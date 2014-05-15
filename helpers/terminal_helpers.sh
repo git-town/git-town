@@ -42,3 +42,11 @@ function echo_all_done {
   echo
 }
 
+
+# Exits the currently running script with an error response code.
+function exit_with_error {
+  echo
+  echo
+  exit 1
+}
+

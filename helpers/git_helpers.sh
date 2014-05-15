@@ -199,14 +199,6 @@ function ensure_on_feature_branch {
 }
 
 
-# Exits the currently running script with an error response code.
-function exit_with_error {
-  echo
-  echo
-  exit 1
-}
-
-
 # Merges the current feature branch into the main dev branch.
 function merge_feature_branch {
   echo_header "Merging the '$feature_branch_name' branch into '$main_branch_name'"
