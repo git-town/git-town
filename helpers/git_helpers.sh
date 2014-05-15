@@ -1,10 +1,6 @@
 # Helper methods for working with Git.
 
 
-# Name of the temp file to use.
-temp_filename="/tmp/git_input_$$"
-
-
 # Checks out the branch with the given name.
 #
 # Skips this operation if the requested branch
@@ -60,12 +56,6 @@ function delete_feature_branch {
   if $has_tracking_branch; then
     git push origin :${feature_branch_name}
   fi
-}
-
-
-# Removes the temp file.
-function delete_temp_file {
-  rm $temp_filename
 }
 
 
