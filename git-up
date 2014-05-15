@@ -1,5 +1,5 @@
 #!/bin/sh -e
-source ~/Dropbox/bin/git_helpers.sh
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/helpers/helpers.sh
 
 echo_intro "UPLOADING THE CURRENT FEATURE BRANCH TO GITHUB"
 

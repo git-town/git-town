@@ -1,3 +1,6 @@
+# Helper methods for writing to the terminal.
+
+
 # Prints a header line into the terminal.
 function echo_header {
   echo

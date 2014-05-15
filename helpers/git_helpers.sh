@@ -1,7 +1,5 @@
 # Helper methods for working with Git.
 
-source ~/Dropbox/bin/bash_helpers.sh
-
 
 # The file name of the configuration file.
 #
@@ -13,14 +11,23 @@ config_filename=".main_branch_name"
 temp_filename="/tmp/git_input_$$"
 
 
+# Checks out the branch with the given name.
+#
+# Skips this operation if the requested branch
+# is already checked out.
+function checkout_branch {
+  determine_current_branch_name
+  if [ ! "$current_branch_name" = "$1" ]; then
+    git checkout $1
+  fi
+}
+
+
 # Checks out the main development branch in Git.
 #
 # Skips the operation if we already are on that branch.
 function checkout_main_branch {
-  determine_current_branch_name
-  if [ ! "$current_branch_name" = "$main_branch_name" ]; then
-    git checkout $main_branch_name
-  fi
+  checkout_branch $main_branch_name
 }
 
 
@@ -28,10 +35,7 @@ function checkout_main_branch {
 #
 # Skips the operation if we already are on that branch.
 function checkout_feature_branch {
-  determine_current_branch_name
-  if [ ! "$current_branch_name" = "$feature_branch_name" ]; then
-    git checkout $feature_branch_name
-  fi
+  checkout_branch $feature_branch_name
 }
 
 
@@ -39,9 +43,21 @@ function checkout_feature_branch {
 function create_config_file {
   echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
   read main_branch_name
+  if [[ -z "$main_branch_name" ]]; then
+    echo_error_header
+    echo "  You have not provided the name for the main branch."
+    echo "  This information is necessary to run this script."
+    echo "  Please try again."
+    exit_with_error
+  fi
   echo $main_branch_name > $config_filename
   echo
+  echo "I have created this file with content $main_branch_name for you."
+  echo Please add this file to your .gitignore,
+  echo then run this script again to continue.
+  exit_with_error
 }
+
 
 # Creates a new feature branch with the given name.
 #
@@ -115,10 +131,6 @@ function determine_main_branch_name {
     echo "  Didn't find the $config_filename file."
     echo
     create_config_file
-    echo "I have created this file with content $main_branch_name for you."
-    echo Please add this file to your .gitignore,
-    echo then run this script again to continue.
-    exit_with_error
   fi
   main_branch_name=`cat $config_filename`
 }
