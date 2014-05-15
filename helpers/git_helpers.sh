@@ -158,7 +158,6 @@ function push_feature_branch {
   echo_header "Pushing '$feature_branch_name' to Github"
   checkout_feature_branch
   determine_tracking_branch
-  echo $has_tracking_branch
   if $has_tracking_branch; then
     git push
   else
@@ -173,6 +172,7 @@ function push_main_branch {
   checkout_main_branch
   git push
 }
+
 
 # Unstashes changes that were stashed in the beginning of a script.
 #
@@ -213,6 +213,6 @@ function update_main_branch {
 
 
 determine_main_branch_name
-determine_open_changes
-determine_current_branch_name
 determine_feature_branch_name
+determine_current_branch_name
+determine_open_changes
