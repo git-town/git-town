@@ -9,9 +9,7 @@ ensure_on_feature_branch "Please checkout the feature branch to ship."
 update_main_branch
 update_feature_branch
 merge_feature_branch
+push_main_branch
+delete_feature_branch 'force'
 
-echo_header "Pushing the merge to Github"
-git push
-
-delete_feature_branch
 echo_all_done

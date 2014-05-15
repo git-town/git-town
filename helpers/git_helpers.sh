@@ -70,15 +70,19 @@ function create_feature_branch {
 
 # Deletes the given feature branch from both the local machine
 # as well as from Github.
+#
+# If you provide 'force' as an argument, it deletes the branch even if it has
+# unmerged changes.
 function delete_feature_branch {
   echo_header "Removing the old '$feature_branch_name' branch"
   checkout_feature_branch
   determine_tracking_branch
-  if $has_tracking_branch; then
-    git push
-  fi
   checkout_main_branch
-  git br -d $feature_branch_name
+  if [[ "$1" == "force" ]]; then
+    git br -D $feature_branch_name
+  else
+    git br -d $feature_branch_name
+  fi
   if $has_tracking_branch; then
     git push origin :${feature_branch_name}
   fi
@@ -225,6 +229,13 @@ function push_feature_branch {
   fi
 }
 
+
+# Pushes the main development branch to Github.
+function push_main_branch {
+  echo_header "Pushing the '$main_branch_name' branch to Github"
+  checkout_main_branch
+  git push
+}
 
 # Unstashes changes that were stashed in the beginning of a script.
 #
