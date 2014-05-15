@@ -40,7 +40,7 @@ fi
 
 create_feature_branch $1
 git cherry-pick `cat $temp_filename`
-remove_temp_file
+delete_temp_file
 
 restore_open_changes
 echo_all_done
