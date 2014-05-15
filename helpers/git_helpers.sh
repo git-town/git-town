@@ -156,7 +156,6 @@ function determine_open_changes {
 #
 # Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
-  echo $feature_branch_name
   if [ $((`git br -vv | grep "\* $feature_branch_name\b" | grep '\[.*\]' | wc -l`)) == 0 ]; then
     has_tracking_branch=false
   else
