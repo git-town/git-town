@@ -1,0 +1,17 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
+
+ensure_no_open_changes "You should not ship while having open files in Git."
+ensure_on_feature_branch "Please checkout the feature branch to ship."
+
+update_main_branch
+update_feature_branch
+merge_feature_branch
+
+echo_header "Pushing the merge to Github"
+git push
+
+delete_feature_branch
+echo_all_done

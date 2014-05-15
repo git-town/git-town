@@ -1,0 +1,14 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "UPLOADING THE CURRENT FEATURE BRANCH TO GITHUB"
+
+ensure_on_feature_branch "You must be in a feature branch to upload it to Github."
+
+stash_open_changes
+
+update_main_branch
+update_feature_branch
+push_feature_branch
+restore_open_changes
+echo_all_done

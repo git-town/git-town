@@ -1,0 +1,46 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "EXTRACTING COMMITS FROM A GIT BRANCH"
+
+# Exit with a help screen if parameters are missing.
+if [ -z $1 ]; then
+  echo_usage_header
+  echo "  git extract [name of the new branch to create]"
+  exit_with_error
+fi
+
+ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
+ensure_dialog_tool
+
+stash_open_changes
+update_main_branch
+
+git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
+  grep -v '^$'                                                     | # Remove empty lines.
+  grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
+  grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
+  awk '{ sub(/^[ ]{4}*/, ""); print }'                             | # Remove the first 4 spaces from commit messages
+  awk '{ sub(/^commit /, ""); print }'                             | # Remove the word 'commit' from the lines that contain the commit SHA.
+  awk '{ if (NR % 2 == 0) print "\047" $0 "\047"; else print }'    | # Surround the commit messages in quotes.
+  awk '{ if (NR % 2 == 0) print ; else print substr($0, 0, 10) }'  | # Truncate the SHA1s to 10 characters.
+  awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
+  awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
+  tail -r                                                          | # Reverse the order of lines.
+  xargs dialog --title "Please select all commits to be extracted from the '$feature_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $temp_filename   # Ask the user for commits
+
+clear
+
+if [ ! -s $temp_filename ]; then
+  echo_error_header
+  echo "  Nothing selected, aborting script."
+  exit_with_error
+fi
+
+create_feature_branch $1
+git cherry-pick `cat $temp_filename`
+remove_temp_file
+
+restore_open_changes
+echo_all_done
+

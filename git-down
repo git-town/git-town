@@ -1,0 +1,15 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "UPDATING THE CURRENT GIT BRANCH"
+stash_open_changes
+
+if [ "$current_branch_name" = "$main_branch_name" ]; then
+  update_main_branch
+else
+  update_main_branch
+  update_feature_branch
+fi
+
+restore_open_changes
+echo_all_done

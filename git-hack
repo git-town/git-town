@@ -1,0 +1,17 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "CREATING A NEW FEATURE BRANCH IN GIT"
+
+# Exit with a help screen if parameters are missing.
+if [ -z $1 ]; then
+  echo_usage_header
+  echo "  git hack [feature branch name]"
+  exit_with_error
+fi
+
+stash_open_changes
+update_main_branch
+create_feature_branch $1
+restore_open_changes
+echo_all_done

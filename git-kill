@@ -1,0 +1,13 @@
+#!/bin/sh -e
+source ~/Dropbox/bin/git_helpers.sh
+
+echo_intro "DELETING THE CURRENT FEATURE BRANCH"
+
+ensure_no_open_changes "You should not kill a branch while having open files in it."
+ensure_on_feature_branch "Please checkout the feature branch to kill."
+
+update_main_branch
+update_feature_branch
+delete_feature_branch
+echo_all_done
+
