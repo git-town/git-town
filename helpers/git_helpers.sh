@@ -53,7 +53,7 @@ function delete_feature_branch {
   else
     git br -d $feature_branch_name
   fi
-  if $has_tracking_branch; then
+  if [ $has_tracking_branch = true ]; then
     git push origin :${feature_branch_name}
   fi
 }
@@ -125,7 +125,7 @@ function determine_tracking_branch {
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
-  if $has_open_changes; then
+  if [ $has_open_changes = true ]; then
     echo_header "  Error"
     echo $*
     exit_with_error
@@ -158,7 +158,7 @@ function push_feature_branch {
   echo_header "Pushing '$feature_branch_name' to Github"
   checkout_feature_branch
   determine_tracking_branch
-  if $has_tracking_branch; then
+  if [ $has_tracking_branch = true ]; then
     git push
   else
     git push -u origin $feature_branch_name
@@ -178,7 +178,7 @@ function push_main_branch {
 #
 # Only does this if there were open changes when the script was started.
 function restore_open_changes {
-  if $has_open_changes; then
+  if [ $has_open_changes = true ]; then
     echo_header "Restoring uncommitted changes"
     git stash pop
   fi
@@ -187,7 +187,7 @@ function restore_open_changes {
 
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
-  if $has_open_changes; then
+  if [ $has_open_changes = true ]; then
     echo_header "Stashing uncommitted changes"
     git add -A
     git stash
