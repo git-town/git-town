@@ -43,19 +43,5 @@ function ensure_config_file_exists {
 }
 
 
-# Makes sure the 'dialog' tool is installed.
-#
-# Exits the script if the tool is not installed.
-function ensure_dialog_tool {
-  if [ $((`which dialog | wc -l`)) == 0 ]; then
-    echo_error_header
-    echo "  You need the 'dialog' tool in order to run this script."
-    echo
-    echo "  Please install it using your package manager on Linux,"
-    echo "  or with 'brew install dialog' on OS X."
-    exit_with_error
-  fi
-}
-
 
 ensure_config_file_exists

@@ -12,7 +12,7 @@ if [ -z $1 ]; then
 fi
 
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
-ensure_dialog_tool
+ensure_tool_installed 'dialog'
 
 stash_open_changes
 update_main_branch
