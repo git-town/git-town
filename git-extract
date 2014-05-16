@@ -21,7 +21,7 @@ git log $main_branch_name..$feature_branch_name                    | # Get a lis
   grep -v '^$'                                                     | # Remove empty lines.
   grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
   grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
-  awk '{ sub(/^[ ]{4}*/, ""); print }'                             | # Remove the first 4 spaces from commit messages
+  awk '{ sub(/^[ ]{4}/, ""); print }'                              | # Remove the first 4 spaces from commit messages
   awk '{ sub(/^commit /, ""); print }'                             | # Remove the word 'commit' from the lines that contain the commit SHA.
   awk '{ if (NR % 2 == 0) print "\047" $0 "\047"; else print }'    | # Surround the commit messages in quotes.
   awk '{ if (NR % 2 == 0) print ; else print substr($0, 0, 10) }'  | # Truncate the SHA1s to 10 characters.
