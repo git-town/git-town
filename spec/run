@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# The root directory of the Git Town source code
+git_town_root_dir=`pwd`
+
+source "$git_town_root_dir/helpers/helpers.sh"
+source "$git_town_root_dir/spec/helpers/command_line_parser.sh"
+source "$git_town_root_dir/spec/helpers/repo_management.sh"
+source "$git_town_root_dir/spec/helpers/config_file.sh"
+source "$git_town_root_dir/spec/helpers/logging.sh"
+source "$git_town_root_dir/spec/helpers/bdd.sh"
+source "$git_town_root_dir/spec/helpers/spec_runners.sh"
+source "$git_town_root_dir/spec/helpers/stubs.sh"
+
+ensure_tool_installed 'hub'
+
+if [ $run_all_specs = true ]; then
+  echo_intro "RUNNING ALL SPECS"
+else
+  echo_intro "RUNNING SPEC $spec_filename"
+fi
+
+reset_failures_log
+enter_test_repo
+create_test_config_file
+
+
+# Run the specs
+if [ $run_all_specs = true ]; then
+  run_all_specs
+else
+  run_spec $git_town_root_dir/$spec_filename
+fi
+
+
+### Clean up after the tests
+reset_failures_log
+
+
+### Verify the results
+echo
+echo
+if [[ -s $failures_log ]]; then
+  echo_failure "SOME SPECS HAVE FAILED!"
+  echo
+  cat $failures_log
+else
+  echo_success "ALL SPECS ARE PASSING"
+fi
+echo
+

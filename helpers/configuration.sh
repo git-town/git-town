@@ -6,6 +6,9 @@
 # This file just contains the name of the main development branch.
 # Typically this is either 'master' or 'development'.
 config_filename=".main_branch_name"
+if [ -z $config_path ]; then
+  config_path=$config_filename
+fi
 
 
 # Creates the configuration file with data asked from the user.
@@ -19,9 +22,9 @@ function create_config_file {
     echo "  Please try again."
     exit_with_error
   fi
-  echo $main_branch_name > $config_filename
+  echo $main_branch_name > $config_path
   echo
-  echo "I have created this file with content $main_branch_name for you."
+  echo "I have created this file with content '$main_branch_name' for you."
   echo Please add this file to your .gitignore,
   echo then run this script again to continue.
   exit_with_error
@@ -34,7 +37,7 @@ function create_config_file {
 #
 # Exits the script if the config file didn't exist.
 function ensure_config_file_exists {
-  if [[ ! -f $config_filename ]]; then
+  if [[ ! -f $config_path ]]; then
     echo_error_header
     echo "  Didn't find the $config_filename file."
     echo
