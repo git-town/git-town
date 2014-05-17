@@ -10,7 +10,7 @@ main_branch_name="main_$$_$current_time"
 feature_branch_name="feature_$$_$current_time"
 
 # Path to the directory that contains the test repo
-test_repo_parent_dir="/tmp/git_town_specs"
+test_repo_parent_dir="/tmp"
 
 # Name of the Git repo used to run the tests
 test_repo_name="git_town_specs"
@@ -33,7 +33,7 @@ function enter_test_repo {
   # Clone repo if it doesn't exist yet
   if [ ! -d "$test_repo_path" ]; then
     echo_header "PREPARING THE TEST REPO"
-    hub clone git@github.com:Originate/$test_repo_name.git
+    git clone https://github.com/Originate/$test_repo_name.git
   fi
 
   # Enter repo directory

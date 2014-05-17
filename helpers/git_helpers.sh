@@ -94,7 +94,7 @@ function determine_feature_branch_name {
 # This value is read from a file '.main_branch_name' in the
 # working directory.
 function determine_main_branch_name {
-  main_branch_name=`cat $config_filename`
+  main_branch_name=`cat $config_path`
 }
 
 

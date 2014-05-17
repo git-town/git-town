@@ -25,9 +25,6 @@ function create_config_file {
   echo $main_branch_name > $config_path
   echo
   echo "I have created this file with content '$main_branch_name' for you."
-  echo Please add this file to your .gitignore,
-  echo then run this script again to continue.
-  exit_with_error
 }
 
 

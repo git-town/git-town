@@ -33,7 +33,3 @@ describe "ensure_config_file_exists"
       assert $config_file_content "user_main_branch"
     ti
 
-    it "returns with exit code 1"
-      assert $exit_code 1
-    ti
-

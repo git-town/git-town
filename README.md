@@ -1,4 +1,5 @@
 ## _Elegant Git workflows for a more civilized age_
+[![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
 
 Git Town is an easily hackable collection of additional Git commands that make massively parallelized collaborative software development easy, safe, and fun.
 
