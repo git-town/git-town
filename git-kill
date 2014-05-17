@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 echo_intro "DELETING THE CURRENT FEATURE BRANCH"

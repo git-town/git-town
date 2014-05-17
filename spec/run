@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # The root directory of the Git Town source code
 git_town_root_dir=`pwd`
