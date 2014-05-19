@@ -25,6 +25,5 @@ describe "ensure_config_file_exists"
     }
 
     it "creates a new config file with input queried from the user"
-      config_file_content=`cat $config_path`
-      assert $config_file_content "user_main_branch"
+      expect_file_content $config_path "user_main_branch"
 

@@ -9,13 +9,13 @@ describe "git hack"
     }
 
     it "creates a new local branch with the given name"
-      assert_local_branch_exists "feature1"
+      expect_local_branch_exists "feature1"
 
     it "checks out the new feature branch"
-      assert_current_branch_is "feature1"
+      expect_current_branch_is "feature1"
 
     it "does not push the new feature branch to the repo"
-      assert_no_remote_branch_exists "feature1"
+      expect_no_remote_branch_exists "feature1"
 
 
   context 'with uncommited local changes'
@@ -25,7 +25,7 @@ describe "git hack"
     }
 
     it 'preserves the uncommitted changes'
-      assert_uncommitted_changes "file1"
+      expect_uncommitted_changes "file1"
 
     function after {
       rm file1
@@ -42,7 +42,7 @@ describe "git hack"
     }
 
     it "cuts the new branch off the main branch"
-      assert_branch_has_commit "new_commit_in_main"
+      expect_branch_has_commit "new_commit_in_main"
 
 
   context "with updates from other developers on the main branch"
@@ -56,4 +56,4 @@ describe "git hack"
 
     it "updates the main branch with the latest changes from remote"
       checkout_branch $main_branch_name
-      assert_branch_has_commit "new_remote_commit"
+      expect_branch_has_commit "new_remote_commit"

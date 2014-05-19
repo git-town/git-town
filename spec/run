@@ -11,7 +11,7 @@ source "$git_town_root_dir/spec/helpers/repo_management.sh"
 source "$git_town_root_dir/spec/helpers/config_file.sh"
 source "$git_town_root_dir/spec/helpers/logging.sh"
 source "$git_town_root_dir/spec/helpers/bdd.sh"
-source "$git_town_root_dir/spec/helpers/asserts.sh"
+source "$git_town_root_dir/spec/helpers/expects.sh"
 source "$git_town_root_dir/spec/helpers/spec_runners.sh"
 source "$git_town_root_dir/spec/helpers/stubs.sh"
 enter_test_repo
