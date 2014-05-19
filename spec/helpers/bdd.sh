@@ -46,7 +46,10 @@ function run_after_function {
 function run_before_function {
   determine_function_exists 'before'
   if [ $function_exists == true ]; then
+    echo
+    echo $underline"Preparing for '$current_SUT $current_context'"$nounderline
     before
+    echo $underline"Preparing done"$nounderline
     unset -f before
   fi
 }

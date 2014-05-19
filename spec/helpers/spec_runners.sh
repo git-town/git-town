@@ -23,7 +23,11 @@ function run_single_spec {
 # This method
 function run_spec {
   source $1
+  unset -f before
+  echo
+  echo $underline"Cleanup up after '$current_SUT' specs"$nounderline
   run_after_function
   reset_test_repo
+  echo $underline"Cleanup done"$nounderline
 }
 

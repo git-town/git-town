@@ -15,6 +15,7 @@ describe "ensure_config_file_exists"
       # Run the SUT with mock user input
       echo "user_main_branch" > input
       ensure_config_file_exists < input
+      rm input
     }
 
     function after {
