@@ -23,6 +23,7 @@ function run_single_spec {
 # This method
 function run_spec {
   source $1 2>> $failures_log
+  run_after_function
   reset_test_repo
 }
 
