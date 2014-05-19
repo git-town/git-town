@@ -153,24 +153,23 @@ function merge_feature_branch {
 }
 
 
-# Pushes the feature branch to Github.
-function push_feature_branch {
-  echo_header "Pushing '$feature_branch_name' to Github"
-  checkout_feature_branch
+# Pushes the branch with the given name to the remote repo
+function push_branch {
+  branch_name=$1
+  checkout_branch $branch_name
+  echo_header "Pushing '$branch_name' to Github"
   determine_tracking_branch
   if [ $has_tracking_branch = true ]; then
     git push
   else
-    git push -u origin $feature_branch_name
+    git push -u origin $branch_name
   fi
 }
 
 
 # Pushes the main development branch to Github.
 function push_main_branch {
-  echo_header "Pushing the '$main_branch_name' branch to Github"
-  checkout_main_branch
-  git push
+  push_branch $main_branch_name
 }
 
 

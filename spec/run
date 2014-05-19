@@ -10,6 +10,7 @@ source "$git_town_root_dir/spec/helpers/repo_management.sh"
 source "$git_town_root_dir/spec/helpers/config_file.sh"
 source "$git_town_root_dir/spec/helpers/logging.sh"
 source "$git_town_root_dir/spec/helpers/bdd.sh"
+source "$git_town_root_dir/spec/helpers/asserts.sh"
 source "$git_town_root_dir/spec/helpers/spec_runners.sh"
 source "$git_town_root_dir/spec/helpers/stubs.sh"
 enter_test_repo
@@ -18,17 +19,13 @@ source "$git_town_root_dir/helpers/configuration.sh"
 source "$git_town_root_dir/helpers/git_helpers.sh"
 reset_failures_log
 
-if [ $run_all_specs = true ]; then
-  echo_intro "RUNNING ALL SPECS"
-else
-  echo_intro "RUNNING SPEC $spec_filename"
-fi
-
 # Run the specs
 if [ $run_all_specs = true ]; then
+  echo_intro "RUNNING ALL SPECS"
   run_all_specs
 else
-  run_spec $git_town_root_dir/$spec_filename
+  echo_intro "RUNNING SPEC $spec_filename"
+  run_single_spec $git_town_root_dir/$spec_filename
 fi
 
 
