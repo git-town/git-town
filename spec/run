@@ -3,6 +3,7 @@
 # The root directory of the Git Town source code
 git_town_root_dir=`pwd`
 source "$git_town_root_dir/helpers/terminal_helpers.sh"
+source "$git_town_root_dir/helpers/bash_helpers.sh"
 source "$git_town_root_dir/helpers/file_helpers.sh"
 
 source "$git_town_root_dir/spec/helpers/command_line_parser.sh"

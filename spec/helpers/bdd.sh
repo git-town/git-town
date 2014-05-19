@@ -26,7 +26,7 @@ function it {
   if [ -z $current_context ]; then
     echo_header "$current_SUT $current_spec_description"
   else
-    echo_header "$current_SUT $current_context $current_spec_description"
+    echo_header "$bold$current_SUT$normal $underline$current_context$nounderline $current_spec_description"
   fi
   if [ $before_has_run = false ]; then
     before
