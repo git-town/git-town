@@ -5,7 +5,7 @@ describe "git hack"
   context "on the main branch"
 
     function before {
-      `git hack feature1`
+      git hack feature1
     }
 
     it "creates a new local branch with the given name"
@@ -38,7 +38,7 @@ describe "git hack"
       git checkout -b existing_feature
       add_local_commit $main_branch_name 'new_commit_in_main'
       checkout_branch 'existing_feature'
-      `git hack new_feature`
+      git hack new_feature
     }
 
     it "cuts the new branch off the main branch"
@@ -51,7 +51,7 @@ describe "git hack"
       git checkout -b existing_feature
       add_remote_commit $main_branch_name 'new_remote_commit'
       checkout_branch 'existing_feature'
-      `git hack new_feature`
+      git hack new_feature
     }
 
     it "updates the main branch with the latest changes from remote"
