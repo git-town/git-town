@@ -24,7 +24,7 @@ function context {
 function it {
   current_spec_description=$1
   run_before_function
-  if [ -z $current_context ]; then
+  if [ "$current_context" == "" ]; then
     echo_header "$current_SUT $current_spec_description"
   else
     echo_header "$bold$current_SUT$normal $underline$current_context$nounderline $current_spec_description"
