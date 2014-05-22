@@ -21,7 +21,7 @@ source "$git_town_root_dir/helpers/git_helpers.sh"
 reset_failures_log
 
 # Run the specs
-if [ $run_all_specs = true ]; then
+if [ $run_all_specs == true ]; then
   echo_intro "RUNNING ALL SPECS"
   run_all_specs
 else

@@ -11,7 +11,7 @@ if [ -z $1 ]; then
 fi
 
 stash_open_changes
-update_main_branch
+pull_main_branch
 create_feature_branch $1
 restore_open_changes
 echo_all_done

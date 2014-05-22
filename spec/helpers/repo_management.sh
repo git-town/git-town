@@ -70,7 +70,7 @@ function enter_test_repo {
   # Clone repo if it doesn't exist yet
   if [ ! -d "$test_repo_path" ]; then
     echo_header "PREPARING THE TEST REPO"
-    git clone https://github.com/Originate/$test_repo_name.git
+    git clone git@github.com:Originate/git_town_specs.git
   fi
 
   # Enter repo directory
@@ -142,6 +142,3 @@ function reset_test_repo {
   remove_all_local_branches
 }
 
-
-main_branch_created=false
-remote_main_branch_created=false

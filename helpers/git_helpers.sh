@@ -102,7 +102,7 @@ function determine_main_branch_name {
 #
 # Makes the result available in the global variable $has_open_changes.
 function determine_open_changes {
-  if [ $((`git status --porcelain | wc -l`)) == 0 ]; then
+  if [ `git status --porcelain | wc -l` == 0 ]; then
     has_open_changes=false
   else
     has_open_changes=true
@@ -114,7 +114,7 @@ function determine_open_changes {
 #
 # Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
-  if [ $((`git br -vv | grep "\* $feature_branch_name\b" | grep '\[.*\]' | wc -l`)) == 0 ]; then
+  if [ `git br -vv | grep "\* $feature_branch_name\b" | grep "\[origin\/$feature_branch_name.*\]" | wc -l` == 0 ]; then
     has_tracking_branch=false
   else
     has_tracking_branch=true
@@ -145,11 +145,24 @@ function ensure_on_feature_branch {
 }
 
 
-# Merges the current feature branch into the main dev branch.
-function merge_feature_branch {
-  echo_header "Merging the '$feature_branch_name' branch into '$main_branch_name'"
+# Pulls updates of the feature branch from the remote repo
+function pull_feature_branch {
+  checkout_feature_branch
+  determine_tracking_branch
+  if [ $has_tracking_branch == true ]; then
+    echo "Pulling updates for the '$feature_branch_name' branch"
+    git pull --rebase
+  else
+    echo "Branch '$feature_branch_name' has no remote branch, skipping pull of updates"
+  fi
+}
+
+
+# Updates the current development branch.
+function pull_main_branch {
+  echo_header "Pulling updates for the '$main_branch_name' branch"
   checkout_main_branch
-  git merge --squash $feature_branch_name && git commit -a
+  git pull --rebase
 }
 
 
@@ -184,6 +197,18 @@ function restore_open_changes {
 }
 
 
+# Merges the current feature branch into the main dev branch.
+function squash_merge_feature_branch {
+  echo_header "Merging the '$feature_branch_name' branch into '$main_branch_name'"
+  checkout_main_branch
+  if [ "$1" == "" ]; then
+    git merge --squash $feature_branch_name && git commit -a
+  else
+    git merge --squash $feature_branch_name && git commit -a -m $*
+  fi
+}
+
+
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
   if [ $has_open_changes = true ]; then
@@ -199,14 +224,6 @@ function update_feature_branch {
   echo_header "Updating the '$current_branch_name' branch"
   checkout_feature_branch
   git rebase $main_branch_name
-}
-
-
-# Updates the current development branch.
-function update_main_branch {
-  echo_header "Updating the '$main_branch_name' branch"
-  checkout_main_branch
-  git pull --rebase
 }
 
 

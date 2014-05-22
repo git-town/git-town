@@ -1,28 +1,6 @@
 # Provides custom-tailored asserts for Git testing
 
 
-# Asserts that the branch with the given name has all of the given commits,
-# in the given order.
-function expect_branch_has_commit {
-  if [ `git log | grep $1 | wc -l` = 1 ]; then
-    echo_success "Branch has as expected commit '$1'"
-  else
-    echo_failure "Branch does not have commit '$1'"
-  fi
-}
-
-
-# Asserts that a local branch with the given name exists
-function expect_local_branch_exists {
-  local expected_branch_name=$1
-  if [ $((`git branch | grep $1 | wc -l`)) == 0 ]; then
-    echo_failure "Expected local branch '$1'"
-  else
-    echo_success "Local branch '$1' exists"
-  fi
-}
-
-
 # Asserts that the current branch has the given name
 function expect_current_branch_is {
   determine_current_branch_name
@@ -46,6 +24,62 @@ function expect_file_content {
   fi
 }
 
+
+# Asserts that the last commit includes the given text
+function expect_last_commit_includes {
+  if [ `git log | grep $1 | wc -l` == 0 ]; then
+    echo_failure "Expected the last commit to contain '$1', but it didn't"
+  else
+    echo_success "The last commit contains as expected '$1'"
+  fi
+}
+
+
+# Asserts that there are exactly the given number of local branches
+function expect_local_branch_count {
+  branch_count=`git branch | wc -l`
+  if [ $branch_count == $1 ]; then
+    echo_success "As expected there are $1 local branches"
+  else
+    echo_failure "Expected $1 local branches, but got $branch_count"
+  fi
+}
+
+
+# Asserts that the branch with the given name has all of the given commits,
+# in the given order.
+function expect_local_branch_has_commit {
+  checkout_branch $1
+  if [ `git log | grep $2 | wc -l` = 1 ]; then
+    echo_success "Branch '$1' has as expected commit '$2'"
+  else
+    echo_failure "Branch `$1` does not have commit '$2'"
+  fi
+}
+
+
+# Asserts that a local branch with the given name exists
+function expect_no_local_branch_exists {
+  local expected_branch_name=$1
+  if [ `git branch | grep $1 | wc -l` == 0 ]; then
+    echo_success "Local branch '$1' does not exist"
+  else
+    echo_failure "Local branch '$1' does exist"
+  fi
+}
+
+
+# Asserts that a local branch with the given name exists
+function expect_local_branch_exists {
+  local expected_branch_name=$1
+  if [ `git branch | grep $1 | wc -l` == 0 ]; then
+    echo_failure "Expected local branch '$1'"
+  else
+    echo_success "Local branch '$1' exists"
+  fi
+}
+
+
 # Asserts that there is no remote branch with the given name
 function expect_no_remote_branch_exists {
   if [ `git branch -a | grep remotes/origin/$1 | wc -l` == 0 ]; then
@@ -66,3 +100,4 @@ function expect_uncommitted_changes {
     echo_failure "Expected '$filename' to have uncommitted changed, but it didn't"
   fi
 }
+
