@@ -137,6 +137,7 @@ function require_remote_main_branch {
 
 # Removes all branches from the test repo
 function reset_test_repo {
+  checkout_main_branch
   remove_all_my_remote_branches
   remove_all_local_branches
 }

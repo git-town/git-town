@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Completely deletes all content in the test repository
+
+source spec/helpers/repo_management.sh
+
+cd /tmp/git_town_specs
+remove_all_remote_branches
+remove_all_local_branches
+cd -
