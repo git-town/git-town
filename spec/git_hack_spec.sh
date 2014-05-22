@@ -5,17 +5,17 @@ describe "git hack"
   context "on the main branch"
 
     function before {
-      git hack feature1
+      git hack $feature_branch_name
     }
 
     it "creates a new local branch with the given name"
-      expect_local_branch_exists "feature1"
+      expect_local_branch_exists $feature_branch_name
 
     it "checks out the new feature branch"
-      expect_current_branch_is "feature1"
+      expect_current_branch_is $feature_branch_name
 
     it "does not push the new feature branch to the repo"
-      expect_no_remote_branch_exists "feature1"
+      expect_no_remote_branch_exists $feature_branch_name
 
 
   context 'with uncommited local changes'

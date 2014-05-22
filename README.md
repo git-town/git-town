@@ -79,7 +79,7 @@ _Cuts a new feature branch off the main development branch.<br>Even when you are
 * abort and retry the command in merge mode: `git hack --retry --merge
 
 
-### git sync\*
+### git sync
 
 _Syncronizes the current feature branch with the rest of the world.<br>Even when you are right in the middle of something._
 
@@ -96,25 +96,25 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
   </tr>
   <tr>
     <td>2.</td>
+    <td>pull the latest updates for the feature branch</td>
+    <td>git pull<br>--rebase</td>
+    <td>git pull</td>
+  </tr>
+  <tr>
+    <td>3.</td>
     <td>switch to the main branch</td>
     <td colspan="2" align="center">git checkout [main]</td>
   </tr>
   <tr>
-    <td>3.</td>
+    <td>4.</td>
     <td>pull the latest updates for the main branch from the repo</td>
     <td>git pull<br>--rebase</td>
     <td>git pull</td>
   </tr>
   <tr>
-    <td>4.</td>
+    <td>5.</td>
     <td>switch to the feature branch</td>
     <td colspan="2" align="center">git checkout [feature]</td>
-  </tr>
-  <tr>
-    <td>5.</td>
-    <td>pull the latest updates for the feature branch</td>
-    <td>git pull<br>--rebase</td>
-    <td>git pull</td>
   </tr>
   <tr>
     <td>6.</td>
@@ -141,7 +141,7 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
 </table>
 
 * run the command: `git sync`
-* abort the command when there are conflicts: `git sync --abort`
+* abort the command when there are conflicts\*: `git sync --abort`
 
 
 ### git sync --all\*

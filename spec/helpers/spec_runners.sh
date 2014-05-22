@@ -3,6 +3,7 @@
 
 # Makes a full spec run with all the specs
 function run_all_specs {
+  reset_test_repo
   for spec_file in `find $git_town_root_dir/spec -name *_spec.sh`; do
     local spec_name=${spec_file/$git_town_root_dir\//}
     echo_header "RUNNING $spec_name"

@@ -1,15 +1,21 @@
 #!/bin/bash -e
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-echo_intro "UPDATING THE CURRENT GIT BRANCH"
+echo_intro "SYNCING THE CURRENT BRANCH"
+
 stash_open_changes
-
 if [ "$current_branch_name" = "$main_branch_name" ]; then
-  update_main_branch
+  # On the main branch
+  pull_main_branch
+  push_main_branch
 else
-  update_main_branch
+  # On a feature branch
+  pull_feature_branch
+  pull_main_branch
   update_feature_branch
+  push_feature_branch 'force'
 fi
-
 restore_open_changes
+
 echo_all_done
+

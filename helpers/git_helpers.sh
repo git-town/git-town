@@ -180,6 +180,23 @@ function push_branch {
 }
 
 
+# Pushes the current feature branch to the repo.
+#
+# If the parameter 'force' is given, uses a force push.
+function push_feature_branch {
+  determine_tracking_branch
+  if [ $has_tracking_branch == true ]; then
+    if [ $1 == 'force' ]; then
+      git push --force
+    else
+      git push
+    fi
+  else
+    git push -u origin $feature_branch_name
+  fi
+}
+
+
 # Pushes the main development branch to Github.
 function push_main_branch {
   push_branch $main_branch_name

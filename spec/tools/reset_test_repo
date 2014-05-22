@@ -4,7 +4,17 @@
 
 source spec/helpers/repo_management.sh
 
+echo "Entering the remote repo"
 cd /tmp/git_town_specs
+
+echo "Removing all remote branches"
 remove_all_remote_branches
+
+echo "Removing all local branches"
 remove_all_local_branches
+
+echo "Removing all local files"
+ls -l1 | grep -v 'README.md' | xargs rm
+
+echo "Returning to the previous directory"
 cd -

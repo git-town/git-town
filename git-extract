@@ -15,7 +15,7 @@ ensure_on_feature_branch "You must be on a feature branch in order to extract co
 ensure_tool_installed 'dialog'
 
 stash_open_changes
-update_main_branch
+pull_main_branch
 
 git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
   grep -v '^$'                                                     | # Remove empty lines.

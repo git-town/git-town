@@ -13,6 +13,17 @@ function expect_current_branch_is {
 
 
 # Expects that the file with the given name has the given content
+function expect_file_exists {
+  file_name=$1
+  if [ `ls $file_name | wc -l` == 1 ]; then
+    echo_success "File '$file_name' exists"
+  else
+    echo_failure "File '$file_name' does not exist"
+  fi
+}
+
+
+# Expects that the file with the given name has the given content
 function expect_file_content {
   file_name=$1
   expected_file_content=$2
@@ -86,6 +97,17 @@ function expect_no_remote_branch_exists {
     echo_success "There is as expected no remote branch '$1'"
   else
     echo_failure "Found a remote branch '$1'"
+  fi
+}
+
+
+# Asserts that the given branch is fully synchronized with its remote branch
+function expect_synchronized_branch {
+  git status
+  if [ `git status | grep "Your branch is up-to-date with .origin/$1" | wc -l` == 1 ]; then
+    echo_success "Branch '$1' is fully synchronized with its remote branch"
+  else
+    echo_failure "Branch '$1' is not completely synchronized with its remote branch"
   fi
 }
 

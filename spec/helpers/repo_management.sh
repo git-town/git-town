@@ -6,9 +6,6 @@ current_time=`date +%s`
 # Name of the main branch used in the current spec runner session
 main_branch_name="main_$$_$current_time"
 
-# Name of the primary feature branch used in the current spec runner session
-feature_branch_name="feature_$$_$current_time"
-
 # Path to the directory that contains the test repo
 test_repo_parent_dir="/tmp"
 
@@ -71,12 +68,26 @@ function enter_test_repo {
   if [ ! -d "$test_repo_path" ]; then
     echo_header "PREPARING THE TEST REPO"
     git clone git@github.com:Originate/git_town_specs.git
+    repo_cloned=true
+  else
+    repo_cloned=false
   fi
 
   # Enter repo directory
   cd $test_repo_name
+
+  # Update repo with remote
+  if [ $repo_cloned == false ]; then
+    git pull
+  fi
 }
 
+
+# Removes all the local files
+function remove_all_local_files {
+  echo "Removing all local files"
+  ls -l1 | grep -v 'README.md' | xargs rm
+}
 
 
 # Removes all branches from the remote repo
@@ -140,5 +151,6 @@ function reset_test_repo {
   checkout_main_branch
   remove_all_my_remote_branches
   remove_all_local_branches
+  remove_all_local_files
 }
 
