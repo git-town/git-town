@@ -75,8 +75,8 @@ _Cuts a new feature branch off the main development branch.<br>Even when you are
 </table>
 
 * run the command: `git hack [name of feature branch to create]`
-* abort and undo the command if there are conflicts: `git hack --abort`
-* abort and retry the command in merge mode: `git hack --retry --merge
+* abort and undo the command if there are conflicts\*: `git hack --abort`
+* abort and retry the command in merge mode\*: `git hack --retry --merge`
 
 
 ### git sync
@@ -241,6 +241,13 @@ Undoes the last Git Town operation.
 
 
 ## Installation
+
+### Using Homebrew\*
+
+`brew install git-town`
+
+
+### Manually
 
 * clone the repo to your machine
 * add the folder to your path
