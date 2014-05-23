@@ -19,7 +19,7 @@ create_test_config_file
 source "$git_town_root_dir/helpers/configuration.sh"
 source "$git_town_root_dir/helpers/git_helpers.sh"
 feature_branch_name="feature_$$_$current_time"
-reset_failures_log
+reset_logs
 
 # Run the specs
 if [ $run_all_specs == true ]; then
@@ -30,10 +30,10 @@ else
   run_single_spec $git_town_root_dir/$spec_filename
 fi
 
-
-### Clean up after the tests
-reset_failures_log
-
+echo
+echo
+echo_header "TEST SUMMARY"
+cat $summary_log
 
 ### Verify the results
 echo
@@ -41,12 +41,11 @@ echo
 if [[ -s $failures_log ]]; then
   echo_failure "SOME SPECS HAVE FAILED!"
   echo
-  cat $failures_log
-  echo
-  exit 1
 else
   echo_success "ALL SPECS ARE PASSING"
   echo
-  exit 0
 fi
+
+### Clean up after the tests
+reset_logs
 

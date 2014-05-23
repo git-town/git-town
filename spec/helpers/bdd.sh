@@ -11,6 +11,8 @@ function describe {
   current_context=""
   current_spec_description=""
   unset -f before
+
+  echo "$current_SUT" >> $summary_log
 }
 
 
@@ -18,6 +20,9 @@ function context {
   run_after_function
   current_context=$1
   current_spec_description=""
+
+  echo                      >> $summary_log
+  echo "  $current_context" >> $summary_log
 }
 
 
@@ -29,6 +34,7 @@ function it {
   else
     echo_header "$bold$current_SUT$normal $underline$current_context$nounderline $current_spec_description"
   fi
+  echo "    $current_spec_description" >> $summary_log
 }
 
 

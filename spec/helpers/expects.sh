@@ -60,11 +60,13 @@ function expect_local_branch_count {
 # Asserts that the branch with the given name has all of the given commits,
 # in the given order.
 function expect_local_branch_has_commit {
-  checkout_branch $1
-  if [ `git log | grep $2 | wc -l` = 1 ]; then
-    echo_success "Branch '$1' has as expected commit '$2'"
+  branch_name=$1
+  commit_name=$2
+  checkout_branch $branch_name
+  if [ `git log | grep $commit_name | wc -l` = 1 ]; then
+    echo_success "Branch '$branch_name' has as expected commit '$commit_name'"
   else
-    echo_failure "Branch `$1` does not have commit '$2'"
+    echo_failure "Branch '$branch_name' does not have commit '$commit_name'"
   fi
 }
 
