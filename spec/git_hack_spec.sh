@@ -36,24 +36,16 @@ describe "git hack"
 
     function before {
       git checkout -b existing_feature
-      add_local_commit $main_branch_name 'new_commit_in_main'
+      add_local_commit $main_branch_name 'new_local_commit_in_main'
+      add_remote_commit $main_branch_name 'new_remote_commit_in_main'
       checkout_branch 'existing_feature'
       git hack new_feature
     }
+
+    it "checks out the new feature branch"
+      expect_current_branch_is 'new_feature'
 
     it "cuts the new branch off the main branch"
-      expect_branch_has_commit "new_commit_in_main"
+      expect_local_branch_has_commit "new_feature" "new_local_commit_in_main"
+      expect_local_branch_has_commit "new_feature" "new_remote_commit_in_main"
 
-
-  context "with updates from other developers on the main branch"
-
-    function before {
-      git checkout -b existing_feature
-      add_remote_commit $main_branch_name 'new_remote_commit'
-      checkout_branch 'existing_feature'
-      git hack new_feature
-    }
-
-    it "updates the main branch with the latest changes from remote"
-      checkout_branch $main_branch_name
-      expect_branch_has_commit "new_remote_commit"
