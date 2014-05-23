@@ -41,11 +41,14 @@ echo
 if [[ -s $failures_log ]]; then
   echo_failure "SOME SPECS HAVE FAILED!"
   echo
+  exit_code=1
 else
   echo_success "ALL SPECS ARE PASSING"
   echo
+  exit_code=0
 fi
 
 ### Clean up after the tests
 reset_logs
 
+exit $exit_code
