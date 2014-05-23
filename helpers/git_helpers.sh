@@ -147,10 +147,10 @@ function ensure_on_feature_branch {
 
 # Pulls updates of the feature branch from the remote repo
 function pull_feature_branch {
+  echo_header "Pulling updates for the '$feature_branch_name' branch"
   checkout_feature_branch
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    echo "Pulling updates for the '$feature_branch_name' branch"
     git pull --rebase
   else
     echo "Branch '$feature_branch_name' has no remote branch, skipping pull of updates"
@@ -184,6 +184,7 @@ function push_branch {
 #
 # If the parameter 'force' is given, uses a force push.
 function push_feature_branch {
+  echo_header "Pushing the updated '$feature_branch_name' to the repo"
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
     if [ $1 == 'force' ]; then
@@ -238,7 +239,7 @@ function stash_open_changes {
 
 # Updates the current feature branch.
 function update_feature_branch {
-  echo_header "Updating the '$current_branch_name' branch"
+  echo_header "Rebasing the '$current_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git rebase $main_branch_name
 }
