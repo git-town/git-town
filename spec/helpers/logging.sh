@@ -11,14 +11,10 @@ summary_log="$git_town_root_dir/test_log"
 function echo_failure {
 
   # Output to terminal
-  tput setaf 1
-  echo $*
-  tput sgr0
+  echo_red $*
 
   # Output to test log
-  tput setaf 1      >> $summary_log
-  echo "      $*"   >> $summary_log
-  tput sgr0         >> $summary_log
+  echo "$red      $*$normal"  >> $summary_log
 
   # Output to error log
   echo "$current_SUT $current_context $current_spec_description $1"  >> $failures_log
@@ -27,14 +23,12 @@ function echo_failure {
 
 # Prints the given text in green.
 function echo_success {
-  tput setaf 2
-  echo $*
-  tput sgr0
+
+  # Output to terminal
+  echo_green $*
 
   # Output to test log
-  tput setaf 2      >> $summary_log
-  echo "      $*"   >> $summary_log
-  tput sgr0         >> $summary_log
+  echo "$green      $*$normal"  >> $summary_log
 }
 
 

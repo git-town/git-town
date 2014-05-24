@@ -1,10 +1,5 @@
 # Helper methods for more convenient bash use
 
-underline=`tput smul`
-nounderline=`tput rmul`
-bold=`tput bold`
-normal=`tput sgr0`
-
 
 # Determines whether a function with the given name exists
 function determine_function_exists {
