@@ -27,10 +27,7 @@ function run_spec {
   remote_main_branch_created=false
   source $1
   unset -f before
-  echo
-  echo $underline"Cleanup up after '$current_SUT' specs"$nounderline
   run_after_function
   reset_test_repo
-  echo $underline"Cleanup done"$nounderline
 }
 

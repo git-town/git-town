@@ -42,7 +42,11 @@ function it {
 function run_after_function {
   determine_function_exists 'after'
   if [ $function_exists == true ]; then
+    echo
+    echo $underline"Cleaning up after '$current_SUT $current_context'"$nounderline
     after
+    echo
+    echo $underline"Cleanup done"$nounderline
     unset -f after
   fi
 }
