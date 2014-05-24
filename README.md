@@ -291,3 +291,8 @@ brew untap Originate/gittown
 * add more scripts
 * share useful stuff back as a pull request
 
+
+Some background on the code structure:
+* Due to limitations of Bash Script, the functions take normal arguments, and return their result as global variables.
+* Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
+

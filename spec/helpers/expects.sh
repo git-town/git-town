@@ -12,13 +12,24 @@ function expect_current_branch_is {
 }
 
 
-# Expects that the file with the given name has the given content
+# Expects that the file with the given path exists
 function expect_file_exists {
   file_name=$1
   if [ `ls $file_name | wc -l` == 1 ]; then
     echo_success "File '$file_name' exists"
   else
     echo_failure "File '$file_name' does not exist"
+  fi
+}
+
+
+# Expects that the file with the given path does not exist
+function expect_file_does_not_exist {
+  file_name=$1
+  if [ `ls $file_name | wc -l` == 0 ]; then
+    echo_success "File '$file_name' does not exist"
+  else
+    echo_failure "File '$file_name' does exist"
   fi
 }
 
@@ -99,6 +110,26 @@ function expect_no_remote_branch_exists {
     echo_success "There is as expected no remote branch '$1'"
   else
     echo_failure "Found a remote branch '$1'"
+  fi
+}
+
+
+# Asserts that there is currently a rebase in progress
+function expect_no_rebase_in_progress {
+  if [ `git status | grep 'You are currently rebasing' | wc -l` == 0 ]; then
+    echo_success "Currently no rebase in progress"
+  else
+    echo_failure "Currently a rebase in progress"
+  fi
+}
+
+
+# Asserts that there is currently a rebase in progress
+function expect_rebase_in_progress {
+  if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
+    echo_success "Currently a rebase in progress"
+  else
+    echo_failure "Currently no rebase in progress"
   fi
 }
 

@@ -152,6 +152,7 @@ function pull_feature_branch {
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
     git pull --rebase
+    if [ $? != 0 ]; then error_pull_feature_branch; fi
   else
     echo "Branch '$feature_branch_name' has no remote branch, skipping pull of updates"
   fi
@@ -242,6 +243,7 @@ function update_feature_branch {
   echo_header "Rebasing the '$current_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git rebase $main_branch_name
+  if [ $? != 0 ]; then error_update_feature_branch; fi
 }
 
 

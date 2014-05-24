@@ -20,6 +20,7 @@ source "$git_town_root_dir/helpers/configuration.sh"
 source "$git_town_root_dir/helpers/git_helpers.sh"
 feature_branch_name="feature_$$_$current_time"
 reset_logs
+echo
 
 # Run the specs
 if [ $run_all_specs == true ]; then
