@@ -242,16 +242,45 @@ Undoes the last Git Town operation.
 
 ## Installation
 
-### Using Homebrew\*
-
-`brew install git-town`
-
+### Using Homebrew
+```
+brew tap Originate/gittown
+brew install git-town
+```
 
 ### Manually
 
 * clone the repo to your machine
 * add the folder to your path
 * get busy
+
+
+## Updating
+
+### Using Homebrew
+```
+brew update
+brew upgrade git-town
+```
+
+### Manually
+
+* Install from scratch
+
+
+## Leaving Git-Town
+
+### Using Homebrew
+```
+brew uninstall git-town
+brew untap Originate/gittown
+```
+ 
+### Manually
+
+* remove repo from your machine
+* remove folder from path
+* git out of town
 
 
 ## Develop your own scripts
