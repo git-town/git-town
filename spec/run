@@ -18,7 +18,6 @@ enter_test_repo
 create_test_config_file
 source "$git_town_root_dir/helpers/configuration.sh"
 source "$git_town_root_dir/helpers/git_helpers.sh"
-feature_branch_name="feature_$$_$current_time"
 reset_logs
 echo
 

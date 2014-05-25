@@ -43,5 +43,11 @@ function ensure_config_file_exists {
 }
 
 
+# Stores the current name branch name in the config file.
+function store_main_branch_name {
+  echo $main_branch_name > $config_path
+}
+
+
 
 ensure_config_file_exists

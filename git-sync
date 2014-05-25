@@ -68,11 +68,13 @@ function abort_sync {
 function perform_sync {
   echo_intro "SYNCING THE CURRENT BRANCH"
   stash_open_changes
-  if [ "$current_branch_name" = "$main_branch_name" ]; then
+  if [ $current_branch_name == $main_branch_name ]; then
+    echo On the main branch
     # On the main branch
     pull_main_branch
     push_main_branch
   else
+    echo On the feature branch
     # On a feature branch
     pull_feature_branch
     pull_main_branch

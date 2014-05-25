@@ -3,9 +3,6 @@
 
 current_time=`date +%s`
 
-# Name of the main branch used in the current spec runner session
-main_branch_name="main_$$_$current_time"
-
 # Path to the directory that contains the test repo
 test_repo_parent_dir="/tmp"
 
@@ -103,16 +100,16 @@ function remove_all_remote_branches {
 }
 
 
-# Removes all branches from the remote repo that currently exist on the local machine
+# Removes all remote branches of local branches from the remote repo
 function remove_all_my_remote_branches {
   echo "Removing all my remote branches"
   checkout_branch "master"
-  git branch -vv          |
-    grep -o '\[.*\]'      |
-    grep -v master        |
-    tr -d '[]'            |
-    cut -d '/' -f 2       |
-    awk '{ print ":"$0 }' |
+  git branch -vv                         |  # get info for all local branches
+    grep '\[origin\/.*\]'                |  # keep only branches that have remotes
+    awk '{ sub(/^[\* ]*/, ""); print }'  |  # remove the trailing '*' and any indentation
+    cut -d ' ' -f 1                      |  # keep only the first column
+    grep -v master                       |  # don't delete the remote master branch
+    awk '{ print ":"$0 }'                |  # prepend a ":" in front of branch names
     xargs git push origin
 }
 
@@ -127,10 +124,10 @@ function remove_all_local_branches {
 # Specs must call this method if they require a main branch
 # in the repo.
 function require_main_branch {
-  if [ $main_branch_created = false ]; then
-    git checkout -b $main_branch_name
-    main_branch_created=true
-  fi
+  main_branch_name="main_$$_$current_time"
+  store_main_branch_name
+  feature_branch_name="feature_$$_$current_time"
+  git checkout -b $main_branch_name master
 }
 
 
@@ -138,11 +135,8 @@ function require_main_branch {
 # on Github.
 function require_remote_main_branch {
   require_main_branch
-  if [ $remote_main_branch_created = false ]; then
-    echo "creating a remote main branch"
-    git push -u origin $main_branch_name
-    remote_main_branch_created=true
-  fi
+  echo "creating a remote main branch"
+  git push -u origin $main_branch_name
 }
 
 
@@ -150,7 +144,7 @@ function require_remote_main_branch {
 function reset_test_repo {
   echo
   echo $underline"Resetting the test repository"$nounderline
-  checkout_main_branch
+  checkout_master_branch
   remove_all_my_remote_branches
   remove_all_local_branches
   remove_all_local_files

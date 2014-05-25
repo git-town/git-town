@@ -23,8 +23,6 @@ function run_single_spec {
 #
 # This method
 function run_spec {
-  main_branch_created=false
-  remote_main_branch_created=false
   source $1
   unset -f before
   run_after_function
