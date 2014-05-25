@@ -12,6 +12,7 @@ function describe {
   current_spec_description=""
   unset -f before
 
+  echo                >> $summary_log
   echo "$current_SUT" >> $summary_log
 }
 
@@ -21,7 +22,6 @@ function context {
   current_context=$1
   current_spec_description=""
 
-  echo                      >> $summary_log
   echo "  $current_context" >> $summary_log
 }
 
