@@ -16,7 +16,7 @@ function delete_temp_file {
 
 # Ensures that the given tool is installed.
 function ensure_tool_installed {
-  if [ $((`which $1 | wc -l`)) == 0 ]; then
+  if [ `which $1 | wc -l` == 0 ]; then
     echo_error_header
     echo "  You need the '$1' tool in order to run tests."
     echo "  Please install it using your package manager,"
