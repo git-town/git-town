@@ -116,6 +116,17 @@ function determine_open_changes {
 }
 
 
+# Determines whether there is currently a rebase in progress.
+#
+# Makes the result available in the global varible $rebase_in_progress
+function determine_rebase_in_progress {
+  if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
+    rebase_in_progress=true
+  else
+    rebase_in_progress=false
+  fi
+}
+
 # Determines whether the feature branch has a remote tracking branch.
 #
 # Makes the result available in the global variable $has_tracking_branch.

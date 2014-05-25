@@ -14,8 +14,11 @@ describe "git sync with a merge conflict when updating the feature branch with t
     it "aborts in the middle of the rebase"
       expect_rebase_in_progress
 
-    it "creates an .git_sync_abort file"
+    it "creates an abort script file"
       expect_file_exists "/tmp/git_sync_abort$temp_filename_suffix"
+
+    it "creates an continue script file"
+      expect_file_exists "/tmp/git_sync_continue$temp_filename_suffix"
 
 
     function after {

@@ -2,7 +2,7 @@ require_remote_main_branch
 
 describe "git sync with conflicts after pulling the feature branch"
 
-  context "right after the conflict happens"
+  context "when the user continues after resolving the conflicts"
 
     function before {
       create_feature_branch $feature_branch_name
@@ -10,20 +10,13 @@ describe "git sync with conflicts after pulling the feature branch"
       add_remote_commit $feature_branch_name 'conflicting_remote_commit' 'conflicting_file' 'one'
       add_local_commit $feature_branch_name 'conflicting_local_commit' 'conflicting_file' 'two'
       git sync
+      git sync --continue
     }
 
-    it "aborts in the middle of the rebase"
+    it 'does nothing'
       expect_rebase_in_progress
 
-    it "creates an abort script file"
-      expect_file_exists "/tmp/git_sync_abort$temp_filename_suffix"
-
-    it "creates an continue script file"
-      expect_file_exists "/tmp/git_sync_continue$temp_filename_suffix"
 
     function after {
       git rebase --abort
-      git checkout $main_branch_name
-      delete_feature_branch 'force'
     }
-

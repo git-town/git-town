@@ -74,10 +74,10 @@ function expect_local_branch_has_commit {
   branch_name=$1
   commit_name=$2
   checkout_branch $branch_name
-  if [ `git log | grep $commit_name | wc -l` = 1 ]; then
-    echo_success "Branch '$branch_name' has as expected commit '$commit_name'"
-  else
+  if [ `git log | grep $commit_name | wc -l` = 0 ]; then
     echo_failure "Branch '$branch_name' does not have commit '$commit_name'"
+  else
+    echo_success "Branch '$branch_name' has as expected commit '$commit_name'"
   fi
 }
 
@@ -116,7 +116,8 @@ function expect_no_remote_branch_exists {
 
 # Asserts that there is currently a rebase in progress
 function expect_no_rebase_in_progress {
-  if [ `git status | grep 'You are currently rebasing' | wc -l` == 0 ]; then
+  determine_rebase_in_progress
+  if [ $rebase_in_progress == false ]; then
     echo_success "Currently no rebase in progress"
   else
     echo_failure "Currently a rebase in progress"
@@ -126,7 +127,8 @@ function expect_no_rebase_in_progress {
 
 # Asserts that there is currently a rebase in progress
 function expect_rebase_in_progress {
-  if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
+  determine_rebase_in_progress
+  if [ $rebase_in_progress == true ]; then
     echo_success "Currently a rebase in progress"
   else
     echo_failure "Currently no rebase in progress"
@@ -136,7 +138,6 @@ function expect_rebase_in_progress {
 
 # Asserts that the given branch is fully synchronized with its remote branch
 function expect_synchronized_branch {
-  git status
   if [ `git status | grep "Your branch is up-to-date with .origin/$1" | wc -l` == 1 ]; then
     echo_success "Branch '$1' is fully synchronized with its remote branch"
   else
