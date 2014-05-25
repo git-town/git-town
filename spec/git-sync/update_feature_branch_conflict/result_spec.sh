@@ -15,7 +15,7 @@ describe "git sync with a merge conflict when updating the feature branch with t
       expect_rebase_in_progress
 
     it "creates an .git_sync_abort file"
-      expect_file_exists '/tmp/git_sync_abort'
+      expect_file_exists "/tmp/git_sync_abort$temp_filename_suffix"
 
 
     function after {

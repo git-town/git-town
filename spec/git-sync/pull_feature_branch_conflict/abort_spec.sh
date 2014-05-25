@@ -22,7 +22,7 @@ describe "git sync with conflicts after pulling the feature branch"
       expect_no_rebase_in_progress
 
     it "removes the abort script"
-      expect_file_does_not_exist '/tmp/git_sync_abort'
+      expect_file_does_not_exist "/tmp/git_sync_abort$temp_filename_suffix"
 
     it "pops the stash"
       expect_file_exists open_file

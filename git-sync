@@ -13,7 +13,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 # The path to the abort script
-abort_script="/tmp/git_sync_abort"
+abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 
 
 # Called by pull_feature_branch when the rebase fails with merge conflicts

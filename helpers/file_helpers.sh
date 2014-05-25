@@ -1,13 +1,16 @@
 # Helper methods for dealing with files and temp files.
 
 
+# Unique string that identifies the current directory and git branch
+temp_filename_suffix="_`pwd | tr '/' '_' `"
+
 # Path to the temp file used by these scripts.
-temp_filename="/tmp/git_input_$$"
+user_input_filename="/tmp/git-town-user-input$temp_filename_suffix"
 
 
 # Removes the temp file.
 function delete_temp_file {
-  rm $temp_filename
+  rm $user_input_filename
 }
 
 
