@@ -1,6 +1,17 @@
 # Provides custom-tailored asserts for Git testing
 
 
+# Asserts that the given file has merge conflicts
+function expect_conflict_for_file {
+  git status | grep "both added.*$1" | wc -l
+  if [ `git status | grep "both added.*$1" | wc -l` == 1 ]; then
+    echo_success "File '$1' has as expected merge conflicts"
+  else
+    echo_failure "File '$1' does not have merge conflicts"
+  fi
+}
+
+
 # Asserts that the current branch has the given name
 function expect_current_branch_is {
   determine_current_branch_name

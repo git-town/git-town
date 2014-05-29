@@ -141,7 +141,8 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
 </table>
 
 * run the command: `git sync`
-* abort the command when there are conflicts\*: `git sync --abort`
+* abort the command when there are conflicts: `git sync --abort`
+* continue the command after conflicts have been resolved\*: `git sync --continue`
 
 
 ### git sync --all\*
@@ -193,6 +194,8 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
   </tr>
 </table>
 
+* run the command: `git extract [new branch name]`
+
 
 ### git ship
 
@@ -230,6 +233,9 @@ _Ships a finished feature._
     <td colspan="2" align="center">git push origin :[feature branch]
   </tr>
 </table>
+
+* run the command: `git ship`
+* abort the command when there are conflicts: `git ship --abort`
 
 
 ### git undo\*
@@ -275,7 +281,7 @@ brew upgrade git-town
 brew uninstall git-town
 brew untap Originate/gittown
 ```
- 
+
 ### Manually
 
 * remove repo from your machine

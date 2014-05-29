@@ -1,15 +1,76 @@
-#!/bin/bash -e
+#!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
+# The path to the abort script
+abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
-ensure_no_open_changes "You should not ship while having open files in Git."
-ensure_on_feature_branch "Please checkout the feature branch to ship."
 
-pull_main_branch
-pull_feature_branch
-squash_merge_feature_branch $*
-push_main_branch
-delete_feature_branch 'force'
+# Called by pull_feature_branch when the rebase fails with merge conflicts
+function error_pull_feature_branch {
+  echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
-echo_all_done
+  # Create the abort file.
+  echo "git rebase --abort" > $abort_script
+  if [ $has_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git ship --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  exit 1
+}
+
+
+# Called when the squash merge of the feature branch fails with merge conflicts
+function error_squash_merge_feature_branch {
+  echo_red "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
+
+  # Create the abort file.
+  echo "git reset --hard HEAD" > $abort_script
+  echo "git checkout $feature_branch_name" >> $abort_script
+
+  # Show error message.
+  echo "To undo this, run 'git ship --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  exit 1
+}
+
+
+
+# Aborts a currently ongoing sync
+function abort_ship {
+  echo_intro "ABORTING THE PREVIOUS GIT SHIP"
+  if [ -f $abort_script ]; then
+    source $abort_script
+    rm $abort_script
+    echo_all_done
+  else
+    echo_red "Cannot find abort definition file"
+  fi
+}
+
+
+function perform_ship {
+  echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
+
+  ensure_no_open_changes "You should not ship while having open files in Git."
+  ensure_on_feature_branch "Please checkout the feature branch to ship."
+
+  pull_main_branch
+  pull_feature_branch
+  squash_merge_feature_branch $*
+  push_main_branch
+  delete_feature_branch 'force'
+  echo_all_done
+}
+
+
+if [ $1 == "--abort" ]; then
+  abort_ship
+else
+  perform_ship $*
+fi
+

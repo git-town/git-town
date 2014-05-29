@@ -242,6 +242,7 @@ function squash_merge_feature_branch {
   else
     git merge --squash $feature_branch_name && git commit -a -m $*
   fi
+  if [ $? != 0 ]; then error_squash_merge_feature_branch; fi
 }
 
 
