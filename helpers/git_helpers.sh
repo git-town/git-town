@@ -8,6 +8,7 @@
 function checkout_branch {
   determine_current_branch_name
   if [ ! "$current_branch_name" = "$1" ]; then
+    echo_header "Checking out the '$1' branch"
     git checkout $1
   fi
 }

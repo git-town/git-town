@@ -22,7 +22,7 @@ function add_local_commit {
   if [ -z $file_name ]; then file_name=$commit_msg; fi
   local content=$4
   if [ -z $content ]; then content=$commit_msg; fi
-  echo "adding local commit $commit_msg to branch $branch_name with file $file_name and content $content"
+  echo_header "Adding local commit $commit_msg to branch $branch_name with file $file_name and content $content"
 
   checkout_branch $branch_name
   echo $content >> $file_name
@@ -39,7 +39,7 @@ function add_remote_commit {
   if [ -z $file_name ]; then file_name=$commit_msg; fi
   local content=$4
   if [ -z $content ]; then content=$commit_msg; fi
-  echo "adding local commit $commit_msg to branch $branch_name with file $file_name and content $content"
+  echo_header "Adding remote commit $commit_msg to branch $branch_name with file $file_name and content $content"
 
   checkout_branch $branch_name
   echo $content >> $file_name
@@ -148,7 +148,6 @@ function reset_test_repo {
   remove_all_my_remote_branches
   remove_all_local_branches
   remove_all_local_files
-  echo
   echo $underline"Reset done"$nounderline
 }
 
