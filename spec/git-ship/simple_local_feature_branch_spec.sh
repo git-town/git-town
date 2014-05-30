@@ -5,8 +5,8 @@ describe 'git ship'
   context 'simple local feature branch'
 
     function before {
-      git checkout -b feature1
-      add_local_commit "feature1" 'feature_commit'
+      create_feature_branch $feature_branch_name
+      add_local_commit $feature_branch_name 'feature_commit'
       git ship "feature_one"
     }
 
@@ -18,11 +18,11 @@ describe 'git ship'
       expect_local_branch_has_commit $main_branch_name 'feature_one'
 
     it 'removes the feature branch'
-      expect_no_local_branch_exists 'feature1'
+      expect_no_local_branch_exists $feature_branch_name
 
     function after {
       git checkout $main_branch_name
-      git branch -D feature1
-      git push origin :feature1
+      git branch -D $feature_branch_name
+      git push origin :$feature_branch_name
     }
 

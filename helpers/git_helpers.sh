@@ -180,7 +180,10 @@ function pull_feature_branch {
 function pull_main_branch {
   echo_header "Pulling updates for the '$main_branch_name' branch"
   checkout_main_branch
-  git pull --rebase
+  determine_tracking_branch
+  if [ $has_tracking_branch == true ]; then
+    git pull --rebase
+  fi
 }
 
 
