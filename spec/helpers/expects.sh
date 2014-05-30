@@ -1,9 +1,28 @@
 # Provides custom-tailored asserts for Git testing
 
 
+# Asserts that there is currently a cherry-picking process going on in the current branch
+function expect_cherrypick_in_progress {
+  if [ `git status | grep "You are currently cherry-picking" | wc -l` == 1 ]; then
+    echo_success "A cherry-pick is currently active"
+  else
+    echo_failure "There is no cherry-pick active right now"
+  fi
+}
+
+
+# Asserts that there is currently a cherry-picking process going on in the current branch
+function expect_no_cherrypick_in_progress {
+  if [ `git status | grep "You are currently cherry-picking" | wc -l` == 0 ]; then
+    echo_success "There is no cherry-pick active right now"
+  else
+    echo_failure "A cherry-pick is currently active"
+  fi
+}
+
+
 # Asserts that the given file has merge conflicts
 function expect_conflict_for_file {
-  git status | grep "both added.*$1" | wc -l
   if [ `git status | grep "both added.*$1" | wc -l` == 1 ]; then
     echo_success "File '$1' has as expected merge conflicts"
   else

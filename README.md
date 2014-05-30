@@ -75,8 +75,6 @@ _Cuts a new feature branch off the main development branch.<br>Even when you are
 </table>
 
 * run the command: `git hack [name of feature branch to create]`
-* abort and undo the command if there are conflicts\*: `git hack --abort`
-* abort and retry the command in merge mode\*: `git hack --retry --merge`
 
 
 ### git sync
@@ -195,6 +193,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
 </table>
 
 * run the command: `git extract [new branch name]`
+* abort the command when there are conflicts: `git sync --abort`
 
 
 ### git ship
@@ -258,7 +257,6 @@ brew install git-town
 
 * clone the repo to your machine
 * add the folder to your path
-* get busy
 
 
 ## Updating
@@ -271,10 +269,10 @@ brew upgrade git-town
 
 ### Manually
 
-* Install from scratch
+* git pull
 
 
-## Leaving Git-Town
+## Uninstall
 
 ### Using Homebrew
 ```
@@ -286,7 +284,6 @@ brew untap Originate/gittown
 
 * remove repo from your machine
 * remove folder from path
-* git out of town
 
 
 ## Develop your own scripts

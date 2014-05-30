@@ -1,5 +1,84 @@
-#!/bin/bash -e
+#!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+# The path to the abort script
+abort_script="/tmp/git_extract_abort$temp_filename_suffix"
+
+
+# Called when the cherry-pick causes an error
+function error_cherry_pick {
+  echo "ERROR WHILE CHERRY PICKING COMMITS INTO THE '$1' BRANCH"
+
+  # Create the abort file.
+  echo "git cherry-pick --abort" > $abort_script
+  echo "git checkout $feature_branch_name" >> $abort_script
+  echo "git branch -D $1" >> $abort_script
+  if [ $has_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git extract --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  delete_temp_file
+  exit 1
+}
+
+
+# Performs the extract operation
+function perform_extract {
+  stash_open_changes
+  pull_main_branch
+
+  if [ "$2" == "" ]; then
+    git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
+      grep -v '^$'                                                     | # Remove empty lines.
+      grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
+      grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
+      awk '{ sub(/^[ ]{4}/, ""); print }'                              | # Remove the first 4 spaces from commit messages
+      awk '{ sub(/^commit /, ""); print }'                             | # Remove the word 'commit' from the lines that contain the commit SHA.
+      awk '{ if (NR % 2 == 0) print "\047" $0 "\047"; else print }'    | # Surround the commit messages in quotes.
+      awk '{ if (NR % 2 == 0) print ; else print substr($0, 0, 10) }'  | # Truncate the SHA1s to 10 characters.
+      awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
+      awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
+      tail -r                                                          | # Reverse the order of lines.
+      xargs dialog --title "Please select all commits to be extracted from the '$feature_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
+    clear
+  else
+    echo $2 > $user_input_filename
+  fi
+
+  if [ ! -s $user_input_filename ]; then
+    echo_error_header
+    echo "  Nothing selected, aborting script."
+    exit_with_error
+  fi
+
+  create_feature_branch $1
+  git cherry-pick `cat $user_input_filename`
+  if [ $? != 0 ]; then error_cherry_pick $*; fi
+
+  delete_temp_file
+  git push -u origin $1
+
+  restore_open_changes
+  echo_all_done
+}
+
+
+# Aborts a currently ongoing sync
+function abort_extract {
+  echo_intro "ABORTING THE PREVIOUS GIT EXTRACT"
+  if [ -f $abort_script ]; then
+    source $abort_script
+    rm $abort_script
+    echo_all_done
+  else
+    echo_red "Cannot find abort definition file"
+  fi
+}
 
 
 echo_intro "EXTRACTING COMMITS FROM A GIT BRANCH"
@@ -14,34 +93,9 @@ fi
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
 ensure_tool_installed 'dialog'
 
-stash_open_changes
-pull_main_branch
-
-git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
-  grep -v '^$'                                                     | # Remove empty lines.
-  grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
-  grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
-  awk '{ sub(/^[ ]{4}/, ""); print }'                              | # Remove the first 4 spaces from commit messages
-  awk '{ sub(/^commit /, ""); print }'                             | # Remove the word 'commit' from the lines that contain the commit SHA.
-  awk '{ if (NR % 2 == 0) print "\047" $0 "\047"; else print }'    | # Surround the commit messages in quotes.
-  awk '{ if (NR % 2 == 0) print ; else print substr($0, 0, 10) }'  | # Truncate the SHA1s to 10 characters.
-  awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
-  awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
-  tail -r                                                          | # Reverse the order of lines.
-  xargs dialog --title "Please select all commits to be extracted from the '$feature_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
-
-clear
-
-if [ ! -s $user_input_filename ]; then
-  echo_error_header
-  echo "  Nothing selected, aborting script."
-  exit_with_error
+if [ $1 == "--abort" ]; then
+  abort_extract $*
+else
+  perform_extract $*
 fi
-
-create_feature_branch $1
-git cherry-pick `cat $user_input_filename`
-delete_temp_file
-
-restore_open_changes
-echo_all_done
 
