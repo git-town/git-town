@@ -131,7 +131,8 @@ function determine_rebase_in_progress {
 #
 # Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
-  if [ `git br -vv | grep "\* $feature_branch_name\b" | grep "\[origin\/$feature_branch_name.*\]" | wc -l` == 0 ]; then
+  determine_current_branch_name
+  if [ `git br -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
     has_tracking_branch=false
   else
     has_tracking_branch=true
@@ -183,6 +184,8 @@ function pull_main_branch {
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
     git pull --rebase
+  else
+    echo "Branch '$main_branch_name' has no remote"
   fi
 }
 
