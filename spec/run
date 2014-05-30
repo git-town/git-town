@@ -1,5 +1,7 @@
 #!/bin/bash
 
+start_time=`date +%s`
+
 # The root directory of the Git Town source code
 git_town_root_dir=`pwd`
 source "$git_town_root_dir/helpers/terminal_helpers.sh"
@@ -50,5 +52,9 @@ fi
 
 ### Clean up after the tests
 reset_logs
+
+end_time=`date +%s`
+echo "Tests took `date -jr $(($end_time - $start_time)) +%M:%S`"
+echo
 
 exit $exit_code
