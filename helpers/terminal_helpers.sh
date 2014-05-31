@@ -10,7 +10,7 @@ red=`tput setaf 1`
 
 function echo_all_done {
   echo
-  echo_header "ALL DONE"
+  echo_header "*** ALL DONE ***"
   echo
 }
 
@@ -19,7 +19,7 @@ function echo_all_done {
 function echo_header {
   echo
   tput bold
-  echo $*
+  echo "$*"
   tput sgr0
 }
 
@@ -36,7 +36,7 @@ function echo_error_header {
 # Prints the given text in green
 function echo_green {
   tput setaf 2
-  echo $*
+  echo "$*"
   tput sgr0
 }
 
@@ -44,7 +44,7 @@ function echo_green {
 # Prints the intro line of a script into the terminal.
 function echo_intro {
   tput bold
-  echo $*
+  echo "$*"
   tput sgr0
 }
 
@@ -52,7 +52,7 @@ function echo_intro {
 # Outputs the given text in red
 function echo_red {
   tput setaf 1
-  echo $*
+  echo "$*"
   tput sgr0
 }
 
