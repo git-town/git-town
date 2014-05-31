@@ -290,52 +290,81 @@ The merge strategy defines which command Git Town uses when merging feature bran
 ## Installation
 
 
-__Using Homebrew__
-```
-brew tap Originate/gittown
-brew install git-town
-```
-
-__Manually__
-
-* clone the repo to your machine
-* add the folder to your path
+<table>
+  <tr>
+    <th>
+      Using Homebrew
+    </th>
+    <th>
+      Manually
+    </th>
+  </tr>
+  <tr>
+    <td>
+      brew tap Originate/gittown<br>
+      brew install git-town
+    </td>
+    <td>
+      clone the repo to your machine<br>
+      add the folder to your path
+    </td>
+  </tr>
+</table>
 
 
 #### Updating
 
-__Using Homebrew__
-```
-brew update
-brew upgrade git-town
-```
-
-__Manually__
-
-* git pull
+<table>
+  <tr>
+    <th>
+      Using Homebrew
+    </th>
+    <th>
+      Manually
+    </th>
+  </tr>
+  <tr>
+    <td>
+      brew update
+      brew upgrade git-town
+    </td>
+    <td>
+      git pull
+    </td>
+  </tr>
+</table>
 
 
 #### Uninstalling
 
-__Using Homebrew__
-```
-brew uninstall git-town
-brew untap Originate/gittown
-```
+<table>
+  <tr>
+    <th>
+      Using Homebrew
+    </th>
+    <th>
+      Manually
+    </th>
+  </tr>
+  <tr>
+    <td>
+      brew uninstall git-town<br>
+      brew untap Originate/gittown
+    </td>
+    <td>
+      remove repo from your machine<br>
+      remove folder from path
+    </td>
+  </tr>
+</table>
 
-__Manually__
-
-* remove repo from your machine
-* remove folder from path
 
 
 ## Develop your own scripts
 
-* check out the existing scripts like https://github.com/Originate/git-town/blob/master/git-hack
-* check out the available helpers at https://github.com/Originate/git-town/tree/master/helpers
-* add more helpers
-* add more scripts
-* share useful stuff back as a pull request
+* run all tests: `spec/run`
+* run a single test: `spec/run [test filename]`
+* this script clones https://github.com/Originate/git_town_specs into your `/tmp` directory
 
 
 Some background on the code structure:
