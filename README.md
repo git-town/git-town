@@ -1,50 +1,36 @@
 ## _Elegant Git workflows for a more civilized age_
 [![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
 
-Git Town is an easily hackable collection of additional Git commands that make massively parallelized collaborative software development easy, safe, and fun.
+Git Town is an easily hackable collection of additional Git commands that perform the typical high-level operations which a software developer performs (or should perform) in a collaborative environment.
+Things like creating up-to-date feature branches, synchronizing feature branches with the ongoing development, and merging feature branches while removing them from the developer machine as well as the repo.
 
-* You have a **main development branch** (typically "development" or "master").
-* You follow a strategy that prefers either _rebases_ or _merges_.
-* Your team decided to always use _squash merges_ - or not.
+Git Town operates under the following assumptions:
+
+* You have a **main development branch** (typically "development" or "master"). In this documentation we will use "development".
+* You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch.
 * You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
 
 
 _Note: This documentation is the driver for readme-driven development of this tool.
-The parts marked with an asterisk are not yet implemented._
-
-
-## Configuration\*
-
-Each Git Town command comes in a _rebase_ and a _merge_ version.
-Which option is used can be configured through the following options in ".git-town-rc"
-* __rebase=always__: never fall back to merging, let the user figure out merge conflict or abort
-* __rebase=automatic__: try rebasing first, when merge conflicts occur abort, undo, and retry in the merge version
-* __rebase=never__: always do merges
-
-The default value for the global setting of _rebase_ is _always_.
-You can override it globally, and per branch:
-* always_merge_branches=(master development)
-
-You can also configure how Git Town should perform merges for you:
-* __merge=squash__: do _squash merges_
-* __merge=no-ff__ : do _-no-ff merges_
-* __merge=normal__: do _normal merges_
+The parts marked with an asterisk (\*) are not yet implemented. Feedback for them is welcome!_
 
 
 ## Scripts
 
-Git Town provides the following extra Git commands.
+Git Town provides the following Git commands.
 
 
 ### git hack
 
-_Cuts a new feature branch off the main development branch.<br>Even when you are right in the middle of something._
+_Cuts a new feature branch off the main development branch. Even if you are right in the middle of something._
+
+Run the command: `git hack [name of feature branch to create]`
 
 <table>
   <tr>
     <th colspan="2">step</th>
-    <th>rebase command</th>
-    <th>merge command**</th>
+    <th>rebase version</th>
+    <th>merge version**</th>
   </tr>
   <tr>
     <td>1.</td>
@@ -53,19 +39,19 @@ _Cuts a new feature branch off the main development branch.<br>Even when you are
   </tr>
   <tr>
     <td>2.</td>
-    <td>check out the main development branch</td>
-    <td colspan="2" align="center">git checkout [main branch]</td>
+    <td>check out the main branch</td>
+    <td colspan="2" align="center">git checkout development</td>
   </tr>
   <tr>
     <td>3.</td>
-    <td>pull the latest updates for the main branch from the repo</td>
+    <td>pull updates for the main branch from the repo</td>
     <td>git pull --rebase</td>
     <td>git pull</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>cut a new feature branch off the main branch</td>
-    <td colspan="2" align="center">git checkout -b [feature branch] [main]</td>
+    <td colspan="2" align="center">git checkout -b [feature branch] development</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -74,18 +60,21 @@ _Cuts a new feature branch off the main development branch.<br>Even when you are
   </tr>
 </table>
 
-* run the command: `git hack [name of feature branch to create]`
 
 
 ### git sync
 
-_Syncronizes the current feature branch with the rest of the world.<br>Even when you are right in the middle of something._
+_Syncronizes the current feature branch with the rest of the world, i.e. with its remote branch and the main branch.
+This also works when you are right in the middle of something._
+
+Run the command: `git sync`<br>
+Abort the command when there are conflicts: `git sync --abort`
 
 <table>
   <tr>
     <th colspan="2" align="center">step</th>
-    <th>rebase command</th>
-    <th>merge command*</th>
+    <th>rebase version</th>
+    <th>merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
@@ -101,7 +90,7 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
   <tr>
     <td>3.</td>
     <td>switch to the main branch</td>
-    <td colspan="2" align="center">git checkout [main]</td>
+    <td colspan="2" align="center">git checkout development</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -117,8 +106,8 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
   <tr>
     <td>6.</td>
     <td>update the feature branch with the latest updates from the main branch</td>
-    <td>git rebase [main]</td>
-    <td>git merge [main]</td>
+    <td>git rebase development</td>
+    <td>git merge development</td>
   </tr>
   <tr>
     <td>7a.</td>
@@ -138,10 +127,6 @@ _Syncronizes the current feature branch with the rest of the world.<br>Even when
   </tr>
 </table>
 
-* run the command: `git sync`
-* abort the command when there are conflicts: `git sync --abort`
-* continue the command after conflicts have been resolved\*: `git sync --continue`
-
 
 ### git sync --all\*
 
@@ -152,135 +137,193 @@ _Synchronizes all branches on the local machine with the rest of the world._
 
 ### git extract
 
-_Extracts commits from a feature branch into another feature branch._
+_Extracts commits from a feature branch into a new feature branch._
 
 More background around <a href="http://blog.originate.com/blog/2014/04/19/refactoring_git_branches" target="_blank">Git branch refactoring</a>.
 
+Run the command: `git extract [new branch name]`<br>
+Abort the command when there are conflicts: `git extract --abort`
+
 <table>
   <tr>
-    <th>step</th>
-    <th>rebase command</th>
-    <th>merge command*</th>
+    <th colspan="2" align="center">step</th>
+    <th>rebase version</th>
+    <th>merge version*</th>
   </tr>
   <tr>
-    <td>1. optionally stash uncommitted changes away</td>
+    <td>1.</td>
+    <td>optionally stash uncommitted changes away</td>
     <td colspan="2" align="center"> git stash</td>
   </tr>
   <tr>
-    <td>2. switch to the main branch</td>
-    <td colspan="2" align="center">git checkout main</td>
+    <td>2.</td>
+    <td>switch to the main branch</td>
+    <td colspan="2" align="center">git checkout development</td>
   </tr>
   <tr>
-    <td>3. pull the latest updates for the main branch from the repo</td>
+    <td>3.</td>
+    <td>pull the latest updates for the main branch from the repo</td>
     <td>git pull --rebase</td>
     <td>git pull</td>
   </tr>
   <tr>
+    <td>4.</td>
     <td>lets the user pick the commits to extract</td>
   </tr>
   <tr>
+    <td>5.</td>
     <td>cut a new feature branch off the main branch</td>
-    <td colspan="2" align="center">git checkout -b [feature] [main]</td>
+    <td colspan="2" align="center">git checkout -b [feature] development</td>
   </tr>
   <tr>
+    <td>6.</td>
     <td>cherry-pick the selected commits into the new branch</td>
     <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
-    <td>8. restore the stashed away changes</td>
+    <td>7.</td>
+    <td>restore the stashed away changes</td>
     <td colspan="2" align="center">git stash pop</td>
   </tr>
 </table>
-
-* run the command: `git extract [new branch name]`
-* abort the command when there are conflicts: `git sync --abort`
 
 
 ### git ship
 
 _Ships a finished feature._
 
+When on the feature branch to ship, run the command: `git ship`<br>
+Abort the command when there are conflicts: `git ship --abort`
+
 <table>
   <tr>
-    <th>step</th>
-    <th>rebase command</th>
-    <th>merge command*</th>
+    <th colspan="2" align="center">step</th>
+    <th>rebase version</th>
+    <th>merge version*</th>
   </tr>
   <tr>
+    <td>1.</td>
     <td>ensure there are no uncommitted changes in the workspace</td>
     <td colspan="2" align="center">git status</td>
   </tr>
   <tr>
-    <td>pull the latest updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
+    <td>2.</td>
+    <td>pull updates for the feature branch from the repo</td>
+    <td>git pull<br>--rebase</td>
     <td>git pull</td>
   </tr>
   <tr>
-    <td>squash-merge the current feature branch into the main branch</td>
+    <td>3.</td>
+    <td>check out the main branch</td>
+    <td colspan="2" align="center">git checkout development</td>
+  </tr>
+  <tr>
+    <td>4.</td>
+    <td>pull updates for the main branch from the repo</td>
+    <td>git pull<br>--rebase</td>
+    <td>git pull</td>
+  </tr>
+  <tr>
+    <td>5.</td>
+    <td>merge the feature branch into the main branch</td>
     <td colspan="2" align="center">git merge --squash [feature branch]
   </tr>
   <tr>
+    <td>6.</td>
     <td>push the new commit of the main branch to the source repo</td>
     <td colspan="2" align="center">git push</td>
   </tr>
   <tr>
+    <td>7.</td>
     <td>delete the feature branch from the local machine</td>
     <td colspan="2" align="center">git branch -d [feature branch]</td>
   </tr>
   <tr>
+    <td>8.</td>
     <td>delete the feature branch from the remote repo</td>
     <td colspan="2" align="center">git push origin :[feature branch]
   </tr>
 </table>
 
-* run the command: `git ship`
-* abort the command when there are conflicts: `git ship --abort`
+
+### git kill
+Safely deletes a git branch.
+
+* never deletes the main branch
+* if the branch has unmerged commits, asks the user for confirmation\*
+* deletes the given branch from the local machine as well as the repo
 
 
-### git undo\*
+## Configuration\*
 
-Undoes the last Git Town operation.
+Each Git Town command comes in a _rebase_ and a _merge_ version.
+Which option is used can be configured through the following options in ".git-town-rc"
 
-* git hack: remove the new feature branch and return to the previous feature branch
-* git extract: delete the new feature branch and return to the previous feature branch
+
+### Pull Strategy\*
+The pull strategy defines which command Git Town uses when updating a branch from its remote tracking branch.
+
+* __rebase__: always do a `git pull --rebase`, let the user figure out merge conflicts
+* __automatic__: try `git pull --rebase` first. When merge conflicts occur, abort and do a `git pull`
+* __merge__: always do `git pull`
+
+The default value for this setting is _automatic_.
+
+
+### Update Strategy\*
+The update strategy defines which command Git Town uses when updating a feature branch with updates from the main branch.
+
+* __rebase__: do a `git rebase [main branch]`, let the user resolve eventual merge conflicts. This setting should only be used if your feature branches are always private. It results in `git push --force` when pushing the updates back to the remote tracking branch.
+* __automatic__: try a `git rebase [main branch]` first. If merge conflicts occur abort, abort and try a `git merge [branch name]`
+* __merge__: always do `git merge [main branch]`
+
+The default value for this setting is _automatic_.
+
+### Merge Strategy\*
+The merge strategy defines which command Git Town uses when merging feature branches into the main branch.
+
+* __squash__: always do `git merge --squash`
+* __no-ff__ : always do `git merge --no-ff`
+* __normal__: always do `git merge`
 
 
 ## Installation
 
-### Using Homebrew
+
+__Using Homebrew__
 ```
 brew tap Originate/gittown
 brew install git-town
 ```
 
-### Manually
+__Manually__
 
 * clone the repo to your machine
 * add the folder to your path
 
 
-## Updating
+#### Updating
 
-### Using Homebrew
+__Using Homebrew__
 ```
 brew update
 brew upgrade git-town
 ```
 
-### Manually
+__Manually__
 
 * git pull
 
 
-## Uninstall
+#### Uninstalling
 
-### Using Homebrew
+__Using Homebrew__
 ```
 brew uninstall git-town
 brew untap Originate/gittown
 ```
 
-### Manually
+__Manually__
 
 * remove repo from your machine
 * remove folder from path

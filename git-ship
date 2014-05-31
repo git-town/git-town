@@ -59,8 +59,8 @@ function perform_ship {
   ensure_no_open_changes "You should not ship while having open files in Git."
   ensure_on_feature_branch "Please checkout the feature branch to ship."
 
-  pull_main_branch
   pull_feature_branch
+  pull_main_branch
   squash_merge_feature_branch $*
   push_main_branch
   delete_feature_branch 'force'
