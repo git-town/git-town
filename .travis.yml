@@ -1,2 +1,2 @@
-language: php
+language: node_js
 script: spec/run

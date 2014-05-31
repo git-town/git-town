@@ -1,5 +1,5 @@
 ## _Elegant Git workflows for a more civilized age_
-[![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
+<a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 
 Git Town is an easily hackable collection of additional Git commands that perform the typical high-level operations which a software developer performs (or should perform) in a collaborative environment.
 Things like creating up-to-date feature branches, synchronizing feature branches with the ongoing development, and merging feature branches while removing them from the developer machine as well as the repo.
