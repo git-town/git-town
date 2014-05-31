@@ -61,10 +61,18 @@ function enter_test_repo {
   # Enter test directory
   cd $test_repo_parent_dir
 
+  # Set Git options if missing
+  if [ $on_travis_ci == true ]; then
+    echo_header "Setting Git configuration values"
+    git config --global user.email 'git.town.ci@gmail.com'
+    git config --global user.name "Git Town CI"
+    git config --global push.default simple
+  fi
+
   # Clone repo if it doesn't exist yet
   if [ ! -d "$test_repo_path" ]; then
     echo_header "PREPARING THE TEST REPO"
-    git clone git@github.com:Originate/git_town_specs.git
+    git clone https://git-town-ci:ea18a04ef3fed0dd1f9048ebfa90d10956121676@github.com/Originate/git_town_specs.git
     repo_cloned=true
   else
     repo_cloned=false
@@ -72,6 +80,7 @@ function enter_test_repo {
 
   # Enter repo directory
   cd $test_repo_name
+  git remote -v
 
   # Update repo with remote
   if [ $repo_cloned == false ]; then
@@ -83,7 +92,14 @@ function enter_test_repo {
 # Removes all the local files
 function remove_all_local_files {
   echo "Removing all local files"
-  ls -l1 | grep -v 'README.md' | xargs rm
+  ls -1
+  files=`ls -1 | grep -v 'README.md' | xargs echo`
+  if [ -z $files ]; then
+    echo "no files to delete"
+  else
+    echo "deleting files: $files"
+    rm $files
+  fi
 }
 
 

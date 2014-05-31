@@ -225,7 +225,7 @@ _Ships a finished feature._
   </tr>
   <tr>
     <td>delete the feature branch from the local machine</td>
-    <td colspan="2" align="center">git br -d [feature branch]</td>
+    <td colspan="2" align="center">git branch -d [feature branch]</td>
   </tr>
   <tr>
     <td>delete the feature branch from the remote repo</td>

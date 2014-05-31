@@ -61,6 +61,8 @@ function perform_extract {
   if [ $? != 0 ]; then error_cherry_pick $*; fi
 
   delete_temp_file
+
+  echo_header "Pushing the new branch to the repo"
   git push -u origin $1
 
   restore_open_changes
@@ -91,11 +93,13 @@ if [ -z $1 ]; then
 fi
 
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
-ensure_tool_installed 'dialog'
 
 if [ $1 == "--abort" ]; then
   abort_extract $*
 else
+  if [ -z $2 ]; then
+    ensure_tool_installed 'dialog'
+  fi
   perform_extract $*
 fi
 

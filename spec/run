@@ -1,5 +1,17 @@
 #!/bin/bash
 
+if [ `env | grep "TRAVIS=true" | wc -l` == 1 ]; then
+  echo "I am on Travis CI!"
+  on_travis_ci=true
+  current_dir=`pwd`
+  if [ `echo $PATH | grep -o $current_dir | wc -l` == 0 ]; then
+    echo "Adding current dir to path"
+    PATH=`pwd`:$PATH
+  fi
+else
+  on_travis_ci=false
+fi
+
 start_time=`date +%s`
 
 # The root directory of the Git Town source code

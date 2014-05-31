@@ -168,7 +168,7 @@ function expect_rebase_in_progress {
 
 # Asserts that the given branch is fully synchronized with its remote branch
 function expect_synchronized_branch {
-  if [ `git status | grep "Your branch is up-to-date with .origin/$1" | wc -l` == 1 ]; then
+  if [ `git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m` == 0 ]; then
     echo_success "Branch '$1' is fully synchronized with its remote branch"
   else
     echo_failure "Branch '$1' is not completely synchronized with its remote branch"

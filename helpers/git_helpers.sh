@@ -56,9 +56,9 @@ function delete_feature_branch {
   determine_tracking_branch
   checkout_main_branch
   if [[ "$1" == "force" ]]; then
-    git br -D $feature_branch_name
+    git branch -D $feature_branch_name
   else
-    git br -d $feature_branch_name
+    git branch -d $feature_branch_name
   fi
   if [ $has_tracking_branch = true ]; then
     git push origin :${feature_branch_name}
@@ -133,7 +133,7 @@ function determine_rebase_in_progress {
 # Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
   determine_current_branch_name
-  if [ `git br -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
+  if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
     has_tracking_branch=false
   else
     has_tracking_branch=true
