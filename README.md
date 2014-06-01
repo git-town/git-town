@@ -1,13 +1,16 @@
 ## _Elegant Git workflows for a more civilized age_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 
-Git Town is an easily hackable collection of additional Git commands that perform the typical high-level operations which a software developer performs (or should perform) in a collaborative environment.
-Things like creating up-to-date feature branches, synchronizing feature branches with the ongoing development, and merging feature branches while removing them from the developer machine as well as the repo.
+Git Town is a configurable\* and hackable collection of additional Git commands that perform the typical high-level operations which a software developer performs (or should perform) in a collaborative environment.
+
+This includes things like easily creating up-to-date feature branches,
+keeping feature branches synchronized with the ongoing development from other developers,
+as well as removing feature branches from the developer machine and the central repo after they have been merged with the main code line.
 
 Git Town operates under the following assumptions:
 
 * You have a **main development branch** (typically "development" or "master"). In this documentation we will use "development".
-* You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch.
+* You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch\*.
 * You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
 
 
