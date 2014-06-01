@@ -328,7 +328,7 @@ The merge strategy defines which command Git Town uses when merging feature bran
   </tr>
   <tr>
     <td>
-      brew update
+      brew update<br>
       brew upgrade git-town
     </td>
     <td>
