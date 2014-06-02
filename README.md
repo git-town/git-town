@@ -292,6 +292,10 @@ The merge strategy defines which command Git Town uses when merging feature bran
 
 ## Installation
 
+Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
+OS X, Linux, BSD, and even Windows with Cygwin or something similar.
+Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
+other platforms need to install manually.
 
 <table>
   <tr>
@@ -332,6 +336,7 @@ The merge strategy defines which command Git Town uses when merging feature bran
       brew upgrade git-town
     </td>
     <td>
+      cd [directory of your Git Town clone]
       git pull
     </td>
   </tr>
