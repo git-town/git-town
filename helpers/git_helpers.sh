@@ -264,7 +264,7 @@ function stash_open_changes {
 
 # Updates the current feature branch.
 function update_feature_branch {
-  echo_header "Rebasing the '$current_branch_name' branch against '$main_branch_name'"
+  echo_header "Rebasing the '$feature_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git rebase $main_branch_name
   if [ $? != 0 ]; then error_update_feature_branch; fi
