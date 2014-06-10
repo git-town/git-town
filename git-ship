@@ -68,7 +68,7 @@ function perform_ship {
 }
 
 
-if [ $1 == "--abort" ]; then
+if [ "$1" == "--abort" ]; then
   abort_ship
 else
   perform_ship $*

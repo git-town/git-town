@@ -94,7 +94,7 @@ fi
 
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
 
-if [ $1 == "--abort" ]; then
+if [ "$1" == "--abort" ]; then
   abort_extract $*
 else
   if [ -z $2 ]; then

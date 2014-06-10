@@ -124,9 +124,9 @@ function perform_sync {
 }
 
 
-if [ $1 == "--abort" ]; then
+if [ "$1" == "--abort" ]; then
   abort_sync
-elif [ $1 == "--continue" ]; then
+elif [ "$1" == "--continue" ]; then
   continue_sync
 else
   perform_sync
