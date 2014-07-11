@@ -66,7 +66,9 @@ fi
 reset_logs
 
 end_time=`date +%s`
-echo "Tests took `date -jr $(($end_time - $start_time)) +%M:%S`"
+if [ "`uname`" == "Darwin" ]; then
+  echo "Tests took `date -jr $(($end_time - $start_time)) +%M:%S`"
+fi
 echo
 
 exit $exit_code
