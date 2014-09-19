@@ -1,0 +1,36 @@
+#!/bin/bash
+
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+# Creates a remote upstreams by querying github to find this repo's parent
+function configure_upstream {
+  origin_remote=`git remote -v | grep "fetch" | awk '{print $2}'`
+  origin_repository=`echo "$origin_remote" | sed "s/.*github.com[/:]\(.*\).git/\1/"`
+  if [[ $origin_remote =~ "https" ]]; then
+    key='clone_url'
+  else
+    key='ssh_url'
+  fi
+  upstream_url=`curl -s https://api.github.com/repos/$origin_repository | python -c "import json,sys;obj=json.load(sys.stdin);print obj['parent']['$key']"`
+  git remote add upstream $upstream_url
+  echo_header "Added remote 'upstream' as $upstream_url"
+}
+
+
+# Sync the current branch with the upstream repository
+function sync_fork {
+  stash_open_changes
+  fetch_upstream
+  merge_upstream
+  push_current_branch
+  restore_open_changes
+}
+
+
+echo_intro "SYNCING THE CURRENT BRANCH WITH REMOTE UPSTREAM"
+if [ `git remote -v | grep 'upstream' | wc -l` == 0 ]; then
+  configure_upstream
+fi
+sync_fork
+echo_all_done

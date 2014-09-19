@@ -152,6 +152,7 @@ function ensure_on_feature_branch {
 }
 
 
+
 # Fetches updates from the central repository.
 #
 # It is safe to call this method multiple times per session,
@@ -164,6 +165,20 @@ function fetch_repo {
   fi
 }
 repo_fetched=false
+
+
+# Fetches changes from the upstream repo
+function fetch_upstream {
+  echo_header "Fetching updates for 'upstream'"
+  git fetch upstream
+}
+
+
+# Merges the upstream branch into the current branch
+function merge_upstream {
+  echo_header "Merging 'upstream/$current_branch_name' into '$current_branch_name'"
+  git merge upstream/$current_branch_name
+}
 
 
 # Pulls updates of the feature branch from the remote repo
@@ -206,6 +221,12 @@ function push_branch {
   else
     git push -u origin $branch_name
   fi
+}
+
+
+# Pushes the current branch to the remote repo
+function push_current_branch {
+  push_branch $current_branch_name
 }
 
 
