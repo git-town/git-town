@@ -3,7 +3,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Creates a remote upstreams by querying github to find this repo's parent
+# Adds a remote 'upstream' by querying github to find the current repo's parent
 function configure_upstream {
   origin_remote=`git remote -v | grep "fetch" | awk '{print $2}'`
   origin_repository=`echo "$origin_remote" | sed "s/.*github.com[/:]\(.*\).git/\1/"`
