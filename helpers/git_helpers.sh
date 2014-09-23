@@ -170,7 +170,7 @@ function ensure_on_feature_branch {
 # by tracking this through the global variable $repo_fetched.
 function fetch_repo {
   if [ $repo_fetched == false ]; then
-    git fetch
+    git fetch -p
     repo_fetched=true
   fi
 }
