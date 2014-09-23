@@ -163,16 +163,27 @@ function ensure_on_feature_branch {
 }
 
 
+# Fetches updates from the central repository.
+#
+# It is safe to call this method multiple times per session,
+# since it makes sure that it fetches updates only once per session
+# by tracking this through the global variable $repo_fetched.
+function fetch_repo {
+  if [ $repo_fetched == false ]; then
+    git fetch
+    repo_fetched=true
+  fi
+}
+repo_fetched=false
+
+
 # Pulls updates of the feature branch from the remote repo
 function pull_feature_branch {
   echo_header "Pulling updates for the '$feature_branch_name' branch"
   checkout_feature_branch
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    if [ $repo_fetched == false ]; then
-      git fetch
-      repo_fetched=true
-    fi
+    fetch_repo
     git rebase origin/$feature_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
   else
@@ -187,10 +198,7 @@ function pull_main_branch {
   checkout_main_branch
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    if [ $repo_fetched == false ]; then
-      git fetch
-      repo_fetched=true
-    fi
+    fetch_repo
     git rebase origin/$main_branch_name
   else
     echo "Branch '$main_branch_name' has no remote"
@@ -284,4 +292,3 @@ determine_main_branch_name
 determine_feature_branch_name
 determine_current_branch_name
 determine_open_changes
-repo_fetched=false
