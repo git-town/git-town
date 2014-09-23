@@ -169,7 +169,11 @@ function pull_feature_branch {
   checkout_feature_branch
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    git pull --rebase
+    if [ $repo_fetched == false ]; then
+      git fetch
+      repo_fetched=true
+    fi
+    git rebase origin/$feature_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
   else
     echo "Branch '$feature_branch_name' has no remote branch, skipping pull of updates"
@@ -183,7 +187,11 @@ function pull_main_branch {
   checkout_main_branch
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    git pull --rebase
+    if [ $repo_fetched == false ]; then
+      git fetch
+      repo_fetched=true
+    fi
+    git rebase origin/$main_branch_name
   else
     echo "Branch '$main_branch_name' has no remote"
   fi
@@ -276,3 +284,4 @@ determine_main_branch_name
 determine_feature_branch_name
 determine_current_branch_name
 determine_open_changes
+repo_fetched=false
