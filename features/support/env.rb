@@ -16,7 +16,7 @@ Before do
 
   # Create the config file
   Dir.chdir '/tmp/git_town_specs'
-  File.write '.main_branch_name', 'main'
+  File.write '.gittownrc', 'main'
   run_this "touch .initial_commit ; git add .initial_commit ; git commit -m 'Initial commit' ; git push -u origin master"
 
   # Create the main branch

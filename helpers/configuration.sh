@@ -5,7 +5,7 @@
 #
 # This file just contains the name of the main development branch.
 # Typically this is either 'master' or 'development'.
-config_filename=".main_branch_name"
+config_filename=".gittownrc"
 if [ -z $config_path ]; then
   config_path=$config_filename
 fi

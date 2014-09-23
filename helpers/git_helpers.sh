@@ -97,7 +97,7 @@ function determine_feature_branch_name {
 #
 # Sets the global variable $main_branch_name with the result.
 #
-# This value is read from a file '.main_branch_name' in the
+# This value is read from a file '.gittownrc' in the
 # working directory.
 function determine_main_branch_name {
   main_branch_name=`cat $config_path`

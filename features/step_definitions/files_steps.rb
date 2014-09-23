@@ -1,15 +1,10 @@
-Given /^I don't have a configuration file$/ do
-  File.delete '.main_branch_name'
-end
-
-
 Given /^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/ do |name, content|
   IO.write name, content
 end
 
 
 Then /^a the main branch name is configured as "(.*?)"$/ do |main_branch_name|
-  expect(IO.read '.main_branch_name').to eql "#{main_branch_name}\n"
+  expect(IO.read '.gittownrc').to eql "#{main_branch_name}\n"
 end
 
 
