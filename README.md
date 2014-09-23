@@ -380,10 +380,13 @@ Some background on the code structure:
 
 ## Release Notes
 
-### 0.2.3
+### 0.3
 * <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs
 * completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
+* new configuration file name: .gittownrc instead of the old .main_branch_name
 * always cleans up abort and continue scripts
+* only makes one fetch from the central repo per session
+* specs no longer commit the Git Town configuration file to the repo
 
 
 ### 0.2.2
