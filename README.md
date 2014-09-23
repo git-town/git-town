@@ -368,12 +368,48 @@ The merge strategy defines which command Git Town uses when merging feature bran
 
 ## Develop your own scripts
 
-* run all tests: `spec/run`
-* run a single test: `spec/run [test filename]`
-* this script clones https://github.com/Originate/git_town_specs into your `/tmp` directory
+* run all tests: `cucumber`
+* run a single test: `cucumber -n 'scenario or feature name`
 
 
 Some background on the code structure:
 * Due to limitations of Bash Script, the functions take normal arguments, and return their result as global variables.
 * Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
 
+
+
+## Release Notes
+
+### 0.2.3
+* <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs
+* completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
+* always cleans up abort and continue scripts
+
+
+### 0.2.2
+* fixes "unary" error messages
+* lots of output and documentation improvements
+
+
+### 0.2.1
+* better terminal output
+* Travis CI improvements
+* better documentation
+
+### 0.2
+* displays the duration of specs
+* only pulls the main branch if it has a remote
+* --abort options to abort failed Git Town operations
+* --continue options to continue some Git Town operations after fixing the underlying issues
+* can be installed through Homebrew
+* colored test output
+* display summary after tests
+* exit with proper status codes
+* better documentation
+
+
+### 0.1
+* git hack, git sync, git extract, git ship, git kill
+* basic test framework
+* Travis CI integration
+* self-hosting: uses Git Town for Git Town development
