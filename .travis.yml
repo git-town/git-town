@@ -1,2 +1,13 @@
-language: node_js
-script: spec/run
+language: ruby
+
+rvm:
+    - 2.1.3
+
+cache: bundler
+
+script:
+    - PATH=`pwd`:$PATH
+    - git config --global user.email 'git.town.ci@gmail.com'
+    - git config --global user.name 'Git Town CI'
+    - git config --global push.default simple
+    - bundle exec cucumber

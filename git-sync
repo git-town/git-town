@@ -76,6 +76,7 @@ function abort_sync {
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
+    rm $continue_script
     echo_all_done
   else
     echo_red "Cannot find abort definition file"
@@ -97,6 +98,7 @@ function continue_sync {
   if [ -f $continue_script ]; then
     source $continue_script
     rm $continue_script
+    rm $abort_script
     echo_all_done
   else
     echo_red "Cannot find continue definition file"
