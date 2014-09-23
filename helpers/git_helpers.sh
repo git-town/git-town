@@ -100,7 +100,7 @@ function determine_feature_branch_name {
 # This value is read from a file '.gittownrc' in the
 # working directory.
 function determine_main_branch_name {
-  main_branch_name=`cat $config_path`
+  main_branch_name=`cat $config_filename`
 }
 
 

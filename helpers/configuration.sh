@@ -6,9 +6,7 @@
 # This file just contains the name of the main development branch.
 # Typically this is either 'master' or 'development'.
 config_filename=".gittownrc"
-if [ -z $config_path ]; then
-  config_path=$config_filename
-fi
+old_config_filename=".main_branch_name"
 
 
 # Creates the configuration file with data asked from the user.
@@ -22,9 +20,17 @@ function create_config_file {
     echo "  Please try again."
     exit_with_error
   fi
-  echo $main_branch_name > $config_path
+  echo $main_branch_name > $config_filename
   echo
   echo "I have created this file with content '$main_branch_name' for you."
+}
+
+
+function update_config_file {
+  echo_header "I have found an old Git Town configuration file: $old_config_filename"
+  echo "I am updating it to the new format: $config_filename"
+  mv $old_config_filename $config_filename
+  exit_with_error
 }
 
 
@@ -34,18 +40,22 @@ function create_config_file {
 #
 # Exits the script if the config file didn't exist.
 function ensure_config_file_exists {
-  if [[ ! -f $config_path ]]; then
-    echo_error_header
-    echo "  Didn't find the $config_filename file."
-    echo
-    create_config_file
+  if [[ ! -f $config_filename ]]; then
+    if [[ -f $old_config_filename ]]; then
+      update_config_file
+    else
+      echo_error_header
+      echo "  Didn't find the $config_filename file."
+      echo
+      create_config_file
+    fi
   fi
 }
 
 
 # Stores the current name branch name in the config file.
 function store_main_branch_name {
-  echo $main_branch_name > $config_path
+  echo $main_branch_name > $config_filename
 }
 
 
