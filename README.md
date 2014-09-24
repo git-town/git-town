@@ -41,7 +41,7 @@ Run the command: `git hack [name of feature branch to create]`
   </tr>
   <tr>
     <td rowspan="3">3.</td>
-    <td rowspan="3">pull updates for the main branch from the repo</td>
+    <td rowspan="3">pull updates for the main branch</td>
     <td rowspan="2" colspan="2" align="center">git fetch</td>
   </tr>
   <tr></tr>
