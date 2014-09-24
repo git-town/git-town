@@ -116,13 +116,13 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>7a.</td>
-    <td>push the feature branch</td>
+    <td>push the feature branch (if we don't have a remote branch yet)</td>
     <td colspan="2" align="center">without remote: git push -u origin feature</td>
   </tr>
   <tr></tr>
   <tr>
     <td>7b.</td>
-    <td>push the feature branch (with remote)</td>
+    <td>push the feature branch (with remote branch)</td>
     <td>git push --force</td>
     <td>git push</td>
   </tr>
