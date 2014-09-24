@@ -244,7 +244,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>6.</td>
-    <td>push the new updated main branch to the repo</td>
+    <td>push the updated main branch</td>
     <td colspan="2" align="center">git push</td>
   </tr>
   <tr>
