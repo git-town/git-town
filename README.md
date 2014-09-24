@@ -239,7 +239,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge the feature branch into the main branch</td>
+    <td>merge feature into main</td>
     <td colspan="2" align="center">git merge --squash feature
   </tr>
   <tr>
