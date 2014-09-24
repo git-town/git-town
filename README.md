@@ -122,7 +122,7 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr></tr>
   <tr>
     <td>7b.</td>
-    <td>with remote branch:<br>push the feature branch</td>
+    <td>push the feature branch (with remote)</td>
     <td>git push --force</td>
     <td>git push</td>
   </tr>
