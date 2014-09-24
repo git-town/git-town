@@ -99,7 +99,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull updates for the main branch</td>
+    <td>pull main branch updates</td>
     <td>git rebase origin/master</td>
     <td>git merge origin/master</td>
   </tr>
