@@ -369,7 +369,7 @@ The merge strategy defines which command Git Town uses when merging feature bran
 ## Develop your own scripts
 
 * run all tests: `cucumber`
-* run a single test: `cucumber -n 'scenario or feature name`
+* run a single test: `cucumber -n 'scenario or feature name'`
 
 
 Some background on the code structure:
