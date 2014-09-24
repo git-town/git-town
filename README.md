@@ -40,8 +40,8 @@ Run the command: `git hack [name of feature branch to create]`
   <tr>
     <td>3.</td>
     <td>pull updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git fetch ;<br>git rebase origin/[branch name]</td>
+    <td>git fetch ;<br>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -79,8 +79,8 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr>
     <td>2.</td>
     <td>synchronize the feature branch with the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git fetch ;<br>git rebase origin/[branch name]</td>
+    <td>git fetch ;<br>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -90,8 +90,8 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr>
     <td>4.</td>
     <td>synchronize the main branch with the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git rebase origin/[remote branch name]</td>
+    <td>git merge origin/[remote branch name]</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -158,8 +158,8 @@ Abort the command when there are conflicts: `git extract --abort`
   <tr>
     <td>3.</td>
     <td>pull the latest updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git fetch ;<br>git rebase origin/[branch name]</td>
+    <td>git fetch ;<br>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -204,8 +204,8 @@ Abort the command when there are conflicts: `git ship --abort`
   <tr>
     <td>2.</td>
     <td>pull updates for the feature branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git fetch ;<br>git rebase origin/[branch name]</td>
+    <td>git fetch ;<br>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -215,8 +215,8 @@ Abort the command when there are conflicts: `git ship --abort`
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>git rebase origin/[branch name]</td>
+    <td>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>5.</td>
