@@ -14,6 +14,8 @@ The parts marked with an asterisk (\*) are not yet implemented. Feedback is welc
 
 Git Town provides the following Git commands.
 
+_Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
+
 
 ### git hack
 
@@ -50,7 +52,7 @@ Run the command: `git hack [name of feature branch to create]`
   <tr>
     <td>4.</td>
     <td>cut a new feature branch off the main branch</td>
-    <td colspan="2" align="center">git checkout -b [feature branch] master</td>
+    <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -87,8 +89,8 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr></tr>
   <tr>
-    <td>git rebase origin/[branch name]</td>
-    <td>git merge origin/[branch name]</td>
+    <td>git rebase origin/feature</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -98,13 +100,13 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch</td>
-    <td>git rebase origin/[remote branch name]</td>
-    <td>git merge origin/[remote branch name]</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>switch to the feature branch</td>
-    <td colspan="2" align="center">git checkout [feature]</td>
+    <td colspan="2" align="center">git checkout feature</td>
   </tr>
   <tr>
     <td>6.</td>
@@ -115,7 +117,7 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr>
     <td>7a.</td>
     <td>without remote branch: push the feature branch</td>
-    <td colspan="2" align="center">git push -u origin [feature]</td>
+    <td colspan="2" align="center">git push -u origin feature</td>
   </tr>
   <tr>
     <td>7b.</td>
@@ -170,8 +172,8 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr></tr>
   <tr>
-    <td>git rebase origin/[branch name]</td>
-    <td>git merge origin/[branch name]</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -180,7 +182,7 @@ Abort the command when there are conflicts: `git extract --abort`
   <tr>
     <td>5.</td>
     <td>cut a new feature branch off main</td>
-    <td colspan="2" align="center">git checkout -b [feature] master</td>
+    <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
     <td>6.</td>
@@ -220,8 +222,8 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr></tr>
   <tr>
-    <td>git rebase origin/[branch name]</td>
-    <td>git merge origin/[branch name]</td>
+    <td>git rebase origin/feature</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -231,13 +233,13 @@ Abort the command when there are conflicts: `git ship --abort`
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch from the repo</td>
-    <td>git rebase origin/[branch name]</td>
-    <td>git merge origin/[branch name]</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>merge the feature branch into the main branch</td>
-    <td colspan="2" align="center">git merge --squash [feature branch]
+    <td colspan="2" align="center">git merge --squash feature
   </tr>
   <tr>
     <td>6.</td>
@@ -247,12 +249,12 @@ Abort the command when there are conflicts: `git ship --abort`
   <tr>
     <td>7.</td>
     <td>delete the feature branch from the local machine</td>
-    <td colspan="2" align="center">git branch -d [feature branch]</td>
+    <td colspan="2" align="center">git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
     <td>delete the feature branch from the remote repo</td>
-    <td colspan="2" align="center">git push origin :[feature branch]
+    <td colspan="2" align="center">git push origin :feature
   </tr>
 </table>
 
