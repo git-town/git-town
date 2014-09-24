@@ -93,17 +93,6 @@ function determine_feature_branch_name {
 }
 
 
-# Determines the name of the 'development' branch in Git.
-#
-# Sets the global variable $main_branch_name with the result.
-#
-# This value is read from a file '.gittownrc' in the
-# working directory.
-function determine_main_branch_name {
-  main_branch_name=`cat $config_filename`
-}
-
-
 # Determines whether there are open changes in Git.
 #
 # Makes the result available in the global variable $has_open_changes.
@@ -272,7 +261,6 @@ function update_feature_branch {
 
 
 
-determine_main_branch_name
 determine_feature_branch_name
 determine_current_branch_name
 determine_open_changes
