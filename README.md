@@ -46,8 +46,8 @@ Run the command: `git hack [name of feature branch to create]`
   </tr>
   <tr></tr>
   <tr>
-    <td>git rebase origin/[branch name]</td>
-    <td>git merge origin/[branch name]</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
