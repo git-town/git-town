@@ -116,7 +116,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>7a.</td>
-    <td>without remote branch:<br>push the feature branch</td>
+    <td>push the feature branch</td>
     <td colspan="2" align="center">git push -u origin feature</td>
   </tr>
   <tr>
@@ -127,7 +127,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>8.</td>
-    <td>restore the stashed away changes</td>
+    <td>restore the stashed changes</td>
     <td colspan="2" align="center">git stash pop</td>
   </tr>
 </table>
