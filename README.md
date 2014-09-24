@@ -187,7 +187,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>6.</td>
-    <td>copy the selected commits into the new branch</td>
+    <td>copy the chosen commits over</td>
     <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
