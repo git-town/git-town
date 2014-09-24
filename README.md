@@ -154,7 +154,7 @@ Abort the command when there are conflicts: `git extract --abort`
   <tr>
     <th colspan="2" align="center">step</th>
     <th width="28%">rebase version</th>
-    <th width="28%">merge version*</th>
+    <th width="27%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
