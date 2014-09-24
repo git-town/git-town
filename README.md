@@ -74,8 +74,8 @@ Abort the command when there are conflicts: `git sync --abort`
 <table>
   <tr>
     <th colspan="2">step</th>
-    <th width="25%">rebase version</th>
-    <th width="25%">merge version*</th>
+    <th width="27%">rebase version</th>
+    <th width="27%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
