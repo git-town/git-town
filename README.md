@@ -387,6 +387,7 @@ Some background on the code structure:
 * always cleans up abort and continue scripts
 * only makes one fetch from the central repo per session
 * specs no longer commit the Git Town configuration file to the repo
+* automatically prunes remote branches when fetching updates
 
 
 ### 0.2.2
