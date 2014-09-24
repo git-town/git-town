@@ -158,7 +158,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>1.</td>
-    <td>optionally stash uncommitted changes away</td>
+    <td>stash uncommitted changes</td>
     <td colspan="2" align="center"> git stash</td>
   </tr>
   <tr>
