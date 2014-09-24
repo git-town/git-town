@@ -165,7 +165,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td rowspan="3">3.</td>
-    <td rowspan="3">pull updates for the main branch from the repo</td>
+    <td rowspan="3">pull updates for the main branch</td>
     <td rowspan="2" colspan="2" align="center">git fetch</td>
   </tr>
   <tr></tr>
@@ -179,12 +179,12 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>5.</td>
-    <td>cut a new feature branch off the main branch</td>
+    <td>cut a new feature branch off main</td>
     <td colspan="2" align="center">git checkout -b [feature] master</td>
   </tr>
   <tr>
     <td>6.</td>
-    <td>cherry-pick the selected commits into the new branch</td>
+    <td>copy the selected commits into the new branch</td>
     <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
