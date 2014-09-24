@@ -38,10 +38,11 @@ Run the command: `git hack [name of feature branch to create]`
     <td colspan="2" align="center">git checkout master</td>
   </tr>
   <tr>
-    <td rowspan="2">3.</td>
-    <td rowspan="2">pull updates for the main branch from the repo</td>
-    <td colspan="2" align="center">git fetch</td>
+    <td rowspan="3">3.</td>
+    <td rowspan="3">pull updates for the main branch from the repo</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
   </tr>
+  <tr></tr>
   <tr>
     <td>git rebase origin/[branch name]</td>
     <td>git merge origin/[branch name]</td>
