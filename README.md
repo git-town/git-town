@@ -209,7 +209,7 @@ Abort the command when there are conflicts: `git ship --abort`
   <tr>
     <th colspan="2" align="center">step</th>
     <th width="29%">rebase version</th>
-    <th width="29%">merge version*</th>
+    <th width="28%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
