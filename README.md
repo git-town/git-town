@@ -81,10 +81,14 @@ Abort the command when there are conflicts: `git sync --abort`
     <td colspan="2" align="center"> git stash</td>
   </tr>
   <tr>
-    <td>2.</td>
-    <td>synchronize the feature branch with the repo</td>
-    <td>git fetch ;<br>git rebase origin/[branch name]</td>
-    <td>git fetch ;<br>git merge origin/[branch name]</td>
+    <td rowspan="3">2.</td>
+    <td rowspan="3">synchronize the feature branch with the repo</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/[branch name]</td>
+    <td>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>3.</td>
