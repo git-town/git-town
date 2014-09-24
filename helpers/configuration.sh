@@ -30,8 +30,4 @@ if [[ -z "$main_branch_name" ]]; then
   store_main_branch_name
   echo
   echo "I have stored the main branch name '$main_branch_name' for you."
-  echo
-  echo "I am stopping right now so that you know about this."
-  echo "Please repeat the last Git Town command to execute it."
-  exit
 fi
