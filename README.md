@@ -214,10 +214,14 @@ Abort the command when there are conflicts: `git ship --abort`
     <td colspan="2" align="center">git status</td>
   </tr>
   <tr>
-    <td>2.</td>
-    <td>pull updates for the feature branch from the repo</td>
-    <td>git fetch ;<br>git rebase origin/[branch name]</td>
-    <td>git fetch ;<br>git merge origin/[branch name]</td>
+    <td rowspan="3">2.</td>
+    <td rowspan="3">pull updates for the feature branch from the repo</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/[branch name]</td>
+    <td>git merge origin/[branch name]</td>
   </tr>
   <tr>
     <td>3.</td>
