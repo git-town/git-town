@@ -108,7 +108,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>6.</td>
-    <td>synchronize the feature branch with the main branch</td>
+    <td>update feature branch from main branch</td>
     <td>git rebase master</td>
     <td>git merge master</td>
   </tr>
@@ -119,7 +119,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>7b.</td>
-    <td>with existing remote branch: push the feature branch</td>
+    <td>with remote branch: push the feature branch</td>
     <td>git push --force</td>
     <td>git push</td>
   </tr>
