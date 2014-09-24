@@ -153,8 +153,8 @@ Abort the command when there are conflicts: `git extract --abort`
 <table>
   <tr>
     <th colspan="2" align="center">step</th>
-    <th>rebase version</th>
-    <th>merge version*</th>
+    <th width="28%">rebase version</th>
+    <th width="28%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
