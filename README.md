@@ -249,12 +249,12 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>7.</td>
-    <td>delete the feature branch from the local machine</td>
+    <td>delete the feature branch from the machine</td>
     <td colspan="2" align="center">git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
-    <td>delete the feature branch from the remote repo</td>
+    <td>delete the feature branch from the repo</td>
     <td colspan="2" align="center">git push origin :feature
   </tr>
 </table>
