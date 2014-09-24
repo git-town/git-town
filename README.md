@@ -82,7 +82,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td rowspan="3">2.</td>
-    <td rowspan="3">pull updates for the feature branch from the repo</td>
+    <td rowspan="3">pull updates for the feature branch</td>
     <td rowspan="2" colspan="2" align="center">git fetch</td>
   </tr>
   <tr></tr>
@@ -97,7 +97,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull updates for the main branch from the repo</td>
+    <td>pull updates for the main branch</td>
     <td>git rebase origin/[remote branch name]</td>
     <td>git merge origin/[remote branch name]</td>
   </tr>
