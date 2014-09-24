@@ -218,7 +218,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td rowspan="3">2.</td>
-    <td rowspan="3">pull updates for the feature branch from the repo</td>
+    <td rowspan="3">pull updates the feature branch</td>
     <td rowspan="2" colspan="2" align="center">git fetch</td>
   </tr>
   <tr></tr>
