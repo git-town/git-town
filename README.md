@@ -51,7 +51,7 @@ Run the command: `git hack [name of feature branch to create]`
   </tr>
   <tr>
     <td>4.</td>
-    <td>cut a new feature branch off the main branch</td>
+    <td>cut the new feature branch</td>
     <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
