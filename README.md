@@ -110,7 +110,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>6.</td>
-    <td>update feature branch from main branch</td>
+    <td>update feature branch</td>
     <td>git rebase master</td>
     <td>git merge master</td>
   </tr>
