@@ -178,7 +178,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>lets the user pick the commits to extract</td>
+    <td>user picks the commits to extract</td>
   </tr>
   <tr>
     <td>5.</td>
