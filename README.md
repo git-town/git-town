@@ -119,6 +119,7 @@ Abort the command when there are conflicts: `git sync --abort`
     <td>push the feature branch</td>
     <td colspan="2" align="center">git push -u origin feature</td>
   </tr>
+  <tr></tr>
   <tr>
     <td>7b.</td>
     <td>with remote branch:<br>push the feature branch</td>
