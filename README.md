@@ -42,11 +42,11 @@ Run the command: `git hack [name of feature branch to create]`
     <td rowspan="2">pull updates for the main branch from the repo</td>
     <td colspan="2" align="center">git fetch</td>
   </tr>
-  <tr></tr>
   <tr>
     <td>git rebase origin/[branch name]</td>
     <td>git merge origin/[branch name]</td>
   </tr>
+  <tr></tr>
   <tr>
     <td>4.</td>
     <td>cut a new feature branch off the main branch</td>
