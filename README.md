@@ -120,7 +120,7 @@ Abort the command when there are conflicts: `git extract --abort`
 <table>
   <tr>
     <td>1.</td>
-    <td>stash uncommitted changes</td>
+    <td>stash away uncommitted changes</td>
     <td> git stash</td>
   </tr>
   <tr>
@@ -131,7 +131,7 @@ Abort the command when there are conflicts: `git extract --abort`
   <tr>
     <td>3.</td>
     <td>pull updates for the main branch</td>
-    <td>git fetch<br>git rebase origin/master</td>
+    <td>git pull</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -139,7 +139,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>5.</td>
-    <td>cut a new feature branch off main</td>
+    <td>cut a new feature branch off the updated main branch</td>
     <td>git checkout -b feature master</td>
   </tr>
   <tr>
