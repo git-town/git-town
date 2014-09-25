@@ -21,7 +21,7 @@ It is configurable, extensible, and provides these commands:
 
 ## Git Commands
 
-Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name.
+Hint: This documentation assumes "master" as the main branch name, and "feature" as the feature branch name.
 
 
 ### git hack
