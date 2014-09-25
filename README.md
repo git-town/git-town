@@ -19,7 +19,7 @@ It is configurable, extensible, and provides these commands:
 * <a href="#git-ship">git ship</a>: merges the current feature branch into the main branch and delete it everywhere
 
 
-## Scripts
+## Git Commands
 
 Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name.
 
