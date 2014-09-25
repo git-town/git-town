@@ -115,8 +115,8 @@ _Extracts commits from a feature branch into a new feature branch._
 
 More background around <a href="http://blog.originate.com/blog/2014/04/19/refactoring_git_branches" target="_blank">Git branch refactoring</a>.
 
-Run the command: `git extract [new branch name]`<br>
-Abort the command when there are conflicts: `git extract --abort`
+* run the command: `git extract [new branch name]`<br>
+* abort the command when there are conflicts: `git extract --abort`
 
 <table>
   <tr>
