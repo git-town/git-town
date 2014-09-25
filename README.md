@@ -9,12 +9,12 @@
 
 ## Scripts
 
-Git Town provides the following Git commands.
+Git Town provides the following Git commands:
 
-* <a href="#git-hack">git hack</a>
-* <a href="#git-sync">git sync</a>
-* <a href="#git-extract">git extract</a>
-* <a href="#git-ship">git ship</a>
+* <a href="#git-hack">git hack</a>: cut a new feature branch from the up to date main branch
+* <a href="#git-sync">git sync</a>: sync a feature branch with the main branch and the repo
+* <a href="#git-extract">git extract</a>: extract commits from a feature branch to a new one
+* <a href="#git-ship">git ship</a>: merge the current feature branch into the main branch and delete it everywhere
 
 _Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
 
