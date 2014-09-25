@@ -3,7 +3,6 @@
 
 Git Town provides a number of additional Git commands that
 automate the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> and others.
-
 It does all the extra updates on each step to keep all branches in sync at all times,
 and is configurable as well as easily hackable.
 
