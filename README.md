@@ -103,7 +103,7 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr>
     <td>8.</td>
     <td>restore the stashed changes</td>
-    <td colspan="2" align="center">git stash pop</td>
+    <td>git stash pop</td>
   </tr>
 </table>
 
