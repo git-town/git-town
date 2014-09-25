@@ -131,7 +131,7 @@ You can call this command safely at any time, many times during the day.
 
 _Extracts commits from a feature branch into a new feature branch._
 
-<u>Scenario</u>:
+Scenario:
 After finishing a bigger feature you realize that this is actually several
 changes in one branch. You want to extract each change into its own feature
 branch.
@@ -160,6 +160,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
   <tr>
     <td>4.</td>
     <td>user picks the commits to extract</td>
+    <td>(nice GUI tool)</td>
   </tr>
   <tr>
     <td>5.</td>
