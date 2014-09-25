@@ -66,7 +66,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>2.</td>
-    <td>pull feature branch updates</td>
+    <td>pull feature branch updates from the repo</td>
     <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull main branch updates</td>
+    <td>pull main branch updates from the repo</td>
     <td>git rebase origin/master</td>
   </tr>
   <tr>
@@ -86,7 +86,7 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>6.</td>
-    <td>update feature branch</td>
+    <td>update the feature branch with the latest changes from main</td>
     <td>git rebase master</td>
   </tr>
   <tr>
@@ -97,7 +97,7 @@ Abort the command when there are conflicts: `git sync --abort`
   <tr></tr>
   <tr>
     <td>7b.</td>
-    <td>push the feature branch (with remote branch)</td>
+    <td>push the feature branch (with existing remote branch)</td>
     <td>git push --force</td>
   </tr>
   <tr>
