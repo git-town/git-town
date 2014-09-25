@@ -11,7 +11,7 @@ and you use a central code repository like [Github](http://github.com).
 
 Git Town goes the extra mile to keep everything in sync at all times,
 thereby minimizing the probability and severity of merge conflicts.
-It is configurable, easily hackable, and provides these commands:
+It is configurable, hackable, and provides these particular commands:
 
 * <a href="#git-hack">git hack</a>: creates a new feature branch
 * <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
