@@ -139,7 +139,7 @@ Abort the command when there are conflicts: `git extract --abort`
   </tr>
   <tr>
     <td>5.</td>
-    <td>cut a new feature branch off the updated main branch</td>
+    <td>cut a new feature branch off the main branch</td>
     <td>git checkout -b feature master</td>
   </tr>
   <tr>
