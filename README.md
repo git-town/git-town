@@ -16,7 +16,7 @@ Git Town provides the following Git commands:
 * <a href="#git-extract">git extract</a>: extract commits from a feature branch to a new one
 * <a href="#git-ship">git ship</a>: merge the current feature branch into the main branch and delete it everywhere
 
-Below are more details.
+Below are more details to those commands.
 Btw, this documentation uses "master" as the main branch name, and "feature" as the feature branch name.
 
 
