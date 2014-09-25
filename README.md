@@ -1,20 +1,21 @@
 ## _Git Automation for Agile Development Teams_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 
-* provides a number of additional Git commands
-* automates the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> (and others)
-* does all the extra updates on each step to keep all branches in sync at all times
-* configurable\* and easily hackable
+Git Town provides a number of additional Git commands that
+automate the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> and others.
 
-
-## Scripts
-
-Git Town provides the following Git commands:
+It does all the extra updates on each step to keep all branches in sync at all times,
+and is configurable as well as easily hackable.
 
 * <a href="#git-hack">git hack</a>: cut a new feature branch from the up to date main branch
 * <a href="#git-sync">git sync</a>: sync a feature branch with the main branch and the repo
 * <a href="#git-extract">git extract</a>: extract commits from a feature branch to a new one
 * <a href="#git-ship">git ship</a>: merge the current feature branch into the main branch and delete it everywhere
+
+
+## Scripts
+
+Git Town provides the following Git commands:
 
 Below are more details to those commands.
 Btw, this documentation uses "master" as the main branch name, and "feature" as the feature branch name.
