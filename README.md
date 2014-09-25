@@ -20,7 +20,6 @@ _Cuts a new feature branch off the main branch. Even if you are right in the mid
 
 Run the command: `git hack [name of feature branch to create]`
 
-<a href="" onclick="alert('hello')">show</a>
 <table>
   <tr>
     <td>1.</td>
