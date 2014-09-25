@@ -32,7 +32,7 @@ Scenario:
 While working on something you realize "Hey, this should be in its own branch."
 No problem, just run `git hack foobar`,
 and a feature branch with name "foobar" is created for you,
-with all open changes copied over to it.
+with all open changes copied over into it.
 
 <table>
   <tr>
@@ -69,7 +69,8 @@ with all open changes copied over to it.
 _Syncronizes the current feature branch with the rest of the world,
 i.e. with its remote branch and the main branch._
 
-This works even when you are right in the middle of coding something.
+This works even when you are right in the middle of coding,
+i.e. with uncommitted changes.
 You can call this command safely at any time, many times during the day.
 
 * run the command: `git sync`<br>
