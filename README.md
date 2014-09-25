@@ -56,7 +56,7 @@ _Syncronizes the current feature branch with the rest of the world, i.e. with it
 This also works when you are right in the middle of something._
 
 Run the command: `git sync`<br>
-Abort the command when there are conflicts: `git sync --abort`
+Abort the command when there are conflicts: `git sync --abort`<br>
 Finish the sync after you have fixed the conflicts: `git sync --continue`
 
 <table>
