@@ -7,7 +7,7 @@ It goes the extra mile for you to keep everything in sync at all times,
 thereby minimizing the chance for merge conflicts.
 It is configurable and easily hackable.
 
-Git Town works best if you have a **main branch** (typically "development" or "master")
+Git Town works best if you have a main branch (typically "development" or "master")
 from which feature branches are cut, and into which they are merged,
 and you use a central code repository like [Github](http://github.com).
 
