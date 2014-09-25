@@ -6,6 +6,9 @@
 * does all the extra updates on each step to keep all branches in sync at all times
 * configurable\* and easily hackable
 
+_Note: This documentation is the driver for the readme-driven development of this tool.
+The parts marked with an asterisk (\*) are not yet implemented. Feedback is welcome!_
+
 
 ## Scripts
 
@@ -22,29 +25,39 @@ Run the command: `git hack [name of feature branch to create]`
 
 <table>
   <tr>
+    <th colspan="2">step</th>
+    <th>rebase version</th>
+    <th>merge version*</th>
+  </tr>
+  <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td>git stash</td>
+    <td colspan="2" align="center">git stash</td>
   </tr>
   <tr>
     <td>2.</td>
     <td>check out the main branch</td>
-    <td>git checkout master</td>
+    <td colspan="2" align="center">git checkout master</td>
   </tr>
   <tr>
-    <td>3.</td>
-    <td>pull updates for the main branch</td>
-    <td>git fetch<br>git rebase origin/master</td>
+    <td rowspan="3">3.</td>
+    <td rowspan="3">pull updates for the main branch</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>cut the new feature branch</td>
-    <td>git checkout -b feature master</td>
+    <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>restore the stashed changes</td>
-    <td>git stash pop</td>
+    <td colspan="2" align="center">git stash pop</td>
   </tr>
 </table>
 
