@@ -30,8 +30,9 @@ _Cuts a new feature branch off the main branch._
 
 Scenario:
 While working on something you realize "Hey, this should be in its own branch."
-No problem, just run `git hack [name of feature branch to create]`,
-and a new branch is created for you, with all open changes copied over to it.
+No problem, just run `git hack foobar`,
+and a feature branch with name "foobar" is created for you,
+with all open changes copied over to it.
 
 <table>
   <tr>
