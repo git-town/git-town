@@ -184,7 +184,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
 
 _Ships a finished feature._
 
-Call this from the feature branch you want to ship.
+Call this from the feature branch that you want to ship.
 
 * run the command: `git ship`<br>
 * abort the command when there are conflicts: `git ship --abort`
