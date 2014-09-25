@@ -325,12 +325,11 @@ The roadmap is developed using readme-driven development <a href="RDD.md">here</
 ### 0.3
 * <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs (you need Ruby 2.x)
 * completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
-* new configuration file name: .gittownrc instead of the old .main_branch_name
+* stores configuration in the Git configuration instead of a dedicated file
 * always cleans up abort and continue scripts
 * only makes one fetch from the central repo per session
-* specs no longer commit the Git Town configuration file to the repo
 * automatically prunes remote branches when fetching updates
-* simpler readme
+* simpler readme, dedicated RDD document
 
 
 ### 0.2.2
