@@ -208,14 +208,6 @@ You have to be on the feature branch that you want to ship._
 </table>
 
 
-### git kill
-Safely deletes a git branch.
-
-* never deletes the main branch
-* if the branch has unmerged commits, asks the user for confirmation\*
-* deletes the given branch from the local machine as well as the repo
-
-
 ## Installation
 
 Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
