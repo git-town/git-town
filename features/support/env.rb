@@ -25,10 +25,6 @@ Before do
 
   # Create the main branch
   run "git checkout -b main master ; git push -u origin main"
-
-  def script_path(operation:, command:)
-    "/tmp/#{operation.gsub ' ', '_'}_#{command}_#{Dir.pwd.gsub '/', '_'}"
-  end
 end
 
 
