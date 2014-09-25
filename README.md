@@ -170,7 +170,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>2.</td>
-    <td>pull the feature branch</td>
+    <td>pull updates for the feature branch</td>
     <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
@@ -180,27 +180,27 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull the main branch</td>
+    <td>pull updates for the main branch</td>
     <td>git rebase origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge the feature branch into main</td>
+    <td>merge the feature branch into the main branch/td>
     <td>git merge --squash feature
   </tr>
   <tr>
     <td>6.</td>
-    <td>push the updated master</td>
+    <td>push the updated main branch</td>
     <td>git push</td>
   </tr>
   <tr>
     <td>7.</td>
-    <td>delete feature locally</td>
+    <td>delete feature branch from the developer machine</td>
     <td>git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
-    <td>delete feature from the repo</td>
+    <td>delete the feature branch from the repo</td>
     <td>git push origin :feature
   </tr>
 </table>
