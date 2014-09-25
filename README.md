@@ -57,6 +57,7 @@ This also works when you are right in the middle of something._
 
 Run the command: `git sync`<br>
 Abort the command when there are conflicts: `git sync --abort`
+Finish the sync after you have fixed the conflicts: `git sync --continue`
 
 <table>
   <tr>
