@@ -8,8 +8,8 @@ thereby minimizing the chance for merge conflicts.
 It is configurable and easily hackable.
 
 Git Town works best if you have a main branch (typically "development" or "master")
-from which feature branches are cut, and into which they are merged,
-and you use a central code repository like [Github](http://github.com).
+from which feature branches are cut and into which they are merged,
+and if you use a central code repository like [Github](http://github.com).
 
 * <a href="#git-hack">git hack</a>: creates a new feature branch
 * <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
