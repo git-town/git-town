@@ -60,58 +60,44 @@ Abort the command when there are conflicts: `git sync --abort`
 
 <table>
   <tr>
-    <th colspan="2">step</th>
-    <th width="28%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td colspan="2" align="center"> git stash</td>
+    <td> git stash</td>
   </tr>
   <tr>
-    <td rowspan="3">2.</td>
-    <td rowspan="3">pull feature branch updates</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/feature</td>
-    <td>git merge origin/feature</td>
+    <td>2.</td>
+    <td>pull feature branch updates</td>
+    <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
     <td>switch to the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>pull main branch updates</td>
     <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>switch to the feature branch</td>
-    <td colspan="2" align="center">git checkout feature</td>
+    <td>git checkout feature</td>
   </tr>
   <tr>
     <td>6.</td>
     <td>update feature branch</td>
     <td>git rebase master</td>
-    <td>git merge master</td>
   </tr>
   <tr>
     <td>7a.</td>
     <td>push the feature branch (if we don't have a remote branch yet)</td>
-    <td colspan="2" align="center">git push -u origin feature</td>
+    <td>git push -u origin feature</td>
   </tr>
-  <tr></tr>
   <tr>
     <td>7b.</td>
     <td>push the feature branch<br>(with remote branch)</td>
     <td>git push --force</td>
-    <td>git push</td>
   </tr>
   <tr>
     <td>8.</td>
