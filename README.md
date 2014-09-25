@@ -14,6 +14,8 @@ The parts marked with an asterisk (\*) are not yet implemented. Feedback is welc
 
 Git Town provides the following Git commands.
 
+_Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
+
 
 ### git hack
 
@@ -38,15 +40,19 @@ Run the command: `git hack [name of feature branch to create]`
     <td colspan="2" align="center">git checkout master</td>
   </tr>
   <tr>
-    <td>3.</td>
-    <td>pull updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td rowspan="3">3.</td>
+    <td rowspan="3">pull updates for the main branch</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
-    <td>cut a new feature branch off the main branch</td>
-    <td colspan="2" align="center">git checkout -b [feature branch] master</td>
+    <td>cut the new feature branch</td>
+    <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -68,8 +74,8 @@ Abort the command when there are conflicts: `git sync --abort`
 <table>
   <tr>
     <th colspan="2">step</th>
-    <th width="20%">rebase version</th>
-    <th width="20%">merge version*</th>
+    <th width="28%">rebase version</th>
+    <th width="28%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
@@ -77,10 +83,14 @@ Abort the command when there are conflicts: `git sync --abort`
     <td colspan="2" align="center"> git stash</td>
   </tr>
   <tr>
-    <td>2.</td>
-    <td>synchronize the feature branch with the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td rowspan="3">2.</td>
+    <td rowspan="3">pull feature branch updates</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/feature</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -89,35 +99,36 @@ Abort the command when there are conflicts: `git sync --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>synchronize the main branch with the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>pull main branch updates</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>switch to the feature branch</td>
-    <td colspan="2" align="center">git checkout [feature]</td>
+    <td colspan="2" align="center">git checkout feature</td>
   </tr>
   <tr>
     <td>6.</td>
-    <td>synchronize the feature branch with the main branch</td>
+    <td>update feature branch</td>
     <td>git rebase master</td>
     <td>git merge master</td>
   </tr>
   <tr>
     <td>7a.</td>
-    <td>without remote branch: push the feature branch</td>
-    <td colspan="2" align="center">git push -u origin [feature]</td>
+    <td>push the feature branch (if we don't have a remote branch yet)</td>
+    <td colspan="2" align="center">git push -u origin feature</td>
   </tr>
+  <tr></tr>
   <tr>
     <td>7b.</td>
-    <td>with existing remote branch: push the feature branch</td>
+    <td>push the feature branch<br>(with remote branch)</td>
     <td>git push --force</td>
     <td>git push</td>
   </tr>
   <tr>
     <td>8.</td>
-    <td>restore the stashed away changes</td>
+    <td>restore the stashed changes</td>
     <td colspan="2" align="center">git stash pop</td>
   </tr>
 </table>
@@ -142,12 +153,12 @@ Abort the command when there are conflicts: `git extract --abort`
 <table>
   <tr>
     <th colspan="2" align="center">step</th>
-    <th>rebase version</th>
-    <th>merge version*</th>
+    <th width="28%">rebase version</th>
+    <th width="28%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
-    <td>optionally stash uncommitted changes away</td>
+    <td>stash uncommitted changes</td>
     <td colspan="2" align="center"> git stash</td>
   </tr>
   <tr>
@@ -156,23 +167,27 @@ Abort the command when there are conflicts: `git extract --abort`
     <td colspan="2" align="center">git checkout master</td>
   </tr>
   <tr>
-    <td>3.</td>
-    <td>pull the latest updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td rowspan="3">3.</td>
+    <td rowspan="3">pull updates for the main branch</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
-    <td>lets the user pick the commits to extract</td>
+    <td>user picks the commits to extract</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>cut a new feature branch off the main branch</td>
-    <td colspan="2" align="center">git checkout -b [feature] master</td>
+    <td>cut a new feature branch off main</td>
+    <td colspan="2" align="center">git checkout -b feature master</td>
   </tr>
   <tr>
     <td>6.</td>
-    <td>cherry-pick the selected commits into the new branch</td>
+    <td>copy the chosen commits over</td>
     <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
@@ -193,8 +208,8 @@ Abort the command when there are conflicts: `git ship --abort`
 <table>
   <tr>
     <th colspan="2" align="center">step</th>
-    <th width="19%">rebase version</th>
-    <th width="19%">merge version*</th>
+    <th width="29%">rebase version</th>
+    <th width="28%">merge version*</th>
   </tr>
   <tr>
     <td>1.</td>
@@ -202,10 +217,14 @@ Abort the command when there are conflicts: `git ship --abort`
     <td colspan="2" align="center">git status</td>
   </tr>
   <tr>
-    <td>2.</td>
-    <td>pull updates for the feature branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td rowspan="3">2.</td>
+    <td rowspan="3">pull the feature branch</td>
+    <td rowspan="2" colspan="2" align="center">git fetch</td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>git rebase origin/feature</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -214,29 +233,29 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull updates for the main branch from the repo</td>
-    <td>git pull --rebase</td>
-    <td>git pull</td>
+    <td>pull the main branch</td>
+    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge the feature branch into the main branch</td>
-    <td colspan="2" align="center">git merge --squash [feature branch]
+    <td>merge feature into main</td>
+    <td colspan="2" align="center">git merge --squash feature
   </tr>
   <tr>
     <td>6.</td>
-    <td>push the new updated main branch to the repo</td>
+    <td>push the updated master</td>
     <td colspan="2" align="center">git push</td>
   </tr>
   <tr>
     <td>7.</td>
-    <td>delete the feature branch from the local machine</td>
-    <td colspan="2" align="center">git branch -d [feature branch]</td>
+    <td>delete feature locally</td>
+    <td colspan="2" align="center">git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
-    <td>delete the feature branch from the remote repo</td>
-    <td colspan="2" align="center">git push origin :[feature branch]
+    <td>delete feature from the repo</td>
+    <td colspan="2" align="center">git push origin :feature
   </tr>
 </table>
 
@@ -380,10 +399,14 @@ Some background on the code structure:
 
 ## Release Notes
 
-### 0.2.3
+### 0.3
 * <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs
 * completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
+* new configuration file name: .gittownrc instead of the old .main_branch_name
 * always cleans up abort and continue scripts
+* only makes one fetch from the central repo per session
+* specs no longer commit the Git Town configuration file to the repo
+* automatically prunes remote branches when fetching updates
 
 
 ### 0.2.2
