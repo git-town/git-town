@@ -260,7 +260,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd [directory of your Git Town clone]
+      cd [directory of your Git Town clone]<br>
       git pull
     </td>
   </tr>
