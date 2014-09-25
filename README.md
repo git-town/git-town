@@ -165,7 +165,7 @@ Abort the command when there are conflicts: `git ship --abort`
 <table>
   <tr>
     <td>1.</td>
-    <td>ensure no uncommitted changes</td>
+    <td>ensure there are no uncommitted changes</td>
     <td>git status</td>
   </tr>
   <tr>
@@ -185,7 +185,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge the feature branch into the main branch/td>
+    <td>merge the feature branch into the main branch</td>
     <td>git merge --squash feature
   </tr>
   <tr>
@@ -195,7 +195,7 @@ Abort the command when there are conflicts: `git ship --abort`
   </tr>
   <tr>
     <td>7.</td>
-    <td>delete feature branch from the developer machine</td>
+    <td>delete the feature branch from the developer machine</td>
     <td>git branch -d feature</td>
   </tr>
   <tr>
