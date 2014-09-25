@@ -292,43 +292,16 @@ other platforms need to install manually.
 
 
 
-## Configuration\*
+## Configuration
 
 Git Town operates under the following assumptions:
 
-* You have a **main branch** (typically "development" or "master") from which feature branches are cut, and into which they are merged. In this documentation we will use "master".
-* You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch\*.
-* You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
+*  You have a **main branch** (typically "development" or "master") from which
+   feature branches are cut, and into which they are merged.
+*  You use a central code repository like [Github](http://github.com).
 
-Each Git Town command comes in a _rebase_ and a _merge_ version.
-Which option is used can be configured through the following options in ".git-town-rc"
-
-
-### Pull Strategy\*
-The pull strategy defines which command Git Town uses when updating a branch from its remote tracking branch.
-
-* __rebase__: always do a `git pull --rebase`, let the user figure out merge conflicts
-* __automatic__: try `git pull --rebase` first. When merge conflicts occur, abort and do a `git pull`
-* __merge__: always do `git pull`
-
-The default value for this setting is _automatic_.
-
-
-### Update Strategy\*
-The update strategy defines which command Git Town uses when updating a feature branch with updates from the main branch.
-
-* __rebase__: do a `git rebase [main branch]`, let the user resolve eventual merge conflicts. This setting should only be used if your feature branches are always private. It results in `git push --force` when pushing the updates back to the remote tracking branch.
-* __automatic__: try a `git rebase [main branch]` first. If merge conflicts occur abort, abort and try a `git merge [branch name]`
-* __merge__: always do `git merge [main branch]`
-
-The default value for this setting is _automatic_.
-
-### Merge Strategy\*
-The merge strategy defines which command Git Town uses when merging feature branches into the main branch.
-
-* __squash__: always do `git merge --squash`
-* __no-ff__ : always do `git merge --no-ff`
-* __normal__: always do `git merge`
+Git Town asks for the main branch name if one isn't set per repository,
+and stores this information in the Git configuration of your project.
 
 
 ## Develop your own scripts
