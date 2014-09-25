@@ -29,7 +29,7 @@ Hint: This documentation assumes "master" as the main branch name, and "feature"
 _Cuts a new feature branch off the main branch._
 
 Scenario:
-While working on something you realize "Hey, this should be in its own branch.
+While working on something you realize "Hey, this should be in its own branch."
 No problem, just run `git hack [name of feature branch to create]`,
 and a new branch is created for you, with all open changes copied over to it.
 
