@@ -14,10 +14,7 @@ is configurable, and easily hackable.
 
 ## Scripts
 
-Git Town provides the following Git commands:
-
-Below are more details to those commands.
-Btw, this documentation uses "master" as the main branch name, and "feature" as the feature branch name.
+Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name.
 
 
 ### git hack
