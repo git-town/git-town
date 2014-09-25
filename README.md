@@ -6,7 +6,7 @@ automate the typical Git operations in <a href="http://scottchacon.com/2011/08/3
 It goes the extra mile for you to keep everything nicely in sync at all times,
 is configurable, and easily hackable.
 
-* <a href="#git-hack">git hack</a>: cuts a new feature branch from the updated main branch
+* <a href="#git-hack">git hack</a>: creates a new feature branch
 * <a href="#git-sync">git sync</a>: sync a feature branch with the main branch and the repo
 * <a href="#git-extract">git extract</a>: extract commits from a feature branch to a new one
 * <a href="#git-ship">git ship</a>: merge the current feature branch into the main branch and delete it everywhere
