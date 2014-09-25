@@ -267,7 +267,7 @@ Git Town operates under the following assumptions:
 * You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
 
 Each Git Town command comes in a _rebase_ and a _merge_ version.
-Which option is used can be configured through the following options in ".git-town-rc"
+Which option is used can be configured.
 
 
 ### Pull Strategy\*
