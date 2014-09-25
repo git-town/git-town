@@ -56,9 +56,10 @@ Run the command: `git hack [name of feature branch to create]`
 ### git sync
 
 _Syncronizes the current feature branch with the rest of the world,
-i.e. with its remote branch and the main branch.
-This also works when you are right in the middle of something,
-i.e. you can call this command safely many times during the day._
+i.e. with its remote branch and the main branch._
+
+This works even when you are right in the middle of coding something.
+You can call this command safely at any time, many times during the day.
 
 * run the command: `git sync`<br>
 * abort the command when there are conflicts: `git sync --abort`<br>
