@@ -164,55 +164,44 @@ Abort the command when there are conflicts: `git ship --abort`
 
 <table>
   <tr>
-    <th colspan="2" align="center">step</th>
-    <th width="29%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
     <td>ensure no uncommitted changes</td>
-    <td colspan="2" align="center">git status</td>
+    <td>git status</td>
   </tr>
   <tr>
-    <td rowspan="3">2.</td>
-    <td rowspan="3">pull the feature branch</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/feature</td>
-    <td>git merge origin/feature</td>
+    <td>2.</td>
+    <td>pull the feature branch</td>
+    <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
     <td>check out the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>pull the main branch</td>
     <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>merge feature into main</td>
-    <td colspan="2" align="center">git merge --squash feature
+    <td>git merge --squash feature
   </tr>
   <tr>
     <td>6.</td>
     <td>push the updated master</td>
-    <td colspan="2" align="center">git push</td>
+    <td>git push</td>
   </tr>
   <tr>
     <td>7.</td>
     <td>delete feature locally</td>
-    <td colspan="2" align="center">git branch -d feature</td>
+    <td>git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
     <td>delete feature from the repo</td>
-    <td colspan="2" align="center">git push origin :feature
+    <td>git push origin :feature
   </tr>
 </table>
 
@@ -364,6 +353,7 @@ Some background on the code structure:
 * only makes one fetch from the central repo per session
 * specs no longer commit the Git Town configuration file to the repo
 * automatically prunes remote branches when fetching updates
+* simpler readme
 
 
 ### 0.2.2
