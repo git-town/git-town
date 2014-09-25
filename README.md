@@ -26,9 +26,12 @@ Hint: This documentation assumes "master" as the main branch name, and "feature"
 
 ### git hack
 
-_Cuts a new feature branch off the main branch. Even if you are right in the middle of something._
+_Cuts a new feature branch off the main branch._
 
-Run the command: `git hack [name of feature branch to create]`
+Scenario:
+While working on something you realize "Hey, this should be in its own branch.
+No problem, just run `git hack [name of feature branch to create]`,
+and a new branch is created for you, with all open changes copied over to it.
 
 <table>
   <tr>
