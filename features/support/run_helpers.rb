@@ -1,4 +1,4 @@
-def run_this command, allow_failures: false, debug: false, input: nil
+def run command, allow_failures: false, debug: false, input: nil
   result = {}
   status = Open4::popen4(command) do |pid, stdin, stdout, stderr|
     stdin.puts input if input

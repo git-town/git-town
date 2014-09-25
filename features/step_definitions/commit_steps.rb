@@ -1,7 +1,7 @@
 Given /^the following commits? exists?$/ do |commits_data|
 
   # Save the current branch in order to restore it later
-  current_branch = run_this("git rev-parse --abbrev-ref HEAD")[:out]
+  current_branch = run("git rev-parse --abbrev-ref HEAD")[:out]
 
   commits_data.hashes.each do |commit_data|
 
@@ -23,7 +23,7 @@ Given /^the following commits? exists?$/ do |commits_data|
     end
 
     # Check out the respective branch
-    run_this "git checkout #{options[:branch]}", allow_failures: true
+    run "git checkout #{options[:branch]}", allow_failures: true
 
     # Create commits
     if options[:commit_location].delete :local
@@ -31,7 +31,7 @@ Given /^the following commits? exists?$/ do |commits_data|
     end
     if options[:commit_location].delete :remote
       IO.write options[:file_name], options[:file_content]
-      run_this "git add #{options[:file_name]} ; git commit -m '#{options[:commit_message]}' ; git push ; git reset --hard HEAD^"
+      run "git add #{options[:file_name]} ; git commit -m '#{options[:commit_message]}' ; git push ; git reset --hard HEAD^"
     end
 
     if options[:commit_location] != []
@@ -40,14 +40,14 @@ Given /^the following commits? exists?$/ do |commits_data|
   end
 
   # Go back to the branch that was checked out initially
-  run_this "git checkout #{current_branch}", allow_failures: true
+  run "git checkout #{current_branch}", allow_failures: true
 end
 
 
 
 
 Then /^my branch and its remote still have (\d+) and (\d+) different commits$/ do |local_count, remote_count|
-  matches = /have (\d+) and (\d+) different commit each/.match(run_this("git status")[:out])
+  matches = /have (\d+) and (\d+) different commit each/.match(run("git status")[:out])
   expect(matches[1]).to eql local_count
   expect(matches[2]).to eql remote_count
 end

@@ -1,6 +1,6 @@
 When /^I successfully finish the rebase by resolving the merge conflict of file "(.*?)"$/ do |file_name|
   IO.write file_name, "resolved content"
-  run_this "git add #{file_name} ; git rebase --continue"
+  run "git add #{file_name} ; git rebase --continue"
 end
 
 

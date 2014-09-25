@@ -1,10 +1,10 @@
 def create_local_commit options
   if options[:branch]
-    run_this "git checkout #{options[:branch]}", allow_failures: true
+    run "git checkout #{options[:branch]}", allow_failures: true
   end
   File.write options[:file_name], options[:file_content]
-  run_this "git add #{options[:file_name]}"
-  run_this "git commit -m '#{options[:commit_message]}'"
+  run "git add #{options[:file_name]}"
+  run "git commit -m '#{options[:commit_message]}'"
 end
 
 
@@ -12,13 +12,13 @@ end
 def actual_commits
 
   # Save the current branch in order to restore it later
-  current_branch = run_this("git rev-parse --abbrev-ref HEAD")[:out]
+  current_branch = run("git rev-parse --abbrev-ref HEAD")[:out]
 
   # Get local commits
   actual_commits = []
   existing_local_branches.each do |local_branch_name|
-    run_this "git checkout #{local_branch_name}", allow_failures: true
-    branch_commits = run_this("git log --oneline").fetch(:out)
+    run "git checkout #{local_branch_name}", allow_failures: true
+    branch_commits = run("git log --oneline").fetch(:out)
                                                   .split("\n")
                                                   .map{|c| { hash: c.slice(0,6),
                                                              message: c.slice(8,500),
@@ -31,7 +31,7 @@ def actual_commits
 
   # Add the affected files to the commits
   actual_commits.each do |commit|
-    commit[:files] = run_this("git diff-tree --no-commit-id --name-only -r #{commit[:hash]}").fetch(:out)
+    commit[:files] = run("git diff-tree --no-commit-id --name-only -r #{commit[:hash]}").fetch(:out)
                                                                                              .split("\n")
   end
 
@@ -39,7 +39,7 @@ def actual_commits
   actual_commits.each{|c| c.delete(:hash)}
 
   # Go back to the branch that was checked out initially
-  run_this "git checkout #{current_branch}", allow_failures: true
+  run "git checkout #{current_branch}", allow_failures: true
 
   actual_commits
 end

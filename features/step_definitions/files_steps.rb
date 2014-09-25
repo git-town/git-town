@@ -9,12 +9,12 @@ end
 
 
 Then /^file "(.*?)" has a merge conflict$/ do |file|
-  run_this("git status | grep 'both added.*#{file}' | wc -l")[:out] == '1'
+  run("git status | grep 'both added.*#{file}' | wc -l")[:out] == '1'
 end
 
 
 Then /^there are no merge conflicts anymore$/ do
-  run_this("git status | grep 'both added' | wc -l")[:out] == '0'
+  run("git status | grep 'both added' | wc -l")[:out] == '0'
 end
 
 
@@ -23,7 +23,7 @@ Then /^(now I|I still) have the following committed files$/ do |_, files_data|
   # Get all files in all branches
   actual_files = []
   existing_local_branches.each do |branch|
-    run_this "git checkout #{branch}"
+    run "git checkout #{branch}"
     existing_files.each do |file|
       if file != "uncommitted"
         actual_files << {branch: branch, name: file, content: IO.read(file)}
@@ -56,13 +56,13 @@ end
 
 
 Then /^I don't have an uncommitted file with name: "(.*?)"$/ do |file_name|
-  actual_files = run_this("git status --porcelain | awk '{print $2}'")[:out].split("\n")
+  actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
   expect(actual_files).to_not include file_name
 end
 
 
 Then /^I (still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"?$/ do |_, expected_name, expected_content|
-  actual_files = run_this("git status --porcelain | awk '{print $2}'")[:out].split("\n")
+  actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
   expect(actual_files).to eql [expected_name]
 
   # Verify the file content

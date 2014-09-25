@@ -1,23 +1,23 @@
 Given /^I am on a feature branch$/ do
-  run_this "git checkout -b feature main"
-  run_this "git push -u origin feature"
+  run "git checkout -b feature main"
+  run "git push -u origin feature"
 end
 
 
 Given /^I am on a local feature branch$/ do
-  run_this "git checkout -b feature main"
+  run "git checkout -b feature main"
 end
 
 
 Given /^I am on the main branch$/ do
-  run_this "git checkout main"
+  run "git checkout main"
 end
 
 
 
 
 When /^I check out the "(.*?)" branch$/ do |branch_name|
-  run_this "git checkout #{branch_name}"
+  run "git checkout #{branch_name}"
 end
 
 
@@ -43,7 +43,7 @@ end
 
 
 Then /^all branches are now synchronized$/ do
-  run_this("git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m") == '0'
+  run("git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m") == '0'
 end
 
 
@@ -52,6 +52,6 @@ Then /^there are no more feature branches$/ do
                         "* main",
                         "remotes/origin/main",
                         'remotes/origin/master' ].sort
-  actual_branches = run_this("git branch -a")[:out].split("\n").map(&:strip).sort
+  actual_branches = run("git branch -a")[:out].split("\n").map(&:strip).sort
   expect(actual_branches).to eql expected_branches
 end

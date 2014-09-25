@@ -1,6 +1,6 @@
 # Returns the name of the branch that is currently checked out
 def current_branch_name
-  run_this("git branch").fetch(:out)
+  run("git branch").fetch(:out)
                         .split("\n")
                         .map(&:strip)
                         .select{|b| b[/^\*/]}
@@ -17,7 +17,7 @@ end
 # * main branch
 # * feature branches ordered alphabetically
 def existing_local_branches
-  actual_branches = run_this("git branch").fetch(:out)
+  actual_branches = run("git branch").fetch(:out)
                                           .split("\n")
                                           .map(&:strip)
                                           .map{|s| s.sub('* ', '')}
@@ -29,5 +29,5 @@ end
 
 
 def remote_branch_exists branch_name
-  run_this("git branch -a | grep remotes/origin/#{branch_name} | wc -l")[:out] != '0'
+  run("git branch -a | grep remotes/origin/#{branch_name} | wc -l")[:out] != '0'
 end
