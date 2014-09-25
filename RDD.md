@@ -296,9 +296,3 @@ The merge strategy defines which command Git Town uses when merging feature bran
 * __no-ff__ : always do `git merge --no-ff`
 * __normal__: always do `git merge`
 
-
-## Develop your own scripts
-
-* run all tests: `cucumber`
-* run a single test: `cucumber -n 'scenario or feature name'`
-
