@@ -17,7 +17,9 @@ Before do
 
   # Create the config file
   Dir.chdir '/tmp/git_town_specs'
-  File.write '.gittownrc', 'main'
+  run_this 'git config git-town.main-branch-name main'
+
+  # Create the master branch
   File.write '.gitignore', '.gittownrc'
   run_this "git add .gitignore ; git commit -m 'Initial commit' ; git push -u origin master"
 
