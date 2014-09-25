@@ -108,13 +108,6 @@ Abort the command when there are conflicts: `git sync --abort`
 </table>
 
 
-### git sync --all\*
-
-_Synchronizes all branches on the local machine with the rest of the world._
-
-* does a `git sync` on each feature branch that exists on the local machine
-
-
 ### git extract
 
 _Extracts commits from a feature branch into a new feature branch._
@@ -126,29 +119,19 @@ Abort the command when there are conflicts: `git extract --abort`
 
 <table>
   <tr>
-    <th colspan="2" align="center">step</th>
-    <th width="28%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
     <td>stash uncommitted changes</td>
-    <td colspan="2" align="center"> git stash</td>
+    <td> git stash</td>
   </tr>
   <tr>
     <td>2.</td>
     <td>switch to the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
-    <td rowspan="3">3.</td>
-    <td rowspan="3">pull updates for the main branch</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
+    <td>3.</td>
+    <td>pull updates for the main branch</td>
+    <td>git fetch<br>git rebase origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -157,17 +140,17 @@ Abort the command when there are conflicts: `git extract --abort`
   <tr>
     <td>5.</td>
     <td>cut a new feature branch off main</td>
-    <td colspan="2" align="center">git checkout -b feature master</td>
+    <td>git checkout -b feature master</td>
   </tr>
   <tr>
     <td>6.</td>
     <td>copy the chosen commits over</td>
-    <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
+    <td>git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
     <td>7.</td>
     <td>restore the stashed away changes</td>
-    <td colspan="2" align="center">git stash pop</td>
+    <td>git stash pop</td>
   </tr>
 </table>
 
