@@ -131,7 +131,7 @@ You can call this command safely at any time, many times during the day.
 
 _Extracts commits from a feature branch into a new feature branch._
 
-Scenario:
+<u>Scenario</u>:
 After finishing a bigger feature you realize that this is actually several
 changes in one branch. You want to extract each change into its own feature
 branch.
