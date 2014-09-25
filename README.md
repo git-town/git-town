@@ -12,6 +12,9 @@
 Git Town provides the following Git commands.
 
 * <a href="#git-hack">git hack</a>
+* <a href="#git-sync">git sync</a>
+* <a href="#git-extract">git extract</a>
+* <a href="#git-ship">git ship</a>
 
 _Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
 
