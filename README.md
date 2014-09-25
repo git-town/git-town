@@ -3,8 +3,8 @@
 
 Git Town provides a number of additional Git commands that
 automate the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> and others.
-It does all the extra updates on each step to keep all branches in sync at all times,
-and is configurable as well as easily hackable.
+It goes the extra mile for you to keep everything nicely in sync at all times,
+is configurable and easily hackable.
 
 * <a href="#git-hack">git hack</a>: cut a new feature branch from the up to date main branch
 * <a href="#git-sync">git sync</a>: sync a feature branch with the main branch and the repo
