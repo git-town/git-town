@@ -3,8 +3,9 @@
 
 Git Town provides a number of additional Git commands that
 automate the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> and others.
-It goes the extra mile for you to keep everything nicely in sync at all times,
-is configurable, and easily hackable.
+It goes the extra mile for you to keep everything in sync at all times,
+thereby minimizing the chance for merge conflicts.
+It is configurable and easily hackable.
 
 Git Town works best if you have a **main branch** (typically "development" or "master")
 from which feature branches are cut, and into which they are merged,
