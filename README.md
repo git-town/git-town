@@ -165,7 +165,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
   <tr>
     <td>5.</td>
     <td>cut a new feature branch off the main branch</td>
-    <td>git checkout -b feature master</td>
+    <td>git checkout -b new_feature master</td>
   </tr>
   <tr>
     <td>6.</td>
