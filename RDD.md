@@ -1,18 +1,6 @@
-## _Git Automation for Agile Development Teams_
-<a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
+This documentation is the driver for the readme-driven development of this tool.
+The parts marked with an asterisk (\*) are not yet implemented. Feedback is welcome!
 
-* provides a number of additional Git commands
-* automates the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> (and others)
-* does all the extra updates on each step to keep all branches in sync at all times
-* configurable\* and easily hackable
-
-_Note: This documentation is the driver for the readme-driven development of this tool.
-The parts marked with an asterisk (\*) are not yet implemented. Feedback is welcome!_
-
-
-## Scripts
-
-Git Town provides the following Git commands.
 
 _Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
 
@@ -268,82 +256,6 @@ Safely deletes a git branch.
 * deletes the given branch from the local machine as well as the repo
 
 
-## Installation
-
-Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
-OS X, Linux, BSD, and even Windows with Cygwin or something similar.
-Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
-other platforms need to install manually.
-
-<table>
-  <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
-  </tr>
-  <tr>
-    <td>
-      brew tap Originate/gittown<br>
-      brew install git-town
-    </td>
-    <td>
-      clone the repo to your machine<br>
-      add the folder to your path
-    </td>
-  </tr>
-</table>
-
-
-#### Updating
-
-<table>
-  <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
-  </tr>
-  <tr>
-    <td>
-      brew update<br>
-      brew upgrade git-town
-    </td>
-    <td>
-      cd [directory of your Git Town clone]
-      git pull
-    </td>
-  </tr>
-</table>
-
-
-#### Uninstalling
-
-<table>
-  <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
-  </tr>
-  <tr>
-    <td>
-      brew uninstall git-town<br>
-      brew untap Originate/gittown
-    </td>
-    <td>
-      remove repo from your machine<br>
-      remove folder from path
-    </td>
-  </tr>
-</table>
-
 
 
 ## Configuration\*
@@ -390,49 +302,3 @@ The merge strategy defines which command Git Town uses when merging feature bran
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario or feature name'`
 
-
-Some background on the code structure:
-* Due to limitations of Bash Script, the functions take normal arguments, and return their result as global variables.
-* Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
-
-
-
-## Release Notes
-
-### 0.3
-* <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs
-* completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
-* new configuration file name: .gittownrc instead of the old .main_branch_name
-* always cleans up abort and continue scripts
-* only makes one fetch from the central repo per session
-* specs no longer commit the Git Town configuration file to the repo
-* automatically prunes remote branches when fetching updates
-
-
-### 0.2.2
-* fixes "unary" error messages
-* lots of output and documentation improvements
-
-
-### 0.2.1
-* better terminal output
-* Travis CI improvements
-* better documentation
-
-### 0.2
-* displays the duration of specs
-* only pulls the main branch if it has a remote
-* --abort options to abort failed Git Town operations
-* --continue options to continue some Git Town operations after fixing the underlying issues
-* can be installed through Homebrew
-* colored test output
-* display summary after tests
-* exit with proper status codes
-* better documentation
-
-
-### 0.1
-* git hack, git sync, git extract, git ship, git kill
-* basic test framework
-* Travis CI integration
-* self-hosting: uses Git Town for Git Town development
