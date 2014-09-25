@@ -11,6 +11,8 @@
 
 Git Town provides the following Git commands.
 
+* <a href="#git-hack">git hack</a>
+
 _Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
 
 
