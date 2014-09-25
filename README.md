@@ -160,7 +160,9 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
 
 _Ships a finished feature._
 
-* when on the feature branch to ship, run the command: `git ship`<br>
+You have to be on the feature branch to ship.
+
+* running the command: `git ship`<br>
 * abort the command when there are conflicts: `git ship --abort`
 
 <table>
