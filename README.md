@@ -10,7 +10,7 @@ from which feature branches are cut and into which they are merged,
 and you use a central code repository like [Github](http://github.com).
 
 Git Town goes the extra mile to keep everything in sync at all times,
-thereby minimizing the chance for merge conflicts.
+thereby minimizing the probability and severity of merge conflicts.
 It is configurable, easily hackable, and provides these commands:
 
 * <a href="#git-hack">git hack</a>: creates a new feature branch
