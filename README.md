@@ -6,6 +6,10 @@ automate the typical Git operations in <a href="http://scottchacon.com/2011/08/3
 It goes the extra mile for you to keep everything nicely in sync at all times,
 is configurable, and easily hackable.
 
+Git Town works best if you have a **main branch** (typically "development" or "master")
+from which feature branches are cut, and into which they are merged,
+and you use a central code repository like [Github](http://github.com).
+
 * <a href="#git-hack">git hack</a>: creates a new feature branch
 * <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
 * <a href="#git-extract">git extract</a>: extracts commits from a feature branch into a new one
@@ -293,12 +297,6 @@ other platforms need to install manually.
 
 
 ## Configuration
-
-Git Town operates under the following assumptions:
-
-*  You have a **main branch** (typically "development" or "master") from which
-   feature branches are cut, and into which they are merged.
-*  You use a central code repository like [Github](http://github.com).
 
 Git Town asks for the main branch name if one isn't set per repository,
 and stores this information in the Git configuration of your project.
