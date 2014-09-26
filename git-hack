@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 echo_intro "CREATING A NEW FEATURE BRANCH IN GIT"
