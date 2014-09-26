@@ -331,4 +331,4 @@ Some background on the code structure:
 ## Roadmap
 
 The roadmap is developed using readme-driven development <a href="RDD.md">here</a>.
-
+Also check out the <a href="release-notes.md">release notes</a>.
