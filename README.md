@@ -286,7 +286,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td colspan="2">
-      Installation
+      Install
     </td>
   </tr>
   <tr>
@@ -301,7 +301,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td colspan="2">
-      Updating
+      Update
     </td>
   </tr>
   <tr>
@@ -316,7 +316,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td colspan="2">
-      Uninstalling
+      Uninstall
     </td>
   </tr>
   <tr>
