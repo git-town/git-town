@@ -277,12 +277,17 @@ other platforms need to install manually.
 
 <table>
   <tr>
-    <th>
+    <th width="300px">
       Using Homebrew
     </th>
-    <th>
+    <th width="300px">
       Manually
     </th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      Installation
+    </td>
   </tr>
   <tr>
     <td>
@@ -294,19 +299,10 @@ other platforms need to install manually.
       add the folder to your path
     </td>
   </tr>
-</table>
-
-
-#### Updating
-
-<table>
   <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
+    <td colspan="2">
+      Updating
+    </td>
   </tr>
   <tr>
     <td>
@@ -314,23 +310,14 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd [directory of your Git Town clone]
+      cd [directory of your Git Town clone]<br>
       git pull
     </td>
   </tr>
-</table>
-
-
-#### Uninstalling
-
-<table>
   <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
+    <td colspan="2">
+      Uninstalling
+    </td>
   </tr>
   <tr>
     <td>
