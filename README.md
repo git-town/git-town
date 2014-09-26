@@ -1,63 +1,64 @@
 ## _Git Automation for Agile Development Teams_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 
-* provides a number of additional Git commands
-* automates the typical Git operations in <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a> (and others)
-* does all the extra updates on each step to keep all branches in sync at all times
-* configurable\* and easily hackable
+Git Town provides a number of additional Git commands that
+automate the typical high-level operations in
+<a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a>
+and others.
+It is designed for workflows that have a main branch (typically "development" or "master")
+from which feature branches are cut and into which they are merged,
+and assumes you use a central code repository like [Github](http://github.com).
 
-_Note: This documentation is the driver for the readme-driven development of this tool.
-The parts marked with an asterisk (\*) are not yet implemented. Feedback is welcome!_
+Git Town goes the extra mile to keep everything in sync at all times,
+thereby minimizing the probability and severity of merge conflicts.
+It is configurable, extensible, and provides these commands:
+
+* <a href="#git-hack">git hack</a>: creates a new feature branch
+* <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
+* <a href="#git-extract">git extract</a>: extracts commits from a feature branch into a new one
+* <a href="#git-ship">git ship</a>: merges the current feature branch into the main branch and delete it everywhere
 
 
-## Scripts
+## Git Commands
 
-Git Town provides the following Git commands.
-
-_Hint: This documentation uses "master" as the main branch name, and "feature" as the feature branch name._
+Hint: This documentation assumes "master" as the main branch name, and "feature" as the feature branch name.
 
 
 ### git hack
 
-_Cuts a new feature branch off the main branch. Even if you are right in the middle of something._
+_Cuts a new feature branch off the main branch._
 
-Run the command: `git hack [name of feature branch to create]`
+Scenario:
+While working on something you realize "Hey, this should be in its own branch."
+No problem, just run `git hack foobar`,
+and a feature branch with name "foobar" is created for you,
+with all open changes copied over into it.
 
 <table>
   <tr>
-    <th colspan="2">step</th>
-    <th>rebase version</th>
-    <th>merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td colspan="2" align="center">git stash</td>
+    <td>git stash</td>
   </tr>
   <tr>
     <td>2.</td>
     <td>check out the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
-    <td rowspan="3">3.</td>
-    <td rowspan="3">pull updates for the main branch</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
+    <td>3.</td>
+    <td>pull updates for the main branch</td>
+    <td>git pull</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>cut the new feature branch</td>
-    <td colspan="2" align="center">git checkout -b feature master</td>
+    <td>git checkout -b feature master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>restore the stashed changes</td>
-    <td colspan="2" align="center">git stash pop</td>
+    <td>git stash pop</td>
   </tr>
 </table>
 
@@ -65,135 +66,116 @@ Run the command: `git hack [name of feature branch to create]`
 
 ### git sync
 
-_Syncronizes the current feature branch with the rest of the world, i.e. with its remote branch and the main branch.
-This also works when you are right in the middle of something._
+_Syncronizes the current feature branch with the rest of the world,
+i.e. with its remote branch and the main branch._
 
-Run the command: `git sync`<br>
-Abort the command when there are conflicts: `git sync --abort`
+This works even when you are right in the middle of coding,
+i.e. with uncommitted changes.
+You can call this command safely at any time, many times during the day.
+
+* run the command: `git sync`<br>
+* abort the command when there are conflicts: `git sync --abort`<br>
+* finish the sync after you have fixed the conflicts: `git sync --continue`
 
 <table>
   <tr>
-    <th colspan="2">step</th>
-    <th width="28%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td colspan="2" align="center"> git stash</td>
+    <td> git stash</td>
   </tr>
   <tr>
-    <td rowspan="3">2.</td>
-    <td rowspan="3">pull feature branch updates</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/feature</td>
-    <td>git merge origin/feature</td>
+    <td>2.</td>
+    <td>pull feature branch updates from the repo</td>
+    <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
     <td>switch to the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull main branch updates</td>
+    <td>pull main branch updates from the repo</td>
     <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>switch to the feature branch</td>
-    <td colspan="2" align="center">git checkout feature</td>
+    <td>git checkout feature</td>
   </tr>
   <tr>
     <td>6.</td>
-    <td>update feature branch</td>
+    <td>update the feature branch with the latest changes from main</td>
     <td>git rebase master</td>
-    <td>git merge master</td>
   </tr>
   <tr>
     <td>7a.</td>
     <td>push the feature branch (if we don't have a remote branch yet)</td>
-    <td colspan="2" align="center">git push -u origin feature</td>
+    <td>git push -u origin feature</td>
   </tr>
   <tr></tr>
   <tr>
     <td>7b.</td>
-    <td>push the feature branch<br>(with remote branch)</td>
+    <td>push the feature branch (with existing remote branch)</td>
     <td>git push --force</td>
-    <td>git push</td>
   </tr>
   <tr>
     <td>8.</td>
     <td>restore the stashed changes</td>
-    <td colspan="2" align="center">git stash pop</td>
+    <td>git stash pop</td>
   </tr>
 </table>
-
-
-### git sync --all\*
-
-_Synchronizes all branches on the local machine with the rest of the world._
-
-* does a `git sync` on each feature branch that exists on the local machine
 
 
 ### git extract
 
 _Extracts commits from a feature branch into a new feature branch._
 
+Scenario:
+After finishing a bigger feature you realize that this is actually several
+changes in one branch. You want to extract each change into its own feature
+branch.
+
 More background around <a href="http://blog.originate.com/blog/2014/04/19/refactoring_git_branches" target="_blank">Git branch refactoring</a>.
 
-Run the command: `git extract [new branch name]`<br>
-Abort the command when there are conflicts: `git extract --abort`
+* run the command: `git extract [new branch name]`<br>
+* abort the command when there are conflicts: `git extract --abort`
 
 <table>
   <tr>
-    <th colspan="2" align="center">step</th>
-    <th width="28%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
-    <td>stash uncommitted changes</td>
-    <td colspan="2" align="center"> git stash</td>
+    <td>stash away uncommitted changes</td>
+    <td> git stash</td>
   </tr>
   <tr>
     <td>2.</td>
     <td>switch to the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
-    <td rowspan="3">3.</td>
-    <td rowspan="3">pull updates for the main branch</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
+    <td>3.</td>
+    <td>pull updates for the main branch</td>
+    <td>git pull</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>user picks the commits to extract</td>
+    <td>(nice GUI tool)</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>cut a new feature branch off main</td>
-    <td colspan="2" align="center">git checkout -b feature master</td>
+    <td>cut a new feature branch off the main branch</td>
+    <td>git checkout -b new_feature master</td>
   </tr>
   <tr>
     <td>6.</td>
-    <td>copy the chosen commits over</td>
-    <td colspan="2" align="center">git cherry-pick [SHA1 of the commits]
+    <td>copy the chosen commits to the feature branch</td>
+    <td>git cherry-pick [SHA1 of the commits]
   </tr>
   <tr>
     <td>7.</td>
     <td>restore the stashed away changes</td>
-    <td colspan="2" align="center">git stash pop</td>
+    <td>git stash pop</td>
   </tr>
 </table>
 
@@ -202,70 +184,53 @@ Abort the command when there are conflicts: `git extract --abort`
 
 _Ships a finished feature._
 
-When on the feature branch to ship, run the command: `git ship`<br>
-Abort the command when there are conflicts: `git ship --abort`
+Call this from the feature branch that you want to ship.
+
+* run the command: `git ship`<br>
+* abort the command when there are conflicts: `git ship --abort`
 
 <table>
   <tr>
-    <th colspan="2" align="center">step</th>
-    <th width="29%">rebase version</th>
-    <th width="28%">merge version*</th>
-  </tr>
-  <tr>
     <td>1.</td>
-    <td>ensure no uncommitted changes</td>
-    <td colspan="2" align="center">git status</td>
+    <td>ensure there are no uncommitted changes</td>
+    <td>git status</td>
   </tr>
   <tr>
-    <td rowspan="3">2.</td>
-    <td rowspan="3">pull the feature branch</td>
-    <td rowspan="2" colspan="2" align="center">git fetch</td>
-  </tr>
-  <tr></tr>
-  <tr>
-    <td>git rebase origin/feature</td>
-    <td>git merge origin/feature</td>
+    <td>2.</td>
+    <td>pull updates for the feature branch</td>
+    <td>git fetch<br>git rebase origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
     <td>check out the main branch</td>
-    <td colspan="2" align="center">git checkout master</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
     <td>4.</td>
-    <td>pull the main branch</td>
+    <td>pull updates for the main branch</td>
     <td>git rebase origin/master</td>
-    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge feature into main</td>
-    <td colspan="2" align="center">git merge --squash feature
+    <td>merge the feature branch into the main branch</td>
+    <td>git merge --squash feature
   </tr>
   <tr>
     <td>6.</td>
-    <td>push the updated master</td>
-    <td colspan="2" align="center">git push</td>
+    <td>push the updated main branch</td>
+    <td>git push</td>
   </tr>
   <tr>
     <td>7.</td>
-    <td>delete feature locally</td>
-    <td colspan="2" align="center">git branch -d feature</td>
+    <td>delete the feature branch from the developer machine</td>
+    <td>git branch -d feature</td>
   </tr>
   <tr>
     <td>8.</td>
-    <td>delete feature from the repo</td>
-    <td colspan="2" align="center">git push origin :feature
+    <td>delete the feature branch from the repo</td>
+    <td>git push origin :feature
   </tr>
 </table>
-
-
-### git kill
-Safely deletes a git branch.
-
-* never deletes the main branch
-* if the branch has unmerged commits, asks the user for confirmation\*
-* deletes the given branch from the local machine as well as the repo
 
 
 ## Installation
@@ -314,7 +279,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd [directory of your Git Town clone]
+      cd [directory of your Git Town clone]<br>
       git pull
     </td>
   </tr>
@@ -346,43 +311,10 @@ other platforms need to install manually.
 
 
 
-## Configuration\*
+## Configuration
 
-Git Town operates under the following assumptions:
-
-* You have a **main branch** (typically "development" or "master") from which feature branches are cut, and into which they are merged. In this documentation we will use "master".
-* You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch\*.
-* You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
-
-Each Git Town command comes in a _rebase_ and a _merge_ version.
-Which option is used can be configured through the following options in ".git-town-rc"
-
-
-### Pull Strategy\*
-The pull strategy defines which command Git Town uses when updating a branch from its remote tracking branch.
-
-* __rebase__: always do a `git pull --rebase`, let the user figure out merge conflicts
-* __automatic__: try `git pull --rebase` first. When merge conflicts occur, abort and do a `git pull`
-* __merge__: always do `git pull`
-
-The default value for this setting is _automatic_.
-
-
-### Update Strategy\*
-The update strategy defines which command Git Town uses when updating a feature branch with updates from the main branch.
-
-* __rebase__: do a `git rebase [main branch]`, let the user resolve eventual merge conflicts. This setting should only be used if your feature branches are always private. It results in `git push --force` when pushing the updates back to the remote tracking branch.
-* __automatic__: try a `git rebase [main branch]` first. If merge conflicts occur abort, abort and try a `git merge [branch name]`
-* __merge__: always do `git merge [main branch]`
-
-The default value for this setting is _automatic_.
-
-### Merge Strategy\*
-The merge strategy defines which command Git Town uses when merging feature branches into the main branch.
-
-* __squash__: always do `git merge --squash`
-* __no-ff__ : always do `git merge --no-ff`
-* __normal__: always do `git merge`
+Git Town asks for the main branch name if one isn't set per repository,
+and stores this information in the Git configuration of your project.
 
 
 ## Develop your own scripts
@@ -396,17 +328,21 @@ Some background on the code structure:
 * Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
 
 
+## Roadmap
+
+The roadmap is developed using readme-driven development <a href="RDD.md">here</a>.
+
 
 ## Release Notes
 
 ### 0.3
-* <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs
+* <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs (you need Ruby 2.x)
 * completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
-* new configuration file name: .gittownrc instead of the old .main_branch_name
+* stores configuration in the Git configuration instead of a dedicated file
 * always cleans up abort and continue scripts
 * only makes one fetch from the central repo per session
-* specs no longer commit the Git Town configuration file to the repo
 * automatically prunes remote branches when fetching updates
+* simpler readme, dedicated RDD document
 
 
 ### 0.2.2
