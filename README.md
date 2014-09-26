@@ -242,12 +242,17 @@ other platforms need to install manually.
 
 <table>
   <tr>
-    <th>
+    <th width="300px">
       Using Homebrew
     </th>
-    <th>
+    <th width="300px">
       Manually
     </th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      Install
+    </td>
   </tr>
   <tr>
     <td>
@@ -259,19 +264,10 @@ other platforms need to install manually.
       add the folder to your path
     </td>
   </tr>
-</table>
-
-
-#### Updating
-
-<table>
   <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
+    <td colspan="2">
+      Update
+    </td>
   </tr>
   <tr>
     <td>
@@ -283,19 +279,10 @@ other platforms need to install manually.
       git pull
     </td>
   </tr>
-</table>
-
-
-#### Uninstalling
-
-<table>
   <tr>
-    <th>
-      Using Homebrew
-    </th>
-    <th>
-      Manually
-    </th>
+    <td colspan="2">
+      Uninstall
+    </td>
   </tr>
   <tr>
     <td>
