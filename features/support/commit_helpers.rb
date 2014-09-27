@@ -1,7 +1,5 @@
 def create_local_commit options
-  if options[:branch]
-    run "git checkout #{options[:branch]}", allow_failures: true
-  end
+  run "git checkout #{options[:branch]}"
   File.write options[:file_name], options[:file_content]
   run "git add #{options[:file_name]}"
   run "git commit -m '#{options[:commit_message]}'"

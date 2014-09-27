@@ -6,29 +6,28 @@ require 'rspec'
 IGNORED_FILES = %w[ tags ]
 
 Before do
-  # Enter the test repository
-  FileUtils.rm_r '/tmp/git_town_specs_remote', force: true
-  Dir.mkdir '/tmp/git_town_specs_remote'
-  run "git init --bare /tmp/git_town_specs_remote"
+  Dir.chdir repositiory_base_path
 
-  FileUtils.rm_r '/tmp/git_town_specs', force: true
-  Dir.chdir '/tmp'
-  run 'git clone git_town_specs_remote git_town_specs'
+  create_repository remote_repository_path
 
-  # Create the config file
-  Dir.chdir '/tmp/git_town_specs'
-  run 'git config git-town.main-branch-name main'
+  clone_repository remote_repository_path, local_repository_path do
+    File.write '.gitignore', ''
+    run 'git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
+    run 'git checkout -b main master ; git push -u origin main'
+    run 'git config git-town.main-branch-name main'
+  end
 
-  # Create the master branch
-  File.write '.gitignore', '.gittownrc'
-  run "git add .gitignore ; git commit -m 'Initial commit' ; git push -u origin master"
+  clone_repository remote_repository_path, coworker_repository_path do
+    run 'git checkout main'
+  end
 
-  # Create the main branch
-  run "git checkout -b main master ; git push -u origin main"
+  Dir.chdir local_repository_path
 end
 
 
 at_exit do
-  FileUtils.rm_r '/tmp/git_town_specs_remote', force: true
-  FileUtils.rm_r '/tmp/git_town_specs', force: true
+  Dir.chdir repositiory_base_path
+  delete_repository remote_repository_path
+  delete_repository local_repository_path
+  delete_repository coworker_repository_path
 end
