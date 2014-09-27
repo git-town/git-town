@@ -3,8 +3,8 @@ Feature: Git Ship
   Scenario: local feature branch
     Given I am on a local feature branch
     And the following commit exists
-      | location | branch  | file name    | file content    |
-      | local    | feature | feature_file | feature content |
+      | branch  | location | file name    | file content    |
+      | feature | local    | feature_file | feature content |
     When I run `git ship 'feature_done'`
     Then I end up on the "main" branch
     And there are no more feature branches
@@ -20,8 +20,8 @@ Feature: Git Ship
   Scenario: feature branch with non-pulled updates in the repo
     Given I am on a remote feature branch
     And the following commit exists
-      | location | branch  | file name    | file content    |
-      | remote   | feature | feature_file | feature content |
+      | branch  | location | file name    | file content    |
+      | feature | remote   | feature_file | feature content |
     When I run `git ship 'feature_done'`
     Then I end up on the "main" branch
     And there are no more feature branches
@@ -56,9 +56,9 @@ Feature: Git Ship
   Scenario: conflict after pulling the feature branch
     Given I am on a remote feature branch
     And the following commits exist
-      | location | branch  | message                   | file name        | file content   |
-      | remote   | feature | conflicting remote commit | conflicting_file | remote content |
-      | local    | feature | conflicting local commit  | conflicting_file | local content  |
+      | branch  | location | message                   | file name        | file content   |
+      | feature | remote   | conflicting remote commit | conflicting_file | remote content |
+      | feature | local    | conflicting local commit  | conflicting_file | local content  |
     When I run `git ship 'feature_done'` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE FEATURE BRANCH"
     And my repo has a rebase in progress
