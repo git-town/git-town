@@ -25,10 +25,10 @@ def clone_repository remote_path, path
   run "git clone #{remote_path} #{path}"
 end
 
-def in_repository path, &block
+def in_repository path
   cwd = Dir.pwd
   Dir.chdir path
-  yield if block_given?
+  yield
   Dir.chdir cwd
 end
 
