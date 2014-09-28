@@ -10,14 +10,18 @@ Before do
 
   create_repository remote_repository
 
-  clone_repository remote_repository, local_repository do
+  clone_repository remote_repository, local_repository
+
+  in_repository local_repository do
     File.write '.gitignore', ''
     run 'git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
     run 'git checkout -b main master ; git push -u origin main'
     run 'git config git-town.main-branch-name main'
   end
 
-  clone_repository remote_repository, coworker_repository do
+  clone_repository remote_repository, coworker_repository
+
+  in_repository coworker_repository do
     run 'git checkout main'
   end
 

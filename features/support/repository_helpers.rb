@@ -14,17 +14,15 @@ def local_repository
   "#{repositiory_base}/git_town_specs_local"
 end
 
-def create_repository path, &block
+def create_repository path
   delete_repository path
   Dir.mkdir path
   run "git init --bare #{path}"
-  in_repository path, &block
 end
 
-def clone_repository remote_path, path, &block
+def clone_repository remote_path, path
   delete_repository path
   run "git clone #{remote_path} #{path}"
-  in_repository path, &block
 end
 
 def in_repository path, &block
