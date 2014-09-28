@@ -1,5 +1,5 @@
 Given /^I am on a remote feature branch$/ do
-  in_repository coworker_repository_path do
+  in_repository coworker_repository do
     run 'git checkout -b feature main'
     run 'git push -u origin feature'
   end

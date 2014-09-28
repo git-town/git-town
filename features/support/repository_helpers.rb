@@ -1,17 +1,17 @@
-def repositiory_base_path
+def repositiory_base
   '/tmp'
 end
 
-def remote_repository_path
-  "#{repositiory_base_path}/git_town_specs_remote"
+def remote_repository
+  "#{repositiory_base}/git_town_specs_remote"
 end
 
-def coworker_repository_path
-  "#{repositiory_base_path}/git_town_specs_coworker"
+def coworker_repository
+  "#{repositiory_base}/git_town_specs_coworker"
 end
 
-def local_repository_path
-  "#{repositiory_base_path}/git_town_specs_local"
+def local_repository
+  "#{repositiory_base}/git_town_specs_local"
 end
 
 def create_repository path, &block
