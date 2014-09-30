@@ -8,30 +8,34 @@ IGNORED_FILES = %w[ tags ]
 Before do
   Dir.chdir repositiory_base
 
-  create_repository remote_repository
+  # Create the remote repository
+  create_repository remote_repository_path
 
-  clone_repository remote_repository, local_repository
+  # Create the local repository
+  clone_repository remote_repository_path, local_repository_path
+  in_repository local_repository_path do
 
-  in_repository local_repository do
-    File.write '.gitignore', ''
-    run 'git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
+    # Create the master branch
+    run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
+
+    # Create the main branch
     run 'git checkout -b main master ; git push -u origin main'
     run 'git config git-town.main-branch-name main'
   end
 
-  clone_repository remote_repository, coworker_repository
-
-  in_repository coworker_repository do
+  # Create the coworker repository
+  clone_repository remote_repository_path, coworker_repository_path
+  in_repository coworker_repository_path do
     run 'git checkout main'
   end
 
-  Dir.chdir local_repository
+  Dir.chdir local_repository_path
 end
 
 
 at_exit do
   Dir.chdir repositiory_base
-  delete_repository remote_repository
-  delete_repository local_repository
-  delete_repository coworker_repository
+  delete_repository remote_repository_path
+  delete_repository local_repository_path
+  delete_repository coworker_repository_path
 end
