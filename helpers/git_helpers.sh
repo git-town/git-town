@@ -72,7 +72,7 @@ function delete_feature_branch {
 # Call this method, and not 'determine_feature_branch_name', if you want
 # to get the current git branch.
 function determine_current_branch_name {
-  current_branch_name=`git branch | grep "*" | awk '{print $2}'`
+  current_branch_name=$(get_current_branch_name)
 }
 
 
@@ -89,7 +89,7 @@ function determine_current_branch_name {
 # and then we don't touch this variable anymore by not running this script
 # ever again.
 function determine_feature_branch_name {
-  feature_branch_name=`git branch | grep "*" | awk '{print $2}'`
+  feature_branch_name=$(get_current_branch_name)
 }
 
 
@@ -152,6 +152,14 @@ function ensure_on_feature_branch {
 }
 
 
+# Returns the current branch name
+function get_current_branch_name {
+  local result=`git branch | grep "*" | awk '{print $2}'`
+  echo $result
+}
+
+
+
 # Fetches updates from the central repository.
 #
 # It is safe to call this method multiple times per session,
@@ -164,6 +172,13 @@ function fetch_repo {
   fi
 }
 repo_fetched=false
+
+
+# Fetches changes from the upstream repository
+function fetch_upstream {
+  echo_header "Fetching updates for 'upstream'"
+  git fetch upstream
+}
 
 
 # Pulls updates of the feature branch from the remote repo
@@ -195,9 +210,18 @@ function pull_main_branch {
 }
 
 
+# Pulls updates of the current branch fromt the upstream repo
+function pull_upstream {
+  determine_current_branch_name
+  echo_header "Pulling 'upstream/$current_branch_name' into '$current_branch_name'"
+  fetch_upstream
+  git merge upstream/$current_branch_name
+}
+
+
 # Pushes the branch with the given name to the remote repo
 function push_branch {
-  branch_name=$1
+  local branch_name=$1
   checkout_branch $branch_name
   echo_header "Pushing '$branch_name' to Github"
   determine_tracking_branch

@@ -1,0 +1,66 @@
+#!/bin/bash
+
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+# Adds a remote 'upstream' by querying github to find the current repo's parent
+function configure_upstream {
+  local origin_remote=`git remote -v | grep "origin.*fetch" | awk '{print $2}'`
+  local origin_repository=`echo "$origin_remote" | sed -n "s/.*github.com[/:]\(.*\).git/\1/p"`
+
+  if [ -z $origin_repository ];  then
+    echo_error_header
+    echo "remote origin is not a GitHub repository, unable to determine upstream"
+    exit_with_error
+  fi
+
+  local key
+  if [[ $origin_remote =~ "https" ]]; then
+    key='clone_url'
+  else
+    key='ssh_url'
+  fi
+
+  python_script="""
+import json, sys;
+obj = json.load(sys.stdin)
+if 'parent' in obj:
+  print obj['parent']['$key']
+"""
+
+  local upstream_url=`curl -s https://api.github.com/repos/$origin_repository | python -c "$python_script"`
+
+  if [ -z $upstream_url ];  then
+    echo_error_header
+    echo "remote origin cannot be found or is not a fork of a GitHub repository, unable to determine upstream"
+    exit_with_error
+  fi
+
+  git remote add upstream $upstream_url
+  echo_header "Added remote 'upstream' as $upstream_url"
+}
+
+
+# Sync the current branch with the upstream repository
+function sync_fork {
+  if [ `git remote -v | grep 'upstream' | wc -l` == 0 ]; then
+    configure_upstream
+  fi
+
+  local branch_name=$(get_current_branch_name)
+  stash_open_changes
+  checkout_main_branch
+  pull_upstream
+  push_main_branch
+  checkout_branch $branch_name
+  restore_open_changes
+}
+
+if [ "$1" == "--configure" ]; then
+  echo_intro "CONFIGURING REMOTE UPSTREAM"
+  configure_upstream
+else
+  echo_intro "SYNCING THE MAIN BRANCH WITH REMOTE UPSTREAM"
+  sync_fork
+fi
+
+echo_all_done
