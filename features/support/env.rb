@@ -13,7 +13,7 @@ Before do
 
   # Create the local repository
   clone_repository remote_repository_path, local_repository_path
-  in_repository local_repository_path do
+  at_path local_repository_path do
 
     # Create the master branch
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
@@ -25,7 +25,7 @@ Before do
 
   # Create the coworker repository
   clone_repository remote_repository_path, coworker_repository_path
-  in_repository coworker_repository_path do
+  at_path coworker_repository_path do
     run 'git checkout main'
   end
 

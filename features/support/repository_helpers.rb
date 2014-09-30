@@ -25,7 +25,7 @@ def clone_repository remote_path, path
   run "git clone #{remote_path} #{path}"
 end
 
-def in_repository path
+def at_path path
   cwd = Dir.pwd
   Dir.chdir path
   yield
