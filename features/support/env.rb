@@ -8,7 +8,6 @@ IGNORED_FILES = %w[ tags ]
 Before do
   Dir.chdir repositiory_base
 
-  # Create the remote repository
   create_repository remote_repository_path
 
   # Create the local repository
