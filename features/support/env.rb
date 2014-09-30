@@ -33,6 +33,13 @@ Before do
 end
 
 
+Before('@github_query') do
+  $rate_checked ||= false
+  github_check_rate_limit! unless $rate_checked
+  $rate_checked = true
+end
+
+
 at_exit do
   Dir.chdir repositiory_base
   delete_repository remote_repository_path

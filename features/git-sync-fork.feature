@@ -38,21 +38,25 @@ Feature: Git Sync Fork
     When I run `git sync-fork` while allowing errors
     Then I get the error "remote origin is not a GitHub repository, unable to determine upstream"
 
+  @github_query
   Scenario: without upstream configured and origin is not found on GitHub
     Given my remote origin is "Originate/git-town-invalid" on GitHub
     When I run `git sync-fork` while allowing errors
     Then I get the error "remote origin cannot be found or is not a fork of a GitHub repository, unable to determine upstream"
 
+  @github_query
   Scenario: without upstream configured and origin is not a fork on GitHub
     Given my remote origin is "Originate/git-town" on GitHub
     When I run `git sync-fork` while allowing errors
     Then I get the error "remote origin cannot be found or is not a fork of a GitHub repository, unable to determine upstream"
 
+  @github_query
   Scenario: --configure when origin is a GitHub fork through HTTPS
     Given my remote origin is a "rails/rails" fork on GitHub through HTTPS
     When I run `git sync-fork --configure`
     Then my remote upstream is "rails/rails" on GitHub through HTTPS
 
+  @github_query
   Scenario: --configure when origin is a GitHub fork through SSH
     Given my remote origin is a "rails/rails" fork on GitHub through SSH
     When I run `git sync-fork --configure`
