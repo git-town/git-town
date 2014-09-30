@@ -28,6 +28,7 @@ Given /^the following commits? exists?$/ do |commits_data|
     end
     if options[:commit_location].delete :remote
       in_repository coworker_repository do
+        run 'git fetch'
         create_local_commit options
         run 'git push'
       end

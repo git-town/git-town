@@ -1,10 +1,6 @@
-Given /^I am on a feature branch( with a remote tracking branch)?$/ do |_|
-  in_repository coworker_repository do
-    run 'git checkout -b feature main'
-    run 'git push -u origin feature'
-  end
-  run 'git fetch'
-  run 'git checkout feature'
+Given /^I am on a feature branch$/ do
+  run "git checkout -b feature main"
+  run "git push -u origin feature"
 end
 
 

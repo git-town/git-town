@@ -50,7 +50,7 @@ Feature: Git Sync
 
 
   Scenario: on a feature branch with a remote branch
-    Given I am on a feature branch with a remote tracking branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message               | file name           |
       | main    | local    | local main commit     | local_main_file     |
@@ -80,7 +80,7 @@ Feature: Git Sync
 
 
   Scenario: user aborts after a merge conflict when pulling the feature branch
-    Given I am on a feature branch with a remote tracking branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                   | file name          | file content               |
       | main    | local    | main branch update        | main_branch_update | main branch update         |
@@ -109,7 +109,7 @@ Feature: Git Sync
 
 
   Scenario: user continues after resolving a merge conflict when pulling the feature branch
-    Given I am on a feature branch with a remote tracking branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                   | file name          | file content               |
       | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
