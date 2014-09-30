@@ -11,7 +11,7 @@ Given /^the following commits? exists?$/ do |commits_data|
       file_content: commit_data.delete('file content') { 'default file content' },
       commit_message: commit_data.delete('message') { 'default commit message' },
       commit_location: commit_data.delete('location'){%i[local remote]},
-      branch: commit_data.delete('branch') { 'main' }
+      branch: commit_data.delete('branch') { current_branch }
     }
     if options[:commit_location].is_a? String
       options[:commit_location] = [options[:commit_location].to_sym]
