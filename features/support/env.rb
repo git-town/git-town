@@ -34,9 +34,7 @@ end
 
 
 Before('@github_query') do
-  $rate_checked ||= false
-  github_check_rate_limit! unless $rate_checked
-  $rate_checked = true
+  github_check_rate_limit!
 end
 
 

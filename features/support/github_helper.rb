@@ -10,12 +10,19 @@ def github_rails_fork
   )
 end
 
+def github_rate_limit
+  $github_rate_limit ||= (
+    uri = URI('https://api.github.com/rate_limit')
+    response = Net::HTTP.get_response(uri)
+    rate_limit = JSON.parse(response.body)
+    remaining = rate_limit['rate']['remaining']
+    reset = Time.at(rate_limit['rate']['reset']).strftime("%I:%M:%S %P")
+    [remaining, reset]
+  )
+end
+
 def github_check_rate_limit!
-  uri = URI('https://api.github.com/rate_limit')
-  response = Net::HTTP.get_response(uri)
-  rate_limit = JSON.parse(response.body)
-  remaining = rate_limit['rate']['remaining']
-  reset = Time.at(rate_limit['rate']['reset']).strftime("%I:%M:%S %P")
+  remaining, reset = github_rate_limit
 
   # Grabbing the rails forks + 4 tests hit the API
   if remaining < 5
