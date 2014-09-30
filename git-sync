@@ -32,7 +32,7 @@ function error_pull_feature_branch {
   # Create the continue file.
   echo "pull_main_branch" > $continue_script
   echo "update_feature_branch" >> $continue_script
-  echo "push_feature_branch 'force'" >> $continue_script
+  echo "push_feature_branch" >> $continue_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
