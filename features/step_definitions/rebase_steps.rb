@@ -14,4 +14,3 @@ end
 Then /^there is no rebase in progress$/ do
   expect(rebase_in_progress).to be_falsy
 end
-

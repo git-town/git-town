@@ -40,12 +40,13 @@ Feature: Git Sync
       | feature | local_main_file    |
       | feature | remote_main_file   |
     And I have the following commits
-      | branch  | message               | files               |
-      | main    | local main commit     | local_main_file     |
-      | main    | remote main commit    | remote_main_file    |
-      | feature | local main commit     | local_main_file     |
-      | feature | remote main commit    | remote_main_file    |
-      | feature | local feature commit  | local_feature_file  |
+      | branch  | message                          | files               |
+      | main    | local main commit                | local_main_file     |
+      | main    | remote main commit               | remote_main_file    |
+      | feature | Merge branch 'main' into feature |                     |
+      | feature | local main commit                | local_main_file     |
+      | feature | remote main commit               | remote_main_file    |
+      | feature | local feature commit             | local_feature_file  |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
@@ -69,13 +70,14 @@ Feature: Git Sync
       | feature | local_main_file     |
       | feature | remote_main_file    |
     And I have the following commits
-      | branch  | message               | files               |
-      | main    | local main commit     | local_main_file     |
-      | main    | remote main commit    | remote_main_file    |
-      | feature | local main commit     | local_main_file     |
-      | feature | remote main commit    | remote_main_file    |
-      | feature | local feature commit  | local_feature_file  |
-      | feature | remote feature commit | remote_feature_file |
+      | branch  | message                          | files               |
+      | main    | local main commit                | local_main_file     |
+      | main    | remote main commit               | remote_main_file    |
+      | feature | Merge branch 'main' into feature |                     |
+      | feature | local main commit                | local_main_file     |
+      | feature | remote main commit               | remote_main_file    |
+      | feature | local feature commit             | local_feature_file  |
+      | feature | remote feature commit            | remote_feature_file |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
@@ -127,11 +129,12 @@ Feature: Git Sync
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And now I have the following commits
-      | branch  | message                   | files              |
-      | feature | remote conflicting commit | conflicting_file   |
-      | feature | local conflicting commit  | conflicting_file   |
-      | feature | main branch update        | main_branch_update |
-      | main    | main branch update        | main_branch_update |
+      | branch  | message                          | files              |
+      | feature | Merge branch 'main' into feature |                    |
+      | feature | remote conflicting commit        | conflicting_file   |
+      | feature | local conflicting commit         | conflicting_file   |
+      | feature | main branch update               | main_branch_update |
+      | main    | main branch update               | main_branch_update |
     And now I have the following committed files
       | branch  | name               | content            |
       | feature | conflicting_file   | resolved content   |
@@ -140,7 +143,7 @@ Feature: Git Sync
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: user aborts after a merge conflict when rebasing the feature branch against the main branch
+  Scenario: user aborts after a conflict when merging the main branch into the feature branch
     Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                   | file name        | file content    |
@@ -148,19 +151,19 @@ Feature: Git Sync
       | feature | local    | conflicting local commit  | conflicting_file | feature content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
-    Then my repo has a rebase in progress
+    Then my repo has a merge in progress
     And there is an abort script for "git sync"
     And there is a continue script for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git sync --abort`
     Then I am still on the "feature" branch
-    And there is no rebase in progress
+    And there is no merge in progress
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And I still have the following commits
-      | branch  | message                   | files            |
-      | main    | conflicting main commit   | conflicting_file |
-      | feature | conflicting local commit  | conflicting_file |
+      | branch  | message                          | files            |
+      | main    | conflicting main commit          | conflicting_file |
+      | feature | conflicting local commit         | conflicting_file |
     And I still have the following committed files
       | branch  | name             | content         |
       | main    | conflicting_file | main content    |
@@ -168,7 +171,7 @@ Feature: Git Sync
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: user continues after resolving a merge conflict when rebasing the feature branch against the main branch
+  Scenario: user continues after resolving the conflict when merging the main branch into the feature branch
     Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                     | file name        | file content    |
@@ -176,20 +179,21 @@ Feature: Git Sync
       | feature | local    | conflicting feature commit  | conflicting_file | feature content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
-    Then my repo has a rebase in progress
+    Then my repo has a merge in progress
     And there is an abort script for "git sync"
     And there is a continue script for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
-    When I successfully finish the rebase by resolving the merge conflict of file "conflicting_file"
+    When I successfully finish the merge by resolving the merge conflict of file "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And I still have the following commits
-      | branch  | message                     | files            |
-      | main    | conflicting main commit     | conflicting_file |
-      | feature | conflicting main commit     | conflicting_file |
-      | feature | conflicting feature commit  | conflicting_file |
+      | branch  | message                          | files            |
+      | main    | conflicting main commit          | conflicting_file |
+      | feature | Merge branch 'main' into feature |                  |
+      | feature | conflicting main commit          | conflicting_file |
+      | feature | conflicting feature commit       | conflicting_file |
     And I still have the following committed files
       | branch  | name             | content         |
       | main    | conflicting_file | main content    |
@@ -205,8 +209,8 @@ Feature: Git Sync
       | feature | local    | conflicting feature commit  | conflicting_file | feature content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
-    Then my repo has a rebase in progress
+    Then my repo has a merge in progress
     When I run `git sync --continue` while allowing errors
-    Then my repo still has a rebase in progress
+    Then my repo still has a merge in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
