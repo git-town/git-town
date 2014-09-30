@@ -141,7 +141,7 @@ Feature: Git Sync
 
 
   Scenario: user aborts after a merge conflict when rebasing the feature branch against the main branch
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                   | file name        | file content    |
       | main    | local    | conflicting main commit   | conflicting_file | main content    |
@@ -169,7 +169,7 @@ Feature: Git Sync
 
 
   Scenario: user continues after resolving a merge conflict when rebasing the feature branch against the main branch
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                     | file name        | file content    |
       | main    | local    | conflicting main commit     | conflicting_file | main content    |
@@ -198,7 +198,7 @@ Feature: Git Sync
 
 
   Scenario: user tries to continue without resolving an occurring merge conflict first
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                     | file name        | file content    |
       | main    | local    | conflicting main commit     | conflicting_file | main content    |

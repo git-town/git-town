@@ -17,7 +17,7 @@ Feature: Git Hack
 
 
   Scenario: on a feature branch with uncommitted changes
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message        | file name    |
       | main    | local    | main commit    | main_file    |
@@ -35,7 +35,7 @@ Feature: Git Hack
 
 
   Scenario: with non-pulled updates for the main branch
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commit exists
       | branch | location | message           | file name        |
       | main   | remote   | new_remote_commit | new_remote_file  |

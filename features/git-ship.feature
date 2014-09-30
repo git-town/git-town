@@ -44,7 +44,7 @@ Feature: Git Ship
 
 
   Scenario: with uncommitted changes
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship 'feature_done'` while allowing errors
     Then I get the error "You should not ship while having open files in Git"
@@ -72,7 +72,7 @@ Feature: Git Ship
 
 
   Scenario: conflict after the squash-merge of the feature branch into the main branch
-    Given I am on a local feature branch
+    Given I am on a feature branch
     And the following commits exist
       | branch  | location | message                    | file name        | file content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
