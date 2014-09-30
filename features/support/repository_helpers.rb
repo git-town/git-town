@@ -28,9 +28,9 @@ def create_repository path
   run "git init --bare #{path}"
 end
 
-def clone_repository remote_path, path, options = {}
+def clone_repository remote_path, path, bare: false
   delete_repository path
-  run "git clone #{'--bare' if options[:bare]} #{remote_path} #{path}"
+  run "git clone #{'--bare' if bare} #{remote_path} #{path}"
 end
 
 def at_path path
