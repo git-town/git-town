@@ -1,4 +1,4 @@
-Given /^I am on a remote feature branch$/ do
+Given /^I am on a feature branch( with a remote tracking branch)?$/ do
   in_repository coworker_repository do
     run 'git checkout -b feature main'
     run 'git push -u origin feature'

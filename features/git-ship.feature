@@ -18,7 +18,7 @@ Feature: Git Ship
 
 
   Scenario: feature branch with non-pulled updates in the repo
-    Given I am on a remote feature branch
+    Given I am on a feature branch with a remote tracking branch
     And the following commit exists
       | branch  | location | file name    | file content    |
       | feature | remote   | feature_file | feature content |
@@ -54,7 +54,7 @@ Feature: Git Ship
 
 
   Scenario: conflict after pulling the feature branch
-    Given I am on a remote feature branch
+    Given I am on a feature branch with a remote tracking branch
     And the following commits exist
       | branch  | location | message                   | file name        | file content   |
       | feature | remote   | conflicting remote commit | conflicting_file | remote content |
