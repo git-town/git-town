@@ -7,7 +7,7 @@ function github_parse_repository {
   echo `echo "$1" | sed -n "s/.*github.com[/:]\(.*\).git/\1/p"`
 }
 
-# Queries GitHub for the upstream repository for the given repository and protocol
+# Queries GitHub for the upstream url for the given repository and protocol
 function github_upstream_url {
   local repository=$1
   local protocol=$2
