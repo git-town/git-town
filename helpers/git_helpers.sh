@@ -257,6 +257,13 @@ function push_main_branch {
 }
 
 
+# Returns the url for the remote with the specified name
+function remote_url {
+  local url=`git remote -v | grep "$1.*fetch" | awk '{print $2}'`
+  echo $url
+}
+
+
 # Unstashes changes that were stashed in the beginning of a script.
 #
 # Only does this if there were open changes when the script was started.

@@ -4,30 +4,23 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 # Adds a remote 'upstream' by querying github to find the current repo's parent
 function configure_upstream {
-  local origin_remote=`git remote -v | grep "origin.*fetch" | awk '{print $2}'`
-  local origin_repository=`echo "$origin_remote" | sed -n "s/.*github.com[/:]\(.*\).git/\1/p"`
+  local url=`remote_url origin`
+  local repository=`github_parse_repository $url`
 
-  if [ -z $origin_repository ];  then
+  if [ -z $repository ];  then
     echo_error_header
     echo "remote origin is not a GitHub repository, unable to determine upstream"
     exit_with_error
   fi
 
-  local key
-  if [[ $origin_remote =~ "https" ]]; then
-    key='clone_url'
+  local protocol
+  if [[ $url =~ "https" ]]; then
+    protocol='clone_url'
   else
-    key='ssh_url'
+    protocol='ssh_url'
   fi
 
-  python_script="""
-import json, sys;
-obj = json.load(sys.stdin)
-if 'parent' in obj:
-  print obj['parent']['$key']
-"""
-
-  local upstream_url=`curl -s https://api.github.com/repos/$origin_repository | python -c "$python_script"`
+  local upstream_url=`github_upstream_url $repository $protocol`
 
   if [ -z $upstream_url ];  then
     echo_error_header
