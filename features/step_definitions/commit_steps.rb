@@ -11,7 +11,7 @@ Given /^the following commits? exists?$/ do |commits_data|
       file_content: commit_data.delete('file content') { 'default file content' },
       commit_message: commit_data.delete('message') { 'default commit message' },
       commit_location: commit_data.delete('location'){%i[local remote]},
-      branch: commit_data.delete('branch')
+      branch: commit_data.delete('branch') { current_branch }
     }
     if options[:commit_location].is_a? String
       options[:commit_location] = [options[:commit_location].to_sym]
@@ -22,16 +22,16 @@ Given /^the following commits? exists?$/ do |commits_data|
       raise "Unused commit specifiers: #{commit_data}"
     end
 
-    # Check out the respective branch
-    run "git checkout #{options[:branch]}", allow_failures: true
-
     # Create commits
     if options[:commit_location].delete :local
       create_local_commit options
     end
     if options[:commit_location].delete :remote
-      IO.write options[:file_name], options[:file_content]
-      run "git add #{options[:file_name]} ; git commit -m '#{options[:commit_message]}' ; git push ; git reset --hard HEAD^"
+      in_repository coworker_repository do
+        run 'git fetch'
+        create_local_commit options
+        run 'git push'
+      end
     end
 
     if options[:commit_location] != []
