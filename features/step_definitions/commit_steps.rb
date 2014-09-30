@@ -34,7 +34,7 @@ Given /^the following commits? exists?$/ do |commits_data|
       end
     end
     if options[:commit_location].delete :upstream
-      in_repository upstream_local_repository do
+      at_path upstream_local_repository_path do
         create_local_commit options
         run 'git push'
       end

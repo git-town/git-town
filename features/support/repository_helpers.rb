@@ -14,11 +14,11 @@ def local_repository_path
   "#{repositiory_base}/git_town_specs_local"
 end
 
-def upstream_repository
-  "#{repositiory_base}/git_town_specs_upstream"
+def upstream_remote_repository_path
+  "#{repositiory_base}/git_town_specs_upstream_remote"
 end
 
-def upstream_local_repository
+def upstream_local_repository_path
   "#{repositiory_base}/git_town_specs_upstream_local"
 end
 
