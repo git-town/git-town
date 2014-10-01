@@ -1,12 +1,5 @@
 # Helper methods for writing to the terminal.
 
-underline=`tput smul`
-nounderline=`tput rmul`
-bold=`tput bold`
-normal=`tput sgr0`
-green=`tput setaf 2`
-red=`tput setaf 1`
-
 
 function echo_all_done {
   echo
@@ -29,14 +22,6 @@ function echo_error_header {
   echo
   tput bold
   echo "  Error"
-  tput sgr0
-}
-
-
-# Prints the given text in green
-function echo_green {
-  tput setaf 2
-  echo "$*"
   tput sgr0
 }
 
@@ -67,12 +52,8 @@ function echo_usage_header {
 
 
 # Exits the currently running script with an error response code.
-function define_exit_with_error {
-  function exit_with_error {
-    echo
-    echo
-    exit 1
-  }
+function exit_with_error {
+  echo
+  echo
+  exit 1
 }
-
-define_exit_with_error

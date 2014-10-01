@@ -29,12 +29,6 @@ function checkout_feature_branch {
 }
 
 
-# Checks out the 'master' branch
-function checkout_master_branch {
-  checkout_branch 'master'
-}
-
-
 # Creates a new feature branch with the given name.
 #
 # The feature branch is cut off the main development branch.
@@ -305,9 +299,3 @@ function update_feature_branch {
   git rebase $main_branch_name
   if [ $? != 0 ]; then error_update_feature_branch; fi
 }
-
-
-
-determine_feature_branch_name
-determine_current_branch_name
-determine_open_changes
