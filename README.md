@@ -17,6 +17,7 @@ It is configurable, extensible, and provides these commands:
 * <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
 * <a href="#git-extract">git extract</a>: extracts commits from a feature branch into a new one
 * <a href="#git-ship">git ship</a>: merges the current feature branch into the main branch and delete it everywhere
+* <a href="#git-sync-fork">git sync-fork</a>: configures remote upstream and merges the upstream main branch into the main branch
 
 
 ## Git Commands
@@ -229,6 +230,51 @@ Call this from the feature branch that you want to ship.
     <td>8.</td>
     <td>delete the feature branch from the repo</td>
     <td>git push origin :feature
+  </tr>
+</table>
+
+
+### git sync-fork
+
+_Syncs the main branch with the upstream repository.
+Designed for use with forks of open source repositories on GitHub._
+
+Automates [configuring a remote for a fork](https://help.github.com/articles/configuring-a-remote-for-a-fork) (if not already configured)
+and [syncing a fork](https://help.github.com/articles/syncing-a-fork).
+
+* run the command: `git sync-fork`
+* configure a remote for a fork only: `git sync-fork --configure`
+
+<table>
+  <tr>
+    <td>1.</td>
+    <td>stash away uncommitted changes</td>
+    <td>git stash</td>
+  </tr>
+  <tr>
+    <td>2.</td>
+    <td>check out the main branch</td>
+    <td>git checkout master</td>
+  </tr>
+  <tr>
+    <td>3.</td>
+    <td>pull upstream updates for the main branch</td>
+    <td>git fetch upstream<br/>git merge upstream/master</td>
+  </tr>
+  <tr>
+    <td>4.</td>
+    <td>push the main branch</td>
+    <td>git push</td>
+  </tr>
+  <tr>
+    <td>5.</td>
+    <td>checkout the branch you started on</td>
+    <td>git checkout [initial branch]</td>
+  </tr>
+  <tr>
+    <td>6.</td>
+    <td>restore the stashed away changes</td>
+    <td>git stash pop</td>
   </tr>
 </table>
 

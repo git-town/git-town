@@ -33,6 +33,11 @@ Before do
 end
 
 
+Before('@github_query') do
+  github_check_rate_limit!
+end
+
+
 at_exit do
   Dir.chdir repositiory_base
   delete_repository remote_repository_path

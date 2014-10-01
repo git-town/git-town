@@ -14,15 +14,23 @@ def local_repository_path
   "#{repositiory_base}/git_town_specs_local"
 end
 
+def upstream_remote_repository_path
+  "#{repositiory_base}/git_town_specs_upstream_remote"
+end
+
+def upstream_local_repository_path
+  "#{repositiory_base}/git_town_specs_upstream_local"
+end
+
 def create_repository path
   delete_repository path
   Dir.mkdir path
   run "git init --bare #{path}"
 end
 
-def clone_repository remote_path, path
+def clone_repository remote_path, path, bare: false
   delete_repository path
-  run "git clone #{remote_path} #{path}"
+  run "git clone #{'--bare' if bare} #{remote_path} #{path}"
 end
 
 def at_path path

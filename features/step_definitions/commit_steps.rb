@@ -33,6 +33,12 @@ Given /^the following commits? exists?$/ do |commits_data|
         run 'git push'
       end
     end
+    if options[:commit_location].delete :upstream
+      at_path upstream_local_repository_path do
+        create_local_commit options
+        run 'git push'
+      end
+    end
 
     if options[:commit_location] != []
       raise "Unused commit location: #{options[:commit_location]}"

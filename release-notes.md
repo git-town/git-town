@@ -8,6 +8,7 @@
 * only makes one fetch from the central repo per session
 * automatically prunes remote branches when fetching updates
 * simpler readme, dedicated RDD document
+* git sync-fork
 
 
 ## 0.2.2
