@@ -29,12 +29,6 @@ function checkout_feature_branch {
 }
 
 
-# Checks out the 'master' branch
-function checkout_master_branch {
-  checkout_branch 'master'
-}
-
-
 # Creates a new feature branch with the given name.
 #
 # The feature branch is cut off the main development branch.
