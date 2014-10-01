@@ -59,7 +59,7 @@ Then /^my branch and its remote still have (\d+) and (\d+) different commits$/ d
 end
 
 
-Then /^(now )?I (still )?have the following commits$/ do |_, _, commits_data|
+Then /^(?:now )?I (?:still )?have the following commits$/ do |commits_data|
   expected_commits = commits_data.hashes
                                  .each do |commit_data|
                                     symbolize_keys_deep! commit_data

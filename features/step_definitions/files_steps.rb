@@ -13,7 +13,7 @@ Then /^there are no merge conflicts anymore$/ do
 end
 
 
-Then /^(now I|I still) have the following committed files$/ do |_, files_data|
+Then /^(?:now I|I still) have the following committed files$/ do |files_data|
 
   # Get all files in all branches
   actual_files = []
@@ -56,7 +56,7 @@ Then /^I don't have an uncommitted file with name: "(.*?)"$/ do |file_name|
 end
 
 
-Then /^I (still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"?$/ do |_, expected_name, expected_content|
+Then /^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"?$/ do |expected_name, expected_content|
   actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
   expect(actual_files).to eql [expected_name]
 
