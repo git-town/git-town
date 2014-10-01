@@ -274,9 +274,3 @@ function update_feature_branch {
   git rebase $main_branch_name
   if [ $? != 0 ]; then error_update_feature_branch; fi
 }
-
-
-
-determine_feature_branch_name
-determine_current_branch_name
-determine_open_changes
