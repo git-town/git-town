@@ -60,12 +60,8 @@ function echo_usage_header {
 
 
 # Exits the currently running script with an error response code.
-function define_exit_with_error {
-  function exit_with_error {
-    echo
-    echo
-    exit 1
-  }
+function exit_with_error {
+  echo
+  echo
+  exit 1
 }
-
-define_exit_with_error
