@@ -3,11 +3,6 @@ Given /^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/ do 
 end
 
 
-Then /^a the main branch name is configured as "(.*?)"$/ do |main_branch_name|
-  expect(IO.read '.gittownrc').to eql "#{main_branch_name}\n"
-end
-
-
 Then /^file "(.*?)" has a merge conflict$/ do |file|
   run("git status | grep 'both added.*#{file}' | wc -l")[:out] == '1'
 end

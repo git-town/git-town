@@ -16,12 +16,6 @@ end
 
 
 
-When /^I check out the "(.*?)" branch$/ do |branch_name|
-  run "git checkout #{branch_name}"
-end
-
-
-
 Then /^I (end up|am still) on the feature branch$/ do |_|
   expect(current_branch_name).to eql 'feature'
 end
