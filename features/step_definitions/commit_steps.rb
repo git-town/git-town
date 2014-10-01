@@ -39,6 +39,11 @@ Given /^the following commits? exists?$/ do |commits_data|
         run 'git push'
       end
     end
+    if options[:commit_location].delete :Charly
+      at_path coworker_repository_path do
+        create_local_commit options
+      end
+    end
 
     if options[:commit_location] != []
       raise "Unused commit location: #{options[:commit_location]}"
@@ -67,6 +72,26 @@ Then /^(?:now )?I (?:still )?have the following commits$/ do |commits_data|
                                                                              .map(&:strip)
                                   end
   expect(actual_commits).to match_array expected_commits
+end
+
+
+Then /^now the following commits exist$/ do |commits_data|
+  expected_commits = commits_data.hashes
+                                 .each do |commit_data|
+                                    symbolize_keys_deep! commit_data
+                                    commit_data[:files] = commit_data[:files].split(',')
+                                                                             .map(&:strip)
+                                  end
+  all_existing_commits = []
+  at_path local_repository_path do
+    all_existing_commits.concat actual_commits.each {|commit| commit[:location] = 'local'}
+    run "git checkout origin/feature"
+    all_existing_commits.concat actual_commits.each {|commit| commit[:location] = 'remote'}
+  end
+  at_path coworker_repository_path do
+    all_existing_commits.concat actual_commits.each {|commit| commit[:location] = 'Charly'}
+  end
+  expect(all_existing_commits).to match_array expected_commits
 end
 
 

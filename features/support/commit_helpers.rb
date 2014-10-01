@@ -15,7 +15,7 @@ def actual_commits
   # Get local commits
   actual_commits = existing_local_branches.map do |local_branch_name|
     run "git checkout #{local_branch_name}", allow_failures: true
-    commits_in_branch(local_branch_name)
+    commits_in_branch local_branch_name
   end.flatten
 
   # Go back to the branch that was checked out initially

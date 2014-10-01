@@ -27,6 +27,7 @@ Before do
   clone_repository remote_repository_path, coworker_repository_path
   at_path coworker_repository_path do
     run 'git checkout main'
+    run 'git config git-town.main-branch-name main'
   end
 
   Dir.chdir local_repository_path
