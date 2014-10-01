@@ -22,7 +22,7 @@ end
 
 
 
-Then /^I (end up|am still) on the feature branch$/ do |_|
+Then /^I (?:end up|am still) on the feature branch$/ do
   expect(current_branch_name).to eql 'feature'
 end
 
@@ -32,7 +32,7 @@ Then /^I end up on my feature branch$/  do
 end
 
 
-Then /^I (end up|am still) on the "(.+?)" branch$/ do |_, branch_name|
+Then /^I (?:end up|am still) on the "(.+?)" branch$/ do |branch_name|
   expect(current_branch_name).to eql branch_name
 end
 

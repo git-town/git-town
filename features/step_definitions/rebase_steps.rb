@@ -6,7 +6,7 @@ end
 
 
 
-Then /^my repo (still )?has a rebase in progress$/ do |_|
+Then /^my repo (?:still )?has a rebase in progress$/ do
   expect(rebase_in_progress).to be_truthy
 end
 
