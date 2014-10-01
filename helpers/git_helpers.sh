@@ -6,9 +6,10 @@
 # Skips this operation if the requested branch
 # is already checked out.
 function checkout_branch {
+  local branch_name=$1
   determine_current_branch_name
-  if [ ! "$current_branch_name" = "$1" ]; then
-    git checkout $1
+  if [ ! "$current_branch_name" = "$branch_name" ]; then
+    git checkout $branch_name
   fi
 }
 
@@ -39,8 +40,9 @@ function checkout_master_branch {
 #
 # The feature branch is cut off the main development branch.
 function create_feature_branch {
-  echo_header "Creating the '$1' branch off the '$main_branch_name' branch"
-  git checkout -b $1 $main_branch_name
+  local new_branch_name=$1
+  echo_header "Creating the '$new_branch_name' branch off the '$main_branch_name' branch"
+  git checkout -b $new_branch_name $main_branch_name
 }
 
 
@@ -50,11 +52,12 @@ function create_feature_branch {
 # If you provide 'force' as an argument, it deletes the branch even if it has
 # unmerged changes.
 function delete_feature_branch {
+  local options=$1
   echo_header "Removing the old '$feature_branch_name' branch"
   checkout_feature_branch
   determine_tracking_branch
   checkout_main_branch
-  if [[ "$1" == "force" ]]; then
+  if [[ "$options" == "force" ]]; then
     git branch -D $feature_branch_name
   else
     git branch -d $feature_branch_name
@@ -143,10 +146,11 @@ function ensure_no_open_changes {
 # Exists the application with an error message if the working directory
 # is on the main development branch.
 function ensure_on_feature_branch {
+  local error_message=$1
   determine_current_branch_name
   if [ "$current_branch_name" = "$main_branch_name" ]; then
     echo_error_header
-    echo "  $1"
+    echo "  $error_message"
     exit_with_error
   fi
 }
@@ -197,7 +201,7 @@ function pull_main_branch {
 
 # Pushes the branch with the given name to the remote repo
 function push_branch {
-  branch_name=$1
+  local branch_name=$1
   checkout_branch $branch_name
   echo_header "Pushing '$branch_name' to Github"
   determine_tracking_branch
@@ -213,10 +217,11 @@ function push_branch {
 #
 # If the parameter 'force' is given, uses a force push.
 function push_feature_branch {
+  local options=$1
   echo_header "Pushing the updated '$feature_branch_name' to the repo"
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    if [ $1 == 'force' ]; then
+    if [ $options == 'force' ]; then
       git push --force
     else
       git push
@@ -246,9 +251,10 @@ function restore_open_changes {
 
 # Merges the current feature branch into the main dev branch.
 function squash_merge_feature_branch {
+  local commit_message=$1
   echo_header "Merging the '$feature_branch_name' branch into '$main_branch_name'"
   checkout_main_branch
-  if [ "$1" == "" ]; then
+  if [ "$commit_message" == "" ]; then
     git merge --squash $feature_branch_name && git commit -a
   else
     git merge --squash $feature_branch_name && git commit -a -m $*
