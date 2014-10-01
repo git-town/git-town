@@ -26,14 +26,6 @@ function echo_error_header {
 }
 
 
-# Prints the given text in green
-function echo_green {
-  tput setaf 2
-  echo "$*"
-  tput sgr0
-}
-
-
 # Prints the intro line of a script into the terminal.
 function echo_intro {
   tput bold
