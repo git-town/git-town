@@ -16,11 +16,12 @@ function delete_temp_file {
 
 # Ensures that the given tool is installed.
 function ensure_tool_installed {
-  if [ `which $1 | wc -l` == 0 ]; then
+  local toolname=$1
+  if [ `which $toolname | wc -l` == 0 ]; then
     echo_error_header
-    echo "  You need the '$1' tool in order to run tests."
+    echo "  You need the '$toolname' tool in order to run tests."
     echo "  Please install it using your package manager,"
-    echo "  or on OS X with 'brew install $1'."
+    echo "  or on OS X with 'brew install $toolname'."
     exit 1
   fi
 }
