@@ -1,12 +1,5 @@
 # Helper methods for writing to the terminal.
 
-underline=`tput smul`
-nounderline=`tput rmul`
-bold=`tput bold`
-normal=`tput sgr0`
-green=`tput setaf 2`
-red=`tput setaf 1`
-
 
 function echo_all_done {
   echo
