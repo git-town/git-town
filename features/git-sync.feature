@@ -214,3 +214,25 @@ Feature: Git Sync
     Then my repo still has a merge in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
+
+  Scenario: two people collaborate on a feature branch
+    Given I am on a feature branch
+    And my coworker Charly works on the same feature branch
+    And the following commits exist
+      | repo   | location | message           | file name     |
+      | mine   | local    | my commit 1       | my_file_1     |
+      | Charly | local    | charlies commit 1 | charly_file_1 |
+    When I run `git sync`
+    Then now exist the following commits
+      | repo   | location | message           |
+      | mine   | local    | my commit 1       |
+      | mine   | remote   | my commit 1       |
+      | Charly | local    | charlies commit 1 |
+    When Charly runs `git sync`
+    Then now exist the following commits
+      | repo   | location | message           |
+      | mine   | local    | my commit 1       |
+      | mine   | remote   | my commit 1       |
+      | mine   | remote   | charlies commit 1 |
+      | Charly | local    | charlies commit 1 |
+      | Charly | local    | my commit 1       |
