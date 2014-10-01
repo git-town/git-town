@@ -1,11 +1,6 @@
 # Returns the name of the branch that is currently checked out
 def current_branch_name
-  run("git branch").fetch(:out)
-                        .split("\n")
-                        .map(&:strip)
-                        .select{|b| b[/^\*/]}
-                        .first
-                        .slice(2, 100)
+  run("git rev-parse --abbrev-ref HEAD")[:out]
 end
 
 
