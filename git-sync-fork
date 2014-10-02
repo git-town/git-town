@@ -3,7 +3,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 # Outputs error and exits
-function require_upstream {
+function error_with_upstream_required {
   echo_error_header
   echo "Please add a remote 'upstream'"
   exit_with_error
@@ -15,7 +15,7 @@ function configure_upstream {
   local repository=`github_parse_repository $url`
 
   if [ -z $repository ];  then
-    require_upstream
+    error_with_upstream_required
   fi
 
   local protocol
@@ -28,7 +28,7 @@ function configure_upstream {
   local upstream_url=`github_upstream_url $repository $protocol`
 
   if [ -z $upstream_url ];  then
-    require_upstream
+    error_with_upstream_required
   fi
 
   git remote add upstream $upstream_url
