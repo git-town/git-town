@@ -1,4 +1,4 @@
-Feature: Git Sync Fork
+Feature: Git Sync-Fork
 
   # TODO (Charlie): I think it shouldn't push to remotes/upstream/master (or main) here.
   #                 But certainly not both. Please verify.
