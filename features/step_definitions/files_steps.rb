@@ -17,7 +17,18 @@ end
 
 Then /^(?:now I|I still) have the following committed files$/ do |files_data|
 
-  # Get all files in all branches
+  # Get all expected files
+  expected_files = files_data.hashes.map do |expected_file|
+    symbolize_keys_deep! expected_file
+    filenames = expected_file.delete :files
+    Kappamaki.from_sentence(filenames).map do |filename|
+      result = expected_file.clone
+      result[:name] = filename
+      result
+    end
+  end.flatten
+
+  # Get all existing files in all branches
   actual_files = []
   existing_local_branches.each do |branch|
     run "git checkout #{branch}"
@@ -28,21 +39,11 @@ Then /^(?:now I|I still) have the following committed files$/ do |files_data|
     end
   end
 
-  # Get all expected files
-  expected_files = files_data.hashes.each do |expected_file|
-    symbolize_keys_deep! expected_file
-    if expected_file[:branch] == 'main'
-      expected_file[:branch] = 'main'
-    end
-  end
-
   # Remove the keys that are not used in the expected data
   used_keys = expected_files[0].keys
   actual_files.each do |actual_file|
     actual_file.keys.each do |key|
-      unless used_keys.include? key
-        actual_file.delete key
-      end
+      actual_file.delete key unless used_keys.include? key
     end
   end
 
