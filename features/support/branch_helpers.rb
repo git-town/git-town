@@ -23,6 +23,25 @@ def existing_local_branches
 end
 
 
+# Returns the names of all existing local branches.
+#
+# Does not return the "master" branch nor remote branches.
+#
+# The branches are ordered this ways:
+# * main branch
+# * feature branches ordered alphabetically
+def existing_remote_branches
+  remote_branches = run('git branch -a | grep remotes').fetch(:out)
+                                                       .split("\n")
+                                                       .map(&:strip)
+                                                       .map {|branch| /remotes\/origin\/(.+)/.match(branch)[1]}
+  remote_branches.delete('master')
+  main_remote_branch = remote_branches.delete 'main'
+  [main_remote_branch].concat(remote_branches)
+                      .compact
+end
+
+
 def remote_branch_exists branch_name
   run("git branch -a | grep remotes/origin/#{branch_name} | wc -l")[:out] != '0'
 end

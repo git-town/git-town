@@ -218,29 +218,31 @@ Feature: Git Sync
   Scenario: two people collaborate on a feature branch
     Given I am on a feature branch
     And my coworker Charly works on the same feature branch
-    And the following commits exist
+    And the following commits exist in my repository
+      | location  | message           | file name     |
+      | local     | my commit 1       | my_file_1     |
+    And the following commits exist in Charly's repository
       | location | message           | file name     |
-      | local    | my commit 1       | my_file_1     |
-      | Charly   | charlies commit 1 | charly_file_1 |
+      | local    | charlies commit 1 | charly_file_1 |
     When I run `git sync`
-    Then now the following commits exist
+    Then I see the following commits
+      | location | branch  | message     | files     |
+      | local    | feature | my commit 1 | my_file_1 |
+      | remote   | feature | my commit 1 | my_file_1 |
+    And Charly sees the following commits
       | location | branch  | message           | files         |
-      | local    | feature | my commit 1       | my_file_1     |
-      | remote   | feature | my commit 1       | my_file_1     |
-      | Charly   | feature | charlies commit 1 | charly_file_1 |
-    When Charly runs `git sync`
-    Then now the following commits exist
-      | location | branch  | message           | files         |
-      | local    | feature | my commit 1       | my_file_1     |
-      | remote   | feature | my commit 1       | my_file_1     |
-      | Charly   | feature | charlies commit 1 | charly_file_1 |
-      | Charly   | feature | my commit 1       | my_file_1     |
-    When I run `git sync`
-    Then now the following commits exist
-      | location | branch  | message           | files         |
-      | local    | feature | my commit 1       | my_file_1     |
       | local    | feature | charlies commit 1 | charly_file_1 |
+    When Charly runs `git sync`
+    Then now Charly sees the following commits
+      | location | branch  | message           | files         |
+      | local    | feature | charlies commit 1 | charly_file_1 |
+      | local    | feature | my commit 1       | my_file_1     |
       | remote   | feature | my commit 1       | my_file_1     |
       | remote   | feature | charlies commit 1 | charly_file_1 |
-      | Charly   | feature | charlies commit 1 | charly_file_1 |
-      | Charly   | feature | my commit 1       | my_file_1     |
+    When I run `git sync`
+    Then now I see the following commits
+      | location  | branch  | message           | files         |
+      | local     | feature | my commit 1       | my_file_1     |
+      | local     | feature | charlies commit 1 | charly_file_1 |
+      | remote    | feature | my commit 1       | my_file_1     |
+      | remote    | feature | charlies commit 1 | charly_file_1 |
