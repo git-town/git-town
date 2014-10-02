@@ -158,11 +158,11 @@ Feature: Git Sync
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And I still have the following commits
-      | branch  | message                          | files            |
-      | main    | conflicting main commit          | conflicting_file |
-      | feature | conflicting local commit         | conflicting_file |
+      | branch  | location | message                  | files            |
+      | main    | local    | conflicting main commit  | conflicting_file |
+      | feature | local    | conflicting local commit | conflicting_file |
     And I still have the following committed files
-      | branch  | name             | content         |
+      | branch  | files            | content         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -171,9 +171,9 @@ Feature: Git Sync
   Scenario: user continues after resolving the conflict when merging the main branch into the feature branch
     Given I am on a feature branch
     And the following commits exist in my repository
-      | branch  | location | message                     | file name        | file content    |
-      | main    | local    | conflicting main commit     | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit  | conflicting_file | feature content |
+      | branch  | location | message                    | file name        | file content    |
+      | main    | local    | conflicting main commit    | conflicting_file | main content    |
+      | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
@@ -186,14 +186,14 @@ Feature: Git Sync
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And I still have the following commits
-      | branch  | message                          | files            |
-      | main    | conflicting main commit          | conflicting_file |
-      | feature | Merge branch 'main' into feature |                  |
-      | feature | conflicting main commit          | conflicting_file |
-      | feature | conflicting feature commit       | conflicting_file |
+      | branch  | location         | message                          | files            |
+      | main    | local            | conflicting main commit          | conflicting_file |
+      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | feature | local and remote | conflicting main commit          | conflicting_file |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
     And I still have the following committed files
-      | branch  | name             | content         |
-      | main    | conflicting_file | main content    |
+      | branch  | files            | content          |
+      | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
@@ -201,9 +201,9 @@ Feature: Git Sync
   Scenario: user tries to continue without resolving an occurring merge conflict first
     Given I am on a feature branch
     And the following commits exist in my repository
-      | branch  | location | message                     | file name        | file content    |
-      | main    | local    | conflicting main commit     | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit  | conflicting_file | feature content |
+      | branch  | location | message                    | file name        | file content    |
+      | main    | local    | conflicting main commit    | conflicting_file | main content    |
+      | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
@@ -216,30 +216,25 @@ Feature: Git Sync
     Given I am on a feature branch
     And my coworker Charly works on the same feature branch
     And the following commits exist in my repository
-      | location  | message           | file name     |
-      | local     | my commit 1       | my_file_1     |
+      | location  | message     | file name |
+      | local     | my commit 1 | my_file_1 |
     And the following commits exist in Charly's repository
       | location | message           | file name     |
       | local    | charlies commit 1 | charly_file_1 |
     When I run `git sync`
     Then I see the following commits
-      | location | branch  | message     | files     |
-      | local    | feature | my commit 1 | my_file_1 |
-      | remote   | feature | my commit 1 | my_file_1 |
-    And Charly sees the following commits
-      | location | branch  | message           | files         |
-      | local    | feature | charlies commit 1 | charly_file_1 |
+      | branch  | location         | message     | files     |
+      | feature | local and remote | my commit 1 | my_file_1 |
+    And Charly still sees the following commits
+      | branch  | location | message           | files         |
+      | feature | local    | charlies commit 1 | charly_file_1 |
     When Charly runs `git sync`
     Then now Charly sees the following commits
-      | location | branch  | message           | files         |
-      | local    | feature | charlies commit 1 | charly_file_1 |
-      | local    | feature | my commit 1       | my_file_1     |
-      | remote   | feature | my commit 1       | my_file_1     |
-      | remote   | feature | charlies commit 1 | charly_file_1 |
+      | branch  | location         | message           | files         |
+      | feature | local and remote | charlies commit 1 | charly_file_1 |
+      | feature | local and remote | my commit 1       | my_file_1     |
     When I run `git sync`
     Then now I see the following commits
-      | location  | branch  | message           | files         |
-      | local     | feature | my commit 1       | my_file_1     |
-      | local     | feature | charlies commit 1 | charly_file_1 |
-      | remote    | feature | my commit 1       | my_file_1     |
-      | remote    | feature | charlies commit 1 | charly_file_1 |
+      | branch  | location         | message           | files         |
+      | feature | local and remote | my commit 1       | my_file_1     |
+      | feature | local and remote | charlies commit 1 | charly_file_1 |

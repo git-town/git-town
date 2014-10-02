@@ -44,13 +44,23 @@ Then /^(?:now )?(?:(?:I (?:still )?(?:have|see))) the following commits$/ do |co
 end
 
 
-Then /^(?:now )?Charly sees the following commits$/ do |commits_table|
+Then /^(?:now )?Charly(?: still)? sees the following commits$/ do |commits_table|
   expected_commits = commits_table.hashes
-                                 .each do |commit_data|
+                                  .each do |commit_data|
                                     symbolize_keys_deep! commit_data
                                     commit_data[:files] = commit_data[:files].split(',')
                                                                              .map(&:strip)
-                                 end
+                                    commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
+                                  end
+  expected_commits.map! do |commit_data|
+    locations = commit_data.delete :location
+    locations.map do |location|
+      result = commit_data.clone
+      result[:location] = location
+      result
+    end
+  end.flatten!
+
   at_path coworker_repository_path do
     expect(commits_in_repo).to match_array expected_commits
   end
