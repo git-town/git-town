@@ -236,14 +236,13 @@ Call this from the feature branch that you want to ship.
 
 ### git sync-fork
 
-_Syncs the main branch with the upstream repository.
-Designed for use with forks of open source repositories on GitHub._
+_Syncs the main branch with the upstream repository._
 
-Automates [configuring a remote for a fork](https://help.github.com/articles/configuring-a-remote-for-a-fork) (if not already configured)
-and [syncing a fork](https://help.github.com/articles/syncing-a-fork).
+Call this to bring the main branch up to date with the main branch of the remote `upstream`.
+
+If your respository is a fork on GitHub, `upstream` will be automatically set on first use.
 
 * run the command: `git sync-fork`
-* configure a remote for a fork only: `git sync-fork --configure`
 
 <table>
   <tr>
