@@ -40,7 +40,6 @@ Feature: Git Extract
     Then I end up on the "refactor" branch
     And my repo has a cherry-pick in progress
     And there is an abort script for "git extract"
-
     When I run `git extract --abort`
     Then I end up on the "feature" branch
     And I have the following commits
