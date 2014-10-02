@@ -1,7 +1,5 @@
 Feature: Git Sync-Fork
 
-  # TODO (Charlie): I think it shouldn't push to remotes/upstream/master (or main) here.
-  #                 But certainly not both. Please verify.
   Scenario: on the main branch with an upstream commit
     Given I am on the main branch
     And my repo has an upstream repo
@@ -15,7 +13,6 @@ Feature: Git Sync-Fork
       | branch                  | location         | message         | files         |
       | main                    | local and remote | upstream commit | upstream_file |
       | remotes/upstream/main   | remote           | upstream commit | upstream_file |
-      | remotes/upstream/master | remote           | upstream commit | upstream_file |
     And now I have the following committed files
       | branch | files         |
       | main   | upstream_file |

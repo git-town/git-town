@@ -4,7 +4,7 @@ def commits_in_repo
 
   result = []
   existing_local_branches.map do |local_branch_name|
-    run "git checkout #{local_branch_name}", allow_failures: true
+    run "git checkout #{local_branch_name}"
     commits = local_commits.each do |commit|
       commit[:location] = 'local'
       commit[:branch] = local_branch_name
@@ -13,7 +13,7 @@ def commits_in_repo
   end
 
   existing_remote_branches.map do |remote_branch_name|
-    run "git checkout origin/#{remote_branch_name}", allow_failures: true
+    run "git checkout #{remote_branch_name}"
     commits = local_commits.each do |commit|
       commit[:location] = 'remote'
       commit[:branch] = remote_branch_name
