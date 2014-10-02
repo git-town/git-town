@@ -107,3 +107,29 @@ def local_commits
 
   result
 end
+
+
+def verify_commits commits_table:, repository_path:
+  expected_commits = commits_table.hashes
+                                  .each do |commit_data|
+                                    symbolize_keys_deep! commit_data
+                                    commit_data[:files] = commit_data[:files].split(',')
+                                                                             .map(&:strip)
+                                    commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
+                                  end
+  expected_commits.map! do |commit_data|
+    locations = commit_data.delete :location
+    locations.map do |location|
+      result = commit_data.clone
+      result[:location] = location
+      if location == 'remote' && /^[^\/]+$/.match(result[:branch])
+        result[:branch] = "remotes/origin/#{result[:branch]}"
+      end
+      result
+    end
+  end.flatten!
+
+  at_path repository_path do
+    expect(commits_in_repo).to match_commits expected_commits
+  end
+end
