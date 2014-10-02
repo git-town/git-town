@@ -2,15 +2,20 @@
 
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-# Adds a remote 'upstream' by querying github to find the current repo's parent
+# Outputs error and exits
+function error_with_upstream_required {
+  echo_error_header
+  echo "Please add a remote 'upstream'"
+  exit_with_error
+}
+
+# Adds a remote 'upstream' by querying GitHub to find the current repo's parent
 function configure_upstream {
   local url=`remote_url origin`
   local repository=`github_parse_repository $url`
 
   if [ -z $repository ];  then
-    echo_error_header
-    echo "remote origin is not a GitHub repository, unable to determine upstream"
-    exit_with_error
+    error_with_upstream_required
   fi
 
   local protocol
@@ -23,9 +28,7 @@ function configure_upstream {
   local upstream_url=`github_upstream_url $repository $protocol`
 
   if [ -z $upstream_url ];  then
-    echo_error_header
-    echo "remote origin cannot be found or is not a fork of a GitHub repository, unable to determine upstream"
-    exit_with_error
+    error_with_upstream_required
   fi
 
   git remote add upstream $upstream_url
@@ -48,7 +51,7 @@ function sync_fork {
   restore_open_changes
 }
 
-if [ "$1" == "--configure" ]; then
+if [ "$1" == "--configure-only" ]; then
   echo_intro "CONFIGURING REMOTE UPSTREAM"
   configure_upstream
 else
