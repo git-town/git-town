@@ -113,8 +113,7 @@ def verify_commits commits_table:, repository_path:
   expected_commits = commits_table.hashes
                                   .each do |commit_data|
                                     symbolize_keys_deep! commit_data
-                                    commit_data[:files] = commit_data[:files].split(',')
-                                                                             .map(&:strip)
+                                    commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
                                     commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
                                   end
   expected_commits.map! do |commit_data|
