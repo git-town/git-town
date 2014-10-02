@@ -117,8 +117,7 @@ def verify_commits commits_table:, repository_path:
                                     commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
                                   end
   expected_commits.map! do |commit_data|
-    locations = commit_data.delete :location
-    locations.map do |location|
+    commit_data.delete(:location).map do |location|
       result = commit_data.clone
       result[:location] = location
       if location == 'remote' && /^[^\/]+$/.match(result[:branch])
