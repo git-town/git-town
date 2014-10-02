@@ -78,5 +78,5 @@ end
 
 
 Then /^there are no commits$/ do
-  expect(actual_commits).to eql []
+  expect(commits_in_repo).to eql []
 end

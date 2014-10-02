@@ -10,11 +10,11 @@ Feature: Git Ship
     And there are no more feature branches
     And there are no open changes
     And I have the following commits
-      | branch  | message      | files        |
-      | main    | feature_done | feature_file |
+      | branch  | location         | message      | files        |
+      | main    | local and remote | feature_done | feature_file |
     And now I have the following committed files
-      | branch | name         | content         |
-      | main   | feature_file | feature content |
+      | branch | files        |
+      | main   | feature_file |
 
 
   Scenario: feature branch with non-pulled updates in the repo
@@ -27,11 +27,11 @@ Feature: Git Ship
     And there are no more feature branches
     And there are no open changes
     And I have the following commits
-      | branch  | message      | files        |
-      | main    | feature_done | feature_file |
+      | branch  | location         | message      | files        |
+      | main    | local and remote | feature_done | feature_file |
     And now I have the following committed files
-      | branch | name         | content         |
-      | main   | feature_file | feature content |
+      | branch | files        |
+      | main   | feature_file |
 
 
   Scenario: on the main branch
@@ -87,7 +87,7 @@ Feature: Git Ship
     And there are no merge conflicts anymore
     And there is no abort script for "git ship" anymore
     And now I have the following commits
-      | branch  | message                     | files            |
-      | main    | conflicting main commit     | conflicting_file |
-      | feature | conflicting feature commit  | conflicting_file |
+      | branch  | location | message                     | files            |
+      | main    | local    | conflicting main commit     | conflicting_file |
+      | feature | local    | conflicting feature commit  | conflicting_file |
 
