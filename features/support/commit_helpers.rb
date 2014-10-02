@@ -5,7 +5,7 @@ def commits_in_repo
   result = []
   existing_local_branches.map do |local_branch_name|
     run "git checkout #{local_branch_name}", allow_failures: true
-    commits = commits_in_branch.each do |commit|
+    commits = local_commits.each do |commit|
       commit[:location] = 'local'
       commit[:branch] = local_branch_name
     end
@@ -14,7 +14,7 @@ def commits_in_repo
 
   existing_remote_branches.map do |remote_branch_name|
     run "git checkout origin/#{remote_branch_name}", allow_failures: true
-    commits = commits_in_branch.each do |commit|
+    commits = local_commits.each do |commit|
       commit[:location] = 'remote'
       commit[:branch] = remote_branch_name
     end
@@ -22,7 +22,6 @@ def commits_in_repo
   end
 
   run "git checkout #{current_branch}"
-
   result
 end
 
@@ -88,7 +87,7 @@ end
 
 
 # Returns the commits in the currently checked out branch
-def commits_in_branch
+def local_commits
   result = run("git log --oneline").fetch(:out)
                                    .split("\n")
                                    .map{|c| { hash: c.slice(0,6),

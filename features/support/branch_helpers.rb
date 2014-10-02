@@ -36,11 +36,7 @@ def existing_remote_branches
                                                        .map(&:strip)
                                                        .map do |branch|
                                                          match_data = /remotes\/origin\/(.+)/.match(branch)
-                                                         if match_data
-                                                           match_data[1]
-                                                         else
-                                                           branch
-                                                         end
+                                                         match_data ?  match_data[1] : branch
                                                        end
   remote_branches.delete('master')
   main_remote_branch = remote_branches.delete 'main'
