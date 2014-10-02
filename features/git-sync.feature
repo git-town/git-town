@@ -2,7 +2,7 @@ Feature: Git Sync
 
   Scenario: on the main branch
     Given I am on the main branch
-    And the following commits exist
+    And the following commits exist in my repository
       | location | message       | file name   |
       | local    | local commit  | local_file  |
       | remote   | remote commit | remote_file |
@@ -23,7 +23,7 @@ Feature: Git Sync
 
   Scenario: on a feature branch without a remote branch
     Given I am on a local feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message              | file name          |
       | main    | local    | local main commit    | local_main_file    |
       | main    | remote   | remote main commit   | remote_main_file   |
@@ -52,7 +52,7 @@ Feature: Git Sync
 
   Scenario: on a feature branch with a remote branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message               | file name           |
       | main    | local    | local main commit     | local_main_file     |
       | main    | remote   | remote main commit    | remote_main_file    |
@@ -83,7 +83,7 @@ Feature: Git Sync
 
   Scenario: user aborts after a merge conflict when pulling the feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                   | file name          | file content               |
       | main    | local    | main branch update        | main_branch_update | main branch update         |
       | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
@@ -112,7 +112,7 @@ Feature: Git Sync
 
   Scenario: user continues after resolving a merge conflict when pulling the feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                   | file name          | file content               |
       | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
       | feature | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
@@ -145,7 +145,7 @@ Feature: Git Sync
 
   Scenario: user aborts after a conflict when merging the main branch into the feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                   | file name        | file content    |
       | main    | local    | conflicting main commit   | conflicting_file | main content    |
       | feature | local    | conflicting local commit  | conflicting_file | feature content |
@@ -173,7 +173,7 @@ Feature: Git Sync
 
   Scenario: user continues after resolving the conflict when merging the main branch into the feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                     | file name        | file content    |
       | main    | local    | conflicting main commit     | conflicting_file | main content    |
       | feature | local    | conflicting feature commit  | conflicting_file | feature content |
@@ -203,7 +203,7 @@ Feature: Git Sync
 
   Scenario: user tries to continue without resolving an occurring merge conflict first
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                     | file name        | file content    |
       | main    | local    | conflicting main commit     | conflicting_file | main content    |
       | feature | local    | conflicting feature commit  | conflicting_file | feature content |

@@ -18,7 +18,7 @@ Feature: Git Hack
 
   Scenario: on a feature branch with uncommitted changes
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message        | file name    |
       | main    | local    | main commit    | main_file    |
       | feature | local    | feature commit | feature_file |
@@ -36,7 +36,7 @@ Feature: Git Hack
 
   Scenario: with non-pulled updates for the main branch
     Given I am on a feature branch
-    And the following commit exists
+    And the following commit exists in my repository
       | branch | location | message           | file name        |
       | main   | remote   | new_remote_commit | new_remote_file  |
     When I run `git hack hot_stuff`

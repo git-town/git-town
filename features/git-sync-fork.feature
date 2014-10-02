@@ -3,7 +3,7 @@ Feature: Git Sync Fork
   Scenario: on the main branch with an upstream commit
     Given I am on the main branch
     And my repo has an upstream repo
-    And the following commits exist
+    And the following commits exist in my repository
       | location | message         | file name     |
       | upstream | upstream commit | upstream_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -20,7 +20,7 @@ Feature: Git Sync Fork
   Scenario: on a feature branch with upstream commit in main branch
     Given I am on a feature branch
     And my repo has an upstream repo
-    And the following commits exist
+    And the following commits exist in my repository
       | branch | location | message         | file name     |
       | main   | upstream | upstream commit | upstream_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"

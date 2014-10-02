@@ -2,7 +2,7 @@ Feature: Git Ship
 
   Scenario: local feature branch
     Given I am on a local feature branch
-    And the following commit exists
+    And the following commit exists in my repository
       | location | file name    | file content    |
       | local    | feature_file | feature content |
     When I run `git ship 'feature_done'`
@@ -19,7 +19,7 @@ Feature: Git Ship
 
   Scenario: feature branch with non-pulled updates in the repo
     Given I am on a feature branch
-    And the following commit exists
+    And the following commit exists in my repository
       | location | file name    | file content    |
       | remote   | feature_file | feature content |
     When I run `git ship 'feature_done'`
@@ -55,7 +55,7 @@ Feature: Git Ship
 
   Scenario: conflict after pulling the feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | location | message                   | file name        | file content   |
       | remote   | conflicting remote commit | conflicting_file | remote content |
       | local    | conflicting local commit  | conflicting_file | local content  |
@@ -73,7 +73,7 @@ Feature: Git Ship
 
   Scenario: conflict after the squash-merge of the feature branch into the main branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message                    | file name        | file content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

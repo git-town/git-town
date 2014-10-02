@@ -8,7 +8,7 @@ Feature: Git Extract
 
   Scenario: on a feature branch
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message            | file name        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
@@ -34,7 +34,7 @@ Feature: Git Extract
 
   Scenario: user aborts after merge conflict during cherry-picking
     Given I am on a feature branch
-    And the following commits exist
+    And the following commits exist in my repository
       | branch  | location | message            | file name        | file content    |
       | main    | local    | conflicting commit | conflicting_file | main content    |
       | feature | local    | conflicting commit | conflicting_file | feature content |
