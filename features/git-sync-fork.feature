@@ -1,5 +1,7 @@
 Feature: Git Sync Fork
 
+  # TODO (Charlie): I think it shouldn't push to remotes/upstream/master (or main) here.
+  #                 But certainly not both. Please verify.
   Scenario: on the main branch with an upstream commit
     Given I am on the main branch
     And my repo has an upstream repo
@@ -9,11 +11,13 @@ Feature: Git Sync Fork
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "main" branch
-    And I have the following commits
-      | branch | message         | files         |
-      | main   | upstream commit | upstream_file |
+    And I see the following commits
+      | branch                  | location         | message         | files         |
+      | main                    | local and remote | upstream commit | upstream_file |
+      | remotes/upstream/main   | remote           | upstream commit | upstream_file |
+      | remotes/upstream/master | remote           | upstream commit | upstream_file |
     And now I have the following committed files
-      | branch | name          |
+      | branch | files         |
       | main   | upstream_file |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
@@ -26,11 +30,11 @@ Feature: Git Sync Fork
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "feature" branch
-    And I have the following commits
-      | branch | message         | files         |
-      | main   | upstream commit | upstream_file |
+    And I see the following commits
+      | branch | location         | message         | files         |
+      | main   | local and remote | upstream commit | upstream_file |
     And now I have the following committed files
-      | branch | name          |
+      | branch | files         |
       | main   | upstream_file |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 

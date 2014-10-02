@@ -34,7 +34,14 @@ def existing_remote_branches
   remote_branches = run('git branch -a | grep remotes').fetch(:out)
                                                        .split("\n")
                                                        .map(&:strip)
-                                                       .map {|branch| /remotes\/origin\/(.+)/.match(branch)[1]}
+                                                       .map do |branch|
+                                                         match_data = /remotes\/origin\/(.+)/.match(branch)
+                                                         if match_data
+                                                           match_data[1]
+                                                         else
+                                                           branch
+                                                         end
+                                                       end
   remote_branches.delete('master')
   main_remote_branch = remote_branches.delete 'main'
   [main_remote_branch].concat(remote_branches)
