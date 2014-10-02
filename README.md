@@ -7,7 +7,7 @@ automate the typical high-level operations in
 and others.
 It is designed for workflows that have a main branch (typically "development" or "master")
 from which feature branches are cut and into which they are merged,
-and assumes you use a central code repository like [Github](http://github.com).
+and assumes you use a central code repository like [GitHub](http://github.com).
 
 Git Town goes the extra mile to keep everything in sync at all times,
 thereby minimizing the probability and severity of merge conflicts.

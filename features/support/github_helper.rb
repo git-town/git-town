@@ -26,6 +26,6 @@ def github_check_rate_limit!
 
   # Grabbing the rails forks + 4 tests hit the API
   if remaining < 5
-    raise "Github API rate limit reached - will reset at #{reset}"
+    raise "GitHub API rate limit reached - will reset at #{reset}"
   end
 end
