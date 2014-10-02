@@ -26,7 +26,6 @@ def commits_in_repo
 end
 
 
-
 def create_local_commit options
   run "git checkout #{options[:branch]}"
   File.write options[:file_name], options[:file_content]
@@ -64,7 +63,7 @@ def create_commits commits_table
     end
     if options[:commit_location].delete :remote
       at_path coworker_repository_path do
-        run 'git fetch'
+        run 'git pull'
         create_local_commit options
         run 'git push'
       end
@@ -76,13 +75,14 @@ def create_commits commits_table
       end
     end
 
+    # Make sure we understood all commit data
     if options[:commit_location] != []
       raise "Unused commit location: #{options[:commit_location]}"
     end
   end
 
   # Go back to the branch that was checked out initially
-  run "git checkout #{current_branch}", allow_failures: true
+  run "git checkout #{current_branch}"
 end
 
 
