@@ -3,6 +3,8 @@ Given /^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/ do 
 end
 
 
+
+
 Then /^file "(.*?)" has a merge conflict$/ do |file|
   run("git status | grep 'both added.*#{file}' | wc -l")[:out] == '1'
 end
@@ -48,8 +50,6 @@ Then /^(?:now I|I still) have the following committed files$/ do |files_data|
 end
 
 
-
-
 Then /^I don't have an uncommitted file with name: "(.*?)"$/ do |file_name|
   actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
   expect(actual_files).to_not include file_name
@@ -63,4 +63,3 @@ Then /^I (?:still|again) have an uncommitted file with name: "([^"]+)" and conte
   # Verify the file content
   expect(IO.read expected_name).to eql expected_content
 end
-
