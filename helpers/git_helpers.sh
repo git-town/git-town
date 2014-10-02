@@ -40,8 +40,7 @@ function create_feature_branch {
 }
 
 
-# Deletes the given feature branch from both the local machine
-# as well as from Github.
+# Deletes the given feature branch from both the local machine and on remote.
 #
 # If you provide 'force' as an argument, it deletes the branch even if it has
 # unmerged changes.
@@ -217,11 +216,11 @@ function pull_upstream {
 }
 
 
-# Pushes the branch with the given name to the remote repo
+# Pushes the branch with the given name to origin
 function push_branch {
   local branch_name=$1
   checkout_branch $branch_name
-  echo_header "Pushing '$branch_name' to Github"
+  echo_header "Pushing '$branch_name'"
   determine_tracking_branch
   if [ $has_tracking_branch = true ]; then
     git push
@@ -231,7 +230,7 @@ function push_branch {
 }
 
 
-# Pushes the current feature branch to the repo.
+# Pushes the current feature branch to origin
 #
 # If the parameter 'force' is given, uses a force push.
 function push_feature_branch {
@@ -250,7 +249,7 @@ function push_feature_branch {
 }
 
 
-# Pushes the main development branch to Github.
+# Pushes the main branch to origin
 function push_main_branch {
   push_branch $main_branch_name
 }
