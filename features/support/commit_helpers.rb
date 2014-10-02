@@ -103,7 +103,7 @@ def local_commits
   end
 
   # Remove the hashes from the commits
-  result.each{|c| c.delete(:hash)}
+  result.each{|commit| commit.delete(:hash)}
 
   result
 end
