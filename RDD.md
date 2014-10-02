@@ -264,7 +264,7 @@ Git Town operates under the following assumptions:
 
 * You have a **main branch** (typically "development" or "master") from which feature branches are cut, and into which they are merged. In this documentation we will use "master".
 * You follow a per-project strategy that prefers either _rebases_ or _merges_ for updating branches, and _squash merges_ or _normal merges_ for merging feature branches into the main branch\*.
-* You use a central code repository like [Github](http://github.com) (called __repo__ from now on).
+* You use a central code repository like [GitHub](http://github.com) (called __repo__ from now on).
 
 Each Git Town command comes in a _rebase_ and a _merge_ version.
 Which option is used can be configured.
