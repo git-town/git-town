@@ -109,6 +109,8 @@ def local_commits
 end
 
 
+# Verifies that the commits in the repository at the given path
+# are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
   expected_commits = commits_table.hashes
                                   .each do |commit_data|
