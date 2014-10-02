@@ -1,4 +1,4 @@
-Given /^the following commits exist in my repository$/ do |commits_table|
+Given /^the following commits? exists? in my repository$/ do |commits_table|
   at_path local_repository_path do
     create_commits commits_table
   end

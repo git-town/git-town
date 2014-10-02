@@ -27,10 +27,10 @@ Feature: Git Hack
     Then I end up on the "hot_stuff" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
-      | branch    | message        | files        |
-      | main      | main commit    | main_file    |
-      | feature   | feature commit | feature_file |
-      | hot_stuff | main commit    | main_file    |
+      | branch    | location | message        | files        |
+      | main      | local    | main commit    | main_file    |
+      | feature   | local    | feature commit | feature_file |
+      | hot_stuff | local    | main commit    | main_file    |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
@@ -42,11 +42,11 @@ Feature: Git Hack
     When I run `git hack hot_stuff`
     Then I end up on the "hot_stuff" branch
     And I have the following commits
-      | branch    | message           | files           |
-      | main      | new_remote_commit | new_remote_file |
-      | hot_stuff | new_remote_commit | new_remote_file |
+      | branch    | location         | message           | files           |
+      | main      | local and remote | new_remote_commit | new_remote_file |
+      | hot_stuff | local            | new_remote_commit | new_remote_file |
     And now I have the following committed files
-      | branch    | name            |
+      | branch    | files           |
       | main      | new_remote_file |
       | hot_stuff | new_remote_file |
 
