@@ -66,9 +66,9 @@ function delete_feature_branch {
 # Makes the result available in the global variable $has_open_changes.
 function determine_open_changes {
   if [ `git status --porcelain | wc -l` == 0 ]; then
-    has_open_changes=false
+    echo false
   else
-    has_open_changes=true
+    echo true
   fi
 }
 

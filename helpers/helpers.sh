@@ -9,4 +9,4 @@ source $current_dir/github_helpers.sh
 
 feature_branch_name=`get_current_branch_name`
 current_branch_name=`get_current_branch_name`
-determine_open_changes
+has_open_changes=`determine_open_changes`
