@@ -216,8 +216,7 @@ function push_main_branch {
 
 # Returns the url for the remote with the specified name
 function remote_url {
-  local url=`git remote -v | grep "$1.*fetch" | awk '{print $2}'`
-  echo $url
+  git remote -v | grep "$1.*fetch" | awk '{print $2}'
 }
 
 
