@@ -231,18 +231,12 @@ function push_branch {
 
 
 # Pushes the current feature branch to origin
-#
-# If the parameter 'force' is given, uses a force push.
 function push_feature_branch {
   local options=$1
   echo_header "Pushing the updated '$feature_branch_name' to the repo"
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    if [ $options == 'force' ]; then
-      git push --force
-    else
-      git push
-    fi
+    git push
   else
     git push -u origin $feature_branch_name
   fi
