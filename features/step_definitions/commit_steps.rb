@@ -5,8 +5,15 @@ Given /^the following commits? exists? in my repository$/ do |commits_table|
 end
 
 
-Given /^the following commits exist in Charly's repository$/ do |commits_table|
+Given /^the following commits? exists? in Charly's repository$/ do |commits_table|
   at_path coworker_repository_path do
+    create_commits commits_table
+  end
+end
+
+
+Given /^the following commits? exists? in the upstream repository$/ do |commits_table|
+  at_path local_repository_path do
     create_commits commits_table
   end
 end
