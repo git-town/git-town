@@ -1,6 +1,7 @@
 # Git Town Release Notes
 
 ## 0.3
+* multi-user support for feature branches (https://github.com/Originate/git-town/issues/35)
 * <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs (you need Ruby 2.x)
 * completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
 * stores configuration in the Git configuration instead of a dedicated file
