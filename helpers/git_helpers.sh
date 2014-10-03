@@ -241,7 +241,9 @@ function squash_merge_feature_branch {
   else
     git merge --squash $feature_branch_name && git commit -a -m $*
   fi
-  if [ $? != 0 ]; then error_squash_merge_feature_branch; fi
+  if [ $? != 0 ]; then
+    error_squash_merge_feature_branch
+  fi
 }
 
 
@@ -260,5 +262,7 @@ function update_feature_branch {
   echo_header "Rebasing the '$feature_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git merge $main_branch_name
-  if [ $? != 0 ]; then error_update_feature_branch; fi
+  if [ $? != 0 ]; then
+    error_update_feature_branch
+  fi
 }
