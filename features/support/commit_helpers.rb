@@ -135,8 +135,8 @@ def verify_commits commits_table:, repository_path:
       commit_data_clone = commit_data.clone
       commit_data_clone[:location] = location
 
-      # Convert simple remote branches ('feature')
-      # into their full branch name ('remotes/origin/feature')
+      # Convert local branch names ('feature')
+      # into their corresponding tracking branch names ('remotes/origin/feature')
       if location == 'remote' && is_local_branch_name?(commit_data_clone[:branch])
         commit_data_clone[:branch] = "remotes/origin/#{commit_data_clone[:branch]}"
       end
