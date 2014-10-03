@@ -23,9 +23,9 @@ def existing_local_branches
 end
 
 
-# Returns the names of all existing local branches.
+# Returns the names of all existing remote branches.
 #
-# Does not return the "master" branch nor remote branches.
+# Does not return the "master" branch.
 #
 # The branches are ordered this ways:
 # * main branch
@@ -36,9 +36,7 @@ def existing_remote_branches
                                                        .map(&:strip)
   remote_branches.delete('remotes/origin/master')
   remote_branches.delete('remotes/origin/HEAD -> origin/master')
-  main_remote_branch = remote_branches.delete 'main'
-  [main_remote_branch].concat(remote_branches)
-                      .compact
+  remote_branches
 end
 
 
