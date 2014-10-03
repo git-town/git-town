@@ -94,7 +94,7 @@ end
 
 # Returns whether the given branch name is simple ('feature')
 # or not ('remotes/origin/feature')
-def is_simple_branch_name branch_name
+def is_local_branch_name? branch_name
   /^[^\/]+$/.match branch_name
 end
 
@@ -137,7 +137,7 @@ def verify_commits commits_table:, repository_path:
 
       # Convert simple remote branches ('feature')
       # into their full branch name ('remotes/origin/feature')
-      if location == 'remote' && is_simple_branch_name(commit_data_clone[:branch])
+      if location == 'remote' && is_local_branch_name?(commit_data_clone[:branch])
         commit_data_clone[:branch] = "remotes/origin/#{commit_data_clone[:branch]}"
       end
       commit_data_clone
