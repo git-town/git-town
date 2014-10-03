@@ -86,7 +86,7 @@ function abort_sync {
 
 function continue_sync {
   echo_intro "CONTINUING THE PREVIOUS GIT SYNC"
-  determine_rebase_in_progress
+  local rebase_in_progress=`determine_rebase_in_progress`
   if [ $rebase_in_progress == true ]; then
     echo_red "There is currently a rebase in progress."
     echo "You must resolve the conflicts and run 'git rebase --continue'"

@@ -78,9 +78,9 @@ function determine_open_changes {
 # Makes the result available in the global varible $rebase_in_progress
 function determine_rebase_in_progress {
   if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
-    rebase_in_progress=true
+    echo true
   else
-    rebase_in_progress=false
+    echo false
   fi
 }
 
