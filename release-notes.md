@@ -2,14 +2,14 @@
 
 ## 0.3
 * multi-user support for feature branches (https://github.com/Originate/git-town/issues/35)
+* git sync-fork
 * <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs (you need Ruby 2.x)
-* completely uses local Git repos for testing: https://github.com/Originate/git-town/issues/25
+* much faster testing thanks to completely local test Git repos (https://github.com/Originate/git-town/issues/25)
 * stores configuration in the Git configuration instead of a dedicated file
-* always cleans up abort and continue scripts
+* always cleans up abort and continue scripts after using one of them
 * only makes one fetch from the central repo per session
 * automatically prunes remote branches when fetching updates
 * simpler readme, dedicated RDD document
-* git sync-fork
 
 
 ## 0.2.2
