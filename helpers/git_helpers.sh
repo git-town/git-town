@@ -7,7 +7,7 @@
 # is already checked out.
 function checkout_branch {
   local branch_name=$1
-  determine_current_branch_name
+  local current_branch_name=`get_current_branch_name`
   if [ ! "$current_branch_name" = "$branch_name" ]; then
     git checkout $branch_name
   fi
@@ -61,17 +61,6 @@ function delete_feature_branch {
 }
 
 
-# Determines the current Git branch name.
-#
-# Makes the result available in the global variable $current_branch_name.
-#
-# Call this method, and not 'determine_feature_branch_name', if you want
-# to get the current git branch.
-function determine_current_branch_name {
-  current_branch_name=$(get_current_branch_name)
-}
-
-
 # Determines the name of the current Git feature branch that we are
 # working on.
 #
@@ -116,7 +105,7 @@ function determine_rebase_in_progress {
 #
 # Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
-  determine_current_branch_name
+  local current_branch_name=`get_current_branch_name`
   if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
     has_tracking_branch=false
   else
@@ -140,7 +129,7 @@ function ensure_no_open_changes {
 # is on the main development branch.
 function ensure_on_feature_branch {
   local error_message=$1
-  determine_current_branch_name
+  local current_branch_name=`get_current_branch_name`
   if [ "$current_branch_name" = "$main_branch_name" ]; then
     echo_error_header
     echo "  $error_message"
@@ -209,7 +198,7 @@ function pull_main_branch {
 
 # Pulls updates of the current branch fromt the upstream repo
 function pull_upstream {
-  determine_current_branch_name
+  local current_branch_name=`get_current_branch_name`
   echo_header "Pulling 'upstream/$current_branch_name' into '$current_branch_name'"
   fetch_upstream
   git merge upstream/$current_branch_name
