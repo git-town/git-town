@@ -164,7 +164,7 @@ function get_current_branch_name {
 # by tracking this through the global variable $repo_fetched.
 function fetch_repo {
   if [ $repo_fetched == false ]; then
-    git fetch -p
+    git fetch --prune
     repo_fetched=true
   fi
 }
