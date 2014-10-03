@@ -4,7 +4,7 @@ When /^I successfully finish the merge by resolving the merge conflict of file "
 end
 
 
-Then /^my repo( still)? has a merge in progress$/ do |_|
+Then /^my repo(?: still)? has a merge in progress$/ do
   expect(merge_in_progress).to be_truthy
 end
 
