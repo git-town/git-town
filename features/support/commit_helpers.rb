@@ -57,12 +57,9 @@ def create_commits commits_table
       file_name: commit_data.delete('file name') { 'default file name' },
       file_content: commit_data.delete('file content') { 'default file content' },
       commit_message: commit_data.delete('message') { 'default commit message' },
-      commit_location: commit_data.delete('location'){%i[local remote]},
+      commit_location: Kappamaki.from_sentence(commit_data.delete('location'){'local and remote'}),
       branch: commit_data.delete('branch') { current_branch }
     }
-    if options[:commit_location].is_a? String
-      options[:commit_location] = [options[:commit_location].to_sym]
-    end
 
     # Make sure we understood all commit data
     if commit_data != {}
@@ -70,17 +67,17 @@ def create_commits commits_table
     end
 
     # Create commits
-    if options[:commit_location].delete :local
+    if options[:commit_location].delete 'local'
       create_local_commit options
     end
-    if options[:commit_location].delete :remote
+    if options[:commit_location].delete 'remote'
       at_path coworker_repository_path do
         run 'git pull'
         create_local_commit options
         run 'git push'
       end
     end
-    if options[:commit_location].delete :upstream
+    if options[:commit_location].delete 'upstream'
       at_path upstream_local_repository_path do
         create_local_commit options
         run 'git push'
