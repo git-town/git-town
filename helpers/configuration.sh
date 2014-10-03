@@ -3,14 +3,13 @@
 
 # Stores the current name branch name in the config file.
 function store_main_branch_name {
-  git config git-town.main-branch-name $main_branch_name
+  git config git-town.main-branch-name $1
 }
 
 
 # Update old configuration to new one if it exists
 if [[ -f ".main_branch_name" ]]; then
-  main_branch_name=`cat .main_branch_name`
-  store_main_branch_name
+  store_main_branch_name `cat .main_branch_name`
   rm .main_branch_name
 fi
 
@@ -27,7 +26,7 @@ if [[ -z "$main_branch_name" ]]; then
     echo "  Please try again."
     exit_with_error
   fi
-  store_main_branch_name
+  store_main_branch_name $main_branch_name
   echo
   echo "I have stored the main branch name '$main_branch_name' for you."
 fi
