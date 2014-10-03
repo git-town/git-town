@@ -62,8 +62,6 @@ function delete_feature_branch {
 
 
 # Determines whether there are open changes in Git.
-#
-# Makes the result available in the global variable $has_open_changes.
 function determine_open_changes {
   if [ `git status --porcelain | wc -l` == 0 ]; then
     echo false
@@ -74,8 +72,6 @@ function determine_open_changes {
 
 
 # Determines whether there is currently a rebase in progress.
-#
-# Makes the result available in the global varible $rebase_in_progress
 function determine_rebase_in_progress {
   if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
     echo true
