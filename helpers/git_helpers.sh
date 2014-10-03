@@ -61,23 +61,6 @@ function delete_feature_branch {
 }
 
 
-# Determines the name of the current Git feature branch that we are
-# working on.
-#
-# Makes the result available in the global variable $feature_branch_name.
-#
-# If you need to know which branch we are curently on, please call
-# determine_current_branch_name and access $current_branch_name.
-#
-# The idea is that the user starts the script in the feature branch,
-# we read the branch name using this script once in the beginning,
-# and then we don't touch this variable anymore by not running this script
-# ever again.
-function determine_feature_branch_name {
-  feature_branch_name=$(get_current_branch_name)
-}
-
-
 # Determines whether there are open changes in Git.
 #
 # Makes the result available in the global variable $has_open_changes.
