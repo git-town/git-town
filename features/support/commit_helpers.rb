@@ -26,11 +26,20 @@ def commits_in_repo
 end
 
 
-def create_local_commit options
-  run "git checkout #{options[:branch]}"
-  File.write options[:file_name], options[:file_content]
-  run "git add #{options[:file_name]}"
-  run "git commit -m '#{options[:commit_message]}'"
+# Creates a new commit with the given properties.
+#
+# Parameter is a Cucumber table line
+def create_local_commit commit_data
+  run "git checkout #{commit_data.delete 'branch'}"
+  filename = commit_data.delete 'file name'
+  File.write filename, commit_data.delete('file content')
+  run "git add #{filename}"
+  run "git commit -m '#{commit_data.delete 'message'}'"
+
+  # Make sure we understood all the given commit data
+  unless commit_data.empty?
+    raise "Unknown commit options: #{commit_data}"
+  end
 end
 
 
@@ -52,41 +61,38 @@ def create_commits commits_table
 
   commits_table.hashes.each do |commit_data|
 
-    # Parse all the given options and augment with default values
-    options = {
-      file_name: commit_data.delete('file name') { 'default file name' },
-      file_content: commit_data.delete('file content') { 'default file content' },
-      commit_message: commit_data.delete('message') { 'default commit message' },
-      commit_location: Kappamaki.from_sentence(commit_data.delete('location'){'local and remote'}),
-      branch: commit_data.delete('branch') { current_branch }
-    }
+    # Augment the commit data with default values
+    commit_data.reverse_merge!({ 'file name' => 'default file name',
+                                 'file content' => 'default file content',
+                                 'message' => 'default commit message',
+                                 'location' => 'local and remote',
+                                 'branch' => current_branch })
 
-    # Make sure we understood all commit data
-    if commit_data != {}
-      raise "Unused commit specifiers: #{commit_data}"
-    end
+    # Parse the given locations into an array
+    commit_data['location'] = Kappamaki.from_sentence commit_data['location']
 
-    # Create commits
-    if options[:commit_location].delete 'local'
-      create_local_commit options
+    # Create the commits
+    locations = commit_data.delete('location')
+    if locations.delete 'local'
+      create_local_commit commit_data
     end
-    if options[:commit_location].delete 'remote'
+    if locations.delete 'remote'
       at_path coworker_repository_path do
         run 'git pull'
-        create_local_commit options
+        create_local_commit commit_data
         run 'git push'
       end
     end
-    if options[:commit_location].delete 'upstream'
+    if locations.delete 'upstream'
       at_path upstream_local_repository_path do
-        create_local_commit options
+        create_local_commit commit_data
         run 'git push'
       end
     end
 
-    # Make sure we understood all commit data
-    if options[:commit_location] != []
-      raise "Unused commit location: #{options[:commit_location]}"
+    # Make sure we understood all the given locations
+    if locations != []
+      raise "Unused commit location: #{locations}"
     end
   end
 
