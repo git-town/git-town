@@ -62,11 +62,8 @@ def create_commits commits_table
                                  location: 'local and remote',
                                  branch: current_branch })
 
-    # Parse the given locations into an array
-    commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
-
     # Create the commits
-    locations = commit_data.delete(:location)
+    locations = Kappamaki.from_sentence commit_data.delete(:location)
     if locations.delete 'local'
       create_local_commit commit_data
     end
