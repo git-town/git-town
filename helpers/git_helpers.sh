@@ -117,8 +117,7 @@ function ensure_on_feature_branch {
 
 # Returns the current branch name
 function get_current_branch_name {
-  local result=`git branch | grep "*" | awk '{print $2}'`
-  echo $result
+  git branch | grep "*" | awk '{print $2}'
 }
 
 
