@@ -48,7 +48,7 @@ function delete_feature_branch {
   local options=$1
   echo_header "Removing the old '$feature_branch_name' branch"
   checkout_feature_branch
-  determine_tracking_branch
+  local has_tracking_branch=`determine_tracking_branch`
   checkout_main_branch
   if [[ "$options" == "force" ]]; then
     git branch -D $feature_branch_name
@@ -81,14 +81,12 @@ function determine_rebase_in_progress {
 }
 
 # Determines whether the feature branch has a remote tracking branch.
-#
-# Makes the result available in the global variable $has_tracking_branch.
 function determine_tracking_branch {
   local current_branch_name=`get_current_branch_name`
   if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
-    has_tracking_branch=false
+    echo false
   else
-    has_tracking_branch=true
+    echo true
   fi
 }
 
@@ -150,7 +148,7 @@ function fetch_upstream {
 function pull_feature_branch {
   echo_header "Pulling updates for the '$feature_branch_name' branch"
   checkout_feature_branch
-  determine_tracking_branch
+  local has_tracking_branch=`determine_tracking_branch`
   if [ $has_tracking_branch == true ]; then
     fetch_repo
     git rebase origin/$feature_branch_name
@@ -165,7 +163,7 @@ function pull_feature_branch {
 function pull_main_branch {
   echo_header "Pulling updates for the '$main_branch_name' branch"
   checkout_main_branch
-  determine_tracking_branch
+  local has_tracking_branch=`determine_tracking_branch`
   if [ $has_tracking_branch == true ]; then
     fetch_repo
     git rebase origin/$main_branch_name
@@ -189,7 +187,7 @@ function push_branch {
   local branch_name=$1
   checkout_branch $branch_name
   echo_header "Pushing '$branch_name'"
-  determine_tracking_branch
+  local has_tracking_branch=`determine_tracking_branch`
   if [ $has_tracking_branch = true ]; then
     git push
   else
@@ -202,7 +200,7 @@ function push_branch {
 function push_feature_branch {
   local options=$1
   echo_header "Pushing the updated '$feature_branch_name' to the repo"
-  determine_tracking_branch
+  local has_tracking_branch=`determine_tracking_branch`
   if [ $has_tracking_branch == true ]; then
     git push
   else
