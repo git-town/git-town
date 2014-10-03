@@ -35,12 +35,24 @@ end
 
 
 # Creates the commits described in the given Cucumber table
+#
+# The following table columns are supported:
+# * branch: branch name
+# * location (optional): branch location
+#     - local: commit is created in the locally checked out developer repository only
+#     - remote: commit is created in the remote repository only
+#     - upstream: commit is created in the upstream repository only
+#   or any combination of them.
+#   Defaults to 'local and remote'
+# * message (optional): commit message
+# * file name (optional): name of the file to be committed
+# * file content (optional): content of the file to be committed
 def create_commits commits_table
   current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
 
   commits_table.hashes.each do |commit_data|
 
-    # Gather all the given options and augment with default values
+    # Parse all the given options and augment with default values
     options = {
       file_name: commit_data.delete('file name') { 'default file name' },
       file_content: commit_data.delete('file content') { 'default file content' },
