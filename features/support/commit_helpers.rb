@@ -29,17 +29,11 @@ end
 # Creates a new commit with the given properties.
 #
 # Parameter is a Cucumber table line
-def create_local_commit commit_data
-  run "git checkout #{commit_data.delete 'branch'}"
-  filename = commit_data.delete 'file name'
-  File.write filename, commit_data.delete('file content')
-  run "git add #{filename}"
-  run "git commit -m '#{commit_data.delete 'message'}'"
-
-  # Make sure we understood all the given commit data
-  unless commit_data.empty?
-    raise "Unknown commit options: #{commit_data}"
-  end
+def create_local_commit branch:, file_name:, file_content:, message:
+  run "git checkout #{branch}"
+  File.write file_name, file_content
+  run "git add #{file_name}"
+  run "git commit -m '#{message}'"
 end
 
 
@@ -60,19 +54,20 @@ def create_commits commits_table
   current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
 
   commits_table.hashes.each do |commit_data|
+    symbolize_keys_deep! commit_data
 
     # Augment the commit data with default values
-    commit_data.reverse_merge!({ 'file name' => 'default file name',
-                                 'file content' => 'default file content',
-                                 'message' => 'default commit message',
-                                 'location' => 'local and remote',
-                                 'branch' => current_branch })
+    commit_data.reverse_merge!({ file_name: 'default file name',
+                                 file_content: 'default file content',
+                                 message: 'default commit message',
+                                 location: 'local and remote',
+                                 branch: current_branch })
 
     # Parse the given locations into an array
-    commit_data['location'] = Kappamaki.from_sentence commit_data['location']
+    commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
 
     # Create the commits
-    locations = commit_data.delete('location')
+    locations = commit_data.delete(:location)
     if locations.delete 'local'
       create_local_commit commit_data
     end
