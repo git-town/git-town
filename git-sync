@@ -32,7 +32,7 @@ function error_pull_feature_branch {
   # Create the continue file.
   echo "pull_main_branch" > $continue_script
   echo "update_feature_branch" >> $continue_script
-  echo "push_feature_branch 'force'" >> $continue_script
+  echo "push_feature_branch" >> $continue_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
@@ -46,18 +46,18 @@ function error_pull_feature_branch {
 }
 
 
-# Called by update_feature_branch when the rebase fails with merge conflicts
+# Called by update_feature_branch when the merge fails with merge conflicts
 function error_update_feature_branch {
   echo_red "ERROR WHILE REBASING THE FEATURE BRANCH AGAINST THE MAIN BRANCH"
 
   # Create the abort file
-  echo "git rebase --abort" > $abort_script
+  echo "git merge --abort" > $abort_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
   # Create the continue file
-  echo "push_feature_branch 'force'"  > $continue_script
+  echo "push_feature_branch"  > $continue_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
@@ -119,7 +119,7 @@ function perform_sync {
     pull_feature_branch
     pull_main_branch
     update_feature_branch
-    push_feature_branch 'force'
+    push_feature_branch
   fi
   restore_open_changes
   echo_all_done

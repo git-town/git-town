@@ -1,3 +1,10 @@
+When /^Charlie runs `([^`]+)`$/ do |command|
+  at_path coworker_repository_path do
+    @last_run_result = run command
+  end
+end
+
+
 When /^I run `([^`]+)`$/ do |command|
   @last_run_result = run command
 end
