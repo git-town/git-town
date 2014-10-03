@@ -86,6 +86,12 @@ def create_commits commits_table
 end
 
 
+# Returns whether the given branch name is simple ('feature')
+# or not ('remotes/origin/feature')
+def is_simple_branch_name branch_name
+  /^[^\/]+$/.match branch_name
+end
+
 # Returns the commits in the currently checked out branch
 def local_commits
   result = run("git log --oneline").fetch(:out)
@@ -112,22 +118,25 @@ end
 # Verifies that the commits in the repository at the given path
 # are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
-  expected_commits = commits_table.hashes
-                                  .each do |commit_data|
-                                    symbolize_keys_deep! commit_data
-                                    commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
-                                    commit_data[:location] = Kappamaki.from_sentence commit_data[:location]
-                                  end
-  expected_commits.map! do |commit_data|
-    commit_data.delete(:location).map do |location|
-      result = commit_data.clone
-      result[:location] = location
-      if location == 'remote' && /^[^\/]+$/.match(result[:branch])
-        result[:branch] = "remotes/origin/#{result[:branch]}"
+  expected_commits = commits_table.hashes.map do |commit_data|
+    symbolize_keys_deep! commit_data
+
+    # Convert file string list into real array
+    commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
+
+    # Create individual expected commits for each location provided
+    Kappamaki.from_sentence(commit_data[:location]).map do |location|
+      commit_data_clone = commit_data.clone
+      commit_data_clone[:location] = location
+
+      # Convert simple remote branches ('feature')
+      # into their full branch name ('remotes/origin/feature')
+      if location == 'remote' && is_simple_branch_name(commit_data_clone[:branch])
+        commit_data_clone[:branch] = "remotes/origin/#{commit_data_clone[:branch]}"
       end
-      result
+      commit_data_clone
     end
-  end.flatten!
+  end.flatten
 
   at_path repository_path do
     expect(commits_in_repo).to match_commits expected_commits
