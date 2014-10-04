@@ -7,8 +7,7 @@
 # is already checked out.
 function checkout_branch {
   local branch_name=$1
-  local current_branch_name=`get_current_branch_name`
-  if [ ! "$current_branch_name" = "$branch_name" ]; then
+  if [ ! "`get_current_branch_name`" = "$branch_name" ]; then
     git checkout $branch_name
   fi
 }
@@ -106,8 +105,7 @@ function ensure_no_open_changes {
 # is on the main development branch.
 function ensure_on_feature_branch {
   local error_message=$1
-  local current_branch_name=`get_current_branch_name`
-  if [ "$current_branch_name" = "$main_branch_name" ]; then
+  if [ "`get_current_branch_name`" = "$main_branch_name" ]; then
     echo_error_header
     echo "  $error_message"
     exit_with_error
@@ -147,8 +145,7 @@ function fetch_upstream {
 function pull_feature_branch {
   echo_header "Pulling updates for the '$feature_branch_name' branch"
   checkout_feature_branch
-  local has_tracking_branch=`determine_tracking_branch`
-  if [ $has_tracking_branch == true ]; then
+  if [ `determine_tracking_branch` == true ]; then
     fetch_repo
     git rebase origin/$feature_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
@@ -162,8 +159,7 @@ function pull_feature_branch {
 function pull_main_branch {
   echo_header "Pulling updates for the '$main_branch_name' branch"
   checkout_main_branch
-  local has_tracking_branch=`determine_tracking_branch`
-  if [ $has_tracking_branch == true ]; then
+  if [ `determine_tracking_branch` == true ]; then
     fetch_repo
     git rebase origin/$main_branch_name
   else
@@ -186,8 +182,7 @@ function push_branch {
   local branch_name=$1
   checkout_branch $branch_name
   echo_header "Pushing '$branch_name'"
-  local has_tracking_branch=`determine_tracking_branch`
-  if [ $has_tracking_branch = true ]; then
+  if [ `determine_tracking_branch` = true ]; then
     git push
   else
     git push -u origin $branch_name
@@ -199,8 +194,7 @@ function push_branch {
 function push_feature_branch {
   local options=$1
   echo_header "Pushing the updated '$feature_branch_name' to the repo"
-  local has_tracking_branch=`determine_tracking_branch`
-  if [ $has_tracking_branch == true ]; then
+  if [ `determine_tracking_branch` == true ]; then
     git push
   else
     git push -u origin $feature_branch_name
