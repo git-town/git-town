@@ -12,7 +12,7 @@ function error_cherry_pick {
 
   # Create the abort file.
   echo "git cherry-pick --abort" > $abort_script
-  echo "git checkout $feature_branch_name" >> $abort_script
+  echo "git checkout $current_branch_name" >> $abort_script
   echo "git branch -D $1" >> $abort_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
@@ -35,7 +35,7 @@ function perform_extract {
   pull_main_branch
 
   if [ "$user_input" == "" ]; then
-    git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
+    git log $main_branch_name..$current_branch_name                    | # Get a list of all commits in the feature branch.
       grep -v '^$'                                                     | # Remove empty lines.
       grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
       grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
@@ -46,7 +46,7 @@ function perform_extract {
       awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
       awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
       tail -r                                                          | # Reverse the order of lines.
-      xargs dialog --title "Please select all commits to be extracted from the '$feature_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
+      xargs dialog --title "Please select all commits to be extracted from the '$current_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
     clear
   else
     echo $user_input > $user_input_filename
