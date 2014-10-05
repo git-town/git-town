@@ -14,6 +14,12 @@ Given /^I am on the main branch$/ do
 end
 
 
+Given /^I have a feature branch named (.*)$/ do |branch_name|
+  run "git branch #{branch_name} main"
+end
+
+
+
 
 
 Then /^I (?:end up|am still) on the feature branch$/ do
