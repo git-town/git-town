@@ -188,6 +188,7 @@ _Ships a finished feature._
 Call this from the feature branch that you want to ship.
 
 * run the command: `git ship`<br>
+* run the command passing in the squashed commit message: `git ship [commit messsage]`
 * abort the command when there are conflicts: `git ship --abort`
 
 <table>
@@ -214,7 +215,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>5.</td>
     <td>merge the feature branch into the main branch</td>
-    <td>git merge --squash feature
+    <td>git merge --squash feature</td>
   </tr>
   <tr>
     <td>6.</td>
