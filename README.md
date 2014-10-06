@@ -187,8 +187,8 @@ _Ships a finished feature._
 
 Call this from the feature branch that you want to ship.
 
-* run the command: `git ship`<br>
-* run the command passing in the squashed commit message: `git ship [commit messsage]`
+* run the command: `git ship`
+* run the command passing in the squashed commit message: `git ship -m [commit messsage]`
 * abort the command when there are conflicts: `git ship --abort`
 
 <table>
