@@ -210,3 +210,18 @@ Feature: Git Sync
     Then my repo still has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
+
+  Scenario: on a special branch
+    Given I have branches named qa, production
+    And I set special branch names to "qa, production"
+    And the following commits exist
+      | branch  | location | message            | file name       |
+      | main    | local    | local main commit  | local_main_file |
+    When I checkout the "qa" branch
+    And I run `git sync` while allowing errors
+    Then I get the error "qa is a special branch. Please checkout the main branch or a feature branch to sync"
+    And I am still on the "qa" branch
+    When I checkout the "production" branch
+    And I run `git sync` while allowing errors
+    Then I get the error "production is a special branch. Please checkout the main branch or a feature branch to sync"
+    And I am still on the "production" branch

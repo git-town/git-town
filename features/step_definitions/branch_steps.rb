@@ -14,6 +14,17 @@ Given /^I am on the main branch$/ do
 end
 
 
+Given /^I have branches named (.*)$/ do |branch_names|
+  branch_names.split(',').each do |branch_name|
+    run "git branch #{branch_name.strip} main"
+  end
+end
+
+
+Given /^I checkout the (.*) branch$/ do |branch_name|
+  run "git checkout #{branch_name}"
+end
+
 
 
 Then /^I (?:end up|am still) on the feature branch$/ do

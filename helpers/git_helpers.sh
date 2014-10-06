@@ -136,14 +136,23 @@ function ensure_no_open_changes {
 }
 
 
-# Exists the application with an error message if the working directory
-# is on the main development branch.
+# Exits the application with an error message if not on a feature branch
 function ensure_on_feature_branch {
   local error_message=$1
-  determine_current_branch_name
-  if [ "$current_branch_name" = "$main_branch_name" ]; then
+  local branch_name=`get_current_branch_name`
+  if [ `is_feature_branch $branch_name` == false ]; then
     echo_error_header
-    echo "  $error_message"
+    echo "  $branch_name is not a feature branch. $error_message"
+    exit_with_error
+  fi
+}
+
+function ensure_not_on_special_branch {
+  local error_message=$1
+  local branch_name=`get_current_branch_name`
+  if [ `is_special_branch $branch_name` == true ]; then
+    echo_error_header
+    echo "  $branch_name is a special branch. $error_message"
     exit_with_error
   fi
 }
@@ -153,6 +162,27 @@ function ensure_on_feature_branch {
 function get_current_branch_name {
   local result=`git branch | grep "*" | awk '{print $2}'`
   echo $result
+}
+
+
+# Returns true if the provided branch name is a feature branch
+function is_feature_branch {
+  local branch_name=$1
+  if [ "$branch_name" = "$main_branch_name" -o `is_special_branch $branch_name` == true ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+# Returns true if the provided branch name is a special branch
+function is_special_branch {
+  local branch_name=$1
+  if [ `special_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == '1' ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 
@@ -270,6 +300,12 @@ function restore_open_changes {
     echo_header "Restoring uncommitted changes"
     git stash pop
   fi
+}
+
+
+# Returns a comma seperated list of special branch names
+function special_branch_names {
+  echo `git config --get git-town.special-branch-names`
 }
 
 

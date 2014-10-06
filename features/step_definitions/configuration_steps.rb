@@ -10,6 +10,11 @@ Given /^I have an old configuration file with (.*?)$/ do |data|
 end
 
 
+Given /^I set special branch names to (.*)$/ do |branch_names|
+  run "git config git-town.special-branch-names #{branch_names}"
+end
+
+
 
 Then /^I don't have an old configuration file anymore$/ do
   expect(File.exist? '.main_branch_name').to be_falsy

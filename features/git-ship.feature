@@ -37,10 +37,23 @@ Feature: Git Ship
   Scenario: on the main branch
     Given I am on the main branch
     When I run `git ship 'feature_done'` while allowing errors
-    Then I get the error "Please checkout the feature branch to ship"
+    Then I get the error "main is not a feature branch. Please checkout a feature branch to ship"
     And I am still on the "main" branch
     And there are no commits
     And there are no open changes
+
+
+  Scenario: on non feature branch
+    Given I have branches named qa, production
+    And I set special branch names to "qa, production"
+    When I checkout the "qa" branch
+    And I run `git ship` while allowing errors
+    Then I get the error "qa is not a feature branch. Please checkout a feature branch to ship"
+    And I am still on the "qa" branch
+    When I checkout the "production" branch
+    And I run `git ship` while allowing errors
+    Then I get the error "production is not a feature branch. Please checkout a feature branch to ship"
+    And I am still on the "production" branch
 
 
   Scenario: with uncommitted changes

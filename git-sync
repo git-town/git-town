@@ -109,6 +109,9 @@ function continue_sync {
 # Perform the sync operation
 function perform_sync {
   echo_intro "SYNCING THE CURRENT BRANCH"
+
+  ensure_not_on_special_branch "Please checkout the main branch or a feature branch to sync"
+
   stash_open_changes
   if [ $current_branch_name == $main_branch_name ]; then
     # On the main branch
