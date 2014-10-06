@@ -231,18 +231,12 @@ function push_branch {
 
 
 # Pushes the current feature branch to origin
-#
-# If the parameter 'force' is given, uses a force push.
 function push_feature_branch {
   local options=$1
   echo_header "Pushing the updated '$feature_branch_name' to the repo"
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
-    if [ $options == 'force' ]; then
-      git push --force
-    else
-      git push
-    fi
+    git push
   else
     git push -u origin $feature_branch_name
   fi
@@ -301,6 +295,6 @@ function stash_open_changes {
 function update_feature_branch {
   echo_header "Rebasing the '$feature_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
-  git rebase $main_branch_name
+  git merge $main_branch_name
   if [ $? != 0 ]; then error_update_feature_branch; fi
 }

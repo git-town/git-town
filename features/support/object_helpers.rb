@@ -1,9 +1,9 @@
-def symbolize_keys_deep!(h)
-  h.keys.each do |k|
-    ks    = k.to_sym
-    h[ks] = h.delete k
-    symbolize_keys_deep! h[ks] if h[ks].kind_of? Hash
+def symbolize_keys_deep! hash
+  hash.keys.each do |key|
+    symbol_key = key.gsub(' ', '_').to_sym
+    hash[symbol_key] = (value = hash.delete key)
+    symbolize_keys_deep! value if value.kind_of? Hash
   end
-  h
+  hash
 end
 

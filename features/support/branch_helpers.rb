@@ -1,11 +1,6 @@
 # Returns the name of the branch that is currently checked out
 def current_branch_name
-  run("git branch").fetch(:out)
-                        .split("\n")
-                        .map(&:strip)
-                        .select{|b| b[/^\*/]}
-                        .first
-                        .slice(2, 100)
+  run("git rev-parse --abbrev-ref HEAD")[:out]
 end
 
 
@@ -25,6 +20,19 @@ def existing_local_branches
   actual_main_branch = actual_branches.delete 'main'
   [actual_main_branch].concat(actual_branches)
                       .compact
+end
+
+
+# Returns the names of all existing remote branches.
+#
+# Does not return the "master" branch.
+def existing_remote_branches
+  remote_branches = run('git branch -a | grep remotes').fetch(:out)
+                                                       .split("\n")
+                                                       .map(&:strip)
+  remote_branches.delete('remotes/origin/master')
+  remote_branches.delete('remotes/origin/HEAD -> origin/master')
+  remote_branches
 end
 
 

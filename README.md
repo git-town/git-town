@@ -107,7 +107,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>6.</td>
     <td>update the feature branch with the latest changes from main</td>
-    <td>git rebase master</td>
+    <td>git merge master</td>
   </tr>
   <tr>
     <td>7a.</td>
@@ -118,7 +118,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>7b.</td>
     <td>push the feature branch (with existing remote branch)</td>
-    <td>git push --force</td>
+    <td>git push</td>
   </tr>
   <tr>
     <td>8.</td>
