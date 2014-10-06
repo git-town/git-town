@@ -43,7 +43,7 @@ Feature: Git Ship
     And there are no open changes
 
 
-  Scenario: on non feature branch
+  Scenario: on a special branch
     Given I have branches named qa, production
     And I set special branch names to "qa, production"
     When I checkout the "qa" branch
