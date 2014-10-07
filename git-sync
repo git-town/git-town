@@ -19,12 +19,12 @@ abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 continue_script="/tmp/git_sync_continue$temp_filename_suffix"
 
 
-# Called by pull_feature_branch when the rebase fails with merge conflicts
+# Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_feature_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
   # Create the abort file.
-  echo "git rebase --abort" > $abort_script
+  echo "git merge --abort" > $abort_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
@@ -86,13 +86,16 @@ function abort_sync {
 
 function continue_sync {
   echo_intro "CONTINUING THE PREVIOUS GIT SYNC"
-  if [ `determine_rebase_in_progress` == true ]; then
-    echo_red "There is currently a rebase in progress."
-    echo "You must resolve the conflicts and run 'git rebase --continue'"
+
+  if [ `determine_merge_in_progress` == true ]; then
+    echo_red "There is currently a merge in progress."
+    echo "You must resolve the conflicts and run 'git merge --continue'"
     echo "before continuing the git sync"
     echo
     exit 1
   fi
+
+  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
 
   if [ -f $continue_script ]; then
     source $continue_script

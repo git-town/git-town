@@ -5,12 +5,12 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
 
-# Called by pull_feature_branch when the rebase fails with merge conflicts
+# Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_feature_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
   # Create the abort file.
-  echo "git rebase --abort" > $abort_script
+  echo "git merge --abort" > $abort_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
@@ -39,6 +39,19 @@ function error_squash_merge_feature_branch {
 }
 
 
+# Parses the options and reruns the message
+function extract_message {
+  message=''
+
+  while getopts "m::" opt; do
+    case "$opt" in
+    m) message=$OPTARG
+    esac
+  done
+
+  echo $message
+}
+
 
 # Aborts a currently ongoing sync
 function abort_ship {
@@ -54,6 +67,7 @@ function abort_ship {
 
 
 function perform_ship {
+  local message=`extract_message "$*"`
   echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
 
   ensure_no_open_changes "You should not ship while having open files in Git."
@@ -61,7 +75,7 @@ function perform_ship {
 
   pull_feature_branch
   pull_main_branch
-  squash_merge_feature_branch $*
+  squash_merge_feature_branch "$message"
   push_main_branch
   delete_feature_branch 'force'
   echo_all_done
@@ -71,6 +85,6 @@ function perform_ship {
 if [ "$1" == "--abort" ]; then
   abort_ship
 else
-  perform_ship "$@"
+  perform_ship "$*"
 fi
 

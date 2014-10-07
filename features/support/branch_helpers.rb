@@ -26,10 +26,6 @@ end
 # Returns the names of all existing remote branches.
 #
 # Does not return the "master" branch.
-#
-# The branches are ordered this ways:
-# * main branch
-# * feature branches ordered alphabetically
 def existing_remote_branches
   remote_branches = run('git branch -a | grep remotes').fetch(:out)
                                                        .split("\n")

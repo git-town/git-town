@@ -70,15 +70,6 @@ function determine_open_changes {
 }
 
 
-# Determines whether there is currently a rebase in progress.
-function determine_rebase_in_progress {
-  if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
-    echo true
-  else
-    echo false
-  fi
-}
-
 # Determines whether the feature branch has a remote tracking branch.
 function determine_tracking_branch {
   local current_branch_name=`get_current_branch_name`
@@ -127,7 +118,7 @@ function get_current_branch_name {
 # by tracking this through the global variable $repo_fetched.
 function fetch_repo {
   if [ $repo_fetched == false ]; then
-    git fetch -p
+    git fetch --prune
     repo_fetched=true
   fi
 }
@@ -161,7 +152,7 @@ function pull_main_branch {
   checkout_main_branch
   if [ `determine_tracking_branch` == true ]; then
     fetch_repo
-    git rebase origin/$main_branch_name
+    git merge origin/$main_branch_name
   else
     echo "Branch '$main_branch_name' has no remote"
   fi
@@ -193,8 +184,14 @@ function push_branch {
 # Pushes the current feature branch to origin
 function push_feature_branch {
   local options=$1
+<<<<<<< HEAD
   echo_header "Pushing the updated '$current_branch_name' to the repo"
   if [ `determine_tracking_branch` == true ]; then
+=======
+  echo_header "Pushing the updated '$feature_branch_name' to the repo"
+  determine_tracking_branch
+  if [ $has_tracking_branch == true ]; then
+>>>>>>> master
     git push
   else
     git push -u origin $current_branch_name
@@ -233,10 +230,14 @@ function squash_merge_feature_branch {
   if [ "$commit_message" == "" ]; then
     git merge --squash $current_branch_name && git commit -a
   else
+<<<<<<< HEAD
     git merge --squash $current_branch_name && git commit -a -m $*
   fi
   if [ $? != 0 ]; then
     error_squash_merge_feature_branch
+=======
+    git merge --squash $feature_branch_name && git commit -a -m "$commit_message"
+>>>>>>> master
   fi
 }
 
@@ -256,7 +257,11 @@ function update_feature_branch {
   echo_header "Rebasing the '$current_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git merge $main_branch_name
+<<<<<<< HEAD
   if [ $? != 0 ]; then
     error_update_feature_branch
   fi
+=======
+  if [ $? != 0 ]; then error_update_feature_branch; fi
+>>>>>>> master
 }

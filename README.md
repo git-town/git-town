@@ -22,7 +22,11 @@ It is configurable, extensible, and provides these commands:
 
 ## Git Commands
 
-Hint: This documentation assumes "master" as the main branch name, and "feature" as the feature branch name.
+Hint: This documentation assumes "master" as the main branch name,
+and "feature" as the feature branch name.
+
+All Git Town commands automatically clean up (prune)
+no longer existing remote branches from your branch list.
 
 
 ### git hack
@@ -87,7 +91,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>2.</td>
     <td>pull feature branch updates from the repo</td>
-    <td>git fetch<br>git rebase origin/feature</td>
+    <td>git fetch<br>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -97,7 +101,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>4.</td>
     <td>pull main branch updates from the repo</td>
-    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -187,7 +191,8 @@ _Ships a finished feature._
 
 Call this from the feature branch that you want to ship.
 
-* run the command: `git ship`<br>
+* run the command: `git ship`
+* run the command passing in the squashed commit message: `git ship -m [commit message]`
 * abort the command when there are conflicts: `git ship --abort`
 
 <table>
@@ -199,7 +204,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>2.</td>
     <td>pull updates for the feature branch</td>
-    <td>git fetch<br>git rebase origin/feature</td>
+    <td>git fetch<br>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -209,12 +214,12 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch</td>
-    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
     <td>merge the feature branch into the main branch</td>
-    <td>git merge --squash feature
+    <td>git merge --squash feature</td>
   </tr>
   <tr>
     <td>6.</td>
