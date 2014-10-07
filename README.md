@@ -9,9 +9,9 @@ It is designed for workflows that have a main branch (typically "development" or
 from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like [GitHub](http://github.com).
 
-Git Town goes the extra mile to keep everything in sync at all times,
-thereby minimizing the probability and severity of merge conflicts.
-It is configurable, extensible, and integrates seamlessly with the normal
+* makes it easy to create, sync, and merge branches
+* minimizes merge conflicts
+* is configurable, extensible, and integrates seamlessly with the normal
 Git command line interface.
 
 
