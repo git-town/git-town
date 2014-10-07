@@ -12,8 +12,6 @@ from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a>,
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>, or others.
-Git Town is configurable, extensible, and integrates seamlessly with the normal
-Git command line interface
 
 * create a new feature branch with <a href="#git-hack">git hack</a>
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
