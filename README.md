@@ -15,7 +15,7 @@ and assumes you use a central code repository like
 
 * provides single git commands to create, sync, and merge feature branches the right way
 * keeps branches in sync with each other to minimize merge conflicts
-* configurable, extendable, and integrates seamlessly with the normal
+* configurable, extensible, and integrates seamlessly with the normal
 Git command line interface
 
 
