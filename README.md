@@ -13,10 +13,10 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a>,
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>, or others.
 
-* makes it easy to create, sync, and merge branches
-* minimizes merge conflicts
-* is configurable, extensible, and integrates seamlessly with the normal
-Git command line interface.
+* creates, syncs, and merges feature branches with single git commands
+* keeps branches in sync with each other to minimize merge conflicts
+* configurable, extendable, and integrates seamlessly with the normal
+Git command line interface
 
 
 ## How it works
