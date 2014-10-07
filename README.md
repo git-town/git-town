@@ -13,7 +13,7 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a>,
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>, or others.
 
-* single git commands to create, sync, and merge feature branches the right way
+* provides single git commands to create, sync, and merge feature branches the right way
 * keeps branches in sync with each other to minimize merge conflicts
 * configurable, extendable, and integrates seamlessly with the normal
 Git command line interface
