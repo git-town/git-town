@@ -26,7 +26,7 @@ Git command line interface
 All Git Town commands automatically clean up (prune)
 no longer existing remote branches from your branch list.
 
-Hint: This documentation assumes "master" as the main branch name,
+Hint: the examples below assume "master" as the main branch name,
 and "feature" as the feature branch name.
 
 
