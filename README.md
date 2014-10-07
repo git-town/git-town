@@ -22,7 +22,11 @@ It is configurable, extensible, and provides these commands:
 
 ## Git Commands
 
-Hint: This documentation assumes "master" as the main branch name, and "feature" as the feature branch name.
+Hint: This documentation assumes "master" as the main branch name,
+and "feature" as the feature branch name.
+
+All Git Town commands automatically clean up (prune)
+no longer existing remote branches from your branch list.
 
 
 ### git hack
