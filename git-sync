@@ -103,7 +103,7 @@ function continue_sync {
 function perform_sync {
   echo_intro "SYNCING THE CURRENT BRANCH"
   stash_open_changes
-  if [ $current_branch_name == $main_branch_name ]; then
+  if [ $initial_branch_name == $main_branch_name ]; then
     # On the main branch
     pull_main_branch
     push_main_branch

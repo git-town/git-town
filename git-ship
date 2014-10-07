@@ -29,7 +29,7 @@ function error_squash_merge_feature_branch {
 
   # Create the abort file.
   echo "git reset --hard HEAD" > $abort_script
-  echo "git checkout $current_branch_name" >> $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
 
   # Show error message.
   echo "To undo this, run 'git ship --abort', or do the following steps manually:"
