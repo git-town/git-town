@@ -5,13 +5,13 @@ Feature: Git Ship
     And the following commit exists in my repository
       | location | file name    | file content    |
       | local    | feature_file | feature content |
-    When I run `git ship -m 'feature_done'`
+    When I run `git ship -m 'feature done'`
     Then I end up on the "main" branch
     And there are no more feature branches
     And there are no open changes
     And I have the following commits
       | branch  | location         | message      | files        |
-      | main    | local and remote | feature_done | feature_file |
+      | main    | local and remote | feature done | feature_file |
     And now I have the following committed files
       | branch | files        |
       | main   | feature_file |
@@ -22,13 +22,13 @@ Feature: Git Ship
     And the following commit exists in my repository
       | location | file name    | file content    |
       | remote   | feature_file | feature content |
-    When I run `git ship -m 'feature_done'`
+    When I run `git ship -m 'feature done'`
     Then I end up on the "main" branch
     And there are no more feature branches
     And there are no open changes
     And I have the following commits
       | branch  | location         | message      | files        |
-      | main    | local and remote | feature_done | feature_file |
+      | main    | local and remote | feature done | feature_file |
     And now I have the following committed files
       | branch | files        |
       | main   | feature_file |
@@ -36,7 +36,7 @@ Feature: Git Ship
 
   Scenario: on the main branch
     Given I am on the main branch
-    When I run `git ship -m 'feature_done'` while allowing errors
+    When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "Please checkout the feature branch to ship"
     And I am still on the "main" branch
     And there are no commits
@@ -46,7 +46,7 @@ Feature: Git Ship
   Scenario: with uncommitted changes
     Given I am on a feature branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship -m 'feature_done'` while allowing errors
+    When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "You should not ship while having open files in Git"
     And I am still on the feature branch
     And there are no commits
@@ -59,7 +59,7 @@ Feature: Git Ship
       | location | message                   | file name        | file content   |
       | remote   | conflicting remote commit | conflicting_file | remote content |
       | local    | conflicting local commit  | conflicting_file | local content  |
-    When I run `git ship -m 'feature_done'` while allowing errors
+    When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE FEATURE BRANCH"
     And my repo has a rebase in progress
     And there is an abort script for "git ship"
@@ -77,7 +77,7 @@ Feature: Git Ship
       | branch  | location | message                    | file name        | file content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
-    When I run `git ship -m 'feature_done'` while allowing errors
+    When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
     And I end up on the "main" branch
     And file "conflicting_file" has a merge conflict

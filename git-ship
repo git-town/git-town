@@ -67,7 +67,7 @@ function abort_ship {
 
 
 function perform_ship {
-  local message=$1
+  local message=`extract_message "$*"`
   echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
 
   ensure_no_open_changes "You should not ship while having open files in Git."
@@ -75,7 +75,7 @@ function perform_ship {
 
   pull_feature_branch
   pull_main_branch
-  squash_merge_feature_branch $message
+  squash_merge_feature_branch "$message"
   push_main_branch
   delete_feature_branch 'force'
   echo_all_done
@@ -85,6 +85,6 @@ function perform_ship {
 if [ "$1" == "--abort" ]; then
   abort_ship
 else
-  perform_ship `extract_message $@`
+  perform_ship "$*"
 fi
 
