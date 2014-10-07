@@ -5,31 +5,29 @@ Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
 <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a>
 and others.
-It is designed for workflows that have a main branch (typically "development" or "master")
+
+It is designed for workflows that have a main branch
+(typically "development" or "master")
 from which feature branches are cut and into which they are merged,
-and assumes you use a central code repository like [GitHub](http://github.com).
+and assumes you use a central code repository like
+<a href="http://github.com" target="_blank">GitHub</a> or
+<a href="https://bitbucket.org" target="_blank">BitBucket</a>.
 
-Git Town goes the extra mile to keep everything in sync at all times,
-thereby minimizing the probability and severity of merge conflicts.
-It is configurable, extensible, and provides these commands:
-
-* <a href="#git-hack">git hack</a>: creates a new feature branch
-* <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
-* <a href="#git-extract">git extract</a>: extracts commits from a feature branch into a new one
-* <a href="#git-ship">git ship</a>: merges the current feature branch into the main branch and delete it everywhere
-* <a href="#git-sync-fork">git sync-fork</a>: configures remote upstream and merges the upstream main branch into the main branch
-
-
-## Git Commands
-
-Hint: This documentation assumes "master" as the main branch name,
-and "feature" as the feature branch name.
+* create a new feature branch with <a href="#git-hack">git hack</a>
+* keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
+* when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
+* in a forked repository, keep your main branch up to date with its upstream repository using <a href="#git-sync-fork">git sync-fork</a>
+* refactor selected commits from one feature branch into a dedicated one using <a href="#git-extract">git extract</a>.
 
 All Git Town commands automatically clean up (prune)
 no longer existing remote branches from your branch list.
 
+Hint: the examples below assume "master" as the main branch name
+(this is <a href="#configuration">configurable</a>),
+and "feature" as the feature branch name.
 
-### git hack
+
+## git hack
 
 _Cuts a new feature branch off the main branch._
 
@@ -69,7 +67,7 @@ with all open changes copied over into it.
 
 
 
-### git sync
+## git sync
 
 _Syncronizes the current feature branch with the rest of the world,
 i.e. with its remote branch and the main branch._
@@ -132,7 +130,7 @@ You can call this command safely at any time, many times during the day.
 </table>
 
 
-### git extract
+## git extract
 
 _Extracts commits from a feature branch into a new feature branch._
 
@@ -185,7 +183,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
 </table>
 
 
-### git ship
+## git ship
 
 _Ships a finished feature._
 
@@ -239,7 +237,7 @@ Call this from the feature branch that you want to ship.
 </table>
 
 
-### git sync-fork
+## git sync-fork
 
 _Syncs the main branch with the upstream repository._
 
@@ -283,7 +281,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
 </table>
 
 
-## Installation
+## installation
 
 Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
 OS X, Linux, BSD, and even Windows with Cygwin or something similar.
@@ -348,24 +346,19 @@ other platforms need to install manually.
 
 
 
-## Configuration
+## configuration
 
 Git Town asks for the main branch name if one isn't set per repository,
 and stores this information in the Git configuration of your project.
 
 
-## Develop your own scripts
+## development
 
 * run all tests: `cucumber`
-* run a single test: `cucumber -n 'scenario or feature name'`
+* run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 
 
-Some background on the code structure:
-* Due to limitations of Bash Script, the functions take normal arguments, and return their result as global variables.
-* Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
-
-
-## Roadmap
+## roadmap
 
 The roadmap is developed using readme-driven development <a href="RDD.md">here</a>.
 Also check out the <a href="release-notes.md">release notes</a>.
