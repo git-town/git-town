@@ -23,11 +23,11 @@ Git command line interface
 * extract selected commits from one feature branch into a dedicated one using
 <a href="#git-extract">git extract</a>.
 
-Hint: This documentation assumes "master" as the main branch name,
-and "feature" as the feature branch name.
-
 All Git Town commands automatically clean up (prune)
 no longer existing remote branches from your branch list.
+
+Hint: This documentation assumes "master" as the main branch name,
+and "feature" as the feature branch name.
 
 
 ## git hack
