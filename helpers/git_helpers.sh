@@ -264,7 +264,7 @@ function squash_merge_feature_branch {
   if [ "$commit_message" == "" ]; then
     git merge --squash $feature_branch_name && git commit -a
   else
-    git merge --squash $feature_branch_name && git commit -a -m $*
+    git merge --squash $feature_branch_name && git commit -a -m "$commit_message"
   fi
   if [ $? != 0 ]; then error_squash_merge_feature_branch; fi
 }
