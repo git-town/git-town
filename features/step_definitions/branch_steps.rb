@@ -27,11 +27,6 @@ Then /^I (?:end up|am still) on the feature branch$/ do
 end
 
 
-Then /^I (?:end up|am still) on the main branch$/ do
-  expect(current_branch_name).to eql 'main'
-end
-
-
 Then /^I end up on my feature branch$/  do
   expect(current_branch_name).to eql 'feature'
 end
