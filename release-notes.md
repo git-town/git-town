@@ -36,7 +36,7 @@
 
 
 ## 0.1
-* git hack, git sync, git extract, git ship, git kill
+* git hack, git sync, git extract, git ship
 * basic test framework
 * Travis CI integration
 * self-hosting: uses Git Town for Git Town development
