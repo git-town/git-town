@@ -167,6 +167,17 @@ function fetch_upstream {
 }
 
 
+# Returns true if the repository has a branch with the given name
+function has_branch {
+  local branch_name=$1
+  if [ `git branch | grep "$branch_name" | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
 # Pulls updates of the feature branch from the remote repo
 function pull_feature_branch {
   echo_header "Pulling updates for the '$feature_branch_name' branch"
