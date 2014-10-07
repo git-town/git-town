@@ -6,9 +6,12 @@ automate the typical high-level operations in
 <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a>
 and others.
 
-It is designed for workflows that have a main branch (typically "development" or "master")
+It is designed for workflows that have a main branch
+(typically "development" or "master")
 from which feature branches are cut and into which they are merged,
-and assumes you use a central code repository like [GitHub](http://github.com).
+and assumes you use a central code repository like
+<a href="http://github.com" target="_blank">GitHub</a>,
+<a href="https://bitbucket.org" target="_blank">BitBucket</a>, or others.
 
 * makes it easy to create, sync, and merge branches
 * minimizes merge conflicts
