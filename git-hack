@@ -3,24 +3,24 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 echo_intro "CREATING A NEW FEATURE BRANCH IN GIT"
 
-branch_name=$1
+target_branch_name=$1
 
 # Exit with a help screen if parameters are missing.
-if [ -z $branch_name ]; then
+if [ -z $target_branch_name ]; then
   echo_usage_header
   echo "  git hack [feature branch name]"
   exit_with_error
 fi
 
 # Exit if the branch with that name already exists.
-if [ `has_branch $branch_name` == true ]; then
+if [ `has_branch $target_branch_name` == true ]; then
   echo_error_header
-  echo "A branch named '$branch_name' already exists"
+  echo "A branch named '$target_branch_name' already exists"
   exit_with_error
 fi
 
 stash_open_changes
 pull_main_branch
-create_feature_branch $branch_name
+create_feature_branch $target_branch_name
 restore_open_changes
 echo_all_done

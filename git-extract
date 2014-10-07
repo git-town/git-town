@@ -12,9 +12,9 @@ function error_cherry_pick {
 
   # Create the abort file.
   echo "git cherry-pick --abort" > $abort_script
-  echo "git checkout $feature_branch_name" >> $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
   echo "git branch -D $1" >> $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
@@ -29,11 +29,13 @@ function error_cherry_pick {
 
 # Performs the extract operation
 function perform_extract {
+  local target_branch_name=$1
+  local user_input=$2
   stash_open_changes
   pull_main_branch
 
-  if [ "$2" == "" ]; then
-    git log $main_branch_name..$feature_branch_name                    | # Get a list of all commits in the feature branch.
+  if [ "$user_input" == "" ]; then
+    git log $main_branch_name..$initial_branch_name                    | # Get a list of all commits in the feature branch.
       grep -v '^$'                                                     | # Remove empty lines.
       grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
       grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
@@ -44,10 +46,10 @@ function perform_extract {
       awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
       awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
       tail -r                                                          | # Reverse the order of lines.
-      xargs dialog --title "Please select all commits to be extracted from the '$feature_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
+      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
     clear
   else
-    echo $2 > $user_input_filename
+    echo $user_input > $user_input_filename
   fi
 
   if [ ! -s $user_input_filename ]; then
@@ -56,14 +58,14 @@ function perform_extract {
     exit_with_error
   fi
 
-  create_feature_branch $1
+  create_feature_branch $target_branch_name
   git cherry-pick `cat $user_input_filename`
   if [ $? != 0 ]; then error_cherry_pick $*; fi
 
   delete_temp_file
 
   echo_header "Pushing the new branch to the repo"
-  git push -u origin $1
+  git push -u origin $target_branch_name
 
   restore_open_changes
   echo_all_done
@@ -102,4 +104,3 @@ else
   fi
   perform_extract "$@"
 fi
-

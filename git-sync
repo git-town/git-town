@@ -25,7 +25,7 @@ function error_pull_feature_branch {
 
   # Create the abort file.
   echo "git merge --abort" > $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
@@ -33,7 +33,7 @@ function error_pull_feature_branch {
   echo "pull_main_branch" > $continue_script
   echo "update_feature_branch" >> $continue_script
   echo "push_feature_branch" >> $continue_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
 
@@ -52,13 +52,13 @@ function error_update_feature_branch {
 
   # Create the abort file
   echo "git merge --abort" > $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
   # Create the continue file
   echo "push_feature_branch"  > $continue_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
 
@@ -86,6 +86,7 @@ function abort_sync {
 
 function continue_sync {
   echo_intro "CONTINUING THE PREVIOUS GIT SYNC"
+
   ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
   if [ -f $continue_script ]; then
     source $continue_script
@@ -102,7 +103,7 @@ function continue_sync {
 function perform_sync {
   echo_intro "SYNCING THE CURRENT BRANCH"
   stash_open_changes
-  if [ $current_branch_name == $main_branch_name ]; then
+  if [ $initial_branch_name == $main_branch_name ]; then
     # On the main branch
     pull_main_branch
     push_main_branch
