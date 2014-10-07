@@ -28,6 +28,7 @@ no longer existing remote branches from your branch list.
 
 Hint: the examples below assume "master" as the main branch name,
 and "feature" as the feature branch name.
+These things are <a href="#configure">configurable</a>.
 
 
 ## git hack
