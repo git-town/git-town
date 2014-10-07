@@ -14,7 +14,7 @@ Given /^I am on the main branch$/ do
 end
 
 
-Given /^I have a feature branch named (.*)$/ do |branch_name|
+Given /^I have a feature branch named "(.*)"$/ do |branch_name|
   run "git branch #{branch_name} main"
 end
 
@@ -24,6 +24,11 @@ end
 
 Then /^I (?:end up|am still) on the feature branch$/ do
   expect(current_branch_name).to eql 'feature'
+end
+
+
+Then /^I (?:end up|am still) on the main branch$/ do
+  expect(current_branch_name).to eql 'main'
 end
 
 

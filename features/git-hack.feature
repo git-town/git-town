@@ -18,10 +18,11 @@ Feature: Git Hack
 
   Scenario: on the main branch with uncommitted changes and the branch name is taken
     Given I am on the main branch
-    And I have a feature branch named hot_stuff
+    And I have a feature branch named "hot_stuff"
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack hot_stuff` while allowing errors
     Then I get the error "A branch named 'hot_stuff' already exists"
+    And I am still on the main branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
