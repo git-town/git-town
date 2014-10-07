@@ -5,6 +5,7 @@ Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
 <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a>
 and others.
+
 It is designed for workflows that have a main branch (typically "development" or "master")
 from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like [GitHub](http://github.com).
