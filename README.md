@@ -31,13 +31,13 @@ Git Town automates typical development workflow steps with Git.
 * when done, merge your feature into the main branch with <a href="#git-ship">git ship</a>
 
 
-##### Committing to an Open Source repository
+**Committing to an Open Source repository**
 
 Copy the latest updates from the upstream repo into your fork of it using
 <a href="#git-sync-fork">git sync-fork</a>
 
 
-### Refactoring Git branches
+**Refactoring Git branches**
 
 Extract selected commits from one feature branch into a dedicated one using
 <a href="#git-extract">git extract</a>.
