@@ -8,4 +8,4 @@ source $current_dir/git_helpers.sh
 source $current_dir/github_helpers.sh
 
 initial_branch_name=`get_current_branch_name`
-has_open_changes=`determine_open_changes`
+initial_open_changes=`has_open_changes`

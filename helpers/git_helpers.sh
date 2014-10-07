@@ -61,7 +61,7 @@ function delete_feature_branch {
 
 
 # Determines whether there are open changes in Git.
-function determine_open_changes {
+function has_open_changes {
   if [ `git status --porcelain | wc -l` == 0 ]; then
     echo false
   else
@@ -84,7 +84,7 @@ function determine_tracking_branch {
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
-  if [ $has_open_changes = true ]; then
+  if [ $initial_open_changes = true ]; then
     echo_header "  Error"
     echo $*
     exit_with_error
@@ -209,7 +209,7 @@ function remote_url {
 #
 # Only does this if there were open changes when the script was started.
 function restore_open_changes {
-  if [ $has_open_changes = true ]; then
+  if [ $initial_open_changes = true ]; then
     echo_header "Restoring uncommitted changes"
     git stash pop
   fi
@@ -234,7 +234,7 @@ function squash_merge_feature_branch {
 
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
-  if [ $has_open_changes = true ]; then
+  if [ $initial_open_changes = true ]; then
     echo_header "Stashing uncommitted changes"
     git add -A
     git stash

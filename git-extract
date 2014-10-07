@@ -14,7 +14,7 @@ function error_cherry_pick {
   echo "git cherry-pick --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
   echo "git branch -D $1" >> $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 

@@ -25,7 +25,7 @@ function error_pull_feature_branch {
 
   # Create the abort file.
   echo "git merge --abort" > $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
@@ -33,7 +33,7 @@ function error_pull_feature_branch {
   echo "pull_main_branch" > $continue_script
   echo "update_feature_branch" >> $continue_script
   echo "push_feature_branch" >> $continue_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
 
@@ -52,13 +52,13 @@ function error_update_feature_branch {
 
   # Create the abort file
   echo "git merge --abort" > $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
   # Create the continue file
   echo "push_feature_branch"  > $continue_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
 

@@ -11,7 +11,7 @@ function error_pull_feature_branch {
 
   # Create the abort file.
   echo "git merge --abort" > $abort_script
-  if [ $has_open_changes == true ]; then
+  if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
