@@ -283,7 +283,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
 </table>
 
 
-## Installation
+## installation
 
 Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
 OS X, Linux, BSD, and even Windows with Cygwin or something similar.
@@ -348,13 +348,13 @@ other platforms need to install manually.
 
 
 
-## Configuration
+## configuration
 
 Git Town asks for the main branch name if one isn't set per repository,
 and stores this information in the Git configuration of your project.
 
 
-## Develop your own scripts
+## develop your own scripts
 
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario or feature name'`
@@ -365,7 +365,7 @@ Some background on the code structure:
 * Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
 
 
-## Roadmap
+## roadmap
 
 The roadmap is developed using readme-driven development <a href="RDD.md">here</a>.
 Also check out the <a href="release-notes.md">release notes</a>.
