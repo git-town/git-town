@@ -355,7 +355,7 @@ and stores this information in the Git configuration of your project.
 ## development
 
 * run all tests: `cucumber`
-* run a single test: `cucumber -n 'scenario or feature name'` or `cucumber [filename]:[lineno]`
+* run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 
 
 ## roadmap
