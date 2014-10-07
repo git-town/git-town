@@ -11,13 +11,60 @@ and assumes you use a central code repository like [GitHub](http://github.com).
 
 Git Town goes the extra mile to keep everything in sync at all times,
 thereby minimizing the probability and severity of merge conflicts.
-It is configurable, extensible, and provides these commands:
+It is configurable, extensible, and integrates seamlessly with the normal
+Git command line interface.
+
+
+## How it works
+
+Git Town automates the typical development workflows with Git.
+
+
+### Feature development in a code base
+
+While coding away you think "Hey, this change should be in its own branch".
+You run `git hack foo` to create a new feature branch.
+Git Town does all the right commands for you under the hood:
+It stashes away your uncommitted changes, updates your main development branch,
+and then cuts the new feature branch off your updated main branch, so that
+you get a good start. Then in pops the stashed away changes back in.
+
+You working on your new "foo" feature for a while, committing as you go along.
+At the same time your team mates work on other features.
+To keep your "foo" branch synchronized with ongoing development you occasionally
+run `git sync`.
+Again, Git Town does all the right things for you:
+It stashes away uncommitted changes, pulls updates for your feature branch and
+the main branch, merges updates from the main branch into your feature branch,
+and restores the uncommitted changes back into your workspace.
+
+After a while you are done with your foo feature.
+A simple "git ship" on your feature branch does everything you need here:
+It pulls updates for the feature and main branch, squash-merges your feature
+branch into the main branch, and removes the local branch as well as its
+remote tracking branch.
 
 * <a href="#git-hack">git hack</a>: creates a new feature branch
 * <a href="#git-sync">git sync</a>: syncs a feature branch with the main branch and the repo
-* <a href="#git-extract">git extract</a>: extracts commits from a feature branch into a new one
 * <a href="#git-ship">git ship</a>: merges the current feature branch into the main branch and delete it everywhere
+
+
+### Committing to an Open Source repository
+
+You are an avid open source contributer and often fork repositories in order
+to submit pull requests with enhancements.
+
+`git sync-fork` automates pulling updates from the upstream repository
+into your branch.
+
 * <a href="#git-sync-fork">git sync-fork</a>: configures remote upstream and merges the upstream main branch into the main branch
+
+
+### Refactoring Git branches
+
+Sometimes one Git branch contains commits that should be in separate branches.
+<a href="#git-extract">git extract</a> extracts commits from a feature branch
+into a new one.
 
 
 ## Git Commands
