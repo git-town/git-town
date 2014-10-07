@@ -17,7 +17,7 @@ Git command line interface.
 
 ## How it works
 
-Git Town automates the typical development workflows with Git.
+Git Town automates typical development workflow steps with Git.
 
 
 ### Feature development in a code base
