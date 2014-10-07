@@ -70,7 +70,7 @@ with all open changes copied over into it.
 
 
 
-### git sync
+## git sync
 
 _Syncronizes the current feature branch with the rest of the world,
 i.e. with its remote branch and the main branch._
@@ -133,7 +133,7 @@ You can call this command safely at any time, many times during the day.
 </table>
 
 
-### git extract
+## git extract
 
 _Extracts commits from a feature branch into a new feature branch._
 
@@ -186,7 +186,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
 </table>
 
 
-### git ship
+## git ship
 
 _Ships a finished feature._
 
@@ -240,7 +240,7 @@ Call this from the feature branch that you want to ship.
 </table>
 
 
-### git sync-fork
+## git sync-fork
 
 _Syncs the main branch with the upstream repository._
 
