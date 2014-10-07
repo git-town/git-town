@@ -138,7 +138,7 @@ function pull_feature_branch {
   checkout_feature_branch
   if [ `determine_tracking_branch` == true ]; then
     fetch_repo
-    git rebase origin/$current_branch_name
+    git merge origin/$current_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
   else
     echo "Branch '$current_branch_name' has no remote branch, skipping pull of updates"
@@ -225,6 +225,9 @@ function squash_merge_feature_branch {
     git merge --squash $current_branch_name && git commit -a
   else
     git merge --squash $current_branch_name && git commit -a -m "$commit_message"
+  fi
+  if [ $? != 0 ]; then
+    error_squash_merge_feature_branch
   fi
 }
 
