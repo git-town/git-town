@@ -47,14 +47,14 @@ function delete_feature_branch {
   local options=$1
   echo_header "Removing the old '$initial_branch_name' branch"
   checkout_feature_branch
-  local has_tracking_branch=`determine_tracking_branch`
+  local tracking_branch_exists=`has_tracking_branch`
   checkout_main_branch
   if [[ "$options" == "force" ]]; then
     git branch -D $initial_branch_name
   else
     git branch -d $initial_branch_name
   fi
-  if [ $has_tracking_branch = true ]; then
+  if [ $tracking_branch_exists = true ]; then
     git push origin :${initial_branch_name}
   fi
 }
@@ -70,8 +70,8 @@ function has_open_changes {
 }
 
 
-# Determines whether the feature branch has a remote tracking branch.
-function determine_tracking_branch {
+# Determines whether the current branch has a remote tracking branch.
+function has_tracking_branch {
   local current_branch_name=`get_current_branch_name`
   if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
     echo false
@@ -136,7 +136,7 @@ function fetch_upstream {
 function pull_feature_branch {
   echo_header "Pulling updates for the '$initial_branch_name' branch"
   checkout_feature_branch
-  if [ `determine_tracking_branch` == true ]; then
+  if [ `has_tracking_branch` == true ]; then
     fetch_repo
     git merge origin/$initial_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
@@ -150,7 +150,7 @@ function pull_feature_branch {
 function pull_main_branch {
   echo_header "Pulling updates for the '$main_branch_name' branch"
   checkout_main_branch
-  if [ `determine_tracking_branch` == true ]; then
+  if [ `has_tracking_branch` == true ]; then
     fetch_repo
     git merge origin/$main_branch_name
   else
@@ -173,7 +173,7 @@ function push_branch {
   local branch_name=$1
   checkout_branch $branch_name
   echo_header "Pushing '$branch_name'"
-  if [ `determine_tracking_branch` = true ]; then
+  if [ `has_tracking_branch` = true ]; then
     git push
   else
     git push -u origin $branch_name
@@ -185,7 +185,7 @@ function push_branch {
 function push_feature_branch {
   local options=$1
   echo_header "Pushing the updated '$initial_branch_name' to the repo"
-  if [ `determine_tracking_branch` == true ]; then
+  if [ `has_tracking_branch` == true ]; then
     git push
   else
     git push -u origin $initial_branch_name
