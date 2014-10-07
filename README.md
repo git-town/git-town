@@ -12,16 +12,8 @@ from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a>,
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>, or others.
-
-* provides single git commands to create, sync, and merge feature branches the right way
-* keeps branches in sync with each other to minimize merge conflicts
-* configurable, extensible, and integrates seamlessly with the normal
+Git Town is configurable, extensible, and integrates seamlessly with the normal
 Git command line interface
-
-
-## Git Commands
-
-Git Town automates typical development workflow steps with Git.
 
 * create a new feature branch with <a href="#git-hack">git hack</a>
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
@@ -38,7 +30,7 @@ All Git Town commands automatically clean up (prune)
 no longer existing remote branches from your branch list.
 
 
-### git hack
+## git hack
 
 _Cuts a new feature branch off the main branch._
 
