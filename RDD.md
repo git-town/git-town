@@ -248,7 +248,7 @@ Abort the command when there are conflicts: `git ship --abort`
 </table>
 
 
-### git kill
+### git kill\*
 Safely deletes a git branch.
 
 * never deletes the main branch
