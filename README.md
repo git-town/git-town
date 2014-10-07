@@ -354,15 +354,10 @@ Git Town asks for the main branch name if one isn't set per repository,
 and stores this information in the Git configuration of your project.
 
 
-## develop your own scripts
+## development
 
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario or feature name'`
-
-
-Some background on the code structure:
-* Due to limitations of Bash Script, the functions take normal arguments, and return their result as global variables.
-* Each function does the thing it says in a robust way. The "pull_feature_branch" function for example switches to the current feature branch, and then pulls it.
 
 
 ## roadmap
