@@ -184,14 +184,8 @@ function push_branch {
 # Pushes the current feature branch to origin
 function push_feature_branch {
   local options=$1
-<<<<<<< HEAD
   echo_header "Pushing the updated '$current_branch_name' to the repo"
   if [ `determine_tracking_branch` == true ]; then
-=======
-  echo_header "Pushing the updated '$feature_branch_name' to the repo"
-  determine_tracking_branch
-  if [ $has_tracking_branch == true ]; then
->>>>>>> master
     git push
   else
     git push -u origin $current_branch_name
@@ -230,14 +224,7 @@ function squash_merge_feature_branch {
   if [ "$commit_message" == "" ]; then
     git merge --squash $current_branch_name && git commit -a
   else
-<<<<<<< HEAD
-    git merge --squash $current_branch_name && git commit -a -m $*
-  fi
-  if [ $? != 0 ]; then
-    error_squash_merge_feature_branch
-=======
-    git merge --squash $feature_branch_name && git commit -a -m "$commit_message"
->>>>>>> master
+    git merge --squash $current_branch_name && git commit -a -m "$commit_message"
   fi
 }
 
@@ -257,11 +244,7 @@ function update_feature_branch {
   echo_header "Rebasing the '$current_branch_name' branch against '$main_branch_name'"
   checkout_feature_branch
   git merge $main_branch_name
-<<<<<<< HEAD
   if [ $? != 0 ]; then
     error_update_feature_branch
   fi
-=======
-  if [ $? != 0 ]; then error_update_feature_branch; fi
->>>>>>> master
 }

@@ -11,7 +11,7 @@ Feature: Git Ship
     And there are no open changes
     And I have the following commits
       | branch  | location         | message      | files        |
-      | main    | local and remote | feature_done | feature_file |
+      | main    | local and remote | feature done | feature_file |
     And now I have the following committed files
       | branch | files        |
       | main   | feature_file |
