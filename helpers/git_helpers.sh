@@ -101,17 +101,6 @@ function determine_open_changes {
 }
 
 
-# Determines whether there is currently a rebase in progress.
-#
-# Makes the result available in the global varible $rebase_in_progress
-function determine_rebase_in_progress {
-  if [ `git status | grep 'You are currently rebasing' | wc -l` == 1 ]; then
-    rebase_in_progress=true
-  else
-    rebase_in_progress=false
-  fi
-}
-
 # Determines whether the feature branch has a remote tracking branch.
 #
 # Makes the result available in the global variable $has_tracking_branch.
@@ -185,7 +174,7 @@ function pull_feature_branch {
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
     fetch_repo
-    git rebase origin/$feature_branch_name
+    git merge origin/$feature_branch_name
     if [ $? != 0 ]; then error_pull_feature_branch; fi
   else
     echo "Branch '$feature_branch_name' has no remote branch, skipping pull of updates"
@@ -200,7 +189,7 @@ function pull_main_branch {
   determine_tracking_branch
   if [ $has_tracking_branch == true ]; then
     fetch_repo
-    git rebase origin/$main_branch_name
+    git merge origin/$main_branch_name
   else
     echo "Branch '$main_branch_name' has no remote"
   fi

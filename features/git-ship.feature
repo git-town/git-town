@@ -61,11 +61,11 @@ Feature: Git Ship
       | local    | conflicting local commit  | conflicting_file | local content  |
     When I run `git ship 'feature_done'` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE FEATURE BRANCH"
-    And my repo has a rebase in progress
+    And my repo has a merge in progress
     And there is an abort script for "git ship"
     When I run `git ship --abort`
     Then I end up on my feature branch
-    And there is no rebase in progress
+    And there is no merge in progress
     And there is no abort script for "git ship" anymore
     And there are no open changes
     And my branch and its remote still have 1 and 1 different commits

@@ -87,7 +87,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>2.</td>
     <td>pull feature branch updates from the repo</td>
-    <td>git fetch<br>git rebase origin/feature</td>
+    <td>git fetch<br>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -97,7 +97,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>4.</td>
     <td>pull main branch updates from the repo</td>
-    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -199,7 +199,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>2.</td>
     <td>pull updates for the feature branch</td>
-    <td>git fetch<br>git rebase origin/feature</td>
+    <td>git fetch<br>git merge origin/feature</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -209,7 +209,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch</td>
-    <td>git rebase origin/master</td>
+    <td>git merge origin/master</td>
   </tr>
   <tr>
     <td>5.</td>

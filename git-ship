@@ -5,12 +5,12 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
 
-# Called by pull_feature_branch when the rebase fails with merge conflicts
+# Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_feature_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
   # Create the abort file.
-  echo "git rebase --abort" > $abort_script
+  echo "git merge --abort" > $abort_script
   if [ $has_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
