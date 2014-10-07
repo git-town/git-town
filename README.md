@@ -16,17 +16,15 @@ and assumes you use a central code repository like
 * create a new feature branch with <a href="#git-hack">git hack</a>
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
 * when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
-* copy the latest updates from a forked upstream repository into your fork of it using
-<a href="#git-sync-fork">git sync-fork</a>
-* refactor selected commits from one feature branch into a dedicated one using
-<a href="#git-extract">git extract</a>.
+* in a forked repository, keep your main branch up to date with its upstream repository using <a href="#git-sync-fork">git sync-fork</a>
+* refactor selected commits from one feature branch into a dedicated one using <a href="#git-extract">git extract</a>.
 
 All Git Town commands automatically clean up (prune)
 no longer existing remote branches from your branch list.
 
-Hint: the examples below assume "master" as the main branch name,
+Hint: the examples below assume "master" as the main branch name
+(this is <a href="#configuration">configurable</a>),
 and "feature" as the feature branch name.
-These things are <a href="#configure">configurable</a>.
 
 
 ## git hack
@@ -357,7 +355,7 @@ and stores this information in the Git configuration of your project.
 ## development
 
 * run all tests: `cucumber`
-* run a single test: `cucumber -n 'scenario or feature name'`
+* run a single test: `cucumber -n 'scenario or feature name'` or `cucumber [filename]:[lineno]`
 
 
 ## roadmap
