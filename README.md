@@ -19,31 +19,17 @@ and assumes you use a central code repository like
 Git command line interface
 
 
-## How it works
+## Git Commands
 
 Git Town automates typical development workflow steps with Git.
-
-
-**Feature development in a code base**
 
 * create a new feature branch with <a href="#git-hack">git hack</a>
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
 * when done, merge your feature into the main branch with <a href="#git-ship">git ship</a>
-
-
-**Committing to an Open Source repository**
-
-Copy the latest updates from the upstream repo into your fork of it using
+* copy the latest updates from a forked upstream repository into your fork of it using
 <a href="#git-sync-fork">git sync-fork</a>
-
-
-**Refactoring Git branches**
-
-Extract selected commits from one feature branch into a dedicated one using
+* extract selected commits from one feature branch into a dedicated one using
 <a href="#git-extract">git extract</a>.
-
-
-## Git Commands
 
 Hint: This documentation assumes "master" as the main branch name,
 and "feature" as the feature branch name.
