@@ -99,7 +99,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>4.</td>
     <td>pull main branch updates from the repo</td>
-    <td>git merge origin/master</td>
+    <td>git rebase origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -212,7 +212,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch</td>
-    <td>git merge origin/master</td>
+    <td>git rebase origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
