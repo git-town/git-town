@@ -261,7 +261,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
   <tr>
     <td>3.</td>
     <td>pull upstream updates for the main branch</td>
-    <td>git fetch upstream<br/>git merge upstream/master</td>
+    <td>git fetch upstream<br/>git rebase upstream/master</td>
   </tr>
   <tr>
     <td>4.</td>
