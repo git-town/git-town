@@ -164,7 +164,9 @@ function pull_main_branch {
   if [ `has_tracking_branch` == true ]; then
     fetch_repo
     git rebase origin/$main_branch_name
-    if [ $? != 0 ]; then error_pull_main_branch; fi
+    if [ $? != 0 ]; then
+      error_pull_main_branch
+    fi
   else
     echo "Branch '$main_branch_name' has no remote"
   fi

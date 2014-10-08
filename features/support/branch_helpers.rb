@@ -4,6 +4,11 @@ def current_branch_name
 end
 
 
+# Returns the names of the existing feature branches
+def existing_feature_branches
+  existing_local_branches - ['main', 'master']
+end
+
 # Returns the names of all existing local branches.
 #
 # Does not return the "master" branch nor remote branches.

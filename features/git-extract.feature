@@ -49,3 +49,27 @@ Feature: Git Extract
     And my repo has no cherry-pick in progress
     And there is no abort script for "git extract" anymore
 
+
+  Scenario: user aborts after merge conflict during main branch pulling
+    Given I am on a feature branch
+    And the following commits exist in my repository
+      | branch  | location | message                   | file name        | file content   |
+      | main    | remote   | conflicting remote commit | conflicting_file | remote content |
+      | main    | local    | conflicting local commit  | conflicting_file | local content  |
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    When I run `git extract refactor` with the last commit sha as an argument while allowing errors
+    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
+    And my repo has a rebase in progress
+    And there is an abort script for "git extract"
+    And I don't have an uncommitted file with name: "uncommitted"
+    When I run `git extract --abort`
+    Then I end up on my feature branch
+    And I have the feature branches "feature"
+    And I have the following commits
+      | branch | location | message                   | files            |
+      | main   | remote   | conflicting remote commit | conflicting_file |
+      | main   | local    | conflicting local commit  | conflicting_file |
+    And there is no rebase in progress
+    And there is no abort script for "git extract" anymore
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+

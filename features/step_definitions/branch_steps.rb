@@ -37,6 +37,11 @@ Then /^I (?:end up|am still) on the "(.+?)" branch$/ do |branch_name|
 end
 
 
+Then /^I have the feature branches (.+?)$/ do |branch_names|
+  expect(existing_feature_branches).to eq Kappamaki.from_sentence(branch_names)
+end
+
+
 Then /^the branch "(.*?)" has not been pushed to the repository$/ do |branch_name|
   expect(remote_branch_exists branch_name).to be_falsy
 end
