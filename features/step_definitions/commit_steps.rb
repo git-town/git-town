@@ -38,7 +38,7 @@ Then /^(?:now )?Charlie(?: still)? sees the following commits$/ do |commits_tabl
 end
 
 
-Then /^the "(.*?)" branch and its remote still have (\d+) and (\d+) different commits$/ do |branch_name, local_count, remote_count|
+Then /^the "([^"]+)" branch and its remote still have (\d+) and (\d+) different commits$/ do |branch_name, local_count, remote_count|
   returning_to_current_branch do
     run "git checkout #{branch_name}"
     matches = /have (\d+) and (\d+) different commit each/.match(run("git status")[:out])

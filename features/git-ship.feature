@@ -80,11 +80,7 @@ Feature: Git Ship
     When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
     And my repo has a rebase in progress
-    And there is an abort script for "git ship" containing
-      """
-      git rebase --abort
-      git checkout feature
-      """
+    And there is an abort script for "git ship"
     When I run `git ship --abort`
     Then I end up on my feature branch
     And there is no rebase in progress
