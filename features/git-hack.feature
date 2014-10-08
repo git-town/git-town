@@ -61,7 +61,7 @@ Feature: Git Hack
       | hot_stuff | new_remote_file |
 
 
-  Scenario: with conflicts on the main branch
+  Scenario: user aborts after conflicts while pulling the main branch
     Given I am on a feature branch
     And the following commit exists in my repository
       | branch | location | message                   | file name        | file content   |
@@ -71,12 +71,8 @@ Feature: Git Hack
     When I run `git hack hot_stuff` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
     And my repo has a rebase in progress
-    And there is an abort script for "git hack" containing
-      """
-      git rebase --abort
-      git checkout feature
-      git stash pop
-      """
+    And there is an abort script for "git hack"
+    And I don't have an uncommitted file with name: "uncommitted"
     When I run `git hack --abort`
     Then I end up on my feature branch
     And there is no rebase in progress
