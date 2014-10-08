@@ -3,24 +3,69 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 echo_intro "CREATING A NEW FEATURE BRANCH IN GIT"
 
+# The path to the abort script
+abort_script="/tmp/git_hack_abort$temp_filename_suffix"
+
 target_branch_name=$1
 
-# Exit with a help screen if parameters are missing.
-if [ -z $target_branch_name ]; then
-  echo_usage_header
-  echo "  git hack [feature branch name]"
-  exit_with_error
-fi
 
-# Exit if the branch with that name already exists.
-if [ `has_branch $target_branch_name` == true ]; then
-  echo_error_header
-  echo "A branch named '$target_branch_name' already exists"
-  exit_with_error
-fi
+# Aborts a currently ongoing sync
+function abort_hack {
+  echo_intro "ABORTING THE PREVIOUS GIT HACK"
+  if [ -f $abort_script ]; then
+    source $abort_script
+    rm $abort_script
+    echo_all_done
+  else
+    echo_red "Cannot find abort definition file"
+  fi
+}
 
-stash_open_changes
-pull_main_branch
-create_feature_branch $target_branch_name
-restore_open_changes
-echo_all_done
+
+# Called by pull_feature_branch when the merge fails with conflicts
+function error_pull_main_branch {
+  echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
+
+  # Create the abort file.
+  echo "git rebase --abort" > $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git ship --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  exit 1
+}
+
+
+function perform_hack {
+  # Exit with a help screen if parameters are missing.
+  if [ -z $target_branch_name ]; then
+    echo_usage_header
+    echo "  git hack [feature branch name]"
+    exit_with_error
+  fi
+
+  # Exit if the branch with that name already exists.
+  if [ `has_branch $target_branch_name` == true ]; then
+    echo_error_header
+    echo "A branch named '$target_branch_name' already exists"
+    exit_with_error
+  fi
+
+  stash_open_changes
+  pull_main_branch
+  create_feature_branch $target_branch_name
+  restore_open_changes
+  echo_all_done
+}
+
+
+if [ "$1" == "--abort" ]; then
+  abort_hack
+else
+  perform_hack "$*"
+fi

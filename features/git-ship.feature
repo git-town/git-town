@@ -79,7 +79,6 @@ Feature: Git Ship
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
     When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
-    And I am on the "main" branch
     And my repo has a rebase in progress
     And there is an abort script for "git ship" containing
       """

@@ -51,7 +51,7 @@ with all open changes copied over into it.
   <tr>
     <td>3.</td>
     <td>pull updates for the main branch</td>
-    <td>git pull</td>
+    <td>git pull --rebase</td>
   </tr>
   <tr>
     <td>4.</td>
