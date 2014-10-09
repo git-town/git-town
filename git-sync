@@ -19,6 +19,7 @@ abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 continue_script="/tmp/git_sync_continue$temp_filename_suffix"
 
 
+# Called by pull_branch when the merge fails with conflicts
 function error_pull_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
@@ -45,6 +46,7 @@ function error_pull_branch {
 }
 
 
+# Called by merge_main_branch when the merge fails with conflicts
 function error_merge_main_branch {
   echo_red "ERROR WHILE MERGING THE MAIN BRANCH INTO THE FEATURE BRANCH"
 

@@ -5,6 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
 
+# Called by pull_branch when the merge fails with conflicts
 function error_pull_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
@@ -22,6 +23,7 @@ function error_pull_branch {
 }
 
 
+# Called by squash_merge_into_main_branch when the merge fails with conflicts
 function error_squash_merge_into_main_branch {
   echo_red "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
 
