@@ -37,7 +37,7 @@ Feature: Git Sync-Fork
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: with conflict while pulling upstream updates
+  Scenario: user aborts after conflict while pulling upstream updates
     Given I am on a feature branch
     And my repo has an upstream repo
     And the following commits exist in my repository
