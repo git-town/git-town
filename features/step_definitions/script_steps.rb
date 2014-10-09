@@ -1,4 +1,4 @@
-Then /^there is an? (abort|continue) script for "([^"]+)"$/ do |command, operation|
+Then /^there is an? (abort|continue) script for "(.+?)"$/ do |command, operation|
   expect(File.exists? script_path(operation: operation, command: command)).to be_truthy
 end
 

@@ -6,7 +6,7 @@ end
 
 # Returns the names of the existing feature branches
 def existing_feature_branches
-  existing_local_branches - %w[main master]
+  existing_local_branches - %w[main]
 end
 
 # Returns the names of all existing local branches.
