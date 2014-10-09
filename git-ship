@@ -5,8 +5,8 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
 
-# Called by pull_feature_branch when the merge fails with conflicts
-function error_pull_feature_branch {
+# Called by pull_branch when the merge fails with conflicts
+function error_pull_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
   # Create the abort file.
@@ -23,8 +23,8 @@ function error_pull_feature_branch {
 }
 
 
-# Called when the squash merge of the feature branch fails with merge conflicts
-function error_squash_merge_feature_branch {
+# Called by squash_merge_into_main_branch when the merge fails with conflicts
+function error_squash_merge_into_main_branch {
   echo_red "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
 
   # Create the abort file.
@@ -73,11 +73,11 @@ function perform_ship {
   ensure_no_open_changes "You should not ship while having open files in Git."
   ensure_on_feature_branch "Please checkout the feature branch to ship."
 
-  pull_feature_branch
+  pull_branch
   pull_main_branch
-  squash_merge_feature_branch "$message"
-  push_main_branch
-  delete_feature_branch 'force'
+  squash_merge_into_main_branch "$message"
+  push_branch
+  delete_branch $initial_branch_name
   echo_all_done
 }
 
