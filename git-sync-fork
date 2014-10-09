@@ -42,12 +42,11 @@ function sync_fork {
     configure_upstream
   fi
 
-  local branch_name=$(get_current_branch_name)
   stash_open_changes
   checkout_main_branch
   pull_upstream
-  push_main_branch
-  checkout_branch $branch_name
+  push_branch
+  checkout_branch $initial_branch_name
   restore_open_changes
 }
 

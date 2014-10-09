@@ -19,8 +19,7 @@ abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 continue_script="/tmp/git_sync_continue$temp_filename_suffix"
 
 
-# Called by pull_feature_branch when the merge fails with conflicts
-function error_pull_feature_branch {
+function error_pull_branch {
   echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
 
   # Create the abort file.
@@ -31,8 +30,8 @@ function error_pull_feature_branch {
 
   # Create the continue file.
   echo "pull_main_branch" > $continue_script
-  echo "update_feature_branch" >> $continue_script
-  echo "push_feature_branch" >> $continue_script
+  echo "merge_main_branch" >> $continue_script
+  echo "push_branch" >> $continue_script
   if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
@@ -46,9 +45,8 @@ function error_pull_feature_branch {
 }
 
 
-# Called by update_feature_branch when the merge fails with merge conflicts
-function error_update_feature_branch {
-  echo_red "ERROR WHILE REBASING THE FEATURE BRANCH AGAINST THE MAIN BRANCH"
+function error_merge_main_branch {
+  echo_red "ERROR WHILE MERGING THE MAIN BRANCH INTO THE FEATURE BRANCH"
 
   # Create the abort file
   echo "git merge --abort" > $abort_script
@@ -57,7 +55,7 @@ function error_update_feature_branch {
   fi
 
   # Create the continue file
-  echo "push_feature_branch"  > $continue_script
+  echo "push_branch"  > $continue_script
   if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
@@ -105,14 +103,14 @@ function perform_sync {
   stash_open_changes
   if [ $initial_branch_name == $main_branch_name ]; then
     # On the main branch
-    pull_main_branch
-    push_main_branch
+    pull_branch
+    push_branch
   else
     # On a feature branch
-    pull_feature_branch
+    pull_branch
     pull_main_branch
-    update_feature_branch
-    push_feature_branch
+    merge_main_branch
+    push_branch
   fi
   restore_open_changes
   echo_all_done
