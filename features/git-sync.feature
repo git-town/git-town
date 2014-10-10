@@ -100,9 +100,9 @@ Feature: Git Sync
       | feature | local    | local conflicting commit  | conflicting_file   |
       | feature | remote   | remote conflicting commit | conflicting_file   |
     And I still have the following committed files
-      | branch  | files              | content            |
-      | feature | conflicting_file   | local conflicting content   |
-      | main    | main_branch_update | main branch update |
+      | branch  | files              | content                   |
+      | feature | conflicting_file   | local conflicting content |
+      | main    | main_branch_update | main branch update        |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
@@ -137,6 +137,34 @@ Feature: Git Sync
       | feature | conflicting_file   | resolved content   |
       | feature | main_branch_update | main branch update |
       | main    | main_branch_update | main branch update |
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: user aborts after a merge conflict when pulling the main branch
+    Given I am on a feature branch
+    And the following commits exist in my repository
+      | branch | location | message                   | file name          | file content               |
+      | main   | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
+      | main   | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    When I run `git sync` while allowing errors
+    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
+    And my repo has a rebase in progress
+    And there is an abort script for "git sync"
+    And there is a continue script for "git sync"
+    And I don't have an uncommitted file with name: "uncommitted"
+    When I run `git sync --abort`
+    Then I am still on the "feature" branch
+    And there is no rebase in progress
+    And there is no abort script for "git sync" anymore
+    And there is no continue script for "git sync" anymore
+    And I still have the following commits
+      | branch | location | message                   | files              |
+      | main   | local    | local conflicting commit  | conflicting_file   |
+      | main   | remote   | remote conflicting commit | conflicting_file   |
+    And I still have the following committed files
+      | branch | files              | content                   |
+      | main   | conflicting_file   | local conflicting content |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
@@ -219,22 +247,22 @@ Feature: Git Sync
       | location  | message     | file name |
       | local     | my commit 1 | my_file_1 |
     And the following commits exist in Charlie's repository
-      | location | message           | file name     |
+      | location | message           | file name      |
       | local    | charlies commit 1 | charlie_file_1 |
     When I run `git sync`
     Then I see the following commits
       | branch  | location         | message     | files     |
       | feature | local and remote | my commit 1 | my_file_1 |
     And Charlie still sees the following commits
-      | branch  | location | message           | files         |
+      | branch  | location | message           | files          |
       | feature | local    | charlies commit 1 | charlie_file_1 |
     When Charlie runs `git sync`
     Then now Charlie sees the following commits
-      | branch  | location         | message           | files         |
+      | branch  | location         | message           | files          |
       | feature | local and remote | charlies commit 1 | charlie_file_1 |
-      | feature | local and remote | my commit 1       | my_file_1     |
+      | feature | local and remote | my commit 1       | my_file_1      |
     When I run `git sync`
     Then now I see the following commits
-      | branch  | location         | message           | files         |
-      | feature | local and remote | my commit 1       | my_file_1     |
+      | branch  | location         | message           | files          |
+      | feature | local and remote | my commit 1       | my_file_1      |
       | feature | local and remote | charlies commit 1 | charlie_file_1 |

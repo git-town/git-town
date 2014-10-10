@@ -46,6 +46,34 @@ function error_pull_feature_branch {
 }
 
 
+# Called by pull_feature_branch when the merge fails with conflicts
+function error_pull_main_branch {
+  echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
+
+  # Create the abort file.
+  echo "git rebase --abort" > $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Create the continue file.
+  echo "pull_main_branch" > $continue_script
+  echo "update_feature_branch" >> $continue_script
+  echo "push_feature_branch" >> $continue_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $continue_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git sync --abort', or do the following steps manually:"
+  cat $abort_script
+  echo "To continue after you have resolved the conflict, run 'git sync --continue'"
+  echo
+  exit 1
+}
+
+
 # Called by update_feature_branch when the merge fails with merge conflicts
 function error_update_feature_branch {
   echo_red "ERROR WHILE REBASING THE FEATURE BRANCH AGAINST THE MAIN BRANCH"

@@ -2,6 +2,43 @@
 
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
+# The path to the abort script
+abort_script="/tmp/git_sync_fork_abort$temp_filename_suffix"
+
+
+
+# Aborts a currently ongoing sync-fork
+function abort_sync_fork {
+  echo_intro "ABORTING THE PREVIOUS GIT SYNC-FORK"
+  if [ -f $abort_script ]; then
+    source $abort_script
+    rm $abort_script
+    echo_all_done
+  else
+    echo_red "Cannot find abort definition file"
+  fi
+}
+
+
+# Called by pull_feature_branch when the merge fails with conflicts
+function error_pull_upstream_branch {
+  echo_red "ERROR WHILE PULLING THE UPSTREAM BRANCH"
+
+  # Create the abort file.
+  echo "git rebase --abort" > $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git sync-fork --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  exit 1
+}
+
+
 # Outputs error and exits
 function error_with_upstream_required {
   echo_error_header
@@ -54,6 +91,8 @@ function sync_fork {
 if [ "$1" == "--configure-only" ]; then
   echo_intro "CONFIGURING REMOTE UPSTREAM"
   configure_upstream
+elif [ "$1" == "--abort" ]; then
+  abort_sync_fork
 else
   echo_intro "SYNCING THE MAIN BRANCH WITH REMOTE UPSTREAM"
   sync_fork

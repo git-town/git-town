@@ -53,7 +53,7 @@ Feature: Git Ship
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: conflict after pulling the feature branch
+  Scenario: user aborts after conflict while pulling the feature branch
     Given I am on a feature branch
     And the following commits exist in my repository
       | location | message                   | file name        | file content   |
@@ -71,7 +71,25 @@ Feature: Git Ship
     And my branch and its remote still have 1 and 1 different commits
 
 
-  Scenario: conflict after the squash-merge of the feature branch into the main branch
+  Scenario: user aborts after conflict while pulling the main branch
+    Given I am on a feature branch
+    And the following commits exist in my repository
+      | branch | location | message                   | file name        | file content   |
+      | main   | remote   | conflicting remote commit | conflicting_file | remote content |
+      | main   | local    | conflicting local commit  | conflicting_file | local content  |
+    When I run `git ship -m 'feature done'` while allowing errors
+    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
+    And my repo has a rebase in progress
+    And there is an abort script for "git ship"
+    When I run `git ship --abort`
+    Then I end up on my feature branch
+    And there is no rebase in progress
+    And there is no abort script for "git ship" anymore
+    And there are no open changes
+    And the "main" branch and its remote still have 1 and 1 different commits
+
+
+  Scenario: user aborts after conflict while squash-merging the feature branch into the main branch
     Given I am on a feature branch
     And the following commits exist in my repository
       | branch  | location | message                    | file name        | file content    |

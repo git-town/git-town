@@ -163,7 +163,10 @@ function pull_main_branch {
   checkout_main_branch
   if [ `has_tracking_branch` == true ]; then
     fetch_repo
-    git merge origin/$main_branch_name
+    git rebase origin/$main_branch_name
+    if [ $? != 0 ]; then
+      error_pull_main_branch
+    fi
   else
     echo "Branch '$main_branch_name' has no remote"
   fi
@@ -175,7 +178,10 @@ function pull_upstream {
   local current_branch_name=`get_current_branch_name`
   echo_header "Pulling 'upstream/$current_branch_name' into '$current_branch_name'"
   fetch_upstream
-  git merge upstream/$current_branch_name
+  git rebase upstream/$current_branch_name
+  if [ $? != 0 ]; then
+    error_pull_upstream_branch
+  fi
 }
 
 

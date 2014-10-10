@@ -33,10 +33,12 @@ end
 
 
 
+
 Then /^I get the error "(.+?)"$/ do |error_message|
   expect(@last_run_result[:status]).to_not eq 0
   output = @last_run_result[:out] + @last_run_result[:err]
-  expect(output).to include error_message
+  expect(output).to include(error_message),
+                    "EXPECTED\n\n***************************************************\n\n#{output.gsub '\n', "\n"}\n\n***************************************************\n\nTO INCLUDE '#{error_message}'\n"
 end
 
 

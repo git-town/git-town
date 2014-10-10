@@ -27,6 +27,25 @@ function error_cherry_pick {
 }
 
 
+# Called by pull_feature_branch when the merge fails with conflicts
+function error_pull_main_branch {
+  echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
+
+  # Create the abort file.
+  echo "git rebase --abort" > $abort_script
+  echo "git checkout $initial_branch_name" >> $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
+
+  # Show error message.
+  echo "To undo this, run 'git extract --abort', or do the following steps manually:"
+  cat $abort_script
+  echo
+  exit 1
+}
+
+
 # Performs the extract operation
 function perform_extract {
   local target_branch_name=$1

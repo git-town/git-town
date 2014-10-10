@@ -51,7 +51,7 @@ with all open changes copied over into it.
   <tr>
     <td>3.</td>
     <td>pull updates for the main branch</td>
-    <td>git pull</td>
+    <td>git pull --rebase</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -99,7 +99,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>4.</td>
     <td>pull main branch updates from the repo</td>
-    <td>git merge origin/master</td>
+    <td>git rebase origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -158,7 +158,7 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
   <tr>
     <td>3.</td>
     <td>pull updates for the main branch</td>
-    <td>git pull</td>
+    <td>git pull --rebase</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -212,7 +212,7 @@ Call this from the feature branch that you want to ship.
   <tr>
     <td>4.</td>
     <td>pull updates for the main branch</td>
-    <td>git merge origin/master</td>
+    <td>git rebase origin/master</td>
   </tr>
   <tr>
     <td>5.</td>
@@ -261,7 +261,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
   <tr>
     <td>3.</td>
     <td>pull upstream updates for the main branch</td>
-    <td>git fetch upstream<br/>git merge upstream/master</td>
+    <td>git fetch upstream<br/>git rebase upstream/master</td>
   </tr>
   <tr>
     <td>4.</td>
