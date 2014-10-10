@@ -45,13 +45,13 @@ with all open changes copied over into it.
   </tr>
   <tr>
     <td>2.</td>
-    <td>check out the main branch</td>
+    <td>checkout the main branch</td>
     <td>git checkout master</td>
   </tr>
   <tr>
     <td>3.</td>
-    <td>pull updates for the main branch</td>
-    <td>git pull --rebase</td>
+    <td>pull main branch updates from the repo</td>
+    <td>git fetch<br>git rebase origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -84,27 +84,27 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td> git stash</td>
+    <td>git stash</td>
   </tr>
   <tr>
     <td>2.</td>
-    <td>pull feature branch updates from the repo</td>
-    <td>git fetch<br>git merge origin/feature</td>
-  </tr>
-  <tr>
-    <td>3.</td>
-    <td>switch to the main branch</td>
+    <td>checkout the main branch</td>
     <td>git checkout master</td>
   </tr>
   <tr>
-    <td>4.</td>
+    <td>3.</td>
     <td>pull main branch updates from the repo</td>
-    <td>git rebase origin/master</td>
+    <td>git fetch<br>git rebase origin/master</td>
+  </tr>
+  <tr>
+    <td>4.</td>
+    <td>checkout the feature branch</td>
+    <td>git checkout feature</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>switch to the feature branch</td>
-    <td>git checkout feature</td>
+    <td>pull feature branch updates from the repo</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>6.</td>
@@ -148,17 +148,17 @@ More background around <a href="http://blog.originate.com/blog/2014/04/19/refact
   <tr>
     <td>1.</td>
     <td>stash away uncommitted changes</td>
-    <td> git stash</td>
+    <td>git stash</td>
   </tr>
   <tr>
     <td>2.</td>
-    <td>switch to the main branch</td>
+    <td>checkout the main branch</td>
     <td>git checkout master</td>
   </tr>
   <tr>
     <td>3.</td>
-    <td>pull updates for the main branch</td>
-    <td>git pull --rebase</td>
+    <td>pull main branch updates from the repo</td>
+    <td>git fetch<br>git rebase origin/master</td>
   </tr>
   <tr>
     <td>4.</td>
@@ -196,41 +196,46 @@ Call this from the feature branch that you want to ship.
 <table>
   <tr>
     <td>1.</td>
-    <td>ensure there are no uncommitted changes</td>
-    <td>git status</td>
+    <td>stash away uncommitted changes</td>
+    <td>git stash</td>
   </tr>
   <tr>
     <td>2.</td>
-    <td>pull updates for the feature branch</td>
-    <td>git fetch<br>git merge origin/feature</td>
-  </tr>
-  <tr>
-    <td>3.</td>
-    <td>check out the main branch</td>
+    <td>checkout the main branch</td>
     <td>git checkout master</td>
   </tr>
   <tr>
+    <td>3.</td>
+    <td>pull main branch updates from the repo</td>
+    <td>git fetch<br>git rebase origin/master</td>
+  </tr>
+  <tr>
     <td>4.</td>
-    <td>pull updates for the main branch</td>
-    <td>git rebase origin/master</td>
+    <td>checkout the feature branch</td>
+    <td>git checkout feature</td>
   </tr>
   <tr>
     <td>5.</td>
-    <td>merge the feature branch into the main branch</td>
-    <td>git merge --squash feature</td>
+    <td>pull updates for the feature branch</td>
+    <td>git merge origin/feature</td>
   </tr>
   <tr>
     <td>6.</td>
+    <td>update the feature branch with the latest changes from main</td>
+    <td>git merge master</td>
+  </tr>
+  <tr>
+    <td>7.</td>
     <td>push the updated main branch</td>
     <td>git push</td>
   </tr>
   <tr>
-    <td>7.</td>
+    <td>8.</td>
     <td>delete the feature branch from the developer machine</td>
     <td>git branch -d feature</td>
   </tr>
   <tr>
-    <td>8.</td>
+    <td>9.</td>
     <td>delete the feature branch from the repo</td>
     <td>git push origin :feature
   </tr>
@@ -255,7 +260,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
   </tr>
   <tr>
     <td>2.</td>
-    <td>check out the main branch</td>
+    <td>checkout the main branch</td>
     <td>git checkout master</td>
   </tr>
   <tr>

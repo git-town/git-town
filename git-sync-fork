@@ -46,14 +46,12 @@ function error_with_upstream_required {
   exit_with_error
 }
 
+
 # Adds a remote 'upstream' by querying GitHub to find the current repo's parent
 function configure_upstream {
   local url=`remote_url origin`
   local repository=`github_parse_repository $url`
-
-  if [ -z $repository ];  then
-    error_with_upstream_required
-  fi
+  if [ -z $repository ]; then error_with_upstream_required; fi
 
   local protocol
   if [[ $url =~ "https" ]]; then
@@ -63,10 +61,7 @@ function configure_upstream {
   fi
 
   local upstream_url=`github_upstream_url $repository $protocol`
-
-  if [ -z $upstream_url ];  then
-    error_with_upstream_required
-  fi
+  if [ -z $upstream_url ]; then error_with_upstream_required; fi
 
   git remote add upstream $upstream_url
   echo_header "Added remote 'upstream' as $upstream_url"
@@ -82,8 +77,8 @@ function sync_fork {
   local branch_name=$(get_current_branch_name)
   stash_open_changes
   checkout_main_branch
-  pull_upstream
-  push_main_branch
+  pull_upstream_branch
+  push_branch
   checkout_branch $branch_name
   restore_open_changes
 }

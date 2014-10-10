@@ -21,14 +21,6 @@ function checkout_main_branch {
 }
 
 
-# Checks out the current feature branch in Git.
-#
-# Skips the operation if we already are on that branch.
-function checkout_feature_branch {
-  checkout_branch $initial_branch_name
-}
-
-
 # Creates a new feature branch with the given name.
 #
 # The feature branch is cut off the main development branch.
@@ -39,24 +31,17 @@ function create_feature_branch {
 }
 
 
-# Deletes the given feature branch from both the local machine and on remote.
-#
-# If you provide 'force' as an argument, it deletes the branch even if it has
-# unmerged changes.
-function delete_feature_branch {
-  local options=$1
-  echo_header "Removing the old '$initial_branch_name' branch"
-  checkout_feature_branch
-  local tracking_branch_exists=`has_tracking_branch`
-  checkout_main_branch
-  if [[ "$options" == "force" ]]; then
-    git branch -D $initial_branch_name
-  else
-    git branch -d $initial_branch_name
+# Deletes the given branch from both the local machine and on remote.
+function delete_branch {
+  local branch_name=$1
+  local current_branch_name=`get_current_branch_name`
+  echo_header "Removing the old '$branch_name' branch"
+  checkout_branch $branch_name
+  if [ `has_tracking_branch` == true ]; then
+    git push origin :${branch_name}
   fi
-  if [ $tracking_branch_exists = true ]; then
-    git push origin :${initial_branch_name}
-  fi
+  checkout_branch $current_branch_name
+  git branch -D $branch_name
 }
 
 
@@ -104,6 +89,16 @@ function ensure_on_feature_branch {
 }
 
 
+# Called by pull_branch when the merge/rebase fails with conflicts
+function error_pull_branch {
+  if [ $1 == $main_branch_name ]; then
+    error_pull_main_branch
+  else
+    error_pull_feature_branch
+  fi
+}
+
+
 # Returns the current branch name
 function get_current_branch_name {
   git branch | grep "*" | awk '{print $2}'
@@ -143,76 +138,51 @@ function has_branch {
 }
 
 
+# Merges the given branch into the current branch
+function merge_branch {
+  local branch_name=$1
+  local current_branch_name=`get_current_branch_name`
+  echo_header "Merging the '$branch_name' into '$current_branch_name'"
+  git merge $branch_name
+  if [ $? != 0 ]; then error_merge_branch; fi
+}
+
+
 # Pulls updates of the feature branch from the remote repo
-function pull_feature_branch {
-  echo_header "Pulling updates for the '$initial_branch_name' branch"
-  checkout_feature_branch
+function pull_branch {
+  local strategy=$1
+  local current_branch_name=`get_current_branch_name`
+  if [ -z $strategy ]; then strategy='merge'; fi
+  echo_header "Pulling updates for the '$current_branch_name' branch"
   if [ `has_tracking_branch` == true ]; then
     fetch_repo
-    git merge origin/$initial_branch_name
-    if [ $? != 0 ]; then error_pull_feature_branch; fi
+    git $strategy origin/$current_branch_name
+    if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
   else
-    echo "Branch '$initial_branch_name' has no remote branch, skipping pull of updates"
+    echo "Branch '$current_branch_name' has no remote branch, skipping pull of updates"
   fi
 }
 
 
-# Updates the current development branch.
-function pull_main_branch {
-  echo_header "Pulling updates for the '$main_branch_name' branch"
-  checkout_main_branch
-  if [ `has_tracking_branch` == true ]; then
-    fetch_repo
-    git rebase origin/$main_branch_name
-    if [ $? != 0 ]; then
-      error_pull_main_branch
-    fi
-  else
-    echo "Branch '$main_branch_name' has no remote"
-  fi
-}
-
-
-# Pulls updates of the current branch fromt the upstream repo
-function pull_upstream {
+# Pulls updates of the current branch from the upstream repo
+function pull_upstream_branch {
   local current_branch_name=`get_current_branch_name`
   echo_header "Pulling 'upstream/$current_branch_name' into '$current_branch_name'"
   fetch_upstream
   git rebase upstream/$current_branch_name
-  if [ $? != 0 ]; then
-    error_pull_upstream_branch
-  fi
+  if [ $? != 0 ]; then error_pull_upstream_branch; fi
 }
 
 
 # Pushes the branch with the given name to origin
 function push_branch {
-  local branch_name=$1
-  checkout_branch $branch_name
-  echo_header "Pushing '$branch_name'"
+  local current_branch_name=`get_current_branch_name`
+  echo_header "Pushing '$current_branch_name'"
   if [ `has_tracking_branch` = true ]; then
     git push
   else
-    git push -u origin $branch_name
+    git push -u origin $current_branch_name
   fi
-}
-
-
-# Pushes the current feature branch to origin
-function push_feature_branch {
-  local options=$1
-  echo_header "Pushing the updated '$initial_branch_name' to the repo"
-  if [ `has_tracking_branch` == true ]; then
-    git push
-  else
-    git push -u origin $initial_branch_name
-  fi
-}
-
-
-# Pushes the main branch to origin
-function push_main_branch {
-  push_branch $main_branch_name
 }
 
 
@@ -233,18 +203,18 @@ function restore_open_changes {
 }
 
 
-# Merges the current feature branch into the main dev branch.
-function squash_merge_feature_branch {
-  local commit_message=$1
-  echo_header "Merging the '$initial_branch_name' branch into '$main_branch_name'"
-  checkout_main_branch
+# Squash merges the given branch into the current branch
+function squash_merge {
+  local branch_name=$1
+  local commit_message=$2
+  local current_branch_name=`get_current_branch_name`
+  echo_header "Merging the '$branch_name' branch into '$current_branch_name'"
+  git merge --squash $branch_name
+  if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
-    git merge --squash $initial_branch_name && git commit -a
+    git commit -a
   else
-    git merge --squash $initial_branch_name && git commit -a -m "$commit_message"
-  fi
-  if [ $? != 0 ]; then
-    error_squash_merge_feature_branch
+    git commit -a -m "$commit_message"
   fi
 }
 
@@ -258,13 +228,10 @@ function stash_open_changes {
   fi
 }
 
-
-# Updates the current feature branch.
-function update_feature_branch {
-  echo_header "Rebasing the '$initial_branch_name' branch against '$main_branch_name'"
-  checkout_feature_branch
-  git merge $main_branch_name
-  if [ $? != 0 ]; then
-    error_update_feature_branch
-  fi
+# Stashes uncommitted changes if they exist.
+function sync_main_branch {
+  local current_branch_name=`get_current_branch_name`
+  checkout_main_branch
+  pull_branch 'rebase'
+  checkout_branch $current_branch_name
 }

@@ -23,7 +23,7 @@ function abort_hack {
 
 
 # Called by pull_feature_branch when the merge fails with conflicts
-function error_pull_main_branch {
+function error_pull_branch {
   echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
 
   # Create the abort file.
@@ -57,7 +57,7 @@ function perform_hack {
   fi
 
   stash_open_changes
-  pull_main_branch
+  sync_main_branch
   create_feature_branch $target_branch_name
   restore_open_changes
   echo_all_done
