@@ -40,8 +40,8 @@ with all open changes copied over into it.
 <table>
   <tr>
     <td>1.</td>
-    <td>stash away uncommitted changes</td>
-    <td>git stash</td>
+    <td>ensure there are no uncommitted changes</td>
+    <td>git status</td>
   </tr>
   <tr>
     <td>2.</td>
