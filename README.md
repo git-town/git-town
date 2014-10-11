@@ -221,13 +221,13 @@ Call this from the feature branch that you want to ship.
   </tr>
   <tr>
     <td>6.</td>
-    <td>update the feature branch with the latest changes from main</td>
-    <td>git merge master</td>
+    <td>checkout the main branch</td>
+    <td>git checkout master</td>
   </tr>
   <tr>
     <td>7.</td>
     <td>push the updated main branch</td>
-    <td>git push</td>
+    <td>git merge --squash feature</td>
   </tr>
   <tr>
     <td>8.</td>
