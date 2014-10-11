@@ -226,16 +226,21 @@ Call this from the feature branch that you want to ship.
   </tr>
   <tr>
     <td>7.</td>
-    <td>push the updated main branch</td>
+    <td>merge the feature branch into the main branch</td>
     <td>git merge --squash feature</td>
   </tr>
   <tr>
     <td>8.</td>
+    <td>push the updated main branch</td>
+    <td>git push</td>
+  </tr>
+  <tr>
+    <td>9.</td>
     <td>delete the feature branch from the developer machine</td>
     <td>git branch -d feature</td>
   </tr>
   <tr>
-    <td>9.</td>
+    <td>10.</td>
     <td>delete the feature branch from the repo</td>
     <td>git push origin :feature
   </tr>
