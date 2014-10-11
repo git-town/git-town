@@ -28,7 +28,7 @@ function error_cherry_pick {
 
 
 # Called by pull_branch when the merge fails with conflicts
-function error_pull_branch {
+function error_pull_main_branch {
   echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
 
   # Create the abort file.

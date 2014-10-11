@@ -23,7 +23,7 @@ function abort_hack {
 
 
 # Called by pull_feature_branch when the merge fails with conflicts
-function error_pull_branch {
+function error_pull_main_branch {
   echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
 
   # Create the abort file.
