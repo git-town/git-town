@@ -80,7 +80,7 @@ You can call this command safely at any time, many times during the day.
 * abort the command when there are conflicts: `git sync --abort`<br>
 * finish the sync after you have fixed the conflicts: `git sync --continue`
 
-#### on a feature branch
+##### on a feature branch
 
 <table>
   <tr>
@@ -131,7 +131,7 @@ You can call this command safely at any time, many times during the day.
   </tr>
 </table>
 
-#### on the main branch or some other non feature branch
+##### on the main branch or some other non feature branch
 
 <table>
   <tr>
@@ -142,7 +142,7 @@ You can call this command safely at any time, many times during the day.
   <tr>
     <td>2.</td>
     <td>pull branch updates from the repo</td>
-    <td>git fetch<br>git rebase origin/master</td>
+    <td>git fetch<br>git rebase origin/[branch name]</td>
   </tr>
   <tr>
     <td>3.</td>
@@ -390,7 +390,7 @@ Git Town stores its configuration in the Git configuration of your project.
 If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config">git config</a>.
 
 
-```shell
+```bash
 # Read configuration
 git config git-town.main-branch-name
 git config git-town.non-feature-branch-names
