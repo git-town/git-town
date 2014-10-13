@@ -387,7 +387,7 @@ other platforms need to install manually.
 
 On first use, Git Town will ask for the main branch name and the names of any other non feature branches.
 Git Town stores its configuration in the Git configuration of your project.
-If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config">git config</a>.
+If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config" target="_blank">git config</a>.
 
 
 ```bash
