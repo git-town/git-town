@@ -364,6 +364,7 @@ and stores this information in the Git configuration of your project.
 
 ## development
 
+* assign yourself to the respective <a href="https://github.com/originate/git-town/issues" target="_blank">GitHub issue</a>
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 
