@@ -266,3 +266,10 @@ Feature: Git Sync
       | branch  | location         | message           | files          |
       | feature | local and remote | my commit 1       | my_file_1      |
       | feature | local and remote | charlies commit 1 | charlie_file_1 |
+
+
+  Scenario: Unpushed tags
+    Given I am on the main branch
+    And I add a local tag "v1.0"
+    When I run `git sync`
+    Then tag "v1.0" has been pushed to the remote
