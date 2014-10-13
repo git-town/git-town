@@ -37,8 +37,18 @@ Feature: Git Ship
   Scenario: on the main branch
     Given I am on the main branch
     When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "Please checkout the feature branch to ship"
+    Then I get the error "main is not a feature branch. Please checkout a feature branch to ship"
     And I am still on the "main" branch
+    And there are no commits
+    And there are no open changes
+
+
+  Scenario: on non feature branch
+    Given I configure Git Town's non-feature branch names to "qa, production"
+    And I am on the "production" branch
+    When I run `git ship -m 'feature done'` while allowing errors
+    Then I get the error "production is not a feature branch. Please checkout a feature branch to ship"
+    And I am still on the "production" branch
     And there are no commits
     And there are no open changes
 

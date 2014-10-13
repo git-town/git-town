@@ -80,6 +80,8 @@ You can call this command safely at any time, many times during the day.
 * abort the command when there are conflicts: `git sync --abort`<br>
 * finish the sync after you have fixed the conflicts: `git sync --continue`
 
+#### on a feature branch
+
 <table>
   <tr>
     <td>1.</td>
@@ -124,6 +126,31 @@ You can call this command safely at any time, many times during the day.
   </tr>
   <tr>
     <td>8.</td>
+    <td>restore the stashed changes</td>
+    <td>git stash pop</td>
+  </tr>
+</table>
+
+#### on the main branch or some other non feature branch
+
+<table>
+  <tr>
+    <td>1.</td>
+    <td>stash away uncommitted changes</td>
+    <td>git stash</td>
+  </tr>
+  <tr>
+    <td>2.</td>
+    <td>pull branch updates from the repo</td>
+    <td>git fetch<br>git rebase origin/master</td>
+  </tr>
+  <tr>
+    <td>3.</td>
+    <td>push the branch</td>
+    <td>git push</td>
+  </tr>
+  <tr>
+    <td>4.</td>
     <td>restore the stashed changes</td>
     <td>git stash pop</td>
   </tr>
@@ -358,9 +385,20 @@ other platforms need to install manually.
 
 ## configuration
 
-Git Town asks for the main branch name if one isn't set per repository,
-and stores this information in the Git configuration of your project.
+On first use, Git Town will ask for the main branch name and the names of any other non feature branches.
+Git Town stores its configuration in the Git configuration of your project.
+If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config">git config</a>.
 
+
+```shell
+# Read configuration
+git config git-town.main-branch-name
+git config git-town.non-feature-branch-names
+
+# Write configuration
+git config git-town.main-branch-name master
+git config git-town.non-feature-branch-names 'qa, production'
+```
 
 ## development
 

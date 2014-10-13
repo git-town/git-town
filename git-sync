@@ -131,15 +131,13 @@ function continue_sync {
 function perform_sync {
   echo_intro "SYNCING THE CURRENT BRANCH"
   stash_open_changes
-  if [ $initial_branch_name == $main_branch_name ]; then
-    # On the main branch
-    pull_branch
-    push_branch
-  else
-    # On a feature branch
+  if [ `is_feature_branch` == true ]; then
     sync_main_branch
     pull_branch
     merge_branch $main_branch_name
+    push_branch
+  else
+    pull_branch 'rebase'
     push_branch
   fi
   restore_open_changes

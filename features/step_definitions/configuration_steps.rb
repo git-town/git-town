@@ -1,3 +1,8 @@
+Given /^I configure Git Town's non-feature branch names to (.*)$/ do |branch_names|
+  run "git config git-town.non-feature-branch-names #{branch_names}"
+end
+
+
 Given /^I don't have a main branch name configured$/ do
   delete_configuration
 end

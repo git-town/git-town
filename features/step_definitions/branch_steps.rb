@@ -14,6 +14,16 @@ Given /^I am on the main branch$/ do
 end
 
 
+Given /^I am on the "(.*)" branch$/ do |branch_name|
+  if existing_local_branches.include?(branch_name)
+    run "git checkout #{branch_name}"
+  else
+    run "git checkout -b #{branch_name} main"
+    run "git push -u origin #{branch_name}"
+  end
+end
+
+
 Given /^I have a feature branch named "(.*)"$/ do |branch_name|
   run "git branch #{branch_name} main"
 end
