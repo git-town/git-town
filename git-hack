@@ -57,7 +57,7 @@ function perform_hack {
   fi
 
   stash_open_changes
-  pull_main_branch
+  sync_main_branch
   create_feature_branch $target_branch_name
   restore_open_changes
   echo_all_done
