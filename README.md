@@ -79,6 +79,7 @@ You can call this command safely at any time, many times during the day.
 * run the command: `git sync`<br>
 * abort the command when there are conflicts: `git sync --abort`<br>
 * finish the sync after you have fixed the conflicts: `git sync --continue`
+* `git sync` pushes tags to the remote
 
 <table>
   <tr>
