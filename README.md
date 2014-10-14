@@ -80,7 +80,7 @@ You can call this command safely at any time, many times during the day.
 * abort the command when there are conflicts: `git sync --abort`<br>
 * finish the sync after you have fixed the conflicts: `git sync --continue`
 
-##### on a feature branch
+_on a feature branch:_
 
 <table>
   <tr>
@@ -131,7 +131,7 @@ You can call this command safely at any time, many times during the day.
   </tr>
 </table>
 
-##### on the main branch or some other non feature branch
+_on the main or a non-feature branch:_
 
 <table>
   <tr>
