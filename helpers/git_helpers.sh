@@ -142,7 +142,7 @@ function has_branch {
 function merge_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
-  echo_header "Merging the '$branch_name' into '$current_branch_name'"
+  echo_header "Merging '$branch_name' into '$current_branch_name'"
   git merge $branch_name
   if [ $? != 0 ]; then error_merge_branch; fi
 }
