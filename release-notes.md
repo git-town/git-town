@@ -2,6 +2,7 @@
 
 ## 0.4
 * pushes tags to the remote when running "git sync" on the main branch
+* skips unnecessary operations
 
 
 ## 0.3
