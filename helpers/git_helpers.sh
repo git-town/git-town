@@ -109,7 +109,7 @@ function get_current_branch_name {
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=`get_current_branch_name`
-  if [ "$branch_name" == "$main_branch_name" -o `echo "$non_feature_branch_names" | tr ',' '\n' | grep $branch_name | wc -l` == '1' ]; then
+  if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == '1' ]; then
     echo false
   else
     echo true
