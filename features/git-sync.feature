@@ -278,4 +278,11 @@ Feature: Git Sync
   Scenario: On main branch with no pushable changes
     Given I am on the main branch
     When I run `git sync`
-    Then I don't see "Pushing 'main'"
+    Then I see "Pushing 'main' not necessary"
+
+
+  Scenario: On feature branch with no pushable changes
+    Given I am on a feature branch
+    When I run `git sync`
+    Then I see "Pushing 'feature' not necessary"
+

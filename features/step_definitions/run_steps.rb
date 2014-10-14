@@ -42,8 +42,8 @@ Then /^I get the error "(.+?)"$/ do |error_message|
 end
 
 
-Then /^I don't see "(.+?)"$/ do |output|
-  expect(@last_run_result[:out]).to_not include output
+Then /^I see "(.+?)"$/ do |output|
+  expect(@last_run_result[:out]).to include output
 end
 
 
