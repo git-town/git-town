@@ -60,8 +60,7 @@ Feature: Git Ship
       | remote   | conflicting remote commit | conflicting_file | remote content |
       | local    | conflicting local commit  | conflicting_file | local content  |
     When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE FEATURE BRANCH"
-    And my repo has a merge in progress
+    Then my repo has a merge in progress
     And there is an abort script for "git ship"
     When I run `git ship --abort`
     Then I end up on my feature branch
@@ -78,8 +77,7 @@ Feature: Git Ship
       | main   | remote   | conflicting remote commit | conflicting_file | remote content |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
     When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
-    And my repo has a rebase in progress
+    Then my repo has a rebase in progress
     And there is an abort script for "git ship"
     When I run `git ship --abort`
     Then I end up on my feature branch
@@ -96,8 +94,7 @@ Feature: Git Ship
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
     When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
-    And I end up on the "main" branch
+    Then I end up on the "main" branch
     And file "conflicting_file" has a merge conflict
     And there is an abort script for "git ship"
     When I run `git ship --abort`

@@ -37,10 +37,9 @@ function error_pull_feature_branch {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git sync --abort', or do the following steps manually:"
-  cat $abort_script
-  echo "To continue after you have resolved the conflict, run 'git sync --continue'"
   echo
+  echo "To abort the merge, run 'git sync --abort'."
+  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
@@ -66,10 +65,9 @@ function error_pull_main_branch {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git sync --abort', or do the following steps manually:"
-  cat $abort_script
-  echo "To continue after you have resolved the conflict, run 'git sync --continue'"
   echo
+  echo "To abort the rebase and checkout the original branch, run 'git sync --abort'."
+  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
@@ -91,16 +89,15 @@ function error_merge_branch {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git sync --abort', or do the following steps manually:"
-  cat $abort_script
   echo
+  echo "To abort the merge, run 'git sync --abort'"
+  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
 
 # Aborts a currently ongoing sync
 function abort_sync {
-  echo_intro "ABORTING THE PREVIOUS GIT SYNC"
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
@@ -112,8 +109,6 @@ function abort_sync {
 
 
 function continue_sync {
-  echo_intro "CONTINUING THE PREVIOUS GIT SYNC"
-
   ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
   if [ -f $continue_script ]; then
     source $continue_script
@@ -127,7 +122,6 @@ function continue_sync {
 
 # Perform the sync operation
 function perform_sync {
-  echo_intro "SYNCING THE CURRENT BRANCH"
   stash_open_changes
   if [ $initial_branch_name == $main_branch_name ]; then
     # On the main branch

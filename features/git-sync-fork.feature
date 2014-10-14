@@ -46,8 +46,7 @@ Feature: Git Sync-Fork
       | main   | local    | local commit    | conflicting_file | local content    |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork` while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE UPSTREAM BRANCH"
-    And my repo has a rebase in progress
+    Then my repo has a rebase in progress
     And there is an abort script for "git sync-fork"
     And I don't have an uncommitted file with name: "uncommitted"
 

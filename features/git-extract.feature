@@ -58,8 +58,7 @@ Feature: Git Extract
       | main    | local    | conflicting local commit  | conflicting_file | local content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha as an argument while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
-    And my repo has a rebase in progress
+    Then my repo has a rebase in progress
     And there is an abort script for "git extract"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git extract --abort`

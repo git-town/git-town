@@ -9,7 +9,6 @@ abort_script="/tmp/git_sync_fork_abort$temp_filename_suffix"
 
 # Aborts a currently ongoing sync-fork
 function abort_sync_fork {
-  echo_intro "ABORTING THE PREVIOUS GIT SYNC-FORK"
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
@@ -21,8 +20,6 @@ function abort_sync_fork {
 
 # Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_upstream_branch {
-  echo_red "ERROR WHILE PULLING THE UPSTREAM BRANCH"
-
   # Create the abort file.
   echo "git rebase --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
@@ -31,9 +28,9 @@ function error_pull_upstream_branch {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git sync-fork --abort', or do the following steps manually:"
-  cat $abort_script
   echo
+  echo
+  echo "To abort the rebase and checkout the original branch, run 'git sync-fork --abort'."
   exit 1
 }
 
@@ -83,11 +80,9 @@ function sync_fork {
 }
 
 if [ "$1" == "--configure-only" ]; then
-  echo_intro "CONFIGURING REMOTE UPSTREAM"
   configure_upstream
 elif [ "$1" == "--abort" ]; then
   abort_sync_fork
 else
-  echo_intro "SYNCING THE MAIN BRANCH WITH REMOTE UPSTREAM"
   sync_fork
 fi
