@@ -151,7 +151,8 @@ function merge_branch {
 # Returns whether the current branch has local updates that haven't been pushed
 # to the remote yet.
 function needs_pushing {
-  if [ `git log origin/master..HEAD | wc -l` == 0 ]; then
+  local current_branch_name=$1
+  if [ `git log origin/$current_branch_name..HEAD | wc -l` == 0 ]; then
     echo false
   else
     echo true
@@ -189,7 +190,7 @@ function pull_upstream_branch {
 function push_branch {
   local current_branch_name=`get_current_branch_name`
   echo_header "Pushing '$current_branch_name'"
-  if [ `needs_pushing` == true ]; then
+  if [ `needs_pushing $current_branch_name` == true ]; then
     if [ `has_tracking_branch` = true ]; then
       git push
     else
