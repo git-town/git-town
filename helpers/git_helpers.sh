@@ -84,7 +84,7 @@ function ensure_on_feature_branch {
   if [ `is_feature_branch` == false ]; then
     echo_error_header
     local branch_name=`get_current_branch_name`
-    echo "  $branch_name is not a feature branch. $error_message"
+    echo "  The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
   fi
 }
