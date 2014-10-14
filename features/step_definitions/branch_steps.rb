@@ -14,7 +14,7 @@ Given /^I am on the main branch$/ do
 end
 
 
-Given /^I am on the "(.*)" branch$/ do |branch_name|
+Given /^I am on the "(.+?)" branch$/ do |branch_name|
   if existing_local_branches.include?(branch_name)
     run "git checkout #{branch_name}"
   else
