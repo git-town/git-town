@@ -148,8 +148,8 @@ function merge_branch {
 }
 
 
-# Returns whether the current branch has local updates that haven't been pushed
-# to the remote yet.
+# Returns whether the current branch has local updates
+# that haven't been pushed to the remote yet.
 function needs_pushing {
   if [ `has_tracking_branch` == false ]; then
     echo true
