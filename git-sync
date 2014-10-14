@@ -105,7 +105,6 @@ function abort_sync {
     source $abort_script
     rm $abort_script
     rm $continue_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -120,7 +119,6 @@ function continue_sync {
     source $continue_script
     rm $continue_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find continue definition file"
   fi
@@ -144,7 +142,6 @@ function perform_sync {
     push_branch
   fi
   restore_open_changes
-  echo_all_done
 }
 
 

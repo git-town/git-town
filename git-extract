@@ -87,7 +87,6 @@ function perform_extract {
   git push -u origin $target_branch_name
 
   restore_open_changes
-  echo_all_done
 }
 
 
@@ -97,7 +96,6 @@ function abort_extract {
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi

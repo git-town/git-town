@@ -15,7 +15,6 @@ function abort_hack {
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -60,7 +59,6 @@ function perform_hack {
   sync_main_branch
   create_feature_branch $target_branch_name
   restore_open_changes
-  echo_all_done
 }
 
 

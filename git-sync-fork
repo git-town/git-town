@@ -13,7 +13,6 @@ function abort_sync_fork {
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -92,5 +91,3 @@ else
   echo_intro "SYNCING THE MAIN BRANCH WITH REMOTE UPSTREAM"
   sync_fork
 fi
-
-echo_all_done

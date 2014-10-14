@@ -1,13 +1,6 @@
 # Helper methods for writing to the terminal.
 
 
-function echo_all_done {
-  echo
-  echo_header "*** ALL DONE ***"
-  echo
-}
-
-
 # Prints a header line into the terminal.
 function echo_header {
   echo

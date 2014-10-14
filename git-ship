@@ -78,7 +78,6 @@ function abort_ship {
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -98,7 +97,6 @@ function perform_ship {
   squash_merge $initial_branch_name "$message"
   push_branch
   delete_branch $initial_branch_name
-  echo_all_done
 }
 
 
