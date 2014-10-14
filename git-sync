@@ -139,6 +139,7 @@ function perform_sync {
   else
     pull_branch 'rebase'
     push_branch
+    push_tags
   fi
   restore_open_changes
   echo_all_done
