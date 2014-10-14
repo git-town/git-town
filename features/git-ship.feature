@@ -44,7 +44,7 @@ Feature: Git Ship
 
 
   Scenario: on non feature branch
-    Given I configure Git Town's non-feature branch names to "qa, production"
+    Given non-feature branch configuration "qa, production"
     And I am on the "production" branch
     When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "production is not a feature branch. Please checkout a feature branch to ship"

@@ -22,7 +22,7 @@ Feature: Git Sync
 
 
   Scenario: on a non feature branch
-    Given I configure Git Town's non-feature branch names to "qa, production"
+    Given non-feature branch configuration "qa, production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | branch | location         | message       | file name   |

@@ -1,8 +1,3 @@
-Given /^I configure Git Town's non-feature branch names to (.*)$/ do |branch_names|
-  run "git config git-town.non-feature-branch-names #{branch_names}"
-end
-
-
 Given /^I don't have a main branch name configured$/ do
   delete_configuration
 end
@@ -12,6 +7,11 @@ Given /^I have an old configuration file with (.*?)$/ do |data|
   delete_configuration
   data = Kappamaki.attributes_from_sentence data
   IO.write '.main_branch_name', data[:'main branch']
+end
+
+
+Given /^non-feature branch configuration (.*)$/ do |branch_names|
+  run "git config git-town.non-feature-branch-names #{branch_names}"
 end
 
 
