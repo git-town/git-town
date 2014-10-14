@@ -42,6 +42,11 @@ Then /^I get the error "(.+?)"$/ do |error_message|
 end
 
 
+Then /^I don't see "(.+?)"$/ do |output|
+  expect(@last_run_result[:out]).to_not include output
+end
+
+
 Then /^show me the output$/  do
   puts @last_run_result[:out]
 end
