@@ -37,6 +37,7 @@ Feature: Git Sync
       | branch | location         | message       | files       |
       | qa     | local and remote | local commit  | local_file  |
       | qa     | local and remote | remote commit | remote_file |
+      | main   | local and remote | main commit   | main_file   |
     And now I have the following committed files
       | branch | files       |
       | qa     | local_file  |
