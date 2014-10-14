@@ -277,6 +277,9 @@ Feature: Git Sync
 
   Scenario: On main branch with no pushable changes
     Given I am on the main branch
+    And the following commits exist in my repository
+      | location         | message               |
+      | local and remote | already pushed commit |
     When I run `git sync`
     Then I see "Pushing 'main' not necessary"
 
