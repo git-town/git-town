@@ -151,11 +151,14 @@ function merge_branch {
 # Returns whether the current branch has local updates that haven't been pushed
 # to the remote yet.
 function needs_pushing {
-  local current_branch_name=$1
-  if [ `git log origin/$current_branch_name..HEAD | wc -l` == 0 ]; then
-    echo false
-  else
+  if [ `has_tracking_branch` == false ]; then
     echo true
+  else
+    if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
+      echo true
+    else
+      echo false
+    fi
   fi
 }
 
