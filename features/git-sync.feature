@@ -286,6 +286,9 @@ Feature: Git Sync
 
   Scenario: On feature branch with no pushable changes
     Given I am on a feature branch
+    And the following commits exist in my repository
+      | location         | message               |
+      | local and remote | already pushed commit |
     When I run `git sync`
     Then I see "Pushing 'feature' not necessary"
 
