@@ -17,10 +17,10 @@ and assumes you use a central code repository like
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
 * when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
 * keep a forked repository up to date with its upstream using <a href="#git-sync-fork">git sync-fork</a>
-* refactor selected commits from one feature branch into a dedicated one using <a href="#git-extract">git extract</a>.
+* extract existing commits into their own feature branches using <a href="#git-extract">git extract</a>.
 
-All Git Town commands automatically clean up (prune)
-no longer existing remote branches from your branch list.
+Git Town automatically prunes no longer existing remote branches
+from your branch list.
 
 Hint: the examples below assume "master" as the main branch name
 (this is <a href="#configuration">configurable</a>),
