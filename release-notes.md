@@ -1,5 +1,9 @@
 # Git Town Release Notes
 
+## 0.4
+* pushes tags to the remote when running "git sync" on the main branch
+
+
 ## 0.3
 * multi-user support for feature branches (https://github.com/Originate/git-town/issues/35)
 * git sync-fork

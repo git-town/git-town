@@ -186,6 +186,12 @@ function push_branch {
 }
 
 
+# Pushes tags to the remote
+function push_tags {
+  git push --tags
+}
+
+
 # Returns the url for the remote with the specified name
 function remote_url {
   git remote -v | grep "$1.*fetch" | awk '{print $2}'

@@ -135,6 +135,7 @@ function perform_sync {
     # On the main branch
     pull_branch
     push_branch
+    push_tags
   else
     # On a feature branch
     sync_main_branch
