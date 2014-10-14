@@ -33,9 +33,9 @@ _Cuts a new feature branch off the main branch._
 
 Scenario:
 While working on something you realize "Hey, this should be in its own branch."
-No problem, just run `git hack foobar`,
-and a feature branch with name "foobar" is created for you,
-with all open changes copied over into it.
+No problem, just run `git hack foo`,
+and you get an up to date feature branch "foo"
+with all uncommitted changes copied into it.
 
 <table>
   <tr>
@@ -69,17 +69,16 @@ with all open changes copied over into it.
 
 ## git sync
 
-_Syncronizes the current feature branch with the rest of the world,
-i.e. with its remote branch and the main branch._
+_Syncronizes the current feature branch with the rest of the world._
 
-This works even when you are right in the middle of coding,
-i.e. with uncommitted changes.
+This works even when you are in the middle of coding,
+with uncommitted changes in your workspace.
 You can call this command safely at any time, many times during the day.
 
-* run the command: `git sync`<br>
-* abort the command when there are conflicts: `git sync --abort`<br>
+* run the command: `git sync`
+* abort the command when there are conflicts: `git sync --abort`
 * finish the sync after you have fixed the conflicts: `git sync --continue`
-* pushes tags to the remote when run on the main branch
+* pushes tags when run on the main branch
 
 <table>
   <tr>
@@ -133,17 +132,19 @@ You can call this command safely at any time, many times during the day.
 
 ## git extract
 
-_Extracts commits from a feature branch into a new feature branch._
+_Extracts commits from a feature branch into another._
 
 Scenario:
-After finishing a bigger feature you realize that this is actually several
-changes in one branch. You want to extract each change into its own feature
-branch.
+While working on a bigger feature you want to extract certain changes
+(like refactorings) into their own feature branches, so that they can be
+reviewed separately/faster than the rest of the feature.
 
-More background around <a href="http://blog.originate.com/blog/2014/04/19/refactoring_git_branches" target="_blank">Git branch refactoring</a>.
+More background around
+<a href="http://blog.originate.com/blog/2014/04/19/refactoring_git_branches" target="_blank">Git branch refactoring</a>.
 
 * run the command: `git extract [new branch name]`<br>
 * abort the command when there are conflicts: `git extract --abort`
+* you need <a href="http://en.wikipedia.org/wiki/Ncurses" target="_blank">Ncurses</a> for this
 
 <table>
   <tr>
