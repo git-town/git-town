@@ -49,4 +49,5 @@ end
 
 Then /^show me the output$/  do
   puts @last_run_result[:out]
+  puts @last_run_result[:err]
 end
