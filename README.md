@@ -16,7 +16,7 @@ and assumes you use a central code repository like
 * create a new feature branch with <a href="#git-hack">git hack</a>
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
 * when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
-* in a forked repository, keep your main branch up to date with its upstream repository using <a href="#git-sync-fork">git sync-fork</a>
+* keep a forked repository up to date with its upstream using <a href="#git-sync-fork">git sync-fork</a>
 * refactor selected commits from one feature branch into a dedicated one using <a href="#git-extract">git extract</a>.
 
 All Git Town commands automatically clean up (prune)
