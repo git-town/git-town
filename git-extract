@@ -18,7 +18,7 @@ function error_cherry_pick {
 
   # Show error message.
   echo
-  echo 'To abort the cherry-pick and check out the original branch, run "git extract --abort".'
+  echo_red 'To abort the cherry-pick and check out the original branch, run "git extract --abort".'
   exit 1
 }
 
@@ -34,7 +34,7 @@ function error_pull_main_branch {
 
   # Show error message.
   echo
-  echo 'To abort the rebase and check out the original branch, run "git extract --abort".'
+  echo_red 'To abort the rebase and check out the original branch, run "git extract --abort".'
   exit 1
 }
 

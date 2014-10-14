@@ -38,8 +38,8 @@ function error_pull_feature_branch {
 
   # Show error message.
   echo
-  echo "To abort the merge, run 'git sync --abort'."
-  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
+  echo_red "To abort the merge, run 'git sync --abort'."
+  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
@@ -66,8 +66,8 @@ function error_pull_main_branch {
 
   # Show error message.
   echo
-  echo "To abort the rebase and checkout the original branch, run 'git sync --abort'."
-  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
+  echo_red "To abort the rebase and checkout the original branch, run 'git sync --abort'."
+  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
@@ -90,8 +90,8 @@ function error_merge_branch {
 
   # Show error message.
   echo
-  echo "To abort the merge, run 'git sync --abort'"
-  echo "To continue after you have resolved the conflict, run 'git sync --continue'."
+  echo_red "To abort the merge, run 'git sync --abort'"
+  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
   exit 1
 }
 
