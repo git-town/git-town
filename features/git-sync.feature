@@ -126,7 +126,7 @@ Feature: Git Sync
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And now I have the following commits
-      | branch  | location | message                          | files              |
+      | branch  | location         | message                          | files              |
       | feature | local and remote | Merge branch 'main' into feature |                    |
       | feature | local and remote | remote conflicting commit        | conflicting_file   |
       | feature | local and remote | local conflicting commit         | conflicting_file   |
