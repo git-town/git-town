@@ -46,6 +46,6 @@ if [[ $? == '1' ]]; then
   echo "Please enter the names of all your non-feature branches as a comma seperated list."
   echo "Example: 'qa, production'"
   read non_feature_branch_names
-  store_non_feature_branch_names $non_feature_branch_names
+  store_non_feature_branch_names "$non_feature_branch_names"
   echo "non-feature branches stored as '$non_feature_branch_names'"
 fi
