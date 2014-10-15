@@ -21,8 +21,6 @@ continue_script="/tmp/git_sync_continue$temp_filename_suffix"
 
 # Called by pull_branch when the merge fails with conflicts on the feature branch
 function error_pull_feature_branch {
-  echo_red "ERROR WHILE PULLING THE FEATURE BRANCH"
-
   # Create the abort file.
   echo "git merge --abort" > $abort_script
   if [ $initial_open_changes == true ]; then
@@ -46,8 +44,6 @@ function error_pull_feature_branch {
 
 # Called by pull_branch when the rebase fails with conflicts on the main branch
 function error_pull_main_branch {
-  echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
-
   # Create the abort file.
   echo "git rebase --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
@@ -74,8 +70,6 @@ function error_pull_main_branch {
 
 # Called by merge_branch when the merge fails with merge conflicts
 function error_merge_branch {
-  echo_red "ERROR WHILE REBASING THE FEATURE BRANCH AGAINST THE MAIN BRANCH"
-
   # Create the abort file
   echo "git merge --abort" > $abort_script
   if [ $initial_open_changes == true ]; then
