@@ -193,7 +193,7 @@ function pull_upstream_branch {
 function push_branch {
   local current_branch_name=`get_current_branch_name`
   echo_header "Pushing '$current_branch_name'"
-  if [ `needs_pushing $current_branch_name` == true ]; then
+  if [ `needs_pushing` == true ]; then
     if [ `has_tracking_branch` == true ]; then
       git push
     else

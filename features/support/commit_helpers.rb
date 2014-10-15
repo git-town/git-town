@@ -67,9 +67,12 @@ def create_commits commits_table
       when 'local'
         create_local_commit commit_data
       when 'remote'
-        create_local_commit commit_data
-        run 'git push'
-        run 'git reset --hard HEAD^'
+        at_path coworker_repository_path do
+          run 'git pull'
+          create_local_commit commit_data
+          run 'git push'
+          run 'git reset --hard HEAD^'
+        end
       when 'local and remote'
         create_local_commit commit_data
         run 'git push'

@@ -80,7 +80,7 @@ You can call this command safely at any time, many times during the day.
 * abort the command when there are conflicts: `git sync --abort`<br>
 * finish the sync after you have fixed the conflicts: `git sync --continue`
 * pushes tags to the remote when run on the main branch
-* skips unnecessary operations
+* skips unnecessary pushes
 
 <table>
   <tr>
@@ -258,6 +258,7 @@ Call this to bring the main branch up to date with the main branch of the remote
 If your respository is a fork on GitHub, `upstream` will be automatically set on first use.
 
 * run the command: `git sync-fork`
+* skips unnecessary pushes
 
 <table>
   <tr>
