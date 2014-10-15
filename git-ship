@@ -36,11 +36,13 @@ function error_pull_main_branch {
 }
 
 
-# Called by squash_merge when the merge fails with conflicts
-function error_squash_merge {
-  # Create the abort file.
-  echo "git reset --hard HEAD" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
+# Called by merge_branch when the merge fails with merge conflicts
+function error_merge_branch {
+  # Create the abort file
+  echo "git merge --abort" > $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
 
   # Show error message.
   echo
@@ -82,6 +84,7 @@ function perform_ship {
 
   sync_main_branch
   pull_branch
+  merge_branch $main_branch_name
   checkout_main_branch
   squash_merge $initial_branch_name "$message"
   push_branch
