@@ -66,6 +66,8 @@ function run_command {
   command_exit_status=$?
 
   print_command $cmd
-  echo "$output"
+  if [ -n "$output" ]; then
+    echo "$output"
+  fi
 }
 
