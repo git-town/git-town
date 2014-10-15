@@ -21,6 +21,30 @@ Feature: Git Sync
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
+  Scenario: on a non feature branch
+    Given non-feature branch configuration "qa, production"
+    And I am on the "qa" branch
+    And the following commits exist in my repository
+      | branch | location         | message       | file name   |
+      | qa     | local            | local commit  | local_file  |
+      | qa     | remote           | remote commit | remote_file |
+      | main   | local and remote | main commit   | main_file   |
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    When I run `git sync`
+    Then I am still on the "qa" branch
+    And all branches are now synchronized
+    And I have the following commits
+      | branch | location         | message       | files       |
+      | qa     | local and remote | local commit  | local_file  |
+      | qa     | local and remote | remote commit | remote_file |
+      | main   | local and remote | main commit   | main_file   |
+    And now I have the following committed files
+      | branch | files                   |
+      | qa     | local_file, remote_file |
+      | main   | main_file               |
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
   # Todo (KG): Shouldn't the 'local main commit' also be pushed to the repo?
   Scenario: on a feature branch without a remote branch
     Given I am on a local feature branch
@@ -126,7 +150,7 @@ Feature: Git Sync
     And there is no abort script for "git sync" anymore
     And there is no continue script for "git sync" anymore
     And now I have the following commits
-      | branch  | location | message                          | files              |
+      | branch  | location         | message                          | files              |
       | feature | local and remote | Merge branch 'main' into feature |                    |
       | feature | local and remote | remote conflicting commit        | conflicting_file   |
       | feature | local and remote | local conflicting commit         | conflicting_file   |
@@ -267,8 +291,16 @@ Feature: Git Sync
       | feature | local and remote | charlies commit 1 | charlie_file_1 |
 
 
-  Scenario: Unpushed tags
+  Scenario: Unpushed tags on the main branch
     Given I am on the main branch
+    And I add a local tag "v1.0"
+    When I run `git sync`
+    Then tag "v1.0" has been pushed to the remote
+
+
+  Scenario: Unpushed tags on a non-feature branch
+    Given non-feature branch configuration "qa, production"
+    And I am on the "production" branch
     And I add a local tag "v1.0"
     When I run `git sync`
     Then tag "v1.0" has been pushed to the remote

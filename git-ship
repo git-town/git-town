@@ -78,7 +78,7 @@ function perform_ship {
   local message=`extract_message "$*"`
 
   ensure_no_open_changes "You should not ship while having open files in Git."
-  ensure_on_feature_branch "Please checkout the feature branch to ship."
+  ensure_on_feature_branch "Please checkout a feature branch to ship."
 
   sync_main_branch
   pull_branch
