@@ -38,14 +38,21 @@ function echo_usage_header {
 
 # Exits the currently running script with an error response code.
 function exit_with_error {
+  echo
   exit 1
 }
 
 
+# Exits the currently running script with a success response code
+function exit_with_success {
+  echo
+  exit 0
+}
+
+
 # Prints a command
-commands_printed=0
 function print_command {
-  if [ $commands_printed -gt 0 ]; then echo; fi
+  echo
   echo_bold $*
   commands_printed=$((commands_printed+1))
 }

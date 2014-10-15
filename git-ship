@@ -16,7 +16,7 @@ function error_pull_feature_branch {
   # Show error message.
   echo
   echo_red 'To abort the merge, run "git ship --abort".'
-  exit 1
+  exit_with_error
 }
 
 
@@ -32,7 +32,7 @@ function error_pull_main_branch {
   # Show error message.
   echo
   echo_red 'To abort the rebase and checkout the original branch, run "git ship --abort".'
-  exit 1
+  exit_with_error
 }
 
 
@@ -47,7 +47,7 @@ function error_merge_branch {
   # Show error message.
   echo
   echo_red 'To abort the merge and checkout the original branch, run "git ship --abort".'
-  exit 1
+  exit_with_error
 }
 
 
@@ -98,3 +98,4 @@ else
   perform_ship "$*"
 fi
 
+exit_with_success
