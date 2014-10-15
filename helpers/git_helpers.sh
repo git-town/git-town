@@ -227,7 +227,6 @@ function squash_merge {
   local current_branch_name=`get_current_branch_name`
   echo_header "Merging the '$branch_name' branch into '$current_branch_name'"
   git merge --squash $branch_name
-  if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
     git commit -a
   else
