@@ -2,6 +2,7 @@
 
 ## 0.4
 * pushes tags to the remote when running "git sync" on the main branch
+* added support for non-feature branches (cannot be shipped, do not merge main when syncing)
 
 
 ## 0.3

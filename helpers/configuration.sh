@@ -1,13 +1,13 @@
 # Helper methods for dealing with configuration.
 
 
-# Stores the current name branch name in the config file.
+# Persists the main branch configuration
 function store_main_branch_name {
   git config git-town.main-branch-name $1
 }
 
 
-# Stores the current name branch name in the config file.
+# Persists the non-feature branch configuration
 function store_non_feature_branch_names {
   git config git-town.non-feature-branch-names "$1"
 }
@@ -34,17 +34,18 @@ if [[ -z "$main_branch_name" ]]; then
   fi
   store_main_branch_name $main_branch_name
   echo
-  echo "I have stored the main branch name '$main_branch_name' for you."
+  echo "main branch stored as '$main_branch_name'."
 fi
 
 
 # Read non feature branch names from config, ask and store if needed
 non_feature_branch_names=`git config git-town.non-feature-branch-names`
 if [[ $? == '1' ]]; then
-  echo "Please enter the names of any other non feature branches as a comma seperated list."
-  echo "git sync and git ship will treat these branches in a similar manner to the main branch."
-  echo "(ex: 'qa, production')"
+  echo "Git Town supports non-feature branches like 'release' or 'production'."
+  echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
+  echo "Please enter the names of all your non-feature branches as a comma seperated list."
+  echo "Example: 'qa, production'"
   read non_feature_branch_names
   store_non_feature_branch_names $non_feature_branch_names
-  echo "Non feature branch names stored as '$non_feature_branch_names'"
+  echo "non-feature branches stored as '$non_feature_branch_names'"
 fi

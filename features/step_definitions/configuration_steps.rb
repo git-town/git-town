@@ -10,8 +10,8 @@ Given /^I have an old configuration file with (.*?)$/ do |data|
 end
 
 
-Given /^non-feature branch configuration (.*)$/ do |branch_names|
-  run "git config git-town.non-feature-branch-names #{branch_names}"
+Given /^non-feature branch configuration (.*)$/ do |configuration|
+  run "git config git-town.non-feature-branch-names #{configuration}"
 end
 
 
