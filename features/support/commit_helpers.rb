@@ -71,7 +71,6 @@ def create_commits commits_table
           run 'git pull'
           create_local_commit commit_data
           run 'git push'
-          run 'git reset --hard HEAD^'
         end
       when 'local and remote'
         create_local_commit commit_data
