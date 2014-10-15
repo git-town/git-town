@@ -21,7 +21,7 @@ function checkout_main_branch {
 }
 
 
-# Cherry picks the shas into the current branch
+# Cherry picks the SHAs into the current branch
 function cherry_pick {
   local shas=$*
   run_command "git cherry-pick $shas"
