@@ -76,7 +76,7 @@ function error_pull_main_branch {
 
 # Called by merge_branch when the merge fails with merge conflicts
 function error_merge_branch {
-  echo_red "ERROR WHILE REBASING THE FEATURE BRANCH AGAINST THE MAIN BRANCH"
+  echo_red "ERROR WHILE MERGING THE MAIN BRANCH INTO THE FEATURE BRANCH"
 
   # Create the abort file
   echo "git merge --abort" > $abort_script
