@@ -44,7 +44,7 @@ end
 
 
 After '~@finishes-with-non-empty-stash' do
-  expect(run("git stash list | wc -l")[:out]).to eql '0'
+  expect(stash_size).to eql 0
 end
 
 
