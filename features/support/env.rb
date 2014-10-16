@@ -47,6 +47,7 @@ After '~@allow-stash-afterwards' do
   expect(run("git stash list | wc -l")[:out]).to eql '0'
 end
 
+
 at_exit do
   Dir.chdir repositiory_base
   delete_repository remote_repository_path
