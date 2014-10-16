@@ -38,14 +38,14 @@ function perform_hack {
   # Exit with a help screen if parameters are missing.
   if [ -z $target_branch_name ]; then
     echo_usage_header
-    echo "  git hack [feature branch name]"
+    echo_usage "git hack [feature branch name]"
     exit_with_error
   fi
 
   # Exit if the branch with that name already exists.
   if [ `has_branch $target_branch_name` == true ]; then
     echo_error_header
-    echo "A branch named '$target_branch_name' already exists"
+    echo_error "A branch named '$target_branch_name' already exists"
     exit_with_error
   fi
 

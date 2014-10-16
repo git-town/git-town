@@ -3,9 +3,9 @@
 
 # Prints a line in bold
 function echo_bold {
-  tput bold
+  output_style_bold
   echo "$*"
-  tput sgr0
+  output_style_reset
 }
 
 
@@ -18,21 +18,52 @@ function echo_header {
 
 # Prints an error header into the terminal.
 function echo_error_header {
-  echo_header "  Error"
+  local str=`echo_indented Error`
+  echo
+  echo_red_bold "$str"
+}
+
+
+# Prints the provided error message
+function echo_error {
+  local str=`echo_indented "$*"`
+  echo_red "$str"
+}
+
+
+# Prints the message idented
+function echo_indented {
+  echo "  $*"
 }
 
 
 # Outputs the given text in red
 function echo_red {
-  tput setaf 1
+  output_style_red
   echo "$*"
-  tput sgr0
+  output_style_reset
+}
+
+
+# Outputs the given text in red and bold
+function echo_red_bold {
+  output_style_bold
+  output_style_red
+  echo "$*"
+  output_style_reset
+}
+
+
+# Prints the provided usage message
+function echo_usage {
+  echo_indented "$*"
 }
 
 
 # Prints the header for the usage help screen into the terminal.
 function echo_usage_header {
-  echo_header "  Usage"
+  local str=`echo_indented Usage`
+  echo_header "$str"
 }
 
 
@@ -50,10 +81,24 @@ function exit_with_success {
 }
 
 
+function output_style_bold {
+  tput bold
+}
+
+
+function output_style_red {
+  tput setaf 1
+}
+
+
+function output_style_reset {
+  tput sgr0
+}
+
+
 # Prints a command
 function print_command {
-  echo
-  echo_bold $*
+  echo_header "$*"
   commands_printed=$((commands_printed+1))
 }
 

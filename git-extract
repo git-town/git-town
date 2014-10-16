@@ -66,7 +66,7 @@ function perform_extract {
 
   if [ ! -s $user_input_filename ]; then
     echo_error_header
-    echo "  Nothing selected, aborting script."
+    echo_error "Nothing selected, aborting script."
     exit_with_error
   fi
 
@@ -93,7 +93,7 @@ function abort_extract {
 # Exit with a help screen if parameters are missing.
 if [ -z $1 ]; then
   echo_usage_header
-  echo "  git extract [name of the new branch to create]"
+  echo_usage "git extract [name of the new branch to create]"
   exit_with_error
 fi
 

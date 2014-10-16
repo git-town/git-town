@@ -76,7 +76,7 @@ function has_tracking_branch {
 function ensure_no_open_changes {
   if [ $initial_open_changes = true ]; then
     echo_error_header
-    echo $*
+    echo_error "$*"
     exit_with_error
   fi
 }
@@ -87,9 +87,9 @@ function ensure_no_open_changes {
 function ensure_on_feature_branch {
   local error_message=$1
   if [ `is_feature_branch` == false ]; then
-    echo_error_header
     local branch_name=`get_current_branch_name`
-    echo "  The current branch '$branch_name' is not a feature branch. $error_message"
+    echo_error_header
+    echo_error "The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
   fi
 }

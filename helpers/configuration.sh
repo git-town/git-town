@@ -27,9 +27,9 @@ if [[ -z "$main_branch_name" ]]; then
   read main_branch_name
   if [[ -z "$main_branch_name" ]]; then
     echo_error_header
-    echo "  You have not provided the name for the main branch."
-    echo "  This information is necessary to run this script."
-    echo "  Please try again."
+    echo_error "You have not provided the name for the main branch."
+    echo_error "This information is necessary to run this script."
+    echo_error "Please try again."
     exit_with_error
   fi
   store_main_branch_name $main_branch_name

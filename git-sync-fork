@@ -38,7 +38,7 @@ function error_pull_upstream_branch {
 # Outputs error and exits
 function error_with_upstream_required {
   echo_error_header
-  echo "Please add a remote 'upstream'"
+  echo_error "Please add a remote 'upstream'"
   exit_with_error
 }
 

@@ -77,7 +77,7 @@ function error_merge_branch {
   fi
 
   # Create the continue file
-  echo "push_branch"  > $continue_script
+  echo "push_branch" > $continue_script
   if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script
   fi
