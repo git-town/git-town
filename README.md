@@ -422,8 +422,8 @@ our way!
 ## roadmap
 
 The future roadmap is planned using
-<a href="https://github.com/Originate/git-town/issues">GitHub issues</a>.
-The past roadmap is in the <a href="release-notes.md">release notes</a>.
+<a href="https://github.com/Originate/git-town/issues" target="_blank">GitHub issues</a>.
+The past roadmap is in the <a href="release-notes.md" target="_blank">release notes</a>.
 
 If you have an idea about a cool feature you would like to see in Git Town,
 please <a href="https://github.com/Originate/git-town/issues/new" target="_blank">open a ticket</a>
