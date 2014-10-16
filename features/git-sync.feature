@@ -313,7 +313,7 @@ Feature: Git Sync
       | location         | message               |
       | local and remote | already pushed commit |
     When I run `git sync`
-    Then I see "Pushing 'main' not necessary"
+    Then I don't see "git push"
 
 
   Scenario: On feature branch with no pushable changes
@@ -322,4 +322,4 @@ Feature: Git Sync
       | location         | message               |
       | local and remote | already pushed commit |
     When I run `git sync`
-    Then I see "Pushing 'feature' not necessary"
+    Then I don't see "git push"

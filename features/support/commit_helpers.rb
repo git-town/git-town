@@ -64,24 +64,24 @@ def create_commits commits_table
 
     # Create the commits
     case (location = commit_data.delete(:location))
-      when 'local'
-        create_local_commit commit_data
-      when 'remote'
-        at_path coworker_repository_path do
-          run 'git pull'
-          create_local_commit commit_data
-          run 'git push'
-        end
-      when 'local and remote'
+    when 'local'
+      create_local_commit commit_data
+    when 'remote'
+      at_path coworker_repository_path do
+        run 'git pull'
         create_local_commit commit_data
         run 'git push'
-      when 'upstream'
-        at_path upstream_local_repository_path do
-          create_local_commit commit_data
-          run 'git push'
-        end
-      else
-        raise "Unknown commit location: #{location}"
+      end
+    when 'local and remote'
+      create_local_commit commit_data
+      run 'git push'
+    when 'upstream'
+      at_path upstream_local_repository_path do
+        create_local_commit commit_data
+        run 'git push'
+      end
+    else
+      raise "Unknown commit location: #{location}"
     end
   end
 

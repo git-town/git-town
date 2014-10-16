@@ -34,6 +34,11 @@ end
 
 
 
+Then /^I don't see "(.*?)"$/ do |unexpected_output|
+  expect(@last_run_result[:out]).to_not include unexpected_output
+end
+
+
 Then /^I get the error "(.+?)"$/ do |error_message|
   expect(@last_run_result[:status]).to_not eq 0
   output = @last_run_result[:out] + @last_run_result[:err]
@@ -42,8 +47,8 @@ Then /^I get the error "(.+?)"$/ do |error_message|
 end
 
 
-Then /^I see "(.+?)"$/ do |output|
-  expect(@last_run_result[:out]).to include output
+Then /^I see "(.+?)"$/ do |expected_output|
+  expect(@last_run_result[:out]).to include expected_output
 end
 
 
