@@ -421,7 +421,7 @@ our way!
 
 ## roadmap
 
-The future roadmap is developed using readme-driven development <a href="RDD.md">here</a> and
+The future roadmap is planned using
 <a href="https://github.com/Originate/git-town/issues">GitHub issues</a>.
 The past roadmap is in the <a href="release-notes.md">release notes</a>.
 
