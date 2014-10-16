@@ -43,7 +43,7 @@ Before '@github_query' do
 end
 
 
-After '~@allow-stash-afterwards' do
+After '~@finishes-with-non-empty-stash' do
   expect(run("git stash list | wc -l")[:out]).to eql '0'
 end
 
