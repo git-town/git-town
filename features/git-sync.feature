@@ -250,6 +250,7 @@ Feature: Git Sync
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
+  @allow-stash-afterwards
   Scenario: user tries to continue without resolving an occurring merge conflict first
     Given I am on a feature branch
     And the following commits exist in my repository

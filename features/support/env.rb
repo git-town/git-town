@@ -38,10 +38,14 @@ Before do
 end
 
 
-Before('@github_query') do
+Before '@github_query' do
   github_check_rate_limit!
 end
 
+
+After '~@allow-stash-afterwards' do
+  expect(run("git stash list | wc -l")[:out]).to eql '0'
+end
 
 at_exit do
   Dir.chdir repositiory_base
