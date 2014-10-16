@@ -21,7 +21,10 @@ Before do
 
     # Create the main branch
     run 'git checkout -b main master ; git push -u origin main'
+
+    # Configuration
     run 'git config git-town.main-branch-name main'
+    run 'git config git-town.non-feature-branch-names ""'
   end
 
   # Create the coworker repository

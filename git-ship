@@ -42,13 +42,15 @@ function error_pull_main_branch {
 }
 
 
-# Called by squash_merge when the merge fails with conflicts
-function error_squash_merge {
-  echo_red "ERROR WHILE SQUASH-MERGING THE FEATURE BRANCH"
+# Called by merge_branch when the merge fails with merge conflicts
+function error_merge_branch {
+  echo_red "ERROR WHILE MERGING THE MAIN BRANCH INTO THE FEATURE BRANCH"
 
-  # Create the abort file.
-  echo "git reset --hard HEAD" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
+  # Create the abort file
+  echo "git merge --abort" > $abort_script
+  if [ $initial_open_changes == true ]; then
+    echo "git stash pop" >> $abort_script
+  fi
 
   # Show error message.
   echo "To undo this, run 'git ship --abort', or do the following steps manually:"
@@ -90,10 +92,11 @@ function perform_ship {
   echo_intro "SHIPPING THE CURRENT FEATURE BRANCH"
 
   ensure_no_open_changes "You should not ship while having open files in Git."
-  ensure_on_feature_branch "Please checkout the feature branch to ship."
+  ensure_on_feature_branch "Please checkout a feature branch to ship."
 
   sync_main_branch
   pull_branch
+  merge_branch $main_branch_name
   checkout_main_branch
   squash_merge $initial_branch_name "$message"
   push_branch

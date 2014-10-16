@@ -81,9 +81,10 @@ function ensure_no_open_changes {
 # is on the main development branch.
 function ensure_on_feature_branch {
   local error_message=$1
-  if [ "`get_current_branch_name`" = "$main_branch_name" ]; then
+  if [ `is_feature_branch` == false ]; then
     echo_error_header
-    echo "  $error_message"
+    local branch_name=`get_current_branch_name`
+    echo "  The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
   fi
 }
@@ -104,6 +105,16 @@ function get_current_branch_name {
   git branch | grep "*" | awk '{print $2}'
 }
 
+
+# Returns true if the current branch is a feature branch
+function is_feature_branch {
+  local branch_name=`get_current_branch_name`
+  if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
 
 
 # Fetches updates from the central repository.
@@ -235,7 +246,6 @@ function squash_merge {
   local current_branch_name=`get_current_branch_name`
   echo_header "Merging the '$branch_name' branch into '$current_branch_name'"
   git merge --squash $branch_name
-  if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
     git commit -a
   else
