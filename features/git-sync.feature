@@ -110,14 +110,12 @@ Feature: Git Sync
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
-    And there is an abort script for "git sync"
-    And there is a continue script for "git sync"
+    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no merge in progress
-    And there is no abort script for "git sync" anymore
-    And there is no continue script for "git sync" anymore
+    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location | message                   | files              |
       | main    | local    | main branch update        | main_branch_update |
@@ -141,14 +139,12 @@ Feature: Git Sync
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
-    And there is an abort script for "git sync"
-    And there is a continue script for "git sync"
+    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I successfully finish the merge by resolving the merge conflict of file "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
-    And there is no abort script for "git sync" anymore
-    And there is no continue script for "git sync" anymore
+    And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
       | branch  | location         | message                          | files              |
       | feature | local and remote | Merge branch 'main' into feature |                    |
@@ -174,14 +170,12 @@ Feature: Git Sync
     When I run `git sync` while allowing errors
     Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
     And my repo has a rebase in progress
-    And there is an abort script for "git sync"
-    And there is a continue script for "git sync"
+    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no rebase in progress
-    And there is no abort script for "git sync" anymore
-    And there is no continue script for "git sync" anymore
+    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch | location | message                   | files              |
       | main   | local    | local conflicting commit  | conflicting_file   |
@@ -201,14 +195,12 @@ Feature: Git Sync
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
-    And there is an abort script for "git sync"
-    And there is a continue script for "git sync"
+    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no merge in progress
-    And there is no abort script for "git sync" anymore
-    And there is no continue script for "git sync" anymore
+    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location | message                  | files            |
       | main    | local    | conflicting main commit  | conflicting_file |
@@ -229,14 +221,12 @@ Feature: Git Sync
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
     Then my repo has a merge in progress
-    And there is an abort script for "git sync"
-    And there is a continue script for "git sync"
+    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     When I successfully finish the merge by resolving the merge conflict of file "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
-    And there is no abort script for "git sync" anymore
-    And there is no continue script for "git sync" anymore
+    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location         | message                          | files            |
       | main    | local            | conflicting main commit          | conflicting_file |
