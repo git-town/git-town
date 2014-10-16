@@ -63,19 +63,19 @@ def create_commits commits_table
                                  branch: current_branch })
 
     # Create the commits
-    case (location = commit_data.delete(:location))
-    when 'local'
+    case (location = Kappamaki.from_sentence commit_data.delete(:location))
+    when %w[local]
       create_local_commit commit_data
-    when 'remote'
+    when %w[remote]
       at_path coworker_repository_path do
         run 'git pull'
         create_local_commit commit_data
         run 'git push'
       end
-    when 'local and remote'
+    when %w[local remote]
       create_local_commit commit_data
       run 'git push'
-    when 'upstream'
+    when %w[upstream]
       at_path upstream_local_repository_path do
         create_local_commit commit_data
         run 'git push'
