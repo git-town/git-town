@@ -23,9 +23,9 @@ function checkout_main_branch {
 
 # Cherry picks the SHAs into the current branch
 function cherry_pick {
-  local shas=$*
-  run_command "git cherry-pick $shas"
-  if [ $command_exit_status != 0 ]; then error_cherry_pick $shas; fi
+  local SHAs=$*
+  run_command "git cherry-pick $SHAs"
+  if [ $command_exit_status != 0 ]; then error_cherry_pick $SHAs; fi
 }
 
 # Creates a new feature branch with the given name.
