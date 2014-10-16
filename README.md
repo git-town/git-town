@@ -413,8 +413,8 @@ git config git-town.non-feature-branch-names 'qa, production'
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 
 Found a bug or want to contribute a feature?
-<a href="https://github.com/Originate/git-town/issues/new" target="_blank">open an issue</a>
-or even better get down, go to town, and fire a feature-tested
+<a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
+or - even better - get down, go to town, and fire a feature-tested
 <a href="https://help.github.com/articles/using-pull-requests" target="_blank">pull request</a>
 our way!
 
