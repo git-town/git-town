@@ -426,6 +426,8 @@ The future roadmap is planned using
 The past roadmap is in the <a href="release-notes.md" target="_blank">release notes</a>.
 
 If you have an idea about a cool feature you would like to see in Git Town,
-please <a href="https://github.com/Originate/git-town/issues/new" target="_blank">open a ticket</a>
-and add the <a href="https://github.com/Originate/git-town/labels/idea" target="_blank">idea</a> tag.
+please <a href="https://github.com/Originate/git-town/issues/new" target="_blank">open a ticket</a>.
+Our team will add the <a href="https://github.com/Originate/git-town/labels/idea" target="_blank">idea</a> tag.
+Once there is agreement on this, it will be tagged as <a href="https://github.com/Originate/git-town/labels/enhancement" target="_blank">enhancement</a>
+or <a href="https://github.com/Originate/git-town/labels/bug" target="_blank">bug</a>.
 
