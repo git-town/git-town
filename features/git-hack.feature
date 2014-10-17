@@ -69,8 +69,7 @@ Feature: Git Hack
       | main   | local    | local_conflicting_commit  | conflicting_file | local content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack hot_stuff` while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
-    And my repo has a rebase in progress
+    Then my repo has a rebase in progress
     And there is an abort script for "git hack"
     And I don't have an uncommitted file with name: "uncommitted"
     When I run `git hack --abort`

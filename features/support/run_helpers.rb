@@ -10,7 +10,7 @@ def run command, allow_failures: false, debug: false, input: nil
   if result[:status] != 0 and !allow_failures
     raise "\nCommand '#{command}' not successful! \n\n************\nOUT: '#{result[:out]}', \n\n************\nERR: '#{result[:err]}'\n\n"
   end
-  if debug or $debug
+  if debug or ENV["DEBUG"]
     puts "\nRUNNING: #{command}"
     puts "#{result[:out]}\n"
     puts "#{result[:err]}\n"
