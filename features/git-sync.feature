@@ -172,8 +172,7 @@ Feature: Git Sync
       | main   | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync` while allowing errors
-    Then I get the error "ERROR WHILE PULLING THE MAIN BRANCH"
-    And my repo has a rebase in progress
+    Then my repo has a rebase in progress
     And there is an abort script for "git sync"
     And there is a continue script for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"

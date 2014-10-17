@@ -8,8 +8,6 @@ abort_script="/tmp/git_extract_abort$temp_filename_suffix"
 
 # Called when the cherry-pick causes an error
 function error_cherry_pick {
-  echo "ERROR WHILE CHERRY PICKING COMMITS INTO THE '$1' BRANCH"
-
   # Create the abort file.
   echo "git cherry-pick --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
@@ -19,18 +17,14 @@ function error_cherry_pick {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git extract --abort', or do the following steps manually:"
-  cat $abort_script
   echo
-  delete_temp_file
-  exit 1
+  echo_red 'To abort the cherry-pick and check out the original branch, run "git extract --abort".'
+  exit_with_error
 }
 
 
 # Called by pull_branch when the merge fails with conflicts
 function error_pull_main_branch {
-  echo_red "ERROR WHILE PULLING THE MAIN BRANCH"
-
   # Create the abort file.
   echo "git rebase --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
@@ -39,10 +33,9 @@ function error_pull_main_branch {
   fi
 
   # Show error message.
-  echo "To undo this, run 'git extract --abort', or do the following steps manually:"
-  cat $abort_script
   echo
-  exit 1
+  echo_red 'To abort the rebase and check out the original branch, run "git extract --abort".'
+  exit_with_error
 }
 
 
@@ -73,43 +66,34 @@ function perform_extract {
 
   if [ ! -s $user_input_filename ]; then
     echo_error_header
-    echo "  Nothing selected, aborting script."
+    echo_error "Nothing selected, aborting script."
     exit_with_error
   fi
 
   create_feature_branch $target_branch_name
-  git cherry-pick `cat $user_input_filename`
-  if [ $? != 0 ]; then error_cherry_pick $*; fi
+  cherry_pick `cat $user_input_filename`
 
   delete_temp_file
-
-  echo_header "Pushing the new branch to the repo"
-  git push -u origin $target_branch_name
-
+  push_branch
   restore_open_changes
-  echo_all_done
 }
 
 
 # Aborts a currently ongoing sync
 function abort_extract {
-  echo_intro "ABORTING THE PREVIOUS GIT EXTRACT"
   if [ -f $abort_script ]; then
     source $abort_script
     rm $abort_script
-    echo_all_done
   else
     echo_red "Cannot find abort definition file"
   fi
 }
 
 
-echo_intro "EXTRACTING COMMITS FROM A GIT BRANCH"
-
 # Exit with a help screen if parameters are missing.
 if [ -z $1 ]; then
   echo_usage_header
-  echo "  git extract [name of the new branch to create]"
+  echo_usage "git extract [name of the new branch to create]"
   exit_with_error
 fi
 
@@ -123,3 +107,5 @@ else
   fi
   perform_extract "$@"
 fi
+
+exit_with_success

@@ -1,59 +1,118 @@
 # Helper methods for writing to the terminal.
 
 
-function echo_all_done {
-  echo
-  echo_header "*** ALL DONE ***"
-  echo
+# Prints a line in bold
+function echo_bold {
+  output_style_bold
+  echo "$*"
+  output_style_reset
 }
 
 
 # Prints a header line into the terminal.
 function echo_header {
   echo
-  tput bold
-  echo "$*"
-  tput sgr0
+  echo_bold "$*"
 }
 
 
 # Prints an error header into the terminal.
 function echo_error_header {
+  local str=`echo_indented Error`
   echo
-  tput bold
-  echo "  Error"
-  tput sgr0
+  echo_red_bold "$str"
 }
 
 
-# Prints the intro line of a script into the terminal.
-function echo_intro {
-  tput bold
-  echo "$*"
-  tput sgr0
+# Prints the provided error message
+function echo_error {
+  local str=`echo_indented "$*"`
+  echo_red "$str"
+}
+
+
+# Prints the message idented
+function echo_indented {
+  echo "  $*"
 }
 
 
 # Outputs the given text in red
 function echo_red {
-  tput setaf 1
+  output_style_red
   echo "$*"
-  tput sgr0
+  output_style_reset
+}
+
+
+# Outputs the given text in red and bold
+function echo_red_bold {
+  output_style_bold
+  output_style_red
+  echo "$*"
+  output_style_reset
+}
+
+
+# Prints the provided usage message
+function echo_usage {
+  echo_indented "$*"
 }
 
 
 # Prints the header for the usage help screen into the terminal.
 function echo_usage_header {
-  echo
-  tput bold
-  echo "  Usage"
-  tput sgr0
+  local str=`echo_indented Usage`
+  echo_header "$str"
 }
 
 
 # Exits the currently running script with an error response code.
 function exit_with_error {
   echo
-  echo
   exit 1
 }
+
+
+# Exits the currently running script with a success response code
+function exit_with_success {
+  echo
+  exit 0
+}
+
+
+function output_style_bold {
+  tput bold
+}
+
+
+function output_style_red {
+  tput setaf 1
+}
+
+
+function output_style_reset {
+  tput sgr0
+}
+
+
+# Prints a command
+function print_command {
+  echo_header "$*"
+  commands_printed=$((commands_printed+1))
+}
+
+
+# Run a command, also prints command and output
+command_exit_status=0
+function run_command {
+  local cmd=$*
+  local output; output=`$cmd 2>&1`
+  command_exit_status=$?
+
+  print_command $cmd
+  if [ -n "$output" ]; then
+    echo "$output"
+  fi
+}
+
