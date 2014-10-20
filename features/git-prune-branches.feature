@@ -1,4 +1,4 @@
-Feature: Git Trim
+Feature: Git Prune Branches
 
   Scenario: on the main branch with a stale branch
     Given I have a feature branch named "old_feature"
