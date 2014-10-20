@@ -22,3 +22,4 @@ do
 done
 
 restore_open_changes
+exit_with_success
