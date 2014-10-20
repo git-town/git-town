@@ -303,7 +303,7 @@ Feature: Git Sync
       | location         | message               |
       | local and remote | already pushed commit |
     When I run `git sync`
-    Then I don't see "git push"
+    Then It doesn't run the command "git push"
 
 
   Scenario: On feature branch with no pushable changes
@@ -312,4 +312,4 @@ Feature: Git Sync
       | location         | message               |
       | local and remote | already pushed commit |
     When I run `git sync`
-    Then I don't see "git push"
+    Then It doesn't run the command "git push"
