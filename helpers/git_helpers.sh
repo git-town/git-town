@@ -204,15 +204,12 @@ function pull_upstream_branch {
 # Pushes the branch with the given name to origin
 function push_branch {
   local current_branch_name=`get_current_branch_name`
-  echo_header "Pushing '$current_branch_name'"
   if [ `needs_pushing` == true ]; then
     if [ `has_tracking_branch` == true ]; then
       run_command "git push"
     else
       run_command "git push -u origin $current_branch_name"
     fi
-  else
-    echo "Pushing '$current_branch_name' not necessary"
   fi
 }
 
