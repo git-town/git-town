@@ -8,7 +8,7 @@
 function checkout_branch {
   local branch_name=$1
   if [ ! "`get_current_branch_name`" = "$branch_name" ]; then
-    git checkout $branch_name
+    run_command "git checkout $branch_name"
   fi
 }
 
@@ -21,13 +21,19 @@ function checkout_main_branch {
 }
 
 
+# Cherry picks the SHAs into the current branch
+function cherry_pick {
+  local SHAs=$*
+  run_command "git cherry-pick $SHAs"
+  if [ $command_exit_status != 0 ]; then error_cherry_pick $SHAs; fi
+}
+
 # Creates a new feature branch with the given name.
 #
 # The feature branch is cut off the main development branch.
 function create_feature_branch {
   local new_branch_name=$1
-  echo_header "Creating the '$new_branch_name' branch off the '$main_branch_name' branch"
-  git checkout -b $new_branch_name $main_branch_name
+  run_command "git checkout -b $new_branch_name $main_branch_name"
 }
 
 
@@ -35,13 +41,12 @@ function create_feature_branch {
 function delete_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
-  echo_header "Removing the old '$branch_name' branch"
   checkout_branch $branch_name
   if [ `has_tracking_branch` == true ]; then
-    git push origin :${branch_name}
+    run_command "git push origin :${branch_name}"
   fi
   checkout_branch $current_branch_name
-  git branch -D $branch_name
+  run_command "git branch -D $branch_name"
 }
 
 
@@ -70,8 +75,8 @@ function has_tracking_branch {
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
   if [ $initial_open_changes = true ]; then
-    echo_header "  Error"
-    echo $*
+    echo_error_header
+    echo_error "$*"
     exit_with_error
   fi
 }
@@ -82,9 +87,9 @@ function ensure_no_open_changes {
 function ensure_on_feature_branch {
   local error_message=$1
   if [ `is_feature_branch` == false ]; then
-    echo_error_header
     local branch_name=`get_current_branch_name`
-    echo "  The current branch '$branch_name' is not a feature branch. $error_message"
+    echo_error_header
+    echo_error "The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
   fi
 }
@@ -124,7 +129,7 @@ function is_feature_branch {
 # by tracking this through the global variable $repo_fetched.
 function fetch_repo {
   if [ $repo_fetched == false ]; then
-    git fetch --prune
+    run_command "git fetch --prune"
     repo_fetched=true
   fi
 }
@@ -133,8 +138,7 @@ repo_fetched=false
 
 # Fetches changes from the upstream repository
 function fetch_upstream {
-  echo_header "Fetching updates for 'upstream'"
-  git fetch upstream
+  run_command "git fetch upstream"
 }
 
 
@@ -153,9 +157,8 @@ function has_branch {
 function merge_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
-  echo_header "Merging '$branch_name' into '$current_branch_name'"
-  git merge $branch_name
-  if [ $? != 0 ]; then error_merge_branch; fi
+  run_command "git merge $branch_name"
+  if [ $command_exit_status != 0 ]; then error_merge_branch; fi
 }
 
 
@@ -179,11 +182,10 @@ function pull_branch {
   local strategy=$1
   local current_branch_name=`get_current_branch_name`
   if [ -z $strategy ]; then strategy='merge'; fi
-  echo_header "Pulling updates for the '$current_branch_name' branch"
   if [ `has_tracking_branch` == true ]; then
     fetch_repo
-    git $strategy origin/$current_branch_name
-    if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
+    run_command "git $strategy origin/$current_branch_name"
+    if [ $command_exit_status != 0 ]; then error_pull_branch $current_branch_name; fi
   else
     echo "Branch '$current_branch_name' has no remote branch, skipping pull of updates"
   fi
@@ -193,10 +195,9 @@ function pull_branch {
 # Pulls updates of the current branch from the upstream repo
 function pull_upstream_branch {
   local current_branch_name=`get_current_branch_name`
-  echo_header "Pulling 'upstream/$current_branch_name' into '$current_branch_name'"
   fetch_upstream
-  git rebase upstream/$current_branch_name
-  if [ $? != 0 ]; then error_pull_upstream_branch; fi
+  run_command "git rebase upstream/$current_branch_name"
+  if [ $command_exit_status != 0 ]; then error_pull_upstream_branch; fi
 }
 
 
@@ -206,9 +207,9 @@ function push_branch {
   echo_header "Pushing '$current_branch_name'"
   if [ `needs_pushing` == true ]; then
     if [ `has_tracking_branch` == true ]; then
-      git push
+      run_command "git push"
     else
-      git push -u origin $current_branch_name
+      run_command "git push -u origin $current_branch_name"
     fi
   else
     echo "Pushing '$current_branch_name' not necessary"
@@ -218,7 +219,7 @@ function push_branch {
 
 # Pushes tags to the remote
 function push_tags {
-  git push --tags
+  run_command "git push --tags"
 }
 
 
@@ -233,8 +234,7 @@ function remote_url {
 # Only does this if there were open changes when the script was started.
 function restore_open_changes {
   if [ $initial_open_changes = true ]; then
-    echo_header "Restoring uncommitted changes"
-    git stash pop
+    run_command "git stash pop"
   fi
 }
 
@@ -244,11 +244,13 @@ function squash_merge {
   local branch_name=$1
   local commit_message=$2
   local current_branch_name=`get_current_branch_name`
-  echo_header "Merging the '$branch_name' branch into '$current_branch_name'"
-  git merge --squash $branch_name
+  run_command "git merge --squash $branch_name"
+  if [ $command_exit_status != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
+    print_command "git commit -a"
     git commit -a
   else
+    print_command "git commit -a -m \"$commit_message\""
     git commit -a -m "$commit_message"
   fi
 }
@@ -257,9 +259,7 @@ function squash_merge {
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
   if [ $initial_open_changes = true ]; then
-    echo_header "Stashing uncommitted changes"
-    git add -A
-    git stash
+    run_command "git stash -u"
   fi
 }
 
