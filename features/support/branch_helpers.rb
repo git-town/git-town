@@ -1,3 +1,11 @@
+# Creates and pushes a branch, optionally checks out the branch
+def create_branch branch_name, checkout:
+  run "git checkout -b #{branch_name} main"
+  run "git push -u origin #{branch_name}"
+  run "git checkout -" unless checkout
+end
+
+
 # Returns the name of the branch that is currently checked out
 def current_branch_name
   run("git rev-parse --abbrev-ref HEAD")[:out]

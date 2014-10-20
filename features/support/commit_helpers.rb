@@ -32,7 +32,7 @@ end
 def create_local_commit branch:, file_name:, file_content:, message:
   run "git checkout #{branch}"
   File.write file_name, file_content
-  run "git add #{file_name}"
+  run "git add '#{file_name}'"
   run "git commit -m '#{message}'"
 end
 
@@ -66,6 +66,9 @@ def create_commits commits_table
     locations = Kappamaki.from_sentence commit_data.delete(:location)
     if locations.delete 'local'
       create_local_commit commit_data
+      if locations.delete 'remote'
+        run 'git push'
+      end
     end
     if locations.delete 'remote'
       at_path coworker_repository_path do

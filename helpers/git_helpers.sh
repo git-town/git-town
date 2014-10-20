@@ -37,16 +37,27 @@ function create_feature_branch {
 }
 
 
+# Deletes the local branch with the given name
+function delete_local_branch {
+  local branch_name=$1
+  run_command "git branch -D $branch_name"
+}
+
+
+# Deletes the remote branch with the given name
+function delete_remote_branch {
+  local branch_name=$1
+  run_command "git push origin :${branch_name}"
+}
+
+
 # Deletes the given branch from both the local machine and on remote.
 function delete_branch {
   local branch_name=$1
-  local current_branch_name=`get_current_branch_name`
-  checkout_branch $branch_name
-  if [ `has_tracking_branch` == true ]; then
-    run_command "git push origin :${branch_name}"
+  if [ `has_tracking_branch $branch_name` == true ]; then
+    delete_remote_branch $branch_name
   fi
-  checkout_branch $current_branch_name
-  run_command "git branch -D $branch_name"
+  delete_local_branch $branch_name
 }
 
 
@@ -60,10 +71,10 @@ function has_open_changes {
 }
 
 
-# Determines whether the current branch has a remote tracking branch.
+# Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
+  local branch_name=$1
+  if [ `git branch -vv | grep "$branch_name" | grep "\[origin\/$branch_name.*\]" | wc -l` == 0 ]; then
     echo false
   else
     echo true
@@ -111,9 +122,10 @@ function get_current_branch_name {
 }
 
 
-# Returns true if the current branch is a feature branch
+# Returns true if the given branch or current branch is a feature branch
 function is_feature_branch {
-  local branch_name=`get_current_branch_name`
+  local branch_name=$1
+  if [ -z $branch_name ]; then branch_name=`get_current_branch_name`; fi
   if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
     echo false
   else
@@ -167,7 +179,7 @@ function pull_branch {
   local strategy=$1
   local current_branch_name=`get_current_branch_name`
   if [ -z $strategy ]; then strategy='merge'; fi
-  if [ `has_tracking_branch` == true ]; then
+  if [ `has_tracking_branch $current_branch_name` == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
     if [ $command_exit_status != 0 ]; then error_pull_branch $current_branch_name; fi
@@ -189,7 +201,7 @@ function pull_upstream_branch {
 # Pushes the branch with the given name to origin
 function push_branch {
   local current_branch_name=`get_current_branch_name`
-  if [ `has_tracking_branch` = true ]; then
+  if [ `has_tracking_branch $current_branch_name` = true ]; then
     run_command "git push"
   else
     run_command "git push -u origin $current_branch_name"

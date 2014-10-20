@@ -27,6 +27,14 @@ Before do
     run 'git config git-town.non-feature-branch-names ""'
   end
 
+  at_path remote_repository_path do
+    run 'git symbolic-ref HEAD refs/head/main'
+  end
+
+  at_path local_repository_path do
+    run 'git pull'
+  end
+
   # Create the coworker repository
   clone_repository remote_repository_path, coworker_repository_path
   at_path coworker_repository_path do

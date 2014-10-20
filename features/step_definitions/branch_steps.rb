@@ -1,6 +1,5 @@
 Given /^I am on a feature branch$/ do
-  run "git checkout -b feature main"
-  run "git push -u origin feature"
+  create_branch "feature", checkout: true
 end
 
 
@@ -18,17 +17,21 @@ Given /^I am on the "(.+?)" branch$/ do |branch_name|
   if existing_local_branches.include?(branch_name)
     run "git checkout #{branch_name}"
   else
-    run "git checkout -b #{branch_name} main"
-    run "git push -u origin #{branch_name}"
+    create_branch branch_name, checkout: true
   end
 end
 
 
-Given /^I have a feature branch named "(.*)"$/ do |branch_name|
-  run "git branch #{branch_name} main"
+Given /^I have a(?: feature)? branch named "(.*)"$/ do |branch_name|
+  create_branch branch_name, checkout: false
 end
 
 
+Given /^my coworker has a feature branch named "(.*)"$/ do |branch_name|
+  at_path coworker_repository_path do
+    create_branch branch_name, checkout: false
+  end
+end
 
 
 
@@ -70,3 +73,13 @@ Then /^there are no more feature branches$/ do
   actual_branches = run("git branch -a")[:out].split("\n").map(&:strip).sort
   expect(actual_branches).to eql expected_branches
 end
+
+Then /^the branch "(.+?)" will be deleted$/  do |branch_name|
+  expect(existing_local_branches).to_not include(branch_name)
+  expect(existing_remote_branches).to_not include(branch_name)
+end
+
+Then(/^the branch "(.+?)" still exists$/) do |branch_name|
+  expect(existing_remote_branches).to include("remotes/origin/#{branch_name}")
+end
+
