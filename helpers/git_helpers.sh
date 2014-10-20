@@ -97,8 +97,8 @@ function ensure_no_open_changes {
 # is on the main development branch.
 function ensure_on_feature_branch {
   local error_message=$1
-  if [ `is_feature_branch` == false ]; then
-    local branch_name=`get_current_branch_name`
+  local branch_name=`get_current_branch_name`
+  if [ `is_feature_branch $banch_name` == false ]; then
     echo_error_header
     echo_error "The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
@@ -122,10 +122,9 @@ function get_current_branch_name {
 }
 
 
-# Returns true if the given branch or current branch is a feature branch
+# Returns true if the given branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
-  if [ -z $branch_name ]; then branch_name=`get_current_branch_name`; fi
   if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
     echo false
   else
