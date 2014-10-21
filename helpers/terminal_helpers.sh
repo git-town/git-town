@@ -100,20 +100,12 @@ function output_style_reset {
 function print_command {
   local branch_name=`get_current_branch_name`
   echo_header "[$branch_name] $*"
-  commands_printed=$((commands_printed+1))
 }
 
 
 # Run a command, prints command and output
-command_exit_status=0
 function run_command {
   local cmd=$*
   print_command $cmd
-
-  local output; output=`$cmd 2>&1`
-  command_exit_status=$?
-
-  if [ -n "$output" ]; then
-    echo "$output"
-  fi
+  eval $cmd 2>&1
 }
