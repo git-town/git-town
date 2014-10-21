@@ -164,6 +164,12 @@ function has_branch {
 }
 
 
+# Returns the names of local branches that have been merged into main
+function local_merged_branches {
+  git branch --merged $main_branch_name | tr -d ' ' | sed 's/\*//g'
+}
+
+
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
@@ -225,6 +231,12 @@ function push_branch {
 # Pushes tags to the remote
 function push_tags {
   run_command "git push --tags"
+}
+
+
+# Returns the names of remote branches that have been merged into main
+function remote_merged_branches {
+  git branch -r --merged $main_branch_name | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
 
 
