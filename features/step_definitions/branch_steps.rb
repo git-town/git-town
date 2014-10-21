@@ -1,7 +1,6 @@
 Given /^I am on a feature branch$/ do
-  create_branch "feature", checkout: true
+  create_branch "feature"
 end
-
 
 Given /^I am on a local feature branch$/ do
   run "git checkout -b feature main"
@@ -17,19 +16,34 @@ Given /^I am on the "(.+?)" branch$/ do |branch_name|
   if existing_local_branches.include?(branch_name)
     run "git checkout #{branch_name}"
   else
-    create_branch branch_name, checkout: true
+    create_branch branch_name
   end
 end
 
 
-Given /^I have a(?: feature)? branch named "(.*)"$/ do |branch_name|
-  create_branch branch_name, checkout: false
+Given /^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/ do |branch_name, relation|
+  create_branch branch_name
+  if relation
+    commit_to_branch = relation == 'behind' ? 'main' : branch_name
+    create_commits [{ branch: commit_to_branch }]
+  end
 end
 
 
-Given /^my coworker has a feature branch named "(.*)"$/ do |branch_name|
+Given /^I have a non\-feature branch "(.+?)" behind main$/ do |branch_name|
+  create_branch branch_name
+  run "git config git-town.non-feature-branch-names #{branch_name}"
+  create_commits [{ branch: 'main' }]
+end
+
+
+Given /^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)?$/ do |branch_name, relation|
   at_path coworker_repository_path do
-    create_branch branch_name, checkout: false
+    create_branch branch_name
+    if relation
+      commit_to_branch = relation == 'behind' ? 'main' : branch_name
+      create_commits [{ branch: commit_to_branch }]
+    end
   end
 end
 
@@ -74,9 +88,9 @@ Then /^there are no more feature branches$/ do
   expect(actual_branches).to eql expected_branches
 end
 
-Then /^the branch "(.+?)" will be deleted$/  do |branch_name|
+Then /^the branch "(.+?)" is deleted$/  do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
-  expect(existing_remote_branches).to_not include(branch_name)
+  expect(existing_remote_branches).to_not include("remotes/origin/#{branch_name}")
 end
 
 Then(/^the branch "(.+?)" still exists$/) do |branch_name|

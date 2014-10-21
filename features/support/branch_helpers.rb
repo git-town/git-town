@@ -1,8 +1,7 @@
 # Creates and pushes a branch, optionally checks out the branch
-def create_branch branch_name, checkout:
+def create_branch branch_name
   run "git checkout -b #{branch_name} main"
   run "git push -u origin #{branch_name}"
-  run "git checkout -" unless checkout
 end
 
 

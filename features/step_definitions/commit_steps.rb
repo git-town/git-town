@@ -1,20 +1,20 @@
 Given /^the following commits? exists? in my repository$/ do |commits_table|
   at_path local_repository_path do
-    create_commits commits_table
+    create_commits commits_table.hashes
   end
 end
 
 
 Given /^the following commits? exists? in Charlie's repository$/ do |commits_table|
   at_path coworker_repository_path do
-    create_commits commits_table
+    create_commits commits_table.hashes
   end
 end
 
 
 Given /^the following commits? exists? in the upstream repository$/ do |commits_table|
   at_path local_repository_path do
-    create_commits commits_table
+    create_commits commits_table.hashes
   end
 end
 

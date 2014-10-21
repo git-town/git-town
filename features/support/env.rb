@@ -27,10 +27,12 @@ Before do
     run 'git config git-town.non-feature-branch-names ""'
   end
 
+  # Set the default branch
   at_path remote_repository_path do
     run 'git symbolic-ref HEAD refs/head/main'
   end
 
+  # Pull the default branch
   at_path local_repository_path do
     run 'git pull'
   end

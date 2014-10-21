@@ -37,9 +37,9 @@ def create_local_commit branch:, file_name:, file_content:, message:
 end
 
 
-# Creates the commits described in the given Cucumber table
+# Creates the commits described in an array of hashs
 #
-# The following table columns are supported. All of them are optional:
+# The following keys are supported. All of them are optional:
 # | column name  | default                | description                                                |
 # | branch       | current branch         | name of the branch in which to create the commit           |
 # | location     | local and remote       | where to create the commit                                 |
@@ -49,14 +49,14 @@ end
 # | message      | default commit message | commit message                                             |
 # | file name    | default file name      | name of the file to be committed                           |
 # | file content | default file content   | content of the file to be committed                        |
-def create_commits commits_table
+def create_commits commit_array
   current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
 
-  commits_table.hashes.each do |commit_data|
+  commit_array.each do |commit_data|
     symbolize_keys_deep! commit_data
 
     # Augment the commit data with default values
-    commit_data.reverse_merge!({ file_name: 'default file name',
+    commit_data.reverse_merge!({ file_name: SecureRandom.urlsafe_base64,
                                  file_content: 'default file content',
                                  message: 'default commit message',
                                  location: 'local and remote',
