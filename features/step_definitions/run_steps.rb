@@ -34,21 +34,11 @@ end
 
 
 
-Then /^I don't see "(.*?)"$/ do |unexpected_output|
-  expect(@last_run_result[:out]).to_not include unexpected_output
-end
-
-
 Then /^I get the error "(.+?)"$/ do |error_message|
   expect(@last_run_result[:status]).to_not eq 0
   output = @last_run_result[:out] + @last_run_result[:err]
   expect(output).to include(error_message),
                     "EXPECTED\n\n***************************************************\n\n#{output.gsub '\n', "\n"}\n\n***************************************************\n\nTO INCLUDE '#{error_message}'\n"
-end
-
-
-Then /^I see "(.+?)"$/ do |expected_output|
-  expect(@last_run_result[:out]).to include expected_output
 end
 
 
