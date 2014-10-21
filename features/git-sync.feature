@@ -295,3 +295,21 @@ Feature: Git Sync
     And I add a local tag "v1.0"
     When I run `git sync`
     Then tag "v1.0" has been pushed to the remote
+
+
+  Scenario: On main branch with no pushable changes
+    Given I am on the main branch
+    And the following commits exist in my repository
+      | location         | message               |
+      | local and remote | already pushed commit |
+    When I run `git sync`
+    Then It doesn't run the command "git push"
+
+
+  Scenario: On feature branch with no pushable changes
+    Given I am on a feature branch
+    And the following commits exist in my repository
+      | location         | message               |
+      | local and remote | already pushed commit |
+    When I run `git sync`
+    Then It doesn't run the command "git push"
