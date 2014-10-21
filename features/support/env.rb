@@ -62,4 +62,3 @@ at_exit do
   delete_repository local_repository_path
   delete_repository coworker_repository_path
 end
-

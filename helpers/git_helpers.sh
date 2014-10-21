@@ -173,6 +173,21 @@ function merge_branch {
 }
 
 
+# Returns whether the current branch has local updates
+# that haven't been pushed to the remote yet.
+function needs_pushing {
+  if [ `has_tracking_branch` == false ]; then
+    echo true
+  else
+    if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
+      echo true
+    else
+      echo false
+    fi
+  fi
+}
+
+
 # Pulls updates of the feature branch from the remote repo
 function pull_branch {
   local strategy=$1
@@ -200,10 +215,12 @@ function pull_upstream_branch {
 # Pushes the branch with the given name to origin
 function push_branch {
   local current_branch_name=`get_current_branch_name`
-  if [ `has_tracking_branch $current_branch_name` = true ]; then
-    run_command "git push"
-  else
-    run_command "git push -u origin $current_branch_name"
+  if [ `needs_pushing` == true ]; then
+    if [ `has_tracking_branch $current_branch_name` == true ]; then
+      run_command "git push"
+    else
+      run_command "git push -u origin $current_branch_name"
+    fi
   fi
 }
 

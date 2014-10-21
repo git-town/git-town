@@ -63,30 +63,25 @@ def create_commits commits_table
                                  branch: current_branch })
 
     # Create the commits
-    locations = Kappamaki.from_sentence commit_data.delete(:location)
-    if locations.delete 'local'
+    case (location = Kappamaki.from_sentence commit_data.delete(:location))
+    when %w[local]
       create_local_commit commit_data
-      if locations.delete 'remote'
-        run 'git push'
-      end
-    end
-    if locations.delete 'remote'
+    when %w[remote]
       at_path coworker_repository_path do
         run 'git pull'
         create_local_commit commit_data
         run 'git push'
       end
-    end
-    if locations.delete 'upstream'
+    when %w[local remote]
+      create_local_commit commit_data
+      run 'git push'
+    when %w[upstream]
       at_path upstream_local_repository_path do
         create_local_commit commit_data
         run 'git push'
       end
-    end
-
-    # Make sure we understood all the given locations
-    if locations != []
-      raise "Unused commit location: #{locations}"
+    else
+      raise "Unknown commit location: #{location}"
     end
   end
 
