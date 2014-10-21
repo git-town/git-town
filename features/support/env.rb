@@ -38,7 +38,7 @@ Before do
 end
 
 
-Before '@github_query' do
+Before '@github-query' do
   github_check_rate_limit!
 end
 
