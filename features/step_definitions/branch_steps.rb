@@ -25,7 +25,7 @@ Given /^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/ do |
   create_branch branch_name
   if relation
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
-    create_commits [{ branch: commit_to_branch }]
+    create_commits branch: commit_to_branch
   end
 end
 
@@ -33,7 +33,7 @@ end
 Given /^I have a non\-feature branch "(.+?)" behind main$/ do |branch_name|
   create_branch branch_name
   run "git config git-town.non-feature-branch-names #{branch_name}"
-  create_commits [{ branch: 'main' }]
+  create_commits branch: 'main'
 end
 
 
@@ -42,7 +42,7 @@ Given /^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)
     create_branch branch_name
     if relation
       commit_to_branch = relation == 'behind' ? 'main' : branch_name
-      create_commits [{ branch: commit_to_branch }]
+      create_commits branch: commit_to_branch
     end
   end
 end
@@ -54,7 +54,7 @@ Then /^I (?:end up|am still) on the feature branch$/ do
 end
 
 
-Then /^I end up on my feature branch$/  do
+Then /^I end up on my feature branch$/ do
   expect(current_branch_name).to eql 'feature'
 end
 
@@ -66,6 +66,13 @@ end
 
 Then /^I have the feature branches (.+?)$/ do |branch_names|
   expect(existing_feature_branches).to eq Kappamaki.from_sentence(branch_names)
+end
+
+
+Then /^my coworker ends up on the "(.+?)" branch$/ do |branch_name|
+  at_path coworker_repository_path do
+    expect(current_branch_name).to eql branch_name
+  end
 end
 
 
@@ -88,12 +95,24 @@ Then /^there are no more feature branches$/ do
   expect(actual_branches).to eql expected_branches
 end
 
-Then /^the branch "(.+?)" is deleted$/  do |branch_name|
+
+Then /^the branch "(.*?)" is deleted everywhere$/ do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
+
+  at_path coworker_repository_path do
+    expect(existing_local_branches).to_not include(branch_name)
+  end
+
   expect(existing_remote_branches).to_not include("remotes/origin/#{branch_name}")
 end
 
-Then(/^the branch "(.+?)" still exists$/) do |branch_name|
+
+Then /^the branch "(.+?)" still exists$/ do |branch_name|
   expect(existing_remote_branches).to include("remotes/origin/#{branch_name}")
+end
+
+
+Then /^the existing branches are$/ do |table|
+  verify_branches table.hashes
 end
 

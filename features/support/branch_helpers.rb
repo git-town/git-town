@@ -59,3 +59,23 @@ def returning_to_current_branch
   yield
   run "git checkout #{original_branch}"
 end
+
+
+# Verifies the branches in each repository
+def verify_branches branches_array
+  branches_array.each do |branches|
+    branch_names = Kappamaki.from_sentence(branches['branches'])
+
+    case branches['repository']
+    when 'local'
+      expect(existing_local_branches).to match_array(branch_names)
+    when 'remote'
+      branch_names = branch_names.map { |n| "remotes/origin/#{n}" }
+      expect(existing_remote_branches).to match_array(branch_names)
+    when 'coworker'
+      at_path coworker_repository_path do
+        expect(existing_local_branches).to match_array(branch_names)
+      end
+    end
+  end
+end

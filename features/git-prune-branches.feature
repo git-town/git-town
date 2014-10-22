@@ -5,7 +5,7 @@ Feature: Git Prune Branches
     And I am on the main branch
     When I run `git prune-branches`
     Then I end up on the "main" branch
-    And the branch "old_feature" is deleted
+    And the branch "old_feature" is deleted everywhere
 
 
   Scenario: on the main branch with a remote feature branch behind main
@@ -13,7 +13,14 @@ Feature: Git Prune Branches
     And I am on the main branch
     When I run `git prune-branches`
     Then I end up on the "main" branch
-    And the branch "old_feature" is deleted
+    And the existing branches are
+      | repository | branches          |
+      | local      | main              |
+      | remote     | main              |
+      | coworker   | main, old_feature |
+    When my coworker runs `git prune-branches`
+    Then my coworker ends up on the "main" branch
+    And the branch "old_feature" is deleted everywhere
 
 
   Scenario: on a feature branch ahead of main with a feature branch behind main
@@ -22,7 +29,7 @@ Feature: Git Prune Branches
     And I am on the "new_feature" branch
     When I run `git prune-branches`
     Then I end up on the "new_feature" branch
-    And the branch "old_feature" is deleted
+    And the branch "old_feature" is deleted everywhere
 
 
   Scenario: on a feature branch behind main
@@ -30,7 +37,7 @@ Feature: Git Prune Branches
     And I am on the "old_feature" branch
     When I run `git prune-branches`
     Then I end up on the "main" branch
-    And the branch "old_feature" is deleted
+    And the branch "old_feature" is deleted everywhere
 
 
   Scenario: on the main branch with feature branches ahead of main
@@ -39,8 +46,11 @@ Feature: Git Prune Branches
     And I am on the main branch
     When I run `git prune-branches`
     Then I end up on the "main" branch
-    And the branch "feature1" still exists
-    And the branch "feature2" still exists
+    And the existing branches are
+      | repository | branches                 |
+      | local      | main, feature1           |
+      | remote     | main, feature1, feature2 |
+      | coworker   | main, feature2           |
 
 
   Scenario: on the main branch with a non-feature branch behind main

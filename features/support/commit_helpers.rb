@@ -49,14 +49,15 @@ end
 # | message      | default commit message | commit message                                             |
 # | file name    | default file name      | name of the file to be committed                           |
 # | file content | default file content   | content of the file to be committed                        |
-def create_commits commit_array
+def create_commits commits_array
   current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
 
-  commit_array.each do |commit_data|
+  commits_array = [commits_array] if commits_array.is_a? Hash
+  commits_array.each do |commit_data|
     symbolize_keys_deep! commit_data
 
     # Augment the commit data with default values
-    commit_data.reverse_merge!({ file_name: SecureRandom.urlsafe_base64,
+    commit_data.reverse_merge!({ file_name: 'default file name' + SecureRandom.urlsafe_base64,
                                  file_content: 'default file content',
                                  message: 'default commit message',
                                  location: 'local and remote',

@@ -1,4 +1,4 @@
-When /^Charlie runs `([^`]+)`$/ do |command|
+When /^(?:Charlie|my coworker) runs `([^`]+)`$/ do |command|
   at_path coworker_repository_path do
     @last_run_result = run command
   end
@@ -47,7 +47,7 @@ Then /^It doesn't run the command "(.*?)"$/ do |unexpected_command|
 end
 
 
-Then /^show me the output$/  do
+Then /^show me the output$/ do
   puts @last_run_result[:out]
   puts @last_run_result[:err]
 end
