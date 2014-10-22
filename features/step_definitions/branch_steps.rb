@@ -32,7 +32,7 @@ end
 
 Given /^I have a non\-feature branch "(.+?)" behind main$/ do |branch_name|
   create_branch branch_name
-  run "git config git-town.non-feature-branch-names #{branch_name}"
+  set_non_feature_branches_configuration branch_name
   create_commits branch: 'main'
 end
 
