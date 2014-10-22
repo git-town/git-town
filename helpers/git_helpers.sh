@@ -70,19 +70,6 @@ function has_tracking_branch {
   fi
 }
 
-
-# Exits the application with an error message if
-# the current branch is not ahead of main
-function ensure_ahead_of_main_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `git log --oneline $main_branch_name..$current_branch_name | wc -l` == '0' ]; then
-    echo_error_header
-    echo_error "The current branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
-    exit_with_error
-  fi
-}
-
-
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
@@ -120,6 +107,17 @@ function error_pull_branch {
 # Returns the current branch name
 function get_current_branch_name {
   git branch | grep "*" | awk '{print $2}'
+}
+
+
+# Determines whether the given branch is ahead of main
+function is_ahead_of_main {
+  local branch_name=$1
+  if [ `git log --oneline $main_branch_name..$branch_name | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
 }
 
 

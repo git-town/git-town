@@ -5,6 +5,17 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script="/tmp/git_ship_abort$temp_filename_suffix"
 
 
+# Exit if the current branch is not ahead of main
+function ensure_ahead_of_main_branch {
+  local current_branch_name=`get_current_branch_name`
+  if [ `is_ahead_of_main $current_branch_name` == false ]; then
+    echo_error_header
+    echo_error "The current branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
+    exit_with_error
+  fi
+}
+
+
 # Called by pull_branch when the merge fails with conflicts on the feature branch
 function error_pull_feature_branch {
   # Create the abort file.
