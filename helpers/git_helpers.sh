@@ -25,7 +25,7 @@ function checkout_main_branch {
 function cherry_pick {
   local SHAs=$*
   run_command "git cherry-pick $SHAs"
-  if [ $command_exit_status != 0 ]; then error_cherry_pick $SHAs; fi
+  if [ $? != 0 ]; then error_cherry_pick $SHAs; fi
 }
 
 # Creates a new feature branch with the given name.
@@ -81,7 +81,6 @@ function has_tracking_branch {
   fi
 }
 
-
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
@@ -122,7 +121,18 @@ function get_current_branch_name {
 }
 
 
-# Returns true if the given branch is a feature branch
+# Determines whether the given branch is ahead of main
+function is_ahead_of_main {
+  local branch_name=$1
+  if [ `git log --oneline $main_branch_name..$branch_name | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
   if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
@@ -175,7 +185,7 @@ function merge_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
   run_command "git merge $branch_name"
-  if [ $command_exit_status != 0 ]; then error_merge_branch; fi
+  if [ $? != 0 ]; then error_merge_branch; fi
 }
 
 
@@ -199,7 +209,7 @@ function pull_branch {
   if [ `has_tracking_branch $current_branch_name` == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
-    if [ $command_exit_status != 0 ]; then error_pull_branch $current_branch_name; fi
+    if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
   else
     echo "Branch '$current_branch_name' has no remote branch, skipping pull of updates"
   fi
@@ -211,7 +221,7 @@ function pull_upstream_branch {
   local current_branch_name=`get_current_branch_name`
   fetch_upstream
   run_command "git rebase upstream/$current_branch_name"
-  if [ $command_exit_status != 0 ]; then error_pull_upstream_branch; fi
+  if [ $? != 0 ]; then error_pull_upstream_branch; fi
 }
 
 
@@ -262,13 +272,11 @@ function squash_merge {
   local commit_message=$2
   local current_branch_name=`get_current_branch_name`
   run_command "git merge --squash $branch_name"
-  if [ $command_exit_status != 0 ]; then error_squash_merge; fi
+  if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
-    print_command "git commit -a"
-    git commit -a
+    run_command "git commit -a"
   else
-    print_command "git commit -a -m \"$commit_message\""
-    git commit -a -m "$commit_message"
+    run_command "git commit -a -m '$commit_message'"
   fi
 }
 

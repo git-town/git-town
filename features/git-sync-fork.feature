@@ -68,28 +68,28 @@ Feature: Git Sync-Fork
     Then I get the error "Please add a remote 'upstream'"
 
 
-  @github_query
+  @github-query
   Scenario: without upstream configured and origin is not found on GitHub
     Given my remote origin is "Originate/git-town-invalid" on GitHub
     When I run `git sync-fork` while allowing errors
     Then I get the error "Please add a remote 'upstream'"
 
 
-  @github_query
+  @github-query
   Scenario: without upstream configured and origin is not a fork on GitHub
     Given my remote origin is "Originate/git-town" on GitHub
     When I run `git sync-fork` while allowing errors
     Then I get the error "Please add a remote 'upstream'"
 
 
-  @github_query
+  @github-query
   Scenario: without upstream configured and origin is a fork on GitHub through HTTPS
     Given my remote origin is a "rails/rails" fork on GitHub through HTTPS
     When I run `git sync-fork --configure-only`
     Then my remote upstream is "rails/rails" on GitHub through HTTPS
 
 
-  @github_query
+  @github-query
   Scenario: without upstream configured and origin is a fork on GitHub through SSH
     Given my remote origin is a "rails/rails" fork on GitHub through SSH
     When I run `git sync-fork --configure-only`
