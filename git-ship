@@ -85,9 +85,7 @@ function perform_ship {
   sync_main_branch
   pull_branch
   merge_branch $main_branch_name
-
   ensure_ahead_of_main_branch
-
   checkout_main_branch
   squash_merge $initial_branch_name "$message"
   push_branch
