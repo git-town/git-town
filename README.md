@@ -227,6 +227,8 @@ Call this from the feature branch that you want to ship.
 * run the command: `git ship`
 * run the command passing in the squashed commit message: `git ship -m [commit message]`
 * abort the command when there are conflicts: `git ship --abort`
+* verifies that we are shipping a feature branch, that the feature branch
+  has shippable commits, and that there are no uncommitted changes.
 
 <table>
   <tr>
