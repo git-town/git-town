@@ -38,7 +38,7 @@ Before do
 end
 
 
-Before '@github_query' do
+Before '@github-query' do
   github_check_rate_limit!
 end
 
@@ -54,4 +54,3 @@ at_exit do
   delete_repository local_repository_path
   delete_repository coworker_repository_path
 end
-

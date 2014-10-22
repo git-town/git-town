@@ -98,21 +98,14 @@ function output_style_reset {
 
 # Prints a command
 function print_command {
-  echo_header "$*"
-  commands_printed=$((commands_printed+1))
+  local branch_name=`get_current_branch_name`
+  echo_header "[$branch_name] $*"
 }
 
 
-# Run a command, also prints command and output
-command_exit_status=0
+# Run a command, prints command and output
 function run_command {
   local cmd=$*
-  local output; output=`$cmd 2>&1`
-  command_exit_status=$?
-
   print_command $cmd
-  if [ -n "$output" ]; then
-    echo "$output"
-  fi
+  eval $cmd 2>&1
 }
-

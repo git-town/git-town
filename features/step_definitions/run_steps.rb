@@ -42,6 +42,12 @@ Then /^I get the error "(.+?)"$/ do |error_message|
 end
 
 
+Then /^It doesn't run the command "(.*?)"$/ do |unexpected_command|
+  expect(@last_run_result[:out]).to_not include "#{unexpected_command}\n"
+end
+
+
 Then /^show me the output$/  do
   puts @last_run_result[:out]
+  puts @last_run_result[:err]
 end
