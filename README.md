@@ -79,6 +79,7 @@ You can call this command safely at any time, many times during the day.
 * abort the command when there are conflicts: `git sync --abort`
 * finish the sync after you have fixed the conflicts: `git sync --continue`
 * pushes tags when run the main or a non-feature branch
+* skips unnecessary pushes
 
 _on a feature branch:_
 
@@ -292,6 +293,7 @@ Call this to bring the main branch up to date with the main branch of the remote
 If your respository is a fork on GitHub, `upstream` will be automatically set on first use.
 
 * run the command: `git sync-fork`
+* skips unnecessary pushes
 
 <table>
   <tr>

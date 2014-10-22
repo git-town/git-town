@@ -6,6 +6,7 @@
 * git ship merges main into the feature branch before squash merging
 * git ship errors if the feature branch is not ahead of main
 * updated output to show each git command and its output, updated error messages
+* skips unnecessary pushes
 
 
 ## 0.3
