@@ -167,7 +167,7 @@ function has_branch {
 function merge_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
-  run_command "git merge $branch_name"
+  run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
 }
 
