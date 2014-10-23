@@ -16,21 +16,21 @@ function ensure_ahead_of_main_branch {
 }
 
 
-# Called when pull_branch errors on the feature branch
+# Called when pull_branch fails on the feature branch
 function error_pull_feature_branch {
   create_pull_feature_branch_abort_script
   exit_with_abort_continue_messages 'ship'
 }
 
 
-# Called when pull_branch errors on the main branch
+# Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_pull_main_branch_abort_script
   exit_with_abort_continue_messages 'ship'
 }
 
 
-# Called when merge_branch errors
+# Called when merge_branch fails
 function error_merge_branch {
   create_merge_main_branch_abort_script
   exit_with_abort_continue_messages 'ship'

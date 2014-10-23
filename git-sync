@@ -17,11 +17,11 @@ abort_script=`abort_filename "sync"`
 continue_script=`continue_filename "sync"`
 
 
-# Called when pull_branch errors on the feature branch
+# Called when pull_branch fails on the feature branch
 function error_pull_feature_branch {
   create_pull_feature_branch_abort_script
 
-  # Create continue script
+  # Create the continue script
   echo "merge_branch $main_branch_name" > $continue_script
   echo "push_branch" >> $continue_script
   if [ $initial_open_changes == true ]; then
@@ -32,11 +32,11 @@ function error_pull_feature_branch {
 }
 
 
-# Called when pull_branch errors on the main branch
+# Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_pull_main_branch_abort_script
 
-  # Create continue script
+  # Create the continue script
   echo "git checkout $initial_branch_name" > $continue_script
   echo "pull_branch" >> $continue_script
   echo "merge_branch $main_branch_name" >> $continue_script
@@ -49,11 +49,11 @@ function error_pull_main_branch {
 }
 
 
-# Called when merge_branch errors
+# Called when merge_branch fails
 function error_merge_branch {
   create_merge_main_branch_abort_script
 
-  # Create continue script
+  # Create the continue script
   echo "push_branch" > $continue_script
   if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $continue_script

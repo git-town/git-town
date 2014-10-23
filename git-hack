@@ -4,7 +4,8 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 abort_script=`abort_filename "hack"`
 
-# Called when pull_branch errors on the main branch
+
+# Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_pull_main_branch_abort_script
   exit_with_abort_continue_messages 'hack'
