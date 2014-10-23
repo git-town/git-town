@@ -351,12 +351,12 @@ _Delete merged branches in local and remote repository._
   <tr>
     <td>3.</td>
     <td>delete each merged branch in the remote repository</td>
-    <td>git push origin :\<branch_name\></td>
+    <td>git push origin :&lt;branch_name&gt;</td>
   </tr>
   <tr>
     <td>4.</td>
     <td>delete each merged branch in the local repository</td>
-    <td>git branch -d \<branch_name\></td>
+    <td>git branch -d &lt;branch_name&gt;</td>
   </tr>
   <tr>
     <td>5.</td>
