@@ -1,4 +1,4 @@
-Then /^there are abort and continue scripts for "(.+?)"$/  do |operation|
+Then /^there are abort and continue scripts for "(.+?)"$/ do |operation|
   expect(script_exists? operation: operation, command: 'abort').to be_truthy
   expect(script_exists? operation: operation, command: 'continue').to be_truthy
 end

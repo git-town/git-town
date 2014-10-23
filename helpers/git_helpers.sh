@@ -37,16 +37,27 @@ function create_feature_branch {
 }
 
 
+# Deletes the local branch with the given name
+function delete_local_branch {
+  local branch_name=$1
+  run_command "git branch -D $branch_name"
+}
+
+
+# Deletes the remote branch with the given name
+function delete_remote_branch {
+  local branch_name=$1
+  run_command "git push origin :${branch_name}"
+}
+
+
 # Deletes the given branch from both the local machine and on remote.
 function delete_branch {
   local branch_name=$1
-  local current_branch_name=`get_current_branch_name`
-  checkout_branch $branch_name
-  if [ `has_tracking_branch` == true ]; then
-    run_command "git push origin :${branch_name}"
+  if [ `has_tracking_branch $branch_name` == true ]; then
+    delete_remote_branch $branch_name
   fi
-  checkout_branch $current_branch_name
-  run_command "git branch -D $branch_name"
+  delete_local_branch $branch_name
 }
 
 
@@ -60,10 +71,10 @@ function has_open_changes {
 }
 
 
-# Determines whether the current branch has a remote tracking branch.
+# Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `git branch -vv | grep "\* $current_branch_name\b" | grep "\[origin\/$current_branch_name.*\]" | wc -l` == 0 ]; then
+  local branch_name=$1
+  if [ `git branch -vv | grep "$branch_name" | grep "\[origin\/$branch_name.*\]" | wc -l` == 0 ]; then
     echo false
   else
     echo true
@@ -85,8 +96,8 @@ function ensure_no_open_changes {
 # is on the main development branch.
 function ensure_on_feature_branch {
   local error_message=$1
-  if [ `is_feature_branch` == false ]; then
-    local branch_name=`get_current_branch_name`
+  local branch_name=`get_current_branch_name`
+  if [ `is_feature_branch $branch_name` == false ]; then
     echo_error_header
     echo_error "The current branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
@@ -123,7 +134,7 @@ function is_ahead_of_main {
 
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
-  local branch_name=`get_current_branch_name`
+  local branch_name=$1
   if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
     echo false
   else
@@ -163,26 +174,29 @@ function has_branch {
 }
 
 
+# Returns the names of local branches that have been merged into main
+function local_merged_branches {
+  git branch --merged $main_branch_name | tr -d ' ' | sed 's/\*//g'
+}
+
+
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
   local current_branch_name=`get_current_branch_name`
-  run_command "git merge $branch_name"
+  run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
 }
 
 
 # Returns whether the current branch has local updates
 # that haven't been pushed to the remote yet.
+# Assumes the current branch has a tracking branch
 function needs_pushing {
-  if [ `has_tracking_branch` == false ]; then
+  if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
     echo true
   else
-    if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
-      echo true
-    else
-      echo false
-    fi
+    echo false
   fi
 }
 
@@ -192,7 +206,7 @@ function pull_branch {
   local strategy=$1
   local current_branch_name=`get_current_branch_name`
   if [ -z $strategy ]; then strategy='merge'; fi
-  if [ `has_tracking_branch` == true ]; then
+  if [ `has_tracking_branch $current_branch_name` == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
     if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
@@ -214,12 +228,12 @@ function pull_upstream_branch {
 # Pushes the branch with the given name to origin
 function push_branch {
   local current_branch_name=`get_current_branch_name`
-  if [ `needs_pushing` == true ]; then
-    if [ `has_tracking_branch` == true ]; then
+  if [ `has_tracking_branch $current_branch_name` == true ]; then
+    if [ `needs_pushing` == true ]; then
       run_command "git push"
-    else
-      run_command "git push -u origin $current_branch_name"
     fi
+  else
+    run_command "git push -u origin $current_branch_name"
   fi
 }
 
@@ -227,6 +241,12 @@ function push_branch {
 # Pushes tags to the remote
 function push_tags {
   run_command "git push --tags"
+}
+
+
+# Returns the names of remote branches that have been merged into main
+function remote_merged_branches {
+  git branch -r --merged $main_branch_name | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
 
 

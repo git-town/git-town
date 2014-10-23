@@ -1,3 +1,10 @@
+# Creates and pushes a branch
+def create_branch branch_name
+  run "git checkout -b #{branch_name} main"
+  run "git push -u origin #{branch_name}"
+end
+
+
 # Returns the name of the branch that is currently checked out
 def current_branch_name
   run("git rev-parse --abbrev-ref HEAD")[:out]
@@ -51,4 +58,26 @@ def returning_to_current_branch
   original_branch = current_branch_name
   yield
   run "git checkout #{original_branch}"
+end
+
+
+# Verifies the branches in each repository
+def verify_branches branches_array
+  branches_array.each do |branches|
+    branch_names = Kappamaki.from_sentence(branches['branches'])
+
+    case branches['repository']
+    when 'local'
+      expect(existing_local_branches).to match_array(branch_names)
+    when 'remote'
+      branch_names = branch_names.map { |n| "remotes/origin/#{n}" }
+      expect(existing_remote_branches).to match_array(branch_names)
+    when 'coworker'
+      at_path coworker_repository_path do
+        expect(existing_local_branches).to match_array(branch_names)
+      end
+    else
+      raise "Unknown repository: #{branches['repository']}"
+    end
+  end
 end

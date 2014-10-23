@@ -8,6 +8,7 @@
 * updated output to show each git command and its output, updated error messages
 * skips unnecessary pushes
 * add man page for git hack
+* git prune-branches
 
 
 ## 0.3
