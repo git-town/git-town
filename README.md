@@ -387,8 +387,8 @@ other platforms need to install manually.
     </td>
     <td>
       remove DIR<br>
-      remove DIR from path<br>
-      remove DIR/man from manpath
+      remove DIR from your path<br>
+      remove DIR/man from your manpath
     </td>
   </tr>
 </table>
