@@ -354,8 +354,9 @@ other platforms need to install manually.
       brew install git-town
     </td>
     <td>
-      clone the repo to your machine<br>
-      add the folder to your path
+      clone the repo to your machine (for example into: `#{prefix}/git-town`)<br>
+      add `#{prefix}/git-town` to your PATH
+      add `#{prefix}/git-town/man` to your MANPATH
     </td>
   </tr>
   <tr>
