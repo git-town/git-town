@@ -4,19 +4,10 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 abort_script=`abort_filename "hack"`
 
-# Called by pull_feature_branch when the merge fails with conflicts
+# Called when pull_branch errors on the main branch
 function error_pull_main_branch {
-  # Create the abort file.
-  echo "git rebase --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red 'To abort the rebase and check out the original branch, run "git hack --abort".'
-  exit_with_error
+  create_pull_main_branch_abort_script
+  exit_with_abort_continue_messages 'hack'
 }
 
 

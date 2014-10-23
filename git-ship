@@ -16,49 +16,24 @@ function ensure_ahead_of_main_branch {
 }
 
 
-# Called by pull_branch when the merge fails with conflicts on the feature branch
+# Called when pull_branch errors on the feature branch
 function error_pull_feature_branch {
-  # Create the abort file.
-  echo "git merge --abort" > $abort_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red 'To abort the merge, run "git ship --abort".'
-  exit_with_error
+  create_pull_feature_branch_abort_script
+  exit_with_abort_continue_messages 'ship'
 }
 
 
-# Called by pull_branch when the rebase fails with conflicts on the main branch
+# Called when pull_branch errors on the main branch
 function error_pull_main_branch {
-  # Create the abort file.
-  echo "git rebase --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red 'To abort the rebase and checkout the original branch, run "git ship --abort".'
-  exit_with_error
+  create_pull_main_branch_abort_script
+  exit_with_abort_continue_messages 'ship'
 }
 
 
-# Called by merge_branch when the merge fails with merge conflicts
+# Called when merge_branch errors
 function error_merge_branch {
-  # Create the abort file
-  echo "git merge --abort" > $abort_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red 'To abort the merge and checkout the original branch, run "git ship --abort".'
-  exit_with_error
+  create_merge_main_branch_abort_script
+  exit_with_abort_continue_messages 'ship'
 }
 
 

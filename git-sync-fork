@@ -8,18 +8,14 @@ abort_script=`abort_filename "sync_fork"`
 
 # Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_upstream_branch {
-  # Create the abort file.
+  # Create the abort script
   echo "git rebase --abort" > $abort_script
   echo "git checkout $initial_branch_name" >> $abort_script
   if [ $initial_open_changes == true ]; then
     echo "git stash pop" >> $abort_script
   fi
 
-  # Show error message.
-  echo
-  echo
-  echo_red "To abort the rebase and checkout the original branch, run 'git sync-fork --abort'."
-  exit_with_error
+  exit_with_abort_continue_messages 'sync-fork'
 }
 
 
