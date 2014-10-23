@@ -119,7 +119,7 @@ function perform_sync {
   stash_open_changes
   local branch_name=`get_current_branch_name`
   if [ `is_feature_branch $branch_name` == true ]; then
-    sync_main_branch 'push'
+    sync_main_branch
     pull_branch
     merge_branch $main_branch_name
     push_branch

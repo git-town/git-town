@@ -293,6 +293,6 @@ function sync_main_branch {
   local current_branch_name=`get_current_branch_name`
   checkout_main_branch
   pull_branch 'rebase'
-  if [ "$1" == "push" ]; then push_branch; fi
+  push_branch
   checkout_branch $current_branch_name
 }
