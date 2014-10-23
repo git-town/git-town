@@ -76,6 +76,8 @@ def verify_branches branches_array
       at_path coworker_repository_path do
         expect(existing_local_branches).to match_array(branch_names)
       end
+    else
+      raise "Unknown repository: #{branches['repository']}"
     end
   end
 end
