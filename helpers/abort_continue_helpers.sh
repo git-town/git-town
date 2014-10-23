@@ -59,7 +59,7 @@ function exit_with_abort_continue_messages {
 }
 
 
-function remove_abort_continue_script_filenames {
+function remove_abort_continue_scripts {
   if [ -n $abort_script_filename ]; then rm $abort_script_filename; fi
   if [ -n $continue_script_filename ]; then rm $continue_script_filename; fi
 }
@@ -68,7 +68,7 @@ function remove_abort_continue_script_filenames {
 function run_abort_script {
   if [ -f $abort_script_filename ]; then
     source $abort_script_filename
-    remove_abort_continue_script_filenames
+    remove_abort_continue_scripts
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -78,7 +78,7 @@ function run_abort_script {
 function run_continue_script {
   if [ -f $continue_script_filename ]; then
     source $continue_script_filename
-    remove_abort_continue_script_filenames
+    remove_abort_continue_scripts
   else
     echo_red "Cannot find continue definition file"
   fi
