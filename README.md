@@ -372,7 +372,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      run <code>git pull<code> in DIR<br>
+      run <code>git pull</code> in DIR<br>
     </td>
   </tr>
   <tr>
