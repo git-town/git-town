@@ -1,17 +1,17 @@
 Given /^I don't have a main branch name configured$/ do
-  delete_configuration
+  delete_main_branch_configuration
 end
 
 
 Given /^I have an old configuration file with (.*?)$/ do |data|
-  delete_configuration
+  delete_main_branch_configuration
   data = Kappamaki.attributes_from_sentence data
   IO.write '.main_branch_name', data[:'main branch']
 end
 
 
 Given /^non-feature branch configuration (.*)$/ do |configuration|
-  run "git config git-town.non-feature-branch-names #{configuration}"
+  set_non_feature_branches_configuration configuration
 end
 
 

@@ -17,7 +17,8 @@ and assumes you use a central code repository like
 * keep your feature branch in sync with the rest of the world using <a href="#git-sync">git sync</a>
 * when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
 * keep a forked repository up to date with its upstream using <a href="#git-sync-fork">git sync-fork</a>
-* extract existing commits into their own feature branches using <a href="#git-extract">git extract</a>.
+* extract existing commits into their own feature branches using <a href="#git-extract">git extract</a>
+* delete merged branches in the local and remote repositories with <a href="#git-prune-branches">git prune-branches</a>.
 
 Git Town automatically prunes no longer existing remote branches
 from your branch list.
@@ -328,6 +329,41 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
   </tr>
 </table>
 
+
+## git prune-branches
+
+_Delete merged branches in the local and remote repositories._
+
+* run the command: `git prune-branches`
+* if the current branch is merged, moves to the main branch
+
+<table>
+  <tr>
+    <td>1.</td>
+    <td>stash away uncommitted changes</td>
+    <td>git stash</td>
+  </tr>
+  <tr>
+    <td>2.</td>
+    <td>pull updates from the repo</td>
+    <td>git fetch</td>
+  </tr>
+  <tr>
+    <td>3.</td>
+    <td>delete each merged branch in the remote repository</td>
+    <td>git push origin :&lt;branch_name&gt;</td>
+  </tr>
+  <tr>
+    <td>4.</td>
+    <td>delete each merged branch in the local repository</td>
+    <td>git branch -d &lt;branch_name&gt;</td>
+  </tr>
+  <tr>
+    <td>5.</td>
+    <td>restore the stashed away changes</td>
+    <td>git stash pop</td>
+  </tr>
+</table>
 
 ## installation
 
