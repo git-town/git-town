@@ -18,7 +18,7 @@ and assumes you use a central code repository like
 * when done with a feature, merge it into the main branch with <a href="#git-ship">git ship</a>
 * keep a forked repository up to date with its upstream using <a href="#git-sync-fork">git sync-fork</a>
 * extract existing commits into their own feature branches using <a href="#git-extract">git extract</a>
-* delete merged branches in local and remote repository with <a href="#git-prune-branches">git prune-branches</a>.
+* delete merged branches in the local and remote repositories with <a href="#git-prune-branches">git prune-branches</a>.
 
 Git Town automatically prunes no longer existing remote branches
 from your branch list.
@@ -332,7 +332,7 @@ If your respository is a fork on GitHub, `upstream` will be automatically set on
 
 ## git prune-branches
 
-_Delete merged branches in local and remote repository._
+_Delete merged branches in the local and remote repositories._
 
 * run the command: `git prune-branches`
 * if the current branch is merged, moves to the main branch
