@@ -339,7 +339,7 @@ other platforms need to install manually.
     <th width="300px">
       Using Homebrew
     </th>
-    <th width="300px">
+    <th width="400px">
       Manually
     </th>
   </tr>
@@ -354,9 +354,9 @@ other platforms need to install manually.
       brew install git-town
     </td>
     <td>
-      clone the repo to your machine (for example into: `#{prefix}/git-town`)<br>
-      add `#{prefix}/git-town` to your PATH
-      add `#{prefix}/git-town/man` to your MANPATH
+      clone the repo into `#{prefix}/git-town`<br>
+      add `#{prefix}/git-town` to your `$PATH`<br>
+      add `#{prefix}/git-town/man` to your `$MANPATH`
     </td>
   </tr>
   <tr>
