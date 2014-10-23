@@ -377,7 +377,7 @@ other platforms need to install manually.
     <th width="300px">
       Using Homebrew
     </th>
-    <th width="300px">
+    <th width="400px">
       Manually
     </th>
   </tr>
@@ -392,8 +392,9 @@ other platforms need to install manually.
       brew install git-town
     </td>
     <td>
-      clone the repo to your machine<br>
-      add the folder to your path
+      clone the repo to your machine (into DIR)<br>
+      add DIR to your path<br>
+      add DIR/man to your manpath
     </td>
   </tr>
   <tr>
@@ -407,8 +408,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd [directory of your Git Town clone]<br>
-      git pull
+      run <code>git pull</code> in DIR<br>
     </td>
   </tr>
   <tr>
@@ -422,8 +422,9 @@ other platforms need to install manually.
       brew untap Originate/gittown
     </td>
     <td>
-      remove repo from your machine<br>
-      remove folder from path
+      remove DIR<br>
+      remove DIR from your path<br>
+      remove DIR/man from your manpath
     </td>
   </tr>
 </table>

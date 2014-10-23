@@ -7,6 +7,7 @@
 * git ship errors if the feature branch is not ahead of main
 * updated output to show each git command and its output, updated error messages
 * skips unnecessary pushes
+* add man page for git hack
 * git prune-branches
 
 
