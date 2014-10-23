@@ -1,8 +1,8 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-# The path to the abort script
-abort_script="/tmp/git_ship_abort$temp_filename_suffix"
+
+abort_script=`abort_filename "ship"`
 
 
 # Exit if the current branch is not ahead of main
@@ -76,17 +76,6 @@ function extract_message {
 }
 
 
-# Aborts a currently ongoing sync
-function abort_ship {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
-
-
 function perform_ship {
   local message=`extract_message "$*"`
 
@@ -105,7 +94,7 @@ function perform_ship {
 
 
 if [ "$1" == "--abort" ]; then
-  abort_ship
+  run_abort_script
 else
   perform_ship "$*"
 fi

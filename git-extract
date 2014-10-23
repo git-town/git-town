@@ -2,8 +2,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# The path to the abort script
-abort_script="/tmp/git_extract_abort$temp_filename_suffix"
+abort_script=`abort_filename "extract"`
 
 
 # Called when the cherry-pick causes an error
@@ -79,17 +78,6 @@ function perform_extract {
 }
 
 
-# Aborts a currently ongoing sync
-function abort_extract {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
-
-
 # Exit with a help screen if parameters are missing.
 if [ -z $1 ]; then
   echo_usage_header
@@ -100,7 +88,7 @@ fi
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
 
 if [ "$1" == "--abort" ]; then
-  abort_extract "$@"
+  run_abort_script
 else
   if [ -z $2 ]; then
     ensure_tool_installed 'dialog'

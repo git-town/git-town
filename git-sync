@@ -12,11 +12,9 @@
 
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-# The path to the abort script
-abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 
-# The path to the continue script
-continue_script="/tmp/git_sync_continue$temp_filename_suffix"
+abort_script=`abort_filename "sync"`
+continue_script=`continue_filename "sync"`
 
 
 # Called by pull_branch when the merge fails with conflicts on the feature branch
@@ -90,30 +88,6 @@ function error_merge_branch {
 }
 
 
-# Aborts a currently ongoing sync
-function abort_sync {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-    rm $continue_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
-
-
-function continue_sync {
-  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
-  if [ -f $continue_script ]; then
-    source $continue_script
-    rm $continue_script
-    rm $abort_script
-  else
-    echo_red "Cannot find continue definition file"
-  fi
-}
-
-
 # Perform the sync operation
 function perform_sync {
   stash_open_changes
@@ -133,9 +107,10 @@ function perform_sync {
 
 
 if [ "$1" == "--abort" ]; then
-  abort_sync
+  run_abort_script
 elif [ "$1" == "--continue" ]; then
-  continue_sync
+  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
+  run_continue_script
 else
   perform_sync
 fi

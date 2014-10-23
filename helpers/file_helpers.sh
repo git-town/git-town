@@ -8,6 +8,18 @@ temp_filename_suffix="_`pwd | tr '/' '_' `"
 user_input_filename="/tmp/git-town-user-input$temp_filename_suffix"
 
 
+# Returns the path to the abort script for the given command
+function abort_filename {
+  echo "/tmp/git_$1_abort$temp_filename_suffix"
+}
+
+
+# Returns the path to the continue script for the given command
+function continue_filename {
+  echo "/tmp/git_$1_continue$temp_filename_suffix"
+}
+
+
 # Removes the temp file.
 function delete_temp_file {
   rm $user_input_filename
