@@ -372,8 +372,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd DIR<br>
-      git pull
+      run <code>git pull<code> in DIR<br>
     </td>
   </tr>
   <tr>
@@ -387,8 +386,9 @@ other platforms need to install manually.
       brew untap Originate/gittown
     </td>
     <td>
-      remove repo from your machine<br>
-      remove folder from path
+      remove DIR<br>
+      remove DIR from path<br>
+      remove DIR/man from manpath
     </td>
   </tr>
 </table>
