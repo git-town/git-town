@@ -57,7 +57,7 @@ def create_commits commits_array
     symbolize_keys_deep! commit_data
 
     # Augment the commit data with default values
-    commit_data.reverse_merge!({ file_name: 'default file name' + SecureRandom.urlsafe_base64,
+    commit_data.reverse_merge!({ file_name: "default file name #{SecureRandom.urlsafe_base64}",
                                  file_content: 'default file content',
                                  message: 'default commit message',
                                  location: 'local and remote',
