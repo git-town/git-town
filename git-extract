@@ -2,40 +2,27 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# The path to the abort script
-abort_script="/tmp/git_extract_abort$temp_filename_suffix"
+abort_script_filename=`abort_script_filename_for_command extract`
 
 
-# Called when the cherry-pick causes an error
+# Called when the cherry_pick fails
 function error_cherry_pick {
-  # Create the abort file.
-  echo "git cherry-pick --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
-  echo "git branch -D $1" >> $abort_script
+  # Create the abort script
+  add_to_abort_script "git cherry-pick --abort"
+  add_to_abort_script "git checkout $initial_branch_name"
+  add_to_abort_script "git branch -D $1"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    add_to_abort_script "git stash pop"
   fi
 
-  # Show error message.
-  echo
-  echo_red 'To abort the cherry-pick and check out the original branch, run "git extract --abort".'
-  exit_with_error
+  exit_with_abort_continue_messages 'extract'
 }
 
 
-# Called by pull_branch when the merge fails with conflicts
+# Called when pull_branch fails on the main branch
 function error_pull_main_branch {
-  # Create the abort file.
-  echo "git rebase --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red 'To abort the rebase and check out the original branch, run "git extract --abort".'
-  exit_with_error
+  create_pull_main_branch_abort_script
+  exit_with_abort_continue_messages 'extract'
 }
 
 
@@ -79,17 +66,6 @@ function perform_extract {
 }
 
 
-# Aborts a currently ongoing sync
-function abort_extract {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
-
-
 # Exit with a help screen if parameters are missing.
 if [ -z $1 ]; then
   echo_usage_header
@@ -100,7 +76,7 @@ fi
 ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
 
 if [ "$1" == "--abort" ]; then
-  abort_extract "$@"
+  run_abort_script
 else
   if [ -z $2 ]; then
     ensure_tool_installed 'dialog'
