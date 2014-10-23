@@ -356,9 +356,9 @@ other platforms need to install manually.
       brew install git-town
     </td>
     <td>
-      clone the repo into `#{prefix}/git-town`<br>
-      add `#{prefix}/git-town` to your `$PATH`<br>
-      add `#{prefix}/git-town/man` to your `$MANPATH`
+      clone the repo to your machine (into DIR)<br>
+      add DIR to your path<br>
+      add DIR/man to your manpath
     </td>
   </tr>
   <tr>
@@ -372,7 +372,7 @@ other platforms need to install manually.
       brew upgrade git-town
     </td>
     <td>
-      cd [directory of your Git Town clone]<br>
+      cd DIR<br>
       git pull
     </td>
   </tr>
