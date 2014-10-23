@@ -34,6 +34,13 @@ Feature: Git Ship
       | main   | feature_file |
 
 
+  Scenario: feature branch not ahead of main
+    Given I am on a feature branch
+    When I run `git ship -m 'feature done'` while allowing errors
+    Then I get the error "The current branch 'feature' has no commits to merge into 'main'."
+    And I end up on the "feature" branch
+
+
   Scenario: on the main branch
     Given I am on the main branch
     When I run `git ship -m 'feature done'` while allowing errors

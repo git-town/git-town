@@ -4,6 +4,7 @@
 * pushes tags to the remote when running "git sync" on the main branch
 * added support for non-feature branches (cannot be shipped and do not merge main when syncing)
 * git ship merges main into the feature branch before squash merging
+* git ship errors if the feature branch is not ahead of main
 * updated output to show each git command and its output, updated error messages
 * skips unnecessary pushes
 * add man page for git hack
