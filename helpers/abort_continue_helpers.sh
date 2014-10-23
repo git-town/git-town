@@ -1,27 +1,46 @@
 # Helper methods for dealing with abort/continue scripts
 
 
+function add_to_abort_script {
+  add_to_script "$1" $abort_script_filename
+}
+
+
+function add_to_continue_script {
+  add_to_script "$1" $continue_script_filename
+}
+
+
+function add_to_script {
+  local content=$1
+  local filename=$2
+  local operator=">"
+  if [ -e $filename ]; then operator=">>"; fi
+  eval "echo \"$content\" $operator $filename"
+}
+
+
 function create_pull_main_branch_abort_script {
-  echo "git rebase --abort" > $abort_script_filename
-  echo "git checkout $initial_branch_name" >> $abort_script_filename
+  add_to_abort_script "git rebase --abort"
+  add_to_abort_script "git checkout $initial_branch_name"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script_filename
+    add_to_abort_script "git stash pop"
   fi
 }
 
 
 function create_pull_feature_branch_abort_script {
-  echo "git merge --abort" > $abort_script_filename
+  add_to_abort_script "git merge --abort"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script_filename
+    add_to_abort_script "git stash pop"
   fi
 }
 
 
 function create_merge_main_branch_abort_script {
-  echo "git merge --abort" > $abort_script_filename
+  add_to_abort_script "git merge --abort"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script_filename
+    add_to_abort_script "git stash pop"
   fi
 }
 
