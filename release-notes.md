@@ -6,6 +6,7 @@
 * git ship merges main into the feature branch before squash merging
 * updated output to show each git command and its output, updated error messages
 * skips unnecessary pushes
+* add man page for git hack
 
 
 ## 0.3
