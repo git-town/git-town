@@ -13,8 +13,8 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script=`abort_filename "sync"`
-continue_script=`continue_filename "sync"`
+abort_script_filename=`abort_script_filename_for_command sync`
+continue_script_filename=`continue_script_filename_for_command sync`
 
 
 # Called when pull_branch fails on the feature branch
@@ -22,10 +22,10 @@ function error_pull_feature_branch {
   create_pull_feature_branch_abort_script
 
   # Create the continue script
-  echo "merge_branch $main_branch_name" > $continue_script
-  echo "push_branch" >> $continue_script
+  echo "merge_branch $main_branch_name" > $continue_script_filename
+  echo "push_branch" >> $continue_script_filename
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
+    echo "git stash pop" >> $continue_script_filename
   fi
 
   exit_with_abort_continue_messages 'sync'
@@ -37,12 +37,12 @@ function error_pull_main_branch {
   create_pull_main_branch_abort_script
 
   # Create the continue script
-  echo "git checkout $initial_branch_name" > $continue_script
-  echo "pull_branch" >> $continue_script
-  echo "merge_branch $main_branch_name" >> $continue_script
-  echo "push_branch" >> $continue_script
+  echo "git checkout $initial_branch_name" > $continue_script_filename
+  echo "pull_branch" >> $continue_script_filename
+  echo "merge_branch $main_branch_name" >> $continue_script_filename
+  echo "push_branch" >> $continue_script_filename
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
+    echo "git stash pop" >> $continue_script_filename
   fi
 
   exit_with_abort_continue_messages 'sync'
@@ -54,9 +54,9 @@ function error_merge_branch {
   create_merge_main_branch_abort_script
 
   # Create the continue script
-  echo "push_branch" > $continue_script
+  echo "push_branch" > $continue_script_filename
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
+    echo "git stash pop" >> $continue_script_filename
   fi
 
   exit_with_abort_continue_messages 'sync'

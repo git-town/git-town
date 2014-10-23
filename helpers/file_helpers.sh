@@ -9,13 +9,13 @@ user_input_filename="/tmp/git-town-user-input$temp_filename_suffix"
 
 
 # Returns the path to the abort script for the given command
-function abort_filename {
+function abort_script_filename_for_command {
   echo "/tmp/git_$1_abort$temp_filename_suffix"
 }
 
 
 # Returns the path to the continue script for the given command
-function continue_filename {
+function continue_script_filename_for_command  {
   echo "/tmp/git_$1_continue$temp_filename_suffix"
 }
 

@@ -2,17 +2,17 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script=`abort_filename "extract"`
+abort_script_filename=`abort_script_filename_for_command extract`
 
 
 # Called when the cherry_pick fails
 function error_cherry_pick {
   # Create the abort script
-  echo "git cherry-pick --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
-  echo "git branch -D $1" >> $abort_script
+  echo "git cherry-pick --abort" > $abort_script_filename
+  echo "git checkout $initial_branch_name" >> $abort_script_filename
+  echo "git branch -D $1" >> $abort_script_filename
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    echo "git stash pop" >> $abort_script_filename
   fi
 
   exit_with_abort_continue_messages 'extract'

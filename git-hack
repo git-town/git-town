@@ -2,7 +2,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script=`abort_filename "hack"`
+abort_script_filename=`abort_script_filename_for_command hack`
 
 
 # Called when pull_branch fails on the main branch
