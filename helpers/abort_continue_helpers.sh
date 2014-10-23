@@ -16,7 +16,7 @@ function add_to_script {
   local filename=$2
   local operator=">"
   if [ -e $filename ]; then operator=">>"; fi
-  eval "echo \"$content\" $operator $filename"
+  eval "echo '$content' $operator $filename"
 }
 
 
