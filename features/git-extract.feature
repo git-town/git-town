@@ -42,6 +42,7 @@ Feature: Git Extract
     And there is an abort script for "git extract"
     When I run `git extract --abort`
     Then I end up on the "feature" branch
+    And I have the feature branches "feature"
     And I have the following commits
       | branch   | location | message            | files            |
       | main     | local    | conflicting commit | conflicting_file |
