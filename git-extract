@@ -33,7 +33,7 @@ function perform_extract {
   stash_open_changes
   sync_main_branch
 
-  if [ "$user_input" == "" ]; then
+  if [ -z $user_input ]; then
     git log $main_branch_name..$initial_branch_name                    | # Get a list of all commits in the feature branch.
       grep -v '^$'                                                     | # Remove empty lines.
       grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
@@ -52,7 +52,7 @@ function perform_extract {
     delete_temp_file
   fi
 
-  if [ ! -s $user_input_filename ]; then
+  if [ -z $user_input ]; then
     restore_open_changes
 
     echo_error_header
