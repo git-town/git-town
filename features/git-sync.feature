@@ -45,7 +45,6 @@ Feature: Git Sync
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  # Todo (KG): Shouldn't the 'local main commit' also be pushed to the repo?
   Scenario: on a feature branch without a remote branch
     Given I am on a local feature branch
     And the following commits exist in my repository
@@ -59,7 +58,7 @@ Feature: Git Sync
     And all branches are now synchronized
     And I have the following commits
       | branch  | location         | message                          | files               |
-      | main    | local            | local main commit                | local_main_file     |
+      | main    | local and remote | local main commit                | local_main_file     |
       | main    | local and remote | remote main commit               | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature |                     |
       | feature | local and remote | local main commit                | local_main_file     |
@@ -72,7 +71,6 @@ Feature: Git Sync
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  # Todo (KG): Shouldn't the 'local main commit' also be pushed to the repo?
   Scenario: on a feature branch with a remote branch
     Given I am on a feature branch
     And the following commits exist in my repository
@@ -86,7 +84,7 @@ Feature: Git Sync
     Then I am still on the "feature" branch
     And I have the following commits
       | branch  | location         | message                          | files               |
-      | main    | local            | local main commit                | local_main_file     |
+      | main    | local and remote | local main commit                | local_main_file     |
       | main    | local and remote | remote main commit               | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature |                     |
       | feature | local and remote | local main commit                | local_main_file     |
@@ -128,7 +126,6 @@ Feature: Git Sync
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  # Todo (KG): Shouldn't the 'local main commit' also be pushed to the repo?
   Scenario: user continues after resolving a merge conflict when pulling the feature branch
     Given I am on a feature branch
     And the following commits exist in my repository
@@ -151,7 +148,7 @@ Feature: Git Sync
       | feature | local and remote | remote conflicting commit        | conflicting_file   |
       | feature | local and remote | local conflicting commit         | conflicting_file   |
       | feature | local and remote | main branch update               | main_branch_update |
-      | main    | local            | main branch update               | main_branch_update |
+      | main    | local and remote | main branch update               | main_branch_update |
     And now I have the following committed files
       | branch  | files              | content            |
       | feature | conflicting_file   | resolved content   |

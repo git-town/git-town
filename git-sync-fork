@@ -2,36 +2,20 @@
 
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-# The path to the abort script
-abort_script="/tmp/git_sync_fork_abort$temp_filename_suffix"
 
-
-
-# Aborts a currently ongoing sync-fork
-function abort_sync_fork {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
+abort_script_filename=`abort_script_filename_for_command sync_fork`
 
 
 # Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_upstream_branch {
-  # Create the abort file.
-  echo "git rebase --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
+  # Create the abort script
+  add_to_abort_script "git rebase --abort"
+  add_to_abort_script "git checkout $initial_branch_name"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    add_to_abort_script "git stash pop"
   fi
 
-  # Show error message.
-  echo
-  echo
-  echo_red "To abort the rebase and checkout the original branch, run 'git sync-fork --abort'."
-  exit_with_error
+  exit_with_abort_continue_messages 'sync-fork'
 }
 
 
@@ -82,7 +66,7 @@ function sync_fork {
 if [ "$1" == "--configure-only" ]; then
   configure_upstream
 elif [ "$1" == "--abort" ]; then
-  abort_sync_fork
+  run_abort_script
 else
   sync_fork
 fi

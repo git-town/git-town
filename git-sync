@@ -12,105 +12,54 @@
 
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-# The path to the abort script
-abort_script="/tmp/git_sync_abort$temp_filename_suffix"
 
-# The path to the continue script
-continue_script="/tmp/git_sync_continue$temp_filename_suffix"
+abort_script_filename=`abort_script_filename_for_command sync`
+continue_script_filename=`continue_script_filename_for_command sync`
 
 
-# Called by pull_branch when the merge fails with conflicts on the feature branch
+# Called when pull_branch fails on the feature branch
 function error_pull_feature_branch {
-  # Create the abort file.
-  echo "git merge --abort" > $abort_script
+  create_pull_feature_branch_abort_script
+
+  # Create the continue script
+  add_to_continue_script "merge_branch $main_branch_name"
+  add_to_continue_script "push_branch"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    add_to_continue_script "git stash pop"
   fi
 
-  # Create the continue file.
-  echo "merge_branch $main_branch_name" > $continue_script
-  echo "push_branch" >> $continue_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red "To abort the merge, run 'git sync --abort'."
-  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
-  exit_with_error
+  exit_with_abort_continue_messages 'sync'
 }
 
 
-# Called by pull_branch when the rebase fails with conflicts on the main branch
+# Called when pull_branch fails on the main branch
 function error_pull_main_branch {
-  # Create the abort file.
-  echo "git rebase --abort" > $abort_script
-  echo "git checkout $initial_branch_name" >> $abort_script
+  create_pull_main_branch_abort_script
+
+  # Create the continue script
+  add_to_continue_script "git checkout $initial_branch_name"
+  add_to_continue_script "pull_branch"
+  add_to_continue_script "merge_branch $main_branch_name"
+  add_to_continue_script "push_branch"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    add_to_continue_script "git stash pop"
   fi
 
-  # Create the continue file.
-  echo "git checkout $initial_branch_name"
-  echo "pull_branch" > $continue_script
-  echo "merge_branch $main_branch_name" >> $continue_script
-  echo "push_branch" >> $continue_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red "To abort the rebase and checkout the original branch, run 'git sync --abort'."
-  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
-  exit_with_error
+  exit_with_abort_continue_messages 'sync'
 }
 
 
-# Called by merge_branch when the merge fails with merge conflicts
+# Called when merge_branch fails
 function error_merge_branch {
-  # Create the abort file
-  echo "git merge --abort" > $abort_script
+  create_merge_main_branch_abort_script
+
+  # Create the continue script
+  add_to_continue_script "push_branch"
   if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $abort_script
+    add_to_continue_script "git stash pop"
   fi
 
-  # Create the continue file
-  echo "push_branch" > $continue_script
-  if [ $initial_open_changes == true ]; then
-    echo "git stash pop" >> $continue_script
-  fi
-
-  # Show error message.
-  echo
-  echo_red "To abort the merge, run 'git sync --abort'"
-  echo_red "To continue after you have resolved the conflict, run 'git sync --continue'."
-  exit_with_error
-}
-
-
-# Aborts a currently ongoing sync
-function abort_sync {
-  if [ -f $abort_script ]; then
-    source $abort_script
-    rm $abort_script
-    rm $continue_script
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
-
-
-function continue_sync {
-  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
-  if [ -f $continue_script ]; then
-    source $continue_script
-    rm $continue_script
-    rm $abort_script
-  else
-    echo_red "Cannot find continue definition file"
-  fi
+  exit_with_abort_continue_messages 'sync'
 }
 
 
@@ -133,9 +82,10 @@ function perform_sync {
 
 
 if [ "$1" == "--abort" ]; then
-  abort_sync
+  run_abort_script
 elif [ "$1" == "--continue" ]; then
-  continue_sync
+  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
+  run_continue_script
 else
   perform_sync
 fi
