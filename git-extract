@@ -33,26 +33,27 @@ function perform_extract {
   stash_open_changes
   sync_main_branch
 
-  if [ "$user_input" == "" ]; then
+  if [ -z $user_input ]; then
     git log --oneline $main_branch_name..$initial_branch_name                 | # Get a list of all commits in the feature branch.
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
       tail -r                                                                 | # Reverse the order of lines.
       xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
     clear
-  else
-    echo $user_input > $user_input_filename
+
+    user_input=`cat $user_input_filename`
+    delete_temp_file
   fi
 
-  if [ ! -s $user_input_filename ]; then
+  if [ -z $user_input ]; then
+    restore_open_changes
+
     echo_error_header
     echo_error "Nothing selected, aborting script."
     exit_with_error
   fi
 
   create_feature_branch $target_branch_name
-  cherry_pick `cat $user_input_filename`
-
-  delete_temp_file
+  cherry_pick $user_input
   push_branch
   restore_open_changes
 }
