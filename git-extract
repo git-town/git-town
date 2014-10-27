@@ -34,17 +34,9 @@ function perform_extract {
   sync_main_branch
 
   if [ -z $user_input ]; then
-    git log $main_branch_name..$initial_branch_name                    | # Get a list of all commits in the feature branch.
-      grep -v '^$'                                                     | # Remove empty lines.
-      grep -v '^Author: '                                              | # Remove the lines that contain the authors of a commit.
-      grep -v '^Date: '                                                | # Remove the lines that contain the date of a commit.
-      awk '{ sub(/^[ ]{4}/, ""); print }'                              | # Remove the first 4 spaces from commit messages
-      awk '{ sub(/^commit /, ""); print }'                             | # Remove the word 'commit' from the lines that contain the commit SHA.
-      awk '{ if (NR % 2 == 0) print "\047" $0 "\047"; else print }'    | # Surround the commit messages in quotes.
-      awk '{ if (NR % 2 == 0) print ; else print substr($0, 0, 10) }'  | # Truncate the SHA1s to 10 characters.
-      awk 'ORS=NR%2?" ":"\n"'                                          | # Concatenate every 2 lines into one line, so we get the first 2 options required by dialog for each entry.
-      awk '{ print $0 " off" }'                                        | # Append ' off' to each line. This is the third option required by dialog for each entry.
-      tail -r                                                          | # Reverse the order of lines.
+    git log --oneline $main_branch_name..$initial_branch_name                 | # Get a list of all commits in the feature branch.
+      awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
+      tail -r                                                                 | # Reverse the order of lines.
       xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
     clear
 
