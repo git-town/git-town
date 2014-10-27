@@ -21,6 +21,12 @@ When /^I run `git extract refactor` with the last commit sha as an argument$/ do
 end
 
 
+When /^I run `git extract refactor` with the last two commit shas as arguments$/ do
+  shas = run("git log --oneline -n 2 | awk '{ print $1 }' | tr '\n' ' '")[:out]
+  @last_run_result = run "git extract refactor #{shas}"
+end
+
+
 When /^I run `git extract refactor` with the last commit sha as an argument while allowing errors$/ do
   sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2")[:out]
   @last_run_result = run "git extract refactor #{sha}", allow_failures: true

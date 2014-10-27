@@ -10,7 +10,7 @@ function error_cherry_pick {
   # Create the abort script
   add_to_abort_script "git cherry-pick --abort"
   add_to_abort_script "git checkout $initial_branch_name"
-  add_to_abort_script "git branch -D $1"
+  add_to_abort_script "git branch -D $target_branch_name"
   if [ $initial_open_changes == true ]; then
     add_to_abort_script "git stash pop"
   fi
@@ -28,8 +28,6 @@ function error_pull_main_branch {
 
 # Performs the extract operation
 function perform_extract {
-  local target_branch_name=$1
-  local user_input=$2
   stash_open_changes
   sync_main_branch
 
@@ -71,10 +69,14 @@ ensure_on_feature_branch "You must be on a feature branch in order to extract co
 if [ "$1" == "--abort" ]; then
   run_abort_script
 else
-  if [ -z $2 ]; then
+  target_branch_name=$1
+  shift
+  user_input="$*"
+
+  if [ -z $user_input ]; then
     ensure_tool_installed 'dialog'
   fi
-  perform_extract "$@"
+  perform_extract
 fi
 
 exit_with_success
