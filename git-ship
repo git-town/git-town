@@ -64,7 +64,7 @@ function perform_ship {
   checkout_main_branch
   squash_merge $initial_branch_name "$message"
   push_branch
-  delete_branch $initial_branch_name
+  delete_branch $initial_branch_name "force"
 }
 
 

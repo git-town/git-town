@@ -40,7 +40,9 @@ function create_feature_branch {
 # Deletes the local branch with the given name
 function delete_local_branch {
   local branch_name=$1
-  run_command "git branch -D $branch_name"
+  local op="d"
+  if [ $2 == "force" ]; then op="D"; fi
+  run_command "git branch -$op $branch_name"
 }
 
 
@@ -57,7 +59,7 @@ function delete_branch {
   if [ `has_tracking_branch $branch_name` == true ]; then
     delete_remote_branch $branch_name
   fi
-  delete_local_branch $branch_name
+  delete_local_branch $branch_name $2
 }
 
 
