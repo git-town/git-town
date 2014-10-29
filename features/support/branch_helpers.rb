@@ -48,11 +48,6 @@ def existing_remote_branches
 end
 
 
-def remote_branch_exists branch_name
-  run("git branch -a | grep remotes/origin/#{branch_name} | wc -l")[:out] != '0'
-end
-
-
 # Executes the given block, then returns to the currently checked out branch
 def returning_to_current_branch
   original_branch = current_branch_name
