@@ -211,8 +211,6 @@ function pull_branch {
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
     if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
-  else
-    echo "Branch '$current_branch_name' has no remote branch, skipping pull of updates"
   fi
 }
 
