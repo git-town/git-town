@@ -37,6 +37,16 @@ function create_feature_branch {
 }
 
 
+# Deletes the given branch from both the local machine and on remote.
+function delete_branch {
+  local branch_name=$1
+  if [ `has_tracking_branch $branch_name` == true ]; then
+    delete_remote_branch $branch_name
+  fi
+  delete_local_branch $branch_name $2
+}
+
+
 # Deletes the local branch with the given name
 function delete_local_branch {
   local branch_name=$1
@@ -52,36 +62,6 @@ function delete_remote_branch {
   run_command "git push origin :${branch_name}"
 }
 
-
-# Deletes the given branch from both the local machine and on remote.
-function delete_branch {
-  local branch_name=$1
-  if [ `has_tracking_branch $branch_name` == true ]; then
-    delete_remote_branch $branch_name
-  fi
-  delete_local_branch $branch_name $2
-}
-
-
-# Determines whether there are open changes in Git.
-function has_open_changes {
-  if [ `git status --porcelain | wc -l` == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Determines whether the given branch has a remote tracking branch.
-function has_tracking_branch {
-  local branch_name=$1
-  if [ `git branch -vv | grep "$branch_name" | grep "\[origin\/$branch_name.*\]" | wc -l` == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
 
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
@@ -117,34 +97,6 @@ function error_pull_branch {
 }
 
 
-# Returns the current branch name
-function get_current_branch_name {
-  git branch | grep "*" | awk '{print $2}'
-}
-
-
-# Determines whether the given branch is ahead of main
-function is_ahead_of_main {
-  local branch_name=$1
-  if [ `git log --oneline $main_branch_name..$branch_name | wc -l` == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Returns true if the current branch is a feature branch
-function is_feature_branch {
-  local branch_name=$1
-  if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
 # Fetches updates from the central repository.
 #
 # It is safe to call this method multiple times per session,
@@ -165,10 +117,59 @@ function fetch_upstream {
 }
 
 
+# Returns the current branch name
+function get_current_branch_name {
+  git branch | grep "*" | awk '{print $2}'
+}
+
+
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
   if [ `git branch | grep "$branch_name" | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Determines whether there are open changes in Git.
+function has_open_changes {
+  if [ `git status --porcelain | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Determines whether the given branch has a remote tracking branch.
+function has_tracking_branch {
+  local branch_name=$1
+  if [ `git branch -vv | grep "$branch_name" | grep "\[origin\/$branch_name.*\]" | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Determines whether the given branch is ahead of main
+function is_ahead_of_main {
+  local branch_name=$1
+  if [ `git log --oneline $main_branch_name..$branch_name | wc -l` == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Returns true if the current branch is a feature branch
+function is_feature_branch {
+  local branch_name=$1
+  if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
     echo false
   else
     echo true
