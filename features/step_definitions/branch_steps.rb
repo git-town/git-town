@@ -82,7 +82,7 @@ end
 
 
 Then /^all branches are now synchronized$/ do
-  run("git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m") == '0'
+  run("git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m")[:out] == '0'
 end
 
 
