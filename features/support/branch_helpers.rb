@@ -47,6 +47,10 @@ def existing_remote_branches
   remote_branches
 end
 
+def number_of_branches_out_of_sync
+  run("git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l")[:out].to_i
+end
+
 
 def remote_branch_exists branch_name
   run("git branch -a | grep remotes/origin/#{branch_name} | wc -l")[:out] != '0'

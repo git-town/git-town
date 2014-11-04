@@ -82,7 +82,7 @@ end
 
 
 Then /^all branches are now synchronized$/ do
-  run("git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m") == '0'
+  expect(number_of_branches_out_of_sync).to eql 0
 end
 
 
