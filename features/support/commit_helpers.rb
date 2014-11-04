@@ -1,6 +1,6 @@
 # Returns the commits in the current directory
 def commits_in_repo
-  current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
+  current_branch = run('git rev-parse --abbrev-ref HEAD').out
 
   result = []
   existing_local_branches.map do |local_branch_name|
@@ -50,7 +50,7 @@ end
 # | file name    | default file name      | name of the file to be committed                           |
 # | file content | default file content   | content of the file to be committed                        |
 def create_commits commits_array
-  current_branch = run('git rev-parse --abbrev-ref HEAD')[:out]
+  current_branch = run('git rev-parse --abbrev-ref HEAD').out
 
   commits_array = [commits_array] if commits_array.is_a? Hash
   commits_array.each do |commit_data|
@@ -99,7 +99,7 @@ end
 
 # Returns the commits in the currently checked out branch
 def local_commits
-  result = run("git log --oneline").fetch(:out)
+  result = run("git log --oneline").out
                                    .split("\n")
                                    .map{|c| { hash: c.slice(0,6),
                                               message: c.slice(8,500) }}
@@ -109,7 +109,7 @@ def local_commits
 
   # Add the affected files to the commits
   result.each do |commit|
-    commit[:files] = run("git diff-tree --no-commit-id --name-only -r #{commit[:hash]}").fetch(:out)
+    commit[:files] = run("git diff-tree --no-commit-id --name-only -r #{commit[:hash]}").out
                                                                                         .split("\n")
   end
 

@@ -22,7 +22,7 @@ end
 
 
 Then /^my branch and its remote still have (\d+) and (\d+) different commits$/ do |local_count, remote_count|
-  matches = /have (\d+) and (\d+) different commit each/.match(run("git status")[:out])
+  matches = /have (\d+) and (\d+) different commit each/.match(run("git status").out)
   expect(matches[1]).to eql local_count
   expect(matches[2]).to eql remote_count
 end
@@ -41,7 +41,7 @@ end
 Then /^the "([^"]+)" branch and its remote still have (\d+) and (\d+) different commits$/ do |branch_name, local_count, remote_count|
   returning_to_current_branch do
     run "git checkout #{branch_name}"
-    matches = /have (\d+) and (\d+) different commit each/.match(run("git status")[:out])
+    matches = /have (\d+) and (\d+) different commit each/.match(run("git status").out)
     expect(matches[1]).to eql local_count
     expect(matches[2]).to eql remote_count
   end
