@@ -77,7 +77,7 @@ end
 
 
 Then /^the branch "(.*?)" has not been pushed to the repository$/ do |branch_name|
-  expect(remote_branch_exists branch_name).to be_falsy
+  expect(existing_remote_branches).to_not include(branch_name)
 end
 
 

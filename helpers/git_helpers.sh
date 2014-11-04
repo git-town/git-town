@@ -124,7 +124,7 @@ function get_current_branch_name {
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
-  if [ `git branch | grep "$branch_name" | wc -l` == 0 ]; then
+  if [ `git branch | tr -d '* ' | grep "^$branch_name$" | wc -l` == 0 ]; then
     echo false
   else
     echo true
