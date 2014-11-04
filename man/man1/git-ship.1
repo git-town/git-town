@@ -4,9 +4,22 @@ git ship \- ships a completed feature branch
 .SH "SYNOPSIS"
 \fIgit ship\fR <branchname>
 .SH "DESCRIPTION"
-Updates the feature branch to ship with the latest updates from the main branch,
-squash-merges the feature branch into the main branch,
-pushes the updated main branch to the remote,
-and deletes the shipped feature branch from the local machines as well as the remote
+Merges the branch into the main branch,
+leading to linear history on the main branch.
 .br
-Leads to linear history on the main branch.
+* merges the main branch into the feature branch
+.br
+* squash-merges the feature branch into the main branch
+.br
+* pushes the updated main branch to the remote
+.br
+* deletes the shipped feature branch from the local machine
+.br
+* deletes the shipped feature branch from the remote
+.br
+
+.SH OPTIONS
+.IP "--abort" 9
+Aborts a failed
+.B git-ship
+and resets the workspace to how it was before running this command
