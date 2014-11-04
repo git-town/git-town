@@ -16,19 +16,19 @@ end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument$/ do
-  sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2")[:out]
+  sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
   @last_run_result = run "git extract refactor #{sha}"
 end
 
 
 When /^I run `git extract refactor` with the last two commit shas as arguments$/ do
-  shas = run("git log --oneline -n 2 | awk '{ print $1 }' | tr '\n' ' '")[:out]
+  shas = run("git log --oneline -n 2 | awk '{ print $1 }' | tr '\n' ' '").out
   @last_run_result = run "git extract refactor #{shas}"
 end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument while allowing errors$/ do
-  sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2")[:out]
+  sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
   @last_run_result = run "git extract refactor #{sha}", allow_failures: true
 end
 
@@ -41,19 +41,19 @@ end
 
 
 Then /^I get the error "(.+?)"$/ do |error_message|
-  expect(@last_run_result[:status]).to_not eq 0
-  output = @last_run_result[:out] + @last_run_result[:err]
+  expect(@last_run_result.status).to_not eq 0
+  output = @last_run_result.out + @last_run_result.err
   expect(output).to include(error_message),
                     "EXPECTED\n\n***************************************************\n\n#{output.gsub '\n', "\n"}\n\n***************************************************\n\nTO INCLUDE '#{error_message}'\n"
 end
 
 
 Then /^It doesn't run the command "(.*?)"$/ do |unexpected_command|
-  expect(@last_run_result[:out]).to_not include "#{unexpected_command}\n"
+  expect(@last_run_result.out).to_not include "#{unexpected_command}\n"
 end
 
 
 Then /^show me the output$/ do
-  puts @last_run_result[:out]
-  puts @last_run_result[:err]
+  puts @last_run_result.out
+  puts @last_run_result.err
 end
