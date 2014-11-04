@@ -19,14 +19,13 @@ continue_script_filename=`continue_script_filename_for_command sync`
 
 # Called when pull_branch fails on the feature branch
 function error_pull_feature_branch {
-  create_pull_feature_branch_abort_script
+  create_merge_conflict_abort_script
 
   # Create the continue script
+  add_to_continue_script "initial_open_changes=$initial_open_changes"
   add_to_continue_script "merge_branch $main_branch_name"
   add_to_continue_script "push_branch"
-  if [ $initial_open_changes == true ]; then
-    add_to_continue_script "git stash pop"
-  fi
+  add_to_continue_script "restore_open_changes"
 
   exit_with_abort_continue_messages 'sync'
 }
@@ -34,16 +33,35 @@ function error_pull_feature_branch {
 
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
-  create_pull_main_branch_abort_script
+  create_rebase_conflict_abort_script
 
   # Create the continue script
-  add_to_continue_script "git checkout $initial_branch_name"
-  add_to_continue_script "pull_branch"
-  add_to_continue_script "merge_branch $main_branch_name"
-  add_to_continue_script "push_branch"
-  if [ $initial_open_changes == true ]; then
-    add_to_continue_script "git stash pop"
+  add_to_continue_script "initial_open_changes=$initial_open_changes"
+  if [ `is_feature_branch $initial_branch_name` == true ]; then
+    add_to_continue_script "push_branch"
+    add_to_continue_script "checkout_branch $initial_branch_name"
+    add_to_continue_script "pull_branch"
+    add_to_continue_script "merge_branch $main_branch_name"
+    add_to_continue_script "push_branch"
+  else
+    add_to_continue_script "push_branch"
+    add_to_continue_script "push_tags"
   fi
+  add_to_continue_script "restore_open_changes"
+
+  exit_with_abort_continue_messages 'sync'
+}
+
+
+# Called when pull_branch fails on a non feature branch
+function error_pull_non_feature_branch {
+  create_rebase_conflict_abort_script
+
+  # Create the continue script
+  add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "push_branch"
+  add_to_continue_script "push_tags"
+  add_to_continue_script "restore_open_changes"
 
   exit_with_abort_continue_messages 'sync'
 }
@@ -51,13 +69,12 @@ function error_pull_main_branch {
 
 # Called when merge_branch fails
 function error_merge_branch {
-  create_merge_main_branch_abort_script
+  create_merge_conflict_abort_script
 
   # Create the continue script
+  add_to_continue_script "initial_open_changes=$initial_open_changes"
   add_to_continue_script "push_branch"
-  if [ $initial_open_changes == true ]; then
-    add_to_continue_script "git stash pop"
-  fi
+  add_to_continue_script "restore_open_changes"
 
   exit_with_abort_continue_messages 'sync'
 }
@@ -66,8 +83,7 @@ function error_merge_branch {
 # Perform the sync operation
 function perform_sync {
   stash_open_changes
-  local branch_name=`get_current_branch_name`
-  if [ `is_feature_branch $branch_name` == true ]; then
+  if [ `is_feature_branch $initial_branch_name` == true ]; then
     sync_main_branch
     pull_branch
     merge_branch $main_branch_name

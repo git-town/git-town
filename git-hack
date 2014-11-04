@@ -7,7 +7,7 @@ abort_script_filename=`abort_script_filename_for_command hack`
 
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
-  create_pull_main_branch_abort_script
+  create_rebase_conflict_abort_script
   exit_with_abort_continue_messages 'hack'
 }
 
