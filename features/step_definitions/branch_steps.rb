@@ -64,8 +64,8 @@ Then /^I (?:end up|am still) on the "(.+?)" branch$/ do |branch_name|
 end
 
 
-Then /^I have the feature branches (.+?)$/ do |branch_names|
-  expect(existing_feature_branches).to eq Kappamaki.from_sentence(branch_names)
+Then /^there is no "(.+?)" branch$/ do |branch_name|
+  expect(existing_local_branches).to_not include(branch_name)
 end
 
 
@@ -77,12 +77,12 @@ end
 
 
 Then /^the branch "(.*?)" has not been pushed to the repository$/ do |branch_name|
-  expect(remote_branch_exists branch_name).to be_falsy
+  expect(existing_remote_branches).to_not include(branch_name)
 end
 
 
 Then /^all branches are now synchronized$/ do
-  run("git branch -vv | grep $1 | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | tr -d '\n' | wc -m") == '0'
+  expect(number_of_branches_out_of_sync).to eql 0
 end
 
 
