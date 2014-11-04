@@ -40,10 +40,11 @@ function create_feature_branch {
 # Deletes the given branch from both the local machine and on remote.
 function delete_branch {
   local branch_name=$1
+  local force=$2
   if [ `has_tracking_branch $branch_name` == true ]; then
     delete_remote_branch $branch_name
   fi
-  delete_local_branch $branch_name $2
+  delete_local_branch $branch_name $force
 }
 
 
