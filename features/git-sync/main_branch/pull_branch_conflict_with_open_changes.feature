@@ -17,7 +17,7 @@ Feature: git-sync on the main branch (conflict when pulling)
     And I don't have an uncommitted file with name: "uncommitted"
 
 
-  Scenario: abort
+  Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "main" branch
     And there is no rebase in progress
@@ -33,14 +33,14 @@ Feature: git-sync on the main branch (conflict when pulling)
 
 
   @finishes-with-non-empty-stash
-  Scenario: continue without resolving
+  Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
     Then I get the error "You must resolve the conflicts and commit your changes before continuing the git sync."
     And my repo still has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
 
-  Scenario: continue after resolving
+  Scenario: continuing after resolving conflicts
     When I successfully finish the rebase by resolving the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "main" branch

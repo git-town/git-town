@@ -18,7 +18,7 @@ Feature: git-sync on a feature branch with open changes (conflict when merging t
     And I don't have an uncommitted file with name: "uncommitted"
 
 
-  Scenario: abort
+  Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no merge in progress
@@ -35,7 +35,7 @@ Feature: git-sync on a feature branch with open changes (conflict when merging t
 
 
   @finishes-with-non-empty-stash
-  Scenario: continue without resolving
+  Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
     Then I get the error "You must resolve the conflicts and commit your changes before continuing the git sync."
     And I am still on the "feature" branch
@@ -43,7 +43,7 @@ Feature: git-sync on a feature branch with open changes (conflict when merging t
     And I don't have an uncommitted file with name: "uncommitted"
 
 
-  Scenario: continue after resolving
+  Scenario: continuing after resolving conflicts
     When I successfully finish the merge by resolving the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch

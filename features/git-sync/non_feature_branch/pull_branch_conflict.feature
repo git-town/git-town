@@ -15,7 +15,7 @@ Feature: git-sync on the main branch (conflict when pulling)
     And there are abort and continue scripts for "git sync"
 
 
-  Scenario: abort
+  Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "qa" branch
     And there is no rebase in progress
@@ -29,13 +29,13 @@ Feature: git-sync on the main branch (conflict when pulling)
       | qa     | conflicting_file   | local conflicting content |
 
 
-  Scenario: continue without resolving
+  Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
     Then I get the error "You must resolve the conflicts and commit your changes before continuing the git sync."
     And my repo still has a rebase in progress
 
 
-  Scenario: continue after resolving
+  Scenario: continuing after resolving conflicts
     When I successfully finish the rebase by resolving the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "qa" branch
