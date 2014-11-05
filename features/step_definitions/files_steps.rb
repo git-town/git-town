@@ -6,12 +6,12 @@ end
 
 
 Then /^file "(.*?)" has a merge conflict$/ do |file|
-  run("git status | grep 'both added.*#{file}' | wc -l")[:out] == '1'
+  run("git status | grep 'both added.*#{file}' | wc -l").out == '1'
 end
 
 
 Then /^there are no merge conflicts anymore$/ do
-  run("git status | grep 'both added' | wc -l")[:out] == '0'
+  run("git status | grep 'both added' | wc -l").out == '0'
 end
 
 
@@ -52,13 +52,13 @@ end
 
 
 Then /^I don't have an uncommitted file with name: "(.*?)"$/ do |file_name|
-  actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
+  actual_files = run("git status --porcelain | awk '{print $2}'").out.split("\n")
   expect(actual_files).to_not include file_name
 end
 
 
 Then /^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"?$/ do |expected_name, expected_content|
-  actual_files = run("git status --porcelain | awk '{print $2}'")[:out].split("\n")
+  actual_files = run("git status --porcelain | awk '{print $2}'").out.split("\n")
   expect(actual_files).to eql [expected_name]
 
   # Verify the file content

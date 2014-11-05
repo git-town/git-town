@@ -91,7 +91,7 @@ Then /^there are no more feature branches$/ do
                         "* main",
                         "remotes/origin/main",
                         'remotes/origin/master' ].sort
-  actual_branches = run("git branch -a")[:out].split("\n").map(&:strip).sort
+  actual_branches = run("git branch -a").out.split("\n").map(&:strip).sort
   expect(actual_branches).to eql expected_branches
 end
 
