@@ -18,7 +18,7 @@ def run command, allow_failures: false, debug: false, input: nil
   OpenStruct.new result
 end
 
+
 def run_and_store command, allow_failures: false, debug: ENV['OUTPUT_COMMANDS'], input: nil
   @last_run_result = run command, allow_failures: allow_failures, debug: debug, input: input
 end
-

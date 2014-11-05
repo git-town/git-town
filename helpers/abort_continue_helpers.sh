@@ -67,6 +67,7 @@ function has_script {
   fi
 }
 
+
 function remove_abort_continue_scripts {
   if [ `has_script $abort_script_filename` == true ]; then
     rm $abort_script_filename;
