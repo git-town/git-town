@@ -31,7 +31,7 @@ function perform_extract {
   stash_open_changes
   sync_main_branch
 
-  if [ -z $user_input ]; then
+  if [ -z "$user_input" ]; then
     git log --oneline $main_branch_name..$initial_branch_name                 | # Get a list of all commits in the feature branch.
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
       tail -r                                                                 | # Reverse the order of lines.
@@ -42,7 +42,7 @@ function perform_extract {
     delete_temp_file
   fi
 
-  if [ -z $user_input ]; then
+  if [ -z "$user_input" ]; then
     restore_open_changes
 
     echo_error_header
@@ -73,7 +73,7 @@ else
   shift
   user_input="$*"
 
-  if [ -z $user_input ]; then
+  if [ -z "$user_input" ]; then
     ensure_tool_installed 'dialog'
   fi
   perform_extract
