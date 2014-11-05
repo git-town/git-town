@@ -6,7 +6,7 @@ end
 
 
 When /^I run `([^`]+)`$/ do |command|
-  @last_run_result = run command
+  @last_run_result = run command, debug: ENV['OUTPUT_COMMANDS']
 end
 
 
