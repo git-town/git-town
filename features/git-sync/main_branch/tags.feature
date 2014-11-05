@@ -1,4 +1,6 @@
-Feature: git-sync on the main branch
+Feature: git-sync
+  on the main branch
+
 
   Scenario: Tags
     Given I am on the main branch

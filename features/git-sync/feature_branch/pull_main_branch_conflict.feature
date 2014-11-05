@@ -1,4 +1,7 @@
-Feature: git-sync on a feature branch (conflict when pulling the main branch)
+Feature: git-sync
+  on a feature branch
+  conflict when pulling the main branch
+
 
   Background:
     Given I am on a feature branch

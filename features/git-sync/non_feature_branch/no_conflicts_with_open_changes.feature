@@ -1,4 +1,7 @@
-Feature: git-sync on a non-feature branch with open changes
+Feature: git-sync
+  on a non-feature branch
+  with open changes
+
 
   Scenario: no conflict
     Given non-feature branch configuration "qa, production"

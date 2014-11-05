@@ -1,4 +1,6 @@
-Feature: git-sync on a non-feature branch
+Feature: git-sync
+  on a non-feature branch
+
 
   Scenario: Tags
     Given non-feature branch configuration "qa, production"

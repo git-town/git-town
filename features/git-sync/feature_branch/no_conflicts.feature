@@ -1,4 +1,7 @@
-Feature: git-sync on a feature branch
+Feature: git-sync
+  on a feature branch
+  no conflicts
+
 
   Scenario: without a remote branch
     Given I am on a local feature branch

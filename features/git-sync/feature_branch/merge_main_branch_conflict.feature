@@ -1,4 +1,7 @@
-Feature: git-sync on a feature branch (conflict when merging the main branch)
+Feature: git-sync
+  on a feature branch
+  conflict when merging the main branch
+
 
   Background:
     Given I am on the "feature" branch

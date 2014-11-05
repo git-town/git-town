@@ -1,4 +1,8 @@
-Feature: git-sync on the main branch (conflict when pulling)
+Feature: git-sync
+  on the main branch
+  with open changes
+  conflict when pulling
+
 
   Background:
     Given I am on the main branch

@@ -1,4 +1,8 @@
-Feature: git-sync on a feature branch with open changes
+Feature: git-sync
+  on a feature branch
+  with open changes
+  no conflicts
+
 
   Scenario: without a remote branch
     Given I am on a local feature branch

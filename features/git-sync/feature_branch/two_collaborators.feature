@@ -1,6 +1,9 @@
-Feature: git-sync on a feature branch
+Feature: git-sync
+  on a feature branch
+  with two collaborators
 
-  Scenario: two people collaborate
+
+  Scenario: merging work
     Given I am on a feature branch
     And my coworker Charlie works on the same feature branch
     And the following commits exist in my repository

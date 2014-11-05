@@ -1,4 +1,5 @@
-Feature: git-sync on a non-feature branch
+Feature: git-sync
+  on a non-feature branch
 
   Scenario: no conflict
     Given non-feature branch configuration "qa, production"

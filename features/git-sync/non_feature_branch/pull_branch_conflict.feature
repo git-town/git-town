@@ -1,4 +1,7 @@
-Feature: git-sync on the main branch (conflict when pulling)
+Feature: git-sync
+  on a non-feature branch
+  conflict when pulling
+
 
   Background:
     Given non-feature branch configuration "qa, production"

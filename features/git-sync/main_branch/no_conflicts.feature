@@ -1,6 +1,8 @@
-Feature: git-sync on the main branch with open changes
+Feature: git-sync
+  on the main branch
 
-  Scenario: on the main branch
+
+  Scenario: no conflicts
     Given I am on the main branch
     And the following commits exist in my repository
       | location | message       | file name   |
