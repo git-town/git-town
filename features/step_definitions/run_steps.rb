@@ -1,6 +1,6 @@
 When /^(?:Charlie|my coworker) runs `([^`]+)`$/ do |command|
   at_path coworker_repository_path do
-    run_and_store command, debug: ENV['OUTPUT_COMMANDS']
+    run_and_store command
   end
 end
 
