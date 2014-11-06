@@ -5,16 +5,19 @@ git extract \- copies selected commits from the current feature branch
 into their own feature branch
 
 .SH SYNOPSIS
-\fIgit extract\fR <branchname>
+\fIgit extract\fR <branchname> [<SHA of commit to extract>]
 
 .SH DESCRIPTION
-Displays a UI for selecting the commits in the current feature branch,
-and cherry-picks the selected ones into the specified feature branch
+Creates the given feature branch,
+and cherry-picks the commits to extract into it.
 .br
+
+.br
+If not given a commit SHA, prompts the user for the commits to extract.
 
 .SH OPTIONS
 .IP "--abort" 9
 Aborts a failed
 .B git-extract
-and resets the workspace back to a consistent state.
+and resets the workspace back into a consistent state.
 
