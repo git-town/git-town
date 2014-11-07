@@ -1,0 +1,28 @@
+.TH "GIT-SHIP" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
+
+.SH "NAME"
+git ship \- ships a completed feature branch
+
+.SH "SYNOPSIS"
+\fIgit ship\fR <branchname>
+
+.SH "DESCRIPTION"
+Merges the branch into the main branch,
+leading to linear history on the main branch.
+.br
+* merges the main branch into the feature branch
+.br
+* squash-merges the feature branch into the main branch
+.br
+* pushes the updated main branch to the remote
+.br
+* deletes the shipped feature branch from the local machine
+.br
+* deletes the shipped feature branch from the remote
+.br
+
+.SH OPTIONS
+.IP "--abort" 9
+Aborts a failed
+.B git-ship
+and resets the workspace back into a consistent state.

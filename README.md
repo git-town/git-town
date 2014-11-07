@@ -452,6 +452,7 @@ git config git-town.non-feature-branch-names 'qa, production'
 
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
+* preview a man page: `man man/man1/git-hack.1`
 
 Found a bug or want to contribute a feature?
 <a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
