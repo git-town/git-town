@@ -1,40 +1,40 @@
 When /^(?:Charlie|my coworker) runs `([^`]+)`$/ do |command|
   at_path coworker_repository_path do
-    run_and_store command
+    @last_run_result = run command, debug: ENV['OUTPUT_COMMANDS']
   end
 end
 
 
 When /^I run `([^`]+)`$/ do |command|
-  run_and_store command
+  @last_run_result = run command, debug: ENV['OUTPUT_COMMANDS']
 end
 
 
 When /^I run `([^`]+)` while allowing errors$/ do |command|
-  run_and_store command, allow_failures: true
+  @last_run_result = run command, allow_failures: true, debug: ENV['OUTPUT_COMMANDS']
 end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument$/ do
   sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
-  run_and_store "git extract refactor #{sha}"
+  @last_run_result = run "git extract refactor #{sha}", debug: ENV['OUTPUT_COMMANDS']
 end
 
 
 When /^I run `git extract refactor` with the last two commit shas as arguments$/ do
   shas = run("git log --oneline -n 2 | awk '{ print $1 }' | tr '\n' ' '").out
-  run_and_store "git extract refactor #{shas}"
+  @last_run_result = run "git extract refactor #{shas}", debug: ENV['OUTPUT_COMMANDS']
 end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument while allowing errors$/ do
   sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
-  run_and_store "git extract refactor #{sha}", allow_failures: true
+  @last_run_result = run "git extract refactor #{sha}", allow_failures: true, debug: ENV['OUTPUT_COMMANDS']
 end
 
 
 When /^I run `(.+?)` and enter "(.*?)"$/ do |command, user_input|
-  run_and_store command, input: user_input, allow_failures: true
+  @result = run command, input: user_input, allow_failures: true, debug: ENV['OUTPUT_COMMANDS']
 end
 
 
