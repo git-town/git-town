@@ -1,7 +1,4 @@
-Feature: git-sync
-  on a feature branch
-  with open changes
-  conflict when merging the main branch
+Feature: handling merge conflict between feature and main branch when syncing a feature branch with open changes
 
 
   Background:

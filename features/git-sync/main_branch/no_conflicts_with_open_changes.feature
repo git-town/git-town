@@ -1,6 +1,4 @@
-Feature: git-sync
-  on the main branch
-  with open changes
+Feature: syncing the main branch with open changes
 
 
   Scenario: no conflicts

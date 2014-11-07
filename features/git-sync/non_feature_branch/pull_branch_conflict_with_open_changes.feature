@@ -1,7 +1,4 @@
-Feature: git-sync
-  on a non-feature branch
-  with open changes
-  conflict when pulling
+Feature: handling conflicting remote branch updates when syncing a non-feature branch with open changes
 
 
   Background:

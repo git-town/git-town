@@ -1,6 +1,4 @@
-Feature: git-sync
-  on a feature branch
-  conflict when merging the main branch
+Feature: handling merge conflict between feature and main branch when syncing a feature branch without open changes
 
 
   Background:

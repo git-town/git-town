@@ -1,7 +1,4 @@
-Feature: git-sync
-  on the main branch
-  with open changes
-  conflict when pulling
+Feature: handling conflicting remote branch updates when syncing the main branch with open changes
 
 
   Background:

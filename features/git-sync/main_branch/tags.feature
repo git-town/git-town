@@ -1,5 +1,4 @@
-Feature: git-sync
-  on the main branch
+Feature: syncing the main branch pushes tags to the remote
 
 
   Scenario: Tags

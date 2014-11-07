@@ -1,6 +1,4 @@
-Feature: git-sync
-  on a feature branch
-  with two collaborators
+Feature: collaborative feature branch syncing
 
 
   Scenario: merging work
