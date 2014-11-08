@@ -448,6 +448,14 @@ git config git-town.main-branch-name master
 git config git-town.non-feature-branch-names 'qa, production'
 ```
 
+## documentation
+
+Once installed, you can run `git help town` on the command line
+for an overview of the git town commands,
+or `git help [git town command]` (e.g. `git help sync`)
+for help on an individual command.
+
+
 ## development
 
 * run all tests: `cucumber`
