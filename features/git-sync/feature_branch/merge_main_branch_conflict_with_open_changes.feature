@@ -1,4 +1,4 @@
-Feature: handling merge conflict between feature and main branch when syncing a feature branch with open changes
+Feature: handling merge conflicts between feature and main branch when syncing a feature branch with open changes
 
 
   Background:
