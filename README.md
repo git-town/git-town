@@ -70,7 +70,7 @@ with all uncommitted changes copied into it.
 
 ## git sync
 
-_Syncronizes the current feature branch with the rest of the world._
+_Syncronizes the current branch with the rest of the world._
 
 This works even when you are in the middle of coding,
 with uncommitted changes in your workspace.
