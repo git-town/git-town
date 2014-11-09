@@ -2,7 +2,14 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 branch_name=`get_current_branch_name`
+
+
+if [ $initial_open_changes = true ]; then
+  git add -A
+  git commit -m 'temp'
+fi
+
 checkout_main_branch
-delete_branch $branch_name
+delete_branch $branch_name force
 
 exit_with_success
