@@ -70,7 +70,7 @@ with all uncommitted changes copied into it.
 
 ## git sync
 
-_Syncronizes the current feature branch with the rest of the world._
+_Syncronizes the current branch with the rest of the world._
 
 This works even when you are in the middle of coding,
 with uncommitted changes in your workspace.
@@ -448,10 +448,20 @@ git config git-town.main-branch-name master
 git config git-town.non-feature-branch-names 'qa, production'
 ```
 
+## documentation
+
+In addition to the online documentation here,
+you can run `git help town` on the command line
+for an overview of the git town commands,
+or `git help <command>` (e.g. `git help sync`)
+for help on an individual command.
+
+
 ## development
 
 * run all tests: `cucumber`
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
+* preview a man page: `man man/man1/git-hack.1`
 
 Found a bug or want to contribute a feature?
 <a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
