@@ -4,11 +4,15 @@
 git ship \- ships a completed feature branch
 
 .SH "SYNOPSIS"
-\fIgit ship\fR <branchname>
+\fIgit ship\fR [<branchname>] [-m <message>]
 
 .SH "DESCRIPTION"
 Merges the branch into the main branch,
 leading to linear history on the main branch.
+.br
+If no <branchname> is supplied, the current branch is shipped
+.sp
+* pull remote updates for the feature branch
 .br
 * merges the main branch into the feature branch
 .br
@@ -19,10 +23,12 @@ leading to linear history on the main branch.
 * deletes the shipped feature branch from the local machine
 .br
 * deletes the shipped feature branch from the remote
-.br
 
 .SH OPTIONS
-.IP "--abort" 9
+.IP "-m <message>" 14
+Provide the message to be used for the squash merge
+
+.IP "--abort" 14
 Aborts a failed
 .B git-ship
 and resets the workspace back into a consistent state.
