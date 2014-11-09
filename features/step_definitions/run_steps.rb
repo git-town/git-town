@@ -1,35 +1,35 @@
 When /^(?:Charlie|my coworker) runs `([^`]+)`$/ do |command|
   at_path coworker_repository_path do
-    @last_run_result = run command
+    run command
   end
 end
 
 
 When /^I run `([^`]+)`$/ do |command|
-  @last_run_result = run command
+  run command
 end
 
 
 When /^I run `([^`]+)` while allowing errors$/ do |command|
-  @last_run_result = run command, allow_failures: true
+  run command, allow_failures: true
 end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument$/ do
   sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
-  @last_run_result = run "git extract refactor #{sha}"
+  run "git extract refactor #{sha}"
 end
 
 
 When /^I run `git extract refactor` with the last two commit shas as arguments$/ do
   shas = run("git log --oneline -n 2 | awk '{ print $1 }' | tr '\n' ' '").out
-  @last_run_result = run "git extract refactor #{shas}"
+  run "git extract refactor #{shas}"
 end
 
 
 When /^I run `git extract refactor` with the last commit sha as an argument while allowing errors$/ do
   sha = run("git log -n 1 | grep '^commit' | cut -d ' ' -f 2").out
-  @last_run_result = run "git extract refactor #{sha}", allow_failures: true
+  run "git extract refactor #{sha}", allow_failures: true
 end
 
 
