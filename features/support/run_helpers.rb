@@ -22,7 +22,7 @@ def run command, allow_failures: false, debug: false, input: nil
     puts "#{result[:out]}\n"
     puts "#{result[:err]}\n"
   end
-  OpenStruct.new result
+  @last_run_result = OpenStruct.new result
 end
 
 
