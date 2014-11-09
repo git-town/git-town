@@ -1,0 +1,32 @@
+.TH "GIT-SYNC" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
+
+.SH "NAME"
+git sync \- synchronizes a feature branch
+
+.SH "SYNOPSIS"
+\fIgit sync\fR
+
+.SH "DESCRIPTION"
+Synchronizes the current branch with the rest of the world.
+
+.br
+* pulls updates for the main and the feature branch
+.br
+* merges updates from the main branch into the feature branch
+.br
+* pushes everything to the remote
+
+.br
+The result is an up-to-date feature branch that can be merged into the main
+branch without conflicts.
+
+.SH OPTIONS
+.IP "--abort" 12
+Aborts a failed
+.B git-sync
+and resets the workspace back into a consistent state.
+
+.IP "--continue" 12
+Continues a failed
+.B git-sync
+after the conflicts have been resolved.

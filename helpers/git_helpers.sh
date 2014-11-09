@@ -1,6 +1,24 @@
 # Helper methods for working with Git.
 
 
+# Abort a cherry-pick
+function abort_cherry_pick {
+  run_command "git cherry-pick --abort"
+}
+
+
+# Abort a merge
+function abort_merge {
+  run_command "git merge --abort"
+}
+
+
+# Abort a rebase
+function abort_rebase {
+  run_command "git rebase --abort"
+}
+
+
 # Checks out the branch with the given name.
 #
 # Skips this operation if the requested branch
@@ -90,10 +108,12 @@ function ensure_on_feature_branch {
 
 # Called by pull_branch when the merge/rebase fails with conflicts
 function error_pull_branch {
-  if [ $1 == $main_branch_name ]; then
+  if [ `is_feature_branch $1` == true ]; then
+    error_pull_feature_branch
+  elif [ $1 == $main_branch_name ]; then
     error_pull_main_branch
   else
-    error_pull_feature_branch
+    error_pull_non_feature_branch
   fi
 }
 
@@ -120,7 +140,7 @@ function fetch_upstream {
 
 # Returns the current branch name
 function get_current_branch_name {
-  git branch | grep "*" | awk '{print $2}'
+  git rev-parse --abbrev-ref HEAD
 }
 
 
