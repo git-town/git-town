@@ -10,8 +10,9 @@ Given /^I have an old configuration file with (.*?)$/ do |data|
 end
 
 
-Given /^non-feature branch configuration (.*)$/ do |configuration|
+Given /^non-feature branch configuration "(.*)"$/ do |configuration|
   set_non_feature_branches_configuration configuration
+  configuration.split(",").map(&:strip).each { |b| create_branch b }
 end
 
 
