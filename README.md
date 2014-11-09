@@ -292,7 +292,7 @@ _Completely removes an obsolete feature branch._
 Call this from the feature branch that you want to delete.
 
 * run the command: `git kill`
-* verifies that we are killing a feature branch
+* verifies that the currently checked out branch is a feature branch
 
 <table>
   <tr>
