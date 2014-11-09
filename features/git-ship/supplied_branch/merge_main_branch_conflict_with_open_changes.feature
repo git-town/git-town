@@ -1,6 +1,4 @@
-Feature: git-ship
-  the current branch
-  conflict when merging the main branch
+Feature: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
 
 
   Background:

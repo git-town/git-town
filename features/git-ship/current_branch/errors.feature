@@ -1,5 +1,4 @@
-Feature: git-ship
-  the current branch
+Feature: errors while shipping the current branch
 
 
   Scenario: feature branch not ahead of main

@@ -1,5 +1,4 @@
-Feature: git-ship
-  the supplied branch
+Feature: errors while shipping the supplied branch without open changes
 
 
   Scenario: feature branch that does not exist
