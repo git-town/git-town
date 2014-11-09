@@ -1,0 +1,8 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+branch_name=`get_current_branch_name`
+checkout_main_branch
+delete_branch $branch_name
+
+exit_with_success
