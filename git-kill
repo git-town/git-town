@@ -1,10 +1,7 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-branch_name=`get_current_branch_name`
-
 ensure_on_feature_branch "You can only kill feature branches."
-
 
 # Remove open changes
 if [ $initial_open_changes = true ]; then
@@ -13,6 +10,6 @@ if [ $initial_open_changes = true ]; then
 fi
 
 checkout_main_branch
-delete_branch $branch_name force
+delete_branch $initial_branch_name force
 
 exit_with_success
