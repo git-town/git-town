@@ -5,6 +5,7 @@
 * added support for non-feature branches (cannot be shipped and do not merge main when syncing)
 * git ship merges main into the feature branch before squash merging
 * git ship errors if the feature branch is not ahead of main
+* git ship takes an optional branch name
 * updated output to show each git command and its output, updated error messages
 * skips unnecessary pushes
 * man pages
