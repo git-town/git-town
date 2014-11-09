@@ -8,7 +8,7 @@ ensure_on_feature_branch "You can only kill feature branches."
 
 if [ $initial_open_changes = true ]; then
   git add -A
-  git commit -m 'temp'
+  git commit -m 'open changes'
 fi
 
 checkout_main_branch

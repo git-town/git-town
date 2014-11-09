@@ -285,6 +285,39 @@ Call this from the feature branch that you want to ship.
 </table>
 
 
+## git kill
+
+_Completely removes an obsolete feature branch._
+
+Call this from the feature branch that you want to delete.
+
+* run the command: `git kill`
+* verifies that we are killing a feature branch
+
+<table>
+  <tr>
+    <td>1.</td>
+    <td>commit any open changes to the branch</td>
+    <td>git add -A<br>git commit -m 'open changes'</td>
+  </tr>
+  <tr>
+    <td>2.</td>
+    <td>checkout the main branch</td>
+    <td>git checkout master</td>
+  </tr>
+  <tr>
+    <td>3.</td>
+    <td>delete the feature branch from the developer machine</td>
+    <td>git branch -D feature</td>
+  </tr>
+  <tr>
+    <td>4.</td>
+    <td>delete the feature branch from the repo</td>
+    <td>git push origin :feature
+  </tr>
+</table>
+
+
 ## git sync-fork
 
 _Syncs the main branch with the upstream repository._
