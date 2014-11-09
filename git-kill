@@ -6,6 +6,7 @@ branch_name=`get_current_branch_name`
 ensure_on_feature_branch "You can only kill feature branches."
 
 
+# Remove open changes
 if [ $initial_open_changes = true ]; then
   git add -A
   git commit -m 'open changes'
