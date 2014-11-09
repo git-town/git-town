@@ -1,5 +1,4 @@
-Feature: git-ship
-  the supplied branch
+Feature: shipping the supplied feature branch without open changes
 
 
   Scenario: local feature branch

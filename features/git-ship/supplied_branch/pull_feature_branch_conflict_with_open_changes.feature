@@ -1,6 +1,4 @@
-Feature: git-ship
-  the current branch
-  conflict when pulling the feature branch
+Feature: handling conflicting remote feature branch updates when shipping the supplied feature branch with open changes
 
 
   Background:
