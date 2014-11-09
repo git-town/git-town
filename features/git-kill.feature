@@ -31,4 +31,12 @@ Feature: Git Kill
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: Cannot kill a non-feature branch
+  Scenario: Does not kill a non-feature branch
+    Given non-feature branch configuration "qa"
+    And I am on the "qa" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    When I run `git kill` while allowing errors
+    Then I get the error "You can only kill feature branches"
+    And I am still on the "qa" branch
+    And the branch "good-feature" still exists
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
