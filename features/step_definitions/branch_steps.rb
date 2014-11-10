@@ -22,7 +22,7 @@ end
 
 
 Given /^I have feature branches named (.+?)$/ do |branch_names|
-  Kappamaki.from_sentence(branch_names).map do |branch_name|
+  Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name
   end
 end
