@@ -52,3 +52,4 @@ Feature: Git Kill
       | repository | branches                                |
       | local      | main, unfortunate-feature, good-feature |
       | remote     | main, unfortunate-feature, good-feature |
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

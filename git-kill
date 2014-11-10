@@ -10,18 +10,23 @@ function create_undo_script {
   if [ `has_tracking_branch $initial_branch_name` == true ]; then
     add_to_undo_script "run_command 'git push -u origin $initial_branch_name'"
   fi
+  if [ $initial_open_changes == true ]; then
+    add_to_undo_script "run_command 'git reset $original_branch_sha'"
+  fi
 }
 
 
 function perform_kill {
   ensure_on_feature_branch "You can only kill feature branches."
-  create_undo_script
+  original_branch_sha=`sha_of_branch $initial_branch_name`
 
   # Remove open changes
-  if [ $initial_open_changes = true ]; then
+  if [ $initial_open_changes == true ]; then
     run_command "git add -A"
     run_command "git commit -m 'open changes'"
   fi
+
+  create_undo_script
 
   checkout_main_branch
   delete_branch $initial_branch_name force
