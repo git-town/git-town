@@ -223,13 +223,25 @@ More background around
 
 _Ships a finished feature._
 
-Call this from the feature branch that you want to ship.
+```
+git ship [<branchname>] [-m <message>]
+git ship --abort
 
-* run the command: `git ship`
-* run the command passing in the squashed commit message: `git ship -m [commit message]`
-* abort the command when there are conflicts: `git ship --abort`
-* verifies that we are shipping a feature branch, that the feature branch
-  has shippable commits, and that there are no uncommitted changes.
+OPTIONS
+
+-m <message>
+  <message> will be used for the squashed commit message. If not given,
+  the command will open an editor and allow you to edit the message.
+
+--abort
+  abort the command when there are conflicts
+
+```
+
+Verifies
+* the branch is a feature branch
+* the branch has shippable commits
+* the branch has no uncommitted changes
 
 <table>
   <tr>
