@@ -21,6 +21,15 @@ Given /^I am on the "(.+?)" branch$/ do |branch_name|
 end
 
 
+Given /^I am on the local "(.+?)" branch$/ do |branch_name|
+  if existing_local_branches.include?(branch_name)
+    run "git checkout #{branch_name}"
+  else
+    run "git checkout -b #{branch_name} main"
+  end
+end
+
+
 Given /^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/ do |branch_name, relation|
   create_branch branch_name
   if relation
