@@ -10,7 +10,7 @@ function ensure_ahead_of_main_branch {
   local current_branch_name=`get_current_branch_name`
   if [ `is_ahead_of_main $current_branch_name` == false ]; then
     echo_error_header
-    echo_error "The current branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
+    echo_error "The branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
     exit_with_error
   fi
 }
@@ -55,7 +55,7 @@ function perform_ship {
   local message=`extract_message "$*"`
 
   ensure_no_open_changes "You should not ship while having open files in Git."
-  ensure_on_feature_branch "Please checkout a feature branch to ship."
+  ensure_on_feature_branch "Only feature branches can be shipped."
 
   sync_main_branch
   pull_branch

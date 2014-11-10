@@ -21,6 +21,13 @@ Given /^I am on the "(.+?)" branch$/ do |branch_name|
 end
 
 
+Given /^I have feature branches named (.+?)$/ do |branch_names|
+  Kappamaki.from_sentence(branch_names).each do |branch_name|
+    create_branch branch_name
+  end
+end
+
+
 Given /^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/ do |branch_name, relation|
   create_branch branch_name
   if relation
