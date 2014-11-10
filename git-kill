@@ -5,8 +5,8 @@ ensure_on_feature_branch "You can only kill feature branches."
 
 # Remove open changes
 if [ $initial_open_changes = true ]; then
-  git add -A
-  git commit -m 'open changes'
+  run_command "git add -A"
+  run_command "git commit -m 'open changes'"
 fi
 
 checkout_main_branch
