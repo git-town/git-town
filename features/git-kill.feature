@@ -40,3 +40,15 @@ Feature: Git Kill
     And I am still on the "qa" branch
     And the branch "good-feature" still exists
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: Undoing a kill
+    Given I am on the "unfortunate-feature" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    When I run `git kill`
+    And I run `git kill --undo`
+    Then I end up on the "unfortunate-feature" branch
+    And the existing branches are
+      | repository | branches                                |
+      | local      | main, unfortunate-feature, good-feature |
+      | remote     | main, unfortunate-feature, good-feature |

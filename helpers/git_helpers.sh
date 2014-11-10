@@ -288,6 +288,13 @@ function restore_open_changes {
 }
 
 
+# Returns the SHA that the given branch points to
+function sha_of_branch {
+  local branch_name=$1
+  git rev-parse $branch_name
+}
+
+
 # Squash merges the given branch into the current branch
 function squash_merge {
   local branch_name=$1
