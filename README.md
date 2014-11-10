@@ -293,6 +293,7 @@ Call this from the feature branch that you want to delete.
 
 * run the command: `git kill`
 * verifies that the currently checked out branch is a feature branch
+* restore the last deleted git branch: `git kill --undo`
 
 <table>
   <tr>
