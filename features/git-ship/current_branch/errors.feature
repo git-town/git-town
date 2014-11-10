@@ -17,7 +17,7 @@ Feature: errors while shipping the current branch
     And there are no open changes
 
 
-  Scenario: on non feature branch
+  Scenario: on a non-feature branch
     Given non-feature branch configuration "qa, production"
     And I am on the "production" branch
     When I run `git ship -m 'feature done'` while allowing errors
