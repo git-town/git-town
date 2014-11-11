@@ -21,8 +21,7 @@ function perform_kill {
 
   # Remove open changes
   if [ $initial_open_changes == true ]; then
-    run_command "git add -A"
-    run_command "git commit -m 'open changes'"
+    commit_open_changes
   fi
 
   create_undo_script
