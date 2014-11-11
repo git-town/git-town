@@ -49,7 +49,7 @@ function perform_extract {
     exit_with_error
   fi
 
-  create_feature_branch $target_branch_name
+  create_and_checkout_feature_branch $target_branch_name
   cherry_pick $user_input
   push_branch
   restore_open_changes

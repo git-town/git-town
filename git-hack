@@ -31,7 +31,7 @@ function perform_hack {
 
   stash_open_changes
   sync_main_branch
-  create_feature_branch $target_branch_name
+  create_and_checkout_feature_branch $target_branch_name
   restore_open_changes
 }
 
