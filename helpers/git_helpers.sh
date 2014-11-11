@@ -85,9 +85,10 @@ function delete_remote_branch {
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_has_branch {
-  if [ `has_branch $1` = false ]; then
+  local branch_name=$1
+  if [ `has_branch $branch_name` = false ]; then
     echo_error_header
-    echo_error "There is no branch named '$1'."
+    echo_error "There is no branch named '$branch_name'."
     exit_with_error
   fi
 }
