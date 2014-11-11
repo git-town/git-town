@@ -50,8 +50,9 @@ function cherry_pick {
 # Commits all open changes into the current branch
 function commit_open_changes {
   run_command "git add -A"
-  run_command "git commit -m 'open changes'"
+  run_command "git commit -m 'WIP on $initial_branch_name'"
 }
+
 
 # Cuts a new branch off the given parent branch, and checks it out.
 function create_and_checkout_branch {
