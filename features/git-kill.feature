@@ -56,6 +56,10 @@ Feature: Git Kill
 
   Scenario: Undoing a kill with open changes
     Given I am on the "unfortunate-feature" branch
+    And the following commits exist in my repository
+      | branch              | location         | message            | file name        |
+      | good-feature        | local and remote | good commit        | good_file        |
+      | unfortunate-feature | local and remote | unfortunate commit | unfortunate_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
     And I run `git kill --undo`
@@ -64,6 +68,10 @@ Feature: Git Kill
       | repository | branches                                |
       | local      | main, unfortunate-feature, good-feature |
       | remote     | main, unfortunate-feature, good-feature |
+    And I have the following commits
+      | branch              | location         | message            | files            |
+      | good-feature        | local and remote | good commit        | good_file        |
+      | unfortunate-feature | local and remote | unfortunate commit | unfortunate_file |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
