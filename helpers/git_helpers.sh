@@ -286,6 +286,13 @@ function remote_url {
 }
 
 
+# Resets the current branch to the commit described by the given SHA
+function reset_to_sha {
+  local sha=$1
+  run_command 'git reset $sha'
+}
+
+
 # Unstashes changes that were stashed in the beginning of a script.
 #
 # Only does this if there were open changes when the script was started.
