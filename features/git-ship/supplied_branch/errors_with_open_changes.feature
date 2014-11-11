@@ -10,7 +10,7 @@ Feature: errors while shipping the supplied branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: feature branch that is not ahead of main
+  Scenario: does not ship a feature branch that is not ahead of main
     Given I have feature branches named "feature" and "other_feature"
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -20,7 +20,7 @@ Feature: errors while shipping the supplied branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: main branch
+  Scenario: does not ship the main branch
     Given I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship main -m 'feature done'` while allowing errors
@@ -29,7 +29,7 @@ Feature: errors while shipping the supplied branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: non feature branch
+  Scenario: does not ship a non-feature branch
     Given non-feature branch configuration "qa, production"
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"

@@ -1,14 +1,14 @@
 Feature: errors while shipping the current branch
 
 
-  Scenario: feature branch not ahead of main
+  Scenario: does not ship a feature branch not ahead of main
     Given I am on a feature branch
     When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "The branch 'feature' has no commits to merge into 'main'."
     And I end up on the "feature" branch
 
 
-  Scenario: on the main branch
+  Scenario: does not ship the main branch
     Given I am on the main branch
     When I run `git ship -m 'feature done'` while allowing errors
     Then I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
@@ -17,7 +17,7 @@ Feature: errors while shipping the current branch
     And there are no open changes
 
 
-  Scenario: on a non-feature branch
+  Scenario: does not ship a non-feature branch
     Given non-feature branch configuration "qa, production"
     And I am on the "production" branch
     When I run `git ship -m 'feature done'` while allowing errors
@@ -27,7 +27,7 @@ Feature: errors while shipping the current branch
     And there are no open changes
 
 
-  Scenario: with uncommitted changes
+  Scenario: does not ship with uncommitted changes
     Given I am on a feature branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship -m 'feature done'` while allowing errors
