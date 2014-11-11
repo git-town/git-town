@@ -83,7 +83,7 @@ function delete_remote_branch {
 
 
 # Exists the application with an error message if the
-# current working directory contains uncommitted changes.
+# repository does not have a branch with the given name.
 function ensure_has_branch {
   local branch_name=$1
   if [ `has_branch $branch_name` = false ]; then
