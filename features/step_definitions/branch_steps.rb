@@ -2,6 +2,7 @@ Given /^I am on a feature branch$/ do
   create_branch "feature"
 end
 
+
 Given /^I am on a local feature branch$/ do
   run "git checkout -b feature main"
 end
@@ -26,6 +27,13 @@ Given /^I am on the local "(.+?)" branch$/ do |branch_name|
     run "git checkout #{branch_name}"
   else
     run "git checkout -b #{branch_name} main"
+  end
+end
+
+
+Given /^I have feature branches named (.+?)$/ do |branch_names|
+  Kappamaki.from_sentence(branch_names).each do |branch_name|
+    create_branch branch_name
   end
 end
 
