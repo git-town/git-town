@@ -1,23 +1,37 @@
 .TH "GIT-EXTRACT" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
 
 .SH NAME
-git extract \- copies selected commits from the current feature branch
-into their own feature branch
+git extract \- copy selected commits from the current branch into their own branch
 
 .SH SYNOPSIS
 \fIgit extract\fR <branchname> [<commit>...]
+.br
+\fIgit extract\fR --abort
 
 .SH DESCRIPTION
-Creates the given feature branch,
-and cherry-picks the commits to extract into it.
+If no commits are provided, prompts the user to select from a list of commits unique to the current branch.
+.PP
+* sync the main branch
 .br
-
+* create a feature branch off it
 .br
-If not given a commit SHA, prompts the user for the commits to extract.
+* cherry pick commits
 
 .SH OPTIONS
-.IP "--abort" 9
-Aborts a failed
-.B git-extract
-and resets the workspace back into a consistent state.
+.PP
+<branchname>
+.RS 4
+The name of the branch to create.
+.RE
 
+.PP
+<commit>
+.RS 4
+SHA to be cherry-picked into the new branch.
+.RE
+
+.PP
+--abort
+.RS 4
+Cancel the operation and reset the workspace to a consistent state.
+.RE

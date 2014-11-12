@@ -1,21 +1,20 @@
 .TH "GIT-SYNC-FORK" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
 
 .SH "NAME"
-git sync-fork \- synchronizes a forked repository
+git sync-fork \- synchronize a forked repository
 
 .SH "SYNOPSIS"
 \fIgit sync-fork\fR
+.br
+\fIgit sync-fork\fR --abort
 
 .SH "DESCRIPTION"
 Pulls updates from the upstream main branch into the main branch of this repository.
-
-If your respository is on GitHub, the git remote
-.B upstream
-will be automatically set on first use.
-
+If your repository is on GitHub, the git remote \fBupstream\fR will be automatically set on first use.
 
 .SH OPTIONS
-.IP "--abort" 9
-Aborts a failed
-.B git-sync-fork
-and resets the workspace back into a consistent state.
+.PP
+--abort
+.RS 4
+Cancel the operation and reset the workspace to a consistent state.
+.RE
