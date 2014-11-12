@@ -29,7 +29,7 @@ Squash merges the current branch, or `<branchname>` if given, into the main bran
   If not provided, uses the current branch.
 
 -m <message>
-  Provide the commit message for the squash merge.
+  The commit message for the squash merge.
   If not provided, will be prompted for it.
 
 --abort
