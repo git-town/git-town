@@ -7,7 +7,7 @@ end
 
 # Returns the name of the branch that is currently checked out
 def current_branch_name
-  run("git rev-parse --abbrev-ref HEAD").out
+  get_output("git rev-parse --abbrev-ref HEAD")
 end
 
 
@@ -24,14 +24,10 @@ end
 # * main branch
 # * feature branches ordered alphabetically
 def existing_local_branches
-  actual_branches = run("git branch").out
-                                     .split("\n")
-                                     .map(&:strip)
-                                     .map{|s| s.sub('* ', '')}
+  actual_branches = get_output_as_array("git branch | tr -d '*'")
   actual_branches.delete('master')
   actual_main_branch = actual_branches.delete 'main'
   [actual_main_branch].concat(actual_branches)
-                      .compact
 end
 
 
@@ -48,7 +44,7 @@ def existing_remote_branches
 end
 
 def number_of_branches_out_of_sync
-  run("git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l").out.to_i
+  get_output_as_integer("git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l")
 end
 
 
