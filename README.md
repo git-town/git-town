@@ -13,7 +13,7 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>.
 
-## Commands
+## commands
 
 * [git-extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git-hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
@@ -22,7 +22,7 @@ and assumes you use a central code repository like
 * [git-sync](/documentation/git-sync.md) - synchronize the current branch
 * [git-sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
 
-#### Output
+#### output
 
 Each command is simply running a series of git commands.
 Every git command is printed in the following format:
@@ -32,7 +32,7 @@ Every git command is printed in the following format:
 <output>
 ```
 
-#### Notes
+#### notes
 
 * each command only fetches the remote repository once
 * automatically prunes deleted remote branches
