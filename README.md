@@ -13,12 +13,30 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>.
 
-* create a new feature branch with [git-hack](https://github.com/Originate/git-town/wiki/git-hack)
-* keep your feature branch in sync with the rest of the world using [git-sync](https://github.com/Originate/git-town/wiki/git-sync)
-* when done with a feature, merge it into the main branch with [git-ship](https://github.com/Originate/git-town/wiki/git-ship)
-* keep a forked repository up to date with its upstream using [git-sync-fork](https://github.com/Originate/git-town/wiki/git-sync-fork)
-* extract existing commits into their own feature branches using [git-extract](https://github.com/Originate/git-town/wiki/git-extract)
-* delete merged branches in the local and remote repositories with [git-prune-branches](https://github.com/Originate/git-town/wiki/git-prune-branches)
+## Commands
+
+* [git-extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
+* [git-hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
+* [git-prune-branches](/documentation/git-prune-branches.md) - delete merged branches
+* [git-ship](/documentationi/git-ship.md) - ship a completed feature branch
+* [git-sync](/documentationi/git-sync.md) - synchronize the current branch
+* [git-sync-fork](/documentationi/git-sync-fork.md) - synchronize a forked repository
+
+#### Output
+
+Each command is simply running a series of git commands.
+Every git command is printed in the following format:
+
+```
+[<branchname>] git <command>
+<output>
+```
+
+#### Notes
+
+* each command only fetches the remote repository once
+* automatically prunes deleted remote branches
+* only pushes to the remote when the local branch is ahead
 
 ## installation
 
