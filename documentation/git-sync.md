@@ -31,5 +31,5 @@ When run on the main branch or a non-feature branch
   Cancel the operation and reset the workspace to a consistent state.
 
 --continue
-  Continue the syncing process after resolving conflicts.
+  Continue the operation after resolving conflicts.
 ```
