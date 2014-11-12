@@ -12,7 +12,7 @@
 * git prune-branches
 
 
-## 0.3
+## 0.3 (2014-10-10)
 * multi-user support for feature branches (https://github.com/Originate/git-town/issues/35)
 * git sync-fork
 * stores configuration in the Git configuration instead of a dedicated file
@@ -24,18 +24,18 @@
 * much faster testing thanks to completely local test Git repos (https://github.com/Originate/git-town/issues/25)
 
 
-## 0.2.2
+## 0.2.2 (2014-06-10)
 * fixes "unary" error messages
 * lots of output and documentation improvements
 
 
-## 0.2.1
+## 0.2.1 (2014-05-31)
 * better terminal output
 * Travis CI improvements
 * better documentation
 
 
-## 0.2
+## 0.2 (2014-05-29)
 * displays the duration of specs
 * only pulls the main branch if it has a remote
 * --abort options to abort failed Git Town operations
@@ -47,7 +47,7 @@
 * better documentation
 
 
-## 0.1
+## 0.1 (2014-05-22)
 * git hack, git sync, git extract, git ship
 * basic test framework
 * Travis CI integration
