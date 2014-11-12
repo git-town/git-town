@@ -20,9 +20,6 @@ and assumes you use a central code repository like
 * extract existing commits into their own feature branches using [git-extract](https://github.com/Originate/git-town/wiki/git-extract)
 * delete merged branches in the local and remote repositories with [git-prune-branches](https://github.com/Originate/git-town/wiki/git-prune-branches)
 
-Git Town automatically prunes no longer existing remote branches
-from your branch list.
-
 ## installation
 
 Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
