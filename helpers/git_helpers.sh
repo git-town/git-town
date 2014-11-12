@@ -83,9 +83,23 @@ function delete_remote_branch {
 
 
 # Exists the application with an error message if the
+# repository does not have a branch with the given name.
+function ensure_has_branch {
+  local branch_name=$1
+  if [ `has_branch $branch_name` = false ]; then
+    echo_error_header
+    echo_error "There is no branch named '$branch_name'."
+    exit_with_error
+  fi
+}
+
+
+# Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
-  if [ $initial_open_changes = true ]; then
+  if [ `has_open_changes` = true ]; then
+    error_has_open_changes
+
     echo_error_header
     echo_error "$*"
     exit_with_error
@@ -99,6 +113,8 @@ function ensure_on_feature_branch {
   local error_message=$1
   local branch_name=`get_current_branch_name`
   if [ `is_feature_branch $branch_name` == false ]; then
+    error_not_on_feature_branch
+
     echo_error_header
     echo_error "The branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error

@@ -5,14 +5,29 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 abort_script_filename=`abort_script_filename_for_command ship`
 
 
+
 # Exit if the current branch is not ahead of main
 function ensure_ahead_of_main_branch {
   local current_branch_name=`get_current_branch_name`
   if [ `is_ahead_of_main $current_branch_name` == false ]; then
+    return_to_initial_branch
+
     echo_error_header
     echo_error "The branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
     exit_with_error
   fi
+}
+
+
+# Called when ensure_no_open_changes is exiting with error
+function error_has_open_changes {
+  return_to_initial_branch
+}
+
+
+# Called when ensure_on_feature_branch is exiting with error
+function error_not_on_feature_branch {
+  return_to_initial_branch
 }
 
 
@@ -54,6 +69,12 @@ function extract_message {
 function perform_ship {
   local message=`extract_message "$*"`
 
+  if [ $target_branch_name != $initial_branch_name ]; then
+    ensure_has_branch $target_branch_name
+    stash_open_changes
+    checkout_branch $target_branch_name
+  fi
+
   ensure_no_open_changes "You should not ship while having open files in Git."
   ensure_on_feature_branch "Only feature branches can be shipped."
 
@@ -62,15 +83,32 @@ function perform_ship {
   merge_branch $main_branch_name
   ensure_ahead_of_main_branch
   checkout_main_branch
-  squash_merge $initial_branch_name "$message"
+  squash_merge $target_branch_name "$message"
   push_branch
-  delete_branch $initial_branch_name "force"
+  delete_branch $target_branch_name "force"
+
+  return_to_initial_branch
+}
+
+
+function return_to_initial_branch {
+  if [ $target_branch_name != $initial_branch_name ]; then
+    checkout_branch $initial_branch_name
+    restore_open_changes
+  fi
 }
 
 
 if [ "$1" == "--abort" ]; then
   run_abort_script
 else
+  if [ "$#" -gt 0 -a "$1" != "-m" ]; then
+    target_branch_name=$1
+    shift
+  else
+    target_branch_name=`get_current_branch_name`
+  fi
+
   perform_ship "$*"
 fi
 
