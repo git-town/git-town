@@ -15,12 +15,6 @@ and assumes you use a central code repository like
 
 ## commands
 
-* [git-extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
-* [git-hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
-* [git-prune-branches](/documentation/git-prune-branches.md) - delete merged branches
-* [git-ship](/documentation/git-ship.md) - ship a completed feature branch
-* [git-sync](/documentation/git-sync.md) - synchronize the current branch
-* [git-sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
 
 #### output
 
@@ -31,6 +25,12 @@ Every git command is printed in the following format:
 [<branchname>] git <command>
 <output>
 ```
+* [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
+* [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
+* [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
+* [git ship](/documentation/git-ship.md) - ship a completed feature branch
+* [git sync](/documentation/git-sync.md) - synchronize the current branch
+* [git sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
 
 #### notes
 
