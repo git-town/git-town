@@ -1,20 +1,21 @@
 .TH "GIT-HACK" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
 
 .SH NAME
-git hack \- cut a new feature branch off the main branch.
+git hack \- cut a new feature branch off the main branch
 
 .SH SYNOPSIS
 \fIgit hack\fR <branchname>
+.br
+\fIgit hack\fR --abort
 
 .SH DESCRIPTION
-Pulls updates for the main branch and creates a new feature branch with the
-given name off it.
-.br
+Sync the main branch and create a new feature branch with the given name.
 .br
 Brings over all uncommitted changes.
 
 .SH OPTIONS
-.IP "--abort" 9
-Aborts a failed
-.B git-hack
-and resets the workspace back into a consistent state.
+.PP
+--abort
+.RS 4
+Cancel the operation and reset the workspace to a consistent state.
+.RE

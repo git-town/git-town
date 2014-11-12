@@ -5,30 +5,40 @@ git ship \- ships a completed feature branch
 
 .SH "SYNOPSIS"
 \fIgit ship\fR [<branchname>] [-m <message>]
+.br
+\fIgit ship\fR --abort
 
 .SH "DESCRIPTION"
-Merges the branch into the main branch,
-leading to linear history on the main branch.
+Squash merges the current branch, or <branchname> if given,
+into the main branch, leading to linear history on the main branch.
+.PP
+* sync the main branch
 .br
-If no <branchname> is supplied, the current branch is shipped
-.sp
-* pull remote updates for the feature branch
+* pull remote updates for <branchname>
 .br
-* merges the main branch into the feature branch
+* merges the main branch into <branchname>
 .br
-* squash-merges the feature branch into the main branch
+* pushes the main branch to the remote repository
 .br
-* pushes the updated main branch to the remote
-.br
-* deletes the shipped feature branch from the local machine
-.br
-* deletes the shipped feature branch from the remote
+* deletes <branchname> from the local and remote repositories
 
 .SH OPTIONS
-.IP "-m <message>" 14
-Provide the message to be used for the squash merge
+.PP
+<branchname>
+.RS 4
+The branch to ship.
+If not provided, uses the current branch.
+.RE
 
-.IP "--abort" 14
-Aborts a failed
-.B git-ship
-and resets the workspace back into a consistent state.
+.PP
+-m <message>
+.RS 4
+The commit message for the squash merge.
+If not provided, will be prompted for it.
+.RE
+
+.PP
+--abort
+.RS 4
+Cancel the operation and reset the workspace to a consistent state.
+.RE

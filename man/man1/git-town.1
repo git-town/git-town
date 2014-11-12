@@ -11,18 +11,38 @@ For more information, please visit
 \fihttps://github.com/Originate/git-town\fR
 
 .SH COMMANDS
-Git Town provides the following commands.
-.br
-.IP "\fBgit hack\fR" 20
-Create a new feature branch
-.IP "\fBgit sync\fR" 20
-Synchronize the current branch with the rest of the world
-.IP "\fBgit ship\fR" 20
-Merge a completed feature branch into the main development branch
-.IP "\fBgit sync-fork\fR" 20
-Pull upstream updates into a forked repository
-.IP "\fBgit prune-branches\fR" 20
-Remove all obsolete feature branches
-.IP "\fBgit extract\fR" 20
-Copy selected commits into their own feature branch
+.PP
+.B git extract
+.RS 4
+copy selected commits from the current branch into their own branch
+.RE
 
+.PP
+.B git hack
+.RS 4
+cut a new feature branch off the main branch.
+.RE
+
+.PP
+.B git prune-branches
+.RS 4
+delete merged branches
+.RE
+
+.PP
+.B git ship
+.RS 4
+ships a completed feature branch
+.RE
+
+.PP
+.B git sync
+.RS 4
+synchronize the current branch
+.RE
+
+.PP
+.B git sync-fork
+.RS 4
+synchronize a forked repository
+.RE
