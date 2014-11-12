@@ -15,16 +15,6 @@ and assumes you use a central code repository like
 
 ## commands
 
-
-#### output
-
-Each command is simply running a series of git commands.
-Every git command is printed in the following format:
-
-```
-[<branchname>] git <command>
-<output>
-```
 * [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
 * [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
