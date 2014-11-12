@@ -13,12 +13,12 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>.
 
-* create a new feature branch with [git-hack](/Originate/git-town/wiki/git-hack)
-* keep your feature branch in sync with the rest of the world using [git-sync](/Originate/git-town/wiki/git-sync)
-* when done with a feature, merge it into the main branch with [git-ship](/Originate/git-town/wiki/git-ship)
-* keep a forked repository up to date with its upstream using [git-sync-fork](/Originate/git-town/wiki/git-sync-fork)
-* extract existing commits into their own feature branches using [git-extract](/Originate/git-town/wiki/git-extract)
-* delete merged branches in the local and remote repositories with [git-prune-branches](/Originate/git-town/wiki/git-prune-branches)
+* create a new feature branch with [git-hack](https://github.com/Originate/git-town/wiki/git-hack)
+* keep your feature branch in sync with the rest of the world using [git-sync](https://github.com/Originate/git-town/wiki/git-sync)
+* when done with a feature, merge it into the main branch with [git-ship](https://github.com/Originate/git-town/wiki/git-ship)
+* keep a forked repository up to date with its upstream using [git-sync-fork](https://github.com/Originate/git-town/wiki/git-sync-fork)
+* extract existing commits into their own feature branches using [git-extract](https://github.com/Originate/git-town/wiki/git-extract)
+* delete merged branches in the local and remote repositories with [git-prune-branches](https://github.com/Originate/git-town/wiki/git-prune-branches)
 
 Git Town automatically prunes no longer existing remote branches
 from your branch list.
