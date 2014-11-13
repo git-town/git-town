@@ -4,7 +4,7 @@ end
 
 
 def get_main_branch_configuration
-  get_output('git config --get git-town.main-branch-name')
+  output_of('git config --get git-town.main-branch-name')
 end
 
 

@@ -1,15 +1,15 @@
-def get_output command
+def output_of command
   run(command).out.strip
 end
 
 
-def get_output_as_array command
-  get_output(command).split("\n").map(&:strip)
+def array_output_of command
+  output_of(command).split("\n").map(&:strip)
 end
 
 
-def get_output_as_integer command
-  get_output(command).to_i
+def integer_output_of command
+  output_of(command).to_i
 end
 
 
