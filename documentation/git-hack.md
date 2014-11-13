@@ -18,8 +18,8 @@ Brings over all uncommitted changes.
 
 ```
 <branchname>
-  The name of the branch to create.
+    The name of the branch to create.
 
 --abort
-  Cancel the operation and reset the workspace to a consistent state.
+    Cancel the operation and reset the workspace to a consistent state.
 ```
