@@ -28,8 +28,8 @@ When run on the main branch or a non-feature branch
 
 ```
 --abort
-  Cancel the operation and reset the workspace to a consistent state.
+    Cancel the operation and reset the workspace to a consistent state.
 
 --continue
-  Continue the operation after resolving conflicts.
+    Continue the operation after resolving conflicts.
 ```

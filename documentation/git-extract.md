@@ -21,11 +21,11 @@ If no commits are provided, prompts the user to select from a list of commits un
 
 ```
 <branchname>
-  The name of the branch to create.
+    The name of the branch to create.
 
 <commit>
-  SHA to be cherry-picked into the new branch.
+    SHA to be cherry-picked into the new branch.
 
 --abort
-  Cancel the operation and reset the workspace to a consistent state.
+    Cancel the operation and reset the workspace to a consistent state.
 ```
