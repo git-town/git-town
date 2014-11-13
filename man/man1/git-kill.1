@@ -5,11 +5,13 @@ git kill \- delete an obsolete feature branch
 
 .SH "SYNOPSIS"
 \fIgit kill [<branchname>]\fR
+\fIgit kill\fR --undo
 
 .SH "DESCRIPTION"
-If a branch name is given, deletes the given branch from the
-local developer machine as well as the remote repository.
-If no branch name is given, removes the current branch.
+Deletes a feature branch from the local and remote repositories.
+
+Removes the branch with the given name, or the current branch if none is
+provided as a parameter.
 
 .br
 Does not delete non-feature branches nor the main branch.
