@@ -4,6 +4,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 undo_script_filename=`undo_script_filename_for_command kill`
 
 function create_undo_script {
+  local original_branch_sha=$1
   local current_sha=`sha_of_branch $initial_branch_name`
   add_to_undo_script "create_and_checkout_branch $initial_branch_name $current_sha"
   if [ $initial_open_changes == true ]; then
@@ -15,19 +16,32 @@ function create_undo_script {
 }
 
 
+# Returns the name of the branch to kill.
+# This is either the branch given as a parameter,
+# or the current branch.
+function determine_branch_to_delete {
+  if [ -z "$1" ]; then
+    echo $initial_branch_name
+  else
+    echo $1
+  fi
+}
+
+
 function perform_kill {
-  ensure_on_feature_branch "You can only kill feature branches."
-  original_branch_sha=`sha_of_branch $initial_branch_name`
+  local branch_to_kill=`determine_branch_to_delete $*`
+  ensure_is_feature_branch $branch_to_kill "You can only kill feature branches."
+  ensure_has_branch $branch_to_kill
+  local original_branch_sha=`sha_of_branch $initial_branch_name`
 
   # Remove open changes
   if [ $initial_open_changes == true ]; then
     commit_open_changes
   fi
 
-  create_undo_script
-
+  create_undo_script $original_branch_sha
   checkout_main_branch
-  delete_branch $initial_branch_name force
+  delete_branch $branch_to_kill force
 }
 
 
