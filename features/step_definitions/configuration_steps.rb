@@ -23,5 +23,5 @@ end
 
 
 Then /^the main branch name is now configured as "(.*?)"$/ do |main_branch_name|
-  expect(run('git config --get git-town.main-branch-name').out).to eql main_branch_name
+  expect(get_main_branch_configuration).to eql main_branch_name
 end
