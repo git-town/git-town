@@ -20,7 +20,10 @@ and checks out the main branch.
 
 ```
 <branchname>
-  The branch to ship.
-  If not provided, uses the current branch.
+    The branch to ship.
+    If not provided, uses the current branch.
+
+--undo
+    Restore the last deleted Git branch.
 ```
 
