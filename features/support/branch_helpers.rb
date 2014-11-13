@@ -24,8 +24,8 @@ end
 # * main branch
 # * feature branches ordered alphabetically
 def existing_local_branches
-  actual_branches = array_output_of("git branch | tr -d '*'")
-  actual_branches.delete('master')
+  actual_branches = array_output_of "git branch | tr -d '*'"
+  actual_branches.delete 'master'
   actual_main_branch = actual_branches.delete 'main'
   [actual_main_branch].concat(actual_branches)
 end
@@ -35,11 +35,9 @@ end
 #
 # Does not return the "master" branch.
 def existing_remote_branches
-  remote_branches = run('git branch -a | grep remotes').out
-                                                       .split("\n")
-                                                       .map(&:strip)
-  remote_branches.delete('remotes/origin/master')
-  remote_branches.delete('remotes/origin/HEAD -> origin/master')
+  remote_branches = array_output_of 'git branch -a | grep remotes'
+  remote_branches.delete 'remotes/origin/master'
+  remote_branches.delete 'remotes/origin/HEAD -> origin/master'
   remote_branches
 end
 
