@@ -103,7 +103,7 @@ function ensure_has_branch {
   local branch_name=$1
   if [ `has_branch $branch_name` = false ]; then
     echo_error_header
-    echo_error "There is no branch named '$branch_name'."
+    echo_error "There is no branch named '$branch_name'"
     exit_with_error
   fi
 }
@@ -117,6 +117,18 @@ function ensure_no_open_changes {
 
     echo_error_header
     echo_error "$*"
+    exit_with_error
+  fi
+}
+
+
+# Stops the script if the given branch name is not a feature branch.
+function ensure_is_feature_branch {
+  local branch_name=$1
+  local error_message=$2
+  if [ `is_feature_branch $branch_name` == false ]; then
+    echo_error_header
+    echo_error $error_message
     exit_with_error
   fi
 }
