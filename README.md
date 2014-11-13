@@ -127,7 +127,7 @@ for help on an individual command.
 ## development
 
 * run all tests: `cucumber` for normal Cucumber output or `cuke` for <a href="https://github.com/martinciu/fuubar-cucumber" target="_blank">Fuubar</a> output
-  (you need to add `./bin` to your path for this to work
+  (you need to add `./bin` to your path for this to work)
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 * preview a man page: `man man/man1/git-hack.1`
 
