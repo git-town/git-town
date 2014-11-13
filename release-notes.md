@@ -1,6 +1,6 @@
 # Git Town Release Notes
 
-## 0.4
+## 0.4 (20140-11-13)
 * git kill: completely removes a feature branch
 * pushes tags to the remote when running "git sync" on the main branch
 * added support for non-feature branches (cannot be shipped and do not merge main when syncing)
