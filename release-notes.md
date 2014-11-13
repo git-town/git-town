@@ -11,6 +11,7 @@
 * skips unnecessary pushes
 * man pages
 * git prune-branches
+* optional Fuubar output for cucumber
 
 
 ## 0.3 (2014-10-10)
