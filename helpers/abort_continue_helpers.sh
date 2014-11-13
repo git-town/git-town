@@ -20,6 +20,11 @@ function add_to_script {
 }
 
 
+function add_to_undo_script {
+  add_to_script "$1" $undo_script_filename
+}
+
+
 function create_merge_conflict_abort_script {
   add_to_abort_script "initial_open_changes=$initial_open_changes"
   add_to_abort_script "abort_merge"
@@ -66,6 +71,9 @@ function remove_abort_continue_scripts {
   if [ `has_script $continue_script_filename` == true ]; then
     rm $continue_script_filename;
   fi
+  if [ `has_script $undo_script_filename` == true ]; then
+    rm $undo_script_filename;
+  fi
 }
 
 
@@ -85,5 +93,15 @@ function run_continue_script {
     remove_abort_continue_scripts
   else
     echo_red "Cannot find continue definition file"
+  fi
+}
+
+
+function run_undo_script {
+  if [ `has_script $undo_script_filename` == true ]; then
+    source $undo_script_filename
+    remove_abort_continue_scripts
+  else
+    echo_red "Cannot find undo definition file"
   fi
 }

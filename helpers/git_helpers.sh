@@ -46,12 +46,27 @@ function cherry_pick {
   if [ $? != 0 ]; then error_cherry_pick $SHAs; fi
 }
 
+
+# Commits all open changes into the current branch
+function commit_open_changes {
+  run_command "git add -A"
+  run_command "git commit -m 'WIP on `get_current_branch_name`'"
+}
+
+
+# Cuts a new branch off the given parent branch, and checks it out.
+function create_and_checkout_branch {
+  local new_branch_name=$1
+  local parent_branch_name=$2
+  run_command "git checkout -b $new_branch_name $parent_branch_name"
+}
+
+
 # Creates a new feature branch with the given name.
 #
 # The feature branch is cut off the main development branch.
-function create_feature_branch {
-  local new_branch_name=$1
-  run_command "git checkout -b $new_branch_name $main_branch_name"
+function create_and_checkout_feature_branch {
+  create_and_checkout_branch $1 $main_branch_name
 }
 
 
@@ -294,6 +309,13 @@ function remote_url {
 }
 
 
+# Resets the current branch to the commit described by the given SHA
+function reset_to_sha {
+  local sha=$1
+  run_command 'git reset $sha'
+}
+
+
 # Unstashes changes that were stashed in the beginning of a script.
 #
 # Only does this if there were open changes when the script was started.
@@ -301,6 +323,13 @@ function restore_open_changes {
   if [ $initial_open_changes = true ]; then
     run_command "git stash pop"
   fi
+}
+
+
+# Returns the SHA that the given branch points to
+function sha_of_branch {
+  local branch_name=$1
+  git rev-parse $branch_name
 }
 
 

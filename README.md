@@ -13,20 +13,24 @@ and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
 <a href="https://bitbucket.org" target="_blank">BitBucket</a>.
 
+
 ## commands
 
 * [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
+* [git kill](/documentation/git-kill.md) - remove an obsolete feature branch
 * [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
 * [git ship](/documentation/git-ship.md) - ship a completed feature branch
 * [git sync](/documentation/git-sync.md) - synchronize the current branch
 * [git sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
+
 
 #### notes
 
 * each command only fetches the remote repository once
 * automatically prunes deleted remote branches
 * only pushes to the remote when the local branch is ahead
+
 
 ## installation
 

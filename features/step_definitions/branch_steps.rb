@@ -2,6 +2,7 @@ Given /^I am on a feature branch$/ do
   create_branch "feature"
 end
 
+
 Given /^I am on a local feature branch$/ do
   run "git checkout -b feature main"
 end
@@ -17,6 +18,15 @@ Given /^I am on the "(.+?)" branch$/ do |branch_name|
     run "git checkout #{branch_name}"
   else
     create_branch branch_name
+  end
+end
+
+
+Given /^I am on the local "(.+?)" branch$/ do |branch_name|
+  if existing_local_branches.include?(branch_name)
+    run "git checkout #{branch_name}"
+  else
+    run "git checkout -b #{branch_name} main"
   end
 end
 
@@ -53,6 +63,7 @@ Given /^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)
     end
   end
 end
+
 
 
 

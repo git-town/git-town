@@ -37,3 +37,9 @@ function ensure_tool_installed {
     exit_with_error
   fi
 }
+
+
+# Returns the path to the undo script for the given command
+function undo_script_filename_for_command {
+  echo "/tmp/git_$1_undo$temp_filename_suffix"
+}
