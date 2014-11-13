@@ -1,5 +1,5 @@
 # Returns the number of unpopped stashes
 def stash_size
-  run("git stash list | wc -l").out.to_i
+  integer_output_of "git stash list | wc -l"
 end
 
