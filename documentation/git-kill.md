@@ -6,7 +6,7 @@ git-kill - kill an obsolete feature branch
 
 ```
 git kill
-git kill -undo
+git kill --undo
 ```
 
 #### DESCRIPTION
