@@ -86,3 +86,20 @@ Feature: Git Kill
       | local      | main, unfortunate-feature, good-feature |
       | remote     | main, good-feature                      |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: Deleting the branch given as a parameter
+    Given I have a feature branch named "delete-by-name-feature"
+    And I am on the main branch
+    When I run `git kill delete-by-name-feature`
+    Then I end up on the "main" branch
+    And the branch "delete-by-name-feature" is deleted everywhere
+    And the branch "good-feature" still exists
+
+
+  Scenario: Handles non-existing branch to delete given
+    Given I am on the main branch
+    When I run `git kill non-existing-feature` while allowing errors
+    Then I get the error "There is no branch named 'non-existing-feature'"
+    And I end up on the "main" branch
+    And the branch "good-feature" still exists
