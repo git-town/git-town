@@ -7,7 +7,7 @@ end
 
 # Returns the name of the branch that is currently checked out
 def current_branch_name
-  output_of("git rev-parse --abbrev-ref HEAD")
+  output_of "git rev-parse --abbrev-ref HEAD"
 end
 
 
