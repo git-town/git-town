@@ -1,19 +1,24 @@
 .TH "GIT-KILL" "1" "10/21/2014" "Git Town 0\&.3\&.0" "Git Town Manual"
 
 .SH "NAME"
-git kill \- kills an obsolete feature branch
+git kill \- delete an obsolete feature branch
 
 .SH "SYNOPSIS"
-\fIgit kill\fR
+\fIgit kill [<branchname>]\fR
 
 .SH "DESCRIPTION"
-Deletes the branch from the local developer machine
-as well as the remote repository.
+If a branch name is given, deletes the given branch from the
+local developer machine as well as the remote repository.
+If no branch name is given, removes the current branch.
 
 .br
-Does not delete non-feature branches or the main branch.
+Does not delete non-feature branches nor the main branch.
 
 
 .SH OPTIONS
-.IP "--undo" 8
+.IP "<branchname>" 4
+The name of the branch to remove.
+If not provided, removes the current branch.
+
+.IP "--undo" 4
 Restores the last deleted Git branch.
