@@ -103,7 +103,7 @@ function ensure_has_branch {
   local branch_name=$1
   if [ `has_branch $branch_name` = false ]; then
     echo_error_header
-    echo_error "There is no branch named '$branch_name'"
+    echo_error "There is no branch named '$branch_name'."
     exit_with_error
   fi
 }
