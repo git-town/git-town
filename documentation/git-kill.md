@@ -17,5 +17,5 @@ Deletes the branch from the local and remote repositories.
 
 ```
 --undo
-  Undo the previous operation
+    Undo the previous operation
 ```
