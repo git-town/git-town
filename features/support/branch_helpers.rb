@@ -44,7 +44,7 @@ def existing_remote_branches
 end
 
 def number_of_branches_out_of_sync
-  integer_output_of("git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l")
+  integer_output_of "git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l"
 end
 
 
