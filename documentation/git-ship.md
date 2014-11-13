@@ -25,13 +25,13 @@ Squash merges the current branch, or `<branchname>` if given, into the main bran
 
 ```
 <branchname>
-  The branch to ship.
-  If not provided, uses the current branch.
+    The branch to ship.
+    If not provided, uses the current branch.
 
 -m <message>
-  The commit message for the squash merge.
-  If not provided, will be prompted for it.
+    The commit message for the squash merge.
+    If not provided, will be prompted for it.
 
 --abort
-  Cancel the operation and reset the workspace to a consistent state.
+    Cancel the operation and reset the workspace to a consistent state.
 ```

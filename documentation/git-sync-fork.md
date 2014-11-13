@@ -18,5 +18,5 @@ If your repository is on GitHub, the git remote `upstream` will be automatically
 
 ```
 --abort
-  Cancel the operation and reset the workspace to a consistent state.
+    Cancel the operation and reset the workspace to a consistent state.
 ```
