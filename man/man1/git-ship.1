@@ -23,22 +23,13 @@ into the main branch, leading to linear history on the main branch.
 * deletes <branchname> from the local and remote repositories
 
 .SH OPTIONS
-.PP
-<branchname>
-.RS 4
+.IP "<branchname>" 4
 The branch to ship.
 If not provided, uses the current branch.
-.RE
 
-.PP
--m <message>
-.RS 4
+.IP "-m <message>" 4
 The commit message for the squash merge.
 If not provided, will be prompted for it.
-.RE
 
-.PP
---abort
-.RS 4
+.IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
-.RE
