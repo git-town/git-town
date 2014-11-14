@@ -13,7 +13,7 @@ Feature: Git Extract
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
       | feature | local    | refactor commit    | refactor_file    |
-    When I run `git extract refactor` with the last commit sha as an argument
+    When I run `git extract refactor` with the last commit sha
     Then I end up on the "refactor" branch
     And all branches are now synchronized
     And I have the following commits
@@ -38,7 +38,7 @@ Feature: Git Extract
       | feature | local    | feature commit     | feature_file     |
       | feature | local    | refactor1 commit   | refactor1_file   |
       | feature | local    | refactor2 commit   | refactor2_file   |
-    When I run `git extract refactor` with the last two commit shas as arguments
+    When I run `git extract refactor` with the last two commit shas
     Then I end up on the "refactor" branch
     And all branches are now synchronized
     And I have the following commits
@@ -63,7 +63,7 @@ Feature: Git Extract
       | branch  | location | message            | file name        | file content    |
       | main    | local    | conflicting commit | conflicting_file | main content    |
       | feature | local    | conflicting commit | conflicting_file | feature content |
-    When I run `git extract refactor` with the last commit sha as an argument while allowing errors
+    When I run `git extract refactor` with the last commit sha while allowing errors
     Then I end up on the "refactor" branch
     And my repo has a cherry-pick in progress
     And there is an abort script for "git extract"
@@ -85,7 +85,7 @@ Feature: Git Extract
       | main    | remote   | conflicting remote commit | conflicting_file | remote content |
       | main    | local    | conflicting local commit  | conflicting_file | local content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git extract refactor` with the last commit sha as an argument while allowing errors
+    When I run `git extract refactor` with the last commit sha while allowing errors
     Then my repo has a rebase in progress
     And there is an abort script for "git extract"
     And I don't have an uncommitted file with name: "uncommitted"
