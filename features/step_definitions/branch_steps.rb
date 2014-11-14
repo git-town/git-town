@@ -105,12 +105,7 @@ end
 
 
 Then /^there are no more feature branches$/ do
-  expected_branches = [ 'master',
-                        "* main",
-                        "remotes/origin/main",
-                        'remotes/origin/master' ].sort
-  actual_branches = run("git branch -a").out.split("\n").map(&:strip).sort
-  expect(actual_branches).to eql expected_branches
+  expect(existing_branches).to match_array ['main', 'origin/main']
 end
 
 
@@ -121,12 +116,12 @@ Then /^the branch "(.*?)" is deleted everywhere$/ do |branch_name|
     expect(existing_local_branches).to_not include(branch_name)
   end
 
-  expect(existing_remote_branches).to_not include("remotes/origin/#{branch_name}")
+  expect(existing_remote_branches).to_not include("origin/#{branch_name}")
 end
 
 
 Then /^the branch "(.+?)" still exists$/ do |branch_name|
-  expect(existing_remote_branches).to include("remotes/origin/#{branch_name}")
+  expect(existing_remote_branches).to include("origin/#{branch_name}")
 end
 
 

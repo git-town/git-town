@@ -12,13 +12,6 @@ Given /^the following commits? exists? in Charlie's repository$/ do |commits_tab
 end
 
 
-Given /^the following commits? exists? in the upstream repository$/ do |commits_table|
-  at_path local_repository_path do
-    create_commits commits_table.hashes
-  end
-end
-
-
 
 
 Then /^my branch and its remote still have (\d+) and (\d+) different commits$/ do |local_count, remote_count|
