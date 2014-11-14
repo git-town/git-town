@@ -50,11 +50,6 @@ Before do
 end
 
 
-Before '@github-query' do
-  github_check_rate_limit!
-end
-
-
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql 0
 end
