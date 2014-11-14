@@ -1,5 +1,9 @@
 # Git Town Release Notes
 
+## 0.5
+* `git kill` can take the branch to delete as a parameter
+
+
 ## 0.4 (2014-11-13)
 * git kill: completely removes a feature branch
 * pushes tags to the remote when running "git sync" on the main branch
