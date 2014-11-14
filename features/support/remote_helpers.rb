@@ -1,3 +1,3 @@
 def remote_url(name)
-  run("git remote -v | grep '#{name}.*fetch' | awk '{print $2}'").out
+  output_of "git remote -v | grep '#{name}.*fetch' | awk '{print $2}'"
 end

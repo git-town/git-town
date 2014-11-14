@@ -1,7 +1,9 @@
+require 'active_support/all'
+require 'fuubar-cucumber'
 require 'kappamaki'
 require 'open4'
 require 'rspec'
-require 'active_support/all'
+
 
 # The files to ignore when checking files
 IGNORED_FILES = %w[ tags ]
