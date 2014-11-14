@@ -2,11 +2,11 @@ Feature: Git Kill: Killing the current feature branch with open changes
 
   Background:
     Given I have a feature branch named "good-feature"
-    And I am on the "unfortunate-feature" branch
+    And I am on the "unfortunate" branch
     And the following commits exist in my repository
-      | branch              | location         | message            | file name        |
-      | good-feature        | local and remote | good commit        | good_file        |
-      | unfortunate-feature | local and remote | unfortunate commit | unfortunate_file |
+      | branch       | location         | message            | file name        |
+      | good-feature | local and remote | good commit        | good_file        |
+      | unfortunate  | local and remote | unfortunate commit | unfortunate_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
 
@@ -25,14 +25,14 @@ Feature: Git Kill: Killing the current feature branch with open changes
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "unfortunate-feature" branch
+    Then I end up on the "unfortunate" branch
     And the existing branches are
       | repository | branches                                |
-      | local      | main, unfortunate-feature, good-feature |
-      | remote     | main, unfortunate-feature, good-feature |
+      | local      | main, unfortunate, good-feature |
+      | remote     | main, unfortunate, good-feature |
     And I have the following commits
-      | branch              | location         | message            | files            |
-      | good-feature        | local and remote | good commit        | good_file        |
-      | unfortunate-feature | local and remote | unfortunate commit | unfortunate_file |
+      | branch       | location         | message            | files            |
+      | good-feature | local and remote | good commit        | good_file        |
+      | unfortunate  | local and remote | unfortunate commit | unfortunate_file |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
