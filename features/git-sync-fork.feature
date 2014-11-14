@@ -3,16 +3,15 @@ Feature: Git Sync-Fork
   Scenario: on the main branch with an upstream commit
     Given I am on the main branch
     And my repo has an upstream repo
-    And the following commits exist in the upstream repository
-      | location | message         | file name     |
-      | upstream | upstream commit | upstream_file |
+    And the following commits exist in my repository
+      | branch | location | message         | file name     |
+      | main   | upstream | upstream commit | upstream_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "main" branch
     And I see the following commits
-      | branch                  | location         | message         | files         |
-      | main                    | local and remote | upstream commit | upstream_file |
-      | remotes/upstream/main   | remote           | upstream commit | upstream_file |
+      | branch | location                    | message         | files         |
+      | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
       | branch | files         |
       | main   | upstream_file |
