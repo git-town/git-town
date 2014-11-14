@@ -2,11 +2,13 @@
 
 git-prune-branches - delete merged branches
 
+
 #### SYNOPSIS
 
 ```
 git prune-branches
 ```
+
 
 #### DESCRIPTION
 
