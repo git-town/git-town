@@ -1,4 +1,4 @@
-Feature: Git Kill: killing the given feature branch without open changes
+Feature: Git Kill: killing the current feature by name, without open changes
 
   Background:
     Given I have a feature branch named "good-feature"
@@ -7,12 +7,12 @@ Feature: Git Kill: killing the given feature branch without open changes
       | branch                 | location         | message            | file name        |
       | good-feature           | local and remote | good commit        | good_file        |
       | delete-by-name-feature | local and remote | unfortunate commit | unfortunate_file |
-    And I am on the "good-feature" branch
+    And I am on the "delete-by-name-feature" branch
     When I run `git kill delete-by-name-feature`
 
 
   Scenario: result
-    Then I am still on the "good-feature" branch
+    Then I end up on the "main" branch
     And the existing branches are
       | repository | branches           |
       | local      | main, good-feature |

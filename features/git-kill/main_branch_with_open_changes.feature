@@ -1,16 +1,18 @@
-Feature: Git Kill: does not delete the given non-existing branch
+Feature: Git Kill: The main branch is not killed
 
   Background:
-    Given I am on the "good-feature" branch
+    Given I have a feature branch named "good-feature"
+    And I am on the "main" branch
     And the following commits exist in my repository
-      | branch                 | location         | message            | file name        |
-      | good-feature           | local and remote | good commit        | good_file        |
+      | branch              | location         | message            | file name        |
+      | good-feature        | local and remote | good commit        | good_file        |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git kill non-existing-feature` while allowing errors
+    When I run `git kill` while allowing errors
+
 
   Scenario: result
-    Then I get the error "There is no branch named 'non-existing-feature'"
-    And I end up on the "good-feature" branch
+    Then I get the error "You can only kill feature branches"
+    And I am still on the "main" branch
     And the existing branches are
       | repository | branches           |
       | local      | main, good-feature |

@@ -1,4 +1,4 @@
-Feature: Git Kill: killing the given feature branch without open changes
+Feature: Git Kill: killing the given feature branch with open changes
 
   Background:
     Given I have a feature branch named "good-feature"
@@ -8,6 +8,7 @@ Feature: Git Kill: killing the given feature branch without open changes
       | good-feature           | local and remote | good commit        | good_file        |
       | delete-by-name-feature | local and remote | unfortunate commit | unfortunate_file |
     And I am on the "good-feature" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill delete-by-name-feature`
 
 
@@ -20,6 +21,7 @@ Feature: Git Kill: killing the given feature branch without open changes
     And I have the following commits
       | branch       | location         | message     | files     |
       | good-feature | local and remote | good commit | good_file |
+    And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: undoing the kill
@@ -33,4 +35,5 @@ Feature: Git Kill: killing the given feature branch without open changes
       | branch                 | location         | message            | files            |
       | good-feature           | local and remote | good commit        | good_file        |
       | delete-by-name-feature | local and remote | unfortunate commit | unfortunate_file |
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
