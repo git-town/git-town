@@ -120,6 +120,12 @@ def local_commits
 end
 
 
+# Returns an array of length count with the shas of the most recent commits
+def recent_commit_shas count
+  array_output_of("git rev-list HEAD -n #{count}")
+end
+
+
 # Verifies that the commits in the repository at the given path
 # are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
