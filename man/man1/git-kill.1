@@ -10,17 +10,10 @@ git kill \- delete an obsolete feature branch
 
 
 .SH "DESCRIPTION"
-Deletes a feature branch from the local and remote repositories.
-
-Removes the branch with the given name, or the current branch if none is
-provided as a parameter.
+Deletes the current/given branch from the local and remote repositories.
 
 .br
 Does not delete non-feature branches nor the main branch.
-
-
-.SH "DESCRIPTION"
-Deletes the branch from the local and remote repositories.
 
 
 .SH OPTIONS
@@ -30,4 +23,4 @@ The name of the branch to remove.
 If not provided, removes the current branch.
 
 .IP "--undo" 4
-Restores the last deleted Git branch.
+Restore the last deleted Git branch.
