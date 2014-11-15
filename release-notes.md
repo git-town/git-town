@@ -16,7 +16,7 @@
 * **git sync:** pushes tags to the remote when running on the main branch
   ([#68](https://github.com/Originate/git-town/issues/68),
    [71b60798](https://github.com/Originate/git-town/commit/71b607988c00e6dfc8f2598e9b964cc2ed4cfc39))
-* non-feature branches (cannot be shipped and do not merge main when syncing)
+* **non-feature branches:** cannot be shipped and do not merge main when syncing
   ([#45](https://github.com/Originate/git-town/issues/45),
    [31dce1df](https://github.com/Originate/git-town/commit/31dce1dfaf11e1e17f17e141a26cb38360ab731a))
 * **git ship:**
@@ -35,14 +35,14 @@
    [408e699e](https://github.com/Originate/git-town/commit/408e699e5bdd3af524b2ea64669b81fea3bbe60b))
 * skips unnecessary pushes
   ([0da8968a](https://github.com/Originate/git-town/commit/0da8968aef29f9ecb7326e0fafb5976f51789dca))
-* man pages
+* **man pages**
   ([609e1140](https://github.com/Originate/git-town/commit/609e11400818604328885df86c02ee4630410e12),
    [164f06bc](https://github.com/Originate/git-town/commit/164f06bc8bf00d9e99ce0416f408cf62959dc833),
    [27b2573c](https://github.com/Originate/git-town/commit/27b2573ca5ffa9ae7930f8b5999bbfdd72bd16d9))
-* git prune-branches
+* **git prune-branches**
   ([#48](https://github.com/Originate/git-town/issues/48),
    [7a922ecd](https://github.com/Originate/git-town/commit/7a922ecd9e03d20ed5a0c159022e601cebc80313))
-* optional Fuubar output for cucumber
+* **Cucumber:** optional Fuubar output
   ([7c540284](https://github.com/Originate/git-town/commit/7c540284cf46bd49a7623566c1343285813524c6))
 
 
