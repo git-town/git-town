@@ -3,20 +3,10 @@ def commits_in_repo
   current_branch = run('git rev-parse --abbrev-ref HEAD').out
 
   result = []
-  existing_local_branches.map do |local_branch_name|
-    run "git checkout #{local_branch_name}"
+  existing_branches.map do |branch_name|
+    run "git checkout #{branch_name}"
     commits = local_commits.each do |commit|
-      commit[:location] = 'local'
-      commit[:branch] = local_branch_name
-    end
-    result.concat commits
-  end
-
-  existing_remote_branches.map do |remote_branch_name|
-    run "git checkout #{remote_branch_name}"
-    commits = local_commits.each do |commit|
-      commit[:location] = 'remote'
-      commit[:branch] = remote_branch_name
+      commit[:branch] = branch_name
     end
     result.concat commits
   end
@@ -91,12 +81,6 @@ def create_commits commits_array
 end
 
 
-# Returns whether the given branch name is simple ('feature')
-# or not ('remotes/origin/feature')
-def is_local_branch_name? branch_name
-  /^[^\/]+$/.match branch_name
-end
-
 # Returns the commits in the currently checked out branch
 def local_commits
   result = run("git log --oneline").out
@@ -120,6 +104,12 @@ def local_commits
 end
 
 
+# Returns an array of length count with the shas of the most recent commits
+def recent_commit_shas count
+  array_output_of("git rev-list HEAD -n #{count}")
+end
+
+
 # Verifies that the commits in the repository at the given path
 # are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
@@ -132,13 +122,9 @@ def verify_commits commits_table:, repository_path:
     # Create individual expected commits for each location provided
     Kappamaki.from_sentence(commit_data[:location]).map do |location|
       commit_data_clone = commit_data.clone
-      commit_data_clone[:location] = location
-
-      # Convert a local branch name ('feature')
-      # into its corresponding tracking branch name ('remotes/origin/feature')
-      if location == 'remote' && is_local_branch_name?(commit_data_clone[:branch])
-        commit_data_clone[:branch] = "remotes/origin/#{commit_data_clone[:branch]}"
-      end
+      commit_data_clone.delete(:location)
+      commit_data_clone[:branch] = "origin/#{commit_data_clone[:branch]}" if location == 'remote'
+      commit_data_clone[:branch] = "upstream/#{commit_data_clone[:branch]}" if location == 'upstream'
       commit_data_clone
     end
   end.flatten

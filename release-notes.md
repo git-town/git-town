@@ -1,7 +1,8 @@
 # Git Town Release Notes
 
 ## 0.5
-* `git kill` can take the branch to delete as a parameter
+* **git kill:** branchname parameter
+* **git sync-fork:** no longer automatically sets upstream configuration
 
 
 ## 0.4 (2014-11-13)

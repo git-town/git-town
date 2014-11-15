@@ -12,9 +12,10 @@ end
 
 
 # Returns the names of the existing feature branches
-def existing_feature_branches
-  existing_local_branches - %w[main]
+def existing_branches
+  existing_local_branches + existing_remote_branches
 end
+
 
 # Returns the names of all existing local branches.
 #
@@ -35,11 +36,10 @@ end
 #
 # Does not return the "master" branch.
 def existing_remote_branches
-  remote_branches = array_output_of 'git branch -a | grep remotes'
-  remote_branches.delete 'remotes/origin/master'
-  remote_branches.delete 'remotes/origin/HEAD -> origin/master'
-  remote_branches
+  remote_branches = array_output_of 'git branch -r'
+  remote_branches.reject { |b| b.include?('HEAD') || b.include?('master') }
 end
+
 
 def number_of_branches_out_of_sync
   integer_output_of "git branch -vv | grep -o '\[.*\]' | tr -d '[]' | awk '{ print $2 }' | grep . | wc -l"
@@ -63,7 +63,7 @@ def verify_branches branches_array
     when 'local'
       expect(existing_local_branches).to match_array(branch_names)
     when 'remote'
-      branch_names = branch_names.map { |n| "remotes/origin/#{n}" }
+      branch_names = branch_names.map { |n| "origin/#{n}" }
       expect(existing_remote_branches).to match_array(branch_names)
     when 'coworker'
       at_path coworker_repository_path do
