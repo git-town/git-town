@@ -4,11 +4,12 @@ Feature: Git Kill: killing the given feature branch with open changes
     Given I have a feature branch named "good-feature"
     And I have a feature branch named "delete-by-name"
     And the following commits exist in my repository
-      | branch         | location         | message            | file name        |
-      | good-feature   | local and remote | good commit        | good_file        |
-      | delete-by-name | local and remote | unfortunate commit | unfortunate_file |
+      | branch         | location         | message                              | file name        | file content   |
+      | main           | local and remote | conflicting with uncommitted changes | conflicting_file | master content |
+      | good-feature   | local and remote | good commit                          | good_file        |                |
+      | delete-by-name | local and remote | unfortunate commit                   | unfortunate_file |                |
     And I am on the "good-feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     When I run `git kill delete-by-name`
 
 
@@ -21,7 +22,7 @@ Feature: Git Kill: killing the given feature branch with open changes
     And I have the following commits
       | branch       | location         | message     | files     |
       | good-feature | local and remote | good commit | good_file |
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
 
 
   Scenario: undoing the kill
@@ -35,5 +36,5 @@ Feature: Git Kill: killing the given feature branch with open changes
       | branch         | location         | message            | files            |
       | good-feature   | local and remote | good commit        | good_file        |
       | delete-by-name | local and remote | unfortunate commit | unfortunate_file |
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
 

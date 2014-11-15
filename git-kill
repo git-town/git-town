@@ -45,7 +45,11 @@ function perform_kill {
 
   # Remove open changes
   if [ $initial_open_changes == true ]; then
-    commit_open_changes
+    if [ $branch_to_kill == $initial_branch_name ]; then
+      commit_open_changes
+    else
+      stash_open_changes
+    fi
   fi
 
   create_undo_script $original_branch_sha $branch_to_kill
@@ -55,6 +59,10 @@ function perform_kill {
     checkout_branch $initial_branch_name
   fi
   delete_branch $branch_to_kill force
+
+  if [ $branch_to_kill != $initial_branch_name ]; then
+    restore_open_changes
+  fi
 }
 
 
