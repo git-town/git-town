@@ -4,7 +4,7 @@
 ## 0.5
 
 * **git sync-fork:** no longer automatically sets upstream configuration
-  ([8650301a](https://github.com/Originate/git-town/commit/8650301a3ea40a989562a991960fa0d41b26f7f7)
+  ([8650301a](https://github.com/Originate/git-town/commit/8650301a3ea40a989562a991960fa0d41b26f7f7))
 
 
 
