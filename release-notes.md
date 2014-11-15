@@ -3,7 +3,6 @@
 
 ## 0.5
 
-### Features
 * **git sync-fork:** no longer automatically sets upstream configuration
   ([8650301a](https://github.com/Originate/git-town/commit/8650301a3ea40a989562a991960fa0d41b26f7f7)
 
@@ -11,7 +10,6 @@
 
 ## 0.4 (2014-11-13)
 
-### Features
 * **git kill:** completely removes a feature branch
   ([edd7d818](https://github.com/Originate/git-town/commit/edd7d8180eb76717fd72e77d2c75edf8e3b6b6ca),
   [#87](https://github.com/Originate/git-town/issues/87))
