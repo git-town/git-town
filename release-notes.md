@@ -2,21 +2,50 @@
 
 
 ## 0.5
-* git sync-fork no longer automatically sets upstream configuration
+
+### Features
+* **git sync-fork:** no longer automatically sets upstream configuration
+  ([8650301a](https://github.com/Originate/git-town/commit/8650301a3ea40a989562a991960fa0d41b26f7f7)
+
 
 
 ## 0.4 (2014-11-13)
-* git kill: completely removes a feature branch
-* pushes tags to the remote when running "git sync" on the main branch
-* added support for non-feature branches (cannot be shipped and do not merge main when syncing)
-* git ship merges main into the feature branch before squash merging
-* git ship errors if the feature branch is not ahead of main
-* git ship takes an optional branch name
+
+### Features
+* **git kill:** completely removes a feature branch
+  ([edd7d818](https://github.com/Originate/git-town/commit/edd7d8180eb76717fd72e77d2c75edf8e3b6b6ca),
+  [#87](https://github.com/Originate/git-town/issues/87))
+* **git sync:** pushes tags to the remote when running on the main branch
+  ([71b60798](https://github.com/Originate/git-town/commit/71b607988c00e6dfc8f2598e9b964cc2ed4cfc39),
+   [#68](https://github.com/Originate/git-town/issues/68))
+* non-feature branches (cannot be shipped and do not merge main when syncing)
+  ([31dce1df](https://github.com/Originate/git-town/commit/31dce1dfaf11e1e17f17e141a26cb38360ab731a),
+   [#45](https://github.com/Originate/git-town/issues/45))
+* **git ship:**
+  * merges main into the feature branch before squash merging
+    ([82d4d3e7](https://github.com/Originate/git-town/commit/82d4d3e745732cb397850a4c047826ba485e2bdb),
+     [#61](https://github.com/Originate/git-town/issues/61))
+  * errors if the feature branch is not ahead of main
+    ([#86](https://github.com/Originate/git-town/issues/86),
+     [a0ace5bb](https://github.com/Originate/git-town/commit/a0ace5bb5e992c193df8abe4b0aca984c302c323))
+  * git ship takes an optional branch name
+    ([cbf020fc](https://github.com/Originate/git-town/commit/cbf020fc3dd6d0ce49f8814a92f103e243f9cd2b),
+     [#95](https://github.com/Originate/git-town/issues/95))
 * updated output to show each git command and its output, updated error messages
+  ([8d8973aa](https://github.com/Originate/git-town/commit/8d8973aaa58394a123ceed2811271606f4e1aaa9),
+   [60e1d829](https://github.com/Originate/git-town/commit/60e1d8299ebbb0e75bdae057e864d17e1f9a3ce7),
+   [408e699e](https://github.com/Originate/git-town/commit/408e699e5bdd3af524b2ea64669b81fea3bbe60b))
 * skips unnecessary pushes
+  ([0da8968a](https://github.com/Originate/git-town/commit/0da8968aef29f9ecb7326e0fafb5976f51789dca))
 * man pages
+  ([609e1140](https://github.com/Originate/git-town/commit/609e11400818604328885df86c02ee4630410e12),
+   [164f06bc](https://github.com/Originate/git-town/commit/164f06bc8bf00d9e99ce0416f408cf62959dc833),
+   [27b2573c](https://github.com/Originate/git-town/commit/27b2573ca5ffa9ae7930f8b5999bbfdd72bd16d9))
 * git prune-branches
+  ([7a922ecd](https://github.com/Originate/git-town/commit/7a922ecd9e03d20ed5a0c159022e601cebc80313),
+   [#48](https://github.com/Originate/git-town/issues/48))
 * optional Fuubar output for cucumber
+  ([7c540284](https://github.com/Originate/git-town/commit/7c540284cf46bd49a7623566c1343285813524c6))
 
 
 ## 0.3 (2014-10-10)
