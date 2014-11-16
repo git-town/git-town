@@ -1,6 +1,6 @@
 #### NAME
 
-git-sync - updates the current branch
+git-sync - updates the current branch with all relevant changes
 
 
 #### SYNOPSIS
