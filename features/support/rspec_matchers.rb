@@ -15,8 +15,8 @@ RSpec::Matchers.define :match_commits do |expected|
 
   failure_message_for_should do |actual|
     result = ""
-    expected.sort! {|x, y| commit_sorted(x) <=> commit_sorted(y) }
-    actual.sort! {|x, y| commit_sorted(x) <=> commit_sorted(y) }
+    expected.sort! {|x, y| commit_to_s(x) <=> commit_to_s(y) }
+    actual.sort! {|x, y| commit_to_s(x) <=> commit_to_s(y) }
 
     result << "\nEXPECTED VALUES\n"
     expected.each do |commit|
@@ -54,10 +54,6 @@ RSpec::Matchers.define :match_commits do |expected|
   end
 
   def commit_to_s commit
-    "#{commit[:branch]} branch (#{commit[:location]}): '#{commit[:message]}' with #{commit[:files]}\n"
-  end
-
-  def commit_sorted commit
-    "#{commit[:message]} #{commit[:branch]} #{commit[:location]} #{commit[:files]}"
+    "#{commit[:branch]} branch: '#{commit[:message]}' with #{commit[:files]}\n"
   end
 end
