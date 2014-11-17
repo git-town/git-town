@@ -266,14 +266,14 @@ function pull_branch {
   if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
-    if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
+    if [ $? != 0 ]; then error_pull_branch "$current_branch_name"; fi
   fi
 }
 
 
 # Pulls updates of the current branch from the upstream repo
 function pull_upstream_branch {
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   fetch_upstream
   run_command "git rebase upstream/$current_branch_name"
   if [ $? != 0 ]; then error_pull_upstream_branch; fi
@@ -282,9 +282,9 @@ function pull_upstream_branch {
 
 # Pushes the branch with the given name to origin
 function push_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `has_tracking_branch $current_branch_name` == true ]; then
-    if [ `needs_pushing` == true ]; then
+  local current_branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
+    if [ "$(needs_pushing)" == true ]; then
       run_command "git push"
     fi
   else
@@ -301,7 +301,7 @@ function push_tags {
 
 # Returns the names of remote branches that have been merged into main
 function remote_merged_branches {
-  git branch -r --merged $main_branch_name | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
+  git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
 
 
@@ -314,7 +314,7 @@ function remote_url {
 # Resets the current branch to the commit described by the given SHA
 function reset_to_sha {
   local sha=$1
-  run_command 'git reset $sha'
+  run_command "git reset $sha"
 }
 
 
@@ -322,7 +322,7 @@ function reset_to_sha {
 #
 # Only does this if there were open changes when the script was started.
 function restore_open_changes {
-  if [ $initial_open_changes = true ]; then
+  if [ "$initial_open_changes" = true ]; then
     run_command "git stash pop"
   fi
 }
