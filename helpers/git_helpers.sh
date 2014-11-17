@@ -263,7 +263,7 @@ function pull_branch {
   local strategy=$1
   local current_branch_name=$(get_current_branch_name)
   if [ -z "$strategy" ]; then strategy='merge'; fi
-  if [ $(has_tracking_branch "$current_branch_name") == true ]; then
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
     if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
