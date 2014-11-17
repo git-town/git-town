@@ -223,7 +223,7 @@ function is_ahead_of_main {
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
-  if [ "$branch_name" == "$main_branch_name" -o $(echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l) == 1 ]; then
+  if [ "$branch_name" == "$main_branch_name" -o $(echo "$non_feature_branch_names" | tr ',' '\n' | grep "$branch_name" | wc -l) == 1 ]; then
     echo false
   else
     echo true
@@ -233,14 +233,14 @@ function is_feature_branch {
 
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
-  git branch --merged $main_branch_name | tr -d ' ' | sed 's/\*//g'
+  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
 }
 
 
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
 }
@@ -250,7 +250,7 @@ function merge_branch {
 # that haven't been pushed to the remote yet.
 # Assumes the current branch has a tracking branch
 function needs_pushing {
-  if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
+  if [ $(git status | grep "Your branch is ahead of" | wc -l) != 0 ]; then
     echo true
   else
     echo false
@@ -261,9 +261,9 @@ function needs_pushing {
 # Pulls updates of the feature branch from the remote repo
 function pull_branch {
   local strategy=$1
-  local current_branch_name=`get_current_branch_name`
-  if [ -z $strategy ]; then strategy='merge'; fi
-  if [ `has_tracking_branch $current_branch_name` == true ]; then
+  local current_branch_name=$(get_current_branch_name)
+  if [ -z "$strategy" ]; then strategy='merge'; fi
+  if [ $(has_tracking_branch "$current_branch_name") == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
     if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
