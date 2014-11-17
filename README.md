@@ -130,10 +130,12 @@ for help on an individual command.
   (you need to add "./bin" to your path for this to work)
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 * preview a man page: `man man/man1/git-hack.1`
+* install the bash linter: `brew install shellcheck`
+* run all linters: `bin/lint`
 
 Found a bug or want to contribute a feature?
 <a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
-or - even better - get down, go to town, and fire a feature-tested
+or - even better - get down, go to town, and fire a feature-tested and linter-passing
 <a href="https://help.github.com/articles/using-pull-requests" target="_blank">pull request</a>
 our way!
 
