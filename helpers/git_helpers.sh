@@ -109,6 +109,21 @@ function ensure_has_branch {
 }
 
 
+# Exists the application with an error message if the supplied branch is
+# not a feature branch
+function ensure_is_feature_branch {
+  local branch_name=$1
+  local error_message=$2
+  if [ `is_feature_branch $branch_name` == false ]; then
+    error_is_not_feature_branch
+
+    echo_error_header
+    echo_error "The branch '$branch_name' is not a feature branch. $error_message"
+    exit_with_error
+  fi
+}
+
+
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
@@ -122,18 +137,12 @@ function ensure_no_open_changes {
 }
 
 
-# Exists the application with an error message if the working directory
-# is on the main development branch.
+# Exists the application with an error message if the current branch is
+# not a feature branch
 function ensure_on_feature_branch {
-  local error_message=$1
+  local error_message=$*
   local branch_name=`get_current_branch_name`
-  if [ `is_feature_branch $branch_name` == false ]; then
-    error_not_on_feature_branch
-
-    echo_error_header
-    echo_error "The branch '$branch_name' is not a feature branch. $error_message"
-    exit_with_error
-  fi
+  ensure_is_feature_branch $branch_name "$error_message"
 }
 
 
@@ -355,11 +364,19 @@ function stash_open_changes {
   fi
 }
 
-# Stashes uncommitted changes if they exist.
+
+# Push and pull the current branch
+function sync_branch {
+  local strategy=$1
+  pull_branch $strategy
+  push_branch
+}
+
+
+# Sync the main branch, returning to the original branch
 function sync_main_branch {
   local current_branch_name=`get_current_branch_name`
   checkout_main_branch
-  pull_branch 'rebase'
-  push_branch
+  sync_branch 'rebase'
   checkout_branch $current_branch_name
 }

@@ -25,8 +25,8 @@ function error_has_open_changes {
 }
 
 
-# Called when ensure_on_feature_branch is exiting with error
-function error_not_on_feature_branch {
+# Called when ensure_is_feature_branch is exiting with error
+function error_is_not_feature_branch {
   return_to_initial_branch
 }
 
@@ -72,13 +72,14 @@ function perform_ship {
   if [ $target_branch_name != $initial_branch_name ]; then
     ensure_has_branch $target_branch_name
     stash_open_changes
-    checkout_branch $target_branch_name
   fi
 
   ensure_no_open_changes "You should not ship while having open files in Git."
-  ensure_on_feature_branch "Only feature branches can be shipped."
+  ensure_is_feature_branch $target_branch_name "Only feature branches can be shipped."
 
-  sync_main_branch
+  checkout_main_branch
+  sync_branch 'rebase'
+  checkout_branch $target_branch_name
   pull_branch
   merge_branch $main_branch_name
   ensure_ahead_of_main_branch
