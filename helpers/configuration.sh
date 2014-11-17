@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Helper methods for dealing with configuration.
 
 

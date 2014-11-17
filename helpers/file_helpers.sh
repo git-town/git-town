@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Helper methods for dealing with files and temp files.
 
 

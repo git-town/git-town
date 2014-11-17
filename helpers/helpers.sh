@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source $current_dir/abort_continue_helpers.sh
