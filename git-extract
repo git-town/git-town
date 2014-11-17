@@ -2,7 +2,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script_filename=`abort_script_filename_for_command extract`
+export abort_script_filename=$(abort_script_filename_for_command extract)
 
 
 # Called when the cherry_pick fails
@@ -31,13 +31,13 @@ function perform_extract {
   sync_main_branch
 
   if [ -z "$user_input" ]; then
-    git log --oneline $main_branch_name..$initial_branch_name                 | # Get a list of all commits in the feature branch.
+    git log --oneline "$main_branch_name".."$initial_branch_name"                 | # Get a list of all commits in the feature branch.
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
       tail -r                                                                 | # Reverse the order of lines.
-      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> $user_input_filename   # Ask the user for commits
+      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$user_input_filename"   # Ask the user for commits
     clear
 
-    user_input=`cat $user_input_filename`
+    user_input=$(cat "$user_input_filename")
     delete_temp_file
   fi
 
@@ -49,15 +49,15 @@ function perform_extract {
     exit_with_error
   fi
 
-  create_and_checkout_feature_branch $target_branch_name
-  cherry_pick $user_input
+  create_and_checkout_feature_branch "$target_branch_name"
+  cherry_pick "$user_input"
   push_branch
   restore_open_changes
 }
 
 
 # Exit with a help screen if parameters are missing.
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
   echo_usage_header
   echo_usage "git extract [name of the new branch to create]"
   exit_with_error
@@ -75,7 +75,7 @@ else
   if [ -z "$user_input" ]; then
     ensure_tool_installed 'dialog'
   fi
-  perform_extract
+  perform_extract "$@"
 fi
 
 exit_with_success
