@@ -47,15 +47,27 @@
 
 
 ## 0.3 (2014-10-10)
-* multi-user support for feature branches (https://github.com/Originate/git-town/issues/35)
-* git sync-fork
+* multi-user support for feature branches
+  ([#35](https://github.com/Originate/git-town/issues/35),
+   [ca0882](https://github.com/Originate/git-town/commit/ca08820c68457bddf6b8fff6c3ef3d430b905d9b))
+* **git sync-fork**
+  ([#22](https://github.com/Originate/git-town/issues/22),
+   [1f1f9f](https://github.com/Originate/git-town/commit/1f1f9f98ffa7288d6a5982ec0c9e571695590fe1))
 * stores configuration in the Git configuration instead of a dedicated file
+  ([8b8695](https://github.com/Originate/git-town/commit/8b86953d7c7c719f28dbc7af6e86d02adaf2053e))
 * only makes one fetch from the central repo per session
+  ([#15](https://github.com/Originate/git-town/issues/15),
+   [43400a](https://github.com/Originate/git-town/commit/43400a5b968a47eb55484f73e34026f66b1e939a))
 * automatically prunes remote branches when fetching updates
+  ([86100f](https://github.com/Originate/git-town/commit/86100f08866f19a0f4e80f470fe8dcc6996ddc2c))
 * always cleans up abort and continue scripts after using one of them
+  ([3be4c0](https://github.com/Originate/git-town/commit/3be4c06635a943f378287963ba30e4306fcd9802))
 * simpler readme, dedicated RDD document
-* <a href="http://cukes.info" target="_blank">Cucumber</a> feature specs (you need Ruby 2.x)
-* much faster testing thanks to completely local test Git repos (https://github.com/Originate/git-town/issues/25)
+* **<a href="http://cukes.info" target="_blank">Cucumber</a>** feature specs (you need Ruby 2.x)
+  ([c9d175](https://github.com/Originate/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
+* much faster testing thanks to completely local test Git repos
+  ([#25](https://github.com/Originate/git-town/issues/25),
+   [c9d175](https://github.com/Originate/git-town/commit/c9d175fe2f28fbda3f662454f54ed80306ce2f46))
 
 
 ## 0.2.2 (2014-06-10)
