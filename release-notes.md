@@ -3,6 +3,8 @@
 
 ## 0.5
 * git sync-fork no longer automatically sets upstream configuration
+* **linter for shell scripts**
+  ([#149](https://github.com/Originate/git-town/issues/149))
 
 
 ## 0.4 (2014-11-13)
