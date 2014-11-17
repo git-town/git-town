@@ -1,6 +1,6 @@
 #### NAME
 
-git-sync-fork - pulls upstream updates into a forked repository
+git-sync-fork - pull upstream updates into a forked repository
 
 
 #### SYNOPSIS

@@ -1,6 +1,6 @@
 #### NAME
 
-git-kill - kill an obsolete feature branch
+git-kill - remove an obsolete feature branch
 
 
 #### SYNOPSIS

@@ -1,6 +1,6 @@
 #### NAME
 
-git-ship - delivers a completed feature branch
+git-ship - deliver a completed feature branch
 
 
 #### SYNOPSIS
