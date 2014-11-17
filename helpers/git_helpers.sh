@@ -331,7 +331,7 @@ function restore_open_changes {
 # Returns the SHA that the given branch points to
 function sha_of_branch {
   local branch_name=$1
-  git rev-parse $branch_name
+  git rev-parse "$branch_name"
 }
 
 
@@ -339,7 +339,7 @@ function sha_of_branch {
 function squash_merge {
   local branch_name=$1
   local commit_message=$2
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   run_command "git merge --squash $branch_name"
   if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
@@ -352,16 +352,16 @@ function squash_merge {
 
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
-  if [ $initial_open_changes = true ]; then
+  if [ "$initial_open_changes" = true ]; then
     run_command "git stash -u"
   fi
 }
 
 # Stashes uncommitted changes if they exist.
 function sync_main_branch {
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   checkout_main_branch
   pull_branch 'rebase'
   push_branch
-  checkout_branch $current_branch_name
+  checkout_branch "$current_branch_name"
 }
