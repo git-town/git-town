@@ -22,13 +22,13 @@
 * **git ship:**
   * merges main into the feature branch before squash merging
     ([#61](https://github.com/Originate/git-town/issues/61),
-     [82d4d3e7](https://github.com/Originate/git-town/commit/82d4d3e745732cb397850a4c047826ba485e2bdb))
+     [82d4d3](https://github.com/Originate/git-town/commit/82d4d3e745732cb397850a4c047826ba485e2bdb))
   * errors if the feature branch is not ahead of main
     ([#86](https://github.com/Originate/git-town/issues/86),
-     [a0ace5bb](https://github.com/Originate/git-town/commit/a0ace5bb5e992c193df8abe4b0aca984c302c323))
+     [a0ace5](https://github.com/Originate/git-town/commit/a0ace5bb5e992c193df8abe4b0aca984c302c323))
   * git ship takes an optional branch name
     ([#95](https://github.com/Originate/git-town/issues/95),
-     [cbf020fc](https://github.com/Originate/git-town/commit/cbf020fc3dd6d0ce49f8814a92f103e243f9cd2b))
+     [cbf020](https://github.com/Originate/git-town/commit/cbf020fc3dd6d0ce49f8814a92f103e243f9cd2b))
 * updated output to show each git command and its output, updated error messages
   ([8d8973](https://github.com/Originate/git-town/commit/8d8973aaa58394a123ceed2811271606f4e1aaa9),
    [60e1d8](https://github.com/Originate/git-town/commit/60e1d8299ebbb0e75bdae057e864d17e1f9a3ce7),
