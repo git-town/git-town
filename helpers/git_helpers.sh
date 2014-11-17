@@ -43,7 +43,7 @@ function checkout_main_branch {
 
 # Cherry picks the SHAs into the current branch
 function cherry_pick {
-  local SHAs=$*
+  local SHAs="$*"
   run_command "git cherry-pick $SHAs"
   if [ $? != 0 ]; then error_cherry_pick "$SHAs"; fi
 }
@@ -180,7 +180,7 @@ function get_current_branch_name {
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
-  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name$")" = 0 ]; then
+  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
     echo false
   else
     echo true
