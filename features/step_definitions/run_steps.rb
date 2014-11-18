@@ -23,10 +23,9 @@ end
 
 
 Given /^I run `git ship` with an empty commit message$/ do
-  filename = '../git_town_input'
-  IO.write filename, 'dGZZ'
-  run "git ship < #{filename}", allow_failures: true
-  File.delete filename
+  with_file '../git_town_input', 'dGZZ' do |filename|
+    run "git ship < #{filename}", allow_failures: true
+  end
 end
 
 
