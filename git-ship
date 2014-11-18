@@ -18,6 +18,19 @@ function ensure_ahead_of_main_branch {
   fi
 }
 
+# Called when squash_merge fails due to empty commit message
+function error_empty_commit {
+  discard_open_changes
+  checkout_branch $initial_branch_name
+  if [ $target_branch_name != $initial_branch_name ]; then
+    restore_open_changes
+  fi
+
+  echo_error_header
+  echo_error "Aborting ship due to empty commit message"
+  exit_with_error
+}
+
 
 # Called when ensure_no_open_changes is exiting with error
 function error_has_open_changes {
