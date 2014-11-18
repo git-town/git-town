@@ -22,6 +22,13 @@ When /^I run `(.+?)` and enter "(.*?)"$/ do |command, user_input|
 end
 
 
+Given /^I run `git ship` with an empty commit message$/ do
+  with_file '../git_town_input', 'dGZZ' do |filename|
+    run "git ship < #{filename}", allow_failures: true
+  end
+end
+
+
 
 
 Then /^I get the error "(.+?)"$/ do |error_message|
