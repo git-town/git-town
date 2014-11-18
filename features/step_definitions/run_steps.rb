@@ -22,10 +22,8 @@ When /^I run `(.+?)` and enter "(.*?)"$/ do |command, user_input|
 end
 
 
-Given /^I run `git ship` with an empty commit message$/ do
-  with_file '../git_town_input', 'dGZZ' do |filename|
-    run "git ship < #{filename}", allow_failures: true
-  end
+When /^I run `(.+?)` and then clear and exit the editor( while allowing errors)?$/ do |command, allow_failures|
+  @result = run command, input: "dGZZ", allow_failures: allow_failures
 end
 
 
