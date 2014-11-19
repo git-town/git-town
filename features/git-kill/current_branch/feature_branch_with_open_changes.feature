@@ -20,7 +20,7 @@ Feature: Git Kill: Killing the current feature branch with open changes
     And I have the following commits
       | branch       | location         | message     | files     |
       | good-feature | local and remote | good commit | good_file |
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have any uncommitted files
 
 
   Scenario: undoing the kill
