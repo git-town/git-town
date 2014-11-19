@@ -1,8 +1,7 @@
 Feature: Git Kill: killing the given feature branch with open changes
 
   Background:
-    Given I have a feature branch named "good-feature"
-    And I have a feature branch named "delete-by-name"
+    Given I have feature branches named "good-feature" and "delete-by-name"
     And the following commits exist in my repository
       | branch         | location         | message                              | file name        | file content   |
       | main           | local and remote | conflicting with uncommitted changes | conflicting_file | master content |

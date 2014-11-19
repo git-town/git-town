@@ -1,8 +1,7 @@
 Feature: Git Kill: killing the current feature by name, without open changes
 
   Background:
-    Given I have a feature branch named "good-feature"
-    And I have a feature branch named "delete-by-name"
+    Given I have feature branches named "good-feature" and "delete-by-name"
     And the following commits exist in my repository
       | branch         | location         | message            | file name        |
       | good-feature   | local and remote | good commit        | good_file        |
