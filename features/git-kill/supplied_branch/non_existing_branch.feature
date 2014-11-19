@@ -3,8 +3,8 @@ Feature: Git Kill: does not delete the given non-existing branch
   Background:
     Given I am on the "good-feature" branch
     And the following commits exist in my repository
-      | branch                 | location         | message            | file name        |
-      | good-feature           | local and remote | good commit        | good_file        |
+      | branch       | location         | message     | file name |
+      | good-feature | local and remote | good commit | good_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill non-existing-feature` while allowing errors
 

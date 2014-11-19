@@ -25,7 +25,7 @@ Feature: Git Kill: Killing the current feature branch without open changes
     When I run `git kill --undo`
     Then I end up on the "unfortunate" branch
     And the existing branches are
-      | repository | branches                                |
+      | repository | branches                        |
       | local      | main, unfortunate, good-feature |
       | remote     | main, unfortunate, good-feature |
     And I have the following commits

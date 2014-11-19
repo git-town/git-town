@@ -28,7 +28,7 @@ Feature: Git Kill: killing the given feature branch with open changes
     When I run `git kill --undo`
     Then I end up on the "delete-by-name" branch
     And the existing branches are
-      | repository | branches                                   |
+      | repository | branches                           |
       | local      | main, delete-by-name, good-feature |
       | remote     | main, delete-by-name, good-feature |
     And I have the following commits
