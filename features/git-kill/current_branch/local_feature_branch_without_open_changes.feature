@@ -32,5 +32,3 @@ Feature: Git Kill: Killing the current local feature branch
       | branch       | location         | message            | files            |
       | good-feature | local and remote | good commit        | good_file        |
       | unfortunate  | local            | unfortunate commit | unfortunate_file |
-    And the branch "good-feature" still exists
-

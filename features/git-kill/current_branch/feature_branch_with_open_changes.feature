@@ -35,4 +35,3 @@ Feature: Git Kill: Killing the current feature branch with open changes
       | good-feature | local and remote | good commit        | good_file        |
       | unfortunate  | local and remote | unfortunate commit | unfortunate_file |
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-
