@@ -1,12 +1,12 @@
 Feature: Git Kill: Killing the current feature branch without open changes
 
   Background:
-    Given I have a feature branch named "good-feature"
-    And I am on the "unfortunate" branch
+    Given I have feature branches named "good-feature" and "unfortunate"
     And the following commits exist in my repository
       | branch       | location         | message            | file name        |
       | good-feature | local and remote | good commit        | good_file        |
       | unfortunate  | local and remote | unfortunate commit | unfortunate_file |
+    And I am on the "unfortunate" branch
     When I run `git kill`
 
 
