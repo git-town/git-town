@@ -107,7 +107,7 @@ function print_command {
 
 # Run a command, prints command and output
 function run_command {
-  local cmd="$@"
+  local cmd="$*"
   print_command "$cmd"
   eval "$cmd" 2>&1
 }
