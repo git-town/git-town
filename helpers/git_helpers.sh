@@ -190,7 +190,7 @@ function has_branch {
 
 # Determines whether there are open changes in Git.
 function has_open_changes {
-  if [ $(git status --porcelain | wc -l) == 0 ]; then
+  if [ "$(git status --porcelain | wc -l | tr -d ' ')" == 0 ]; then
     echo false
   else
     echo true
@@ -212,7 +212,7 @@ function has_tracking_branch {
 # Determines whether the given branch is ahead of main
 function is_ahead_of_main {
   local branch_name=$1
-  if [ $(git log --oneline $main_branch_name..$branch_name | wc -l) == 0 ]; then
+  if [ "$(git log --oneline $main_branch_name..$branch_name | wc -l | tr -d ' ')" == 0 ]; then
     echo false
   else
     echo true
@@ -250,7 +250,7 @@ function merge_branch {
 # that haven't been pushed to the remote yet.
 # Assumes the current branch has a tracking branch
 function needs_pushing {
-  if [ $(git status | grep "Your branch is ahead of" | wc -l) != 0 ]; then
+  if [ "$(git status | grep -c "Your branch is ahead of")" != 0 ]; then
     echo true
   else
     echo false
