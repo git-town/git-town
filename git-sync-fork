@@ -23,7 +23,7 @@ function error_with_upstream_required {
 
 # Sync the current branch with the upstream repository
 function sync_fork {
-  if [ $(git remote -v | grep 'upstream' | wc -l) == 0 ]; then
+  if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
     error_with_upstream_required
   fi
 
