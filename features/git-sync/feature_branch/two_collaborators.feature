@@ -1,4 +1,4 @@
-Feature: collaborative feature branch syncing
+Feature: Git Sync: collaborative feature branch syncing
 
 
   Scenario: merging work

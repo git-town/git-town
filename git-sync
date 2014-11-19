@@ -13,8 +13,8 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script_filename=`abort_script_filename_for_command sync`
-continue_script_filename=`continue_script_filename_for_command sync`
+abort_script_filename=$(abort_script_filename_for_command sync)
+continue_script_filename=$(continue_script_filename_for_command sync)
 
 
 # Called when pull_branch fails on the feature branch
@@ -37,7 +37,7 @@ function error_pull_main_branch {
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
-  if [ `is_feature_branch $initial_branch_name` == true ]; then
+  if [ $(is_feature_branch "$initial_branch_name") == true ]; then
     add_to_continue_script "push_branch"
     add_to_continue_script "checkout_branch $initial_branch_name"
     add_to_continue_script "pull_branch"
@@ -83,10 +83,10 @@ function error_merge_branch {
 # Perform the sync operation
 function perform_sync {
   stash_open_changes
-  if [ `is_feature_branch $initial_branch_name` == true ]; then
+  if [ $(is_feature_branch "$initial_branch_name") == true ]; then
     sync_main_branch
     pull_branch
-    merge_branch $main_branch_name
+    merge_branch "$main_branch_name"
     push_branch
   else
     pull_branch 'rebase'

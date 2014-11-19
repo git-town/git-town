@@ -1,4 +1,4 @@
-Feature: syncing a non-feature branch pushes tags to the remote
+Feature: Git Sync: syncing a non-feature branch pushes tags to the remote
 
 
   Scenario: Tags
