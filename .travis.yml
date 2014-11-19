@@ -6,6 +6,9 @@ rvm:
 cache: bundler
 
 script:
+    - sudo apt-get update -qq
+    - sudo apt-get install -y shellcheck
+    - ./bin/lint
     - PATH=`pwd`:$PATH
     - git config --global user.email 'git.town.ci@gmail.com'
     - git config --global user.name 'Git Town CI'
