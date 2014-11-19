@@ -6,6 +6,7 @@ rvm:
 cache: bundler
 
 script:
+    - sudo add-apt-repository ppa:danlipsitt/ppa -y
     - sudo apt-get update -qq
     - sudo apt-get install -y shellcheck
     - ./bin/lint
