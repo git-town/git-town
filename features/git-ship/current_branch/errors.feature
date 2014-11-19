@@ -1,4 +1,4 @@
-Feature: errors while shipping the current branch
+Feature: Git Ship: errors while shipping the current branch
 
 
   Scenario: does not ship a feature branch not ahead of main

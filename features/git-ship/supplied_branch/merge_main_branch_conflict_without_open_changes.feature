@@ -1,4 +1,4 @@
-Feature: handling merge conflicts between feature and main branch when shipping the supplied feature branch without open changes
+Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the supplied feature branch without open changes
 
 
   Background:
