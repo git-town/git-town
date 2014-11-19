@@ -1,6 +1,5 @@
 Feature: handling merge conflicts between feature and main branch when shipping the current feature branch
 
-
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
