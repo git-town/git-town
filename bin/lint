@@ -1,3 +1,4 @@
 #!/bin/bash
 
 find . -name '*.sh' -exec shellcheck {} ';'
+find . -name 'git-*' -depth 1 -exec shellcheck {} ';'
