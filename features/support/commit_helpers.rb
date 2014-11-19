@@ -86,7 +86,7 @@ def local_commits
   result = run("git log --oneline").out
                                    .split("\n")
                                    .map{|c| { hash: c.slice(0,6),
-                                              message: c.slice(8,500) }}
+                                              message: c.slice(8,500).strip }}
 
   # Remove the root commit
   result.select!{|commit| commit[:message] != 'Initial commit'}

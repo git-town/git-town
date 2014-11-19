@@ -62,7 +62,7 @@ function extract_message {
     esac
   done
 
-  echo $message
+  echo "$message"
 }
 
 
