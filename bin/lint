@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
-find . -name '*.sh' -exec shellcheck {} ';'
-find . -name 'git-*' -depth 1 -exec shellcheck {} ';'
+find . -name '*.sh' -print0 | xargs -0 shellcheck
+find . -name 'git-*' -depth 1 -print0 | xargs -0 shellcheck
