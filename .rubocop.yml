@@ -7,7 +7,7 @@ Style/MethodDefParentheses:
 
 
 Metrics/LineLength:
-  Max: 80
+  Max: 120
 
 
 Metrics/ParameterLists:
