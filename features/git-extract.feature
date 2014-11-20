@@ -15,7 +15,6 @@ Feature: Git Extract
       | feature | local    | refactor commit    | refactor_file    |
     When I run `git extract refactor` with the last commit sha
     Then I end up on the "refactor" branch
-    And all branches are now synchronized
     And I have the following commits
       | branch   | location         | message            | files            |
       | main     | local and remote | remote main commit | remote_main_file |
@@ -40,7 +39,6 @@ Feature: Git Extract
       | feature | local    | refactor2 commit   | refactor2_file   |
     When I run `git extract refactor` with the last two commit shas
     Then I end up on the "refactor" branch
-    And all branches are now synchronized
     And I have the following commits
       | branch   | location         | message            | files            |
       | main     | local and remote | remote main commit | remote_main_file |

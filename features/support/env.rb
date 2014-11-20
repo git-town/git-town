@@ -6,7 +6,7 @@ require 'rspec'
 
 
 # The files to ignore when checking files
-IGNORED_FILES = %w[ tags ]
+IGNORED_FILES = %w(tags)
 
 Before do
   Dir.chdir repositiory_base

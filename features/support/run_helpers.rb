@@ -13,34 +13,47 @@ def integer_output_of command
 end
 
 
-def is_git_town_command? command
+def git_town_command? command
   %w(extract hack prune-branches ship sync-fork sync kill).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end
 
 
-def run command, allow_failures: false, debug: false, input: nil
-  result = {}
-  status = Open4::popen4(command) do |pid, stdin, stdout, stderr|
-    stdin.puts input if input
-    stdin.close
-    result[:out] = stdout.read
-    result[:err] = stderr.read
-  end
-  result[:status] = status.exitstatus
-  if result[:status] != 0 and !allow_failures
-    raise "\nCommand '#{command}' not successful! \n\n************\nOUT:\n#{result[:out]} \n\n************\nERR:\n#{result[:err]}\n\n"
-  end
-  if should_print_command_output? command, debug
-    puts "\nRUNNING: #{command}"
-    puts "#{result[:out]}\n"
-    puts "#{result[:err]}\n"
-  end
-  @last_run_result = OpenStruct.new result
+def print_result result
+  puts "\nRUNNING: #{result.command}"
+  puts "#{result.out}\n"
+  puts "#{result.err}\n"
 end
 
 
+def run command, allow_failures: false, debug: false, input: nil
+  result = run_shell_command command, input
+  should_error = result.error && !allow_failures
+
+  print_result(result) if should_error || should_print_command_output?(command, debug)
+  fail 'Command not successful!' if should_error
+
+  @last_run_result = result
+end
+
+
+def run_shell_command command, input
+  result = OpenStruct.new(command: command)
+
+  status = Open4.popen4(command) do |_pid, stdin, stdout, stderr|
+    stdin.puts input if input
+    stdin.close
+    result.out = stdout.read
+    result.err = stderr.read
+  end
+
+  result.error = status.exitstatus != 0
+  result
+end
+
+
+
 def should_print_command_output? command, debug
-  debug or ENV["DEBUG"] or (ENV['DEBUG_COMMANDS'] and is_git_town_command? command)
+  debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
 end
