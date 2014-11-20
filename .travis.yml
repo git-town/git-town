@@ -6,12 +6,4 @@ rvm:
 cache: bundler
 
 script:
-  - sudo apt-get install cabal-install
-  - cabal update
-  - cabal install shellcheck
-  - export PATH=`pwd`:~/.cabal/bin/:$PATH
-  - ./bin/lint
-  - git config --global user.email 'git.town.ci@gmail.com'
-  - git config --global user.name 'Git Town CI'
-  - git config --global push.default simple
-  - bundle exec cucumber
+  - bin/travis
