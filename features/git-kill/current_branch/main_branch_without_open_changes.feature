@@ -3,9 +3,6 @@ Feature: Git Kill: The main branch is not killed
   Background:
     Given I have a feature branch named "good-feature"
     And I am on the "main" branch
-    And the following commits exist in my repository
-      | branch       | location         | message     | file name |
-      | good-feature | local and remote | good commit | good_file |
     When I run `git kill` while allowing errors
 
 
@@ -16,7 +13,3 @@ Feature: Git Kill: The main branch is not killed
       | repository | branches           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
-    And I have the following commits
-      | branch       | location         | message     | files     |
-      | good-feature | local and remote | good commit | good_file |
-
