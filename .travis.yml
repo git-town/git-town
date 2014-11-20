@@ -6,7 +6,7 @@ rvm:
 cache: bundler
 
 script:
-  - apt-get install cabal-install
+  - sudo apt-get install cabal-install
   - cabal update
   - cabal install shellcheck
   - export PATH=`pwd`:~/.cabal/bin/:$PATH
