@@ -1,4 +1,4 @@
-#!/bin/bash -e -x
+#!/bin/bash
 
 # ShellCheck
 sudo apt-get install cabal-install

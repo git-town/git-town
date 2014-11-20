@@ -6,4 +6,4 @@ rvm:
 cache: bundler
 
 script:
-  - bin/travis
+  - bin/travis -e -x
