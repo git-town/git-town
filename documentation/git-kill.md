@@ -13,7 +13,8 @@ git kill --undo
 
 #### DESCRIPTION
 
-Deletes the current/given branch from the local and remote repositories.
+Deletes the current branch, or `<branchname>` if given,
+from the local and remote repositories.
 
 Does not delete non-feature branches nor the main branch.
 
@@ -26,5 +27,5 @@ Does not delete non-feature branches nor the main branch.
     If not provided, uses the current branch.
 
 --undo
-    Restore the last deleted Git branch.
+    undo the previous `git kill` operation
 ```

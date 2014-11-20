@@ -141,7 +141,6 @@ function ensure_on_feature_branch {
   local branch_name=`get_current_branch_name`
   if [ `is_feature_branch $branch_name` == false ]; then
     error_not_on_feature_branch
-
     echo_error_header
     echo_error "The branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
