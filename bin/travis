@@ -9,7 +9,7 @@ export PATH=~/.cabal/bin/:$PATH
 
 # Cucumber
 export PATH=`pwd`:$PATH
-git config --global user.email 'git.town.ci@gmail.com'
-git config --global user.name 'Git Town CI'
-git config --global push.default simple
+# git config --global user.email 'git.town.ci@gmail.com'
+# git config --global user.name 'Git Town CI'
+# git config --global push.default simple
 bundle exec cucumber
