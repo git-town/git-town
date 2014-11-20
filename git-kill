@@ -39,7 +39,6 @@ function perform_kill {
 
   ensure_has_branch $branch_to_kill
   ensure_is_feature_branch $branch_to_kill "You can only kill feature branches."
-  checkout_branch $branch_to_kill
 
   # The SHA of where the branch to kill needs to point to when restored
   local original_branch_sha=`sha_of_branch $branch_to_kill`
