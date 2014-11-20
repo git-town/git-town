@@ -1,0 +1,15 @@
+#!/bin/bash -e -x
+
+# ShellCheck
+sudo apt-get install cabal-install
+cabal update
+cabal install shellcheck
+export PATH=~/.cabal/bin/:$PATH
+./bin/lint
+
+# Cucumber
+export PATH=`pwd`:$PATH
+git config --global user.email 'git.town.ci@gmail.com'
+git config --global user.name 'Git Town CI'
+git config --global push.default simple
+bundle exec cucumber
