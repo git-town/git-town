@@ -89,8 +89,7 @@ function perform_sync {
     merge_branch "$main_branch_name"
     push_branch
   else
-    pull_branch 'rebase'
-    push_branch
+    sync_branch 'rebase'
     push_tags
   fi
   restore_open_changes

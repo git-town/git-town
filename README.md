@@ -20,9 +20,9 @@ and assumes you use a central code repository like
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
 * [git kill](/documentation/git-kill.md) - remove an obsolete feature branch
 * [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
-* [git ship](/documentation/git-ship.md) - ship a completed feature branch
-* [git sync](/documentation/git-sync.md) - synchronize the current branch
-* [git sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
+* [git ship](/documentation/git-ship.md) - deliver a completed feature branch
+* [git sync](/documentation/git-sync.md) - update the current branch with all relevant changes
+* [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
 #### notes
