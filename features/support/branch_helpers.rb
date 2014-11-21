@@ -1,7 +1,7 @@
 # Returns the branch name for the given location
 def branch_name_for_location location, branch
   case location
-  when 'local' then branch
+  when 'local', 'coworker' then branch
   when 'remote' then "origin/#{branch}"
   when 'upstream' then "upstream/#{branch}"
   else fail "Unknown location: #{location}"
