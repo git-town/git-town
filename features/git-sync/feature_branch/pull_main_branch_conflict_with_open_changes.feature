@@ -1,4 +1,4 @@
-Feature: handling conflicting remote main branch updates when syncing a feature branch with open changes
+Feature: Git Sync: handling conflicting remote main branch updates when syncing a feature branch with open changes
 
 
   Background:

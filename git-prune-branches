@@ -4,18 +4,18 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 stash_open_changes
 sync_main_branch
 
-for remote_branch_name in `remote_merged_branches`; do
-  if [ `is_feature_branch $remote_branch_name` == true ]; then
-    delete_remote_branch $remote_branch_name
+for remote_branch_name in $(remote_merged_branches); do
+  if [ "$(is_feature_branch "$remote_branch_name")" == true ]; then
+    delete_remote_branch "$remote_branch_name"
   fi
 done
 
-for local_branch_name in `local_merged_branches`; do
-  if [ `is_feature_branch $local_branch_name` == true ]; then
-    if [ `get_current_branch_name` == $local_branch_name ]; then
+for local_branch_name in $(local_merged_branches); do
+  if [ "$(is_feature_branch "$local_branch_name")" == true ]; then
+    if [ "$(get_current_branch_name)" == "$local_branch_name" ]; then
       checkout_main_branch
     fi
-    delete_local_branch $local_branch_name
+    delete_local_branch "$local_branch_name"
   fi
 done
 
