@@ -1,5 +1,4 @@
-Feature: handling conflicting remote main branch updates when extracting without open changes
-
+Feature: git-extract handling conflicting remote main branch updates without open changes
 
   Background:
     Given I am on a feature branch

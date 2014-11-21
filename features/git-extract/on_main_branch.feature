@@ -1,4 +1,4 @@
-Feature: cannot extract while on the main branch
+Feature: git-extract errors on the main branch
 
   Background:
     Given I am on the main branch

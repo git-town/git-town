@@ -1,4 +1,4 @@
-Feature: extracting one commit
+Feature: git-extract with a single commit
 
   Background:
     Given I am on a feature branch

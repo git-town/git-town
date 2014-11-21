@@ -1,4 +1,4 @@
-Feature: cannot extract while on a non-feature branch
+Feature: git-extract errors on a non-feature branch
 
   Background:
     Given non-feature branch configuration "qa, production"

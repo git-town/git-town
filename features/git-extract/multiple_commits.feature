@@ -1,5 +1,4 @@
-Feature: extracting two commits
-
+Feature: git-extract with multiple commits
 
   Background:
     Given I am on a feature branch
