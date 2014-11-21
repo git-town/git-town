@@ -43,9 +43,10 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Then I am still on the "feature" branch
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch  | location         | message                   | files              |
-      | feature | local and remote | remote conflicting commit | conflicting_file   |
-      | feature | local and remote | local conflicting commit  | conflicting_file   |
+      | branch  | location         | message                                                    | files            |
+      | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
+      | feature | local and remote | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
       | branch  | files              | content            |
       | feature | conflicting_file   | resolved content   |
@@ -58,9 +59,10 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Then I am still on the "feature" branch
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch  | location         | message                   | files              |
-      | feature | local and remote | remote conflicting commit | conflicting_file   |
-      | feature | local and remote | local conflicting commit  | conflicting_file   |
+      | branch  | location         | message                                                    | files            |
+      | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
+      | feature | local and remote | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
       | branch  | files              | content            |
       | feature | conflicting_file   | resolved content   |
