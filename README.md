@@ -126,7 +126,7 @@ for help on an individual command.
 
 ## development
 
-Tests are written in Cucumber and implemented in Ruby.
+tests are written in <a href="https://github.com/cucumber/cucumber" target="_blank">cucumber</a>
 
 * install tools
   * `bundle`
@@ -134,7 +134,7 @@ Tests are written in Cucumber and implemented in Ruby.
 * run tests
   * all tests
     * `cucumber`
-    * `bin/cuke` for <a href="https://github.com/martinciu/fuubar-cucumber" target="_blank">Fuubar</a> output
+    * `bin/cuke` for <a href="https://github.com/martinciu/fuubar-cucumber" target="_blank">fuubar</a> output
   * single test
     * `cucumber -n 'scenario/feature name'`
     * `cucumber [filename]:[lineno]`
