@@ -33,13 +33,31 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
 
   Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts and commit your changes before continuing the git sync."
+    Then I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
     And my repo still has a merge in progress
 
 
   Scenario: continuing after resolving conflicts
-    When I successfully finish the merge by resolving the conflict in "conflicting_file"
+    Given I resolve the conflict in "conflicting_file"
+    And I run `git sync --continue`
+    Then I am still on the "feature" branch
+    And there are no abort and continue scripts for "git sync" anymore
+    And I still have the following commits
+      | branch  | location         | message                          | files            |
+      | main    | local            | conflicting main commit          | conflicting_file |
+      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | feature | local and remote | conflicting main commit          | conflicting_file |
+      | feature | local and remote | conflicting local commit         | conflicting_file |
+    And I still have the following committed files
+      | branch  | files            | content          |
+      | main    | conflicting_file | main content     |
+      | feature | conflicting_file | resolved content |
+
+
+  Scenario: continuing after resolving conflicts and committing
+    Given I resolve the conflict in "conflicting_file"
+    And I run `git commit --no-edit`
     And I run `git sync --continue`
     Then I am still on the "feature" branch
     And there are no abort and continue scripts for "git sync" anymore

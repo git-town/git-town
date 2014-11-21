@@ -23,6 +23,7 @@ function error_pull_feature_branch {
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "continue_merge"
   add_to_continue_script "merge_branch $main_branch_name"
   add_to_continue_script "push_branch"
   add_to_continue_script "restore_open_changes"
@@ -37,6 +38,7 @@ function error_pull_main_branch {
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "continue_rebase"
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     add_to_continue_script "push_branch"
     add_to_continue_script "checkout_branch $initial_branch_name"
@@ -59,6 +61,7 @@ function error_pull_non_feature_branch {
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "continue_rebase"
   add_to_continue_script "push_branch"
   add_to_continue_script "push_tags"
   add_to_continue_script "restore_open_changes"
@@ -73,6 +76,7 @@ function error_merge_branch {
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "continue_merge"
   add_to_continue_script "push_branch"
   add_to_continue_script "restore_open_changes"
 
@@ -99,7 +103,7 @@ function perform_sync {
 if [ "$1" == "--abort" ]; then
   run_abort_script
 elif [ "$1" == "--continue" ]; then
-  ensure_no_open_changes "You must resolve the conflicts and commit your changes before continuing the git sync".
+  ensure_no_conflicts "You must resolve the conflicts before continuing the git sync"
   run_continue_script
 else
   perform_sync

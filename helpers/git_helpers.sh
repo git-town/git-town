@@ -56,6 +56,22 @@ function commit_open_changes {
 }
 
 
+# Continues merge if one is in progress
+function continue_merge {
+  if [ "$(has_open_changes)" == true ]; then
+    run_command "git commit --no-edit"
+  fi
+}
+
+
+# Continues rebase if one is in progress
+function continue_rebase {
+  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
+    run_command "git rebase --continue"
+  fi
+}
+
+
 # Cuts a new branch off the given parent branch, and checks it out.
 function create_and_checkout_branch {
   local new_branch_name=$1
@@ -145,6 +161,16 @@ function ensure_is_feature_branch {
 }
 
 
+# Exits with an error message if there are unresolved conflicts
+function ensure_no_conflicts {
+  if [ "$(has_conflicts)" == true ]; then
+    echo_error_header
+    echo_error "$*"
+    exit_with_error
+  fi
+}
+
+
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
@@ -209,6 +235,16 @@ function get_current_branch_name {
 function has_branch {
   local branch_name=$1
   if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
+# Returns true if there are conflicts
+function has_conflicts {
+  if [ "$(git status | grep -c 'Unmerged paths')" == 0 ]; then
     echo false
   else
     echo true
