@@ -109,7 +109,7 @@ function ensure_has_branch {
 }
 
 
-# Exists the application with an error message if the supplied branch is
+# Exits the application with an error message if the supplied branch is
 # not a feature branch
 function ensure_is_feature_branch {
   local branch_name=$1
@@ -137,7 +137,7 @@ function ensure_no_open_changes {
 }
 
 
-# Exists the application with an error message if the current branch is
+# Exits the application with an error message if the current branch is
 # not a feature branch
 function ensure_on_feature_branch {
   local error_message="$*"
