@@ -66,7 +66,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <th colspan="2">
-      Update
+      <b>Update</b>
     </td>
   </tr>
   <tr>
@@ -80,7 +80,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <th colspan="2">
-      Uninstall
+      <b>Uninstall</b>
     </td>
   </tr>
   <tr>
