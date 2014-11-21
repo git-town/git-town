@@ -152,18 +152,6 @@ function ensure_no_open_changes {
 }
 
 
-# Stops the script if the given branch name is not a feature branch.
-function ensure_is_feature_branch {
-  local branch_name=$1
-  local error_message=$2
-  if [ "$(is_feature_branch "$branch_name")" == false ]; then
-    echo_error_header
-    echo_error "$error_message"
-    exit_with_error
-  fi
-}
-
-
 # Exits the application with an error message if the current branch is
 # not a feature branch
 function ensure_on_feature_branch {
