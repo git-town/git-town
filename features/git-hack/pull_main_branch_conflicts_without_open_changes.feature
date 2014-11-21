@@ -1,5 +1,4 @@
-Feature: handling conflicting remote main branch updates when hacking with open changes
-
+Feature: git-hack handling conflicting remote main branch updates with open changes
 
   Background:
     Given I have a feature branch named "feature"

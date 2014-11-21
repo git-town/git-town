@@ -1,5 +1,4 @@
-Feature: hacking on a feature branch with open changes
-
+Feature: git-hack on a feature branch with open changes
 
   Background:
     Given I have a feature branch named "feature"

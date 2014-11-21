@@ -1,5 +1,4 @@
-Feature: hacking on main branch without open changes
-
+Feature: git-hack on the main branch with open changes
 
   Background:
     Given the following commit exists in my repository

@@ -1,5 +1,4 @@
-Feature: cannot hack when branch exists without open changes
-
+Feature: git-hack errors when branch exists without open changes
 
   Background:
     Given I have a feature branch named "feature"
