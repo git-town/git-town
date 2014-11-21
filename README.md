@@ -27,8 +27,9 @@ and assumes you use a central code repository like
 
 #### notes
 
-* minimizes network requests: * each command fetches updates from the remote repository only once,
-  and pushes only when necessary
+* minimizes network requests:
+  * each command only performs a single remote fetch
+  * pushes to the repository are omitted if possible
 * automatically prunes deleted remote branches
 
 
