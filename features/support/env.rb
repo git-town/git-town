@@ -27,6 +27,7 @@ Before do
     # Configuration
     run 'git config git-town.main-branch-name main'
     run 'git config git-town.non-feature-branch-names ""'
+    run 'git config core.editor vim'
   end
 
   # Set the default branch
