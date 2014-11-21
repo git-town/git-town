@@ -22,12 +22,7 @@ function perform_hack {
     exit_with_error
   fi
 
-  # Exit if the branch with that name already exists.
-  if [ `has_branch $target_branch_name` == true ]; then
-    echo_error_header
-    echo_error "A branch named '$target_branch_name' already exists"
-    exit_with_error
-  fi
+  ensure_does_not_have_branch $target_branch_name
 
   stash_open_changes
   sync_main_branch

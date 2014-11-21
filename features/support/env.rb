@@ -51,7 +51,7 @@ end
 
 
 After '~@finishes-with-non-empty-stash' do
-  expect(stash_size).to eql 0
+  expect(stash_size).to eql(0), 'Finished with non empty stash'
 end
 
 
