@@ -17,9 +17,9 @@ Feature: Git Kill
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
     Then I end up on the "main" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And the branch "stupid-feature" is deleted everywhere
     And the branch "good-feature" still exists
-    And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: Does not kill the main branch
@@ -28,8 +28,8 @@ Feature: Git Kill
     When I run `git kill` while allowing errors
     Then I get the error "You can only kill feature branches"
     And I am still on the "main" branch
-    And the branch "good-feature" still exists
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And the branch "good-feature" still exists
 
 
   Scenario: Does not kill a non-feature branch
@@ -39,8 +39,8 @@ Feature: Git Kill
     When I run `git kill` while allowing errors
     Then I get the error "You can only kill feature branches"
     And I am still on the "qa" branch
-    And the branch "good-feature" still exists
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And the branch "good-feature" still exists
 
 
   Scenario: Undoing a kill without open changes
@@ -64,6 +64,7 @@ Feature: Git Kill
     When I run `git kill`
     And I run `git kill --undo`
     Then I end up on the "unfortunate-feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | repository | branches                                |
       | local      | main, unfortunate-feature, good-feature |
@@ -72,7 +73,6 @@ Feature: Git Kill
       | branch              | location         | message            | files            |
       | good-feature        | local and remote | good commit        | good_file        |
       | unfortunate-feature | local and remote | unfortunate commit | unfortunate_file |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   Scenario: Undoing a kill of a local feature branch
@@ -81,8 +81,8 @@ Feature: Git Kill
     When I run `git kill`
     And I run `git kill --undo`
     Then I end up on the "unfortunate-feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | repository | branches                                |
       | local      | main, unfortunate-feature, good-feature |
       | remote     | main, good-feature                      |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

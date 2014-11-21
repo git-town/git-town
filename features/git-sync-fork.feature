@@ -9,13 +9,13 @@ Feature: Git Sync-Fork
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I see the following commits
       | branch | location                    | message         | files         |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
       | branch | files         |
       | main   | upstream_file |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   Scenario: on a feature branch with upstream commit in main branch
@@ -27,13 +27,13 @@ Feature: Git Sync-Fork
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I see the following commits
       | branch | location         | message         | files         |
       | main   | local and remote | upstream commit | upstream_file |
     And now I have the following committed files
       | branch | files         |
       | main   | upstream_file |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   Scenario: user aborts after conflict while pulling upstream updates
@@ -51,6 +51,7 @@ Feature: Git Sync-Fork
 
     When I run `git sync-fork --abort`
     Then I end up on my feature branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And there is no abort script for "git sync-fork" anymore
     And I still have the following commits
@@ -59,7 +60,6 @@ Feature: Git Sync-Fork
     And I still have the following committed files
       | branch | files            | content       |
       | main   | conflicting_file | local content |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   Scenario: without upstream
