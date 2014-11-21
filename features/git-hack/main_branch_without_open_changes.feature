@@ -9,7 +9,7 @@ Feature: git-hack on the main branch without open changes
     When I run `git hack feature`
 
 
-  Scenario: on the main branch
+  Scenario: result
     Then I end up on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the branch "feature" has not been pushed to the repository

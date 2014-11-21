@@ -8,7 +8,7 @@ Feature: git-hack on the main branch with open changes
     When I run `git hack feature`
 
 
-  Scenario: on the main branch
+  Scenario: result
     Then I end up on the "feature" branch
     And the branch "feature" has not been pushed to the repository
     And I have the following commits
