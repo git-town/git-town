@@ -11,7 +11,7 @@ end
 # Parameter is a Cucumber table line
 def create_local_commit branch:, file_name:, file_content:, message:, push: false, pull: false
   run 'git fetch --prune' if pull
-  return_to_current_branch(branch) do
+  on_branch(branch) do
     File.write file_name, file_content
     run "git add '#{file_name}'"
     run "git commit -m '#{message}'"

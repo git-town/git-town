@@ -68,8 +68,9 @@ def number_of_branches_out_of_sync
 end
 
 
-# Executes the given block, then returns to the currently checked out branch
-def return_to_current_branch branch_name
+# Executes the given block after checking out the supplied branch
+# then returns to the currently branch
+def on_branch branch_name
   original_branch = current_branch_name
   run "git checkout #{branch_name}"
   result = yield
