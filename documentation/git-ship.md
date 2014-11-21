@@ -1,6 +1,7 @@
 #### NAME
 
-git-ship - ship a completed feature branch
+git-ship - deliver a completed feature branch
+
 
 #### SYNOPSIS
 
@@ -8,6 +9,7 @@ git-ship - ship a completed feature branch
 git ship [<branchname>] [-m <message>]
 git ship --abort
 ```
+
 
 #### DESCRIPTION
 

@@ -1,6 +1,7 @@
 #### NAME
 
-git-sync-fork - synchronize a forked repository
+git-sync-fork - pull upstream updates into a forked repository
+
 
 #### SYNOPSIS
 
@@ -9,9 +10,11 @@ git sync-fork
 git sync-fork --abort
 ```
 
+
 #### DESCRIPTION
 
 Pulls updates from the upstream main branch into the main branch of this repository.
+
 
 #### Options
 

@@ -1,6 +1,7 @@
 #### NAME
 
-git-sync - synchronize the current branch
+git-sync - updates the current branch with all relevant changes
+
 
 #### SYNOPSIS
 
@@ -23,6 +24,7 @@ When run on a feature branch
 When run on the main branch or a non-feature branch
 * pulls and pushes updates for the current branch
 * pushes tags
+
 
 #### OPTIONS
 
