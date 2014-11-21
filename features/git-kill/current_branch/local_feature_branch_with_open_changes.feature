@@ -2,11 +2,12 @@ Feature: Git Kill: Killing the current local feature branch
 
   Background:
     Given I have a feature branch named "good-feature"
-    And I am on the local "unfortunate" branch
+    And I have a local feature branch named "unfortunate"
     And the following commits exist in my repository
       | branch       | location         | message            | file name        |
       | good-feature | local and remote | good commit        | good_file        |
       | unfortunate  | local            | unfortunate commit | unfortunate_file |
+    And I am on the "unfortunate" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
 

@@ -38,6 +38,11 @@ Given /^I have feature branches named (.+?)$/ do |branch_names|
 end
 
 
+Given(/^I have a local feature branch named "(.+?)"$/) do |branch_name|
+  create_branch branch_name, remote: false
+end
+
+
 Given /^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/ do |branch_name, relation|
   create_branch branch_name
   if relation
