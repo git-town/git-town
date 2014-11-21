@@ -49,8 +49,8 @@ other platforms need to install manually.
     </th>
   </tr>
   <tr>
-    <th colspan="2">
-      Install
+    <td colspan="2">
+      __Install__
     </td>
   </tr>
   <tr>
