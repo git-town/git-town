@@ -15,9 +15,9 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
   @finishes-with-non-empty-stash
   Scenario: result
     Then I end up on the "feature" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
     And there is an abort script for "git ship"
-    And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting
