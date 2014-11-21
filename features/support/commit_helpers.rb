@@ -69,6 +69,7 @@ def create_commits commits_array
 end
 
 
+# Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
 end
@@ -97,6 +98,8 @@ def default_commit_attributes
 end
 
 
+# Normalize commit_data by parsing the files and location
+# Returns an array of commit_data
 def normalize_expected_commit_data commit_data
   symbolize_keys_deep! commit_data
 
