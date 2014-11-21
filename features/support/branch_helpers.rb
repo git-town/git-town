@@ -82,9 +82,10 @@ end
 # Verifies the branches in each repository
 def verify_branches branch_data_array
   branch_data_array.each do |branch_data|
-    expected_branches = Kappamaki.from_sentence(branch_data['branches'])
-    expected_branches.map! { |n| "origin/#{n}" } if branch_data['repository'] == 'remote'
-    actual_branches = branches_for_repository branch_data['repository']
+    repository = branch_data['repository']
+    expected_branches = Kappamaki.from_sentence branch_data['branches']
+    expected_branches.map! { |branch_name| branch_name_for_location repository, branch_name }
+    actual_branches = branches_for_repository repository
     expect(actual_branches).to match_array(expected_branches)
   end
 end
