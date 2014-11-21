@@ -97,7 +97,7 @@ function delete_remote_branch {
 }
 
 
-# Exists the application with an error message if the
+# Exits the application with an error message if the
 # repository has a branch with the given name.
 function ensure_does_not_have_branch {
   local branch_name=$1
@@ -110,7 +110,7 @@ function ensure_does_not_have_branch {
 
 
 
-# Exists the application with an error message if the
+# Exits the application with an error message if the
 # repository does not have a branch with the given name.
 function ensure_has_branch {
   local branch_name=$1
