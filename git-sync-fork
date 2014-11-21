@@ -3,7 +3,7 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script_filename=`abort_script_filename_for_command sync_fork`
+export abort_script_filename=$(abort_script_filename_for_command sync_fork)
 
 
 # Called by pull_feature_branch when the merge fails with conflicts
@@ -23,7 +23,7 @@ function error_with_upstream_required {
 
 # Sync the current branch with the upstream repository
 function sync_fork {
-  if [ `git remote -v | grep 'upstream' | wc -l` == 0 ]; then
+  if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
     error_with_upstream_required
   fi
 
@@ -32,7 +32,7 @@ function sync_fork {
   checkout_main_branch
   pull_upstream_branch
   push_branch
-  checkout_branch $branch_name
+  checkout_branch "$branch_name"
   restore_open_changes
 }
 

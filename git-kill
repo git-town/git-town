@@ -1,17 +1,17 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-undo_script_filename=`undo_script_filename_for_command kill`
+export undo_script_filename=$(undo_script_filename_for_command kill)
 
 function create_undo_script {
   local original_branch_sha=$1
   local branch_to_kill=$2
-  local current_sha=`sha_of_branch $branch_to_kill`
+  local current_sha=$(sha_of_branch "$branch_to_kill")
   add_to_undo_script "create_and_checkout_branch $branch_to_kill $current_sha"
-  if [ $initial_open_changes == true ]; then
+  if [ "$initial_open_changes" == true ]; then
     add_to_undo_script "reset_to_sha $original_branch_sha"
   fi
-  if [ `has_tracking_branch $initial_branch_name` == true ]; then
+  if [ "$(has_tracking_branch "$initial_branch_name")" == true ]; then
     add_to_undo_script "push_branch"
   fi
 }
@@ -22,40 +22,40 @@ function create_undo_script {
 # or the current branch.
 function determine_branch_to_kill {
   if [ -z "$1" ]; then
-    echo $initial_branch_name
+    echo "$initial_branch_name"
   else
-    echo $1
+    echo "$1"
   fi
 }
 
 
 function perform_kill {
-  local branch_to_kill=`determine_branch_to_kill $*`
+  local branch_to_kill=$(determine_branch_to_kill "$*")
 
-  ensure_has_branch $branch_to_kill
-  ensure_is_feature_branch $branch_to_kill "You can only kill feature branches."
+  ensure_has_branch "$branch_to_kill"
+  ensure_is_feature_branch "$branch_to_kill" "You can only kill feature branches."
 
   # The SHA of where the branch to kill needs to point to when restored
-  local original_branch_sha=`sha_of_branch $branch_to_kill`
+  local original_branch_sha=$(sha_of_branch "$branch_to_kill")
 
   # Remove open changes
-  if [ $initial_open_changes == true ]; then
-    if [ $branch_to_kill == $initial_branch_name ]; then
+  if [ "$initial_open_changes" == true ]; then
+    if [ "$branch_to_kill" == "$initial_branch_name" ]; then
       commit_open_changes
     else
       stash_open_changes
     fi
   fi
 
-  create_undo_script $original_branch_sha $branch_to_kill
-  if [ $branch_to_kill == $initial_branch_name ]; then
+  create_undo_script "$original_branch_sha" "$branch_to_kill"
+  if [ "$branch_to_kill" == "$initial_branch_name" ]; then
     checkout_main_branch
   else
-    checkout_branch $initial_branch_name
+    checkout_branch "$initial_branch_name"
   fi
-  delete_branch $branch_to_kill force
+  delete_branch "$branch_to_kill" force
 
-  if [ $branch_to_kill != $initial_branch_name ]; then
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
     restore_open_changes
   fi
 }

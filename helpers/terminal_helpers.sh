@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Helper methods for writing to the terminal.
 
 
@@ -18,7 +20,7 @@ function echo_header {
 
 # Prints an error header into the terminal.
 function echo_error_header {
-  local str=`echo_indented Error`
+  local str=$(echo_indented Error)
   echo
   echo_red_bold "$str"
 }
@@ -26,7 +28,7 @@ function echo_error_header {
 
 # Prints the provided error message
 function echo_error {
-  local str=`echo_indented "$*"`
+  local str=$(echo_indented "$*")
   echo_red "$str"
 }
 
@@ -62,7 +64,7 @@ function echo_usage {
 
 # Prints the header for the usage help screen into the terminal.
 function echo_usage_header {
-  local str=`echo_indented Usage`
+  local str=$(echo_indented Usage)
   echo_header "$str"
 }
 
@@ -98,14 +100,14 @@ function output_style_reset {
 
 # Prints a command
 function print_command {
-  local branch_name=`get_current_branch_name`
+  local branch_name=$(get_current_branch_name)
   echo_header "[$branch_name] $*"
 }
 
 
 # Run a command, prints command and output
 function run_command {
-  local cmd=$*
-  print_command $cmd
-  eval $cmd 2>&1
+  local cmd="$*"
+  print_command "$cmd"
+  eval "$cmd" 2>&1
 }

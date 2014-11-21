@@ -1,4 +1,4 @@
-Feature: syncing a non-feature branch with open changes
+Feature: Git Sync: syncing a non-feature branch with open changes
 
 
   Scenario: no conflict

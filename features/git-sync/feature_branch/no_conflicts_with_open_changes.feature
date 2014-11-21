@@ -1,4 +1,4 @@
-Feature: syncing a feature branch with open changes
+Feature: Git Sync: syncing a feature branch with open changes
 
 
   Scenario: without a remote branch

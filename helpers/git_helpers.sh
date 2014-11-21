@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Helper methods for working with Git.
 
 
@@ -25,7 +27,7 @@ function abort_rebase {
 # is already checked out.
 function checkout_branch {
   local branch_name=$1
-  if [ ! "`get_current_branch_name`" = "$branch_name" ]; then
+  if [ ! "$(get_current_branch_name)" = "$branch_name" ]; then
     run_command "git checkout $branch_name"
   fi
 }
@@ -35,22 +37,22 @@ function checkout_branch {
 #
 # Skips the operation if we already are on that branch.
 function checkout_main_branch {
-  checkout_branch $main_branch_name
+  checkout_branch "$main_branch_name"
 }
 
 
 # Cherry picks the SHAs into the current branch
 function cherry_pick {
-  local SHAs=$*
+  local SHAs="$*"
   run_command "git cherry-pick $SHAs"
-  if [ $? != 0 ]; then error_cherry_pick $SHAs; fi
+  if [ $? != 0 ]; then error_cherry_pick "$SHAs"; fi
 }
 
 
 # Commits all open changes into the current branch
 function commit_open_changes {
   run_command "git add -A"
-  run_command "git commit -m 'WIP on `get_current_branch_name`'"
+  run_command "git commit -m 'WIP on $(get_current_branch_name)'"
 }
 
 
@@ -66,7 +68,7 @@ function create_and_checkout_branch {
 #
 # The feature branch is cut off the main development branch.
 function create_and_checkout_feature_branch {
-  create_and_checkout_branch $1 $main_branch_name
+  create_and_checkout_branch "$1" "$main_branch_name"
 }
 
 
@@ -74,10 +76,10 @@ function create_and_checkout_feature_branch {
 function delete_branch {
   local branch_name=$1
   local force=$2
-  if [ `has_tracking_branch $branch_name` == true ]; then
-    delete_remote_branch $branch_name
+  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
+    delete_remote_branch "$branch_name"
   fi
-  delete_local_branch $branch_name $force
+  delete_local_branch "$branch_name" "$force"
 }
 
 
@@ -97,13 +99,41 @@ function delete_remote_branch {
 }
 
 
-# Exists the application with an error message if the
+# Exits the application with an error message if the
+# repository has a branch with the given name.
+function ensure_does_not_have_branch {
+  local branch_name=$1
+  if [ "$(has_branch "$branch_name")" = true ]; then
+    echo_error_header
+    echo_error "A branch named '$branch_name' already exists"
+    exit_with_error
+  fi
+}
+
+
+
+# Exits the application with an error message if the
 # repository does not have a branch with the given name.
 function ensure_has_branch {
   local branch_name=$1
-  if [ `has_branch $branch_name` = false ]; then
+  if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
     echo_error "There is no branch named '$branch_name'"
+    exit_with_error
+  fi
+}
+
+
+# Exits the application with an error message if the supplied branch is
+# not a feature branch
+function ensure_is_feature_branch {
+  local branch_name=$1
+  local error_message=$2
+  if [ "$(is_feature_branch "$branch_name")" == false ]; then
+    error_is_not_feature_branch
+
+    echo_error_header
+    echo_error "The branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error
   fi
 }
@@ -112,7 +142,7 @@ function ensure_has_branch {
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
-  if [ `has_open_changes` = true ]; then
+  if [ "$(has_open_changes)" == true ]; then
     error_has_open_changes
 
     echo_error_header
@@ -126,33 +156,28 @@ function ensure_no_open_changes {
 function ensure_is_feature_branch {
   local branch_name=$1
   local error_message=$2
-  if [ `is_feature_branch $branch_name` == false ]; then
+  if [ "$(is_feature_branch "$branch_name")" == false ]; then
     echo_error_header
-    echo_error $error_message
+    echo_error "$error_message"
     exit_with_error
   fi
 }
 
 
-# Exists the application with an error message if the working directory
-# is on the main development branch.
+# Exits the application with an error message if the current branch is
+# not a feature branch
 function ensure_on_feature_branch {
-  local error_message=$1
-  local branch_name=`get_current_branch_name`
-  if [ `is_feature_branch $branch_name` == false ]; then
-    error_not_on_feature_branch
-    echo_error_header
-    echo_error "The branch '$branch_name' is not a feature branch. $error_message"
-    exit_with_error
-  fi
+  local error_message="$*"
+  local branch_name=$(get_current_branch_name)
+  ensure_is_feature_branch "$branch_name" "$error_message"
 }
 
 
 # Called by pull_branch when the merge/rebase fails with conflicts
 function error_pull_branch {
-  if [ `is_feature_branch $1` == true ]; then
+  if [ "$(is_feature_branch "$1")" == true ]; then
     error_pull_feature_branch
-  elif [ $1 == $main_branch_name ]; then
+  elif [ "$1" == "$main_branch_name" ]; then
     error_pull_main_branch
   else
     error_pull_non_feature_branch
@@ -166,7 +191,7 @@ function error_pull_branch {
 # since it makes sure that it fetches updates only once per session
 # by tracking this through the global variable $repo_fetched.
 function fetch_repo {
-  if [ $repo_fetched == false ]; then
+  if [ "$repo_fetched" == false ]; then
     run_command "git fetch --prune"
     repo_fetched=true
   fi
@@ -189,7 +214,7 @@ function get_current_branch_name {
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
-  if [ `git branch | tr -d '* ' | grep "^$branch_name$" | wc -l` == 0 ]; then
+  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
     echo false
   else
     echo true
@@ -199,7 +224,7 @@ function has_branch {
 
 # Determines whether there are open changes in Git.
 function has_open_changes {
-  if [ `git status --porcelain | wc -l` == 0 ]; then
+  if [ "$(git status --porcelain | wc -l | tr -d ' ')" == 0 ]; then
     echo false
   else
     echo true
@@ -210,7 +235,7 @@ function has_open_changes {
 # Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
   local branch_name=$1
-  if [ `git branch -vv | grep "$branch_name" | grep "\[origin\/$branch_name.*\]" | wc -l` == 0 ]; then
+  if [ "$(git branch -vv | grep "$branch_name" | grep -c "\[origin\/$branch_name.*\]")" == 0 ]; then
     echo false
   else
     echo true
@@ -221,7 +246,7 @@ function has_tracking_branch {
 # Determines whether the given branch is ahead of main
 function is_ahead_of_main {
   local branch_name=$1
-  if [ `git log --oneline $main_branch_name..$branch_name | wc -l` == 0 ]; then
+  if [ "$(git log --oneline "$main_branch_name..$branch_name" | wc -l | tr -d ' ')" == 0 ]; then
     echo false
   else
     echo true
@@ -232,7 +257,7 @@ function is_ahead_of_main {
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
-  if [ "$branch_name" == "$main_branch_name" -o `echo $non_feature_branch_names | tr ',' '\n' | grep $branch_name | wc -l` == 1 ]; then
+  if [ "$branch_name" == "$main_branch_name" -o "$(echo "$non_feature_branch_names" | tr ',' '\n' | grep -c "$branch_name")" == 1 ]; then
     echo false
   else
     echo true
@@ -242,14 +267,14 @@ function is_feature_branch {
 
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
-  git branch --merged $main_branch_name | tr -d ' ' | sed 's/\*//g'
+  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
 }
 
 
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
 }
@@ -259,7 +284,7 @@ function merge_branch {
 # that haven't been pushed to the remote yet.
 # Assumes the current branch has a tracking branch
 function needs_pushing {
-  if [ `git status | grep "Your branch is ahead of" | wc -l` != 0 ]; then
+  if [ "$(git status | grep -c "Your branch is ahead of")" != 0 ]; then
     echo true
   else
     echo false
@@ -270,19 +295,19 @@ function needs_pushing {
 # Pulls updates of the feature branch from the remote repo
 function pull_branch {
   local strategy=$1
-  local current_branch_name=`get_current_branch_name`
-  if [ -z $strategy ]; then strategy='merge'; fi
-  if [ `has_tracking_branch $current_branch_name` == true ]; then
+  local current_branch_name=$(get_current_branch_name)
+  if [ -z "$strategy" ]; then strategy='merge'; fi
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
     fetch_repo
     run_command "git $strategy origin/$current_branch_name"
-    if [ $? != 0 ]; then error_pull_branch $current_branch_name; fi
+    if [ $? != 0 ]; then error_pull_branch "$current_branch_name"; fi
   fi
 }
 
 
 # Pulls updates of the current branch from the upstream repo
 function pull_upstream_branch {
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   fetch_upstream
   run_command "git rebase upstream/$current_branch_name"
   if [ $? != 0 ]; then error_pull_upstream_branch; fi
@@ -291,9 +316,9 @@ function pull_upstream_branch {
 
 # Pushes the branch with the given name to origin
 function push_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `has_tracking_branch $current_branch_name` == true ]; then
-    if [ `needs_pushing` == true ]; then
+  local current_branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
+    if [ "$(needs_pushing)" == true ]; then
       run_command "git push"
     fi
   else
@@ -310,7 +335,7 @@ function push_tags {
 
 # Returns the names of remote branches that have been merged into main
 function remote_merged_branches {
-  git branch -r --merged $main_branch_name | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
+  git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
 
 
@@ -323,7 +348,7 @@ function remote_url {
 # Resets the current branch to the commit described by the given SHA
 function reset_to_sha {
   local sha=$1
-  run_command 'git reset $sha'
+  run_command "git reset $sha"
 }
 
 
@@ -331,7 +356,7 @@ function reset_to_sha {
 #
 # Only does this if there were open changes when the script was started.
 function restore_open_changes {
-  if [ $initial_open_changes = true ]; then
+  if [ "$initial_open_changes" = true ]; then
     run_command "git stash pop"
   fi
 }
@@ -340,7 +365,7 @@ function restore_open_changes {
 # Returns the SHA that the given branch points to
 function sha_of_branch {
   local branch_name=$1
-  git rev-parse $branch_name
+  git rev-parse "$branch_name"
 }
 
 
@@ -348,7 +373,7 @@ function sha_of_branch {
 function squash_merge {
   local branch_name=$1
   local commit_message=$2
-  local current_branch_name=`get_current_branch_name`
+  local current_branch_name=$(get_current_branch_name)
   run_command "git merge --squash $branch_name"
   if [ $? != 0 ]; then error_squash_merge; fi
   if [ "$commit_message" == "" ]; then
@@ -361,16 +386,24 @@ function squash_merge {
 
 # Stashes uncommitted changes if they exist.
 function stash_open_changes {
-  if [ $initial_open_changes = true ]; then
+  if [ "$initial_open_changes" = true ]; then
     run_command "git stash -u"
   fi
 }
 
-# Stashes uncommitted changes if they exist.
-function sync_main_branch {
-  local current_branch_name=`get_current_branch_name`
-  checkout_main_branch
-  pull_branch 'rebase'
+
+# Push and pull the current branch
+function sync_branch {
+  local strategy=$1
+  pull_branch "$strategy"
   push_branch
-  checkout_branch $current_branch_name
+}
+
+
+# Sync the main branch, returning to the original branch
+function sync_main_branch {
+  local current_branch_name=$(get_current_branch_name)
+  checkout_main_branch
+  sync_branch 'rebase'
+  checkout_branch "$current_branch_name"
 }

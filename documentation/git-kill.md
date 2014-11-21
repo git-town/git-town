@@ -1,6 +1,6 @@
 #### NAME
 
-git-kill - completely remove an obsolete feature branch
+git-kill - remove an obsolete feature branch
 
 
 #### SYNOPSIS
@@ -17,6 +17,7 @@ Deletes the current branch, or `<branchname>` if given,
 from the local and remote repositories.
 
 Does not delete non-feature branches nor the main branch.
+
 
 
 #### OPTIONS

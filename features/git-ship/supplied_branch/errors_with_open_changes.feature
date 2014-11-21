@@ -1,4 +1,4 @@
-Feature: errors while shipping the supplied branch with open changes
+Feature: Git Ship: errors while shipping the supplied branch with open changes
 
 
   Scenario: feature branch that does not exist

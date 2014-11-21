@@ -1,4 +1,4 @@
-Feature: errors while shipping the current branch
+Feature: Git Ship: errors while shipping the current branch
 
 
   Scenario: does not ship a feature branch not ahead of main
@@ -31,7 +31,7 @@ Feature: errors while shipping the current branch
     Given I am on a feature branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "You should not ship while having open files in Git"
+    Then I get the error "You cannot ship with uncommitted changes."
     And I am still on the feature branch
     And there are no commits
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

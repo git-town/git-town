@@ -1,4 +1,4 @@
-Feature: shipping the current feature branch
+Feature: Git Ship: shipping the current feature branch
 
 
   Scenario: local feature branch

@@ -1,4 +1,4 @@
-Feature: handling conflicting remote feature branch updates when shipping the current feature branch
+Feature: Git Ship: handling conflicting remote feature branch updates when shipping the current feature branch
 
 
   Background:
