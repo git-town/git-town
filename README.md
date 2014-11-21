@@ -41,10 +41,10 @@ other platforms need to install manually.
 
 <table>
   <tr>
-    <td width="300px">
+    <th width="300px">
       Using Homebrew
     </th>
-    <td width="400px">
+    <th width="400px">
       Manually
     </th>
   </tr>
