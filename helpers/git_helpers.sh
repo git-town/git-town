@@ -114,7 +114,7 @@ function ensure_has_branch {
 function ensure_is_feature_branch {
   local branch_name=$1
   local error_message=$2
-  if [ `is_feature_branch $branch_name` == false ]; then
+  if [ "$(is_feature_branch "$branch_name")" == false ]; then
     error_is_not_feature_branch
 
     echo_error_header
@@ -140,9 +140,9 @@ function ensure_no_open_changes {
 # Exists the application with an error message if the current branch is
 # not a feature branch
 function ensure_on_feature_branch {
-  local error_message=$*
-  local branch_name=`get_current_branch_name`
-  ensure_is_feature_branch $branch_name "$error_message"
+  local error_message="$*"
+  local branch_name=$(get_current_branch_name)
+  ensure_is_feature_branch "$branch_name" "$error_message"
 }
 
 
@@ -368,7 +368,7 @@ function stash_open_changes {
 # Push and pull the current branch
 function sync_branch {
   local strategy=$1
-  pull_branch $strategy
+  pull_branch "$strategy"
   push_branch
 }
 
