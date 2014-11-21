@@ -6,6 +6,6 @@ Feature: git-extract errors on a non-feature branch
     When I run `git extract refactor` while allowing errors
 
 
-  Scenario: on the main branch
+  Scenario: result
     Then I get the error "The branch 'production' is not a feature branch. You must be on a feature branch in order to extract commits."
     And I am still on the "production" branch

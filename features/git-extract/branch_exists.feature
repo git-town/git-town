@@ -11,6 +11,6 @@ Feature: cannot extract if a branch already exists with that name
     When I run `git extract refactor` while allowing errors
 
 
-  Scenario: on the main branch
+  Scenario: result
     Then I get the error "A branch named 'refactor' already exists"
     And I am still on the "feature" branch
