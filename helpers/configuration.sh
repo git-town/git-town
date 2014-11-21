@@ -1,9 +1,11 @@
+#!/bin/bash
+
 # Helper methods for dealing with configuration.
 
 
 # Persists the main branch configuration
 function store_main_branch_name {
-  git config git-town.main-branch-name $1
+  git config git-town.main-branch-name "$1"
 }
 
 
@@ -15,13 +17,13 @@ function store_non_feature_branch_names {
 
 # Update old configuration to new one if it exists
 if [[ -f ".main_branch_name" ]]; then
-  store_main_branch_name `cat .main_branch_name`
+  store_main_branch_name "$(cat .main_branch_name)"
   rm .main_branch_name
 fi
 
 
 # Read main branch name from config, ask and store it if it isn't known yet.
-main_branch_name=`git config git-town.main-branch-name`
+main_branch_name=$(git config git-town.main-branch-name)
 if [[ -z "$main_branch_name" ]]; then
   echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
   read main_branch_name
@@ -32,14 +34,14 @@ if [[ -z "$main_branch_name" ]]; then
     echo_error "Please try again."
     exit_with_error
   fi
-  store_main_branch_name $main_branch_name
+  store_main_branch_name "$main_branch_name"
   echo
   echo "main branch stored as '$main_branch_name'."
 fi
 
 
 # Read non feature branch names from config, ask and store if needed
-non_feature_branch_names=`git config git-town.non-feature-branch-names`
+non_feature_branch_names=$(git config git-town.non-feature-branch-names)
 if [[ $? == '1' ]]; then
   echo "Git Town supports non-feature branches like 'release' or 'production'."
   echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."

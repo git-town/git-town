@@ -1,4 +1,4 @@
-Feature: syncing a non-feature branch with open changes
+Feature: Git Sync: syncing a non-feature branch with open changes
 
 
   Scenario: no conflict
@@ -12,6 +12,7 @@ Feature: syncing a non-feature branch with open changes
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
     Then I am still on the "qa" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
       | branch | location         | message       | files       |
@@ -22,4 +23,3 @@ Feature: syncing a non-feature branch with open changes
       | branch | files                   |
       | qa     | local_file, remote_file |
       | main   | main_file               |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

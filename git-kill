@@ -1,15 +1,15 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-undo_script_filename=`undo_script_filename_for_command kill`
+export undo_script_filename=$(undo_script_filename_for_command kill)
 
 function create_undo_script {
-  local current_sha=`sha_of_branch $initial_branch_name`
+  local current_sha=$(sha_of_branch "$initial_branch_name")
   add_to_undo_script "create_and_checkout_branch $initial_branch_name $current_sha"
-  if [ $initial_open_changes == true ]; then
+  if [ "$initial_open_changes" == true ]; then
     add_to_undo_script "reset_to_sha $original_branch_sha"
   fi
-  if [ `has_tracking_branch $initial_branch_name` == true ]; then
+  if [ "$(has_tracking_branch "$initial_branch_name")" == true ]; then
     add_to_undo_script "push_branch"
   fi
 }
@@ -17,17 +17,17 @@ function create_undo_script {
 
 function perform_kill {
   ensure_on_feature_branch "You can only kill feature branches."
-  original_branch_sha=`sha_of_branch $initial_branch_name`
+  original_branch_sha=$(sha_of_branch "$initial_branch_name")
 
   # Remove open changes
-  if [ $initial_open_changes == true ]; then
+  if [ "$initial_open_changes" == true ]; then
     commit_open_changes
   fi
 
   create_undo_script
 
   checkout_main_branch
-  delete_branch $initial_branch_name force
+  delete_branch "$initial_branch_name" force
 }
 
 

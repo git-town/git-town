@@ -20,9 +20,9 @@ and assumes you use a central code repository like
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
 * [git kill](/documentation/git-kill.md) - remove an obsolete feature branch
 * [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
-* [git ship](/documentation/git-ship.md) - ship a completed feature branch
-* [git sync](/documentation/git-sync.md) - synchronize the current branch
-* [git sync-fork](/documentation/git-sync-fork.md) - synchronize a forked repository
+* [git ship](/documentation/git-ship.md) - deliver a completed feature branch
+* [git sync](/documentation/git-sync.md) - update the current branch with all relevant changes
+* [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
 #### notes
@@ -130,10 +130,12 @@ for help on an individual command.
   (you need to add "./bin" to your path for this to work)
 * run a single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 * preview a man page: `man man/man1/git-hack.1`
+* install the bash linter: `brew install shellcheck`
+* run all linters: `bin/lint`
 
 Found a bug or want to contribute a feature?
 <a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
-or - even better - get down, go to town, and fire a feature-tested
+or - even better - get down, go to town, and fire a feature-tested and linter-passing
 <a href="https://help.github.com/articles/using-pull-requests" target="_blank">pull request</a>
 our way!
 

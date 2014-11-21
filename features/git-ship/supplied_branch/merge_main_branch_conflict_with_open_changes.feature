@@ -1,4 +1,4 @@
-Feature: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
+Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
 
 
   Background:
@@ -15,9 +15,9 @@ Feature: handling merge conflicts between feature and main branch when shipping 
   @finishes-with-non-empty-stash
   Scenario: result
     Then I end up on the "feature" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
     And there is an abort script for "git ship"
-    And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting

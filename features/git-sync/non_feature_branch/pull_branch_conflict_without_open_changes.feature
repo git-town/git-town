@@ -1,4 +1,4 @@
-Feature: handling conflicting remote branch updates when syncing a non-feature branch without open changes
+Feature: Git Sync: handling conflicting remote branch updates when syncing a non-feature branch without open changes
 
 
   Background:

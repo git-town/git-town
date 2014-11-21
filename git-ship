@@ -2,14 +2,14 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-abort_script_filename=`abort_script_filename_for_command ship`
+export abort_script_filename=$(abort_script_filename_for_command ship)
 
 
 
 # Exit if the current branch is not ahead of main
 function ensure_ahead_of_main_branch {
-  local current_branch_name=`get_current_branch_name`
-  if [ `is_ahead_of_main $current_branch_name` == false ]; then
+  local current_branch_name=$(get_current_branch_name)
+  if [ "$(is_ahead_of_main "$current_branch_name")" == false ]; then
     return_to_initial_branch
 
     echo_error_header
@@ -62,39 +62,39 @@ function extract_message {
     esac
   done
 
-  echo $message
+  echo "$message"
 }
 
 
 function perform_ship {
-  local message=`extract_message "$*"`
+  local message=$(extract_message "$@")
 
-  if [ $target_branch_name != $initial_branch_name ]; then
-    ensure_has_branch $target_branch_name
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    ensure_has_branch "$target_branch_name"
     stash_open_changes
   fi
 
   ensure_no_open_changes "You cannot ship with uncommitted changes."
-  ensure_is_feature_branch $target_branch_name "Only feature branches can be shipped."
+  ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
 
   checkout_main_branch
   sync_branch 'rebase'
   checkout_branch "$target_branch_name"
   pull_branch
-  merge_branch $main_branch_name
+  merge_branch "$main_branch_name"
   ensure_ahead_of_main_branch
   checkout_main_branch
-  squash_merge $target_branch_name "$message"
+  squash_merge "$target_branch_name" "$message"
   push_branch
-  delete_branch $target_branch_name "force"
+  delete_branch "$target_branch_name" "force"
 
   return_to_initial_branch
 }
 
 
 function return_to_initial_branch {
-  if [ $target_branch_name != $initial_branch_name ]; then
-    checkout_branch $initial_branch_name
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    checkout_branch "$initial_branch_name"
     restore_open_changes
   fi
 }
@@ -107,7 +107,7 @@ else
     target_branch_name=$1
     shift
   else
-    target_branch_name=`get_current_branch_name`
+    target_branch_name=$(get_current_branch_name)
   fi
 
   perform_ship "$*"

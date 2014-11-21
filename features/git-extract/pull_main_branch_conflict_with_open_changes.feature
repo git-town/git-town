@@ -22,6 +22,7 @@ Feature: git-extract handling conflicting remote main branch updates with open c
   Scenario: aborting
     When I run `git extract --abort`
     Then I end up on my feature branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
       | branch  | location | message                   | files            |
@@ -31,4 +32,3 @@ Feature: git-extract handling conflicting remote main branch updates with open c
       | feature | local    | refactor commit           | refactor_file    |
     And there is no rebase in progress
     And there is no abort script for "git extract" anymore
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
