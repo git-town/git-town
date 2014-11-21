@@ -27,29 +27,28 @@ and assumes you use a central code repository like
 
 #### notes
 
-* each command only fetches the remote repository once
+* minimizes network requests: * each command fetches updates from the remote repository only once,
+  and pushes only when necessary
 * automatically prunes deleted remote branches
-* only pushes to the remote when the local branch is ahead
 
 
 ## installation
 
-Git Town is 100% bash script, so it runs anywhere where Git and Bash runs:
-OS X, Linux, BSD, and even Windows with Cygwin or something similar.
+Git Town is 100% Bash script, so it runs anywhere where Git and Bash runs.
 Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
 other platforms need to install manually.
 
 <table>
   <tr>
-    <th width="300px">
+    <td width="300px">
       Using Homebrew
     </th>
-    <th width="400px">
+    <td width="400px">
       Manually
     </th>
   </tr>
   <tr>
-    <td colspan="2">
+    <th colspan="2">
       Install
     </td>
   </tr>
@@ -65,7 +64,7 @@ other platforms need to install manually.
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <th colspan="2">
       Update
     </td>
   </tr>
@@ -79,7 +78,7 @@ other platforms need to install manually.
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <th colspan="2">
       Uninstall
     </td>
   </tr>
