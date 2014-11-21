@@ -28,6 +28,8 @@ Before do
     run 'git config git-town.main-branch-name main'
     run 'git config git-town.non-feature-branch-names ""'
     run 'git config push.default simple'
+    run 'git config user.email "cucumber@git.town"'
+    run 'git config user.name "Git Town"'
   end
 
   # Set the default branch
