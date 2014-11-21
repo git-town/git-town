@@ -50,7 +50,7 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td colspan="2">
-      __Install__
+      <b>Install</b>
     </td>
   </tr>
   <tr>
