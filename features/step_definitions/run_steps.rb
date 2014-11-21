@@ -22,8 +22,8 @@ When /^I run `(.+?)` and enter "(.*?)"$/ do |command, user_input|
 end
 
 
-When /^I run `(.+?)` and then clear and exit the editor( while allowing errors)?$/ do |command, allow_failures|
-  @result = run command, input: "dGZZ", allow_failures: allow_failures
+When /^I run `(.+?)` and enter an empty commit message?$/ do |command|
+  @result = run command, input: "dGZZ", allow_failures: true
 end
 
 

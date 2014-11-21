@@ -8,7 +8,7 @@ Feature: aborting ship of supplied branch by entering an empty commit message wi
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship feature` and then clear and exit the editor while allowing errors
+    When I run `git ship feature` and enter an empty commit message
 
 
   Scenario: result

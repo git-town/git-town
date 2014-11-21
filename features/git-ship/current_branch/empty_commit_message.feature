@@ -6,7 +6,7 @@ Feature: aborting ship of current branch by entering an empty commit message
     And the following commit exists in my repository
       | branch  | location | message        | file name    | file content    |
       | feature | local    | feature commit | feature_file | feature content |
-    And I run `git ship` and then clear and exit the editor while allowing errors
+    When I run `git ship` and enter an empty commit message
 
 
   Scenario: result

@@ -7,8 +7,7 @@ Feature: aborting ship of supplied branch by entering an empty commit message wi
       | branch  | location | message        | file name    | file content    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other_feature" branch
-    When I run `git ship feature` and then clear and exit the editor while allowing errors
-
+    When I run `git ship feature` and enter an empty commit message
 
   Scenario: result
     Then I get the error "Aborting ship due to empty commit message"
