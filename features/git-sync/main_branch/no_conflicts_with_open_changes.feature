@@ -10,6 +10,7 @@ Feature: Git Sync: syncing the main branch with open changes
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
     Then I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
       | branch | location         | message       | files       |
@@ -19,4 +20,3 @@ Feature: Git Sync: syncing the main branch with open changes
       | branch | files       |
       | main   | local_file  |
       | main   | remote_file |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

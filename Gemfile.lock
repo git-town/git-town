@@ -7,6 +7,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    ast (2.0.0)
+    astrolabe (1.3.0)
+      parser (>= 2.2.0.pre.3, < 3.0)
     builder (3.2.2)
     cucumber (1.3.17)
       builder (>= 2.1.2)
@@ -27,6 +30,11 @@ GEM
     multi_json (1.10.1)
     multi_test (0.1.1)
     open4 (1.3.4)
+    parser (2.2.0.pre.8)
+      ast (>= 1.1, < 3.0)
+      slop (~> 3.4, >= 3.4.5)
+    powerpack (0.0.9)
+    rainbow (2.0.0)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -39,7 +47,14 @@ GEM
     rspec-mocks (3.0.2)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.2)
+    rubocop (0.27.1)
+      astrolabe (~> 1.3)
+      parser (>= 2.2.0.pre.7, < 3.0)
+      powerpack (~> 0.0.6)
+      rainbow (>= 1.99.1, < 3.0)
+      ruby-progressbar (~> 1.4)
     ruby-progressbar (1.7.0)
+    slop (3.6.0)
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -54,3 +69,4 @@ DEPENDENCIES
   kappamaki
   open4
   rspec
+  rubocop

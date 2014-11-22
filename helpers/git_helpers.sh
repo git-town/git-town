@@ -99,6 +99,12 @@ function delete_remote_branch {
 }
 
 
+# Discard open changes
+function discard_open_changes {
+  run_command 'git reset --hard'
+}
+
+
 # Exits the application with an error message if the
 # repository has a branch with the given name.
 function ensure_does_not_have_branch {
@@ -369,6 +375,7 @@ function squash_merge {
   else
     run_command "git commit -a -m '$commit_message'"
   fi
+  if [ $? != 0 ]; then error_empty_commit; fi
 }
 
 

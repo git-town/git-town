@@ -28,8 +28,8 @@ Feature: Git Ship: shipping the supplied feature branch with open changes
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship feature -m 'feature done'`
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     Then I end up on the "other_feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I have the following commits
       | branch  | location         | message      | files        |
