@@ -84,7 +84,9 @@ function error_merge_branch {
 function perform_sync {
   stash_open_changes
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
-    sync_main_branch
+    checkout_main_branch
+    sync_branch 'rebase'
+    checkout_branch "$initial_branch_name"
     pull_branch
     merge_branch "$main_branch_name"
     push_branch
