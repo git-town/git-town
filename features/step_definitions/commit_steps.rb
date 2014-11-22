@@ -22,9 +22,7 @@ end
 
 
 Then(/^(?:now )?(?:(?:I (?:still )?(?:have|see))) the following commits$/) do |commits_table|
-  without_open_changes do
-    verify_commits commits_table: commits_table, repository_path: local_repository_path
-  end
+  verify_commits commits_table: commits_table, repository_path: local_repository_path
 end
 
 
