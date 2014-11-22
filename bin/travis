@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 # ShellCheck
 sudo apt-get install cabal-install
 cabal update
 cabal install shellcheck
 export PATH=~/.cabal/bin/:$PATH
-./bin/lint -e -x
+./bin/lint
 
 # Cucumber
 export PATH=$(pwd):$PATH
