@@ -1,2 +1,2 @@
 #!/bin/sh
-cucumber --format=fuubar "$@"
+bundle exec cucumber --format=fuubar "$@"

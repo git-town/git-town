@@ -9,4 +9,4 @@ export PATH=~/.cabal/bin/:$PATH
 
 # Cucumber
 export PATH=$(pwd):$PATH
-bundle exec cucumber
+bin/cuke
