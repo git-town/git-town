@@ -28,8 +28,8 @@ and assumes you use a central code repository like
 #### notes
 
 * minimizes network requests:
-  * each command only performs a single remote fetch
-  * pushes to the repository are omitted if possible
+  * each command performs a single fetch
+  * skips unnecessary pushes
 * automatically prunes deleted remote branches
 
 
