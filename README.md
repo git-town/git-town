@@ -27,7 +27,7 @@ and assumes you use a central code repository like
 
 #### notes
 
-* minimizes network requests:
+* minimizes network requests
   * each command performs a single fetch
   * skips unnecessary pushes
 * automatically prunes deleted remote branches
