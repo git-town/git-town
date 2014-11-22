@@ -28,7 +28,6 @@ function error_pull_main_branch {
 # Performs the extract operation
 function perform_extract {
   stash_open_changes
-  sync_main_branch
 
   if [ -z "$user_input" ]; then
     git log --oneline "$main_branch_name..$initial_branch_name"               | # Get a list of all commits in the feature branch.
@@ -49,6 +48,8 @@ function perform_extract {
     exit_with_error
   fi
 
+  checkout_main_branch
+  sync_branch 'rebase'
   create_and_checkout_feature_branch "$target_branch_name"
   cherry_pick "$user_input"
   push_branch
