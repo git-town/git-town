@@ -21,6 +21,7 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
   Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
@@ -30,7 +31,6 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And I still have the following committed files
       | branch | files              | content                   |
       | main   | conflicting_file   | local conflicting content |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   @finishes-with-non-empty-stash
@@ -45,6 +45,7 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     When I successfully finish the rebase by resolving the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
       | branch  | location         | message                   | files            |
@@ -56,4 +57,3 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
       | branch  | files            | content          |
       | main    | conflicting_file | resolved content |
       | feature | conflicting_file | resolved content |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

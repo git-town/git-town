@@ -12,7 +12,6 @@ Feature: git-extract with a single commit
 
   Scenario: result
     Then I end up on the "refactor" branch
-    And all branches are now synchronized
     And I have the following commits
       | branch   | location         | message            | files            |
       | main     | local and remote | remote main commit | remote_main_file |

@@ -36,8 +36,9 @@ end
 def at_path path
   cwd = Dir.pwd
   Dir.chdir path
-  yield
+  result = yield
   Dir.chdir cwd
+  result
 end
 
 def delete_repository path

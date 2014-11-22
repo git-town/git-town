@@ -14,14 +14,15 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
   @finishes-with-non-empty-stash
   Scenario: result
     Then I am still on the "feature" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
     And there are abort and continue scripts for "git sync"
-    And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "feature" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
@@ -32,7 +33,6 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | branch  | files            | content         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
   @finishes-with-non-empty-stash
@@ -40,14 +40,15 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     When I run `git sync --continue` while allowing errors
     Then I get the error "You must resolve the conflicts and commit your changes before continuing the git sync."
     And I am still on the "feature" branch
-    And my repo still has a merge in progress
     And I don't have an uncommitted file with name: "uncommitted"
+    And my repo still has a merge in progress
 
 
   Scenario: continuing after resolving conflicts
     When I successfully finish the merge by resolving the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location         | message                          | files            |
@@ -59,4 +60,3 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | branch  | files            | content          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"

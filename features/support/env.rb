@@ -6,7 +6,7 @@ require 'rspec'
 
 
 # The files to ignore when checking files
-IGNORED_FILES = %w[ tags ]
+IGNORED_FILES = %w(tags)
 
 Before do
   Dir.chdir repositiory_base
@@ -28,6 +28,7 @@ Before do
     run 'git config git-town.main-branch-name main'
     run 'git config git-town.non-feature-branch-names ""'
     run 'git config push.default simple'
+    run 'git config core.editor vim'
   end
 
   # Set the default branch

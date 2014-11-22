@@ -1,0 +1,14 @@
+Style/EmptyLines:
+  Enabled: false
+
+
+Style/MethodDefParentheses:
+  EnforcedStyle: require_no_parentheses
+
+
+Metrics/LineLength:
+  Max: 120
+
+
+Metrics/ParameterLists:
+  Max: 6
