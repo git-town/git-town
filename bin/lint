@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 find . -name '*.sh' -not -path "./vendor/*" -print0 | xargs -0 shellcheck
 find . -maxdepth 1 -name 'git-*' -print0 | xargs -0 shellcheck
