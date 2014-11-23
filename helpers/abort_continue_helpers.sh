@@ -4,7 +4,7 @@
 
 
 function add_to_abort_script {
-  add_to_script $1 "$abort_script_filename"
+  add_to_script "$1" "$abort_script_filename"
 }
 
 
