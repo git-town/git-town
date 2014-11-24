@@ -11,6 +11,7 @@ def remote_url domain, protocol
   end
 end
 
+
 # Returns the remote URL for a new pull request for the given domain and branch
 #   domain is Github or Bitbucket
 def remote_pull_request_url domain, branch_name
