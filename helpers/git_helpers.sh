@@ -66,7 +66,7 @@ function continue_merge {
 
 # Continues rebase if one is in progress
 function continue_rebase {
-  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
+  if [ "$(rebase_in_progress)" == true ]; then
     run_command "git rebase --continue"
   fi
 }
@@ -360,6 +360,16 @@ function push_branch {
 # Pushes tags to the remote
 function push_tags {
   run_command "git push --tags"
+}
+
+
+# Determines whether the current branch has a rebase in progress
+function rebase_in_progress {
+  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 
