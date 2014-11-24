@@ -25,9 +25,9 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And there is no rebase in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
-      | branch  | location | message                   | files              |
-      | main    | remote   | conflicting remote commit | conflicting_file   |
-      | main    | local    | conflicting local commit  | conflicting_file   |
+      | branch  | location | message                   | files            |
+      | main    | remote   | conflicting remote commit | conflicting_file |
+      | main    | local    | conflicting local commit  | conflicting_file |
     And I still have the following committed files
       | branch | files              | content                   |
       | main   | conflicting_file   | local conflicting content |

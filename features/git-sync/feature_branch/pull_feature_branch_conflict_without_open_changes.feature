@@ -22,9 +22,9 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And there is no merge in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
-      | branch  | location | message                   | files              |
-      | feature | local    | local conflicting commit  | conflicting_file   |
-      | feature | remote   | remote conflicting commit | conflicting_file   |
+      | branch  | location | message                   | files            |
+      | feature | local    | local conflicting commit  | conflicting_file |
+      | feature | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
       | branch  | files              | content                   |
       | feature | conflicting_file   | local conflicting content |
@@ -48,9 +48,8 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
       | feature | local and remote | remote conflicting commit                                  | conflicting_file |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
-      | branch  | files              | content            |
-      | feature | conflicting_file   | resolved content   |
-
+      | branch  | files              | content          |
+      | feature | conflicting_file   | resolved content |
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
