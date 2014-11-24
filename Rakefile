@@ -1,5 +1,5 @@
 desc 'Run all linters and tests'
-task 'default' => %w(lint test)
+task 'default' => %w(lint spec)
 
 desc 'Run all linters'
 task 'lint' => %w(lint:bash lint:ruby)
@@ -15,6 +15,6 @@ task 'lint:ruby' do
 end
 
 desc 'Run all tests'
-task 'test' do
-  sh 'cucumber'
+task 'spec' do
+  sh 'bin/cuke'
 end
