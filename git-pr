@@ -14,7 +14,7 @@ elif [ "$domain" == bitbucket.org ]; then
   encoded_source=$(echo "$repository%3A$sha%3A$branch" | sed 's/\//%2F/')
   pr_path="pull-request/new?source=$encoded_source"
 else
-  echo_usage_header
+  echo_error_header
   echo_usage "Unsupported domain. Only Github and Bitbucket are currently supported"
   exit_with_error
 fi
