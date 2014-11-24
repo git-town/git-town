@@ -22,8 +22,8 @@ When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, user_input|
 end
 
 
-When /^I run `(.+?)` and enter an empty commit message?$/ do |command|
-  @result = run command, input: "dGZZ", allow_failures: true
+When(/^I run `(.+?)` and enter an empty commit message?$/) do |command|
+  @result = run command, input: 'dGZZ', allow_failures: true
 end
 
 
