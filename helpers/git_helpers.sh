@@ -399,8 +399,7 @@ function remote_domain {
 
 # Returns the USER/REPO for the remote repository
 function remote_repository_name {
-  local url=$(remote_url)
-  echo "$url" | sed "s@.*[:/]\([^/]*/[^/]*\)\.git@\1@"
+  echo "$(remote_url)" | sed "s@.*[:/]\([^/]*/[^/]*\)\.git@\1@"
 }
 
 
