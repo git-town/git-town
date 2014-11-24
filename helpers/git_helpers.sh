@@ -381,8 +381,28 @@ function remote_merged_branches {
 
 # Returns the url for the remote with the specified name
 function remote_url {
-  git remote -v | grep "$1.*fetch" | awk '{print $2}'
+  git remote -v | grep "origin.*fetch" | awk '{print $2}'
 }
+
+
+# Returns the domain of the remote repository
+function remote_domain {
+  local url=$(remote_url)
+
+  if [[ "$url" =~ github ]]; then
+    echo 'github.com'
+  elif [[ "$url" =~ bitbucket ]]; then
+    echo 'bitbucket.org'
+  fi
+}
+
+
+# Returns the USER/REPO for the remote repository
+function remote_repository_name {
+  local url=$(remote_url)
+  echo "$url" | sed "s@.*[:/]\([^/]*/[^/]*\)\.git@\1@"
+}
+
 
 
 # Resets the current branch to the commit described by the given SHA

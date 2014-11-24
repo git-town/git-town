@@ -8,3 +8,9 @@ Given(/^my repo has an upstream repo$/) do
 
   run "git remote add upstream #{upstream_remote_repository_path}"
 end
+
+
+Given(/^my remote origin is on (Github|Bitbucket) through (HTTPS|SSH)$/) do |domain, protocol|
+  url = remote_url domain, protocol
+  run "git remote set-url origin #{url}"
+end

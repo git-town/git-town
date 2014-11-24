@@ -1,0 +1,20 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+branch=$(get_current_branch_name)
+domain=$(remote_domain)
+repository=$(remote_repository_name)
+
+if [ "$domain" == github.com ]; then
+  pr_path="compare/$branch?expand=1"
+elif [ "$domain" == bitbucket.org ]; then
+  sha=$(git log --format="%H" -1 | cut -c-12)
+  encoded_source=$(echo "$repository%3A$sha%3A$branch" | sed 's/\//%2F/')
+  pr_path="pull-request/new?source=$encoded_source"
+else
+  echo_usage_header
+  echo_usage "Unsupported domain. Only Github and Bitbucket are currently supported"
+  exit_with_error
+fi
+
+open "https://$domain/$repository/$pr_path"

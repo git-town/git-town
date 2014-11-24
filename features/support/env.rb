@@ -4,6 +4,7 @@ require 'kappamaki'
 require 'open4'
 require 'rspec'
 
+SHELL_OVERRIDE_DIRECTORY = "#{Pathname.new(__FILE__).parent.parent.parent}/features/shell_overrides"
 
 # The files to ignore when checking files
 IGNORED_FILES = %w(tags)
@@ -49,6 +50,16 @@ Before do
   end
 
   Dir.chdir local_repository_path
+end
+
+
+Before '@shell-overrides' do
+  ENV['SHELL_OVERRIDES'] = '1'
+end
+
+
+Before '~@shell-overrides' do
+  ENV['SHELL_OVERRIDES'] = nil
 end
 
 
