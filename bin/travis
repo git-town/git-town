@@ -7,4 +7,4 @@ cabal install shellcheck
 export PATH=~/.cabal/bin/:$PATH
 
 # Run suite
-bundle exec rake
+rake
