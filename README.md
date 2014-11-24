@@ -126,7 +126,7 @@ for help on an individual command.
 
 ## development
 
-tests are written in <a href="http://cukes.info/" target="_blank">cucumber</a> and <a href="http://rspec.info/" target="_blank">rspec</a>
+tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
 
 * install tools
   * `bundle`
