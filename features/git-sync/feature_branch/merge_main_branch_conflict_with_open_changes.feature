@@ -44,7 +44,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And my repo still has a merge in progress
 
 
-  Scenario: continuing after resolving conflicts and committing
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then I am still on the "feature" branch
