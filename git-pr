@@ -11,7 +11,7 @@ if [ "$domain" == github.com ]; then
   pr_path="compare/$branch?expand=1"
 elif [ "$domain" == bitbucket.org ]; then
   sha=$(git log --format="%H" -1 | cut -c-12)
-  encoded_source=$(echo "$repository%3A$sha%3A$branch" | sed 's/\//%2F/')
+  encoded_source=$(echo "$repository:$sha:$branch" | sed 's/\//%2F/' | sed 's/\:/%3A/')
   pr_path="pull-request/new?source=$encoded_source"
 else
   echo_error_header
