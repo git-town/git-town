@@ -7,4 +7,5 @@ cabal install shellcheck
 export PATH=~/.cabal/bin/:$PATH
 
 # Run suite
+export PATH=$(pwd):$PATH
 rake
