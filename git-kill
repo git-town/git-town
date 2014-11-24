@@ -24,7 +24,6 @@ function determine_branch_to_kill {
   if [ -z "$1" ]; then
     echo "$initial_branch_name"
   else
-    ensure_has_branch "$1"
     echo "$1"
   fi
 }
@@ -32,6 +31,10 @@ function determine_branch_to_kill {
 
 function perform_kill {
   local branch_to_kill=$(determine_branch_to_kill "$*")
+
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
+    ensure_has_branch "$branch_to_kill"
+  fi
 
   ensure_is_feature_branch "$branch_to_kill" "You can only kill feature branches."
 
