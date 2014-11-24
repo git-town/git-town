@@ -16,5 +16,5 @@ end
 
 desc 'Run all tests'
 task 'spec' do
-  sh 'bin/cuke'
+  sh 'cucumber'
 end

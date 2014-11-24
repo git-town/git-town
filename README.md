@@ -132,7 +132,7 @@ tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> a
   * `bundle`
   * `brew install shellcheck`
 * run tests
-  * all tests: `cucumber` or `bin/cuke` for <a href="https://github.com/martinciu/fuubar-cucumber" target="_blank">fuubar</a> output
+  * all tests: `cucumber`
   * single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
 * run linters
   * `bin/lint` for the bash source code
