@@ -11,10 +11,10 @@ end
 
 desc 'Run the ruby linter'
 task 'lint:ruby' do
-  sh 'rubocop'
+  sh 'bundle exec rubocop'
 end
 
 desc 'Run all tests'
 task 'spec' do
-  sh 'bin/cuke'
+  sh 'bundle exec cucumber'
 end
