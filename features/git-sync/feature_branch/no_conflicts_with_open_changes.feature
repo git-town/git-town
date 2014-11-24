@@ -14,13 +14,13 @@ Feature: Git Sync: syncing a feature branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
-      | branch  | location         | message                          | files               |
-      | main    | local and remote | local main commit                | local_main_file     |
-      | main    | local and remote | remote main commit               | remote_main_file    |
-      | feature | local and remote | Merge branch 'main' into feature |                     |
-      | feature | local and remote | local main commit                | local_main_file     |
-      | feature | local and remote | remote main commit               | remote_main_file    |
-      | feature | local and remote | local feature commit             | local_feature_file  |
+      | branch  | location         | message                          | files              |
+      | main    | local and remote | local main commit                | local_main_file    |
+      | main    | local and remote | remote main commit               | remote_main_file   |
+      | feature | local and remote | Merge branch 'main' into feature |                    |
+      | feature | local and remote | local main commit                | local_main_file    |
+      | feature | local and remote | remote main commit               | remote_main_file   |
+      | feature | local and remote | local feature commit             | local_feature_file |
     And now I have the following committed files
       | branch  | files                                                 |
       | main    | local_main_file, remote_main_file                     |

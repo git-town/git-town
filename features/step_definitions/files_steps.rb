@@ -3,6 +3,12 @@ Given(/^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/) do
 end
 
 
+Given(/^I resolve the conflict in "(.+?)"$/) do |file_name|
+  IO.write file_name, 'resolved content'
+  run "git add #{file_name}"
+end
+
+
 
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
