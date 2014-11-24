@@ -229,7 +229,7 @@ function has_open_changes {
 # Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
   local branch_name=$1
-  if [ "$(git branch -vv | grep "$branch_name" | grep -c "\[origin\/$branch_name.*\]")" == 0 ]; then
+  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
     echo false
   else
     echo true
