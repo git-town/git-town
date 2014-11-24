@@ -393,12 +393,3 @@ function sync_branch {
   pull_branch "$strategy"
   push_branch
 }
-
-
-# Sync the main branch, returning to the original branch
-function sync_main_branch {
-  local current_branch_name=$(get_current_branch_name)
-  checkout_main_branch
-  sync_branch 'rebase'
-  checkout_branch "$current_branch_name"
-}
