@@ -1,4 +1,4 @@
-Feature: git-sync properly handles a deleted tracking branch
+Feature: git-sync restores deleted tracking branch
 
   Scenario: without a remote branch
     Given I have a feature branch named "feature"
