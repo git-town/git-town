@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Helper methods for working with Git.
+# Helper methods for running git commands
 
 
 # Abort a cherry-pick
@@ -21,7 +21,7 @@ function abort_rebase {
 }
 
 
-# Checks out the branch with the given name.
+# Checks out the branch with the given name (if necessary)
 #
 # Skips this operation if the requested branch
 # is already checked out.
@@ -121,78 +121,6 @@ function discard_open_changes {
 }
 
 
-# Exits the application with an error message if the
-# repository has a branch with the given name.
-function ensure_does_not_have_branch {
-  local branch_name=$1
-  if [ "$(has_branch "$branch_name")" = true ]; then
-    echo_error_header
-    echo_error "A branch named '$branch_name' already exists"
-    exit_with_error
-  fi
-}
-
-
-
-# Exits the application with an error message if the
-# repository does not have a branch with the given name.
-function ensure_has_branch {
-  local branch_name=$1
-  if [ "$(has_branch "$branch_name")" == false ]; then
-    echo_error_header
-    echo_error "There is no branch named '$branch_name'."
-    exit_with_error
-  fi
-}
-
-
-# Exits the application with an error message if the supplied branch is
-# not a feature branch
-function ensure_is_feature_branch {
-  local branch_name=$1
-  local error_message=$2
-  if [ "$(is_feature_branch "$branch_name")" == false ]; then
-    error_is_not_feature_branch
-
-    echo_error_header
-    echo_error "The branch '$branch_name' is not a feature branch. $error_message"
-    exit_with_error
-  fi
-}
-
-
-# Exits with an error message if there are unresolved conflicts
-function ensure_no_conflicts {
-  if [ "$(has_conflicts)" == true ]; then
-    echo_error_header
-    echo_error "$*"
-    exit_with_error
-  fi
-}
-
-
-# Exists the application with an error message if the
-# current working directory contains uncommitted changes.
-function ensure_no_open_changes {
-  if [ "$(has_open_changes)" == true ]; then
-    error_has_open_changes
-
-    echo_error_header
-    echo_error "$*"
-    exit_with_error
-  fi
-}
-
-
-# Exits the application with an error message if the current branch is
-# not a feature branch
-function ensure_on_feature_branch {
-  local error_message="$*"
-  local branch_name=$(get_current_branch_name)
-  ensure_is_feature_branch "$branch_name" "$error_message"
-}
-
-
 # Called by pull_branch when the merge/rebase fails with conflicts
 function error_pull_branch {
   if [ "$(is_feature_branch "$1")" == true ]; then
@@ -225,100 +153,12 @@ function fetch_upstream {
 }
 
 
-# Returns the current branch name
-function get_current_branch_name {
-  git rev-parse --abbrev-ref HEAD
-}
-
-
-# Returns true if the repository has a branch with the given name
-function has_branch {
-  local branch_name=$1
-  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Returns true if there are conflicts
-function has_conflicts {
-  if [ "$(git status | grep -c 'Unmerged paths')" == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Determines whether there are open changes in Git.
-function has_open_changes {
-  if [ "$(git status --porcelain | wc -l | tr -d ' ')" == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Determines whether the given branch has a remote tracking branch.
-function has_tracking_branch {
-  local branch_name=$1
-  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Determines whether the given branch is ahead of main
-function is_ahead_of_main {
-  local branch_name=$1
-  if [ "$(git log --oneline "$main_branch_name..$branch_name" | wc -l | tr -d ' ')" == 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Returns true if the current branch is a feature branch
-function is_feature_branch {
-  local branch_name=$1
-  if [ "$branch_name" == "$main_branch_name" -o "$(echo "$non_feature_branch_names" | tr ',' '\n' | grep -c "$branch_name")" == 1 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Returns the names of local branches that have been merged into main
-function local_merged_branches {
-  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
-}
-
-
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
   local current_branch_name=$(get_current_branch_name)
   run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
-}
-
-
-# Returns whether the current branch has local updates
-# that haven't been pushed to the remote yet.
-# Assumes the current branch has a tracking branch
-function needs_pushing {
-  if [ "$(git status | grep -c "Your branch is ahead of")" != 0 ]; then
-    echo true
-  else
-    echo false
-  fi
 }
 
 
@@ -363,28 +203,6 @@ function push_tags {
 }
 
 
-# Determines whether the current branch has a rebase in progress
-function rebase_in_progress {
-  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
-    echo true
-  else
-    echo false
-  fi
-}
-
-
-# Returns the names of remote branches that have been merged into main
-function remote_merged_branches {
-  git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
-}
-
-
-# Returns the url for the remote with the specified name
-function remote_url {
-  git remote -v | grep "$1.*fetch" | awk '{print $2}'
-}
-
-
 # Resets the current branch to the commit described by the given SHA
 function reset_to_sha {
   local sha=$1
@@ -399,13 +217,6 @@ function restore_open_changes {
   if [ "$initial_open_changes" = true ]; then
     run_command "git stash pop"
   fi
-}
-
-
-# Returns the SHA that the given branch points to
-function sha_of_branch {
-  local branch_name=$1
-  git rev-parse "$branch_name"
 }
 
 
