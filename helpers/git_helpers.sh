@@ -387,13 +387,7 @@ function remote_url {
 
 # Returns the domain of the remote repository
 function remote_domain {
-  local url=$(remote_url)
-
-  if [[ "$url" =~ github ]]; then
-    echo 'github.com'
-  elif [[ "$url" =~ bitbucket ]]; then
-    echo 'bitbucket.org'
-  fi
+  remote_url | grep -o "github.com\|bitbucket.org"
 }
 
 
