@@ -128,6 +128,6 @@ def verify_commits commits_table:, repository_path:
   end.flatten
 
   at_path repository_path do
-    expect(commits_in_repo).to match_commits expected_commits
+    expect(commits_in_repo).to match_array expected_commits
   end
 end
