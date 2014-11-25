@@ -387,13 +387,13 @@ function remote_url {
 
 # Returns the domain of the remote repository
 function remote_domain {
-  remote_url | grep -o "github.com\|bitbucket.org"
+  remote_url | sed -E "s#(https?://([^@]*@)?|git@)([^/:]+).*#\3#"
 }
 
 
 # Returns the USER/REPO for the remote repository
 function remote_repository_name {
-  remote_url | sed "s@.*[:/]\([^/]*/[^/]*\)\.git@\1@"
+  remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
 }
 
 

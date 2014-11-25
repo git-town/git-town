@@ -6,5 +6,6 @@ Feature: git-pr when origin is unsupported
     When I run `git pr` while allowing errors
 
 
+  @shell-overrides
   Scenario:
     Then I get the error "Unsupported hosting service. Only Github and Bitbucket are currently supported"
