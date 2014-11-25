@@ -21,7 +21,7 @@ function abort_rebase {
 }
 
 
-# Checks out the branch with the given name (if necessary)
+# Checks out the branch with the given name.
 #
 # Skips this operation if the requested branch
 # is already checked out.
