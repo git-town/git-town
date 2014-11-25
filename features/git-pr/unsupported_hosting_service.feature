@@ -7,4 +7,4 @@ Feature: git-pr when origin is unsupported
 
 
   Scenario:
-    Then I get the error "Unsupported domain. Only Github and Bitbucket are currently supported"
+    Then I get the error "Unsupported hosting service. Only Github and Bitbucket are currently supported"

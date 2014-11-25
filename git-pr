@@ -15,7 +15,7 @@ elif [ "$domain" == bitbucket.org ]; then
   pr_path="pull-request/new?source=$encoded_source"
 else
   echo_error_header
-  echo_usage "Unsupported domain. Only Github and Bitbucket are currently supported"
+  echo_usage "Unsupported hosting service. Only Github and Bitbucket are currently supported"
   exit_with_error
 fi
 
