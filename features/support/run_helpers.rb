@@ -21,9 +21,10 @@ end
 
 
 def print_result result
-  puts "\nRUNNING: #{result.command}"
-  puts "#{result.out}\n"
-  puts "#{result.err}\n"
+  puts ''
+  puts "#{result.location}$ #{result.command}"
+  puts "#{result.out}#{result.err}"
+  puts ''
 end
 
 
@@ -39,7 +40,7 @@ end
 
 
 def run_shell_command command, input
-  result = OpenStruct.new(command: command)
+  result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, stderr|
     stdin.puts input if input
