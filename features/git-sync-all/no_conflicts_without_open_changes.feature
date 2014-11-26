@@ -4,7 +4,7 @@ Feature: git-sync-all from the main branch
     Given I have feature branches named "feature" and "local_feature"
     And my coworker has a feature branch named "remote_feature"
     And the following commits exist in my repository
-      | branch         | location         | message               |  file name          |
+      | branch         | location         | message               | file name           |
       | main           | local            | local main commit     | local_main_file     |
       | main           | remote           | remote main commit    | remote_main_file    |
       | feature        | local and remote | feature commit        | feature_file        |

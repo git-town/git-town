@@ -1,19 +1,87 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-stash_open_changes
-checkout_main_branch
-sync_non_feature_branch
 
-for local_branch_name in $(local_branches); do
-  if [ "$(is_feature_branch "$local_branch_name")" == true ]; then
-    checkout_branch "$local_branch_name"
-    pull_branch
-    merge_branch "$main_branch_name"
-    push_branch
-  fi
-done
+export abort_script_filename=$(abort_script_filename_for_command sync-all)
+export continue_script_filename=$(continue_script_filename_for_command sync-all)
+export skip_script_filename=$(skip_script_filename_for_command sync-all)
+export skip_script_message
 
-checkout_branch "$initial_branch_name"
-restore_open_changes
+
+function initialize_skip_continue_scripts {
+  local operations=(add_to_skip_script add_to_continue_script)
+  for operation in "${operations[@]}"; do
+    $operation "initial_open_changes=$initial_open_changes"
+    $operation "initial_branch_name=$initial_branch_name"
+    $operation "read -a branch_names <<< '${branch_names[*]}'"
+    $operation "branch_names_index=$branch_names_index"
+  done
+}
+
+
+# Called when merge_branch fails
+function error_merge_branch {
+  create_merge_conflict_abort_script
+
+  initialize_skip_continue_scripts
+
+  # Create the skip script
+  add_to_skip_script "abort_merge"
+  add_to_skip_script 'sync_branches'
+
+  # Create the continue script
+  add_to_continue_script 'continue_merge'
+  add_to_continue_script 'push_branch'
+  add_to_continue_script 'sync_branches'
+
+  exit_with_abort_continue_messages 'sync-all'
+}
+
+
+function pre_sync_branches {
+  stash_open_changes
+  checkout_main_branch
+  sync_non_feature_branch
+
+  read -a branch_names <<< "$(local_branches | tr '\n' ' ')"
+  echo "${branch_names[@]}"
+  branch_names_index=0
+}
+
+
+function sync_branches {
+  for index in "${!branch_names[@]}"; do
+    if [ "$index" -lt $branch_names_index ]; then continue; fi
+
+    (( branch_names_index++ ))
+    branch_name="${branch_names[index]}"
+    skip_script_message="To skip the sync of the '$branch_name' branch and continue"
+
+    if [ "$(is_feature_branch "$branch_name")" == true ]; then
+      checkout_branch "$branch_name"
+      pull_branch
+      merge_branch "$main_branch_name"
+      push_branch
+    fi
+  done
+
+  checkout_branch "$initial_branch_name"
+  restore_open_changes
+}
+
+
+if [ "$1" = "--abort" ]; then
+  run_abort_script
+elif [ "$1" = "--skip" ]; then
+  run_skip_script
+elif [ "$1" = "--continue" ]; then
+  ensure_no_conflicts "You must resolve the conflicts before continuing the git sync-all"
+  cat $continue_script_filename
+  run_continue_script
+else
+  remove_scripts
+  pre_sync_branches
+  sync_branches
+fi
+
 exit_with_success
