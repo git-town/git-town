@@ -89,13 +89,11 @@ function perform_sync {
   stash_open_changes
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     checkout_main_branch
-    sync_branch 'rebase'
+    sync_non_feature_branch
     checkout_branch "$initial_branch_name"
-    pull_branch
-    merge_branch "$main_branch_name"
-    push_branch
+    sync_feature_branch
   else
-    sync_branch 'rebase'
+    sync_non_feature_branch
     push_tags
   fi
   restore_open_changes

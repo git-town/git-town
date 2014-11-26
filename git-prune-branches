@@ -3,7 +3,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 stash_open_changes
 checkout_main_branch
-sync_branch 'rebase'
+sync_non_feature_branch
 checkout_branch "$initial_branch_name"
 
 for remote_branch_name in $(remote_merged_branches); do

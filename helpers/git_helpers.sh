@@ -295,6 +295,13 @@ function is_feature_branch {
 }
 
 
+# Returns the names of local branches
+function local_branches {
+  git branch | tr -d ' ' | sed 's/\*//g'
+}
+
+
+
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
@@ -433,9 +440,16 @@ function stash_open_changes {
 }
 
 
-# Push and pull the current branch
-function sync_branch {
-  local strategy=$1
+# rebase tracking branch and push the current branch
+function sync_non_feature_branch {
+  pull_branch rebase
+  push_branch
+}
+
+
+# merge tracking branch, merge main, and push the current branch
+function sync_feature_branch {
   pull_branch "$strategy"
+  merge_branch "$main_branch_name"
   push_branch
 }
