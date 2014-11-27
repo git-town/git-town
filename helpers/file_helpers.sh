@@ -7,7 +7,7 @@
 temp_filename_suffix="$(pwd | tr '/' '_')"
 
 # Temporary filename used for short term storage of user input
-user_input_filename="/tmp/git-town-user-input_${temp_filename_suffix}"
+export user_input_filename="/tmp/git-town-user-input_${temp_filename_suffix}"
 
 # Scripts filenames
 actions=(abort continue undo)

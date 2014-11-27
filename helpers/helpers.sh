@@ -1,7 +1,7 @@
 #!/bin/bash -e
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-program="$(echo "$0" | grep -o "[^/]*$")"
+export program="$(echo "$0" | grep -o "[^/]*$")"
 
 source "$current_dir/configuration.sh"
 source "$current_dir/file_helpers.sh"
