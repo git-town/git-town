@@ -1,20 +1,5 @@
 #!/bin/bash
-
-# This file provides the "git sync" functionality.
-#
-# To handle errors, it defines a number of error handler methods.
-# These methods are called automatically by the respective git helper methods
-# when their operation fails.
-#
-# The error handlers create abort and continue scripts that are used when the
-# user runs "git sync --abort" and "git sync --continue".
-
-
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
-
-
-export abort_script_filename=$(abort_script_filename_for_command sync)
-export continue_script_filename=$(continue_script_filename_for_command sync)
 
 
 # Called when pull_branch fails on the feature branch
@@ -28,7 +13,7 @@ function error_pull_feature_branch {
   add_to_continue_script "push_branch"
   add_to_continue_script "restore_open_changes"
 
-  exit_with_abort_continue_messages 'sync'
+  exit_with_script_messages 'sync'
 }
 
 
@@ -51,7 +36,7 @@ function error_pull_main_branch {
   fi
   add_to_continue_script "restore_open_changes"
 
-  exit_with_abort_continue_messages 'sync'
+  exit_with_script_messages 'sync'
 }
 
 
@@ -66,7 +51,7 @@ function error_pull_non_feature_branch {
   add_to_continue_script "push_tags"
   add_to_continue_script "restore_open_changes"
 
-  exit_with_abort_continue_messages 'sync'
+  exit_with_script_messages 'sync'
 }
 
 
@@ -80,7 +65,7 @@ function error_merge_branch {
   add_to_continue_script "push_branch"
   add_to_continue_script "restore_open_changes"
 
-  exit_with_abort_continue_messages 'sync'
+  exit_with_script_messages 'sync'
 }
 
 

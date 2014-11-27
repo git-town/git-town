@@ -2,10 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-export abort_script_filename=$(abort_script_filename_for_command ship)
-
-
-
 # Exit if the current branch is not ahead of main
 function ensure_ahead_of_main_branch {
   local current_branch_name=$(get_current_branch_name)
@@ -47,21 +43,21 @@ function error_is_not_feature_branch {
 # Called when pull_branch fails on the feature branch
 function error_pull_feature_branch {
   create_merge_conflict_abort_script
-  exit_with_abort_continue_messages 'ship'
+  exit_with_script_messages
 }
 
 
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_rebase_conflict_abort_script
-  exit_with_abort_continue_messages 'ship'
+  exit_with_script_messages
 }
 
 
 # Called when merge_branch fails
 function error_merge_branch {
   create_merge_conflict_abort_script
-  exit_with_abort_continue_messages 'ship'
+  exit_with_script_messages
 }
 
 
