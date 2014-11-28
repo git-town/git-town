@@ -1,5 +1,5 @@
 #!/bin/bash -e
 
 find . -name '*.sh' -not -path "./vendor/*" -print0 | xargs -0 shellcheck
-find . -name 'git-*' -depth 1 -print0 | xargs -0 shellcheck
-find bin/ -name '*.' -print0 | xargs -0 shellcheck
+find . -maxdepth 1 -name 'git-*' -print0 | xargs -0 shellcheck
+find bin/ -mindepth 1 -name '*' -print0 | xargs -0 shellcheck
