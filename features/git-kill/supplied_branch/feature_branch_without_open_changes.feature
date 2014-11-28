@@ -32,4 +32,3 @@ Feature: Git Kill: killing the given feature branch without open changes
       | branch         | location         | message            | files            |
       | good-feature   | local and remote | good commit        | good_file        |
       | delete-by-name | local and remote | unfortunate commit | unfortunate_file |
-
