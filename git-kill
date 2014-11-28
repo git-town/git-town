@@ -32,32 +32,24 @@ function determine_branch_to_kill {
 function perform_kill {
   local branch_to_kill=$(determine_branch_to_kill "$*")
 
-  ensure_has_branch "$branch_to_kill"
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
+    ensure_has_branch "$branch_to_kill"
+  fi
+
   ensure_is_feature_branch "$branch_to_kill" "You can only kill feature branches."
 
   # The SHA of where the branch to kill needs to point to when restored
   local original_branch_sha=$(sha_of_branch "$branch_to_kill")
 
-  # Remove open changes
-  if [ "$initial_open_changes" == true ]; then
-    if [ "$branch_to_kill" == "$initial_branch_name" ]; then
-      commit_open_changes
-    else
-      stash_open_changes
-    fi
+  if [ "$branch_to_kill" == "$initial_branch_name" ]; then
+    commit_open_changes
   fi
 
   create_undo_script "$original_branch_sha" "$branch_to_kill"
   if [ "$branch_to_kill" == "$initial_branch_name" ]; then
     checkout_main_branch
-  else
-    checkout_branch "$initial_branch_name"
   fi
   delete_branch "$branch_to_kill" force
-
-  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
-    restore_open_changes
-  fi
 }
 
 

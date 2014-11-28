@@ -51,8 +51,10 @@ function cherry_pick {
 
 # Commits all open changes into the current branch
 function commit_open_changes {
-  run_command "git add -A"
-  run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  if [ "$initial_open_changes" = true ]; then
+    run_command "git add -A"
+    run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  fi
 }
 
 
