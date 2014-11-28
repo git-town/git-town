@@ -3,11 +3,11 @@ Feature: git-extract with multiple commits and open changes
   Background:
     Given I am on a feature branch
     And the following commits exist in my repository
-      | branch  | location | message            | file name        | file content        |
-      | main    | remote   | remote main commit | remote_main_file | remote main content |
-      | feature | local    | feature commit     | feature_file     |                     |
-      | feature | local    | refactor1 commit   | refactor1_file   |                     |
-      | feature | local    | refactor2 commit   | refactor2_file   |                     |
+      | branch  | location | message            | file name        |
+      | main    | remote   | remote main commit | remote_main_file |
+      | feature | local    | feature commit     | feature_file     |
+      | feature | local    | refactor1 commit   | refactor1_file   |
+      | feature | local    | refactor2 commit   | refactor2_file   |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last two commit shas
 
