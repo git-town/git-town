@@ -14,6 +14,9 @@ function create_undo_script {
   if [ "$(has_tracking_branch "$initial_branch_name")" == true ]; then
     add_to_undo_script "push_branch"
   fi
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
+    add_to_undo_script "git checkout $initial_branch_name"
+  fi
 }
 
 

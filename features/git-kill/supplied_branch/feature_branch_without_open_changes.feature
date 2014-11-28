@@ -23,7 +23,7 @@ Feature: Git Kill: killing the given feature branch without open changes
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "delete-by-name" branch
+    Then I am still on the "good-feature" branch
     And the existing branches are
       | repository | branches                           |
       | local      | main, delete-by-name, good-feature |

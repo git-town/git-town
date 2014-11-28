@@ -26,7 +26,7 @@ Feature: Git Kill: killing the given feature branch with open changes
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "delete-by-name" branch
+    Then I am still on the "good-feature" branch
     And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
       | repository | branches                           |
