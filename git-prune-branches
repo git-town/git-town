@@ -2,7 +2,9 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 stash_open_changes
-sync_main_branch
+checkout_main_branch
+sync_branch 'rebase'
+checkout_branch "$initial_branch_name"
 
 for remote_branch_name in $(remote_merged_branches); do
   if [ "$(is_feature_branch "$remote_branch_name")" == true ]; then
