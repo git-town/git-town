@@ -21,8 +21,8 @@ function ensure_ahead_of_main_branch {
 # Called when squash_merge fails due to empty commit message
 function error_empty_commit {
   discard_open_changes
-  checkout_branch $initial_branch_name
-  if [ $target_branch_name != $initial_branch_name ]; then
+  checkout_branch "$initial_branch_name"
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
     restore_open_changes
   fi
 

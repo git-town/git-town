@@ -70,6 +70,13 @@ Given(/^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)
 end
 
 
+Given(/the "(.+)" branch gets deleted on the remote/) do |branch_name|
+  at_path coworker_repository_path do
+    run "git push origin :#{branch_name}"
+  end
+end
+
+
 
 
 Then(/^I (?:end up|am still) on the feature branch$/) do

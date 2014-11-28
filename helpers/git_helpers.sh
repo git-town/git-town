@@ -56,6 +56,22 @@ function commit_open_changes {
 }
 
 
+# Continues merge if one is in progress
+function continue_merge {
+  if [ "$(has_open_changes)" == true ]; then
+    run_command "git commit --no-edit"
+  fi
+}
+
+
+# Continues rebase if one is in progress
+function continue_rebase {
+  if [ "$(rebase_in_progress)" == true ]; then
+    run_command "git rebase --continue"
+  fi
+}
+
+
 # Cuts a new branch off the given parent branch, and checks it out.
 function create_and_checkout_branch {
   local new_branch_name=$1
@@ -145,6 +161,16 @@ function ensure_is_feature_branch {
 }
 
 
+# Exits with an error message if there are unresolved conflicts
+function ensure_no_conflicts {
+  if [ "$(has_conflicts)" == true ]; then
+    echo_error_header
+    echo_error "$*"
+    exit_with_error
+  fi
+}
+
+
 # Exists the application with an error message if the
 # current working directory contains uncommitted changes.
 function ensure_no_open_changes {
@@ -216,6 +242,16 @@ function has_branch {
 }
 
 
+# Returns true if there are conflicts
+function has_conflicts {
+  if [ "$(git status | grep -c 'Unmerged paths')" == 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
 # Determines whether there are open changes in Git.
 function has_open_changes {
   if [ "$(git status --porcelain | wc -l | tr -d ' ')" == 0 ]; then
@@ -229,7 +265,7 @@ function has_open_changes {
 # Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
   local branch_name=$1
-  if [ "$(git branch -vv | grep "$branch_name" | grep -c "\[origin\/$branch_name.*\]")" == 0 ]; then
+  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
     echo false
   else
     echo true
@@ -327,6 +363,16 @@ function push_tags {
 }
 
 
+# Determines whether the current branch has a rebase in progress
+function rebase_in_progress {
+  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 # Returns the names of remote branches that have been merged into main
 function remote_merged_branches {
   git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
@@ -392,13 +438,4 @@ function sync_branch {
   local strategy=$1
   pull_branch "$strategy"
   push_branch
-}
-
-
-# Sync the main branch, returning to the original branch
-function sync_main_branch {
-  local current_branch_name=$(get_current_branch_name)
-  checkout_main_branch
-  sync_branch 'rebase'
-  checkout_branch "$current_branch_name"
 }

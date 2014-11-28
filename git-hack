@@ -24,7 +24,8 @@ function perform_hack {
 
   ensure_does_not_have_branch "$target_branch_name"
   stash_open_changes
-  sync_main_branch
+  checkout_main_branch
+  sync_branch 'rebase'
   create_and_checkout_feature_branch "$target_branch_name"
   restore_open_changes
 }
