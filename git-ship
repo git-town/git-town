@@ -5,19 +5,6 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 export abort_script_filename=$(abort_script_filename_for_command ship)
 
 
-
-# Exit if the current branch is not ahead of main
-function ensure_ahead_of_main_branch {
-  local current_branch_name=$(get_current_branch_name)
-  if [ "$(is_ahead_of_main "$current_branch_name")" == false ]; then
-    return_to_initial_branch
-
-    echo_error_header
-    echo_error "The branch '$current_branch_name' has no commits to merge into '$main_branch_name'."
-    exit_with_error
-  fi
-}
-
 # Called when squash_merge fails due to empty commit message
 function error_empty_commit {
   discard_open_changes
@@ -95,7 +82,7 @@ function perform_ship {
   checkout_branch "$target_branch_name"
   pull_branch
   merge_branch "$main_branch_name"
-  ensure_ahead_of_main_branch
+  ensure_has_shippable_changes
   checkout_main_branch
   squash_merge "$target_branch_name" "$message"
   push_branch
