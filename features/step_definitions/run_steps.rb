@@ -31,12 +31,11 @@ end
 
 Then(/^I get the error "(.+?)"$/) do |error_message|
   expect(@last_run_result.error).to be_truthy
-  output = @last_run_result.out + @last_run_result.err
-  expect(output).to include(error_message), %(
+  expect(@last_run_result.out).to include(error_message), %(
     "EXPECTED
     ***************************************************
 
-    #{output.gsub '\n', "\n"}
+    #{@last_run_result.out.gsub '\n', "\n"}
 
     ***************************************************
     TO INCLUDE '#{error_message}'
