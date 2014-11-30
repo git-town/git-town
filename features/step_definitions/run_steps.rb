@@ -42,3 +42,22 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 
   )
 end
+
+
+Then(/^it runs no Git commands$/) do
+  expect(@last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)).to be_empty
+end
+
+
+Then(/^it runs the Git commands$/) do |steps_table|
+  actual_steps = [['BRANCH', 'COMMAND']]
+  actual_steps.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
+  expected_steps = steps_table.raw
+  expect(expected_steps.size).to eq(actual_steps.size),
+                                 "expected #{expected_steps.size} steps, found #{actual_steps.size}: #{actual_steps}"
+  actual_steps.each_with_index do |actual_step, i|
+    expected_step = expected_steps[i]
+    expect(actual_step[0]).to eq expected_step[0]
+    expect(actual_step[1]).to match Regexp.new "^#{expected_step[1]}$"
+  end
+end

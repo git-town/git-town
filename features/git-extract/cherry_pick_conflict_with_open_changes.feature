@@ -14,7 +14,16 @@ Feature: git-extract handling cherry-pick conflicts with open changes
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then I end up on the "refactor" branch
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                       |
+      | feature  | git stash -u                  |
+      | feature  | git checkout main             |
+      | main     | git fetch --prune             |
+      | main     | git rebase origin/main        |
+      | main     | git push                      |
+      | main     | git checkout -b refactor main |
+      | refactor | git cherry-pick \w{40}        |
+    And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
     And there is an abort script for "git extract"
@@ -22,7 +31,16 @@ Feature: git-extract handling cherry-pick conflicts with open changes
 
   Scenario: aborting
     When I run `git extract --abort`
-    Then I end up on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                 |
+      | refactor | git cherry-pick --abort |
+      | refactor | git checkout feature    |
+      | feature  | git branch -D refactor  |
+      | feature  | git stash pop           |
+      | feature  | git cherry-pick --abort |
+      | feature  | git branch -D refactor  |
+      | feature  | git stash pop           |
+    And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
