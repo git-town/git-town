@@ -1,14 +1,18 @@
 #!/bin/bash -e
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+
+source "$current_dir/git_helpers/branch_helpers.sh"
+source "$current_dir/git_helpers/checkout_helpers.sh"
+source "$current_dir/git_helpers/cherry_pick_helpers.sh"
+source "$current_dir/git_helpers/conflict_helpers.sh"
+source "$current_dir/git_helpers/log_helpers.sh"
+source "$current_dir/git_helpers/merge_rebase_helpers.sh"
+source "$current_dir/git_helpers/open_changes_helpers.sh"
+source "$current_dir/git_helpers/remote_helpers.sh"
+source "$current_dir/git_helpers/sha_helpers.sh"
+
 source "$current_dir/abort_continue_helpers.sh"
 source "$current_dir/configuration.sh"
 source "$current_dir/file_helpers.sh"
-source "$current_dir/git_command_helpers.sh"
-source "$current_dir/git_predicate_helpers.sh"
-source "$current_dir/git_required_status_helpers.sh"
-source "$current_dir/git_status_helpers.sh"
 source "$current_dir/terminal_helpers.sh"
-
-export initial_branch_name=$(get_current_branch_name)
-export initial_open_changes=$(has_open_changes)

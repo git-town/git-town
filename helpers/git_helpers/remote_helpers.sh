@@ -1,0 +1,94 @@
+#!/bin/bash
+
+
+# Called by pull_branch when the merge/rebase fails with conflicts
+function error_pull_branch {
+  if [ "$(is_feature_branch "$1")" == true ]; then
+    error_pull_feature_branch
+  elif [ "$1" == "$main_branch_name" ]; then
+    error_pull_main_branch
+  else
+    error_pull_non_feature_branch
+  fi
+}
+
+
+# Fetches updates from the central repository.
+#
+# It is safe to call this method multiple times per session,
+# since it makes sure that it fetches updates only once per session
+# by tracking this through the global variable $repo_fetched.
+function fetch_repo {
+  if [ "$repo_fetched" == false ]; then
+    run_command "git fetch --prune"
+    repo_fetched=true
+  fi
+}
+repo_fetched=false
+
+
+# Fetches changes from the upstream repository
+function fetch_upstream {
+  run_command "git fetch upstream"
+}
+
+
+# Returns whether the current branch has local updates
+# that haven't been pushed to the remote yet.
+# Assumes the current branch has a tracking branch
+function needs_pushing {
+  if [ "$(git status | grep -c "Your branch is ahead of")" != 0 ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
+# Pulls updates of the feature branch from the remote repo
+function pull_branch {
+  local strategy=$1
+  local current_branch_name=$(get_current_branch_name)
+  if [ -z "$strategy" ]; then strategy='merge'; fi
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
+    fetch_repo
+    run_command "git $strategy origin/$current_branch_name"
+    if [ $? != 0 ]; then error_pull_branch "$current_branch_name"; fi
+  fi
+}
+
+
+# Pulls updates of the current branch from the upstream repo
+function pull_upstream_branch {
+  local current_branch_name=$(get_current_branch_name)
+  fetch_upstream
+  run_command "git rebase upstream/$current_branch_name"
+  if [ $? != 0 ]; then error_pull_upstream_branch; fi
+}
+
+
+# Pushes the branch with the given name to origin
+function push_branch {
+  local current_branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
+    if [ "$(needs_pushing)" == true ]; then
+      run_command "git push"
+    fi
+  else
+    run_command "git push -u origin $current_branch_name"
+  fi
+}
+
+
+# Pushes tags to the remote
+function push_tags {
+  run_command "git push --tags"
+}
+
+
+# Push and pull the current branch
+function sync_branch {
+  local strategy=$1
+  pull_branch "$strategy"
+  push_branch
+}
