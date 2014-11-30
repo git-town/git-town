@@ -10,8 +10,7 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 export user_input_filename="/tmp/git-town-user-input_${temp_filename_suffix}"
 
 # Scripts filenames
-actions=(abort continue undo)
-for action in "${actions[@]}"; do
+for action in "abort" "continue" "undo"; do
   declare ${action}_script_filename="/tmp/${program}_${action}_${temp_filename_suffix}"
 done
 
