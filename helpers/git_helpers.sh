@@ -148,6 +148,19 @@ function ensure_has_branch {
 }
 
 
+# Exit if the current branch does not have shippable changes
+function ensure_has_shippable_changes {
+  local current_branch_name=$(get_current_branch_name)
+  if [ "$(has_shippable_changes "$current_branch_name")" == false ]; then
+    return_to_initial_branch
+
+    echo_error_header
+    echo_error "The branch '$current_branch_name' has no shippable changes."
+    exit_with_error
+  fi
+}
+
+
 # Exits the application with an error message if the supplied branch is
 # not a feature branch
 function ensure_is_feature_branch {
@@ -264,10 +277,10 @@ function has_open_changes {
 }
 
 
-# Determines whether the given branch has a remote tracking branch.
-function has_tracking_branch {
+# Determines whether the given branch has shippable changes
+function has_shippable_changes {
   local branch_name=$1
-  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
+  if [ "$(git diff --quiet "$main_branch_name..$branch_name" ; echo $?)" == 0 ]; then
     echo false
   else
     echo true
@@ -275,10 +288,10 @@ function has_tracking_branch {
 }
 
 
-# Determines whether the given branch is ahead of main
-function is_ahead_of_main {
+# Determines whether the given branch has a remote tracking branch.
+function has_tracking_branch {
   local branch_name=$1
-  if [ "$(git log --oneline "$main_branch_name..$branch_name" | wc -l | tr -d ' ')" == 0 ]; then
+  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
     echo false
   else
     echo true
