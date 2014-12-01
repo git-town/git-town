@@ -90,7 +90,7 @@ function perform_sync {
 if [ "$1" == "--abort" ]; then
   run_abort_script
 elif [ "$1" == "--continue" ]; then
-  ensure_no_conflicts "You must resolve the conflicts before continuing the git sync"
+  ensure_no_conflicts
   run_continue_script
 else
   perform_sync
