@@ -392,7 +392,7 @@ function remote_merged_branches {
 }
 
 
-# Returns the url for the remote with the specified name
+# Returns the url for the remote
 function remote_url {
   git remote -v | grep "origin.*fetch" | awk '{print $2}'
 }
