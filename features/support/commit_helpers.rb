@@ -104,9 +104,6 @@ end
 # Normalize commit_data by parsing the files and location
 # Returns an array of commit_data
 def normalize_expected_commit_data commit_data
-  commit_data.keys.each do |key|
-    commit_data[key.downcase] = commit_data.delete key
-  end
   symbolize_keys_deep! commit_data
 
   # Convert file string list into real array
@@ -129,6 +126,7 @@ end
 # Verifies that the commits in the repository at the given path
 # are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
+  commits_table.map_headers! {|header| header.downcase }
   expected_commits = commits_table.hashes.map do |commit_data|
     normalize_expected_commit_data commit_data
   end.flatten
