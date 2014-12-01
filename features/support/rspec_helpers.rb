@@ -1,41 +1,22 @@
 def commits_diff actual, expected
-  result = ''
-  expected.sort! { |x, y| commit_to_s(x) <=> commit_to_s(y) }
-  actual.sort! { |x, y| commit_to_s(x) <=> commit_to_s(y) }
+  expected.sort_by! { |c| commit_to_s(c) }
+  actual.sort_by! { |c| commit_to_s(c) }
 
-  result << "\nEXPECTED COMMITS\n"
-  expected.each do |commit|
-    result << commit_to_s(commit)
-  end
+  section_options = [
+    ['Expected commits', expected],
+    ['Actual commits', actual],
+    ['Common commits', expected & actual, skip_if_empty: true],
+    ['Expected but not actual commits', expected - actual, skip_if_empty: true],
+    ['Actual but not expected commits', actual - expected, skip_if_empty: true]
+  ]
 
-  result << "\nACTUAL COMMITS\n"
-  actual.each do |commit|
-    result << commit_to_s(commit)
-  end
+  section_options.map { |options| commit_diff_section(*options) }.join('') + "\n"
+end
 
-  result << "\nCOMMON COMMITS\n"
-  common_commits = expected & actual
-  common_commits.each do |commit|
-    result << commit_to_s(commit)
-  end
 
-  expected_but_not_present = expected - actual
-  unless expected_but_not_present.empty?
-    result << "\nEXPECTED BUT NOT PRESENT COMMITS:\n"
-    expected_but_not_present.each do |commit|
-      result << commit_to_s(commit)
-    end
-  end
-
-  present_but_not_expected = actual - expected
-  unless present_but_not_expected.empty?
-    result << "\nPRESENT BUT NOT EXPECTED COMMITS:\n"
-    present_but_not_expected.each do |commit|
-      result << commit_to_s(commit)
-    end
-  end
-
-  result + "\n"
+def commit_diff_section title, commits, skip_if_empty: false
+  return '' if skip_if_empty && commits.empty?
+  "\n#{title}:\n" + commits.map { |c| commit_to_s(c) }.join('')
 end
 
 
