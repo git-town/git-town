@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Install ShellCheck
-sudo apt-get install -qq cabal-install
+sudo apt-get install cabal-install > /dev/null
 cabal update --verbose=0
 cabal install --verbose=0 shellcheck
 export PATH=~/.cabal/bin/:$PATH
