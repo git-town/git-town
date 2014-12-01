@@ -82,6 +82,9 @@ end
 # Verifies the branches in each repository
 def verify_branches branch_data_array
   branch_data_array.each do |branch_data|
+    branch_data.keys.each do |key|
+      branch_data[key.downcase] = branch_data.delete key
+    end
     repository = branch_data['repository']
     expected_branches = Kappamaki.from_sentence branch_data['branches']
     expected_branches.map! { |branch_name| branch_name_for_location repository, branch_name }

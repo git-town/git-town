@@ -3,7 +3,7 @@ Feature: git-extract handling cherry-pick conflicts with open changes
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | branch  | location | message            | file name        | file content     |
+      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT     |
       | main    | local    | conflicting commit | conflicting_file | main content     |
       | feature | local    | feature commit     | feature_file     |                  |
       | feature | local    | refactor commit    | conflicting_file | refactor content |
@@ -26,7 +26,7 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
-      | branch   | location         | message            | files            |
+      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | conflicting commit | conflicting_file |
       | feature  | local            | feature commit     | feature_file     |
       | feature  | local            | refactor commit    | conflicting_file |

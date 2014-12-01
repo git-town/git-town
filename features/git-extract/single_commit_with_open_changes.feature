@@ -3,7 +3,7 @@ Feature: git-extract with a single commit
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | branch  | location | message            | file name        |
+      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
       | feature | local    | refactor commit    | refactor_file    |
@@ -16,14 +16,14 @@ Feature: git-extract with a single commit
     Then I end up on the "refactor" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | branch   | location         | message            | files            |
+      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
       | feature  | local            | refactor commit    | refactor_file    |
       | refactor | local and remote | remote main commit | remote_main_file |
       | refactor | local and remote | refactor commit    | refactor_file    |
     And now I have the following committed files
-      | branch   | files                           |
+      | BRANCH   | FILES                           |
       | main     | remote_main_file                |
       | feature  | feature_file, refactor_file     |
       | refactor | remote_main_file, refactor_file |

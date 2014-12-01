@@ -15,6 +15,9 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 
   # Get all expected files
   expected_files = files_data.hashes.map do |expected_file|
+    expected_file.keys.each do |key|
+      expected_file[key.downcase] = expected_file.delete key
+    end
     symbolize_keys_deep! expected_file
     filenames = expected_file.delete :files
     Kappamaki.from_sentence(filenames).map do |filename|
