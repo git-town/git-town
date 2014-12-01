@@ -2,13 +2,10 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-export abort_script_filename=$(abort_script_filename_for_command hack)
-
-
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_rebase_conflict_abort_script
-  exit_with_abort_continue_messages 'hack'
+  exit_with_script_messages
 }
 
 

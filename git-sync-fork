@@ -1,15 +1,11 @@
 #!/bin/bash
-
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
-
-
-export abort_script_filename=$(abort_script_filename_for_command sync_fork)
 
 
 # Called by pull_feature_branch when the merge fails with conflicts
 function error_pull_upstream_branch {
   create_rebase_conflict_abort_script
-  exit_with_abort_continue_messages 'sync-fork'
+  exit_with_script_messages
 }
 
 

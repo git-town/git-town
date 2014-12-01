@@ -2,9 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-export abort_script_filename=$(abort_script_filename_for_command extract)
-
-
 # Called when the cherry_pick fails
 function error_cherry_pick {
   # Create the abort script
@@ -14,14 +11,14 @@ function error_cherry_pick {
   add_to_abort_script "delete_local_branch $target_branch_name force"
   add_to_abort_script "restore_open_changes"
 
-  exit_with_abort_continue_messages 'extract'
+  exit_with_script_messages
 }
 
 
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_rebase_conflict_abort_script
-  exit_with_abort_continue_messages 'extract'
+  exit_with_script_messages
 }
 
 
@@ -35,7 +32,7 @@ function perform_extract {
     clear
 
     user_input=$(cat "$user_input_filename")
-    delete_temp_file
+    rm "$user_input_filename"
   fi
 
   if [ -z "$user_input" ]; then

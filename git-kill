@@ -1,7 +1,6 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-export undo_script_filename=$(undo_script_filename_for_command kill)
 
 function create_undo_script {
   local current_sha=$(sha_of_branch "$initial_branch_name")
