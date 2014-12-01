@@ -44,7 +44,7 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/my browser is opened to a new pull request on (Github|Bitbucket) for the "(.+)" branch/) do |domain, branch_name|
+Then(/I see a browser open to a new pull request on (Github|Bitbucket) for the "(.+)" branch/) do |domain, branch_name|
   url = remote_pull_request_url domain, branch_name
   expect(@last_run_result.out).to eql "open called with: #{url}\n"
 end

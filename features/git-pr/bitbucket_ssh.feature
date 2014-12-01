@@ -8,4 +8,4 @@ Feature: git-pr when origin is on Bitbucket over SSH
 
 
   Scenario:
-    Then my browser is opened to a new pull request on Bitbucket for the "feature" branch
+    Then I see a browser open to a new pull request on Bitbucket for the "feature" branch
