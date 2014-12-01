@@ -37,7 +37,6 @@ if [ "$1" == "--abort" ]; then
   run_abort_script
 elif [ "$1" == "--continue" ]; then
   ensure_no_conflicts "You must resolve the conflicts before continuing the git sync"
-  cat "$command_list_filename"
   execute_command_list
 else
   remove_scripts
