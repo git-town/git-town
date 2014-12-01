@@ -45,7 +45,7 @@ function exit_with_script_messages {
   if [ "$(has_script "$abort_script_filename")" == true ]; then
     echo_red "To abort, run \"$cmd --abort\"."
   fi
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
+  if [ "$(has_script "$command_list_filename")" == true ]; then
     echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
   fi
   exit_with_error
@@ -69,8 +69,10 @@ function pop_line {
 
 
 function prepend_to_command_list {
-  local file=$(temp_filename)
-  echo "$1" | cat - "$command_list_filename" > "$file" && mv "$file" "$command_list_filename"
+  if [ "$(has_script "$command_list_filename")" == true ]; then
+    local file=$(temp_filename)
+    echo "$1" | cat - "$command_list_filename" > "$file" && mv "$file" "$command_list_filename"
+  fi
 }
 
 
