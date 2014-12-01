@@ -1,6 +1,8 @@
 #!/bin/bash -e
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+export program="$(echo "$0" | grep -o "[^/]*$")"
+
 source "$current_dir/configuration.sh"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/git_helpers.sh"

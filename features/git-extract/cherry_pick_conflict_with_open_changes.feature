@@ -26,9 +26,9 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
-      | branch   | location | message            | files            |
-      | main     | local    | conflicting commit | conflicting_file |
-      | feature  | local    | feature commit     | feature_file     |
-      | feature  | local    | refactor commit    | conflicting_file |
+      | branch   | location         | message            | files            |
+      | main     | local and remote | conflicting commit | conflicting_file |
+      | feature  | local            | feature commit     | feature_file     |
+      | feature  | local            | refactor commit    | conflicting_file |
     And my repo has no cherry-pick in progress
     And there is no abort script for "git extract" anymore

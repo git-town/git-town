@@ -26,9 +26,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And there is no merge in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
-      | branch  | location | message                  | files            |
-      | main    | local    | conflicting main commit  | conflicting_file |
-      | feature | local    | conflicting local commit | conflicting_file |
+      | branch  | location         | message                  | files            |
+      | main    | local and remote | conflicting main commit  | conflicting_file |
+      | feature | local            | conflicting local commit | conflicting_file |
     And I still have the following committed files
       | branch  | files            | content         |
       | main    | conflicting_file | main content    |
@@ -52,7 +52,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location         | message                          | files            |
-      | main    | local            | conflicting main commit          | conflicting_file |
+      | main    | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature |                  |
       | feature | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | conflicting local commit         | conflicting_file |
@@ -71,7 +71,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | branch  | location         | message                          | files            |
-      | main    | local            | conflicting main commit          | conflicting_file |
+      | main    | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature |                  |
       | feature | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | conflicting local commit         | conflicting_file |

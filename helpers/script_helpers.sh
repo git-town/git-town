@@ -49,18 +49,18 @@ function create_rebase_conflict_abort_script {
 }
 
 
-function exit_with_abort_continue_messages {
-  local cmd=$1
+function exit_with_script_messages {
+  local cmd="${program/-/ }"
 
   echo
   if [ "$(has_script "$abort_script_filename")" == true ]; then
-    echo_red "To abort, run \"git $cmd --abort\"."
+    echo_red "To abort, run \"$cmd --abort\"."
   fi
   if [ "$(has_script "$skip_script_filename")" == true ]; then
     echo_red "$skip_script_message, run \"git $cmd --skip\"."
   fi
   if [ "$(has_script "$continue_script_filename")" == true ]; then
-    echo_red "To continue after you have resolved the conflicts, run \"git $cmd --continue\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
   fi
   exit_with_error
 }

@@ -1,12 +1,5 @@
 Feature: Git Ship: errors while shipping the current branch
 
-  Scenario: does not ship a feature branch not ahead of main
-    Given I am on a feature branch
-    When I run `git ship -m 'feature done'` while allowing errors
-    Then I get the error "The branch 'feature' has no commits to merge into 'main'."
-    And I end up on the "feature" branch
-
-
   Scenario: does not ship the main branch
     Given I am on the main branch
     When I run `git ship -m 'feature done'` while allowing errors
