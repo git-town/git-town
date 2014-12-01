@@ -53,16 +53,6 @@ Before do
 end
 
 
-Before '@shell-overrides' do
-  ENV['SHELL_OVERRIDES'] = '1'
-end
-
-
-Before '~@shell-overrides' do
-  ENV['SHELL_OVERRIDES'] = nil
-end
-
-
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
 end
