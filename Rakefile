@@ -14,7 +14,7 @@ task 'lint:ruby' do
   sh 'bundle exec rubocop'
 end
 
-desc 'Run all tests'
+desc 'Run tests'
 task 'spec' do
   sh 'cucumber --format=fuubar'
 end

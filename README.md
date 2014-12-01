@@ -138,7 +138,7 @@ rake            # Run all linters and tests
 rake lint       # Run all linters
 rake lint:bash  # Run bash linter
 rake lint:ruby  # Run ruby linter
-rake spec       # Run all tests
+rake spec       # Run tests
 
 # run single test
 cucumber -n 'scenario/feature name'
