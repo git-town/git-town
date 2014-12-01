@@ -21,9 +21,10 @@ end
 
 
 def print_result result
-  puts "\nRUNNING: #{result.command}"
-  puts "#{result.out}\n"
-  puts "#{result.err}\n"
+  puts ''
+  puts "#{result.location}$ #{result.command}"
+  puts "#{result.out}"
+  puts ''
 end
 
 
@@ -41,15 +42,13 @@ end
 
 
 def run_shell_command command, input
-  result = OpenStruct.new(command: command)
+  result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
+  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH: #{command}"
 
-  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH: #{command}" if ENV['SHELL_OVERRIDES']
-
-  status = Open4.popen4(command) do |_pid, stdin, stdout, stderr|
+  status = Open4.popen4("#{command} 2>&1") do |_pid, stdin, stdout, _stderr|
     stdin.puts input if input
     stdin.close
     result.out = stdout.read
-    result.err = stderr.read
   end
 
   result.error = status.exitstatus != 0
