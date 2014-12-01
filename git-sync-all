@@ -58,7 +58,7 @@ function sync_branches {
 
     if [ "$(is_feature_branch "$branch_name")" == true ]; then
       checkout_branch "$branch_name"
-      pull_branch
+      merge_branch "origin/$branch_name"
       merge_branch "$main_branch_name"
       push_branch
     fi
