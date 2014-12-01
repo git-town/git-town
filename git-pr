@@ -2,7 +2,14 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-branch=$(get_current_branch_name)
+# Returns the source for a new Bitbucket pull request
+function bitbucket_source {
+  sha=$(git log --format="%H" -1 | cut -c-12)
+  echo "$repository:$sha:$branch" | sed 's/\//%2F/g' | sed 's/\:/%3A/g'
+}
+
+
+branch=$initial_branch_name
 domain=$(remote_domain)
 repository=$(remote_repository_name)
 
@@ -10,9 +17,7 @@ repository=$(remote_repository_name)
 if [ "$domain" == github.com ]; then
   pr_path="compare/$branch?expand=1"
 elif [ "$domain" == bitbucket.org ]; then
-  sha=$(git log --format="%H" -1 | cut -c-12)
-  encoded_source=$(echo "$repository:$sha:$branch" | sed 's/\//%2F/g' | sed 's/\:/%3A/g')
-  pr_path="pull-request/new?source=$encoded_source"
+  pr_path="pull-request/new?source=$(bitbucket_source)"
 else
   echo_error_header
   echo_usage "Unsupported hosting service. Only Github and Bitbucket are currently supported"
