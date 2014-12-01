@@ -128,15 +128,22 @@ for help on an individual command.
 
 tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
 
-* install tools
-  * `bundle`
-  * `brew install shellcheck`
-* run tests
-  * all tests: `cucumber` or `bin/cuke` for <a href="https://github.com/martinciu/fuubar-cucumber" target="_blank">fuubar</a> output
-  * single test: `cucumber -n 'scenario/feature name'` or `cucumber [filename]:[lineno]`
-* run linters
-  * `bin/lint` for the bash source code
-  * `rubocop` for the ruby test code
+```
+# install tools
+bundle
+brew install shellcheck  # bash linter
+
+# rake tasks
+rake            # Run all linters and tests
+rake lint       # Run all linters
+rake lint:bash  # Run bash linter
+rake lint:ruby  # Run ruby linter
+rake spec       # Run tests
+
+# run single test
+cucumber -n 'scenario/feature name'
+cucumber [filename]:[lineno]
+```
 
 Found a bug or want to contribute a feature?
 <a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>

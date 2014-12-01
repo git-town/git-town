@@ -19,11 +19,13 @@ Feature: Git Sync: collaborative feature branch syncing
       | feature | local    | charlies commit 1 | charlie_file_1 |
     When Charlie runs `git sync`
     Then now Charlie sees the following commits
-      | branch  | location         | message           | files          |
-      | feature | local and remote | charlies commit 1 | charlie_file_1 |
-      | feature | local and remote | my commit 1       | my_file_1      |
+      | branch  | location         | message                                                    | files          |
+      | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                |
+      | feature | local and remote | charlies commit 1                                          | charlie_file_1 |
+      | feature | local and remote | my commit 1                                                | my_file_1      |
     When I run `git sync`
     Then now I see the following commits
-      | branch  | location         | message           | files          |
-      | feature | local and remote | my commit 1       | my_file_1      |
-      | feature | local and remote | charlies commit 1 | charlie_file_1 |
+      | branch  | location         | message                                                    | files          |
+      | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                |
+      | feature | local and remote | charlies commit 1                                          | charlie_file_1 |
+      | feature | local and remote | my commit 1                                                | my_file_1      |
