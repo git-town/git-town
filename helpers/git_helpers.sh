@@ -178,7 +178,7 @@ function ensure_is_feature_branch {
 function ensure_no_conflicts {
   if [ "$(has_conflicts)" == true ]; then
     echo_error_header
-    echo_error "$*"
+    echo_error "You must resolve the conflicts before continuing the $git_command"
     exit_with_error
   fi
 }

@@ -5,13 +5,20 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 # Called when pull_branch fails on the main branch
 function error_pull_main_branch {
   create_rebase_conflict_abort_script
+
+  # Create continue script
+  add_to_continue_script "initial_open_changes=$initial_open_changes"
+  add_to_continue_script "target_branch_name=$target_branch_name"
+  add_to_continue_script "continue_rebase"
+  add_to_continue_script "push_branch"
+  add_to_continue_script "create_and_checkout_feature_branch '$target_branch_name'"
+  add_to_continue_script "restore_open_changes"
+
   exit_with_script_messages
 }
 
 
 function perform_hack {
-  target_branch_name=$1
-
   # Exit with a help screen if parameters are missing.
   if [ -z "$target_branch_name" ]; then
     echo_usage_header
@@ -30,7 +37,12 @@ function perform_hack {
 
 if [ "$1" == "--abort" ]; then
   run_abort_script
+elif [ "$1" == "--continue" ]; then
+  ensure_no_conflicts
+  run_continue_script
 else
+  remove_scripts
+  target_branch_name=$1
   perform_hack "$*"
 fi
 

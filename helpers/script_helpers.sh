@@ -44,14 +44,12 @@ function create_rebase_conflict_abort_script {
 
 
 function exit_with_script_messages {
-  local cmd="${program/-/ }"
-
   echo
   if [ "$(has_script "$abort_script_filename")" == true ]; then
-    echo_red "To abort, run \"$cmd --abort\"."
+    echo_red "To abort, run \"$git_command --abort\"."
   fi
   if [ "$(has_script "$continue_script_filename")" == true ]; then
-    echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
   fi
   exit_with_error
 }
