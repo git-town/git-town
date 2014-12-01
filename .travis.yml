@@ -5,11 +5,7 @@ rvm:
 
 cache: bundler
 
-before_install:
-  - brew update
-  - brew install shellcheck
-
 script:
   - git config --global user.email cucumber@git.town
   - git config --global user.name "Git Town"
-  - bundle exec rake
+  - bin/travis
