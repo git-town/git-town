@@ -26,7 +26,7 @@ function error_merge_branch {
   initialize_skip_continue_scripts
 
   # Create the skip script
-  add_to_skip_script "abort_merge"
+  add_to_skip_script 'abort_merge'
   add_to_skip_script 'sync_branches'
 
   # Create the continue script
@@ -44,7 +44,6 @@ function pre_sync_branches {
   sync_non_feature_branch
 
   read -a branch_names <<< "$(local_branches | tr '\n' ' ')"
-  echo "${branch_names[@]}"
   branch_names_index=0
 }
 
@@ -76,7 +75,6 @@ elif [ "$1" = "--skip" ]; then
   run_skip_script
 elif [ "$1" = "--continue" ]; then
   ensure_no_conflicts "You must resolve the conflicts before continuing the git sync-all"
-  cat $continue_script_filename
   run_continue_script
 else
   remove_scripts
