@@ -12,7 +12,7 @@ end
 
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
-  files_data.map_headers! {|header| header.downcase }
+  files_data.map_headers!(&:downcase)
 
   # Get all expected files
   expected_files = files_data.hashes.map do |expected_file|

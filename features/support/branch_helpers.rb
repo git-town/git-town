@@ -81,7 +81,7 @@ end
 
 # Verifies the branches in each repository
 def verify_branches branch_table
-  branch_table.map_headers! {|header| header.downcase }
+  branch_table.map_headers!(&:downcase)
   branch_table.hashes.each do |branch_data|
     repository = branch_data['repository']
     expected_branches = Kappamaki.from_sentence branch_data['branches']
