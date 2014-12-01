@@ -2,13 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called by pull_feature_branch when the merge fails with conflicts
-function error_pull_upstream_branch {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
-
-
 # Outputs error and exits
 function error_with_upstream_required {
   echo_error_header
@@ -24,12 +17,13 @@ function sync_fork {
   fi
 
   local branch_name=$(get_current_branch_name)
-  stash_open_changes
+  stash_open_changes_if_needed
   checkout_main_branch
-  pull_upstream_branch
+  fetch_upstream
+  rebase_branch "upstream/$main_branch_name"
   push_branch
   checkout_branch "$branch_name"
-  restore_open_changes
+  restore_open_changes_if_needed
 }
 
 

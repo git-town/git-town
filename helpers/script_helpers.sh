@@ -4,16 +4,16 @@
 
 
 function add_to_abort_script {
-  add_to_script "$1" "$abort_script_filename"
+  add_to_file "$1" "$abort_script_filename"
 }
 
 
-function add_to_continue_script {
-  add_to_script "$1" "$continue_script_filename"
+function add_to_command_list {
+  add_to_file "$1" "$command_list_filename"
 }
 
 
-function add_to_script {
+function add_to_file {
   local content=$1
   local filename=$2
   local operator=">"
@@ -23,23 +23,18 @@ function add_to_script {
 
 
 function add_to_undo_script {
-  add_to_script "$1" "$undo_script_filename"
+  add_to_file "$1" "$undo_script_filename"
 }
 
 
-function create_merge_conflict_abort_script {
-  add_to_abort_script "initial_open_changes=$initial_open_changes"
-  add_to_abort_script "abort_merge"
-  add_to_abort_script "checkout_branch $initial_branch_name"
-  add_to_abort_script "restore_open_changes"
-}
+function execute_command_list {
+  while [ "$(wc -l < "$command_list_filename" | tr -d ' ')" -gt 0 ]; do
+    local cmd=$(pop_line "$command_list_filename")
+    eval "$cmd"
+    if [ $? != 0 ]; then exit_with_error; fi
+  done
 
-
-function create_rebase_conflict_abort_script {
-  add_to_abort_script "initial_open_changes=$initial_open_changes"
-  add_to_abort_script "abort_rebase"
-  add_to_abort_script "checkout_branch $initial_branch_name"
-  add_to_abort_script "restore_open_changes"
+  remove_scripts
 }
 
 
@@ -66,12 +61,25 @@ function has_script {
 }
 
 
+function pop_line {
+  local file=$1
+  head -n 1 "$file"
+  sed -i '' '1d' "$file"
+}
+
+
+function prepend_to_command_list {
+  local file=$(temp_filename)
+  echo "$1" | cat - "$command_list_filename" > "$file" && mv "$file" "$command_list_filename"
+}
+
+
 function remove_scripts {
   if [ "$(has_script "$abort_script_filename")" == true ]; then
     rm "$abort_script_filename"
   fi
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
-    rm "$continue_script_filename"
+  if [ "$(has_script "$command_list_filename")" == true ]; then
+    rm "$command_list_filename"
   fi
   if [ "$(has_script "$undo_script_filename")" == true ]; then
     rm "$undo_script_filename"
@@ -89,16 +97,6 @@ function run_abort_script {
 }
 
 
-function run_continue_script {
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
-    source "$continue_script_filename"
-    remove_scripts
-  else
-    echo_red "Cannot find continue definition file"
-  fi
-}
-
-
 function run_undo_script {
   if [ "$(has_script "$undo_script_filename")" == true ]; then
     source "$undo_script_filename"
@@ -106,4 +104,24 @@ function run_undo_script {
   else
     echo_red "Cannot find undo definition file"
   fi
+}
+
+
+function write_conflict_abort_script {
+  add_to_abort_script "checkout_branch $initial_branch_name"
+  if [ "$initial_open_changes" = true ]; then
+    add_to_abort_script "restore_open_changes"
+  fi
+}
+
+
+function write_merge_conflict_abort_script {
+  add_to_abort_script "abort_merge"
+  write_conflict_abort_script
+}
+
+
+function write_rebase_conflict_abort_script {
+  add_to_abort_script "abort_rebase"
+  write_conflict_abort_script
 }

@@ -2,13 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when pull_branch fails on the main branch
-function error_pull_main_branch {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
-
-
 function perform_hack {
   target_branch_name=$1
 
@@ -20,11 +13,13 @@ function perform_hack {
   fi
 
   ensure_does_not_have_branch "$target_branch_name"
-  stash_open_changes
+  stash_open_changes_if_needed
   checkout_main_branch
-  sync_branch 'rebase'
+  fetch_repo
+  rebase_tracking_branch
+  push_branch
   create_and_checkout_feature_branch "$target_branch_name"
-  restore_open_changes
+  restore_open_changes_if_needed
 }
 
 
