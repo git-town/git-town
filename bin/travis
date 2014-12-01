@@ -2,8 +2,8 @@
 
 # Install ShellCheck
 sudo apt-get install -qq cabal-install
-cabal update -v=0
-cabal install -v=0 shellcheck
+cabal update --verbose=0
+cabal install --verbose=0 shellcheck
 export PATH=~/.cabal/bin/:$PATH
 
 # Run the full test suite
