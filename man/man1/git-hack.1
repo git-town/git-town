@@ -7,6 +7,8 @@ git hack \- cut a new feature branch off the main branch
 \fIgit hack\fR <branchname>
 .br
 \fIgit hack\fR --abort
+.br
+\fIgit hack\fR --continue
 
 .SH DESCRIPTION
 Sync the main branch and create a new feature branch with the given name.
@@ -14,5 +16,11 @@ Sync the main branch and create a new feature branch with the given name.
 Brings over all uncommitted changes.
 
 .SH OPTIONS
+.IP "<branchname>" 4
+The name of the branch to create.
+
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.

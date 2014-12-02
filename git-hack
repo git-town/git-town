@@ -2,38 +2,37 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when rebase_branch fails on the main branch
-function error_rebase_branch {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
+function build_command_list {
+  ensure_preconditions "$@"
 
-
-function perform_hack {
-  target_branch_name=$1
-
-  # Exit with a help screen if parameters are missing.
-  if [ -z "$target_branch_name" ]; then
-    echo_usage_header
-    echo_usage "git hack [feature branch name]"
-    exit_with_error
+  if [ "$initial_open_changes" = true ]; then
+    add_to_command_list "stash_open_changes"
   fi
 
+  add_to_command_list "checkout_main_branch"
+  add_to_command_list "fetch_repo"
+  add_to_command_list "rebase_tracking_branch"
+  add_to_command_list "push_branch"
+  add_to_command_list "create_and_checkout_feature_branch '$target_branch_name'"
+
+  if [ "$initial_open_changes" = true ]; then
+    add_to_command_list "restore_open_changes"
+  fi
+}
+
+function ensure_has_target_branch {
+  if [ -z "$target_branch_name" ]; then
+    echo_error_header
+    echo_error "No branch name provided."
+    exit_with_error
+  fi
+}
+
+function ensure_preconditions {
+  target_branch_name=$1
+  ensure_has_target_branch
   ensure_does_not_have_branch "$target_branch_name"
-  stash_open_changes_if_needed
-  checkout_main_branch
-  fetch_repo
-  rebase_tracking_branch
-  push_branch
-  create_and_checkout_feature_branch "$target_branch_name"
-  restore_open_changes_if_needed
 }
 
 
-if [ "$1" == "--abort" ]; then
-  run_abort_script
-else
-  perform_hack "$*"
-fi
-
-exit_with_success
+run "$@"
