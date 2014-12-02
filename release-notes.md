@@ -30,13 +30,11 @@
    [#155](https://github.com/Originate/git-town/issues/155),
    [8b385a](https://github.com/Originate/git-town/commit/8b385a745cf7ed28638e0a5c9c24440b7010354c),
    [35de43](https://github.com/Originate/git-town/commit/35de43156d9c6092840cd73456844b90acc36d8e))
-* **linter for shell scripts**
+* linters for shell scripts and ruby tests
   ([#149](https://github.com/Originate/git-town/issues/149),
-   [076668](https://github.com/Originate/git-town/commit/07666825b5d60e15de274746fc3c26f72bd7aee2))
-* **linter for ruby tests**
-  ([#149](https://github.com/Originate/git-town/issues/149),
+   [076668](https://github.com/Originate/git-town/commit/07666825b5d60e15de274746fc3c26f72bd7aee2),
    [651c04](https://github.com/Originate/git-town/commit/651c0448309a376eee7d35659d8b06f709b113b5))
-* **rake tasks for development**
+* rake tasks for development
   ([#170](https://github.com/Originate/git-town/issues/170),
    [ba74cf](https://github.com/Originate/git-town/commit/ba74cf30c8001941769dcd70410dbd18331f2fe9))
 
