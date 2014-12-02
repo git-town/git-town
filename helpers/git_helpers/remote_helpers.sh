@@ -86,6 +86,24 @@ function push_tags {
 }
 
 
+# Returns the url for the remote
+function remote_url {
+  git remote -v | grep "origin.*fetch" | awk '{print $2}'
+}
+
+
+# Returns the domain of the remote repository
+function remote_domain {
+  remote_url | sed -E "s#(https?://([^@]*@)?|git@)([^/:]+).*#\3#"
+}
+
+
+# Returns the USER/REPO for the remote repository
+function remote_repository_name {
+  remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
+}
+
+
 # Push and pull the current branch
 function sync_branch {
   local strategy=$1
