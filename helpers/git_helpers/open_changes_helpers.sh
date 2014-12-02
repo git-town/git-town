@@ -34,7 +34,6 @@ function has_open_changes {
     echo true
   fi
 }
-export initial_open_changes=$(has_open_changes)
 
 
 # Unstashes changes that were stashed in the beginning of a script.

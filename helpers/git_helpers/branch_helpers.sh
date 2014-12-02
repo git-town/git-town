@@ -55,7 +55,6 @@ function ensure_has_branch {
 function get_current_branch_name {
   git rev-parse --abbrev-ref HEAD
 }
-export initial_branch_name=$(get_current_branch_name)
 
 
 # Returns true if the repository has a branch with the given name
