@@ -43,9 +43,9 @@ end
 
 def run_shell_command command, input
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
-  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH: #{command}"
+  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
 
-  status = Open4.popen4("#{command} 2>&1") do |_pid, stdin, stdout, _stderr|
+  status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
     stdin.puts input if input
     stdin.close
     result.out = stdout.read

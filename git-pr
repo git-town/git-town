@@ -13,7 +13,6 @@ branch=$initial_branch_name
 domain=$(remote_domain)
 repository=$(remote_repository_name)
 
-
 if [ "$domain" == github.com ]; then
   pr_path="compare/$branch?expand=1"
 elif [ "$domain" == bitbucket.org ]; then
@@ -23,6 +22,5 @@ else
   echo_usage "Unsupported hosting service. Pull requests can only be created on Bitbucket and Github"
   exit_with_error
 fi
-
 
 open "https://$domain/$repository/$pr_path"
