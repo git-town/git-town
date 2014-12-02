@@ -7,24 +7,10 @@ function abort_merge {
 }
 
 
-# Abort a rebase
-function abort_rebase {
-  run_command "git rebase --abort"
-}
-
-
 # Continues merge if one is in progress
 function continue_merge {
   if [ "$(has_open_changes)" == true ]; then
     run_command "git commit --no-edit"
-  fi
-}
-
-
-# Continues rebase if one is in progress
-function continue_rebase {
-  if [ "$(rebase_in_progress)" == true ]; then
-    run_command "git rebase --continue"
   fi
 }
 
@@ -34,16 +20,6 @@ function merge_branch {
   local branch_name=$1
   run_command "git merge --no-edit $branch_name"
   if [ $? != 0 ]; then error_merge_branch; fi
-}
-
-
-# Determines whether the current branch has a rebase in progress
-function rebase_in_progress {
-  if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
-    echo true
-  else
-    echo false
-  fi
 }
 
 
