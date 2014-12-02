@@ -1,27 +1,22 @@
 #!/bin/bash
 
 
-# Checks out the branch with the given name.
-#
-# Skips this operation if the requested branch
-# is already checked out.
+# Checks out the branch with the given name (if not alread checked out)
 function checkout_branch {
   local branch_name=$1
-  if [ ! "$(get_current_branch_name)" = "$branch_name" ]; then
+  if [ "$(get_current_branch_name)" != "$branch_name" ]; then
     run_command "git checkout $branch_name"
   fi
 }
 
 
-# Checks out the main development branch in Git.
-#
-# Skips the operation if we already are on that branch.
+# Checks out the main branch (if not alread checked out)
 function checkout_main_branch {
   checkout_branch "$main_branch_name"
 }
 
 
-# Cuts a new branch off the given parent branch, and checks it out.
+# Creates and checkouts a new branch with the given name off the given parent branch
 function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
@@ -29,9 +24,7 @@ function create_and_checkout_branch {
 }
 
 
-# Creates a new feature branch with the given name.
-#
-# The feature branch is cut off the main development branch.
+# Creates and checkouts a new branch off the main branch with the given name
 function create_and_checkout_feature_branch {
   create_and_checkout_branch "$1" "$main_branch_name"
 }
