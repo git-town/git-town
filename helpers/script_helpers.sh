@@ -30,7 +30,7 @@ function add_to_undo_script {
 function execute_command_list {
   while [ "$(wc -l < "$command_list_filename" | tr -d ' ')" -gt 0 ]; do
     local cmd=$(pop_line "$command_list_filename")
-    eval "$cmd"
+    $cmd
     if [ $? != 0 ]; then exit_with_error; fi
   done
 
