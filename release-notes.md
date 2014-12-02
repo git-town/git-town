@@ -11,7 +11,7 @@
     ([#153](https://github.com/Originate/git-town/issues/153),
      [0bc84e](https://github.com/Originate/git-town/commit/0bc84ee626299896661fe1754cfa227630725bb9))
   * abort when there are no shippable changes
-    ([#188](https://github.com/Originate/git-town/issues/153),
+    ([#188](https://github.com/Originate/git-town/issues/188),
      [52fd94](https://github.com/Originate/git-town/commit/52fd94eca05bd3c2db5e7ac36121f08e56b9558b))
 * **git sync:**
   * can now continue after just resolving conflicts (no need to commit or continue rebasing)
