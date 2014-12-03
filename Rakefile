@@ -1,4 +1,4 @@
-desc 'Run all linters and tests'
+desc 'Run all linters and specs'
 task 'default' => %w(lint spec)
 
 desc 'Run all linters'
@@ -14,7 +14,7 @@ task 'lint:ruby' do
   sh 'bundle exec rubocop'
 end
 
-desc 'Run tests'
+desc 'Run specs'
 task 'spec' do
   sh 'bundle exec parallel_cucumber features'
 end
