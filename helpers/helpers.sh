@@ -1,6 +1,8 @@
 #!/bin/bash -e
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+GIT_TOWN_VERSION="0.4.1"
+
 export program="$(echo "$0" | grep -o "[^/]*$")"
 
 source "$current_dir/configuration.sh"

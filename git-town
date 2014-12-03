@@ -6,9 +6,15 @@ function show_config {
   echo "Non-feature branches: \"$(get_configuration "non-feature-branch-names")\""
 }
 
+function show_version {
+  echo "Git Town v${GIT_TOWN_VERSION}"
+}
+
 
 if [ "$1" == "--config" ]; then
   show_config
+elif [ "$1" == "--version" ]; then
+  show_version
 fi
 
 exit_with_success
