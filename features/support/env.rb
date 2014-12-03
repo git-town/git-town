@@ -12,6 +12,7 @@ REPOSITORY_BASE = Dir.mktmpdir
 
 Before do
   Dir.chdir REPOSITORY_BASE
+  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
 
   # Create remote repository
   create_repository remote_repository_path
@@ -53,15 +54,6 @@ Before do
   Dir.chdir local_repository_path
 end
 
-After do
-  Dir.chdir Dir.tmpdir
-  delete_repository remote_repository_path
-  delete_repository local_repository_path
-  delete_repository coworker_repository_path
-  delete_repository upstream_remote_repository_path
-  delete_repository upstream_local_repository_path
-end
-
 
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
@@ -69,5 +61,5 @@ end
 
 
 at_exit do
-  FileUtils.rm_r REPOSITORY_BASE, force: true
+  FileUtils.rm_rf REPOSITORY_BASE
 end

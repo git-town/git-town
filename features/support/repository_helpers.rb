@@ -34,7 +34,3 @@ def at_path path
   Dir.chdir cwd
   result
 end
-
-def delete_repository path
-  FileUtils.rm_r path, force: true
-end
