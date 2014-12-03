@@ -7,7 +7,7 @@ function show_config {
 }
 
 function show_version {
-  echo "Git Town v${GIT_TOWN_VERSION}"
+  echo "Git Town v0.4.1"
 }
 
 

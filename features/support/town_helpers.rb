@@ -16,9 +16,3 @@ end
 def set_configuration configuration, value
   run "git config git-town.#{configuration} \"#{value}\""
 end
-
-
-def set_environment_variable variable, value
-  (@shell_overrides_export ||= {})[variable] = value
-  run "export #{variable}=\"#{value}\""
-end
