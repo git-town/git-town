@@ -21,6 +21,11 @@ Given(/^I have set "(.*)" to "(.*)"$/) do |config, value|
 end
 
 
+Given(/^I am using Git Town version "(.*)"/) do |version|
+  set_environment_variable 'GIT_TOWN_VERSION', version
+end
+
+
 Then(/^I don't have an old configuration file anymore$/) do
   expect(File.exist? '.main_branch_name').to be_falsy
 end

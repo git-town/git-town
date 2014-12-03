@@ -1,4 +1,4 @@
-Feature: Configuration File
+Feature: Configuration
 
   Scenario: Without a configured main branch name
     Given I don't have a main branch name configured

@@ -1,3 +1,5 @@
+require 'English'
+
 When(/^(?:Charlie|my coworker) runs `([^`]+)`$/) do |command|
   at_path coworker_repository_path do
     run command
@@ -50,5 +52,13 @@ end
 
 
 Then(/^the output should contain '(.*?)'$/) do |string|
-  expect(@last_run_result.out).to include string
+  # @shell_overrides_export
+  if string =~ /<#(.+)=(.+)#>/
+    override_placeholder, override_variable, override_value = $LAST_MATCH_INFO.to_a
+
+    expect(@last_run_result.out).to include string.gsub(override_placeholder, '')
+    expect(@shell_overrides_export[override_variable]).to eql override_value
+  else
+    expect(@last_run_result.out).to include string
+  end
 end
