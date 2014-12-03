@@ -14,7 +14,7 @@ end
 
 
 def git_town_command? command
-  %w(extract hack pr prune-branches ship sync-fork sync kill).any? do |subcommand|
+  %w(extract hack pr prune-branches ship sync-fork sync town kill).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end

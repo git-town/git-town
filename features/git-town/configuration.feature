@@ -11,3 +11,11 @@ Feature: Configuration File
     When I run `git ship` while allowing errors
     Then the main branch name is now configured as "main"
     And I don't have an old configuration file anymore
+
+
+  Scenario: Reading configuration
+    Given I have set "main-branch-name" to "main"
+    And I have set "non-feature-branch-names" to "ay, bee, cee"
+    When I run `git town config` while allowing errors
+    Then the output should contain 'Main branch: "main"'
+    And the output should contain 'Non-feature branches: "ay, bee, cee"'

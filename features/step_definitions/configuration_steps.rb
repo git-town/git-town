@@ -16,6 +16,9 @@ Given(/^non-feature branch configuration "(.*)"$/) do |configuration|
 end
 
 
+Given(/^I have set "(.*)" to "(.*)"$/) do |config, value|
+  set_configuration config, value
+end
 
 
 Then(/^I don't have an old configuration file anymore$/) do
