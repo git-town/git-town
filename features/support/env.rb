@@ -1,5 +1,4 @@
 require 'active_support/all'
-require 'fuubar-cucumber'
 require 'kappamaki'
 require 'open4'
 require 'rspec'
@@ -9,8 +8,10 @@ SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 # The files to ignore when checking files
 IGNORED_FILES = %w(tags)
 
+REPOSITORY_BASE = Dir.mktmpdir
+
 Before do
-  Dir.chdir repositiory_base
+  Dir.chdir REPOSITORY_BASE
 
   # Create remote repository
   create_repository remote_repository_path
@@ -52,6 +53,15 @@ Before do
   Dir.chdir local_repository_path
 end
 
+After do
+  Dir.chdir Dir.tmpdir
+  delete_repository remote_repository_path
+  delete_repository local_repository_path
+  delete_repository coworker_repository_path
+  delete_repository upstream_remote_repository_path
+  delete_repository upstream_local_repository_path
+end
+
 
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
@@ -59,8 +69,5 @@ end
 
 
 at_exit do
-  Dir.chdir repositiory_base
-  delete_repository remote_repository_path
-  delete_repository local_repository_path
-  delete_repository coworker_repository_path
+  FileUtils.rm_r REPOSITORY_BASE, force: true
 end

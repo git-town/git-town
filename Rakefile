@@ -16,5 +16,5 @@ end
 
 desc 'Run tests'
 task 'spec' do
-  sh 'cucumber --format=fuubar'
+  sh 'bundle exec parallel_cucumber features'
 end
