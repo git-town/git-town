@@ -39,9 +39,9 @@ Before do
     run 'git symbolic-ref HEAD refs/head/main'
   end
 
-  # Pull the default branch
+  # Fetch the default branch
   at_path local_repository_path do
-    run 'git pull'
+    run 'git fetch'
   end
 
   # Create the coworker repository
