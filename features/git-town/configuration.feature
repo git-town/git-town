@@ -16,6 +16,6 @@ Feature: Configuration File
   Scenario: Reading configuration
     Given I have set "main-branch-name" to "main"
     And I have set "non-feature-branch-names" to "ay, bee, cee"
-    When I run `git town config` while allowing errors
+    When I run `git town --config` while allowing errors
     Then the output should contain 'Main branch: "main"'
     And the output should contain 'Non-feature branches: "ay, bee, cee"'
