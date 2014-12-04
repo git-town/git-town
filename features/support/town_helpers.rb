@@ -14,5 +14,5 @@ end
 
 
 def set_configuration configuration, value
-  run "git config git-town.#{configuration} \"#{value}\""
+  run "git config git-town.#{configuration} '#{value}'"
 end
