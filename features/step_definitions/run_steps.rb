@@ -55,9 +55,9 @@ end
 
 
 Then(/^it runs the Git commands$/) do |steps_table|
-  actual_steps = [%w(BRANCH COMMAND)]
-  actual_steps.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
+  actual_steps = @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
   expected_steps = steps_table.raw
+  expected_steps.shift
   expect(expected_steps.size).to eq(actual_steps.size),
                                  "expected #{expected_steps.size} steps, found #{actual_steps.size}: #{actual_steps}"
   actual_steps.each_with_index do |actual_step, i|
