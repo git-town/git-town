@@ -13,7 +13,7 @@ function show_version {
 
 
 function show_help {
-  echo -e "$(cat help.txt)"
+  cat help.txt
 }
 
 
