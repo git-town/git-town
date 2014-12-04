@@ -52,7 +52,14 @@ end
 #   ['feature', 'git pull'] ]
 def commands_of_last_run
   [%w(BRANCH COMMAND)].tap do |result|
-    result.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
+    command_regex = /
+      \[1m          # bold text
+      \[(.*?)\]     # branch name in square brackets
+      \s            # space between branch name and Git command
+      (.*?)         # the Git command
+      \n            # newline at the end
+    /x
+    result.concat @last_run_result.out.scan command_regex
   end
 end
 
