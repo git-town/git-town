@@ -3,6 +3,11 @@ Given(/^I don't have a main branch name configured$/) do
 end
 
 
+Given(/^my non\-feature branches are not configured$/) do
+  delete_non_feature_branches_configuration
+end
+
+
 Given(/^I have an old configuration file with (.*?)$/) do |data|
   delete_main_branch_configuration
   data = Kappamaki.attributes_from_sentence data
@@ -23,6 +28,12 @@ end
 
 Given(/^my non-feature branches are configured as "(.*)"$/) do |non_feature_branches|
   set_configuration 'non-feature-branch-names', non_feature_branches
+end
+
+
+Given(/I haven't configured Git Town yet/) do
+  delete_main_branch_configuration
+  delete_non_feature_branches_configuration
 end
 
 

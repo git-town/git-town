@@ -28,8 +28,8 @@ def print_result result
 end
 
 
-def run command, allow_failures: false, debug: false, input: nil
-  result = run_shell_command command, input
+def run command, allow_failures: false, debug: false, inputs: nil
+  result = run_shell_command command, inputs
   should_error = result.error && !allow_failures
 
   print_result(result) if should_error || should_print_command_output?(command, debug)
@@ -41,12 +41,12 @@ def run command, allow_failures: false, debug: false, input: nil
 end
 
 
-def run_shell_command command, input
+def run_shell_command command, inputs
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
   command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    stdin.puts input if input
+    inputs.each { |input| stdin.puts input } if inputs
     stdin.close
     result.out = stdout.read
   end
