@@ -15,14 +15,14 @@ Feature: git-extract handling cherry-pick conflicts with open changes
   @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
-      | BRANCH   | COMMAND                       |
-      | feature  | git stash -u                  |
-      | feature  | git checkout main             |
-      | main     | git fetch --prune             |
-      | main     | git rebase origin/main        |
-      | main     | git push                      |
-      | main     | git checkout -b refactor main |
-      | refactor | git cherry-pick \w{40}        |
+      | BRANCH   | COMMAND                                  |
+      | feature  | git stash -u                             |
+      | feature  | git checkout main                        |
+      | main     | git fetch --prune                        |
+      | main     | git rebase origin/main                   |
+      | main     | git push                                 |
+      | main     | git checkout -b refactor main            |
+      | refactor | git cherry-pick [["feature" branch SHA]] |
     And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress

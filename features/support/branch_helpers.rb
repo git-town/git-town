@@ -79,6 +79,12 @@ def on_branch branch_name
 end
 
 
+# Returns the SHA of the given branch
+def sha_of_branch branch_name
+  output_of "git rev-parse #{branch_name}"
+end
+
+
 # Verifies the branches in each repository
 def verify_branches branch_data_array
   branch_data_array.each do |branch_data|
