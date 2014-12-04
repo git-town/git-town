@@ -20,8 +20,9 @@ Feature: Git Kill: killing the given feature branch with open changes
       | local      | main, good-feature |
       | remote     | main, good-feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
-      | good-feature | local and remote | good commit | good_file |
+      | branch       | location         | message                              | files            |
+      | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
+      | good-feature | local and remote | good commit                          | good_file        |
 
 
   Scenario: undoing the kill
@@ -33,6 +34,7 @@ Feature: Git Kill: killing the given feature branch with open changes
       | local      | main, delete-by-name, good-feature |
       | remote     | main, delete-by-name, good-feature |
     And I have the following commits
-      | branch         | location         | message            | files            |
-      | good-feature   | local and remote | good commit        | good_file        |
-      | delete-by-name | local and remote | unfortunate commit | unfortunate_file |
+      | branch         | location         | message                              | files            |
+      | main           | local and remote | conflicting with uncommitted changes | conflicting_file |
+      | good-feature   | local and remote | good commit                          | good_file        |
+      | delete-by-name | local and remote | unfortunate commit                   | unfortunate_file |

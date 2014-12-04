@@ -22,5 +22,6 @@ Feature: Git Kill: Non-feature branches are not killed
       | local      | main, qa, good-feature |
       | remote     | main, qa, good-feature |
     And I have the following commits
-      | branch | location         | message   | files   |
-      | qa     | local and remote | qa commit | qa_file |
+      | branch       | location         | message     | files     |
+      | good-feature | local and remote | good commit | good_file |
+      | qa           | local and remote | qa commit   | qa_file   |
