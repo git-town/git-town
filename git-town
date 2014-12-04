@@ -19,7 +19,7 @@ function show_help {
 
 if [ "$1" == "--config" ]; then
   show_config
-elif [ "$1" == "--version" ] || [ "$1" == "version" ]; then
+elif [ "$1" == "--version" ]; then
   show_version
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
   show_help
