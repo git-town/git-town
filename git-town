@@ -13,7 +13,7 @@ function show_version {
 
 
 function show_help {
-  cat help.txt
+  cat "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/help.txt"
 }
 
 
