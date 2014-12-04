@@ -13,6 +13,6 @@ function show_version {
 
 if [ "$1" == "--config" ]; then
   show_config
-elif [ "$1" == "--version" ]; then
+elif [ "$1" == "--version" ] || [ "$1" == "version" ]; then
   show_version
 fi
