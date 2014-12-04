@@ -1,4 +1,4 @@
-Given(/^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/) do |name, content|
+Given(/^I have an uncommitted file with name: "(.+?)" and content: "(.+?)"$/) do |name, content|
   IO.write name, content
 end
 
@@ -48,7 +48,7 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 end
 
 
-Then(/^I don't have an uncommitted file with name: "(.*?)"$/) do |file_name|
+Then(/^I don't have an uncommitted file with name: "(.+?)"$/) do |file_name|
   expect(uncommitted_files).to_not include file_name
 end
 

@@ -17,7 +17,7 @@ When(/^I run `([^`]+)` with the last( two)? commit shas?( while allowing errors)
 end
 
 
-When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, user_input|
+When(/^I run `(.+?)` and enter "(.+?)"$/) do |command, user_input|
   @result = run command, input: user_input, allow_failures: true
 end
 
@@ -44,6 +44,6 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see a browser window for a new pull request on (.+) for the "(.+)" branch$/) do |domain, branch_name|
+Then(/^I see a browser window for a new pull request on (.+?) for the "(.+?)" branch$/) do |domain, branch_name|
   expect(@last_run_result.out).to eql "open called with: #{remote_pull_request_url domain, branch_name}\n"
 end
