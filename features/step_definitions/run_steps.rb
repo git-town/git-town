@@ -31,15 +31,19 @@ end
 
 Then(/^I get the error "(.+?)"$/) do |error_message|
   expect(@last_run_result.error).to be_truthy
-  output = @last_run_result.out + @last_run_result.err
-  expect(output).to include(error_message), %(
+  expect(@last_run_result.out).to include(error_message), %(
     "EXPECTED
     ***************************************************
 
-    #{output.gsub '\n', "\n"}
+    #{@last_run_result.out.gsub '\n', "\n"}
 
     ***************************************************
     TO INCLUDE '#{error_message}'
 
   )
+end
+
+
+Then(/^I see a browser window for a new pull request on (.+) for the "(.+)" branch$/) do |domain, branch_name|
+  expect(@last_run_result.out).to eql "open called with: #{remote_pull_request_url domain, branch_name}\n"
 end

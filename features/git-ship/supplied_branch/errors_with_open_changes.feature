@@ -10,19 +10,6 @@ Feature: Git Ship: errors while shipping the supplied branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-  Scenario: does not ship a feature branch that is not ahead of main
-    Given I have feature branches named "feature" and "other_feature"
-    And the following commit exists in my repository
-      | branch  | location | message        | file name    | file content    |
-      | main    | local    | main commit    | main_file    | main content    |
-    And I am on the "other_feature" branch
-    And I have an uncommitted file with name: "main_file" and content: "conflicting content"
-    When I run `git ship feature -m 'feature done'` while allowing errors
-    Then I get the error "The branch 'feature' has no commits to merge into 'main'."
-    And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "main_file" and content: "conflicting content"
-
-
   Scenario: does not ship the main branch
     Given I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"

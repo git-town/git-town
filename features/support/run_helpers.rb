@@ -14,16 +14,17 @@ end
 
 
 def git_town_command? command
-  %w(extract hack prune-branches ship sync-fork sync kill).any? do |subcommand|
+  %w(extract hack pr prune-branches ship sync-fork sync kill).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end
 
 
 def print_result result
-  puts "\nRUNNING: #{result.command}"
-  puts "#{result.out}\n"
-  puts "#{result.err}\n"
+  puts ''
+  puts "#{result.location}$ #{result.command}"
+  puts "#{result.out}"
+  puts ''
 end
 
 
@@ -34,18 +35,20 @@ def run command, allow_failures: false, debug: false, input: nil
   print_result(result) if should_error || should_print_command_output?(command, debug)
   fail 'Command not successful!' if should_error
 
-  @last_run_result = result
+  @last_run_result = result if git_town_command?(command)
+
+  result
 end
 
 
 def run_shell_command command, input
-  result = OpenStruct.new(command: command)
+  result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
+  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
 
-  status = Open4.popen4(command) do |_pid, stdin, stdout, stderr|
+  status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
     stdin.puts input if input
     stdin.close
     result.out = stdout.read
-    result.err = stderr.read
   end
 
   result.error = status.exitstatus != 0
