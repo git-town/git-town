@@ -16,5 +16,5 @@ end
 
 desc 'Run specs'
 task 'spec' do
-  sh 'bundle exec parallel_cucumber features'
+  sh 'bin/cuke'
 end
