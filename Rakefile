@@ -16,5 +16,5 @@ end
 
 desc 'Run tests'
 task 'spec' do
-  sh 'cucumber --format=fuubar'
+  sh 'cucumber'
 end
