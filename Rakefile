@@ -16,5 +16,5 @@ end
 
 desc 'Run tests'
 task 'spec' do
-  sh 'cucumber'
+  sh 'cucumber DEBUG_COMMANDS=1'
 end
