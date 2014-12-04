@@ -2,12 +2,12 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 function show_config {
-  echo "Main branch: \"$(get_configuration "main-branch-name")\""
-  echo "Non-feature branches: \"$(get_configuration "non-feature-branch-names")\""
+  echo "Main branch: '$(get_configuration "main-branch-name")'"
+  echo "Non-feature branches: '$(get_configuration "non-feature-branch-names")'"
 }
 
 function show_version {
-  echo "Git Town v0.4.1"
+  echo "Git Town 0.4.1"
 }
 
 
