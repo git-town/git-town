@@ -55,14 +55,14 @@ end
 
 
 Then(/^it runs the Git commands$/) do |expected_steps|
+
+  # Replace SHA placeholders with the real SHAs of the respective branches
   expected_steps.map_column! 'COMMAND' do |command|
     command.gsub(/\[\[.+?\]\]/) do |sha_expression|
       branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0]
       sha_of_branch branch_name
     end
   end
-  actual_steps = [%w(BRANCH COMMAND)]
-  actual_steps.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
 
-  expected_steps.diff! actual_steps
+  expected_steps.diff! commands_of_last_run
 end

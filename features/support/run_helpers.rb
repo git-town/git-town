@@ -41,6 +41,22 @@ def run command, allow_failures: false, debug: false, input: nil
 end
 
 
+# Returns the Git commands that were run in the last invocation of "run",
+# as well as the Git branch on which they were run.
+#
+# The results are returned as a data structure matching a Cucumber table.
+#
+# Example:
+# [ ['BRANCH', 'COMMAND'],
+#   ['master', 'git checkout feature'],
+#   ['feature', 'git pull'] ]
+def commands_of_last_run
+  [%w(BRANCH COMMAND)].tap do |result|
+    result.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
+  end
+end
+
+
 def run_shell_command command, input
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
   command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
