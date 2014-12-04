@@ -17,14 +17,14 @@ When(/^I run `([^`]+)` with the last( two)? commit shas?( while allowing errors)
 end
 
 
-When(/^I run `(.+?)` and enter (.+?)$/) do |command, input|
-  inputs = Kappamaki.from_sentence(input)
+When(/^I run `(.+?)` and enter (?:(an empty commit message)|(.+?))$/) do |command, empty_commit_msg, input|
+  inputs = if empty_commit_msg
+             ['dGZZ']
+           elsif input
+             Kappamaki.from_sentence(input)
+           end
+
   @result = run command, inputs: inputs, allow_failures: true
-end
-
-
-When(/^I run `(.+?)` and enter an empty commit message?$/) do |command|
-  @result = run command, inputs: ['dGZZ'], allow_failures: true
 end
 
 
