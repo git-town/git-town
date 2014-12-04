@@ -144,6 +144,9 @@ rake spec       # Run specs
 # run single test
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
+
+# run cucumber in parallel
+bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?
