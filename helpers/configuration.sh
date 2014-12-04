@@ -4,16 +4,16 @@
 
 # Returns git-town configuration
 function get_configuration {
-  local config=$1
-  git config "git-town.$config"
+  local config_setting_name=$1
+  git config "git-town.$config_setting_name"
 }
 
 
 # Persists git-town configuration
 function store_configuration {
-  local config=$1
+  local config_setting_name=$1
   local value=$2
-  git config "git-town.$config" "$value"
+  git config "git-town.$config_setting_name" "$value"
 }
 
 
