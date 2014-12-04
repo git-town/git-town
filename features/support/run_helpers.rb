@@ -28,7 +28,7 @@ def print_result result
 end
 
 
-def run command, allow_failures: false, debug: false, inputs: nil
+def run command, allow_failures: false, debug: false, inputs: []
   result = run_shell_command command, inputs
   should_error = result.error && !allow_failures
 
@@ -46,7 +46,7 @@ def run_shell_command command, inputs
   command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    inputs.each { |input| stdin.puts input } if inputs
+    inputs.each { |input| stdin.puts input }
     stdin.close
     result.out = stdout.read
   end
