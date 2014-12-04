@@ -17,9 +17,9 @@ When(/^I run `([^`]+)` with the last( two)? commit shas?( while allowing errors)
 end
 
 
-When(/^I run `(.+?)` and enter "(.*)"$/) do |command, user_input|
-  user_inputs = user_input.split('" then enter "')
-  @result = run command, inputs: user_inputs, allow_failures: true
+When(/^I run `(.+?)` and enter (.+?)$/) do |command, input|
+  inputs = Kappamaki.from_sentence(input)
+  @result = run command, inputs: inputs, allow_failures: true
 end
 
 

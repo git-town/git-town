@@ -26,6 +26,6 @@ Feature: listing the configuration
 
   Scenario: nothing is configured yet
     Given I haven't configured Git Town yet
-    When I run `git town --config` and enter "master" then enter "development"
+    When I run `git town --config` and enter "master" and "development"
     Then I see "Main branch: 'master'"
     And I see "Non-feature branches: 'development'"
