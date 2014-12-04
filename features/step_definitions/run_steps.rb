@@ -50,7 +50,7 @@ end
 
 
 Then(/^it runs no Git commands$/) do
-  expect(@last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)).to be_empty
+  expect(commands_of_last_run).to be_empty
 end
 
 
@@ -64,5 +64,5 @@ Then(/^it runs the Git commands$/) do |expected_steps|
     end
   end
 
-  expected_steps.diff! commands_of_last_run
+  expected_steps.diff! commands_of_last_run.unshift(expected_steps.headers)
 end
