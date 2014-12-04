@@ -1,8 +1,8 @@
-Feature: Configuration actions
+Feature: listing the configuration
 
-  Scenario: Reading configuration
-    Given I have set "main-branch-name" to "main"
-    And I have set "non-feature-branch-names" to "dev, qa, staging"
-    When I run `git town --config` while allowing errors
-    Then the output should contain "Main branch: 'main'"
-    And the output should contain "Non-feature branches: 'dev, qa, staging'"
+  Scenario: Everything is configured
+    Given I have configured the main branch name as "main"
+    And my non-feature branches are configured as "dev, qa, staging"
+    When I run `git town --config`
+    Then I see "Main branch: 'main'"
+    And I see "Non-feature branches: 'dev, qa, staging'"

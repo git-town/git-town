@@ -49,6 +49,6 @@ Then(/^I see a browser window for a new pull request on (.+) for the "(.+)" bran
 end
 
 
-Then(/^the output should contain "(.*?)"$/) do |string|
+Then(/^I see "(.*)"$/) do |string|
   expect(@last_run_result.out).to include string
 end

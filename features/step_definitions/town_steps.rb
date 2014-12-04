@@ -16,8 +16,13 @@ Given(/^non-feature branch configuration "(.*)"$/) do |configuration|
 end
 
 
-Given(/^I have set "(.*)" to "(.*)"$/) do |config, value|
-  set_configuration config, value
+Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name|
+  set_configuration 'main-branch-name', main_branch_name
+end
+
+
+Given(/^my non-feature branches are configured as "(.*)"$/) do |non_feature_branches|
+  set_configuration 'non-feature-branch-names', non_feature_branches
 end
 
 
