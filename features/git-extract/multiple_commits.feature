@@ -3,7 +3,7 @@ Feature: git-extract with multiple commits
   Background:
     Given I am on a feature branch
     And the following commits exist in my repository
-      | branch  | location | message            | file name        |
+      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
       | feature | local    | refactor1 commit   | refactor1_file   |
@@ -14,7 +14,7 @@ Feature: git-extract with multiple commits
   Scenario: result
     Then I end up on the "refactor" branch
     And I have the following commits
-      | branch   | location         | message            | files            |
+      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
       | feature  | local            | refactor1 commit   | refactor1_file   |
@@ -23,7 +23,7 @@ Feature: git-extract with multiple commits
       | refactor | local and remote | refactor1 commit   | refactor1_file   |
       | refactor | local and remote | refactor2 commit   | refactor2_file   |
     And now I have the following committed files
-      | branch   | files                                            |
+      | BRANCH   | FILES                                            |
       | main     | remote_main_file                                 |
       | feature  | feature_file, refactor1_file, refactor2_file     |
       | refactor | remote_main_file, refactor1_file, refactor2_file |
