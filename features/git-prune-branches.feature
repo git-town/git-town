@@ -14,7 +14,7 @@ Feature: Git Prune Branches
     When I run `git prune-branches`
     Then I end up on the "main" branch
     And the existing branches are
-      | repository | branches          |
+      | REPOSITORY | BRANCHES          |
       | local      | main              |
       | remote     | main              |
       | coworker   | main, old_feature |
@@ -47,7 +47,7 @@ Feature: Git Prune Branches
     When I run `git prune-branches`
     Then I end up on the "main" branch
     And the existing branches are
-      | repository | branches                 |
+      | REPOSITORY | BRANCHES                 |
       | local      | main, feature1           |
       | remote     | main, feature1, feature2 |
       | coworker   | main, feature2           |
