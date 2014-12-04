@@ -44,6 +44,11 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
+Then(/^I see a browser window for a new pull request on (.+) for the "(.+)" branch$/) do |domain, branch_name|
+  expect(@last_run_result.out).to eql "open called with: #{remote_pull_request_url domain, branch_name}\n"
+end
+
+
 Then(/^it runs no Git commands$/) do
   expect(@last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)).to be_empty
 end

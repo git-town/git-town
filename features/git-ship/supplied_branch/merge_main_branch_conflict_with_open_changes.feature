@@ -27,9 +27,9 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And there is no merge in progress
     And there is no abort script for "git ship" anymore
     And I still have the following commits
-      | branch  | location | message                    | files            |
-      | main    | local    | conflicting main commit    | conflicting_file |
-      | feature | local    | conflicting feature commit | conflicting_file |
+      | branch  | location         | message                    | files            |
+      | main    | local and remote | conflicting main commit    | conflicting_file |
+      | feature | local            | conflicting feature commit | conflicting_file |
     And I still have the following committed files
       | branch  | files            | content         |
       | main    | conflicting_file | main content    |
