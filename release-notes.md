@@ -3,10 +3,45 @@
 ## 0.5
 * **git kill:** branchname parameter
   ([#126](https://github.com/Originate/git-town/issues/126))
+
+
+## 0.4.1 (2014-12-02)
+
+* **git pr:** create a new pull request
+  ([#138](https://github.com/Originate/git-town/issues/138),
+   [40d22e](https://github.com/Originate/git-town/commit/40d22eb1703ac96a58ac5052e70d20d7bdb9ac73))
+* **git ship:**
+  * empty commit message aborts the command
+    ([#153](https://github.com/Originate/git-town/issues/153),
+     [0bc84e](https://github.com/Originate/git-town/commit/0bc84ee626299896661fe1754cfa227630725bb9))
+  * abort when there are no shippable changes
+    ([#188](https://github.com/Originate/git-town/issues/188),
+     [52fd94](https://github.com/Originate/git-town/commit/52fd94eca05bd3c2db5e7ac36121f08e56b9558b))
+* **git sync:**
+  * can now continue after just resolving conflicts (no need to commit or continue rebasing)
+    ([#123](https://github.com/Originate/git-town/issues/123),
+     [1a50ad](https://github.com/Originate/git-town/commit/1a50ad689a752f4eaed663e0ab22184621ee96a2))
+  * restores deleted tracking branch
+    ([#165](https://github.com/Originate/git-town/issues/165),
+     [259464](https://github.com/Originate/git-town/commit/2594646ad853d83a6d697354d66755a374e42b8a))
+* **git extract:** errors if branch already exists
+  ([#128](https://github.com/Originate/git-town/issues/128),
+   [75f498](https://github.com/Originate/git-town/commit/75f498771f19326f03bd1fd1bb70c9d9851b53f3))
 * **git sync-fork:** no longer automatically sets upstream configuration
   ([865030](https://github.com/Originate/git-town/commit/8650301a3ea40a989562a991960fa0d41b26f7f7))
-* **linter for shell scripts**
-  ([#149](https://github.com/Originate/git-town/issues/149))
+* remove needless checkouts for **git-ship**, **git-extract**, and **git-hack**
+  ([#150](https://github.com/Originate/git-town/issues/150),
+   [#155](https://github.com/Originate/git-town/issues/155),
+   [8b385a](https://github.com/Originate/git-town/commit/8b385a745cf7ed28638e0a5c9c24440b7010354c),
+   [35de43](https://github.com/Originate/git-town/commit/35de43156d9c6092840cd73456844b90acc36d8e))
+* linters for shell scripts and ruby tests
+  ([#149](https://github.com/Originate/git-town/issues/149),
+   [076668](https://github.com/Originate/git-town/commit/07666825b5d60e15de274746fc3c26f72bd7aee2),
+   [651c04](https://github.com/Originate/git-town/commit/651c0448309a376eee7d35659d8b06f709b113b5))
+* rake tasks for development
+  ([#170](https://github.com/Originate/git-town/issues/170),
+   [ba74cf](https://github.com/Originate/git-town/commit/ba74cf30c8001941769dcd70410dbd18331f2fe9))
+
 
 ## 0.4 (2014-11-13)
 

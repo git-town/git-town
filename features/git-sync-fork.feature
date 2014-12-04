@@ -29,8 +29,8 @@ Feature: Git Sync-Fork
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I see the following commits
-      | branch | location         | message         | files         |
-      | main   | local and remote | upstream commit | upstream_file |
+      | branch | location                | message         | files         |
+      | main   | local, remote, upstream | upstream commit | upstream_file |
     And now I have the following committed files
       | branch | files         |
       | main   | upstream_file |
@@ -55,8 +55,9 @@ Feature: Git Sync-Fork
     And there is no rebase in progress
     And there is no abort script for "git sync-fork" anymore
     And I still have the following commits
-      | branch | location | message      | files            |
-      | main   | local    | local commit | conflicting_file |
+      | branch | location | message         | files            |
+      | main   | upstream | upstream commit | conflicting_file |
+      | main   | local    | local commit    | conflicting_file |
     And I still have the following committed files
       | branch | files            | content       |
       | main   | conflicting_file | local content |

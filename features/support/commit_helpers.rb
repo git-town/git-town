@@ -128,6 +128,7 @@ def verify_commits commits_table:, repository_path:
   end.flatten
 
   at_path repository_path do
-    expect(commits_in_repo).to match_commits expected_commits
+    actual_commits = commits_in_repo
+    expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
   end
 end

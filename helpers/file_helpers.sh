@@ -3,29 +3,16 @@
 # Helper methods for dealing with files and temp files.
 
 
-# Unique string that identifies the current directory and git branch
-temp_filename_suffix="_$(pwd | tr '/' '_' )"
+# Unique string that identifies the current directory
+temp_filename_suffix="$(pwd | tr '/' '_')"
 
-# Path to the temp file used by these scripts.
-user_input_filename="/tmp/git-town-user-input$temp_filename_suffix"
+# Temporary filename used for short term storage of user input
+export user_input_filename="/tmp/git-town-user-input_${temp_filename_suffix}"
 
-
-# Returns the path to the abort script for the given command
-function abort_script_filename_for_command {
-  echo "/tmp/git_$1_abort$temp_filename_suffix"
-}
-
-
-# Returns the path to the continue script for the given command
-function continue_script_filename_for_command  {
-  echo "/tmp/git_$1_continue$temp_filename_suffix"
-}
-
-
-# Removes the temp file.
-function delete_temp_file {
-  rm "$user_input_filename"
-}
+# Scripts filenames
+for action in "abort" "continue" "undo"; do
+  declare -r ${action}_script_filename="/tmp/${program}_${action}_${temp_filename_suffix}"
+done
 
 
 # Ensures that the given tool is installed.
@@ -38,10 +25,4 @@ function ensure_tool_installed {
     echo_error "or on OS X with 'brew install $toolname'."
     exit_with_error
   fi
-}
-
-
-# Returns the path to the undo script for the given command
-function undo_script_filename_for_command {
-  echo "/tmp/git_$1_undo$temp_filename_suffix"
 }

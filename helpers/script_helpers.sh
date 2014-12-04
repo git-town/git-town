@@ -43,15 +43,15 @@ function create_rebase_conflict_abort_script {
 }
 
 
-function exit_with_abort_continue_messages {
-  local cmd=$1
+function exit_with_script_messages {
+  local cmd="${program/-/ }"
 
   echo
   if [ "$(has_script "$abort_script_filename")" == true ]; then
-    echo_red "To abort, run \"git $cmd --abort\"."
+    echo_red "To abort, run \"$cmd --abort\"."
   fi
   if [ "$(has_script "$continue_script_filename")" == true ]; then
-    echo_red "To continue after you have resolved the conflicts, run \"git $cmd --continue\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
   fi
   exit_with_error
 }
@@ -66,7 +66,7 @@ function has_script {
 }
 
 
-function remove_abort_continue_scripts {
+function remove_scripts {
   if [ "$(has_script "$abort_script_filename")" == true ]; then
     rm "$abort_script_filename"
   fi
@@ -82,7 +82,7 @@ function remove_abort_continue_scripts {
 function run_abort_script {
   if [ "$(has_script "$abort_script_filename")" == true ]; then
     source "$abort_script_filename"
-    remove_abort_continue_scripts
+    remove_scripts
   else
     echo_red "Cannot find abort definition file"
   fi
@@ -92,7 +92,7 @@ function run_abort_script {
 function run_continue_script {
   if [ "$(has_script "$continue_script_filename")" == true ]; then
     source "$continue_script_filename"
-    remove_abort_continue_scripts
+    remove_scripts
   else
     echo_red "Cannot find continue definition file"
   fi
@@ -102,7 +102,7 @@ function run_continue_script {
 function run_undo_script {
   if [ "$(has_script "$undo_script_filename")" == true ]; then
     source "$undo_script_filename"
-    remove_abort_continue_scripts
+    remove_scripts
   else
     echo_red "Cannot find undo definition file"
   fi
