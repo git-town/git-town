@@ -62,9 +62,6 @@ end
 def create_commits commits_array
   commits_array = [commits_array] if commits_array.is_a? Hash
   commits_array.each do |commit_data|
-    commit_data.keys.each do |key|
-      commit_data[key.downcase] = commit_data.delete key
-    end
     symbolize_keys_deep! commit_data
     commit_data.reverse_merge!(default_commit_attributes)
     create_commit commit_data
