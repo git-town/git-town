@@ -5,7 +5,7 @@
 # Returns git-town configuration
 function get_configuration {
   local config=$1
-  git config "git-town.${config}"
+  git config "git-town.$config"
 }
 
 
@@ -13,7 +13,7 @@ function get_configuration {
 function store_configuration {
   local config=$1
   local value=$2
-  git config "git-town.${config}" "${value}"
+  git config "git-town.$config" "$value"
 }
 
 
