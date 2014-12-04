@@ -28,5 +28,5 @@ Does not delete non-feature branches nor the main branch.
     If not provided, uses the current branch.
 
 --undo
-    undo the previous `git kill` operation
+    Undo the previous `git kill` operation.
 ```
