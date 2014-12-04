@@ -13,32 +13,7 @@ function show_version {
 
 
 function show_help {
-  echo
-  echo "Git Town is a collection of additional Git commands"
-  echo "that help implement higher-level Git workflows, like GitHub flow."
-  echo
-  echo "usage: git town [--config] [--help] [--version]"
-  echo
-  echo "The most commonly used Git Town commands are:"
-  echo_indented "git extract         Copy selected commits from the current branch into their own branch"
-  echo_indented "git hack            Cut a new feature branch off the main branch"
-  echo_indented "git kill            Remove an obsolete feature branch"
-  echo_indented "git pr              Create a new pull request"
-  echo_indented "git prune-branches  Delete merged branches"
-  echo_indented "git ship            Deliver a completed feature branch"
-  echo_indented "git sync            Update the current branch with all relevant changes"
-  echo_indented "git sync-fork       Pull upstream updates into a forked repository"
-  echo
-  echo
-  echo_bold "Configuration"
-  echo_indented "Git Town will automatically prompt you for the main and non-feature branches"
-  echo_indented "of your current repository if they haven't been set."
-  echo_indented
-  echo_indented '`git town --config` will show the current configuration'
-  echo
-  echo_bold "Help"
-  echo_indented 'All the Git Town commands listed above support the `--help` flag.'
-  echo
+  echo -e "$(cat help.txt)"
 }
 
 

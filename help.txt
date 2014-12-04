@@ -1,0 +1,25 @@
+
+Git Town is a collection of additional Git commands
+that help implement higher-level Git workflows, like GitHub flow.
+
+usage: git town [--config] [--help] [--version]
+
+The most commonly used Git Town commands are:
+    git extract         Copy selected commits from the current branch into their own branch
+    git hack            Cut a new feature branch off the main branch
+    git kill            Remove an obsolete feature branch
+    git pr              Create a new pull request
+    git prune-branches  Delete merged branches
+    git ship            Deliver a completed feature branch
+    git sync            Update the current branch with all relevant changes
+    git sync-fork       Pull upstream updates into a forked repository
+
+
+\033[1mConfiguration\033[0m
+    Git Town will automatically prompt you for the main and non-feature branches
+    of your current repository if they haven't been set.
+
+    `git town --config` will show the current configuration
+
+\033[1mHelp\033[0m
+    All the Git Town commands listed above support the `--help` flag.
