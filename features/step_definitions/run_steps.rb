@@ -1,5 +1,3 @@
-require 'English'
-
 When(/^(?:Charlie|my coworker) runs `([^`]+)`$/) do |command|
   at_path coworker_repository_path do
     run command
