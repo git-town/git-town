@@ -392,10 +392,23 @@ function remote_merged_branches {
 }
 
 
-# Returns the url for the remote with the specified name
+# Returns the url for the remote
 function remote_url {
-  git remote -v | grep "$1.*fetch" | awk '{print $2}'
+  git remote -v | grep "origin.*fetch" | awk '{print $2}'
 }
+
+
+# Returns the domain of the remote repository
+function remote_domain {
+  remote_url | sed -E "s#(https?://([^@]*@)?|git@)([^/:]+).*#\3#"
+}
+
+
+# Returns the USER/REPO for the remote repository
+function remote_repository_name {
+  remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
+}
+
 
 
 # Resets the current branch to the commit described by the given SHA
