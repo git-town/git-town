@@ -55,7 +55,7 @@ end
 
 
 Then(/^it runs the Git commands$/) do |steps_table|
-  actual_steps = [['BRANCH', 'COMMAND']]
+  actual_steps = [%w(BRANCH COMMAND)]
   actual_steps.concat @last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)
   expected_steps = steps_table.raw
   expect(expected_steps.size).to eq(actual_steps.size),
