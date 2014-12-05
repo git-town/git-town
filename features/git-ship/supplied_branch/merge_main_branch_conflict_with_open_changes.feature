@@ -4,7 +4,7 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
   Background:
     Given I have feature branches named "feature" and "other_feature"
     And the following commits exist in my repository
-      | branch  | location | message                    | file name        | file content    |
+      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
@@ -27,10 +27,10 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And there is no merge in progress
     And there is no abort script for "git ship" anymore
     And I still have the following commits
-      | branch  | location         | message                    | files            |
+      | BRANCH  | LOCATION         | MESSAGE                    | FILES            |
       | main    | local and remote | conflicting main commit    | conflicting_file |
       | feature | local            | conflicting feature commit | conflicting_file |
     And I still have the following committed files
-      | branch  | files            | content         |
+      | BRANCH  | FILES            | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |

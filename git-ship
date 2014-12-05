@@ -32,7 +32,7 @@ function error_is_not_feature_branch {
 function extract_message {
   message=''
 
-  while getopts "m::" opt; do
+  while getopts "m:" opt; do
     case "$opt" in
     m) message=$OPTARG
     esac
@@ -88,7 +88,7 @@ else
     target_branch_name=$(get_current_branch_name)
   fi
 
-  perform_ship "$*"
+  perform_ship "$@"
 fi
 
 exit_with_success

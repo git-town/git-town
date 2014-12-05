@@ -135,15 +135,18 @@ bundle
 brew install shellcheck  # bash linter
 
 # rake tasks
-rake            # Run all linters and tests
+rake            # Run all linters and specs
 rake lint       # Run all linters
 rake lint:bash  # Run bash linter
 rake lint:ruby  # Run ruby linter
-rake spec       # Run tests
+rake spec       # Run specs
 
 # run single test
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
+
+# run cucumber in parallel
+bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?

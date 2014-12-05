@@ -1,12 +1,8 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-stash_open_changes_if_needed
-checkout_main_branch
+
 fetch_repo
-rebase_tracking_branch
-push_branch
-checkout_branch "$initial_branch_name"
 
 for remote_branch_name in $(remote_merged_branches); do
   if [ "$(is_feature_branch "$remote_branch_name")" == true ]; then
@@ -23,5 +19,4 @@ for local_branch_name in $(local_merged_branches); do
   fi
 done
 
-restore_open_changes_if_needed
 exit_with_success
