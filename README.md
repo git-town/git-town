@@ -11,7 +11,7 @@ It is designed for workflows that have a main branch
 from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
-<a href="https://bitbucket.org" target="_blank">BitBucket</a>.
+<a href="https://bitbucket.org" target="_blank">Bitbucket</a>.
 
 
 ## commands
