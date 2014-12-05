@@ -6,8 +6,8 @@ Feature: git-extract with multiple commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
-      | feature | local    | refactor1 commit   | refactor1_file   |
-      | feature | local    | refactor2 commit   | refactor2_file   |
+      |         |          | refactor1 commit   | refactor1_file   |
+      |         |          | refactor2 commit   | refactor2_file   |
     When I run `git extract refactor` with the last two commit shas
 
 
@@ -17,11 +17,11 @@ Feature: git-extract with multiple commits
       | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
-      | feature  | local            | refactor1 commit   | refactor1_file   |
-      | feature  | local            | refactor2 commit   | refactor2_file   |
+      |          |                  | refactor1 commit   | refactor1_file   |
+      |          |                  | refactor2 commit   | refactor2_file   |
       | refactor | local and remote | remote main commit | remote_main_file |
-      | refactor | local and remote | refactor1 commit   | refactor1_file   |
-      | refactor | local and remote | refactor2 commit   | refactor2_file   |
+      |          |                  | refactor1 commit   | refactor1_file   |
+      |          |                  | refactor2 commit   | refactor2_file   |
     And now I have the following committed files
       | BRANCH   | FILES                                            |
       | main     | remote_main_file                                 |

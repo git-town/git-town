@@ -10,7 +10,7 @@ Feature: Git Sync-Fork
     When I run `git sync-fork`
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I see the following commits
+    And I have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILES         |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
@@ -28,7 +28,7 @@ Feature: Git Sync-Fork
     When I run `git sync-fork`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I see the following commits
+    And I have the following commits
       | BRANCH | LOCATION                | MESSAGE         | FILES         |
       | main   | local, remote, upstream | upstream commit | upstream_file |
     And now I have the following committed files

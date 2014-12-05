@@ -16,7 +16,7 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 
   # Get all expected files
   expected_files = files_data.hashes.map do |expected_file|
-    symbolize_keys_deep! expected_file
+    expected_file.symbolize_keys_deep!
     filenames = expected_file.delete :files
     Kappamaki.from_sentence(filenames).map do |filename|
       result = expected_file.clone

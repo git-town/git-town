@@ -1,28 +1,16 @@
-Given(/^the following commits? exists? in my repository$/) do |commits_table|
-  at_path local_repository_path do
-    commits_table.map_headers!(&:downcase)
-    create_commits commits_table.hashes
-  end
-end
-
-
-Given(/^the following commits? exists? in Charlie's repository$/) do |commits_table|
-  at_path coworker_repository_path do
-    commits_table.map_headers!(&:downcase)
-    create_commits commits_table.hashes
-  end
+Given(/^the following commits? exists? in (my|Charlie's) repository$/) do |who, commits_table|
+  path = (who == 'my') ? local_repository_path : coworker_repository_path
+  commits_table.map_headers!(&:downcase)
+  at_path(path) { create_commits commits_table.hashes }
 end
 
 
 
 
-Then(/^(?:now )?(?:(?:I (?:still )?(?:have|see))) the following commits$/) do |commits_table|
-  verify_commits commits_table: commits_table, repository_path: local_repository_path
-end
-
-
-Then(/^(?:now )?Charlie(?: still)? sees the following commits$/) do |commits_table|
-  verify_commits commits_table: commits_table, repository_path: coworker_repository_path
+Then(/^(?:now )?(I|Charlie) (?:(?:still )?(?:have|has)) the following commits$/) do |who, commits_table|
+  path = (who == 'I') ? local_repository_path : coworker_repository_path
+  commits_table.map_headers!(&:downcase)
+  at_path(path) { verify_commits commits_table.hashes }
 end
 
 

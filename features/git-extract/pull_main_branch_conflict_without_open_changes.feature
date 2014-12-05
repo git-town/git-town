@@ -7,7 +7,7 @@ Feature: git-extract handling conflicting remote main branch updates without ope
       | main    | remote   | conflicting remote commit | conflicting_file | remote content |
       | main    | local    | conflicting local commit  | conflicting_file | local content  |
       | feature | local    | feature commit            | feature_file     |                |
-      | feature | local    | refactor commit           | refactor_file    |                |
+      |         |          | refactor commit           | refactor_file    |                |
     When I run `git extract refactor` with the last commit sha while allowing errors
 
 
@@ -25,6 +25,6 @@ Feature: git-extract handling conflicting remote main branch updates without ope
       | main    | remote   | conflicting remote commit | conflicting_file |
       | main    | local    | conflicting local commit  | conflicting_file |
       | feature | local    | feature commit            | feature_file     |
-      | feature | local    | refactor commit           | refactor_file    |
+      |         |          | refactor commit           | refactor_file    |
     And there is no rebase in progress
     And there is no abort script for "git extract" anymore
