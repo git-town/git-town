@@ -50,7 +50,7 @@ end
 
 
 Then(/^it runs no Git commands$/) do
-  expect(@last_run_result.out.scan(/\[1m\[(.*?)\] (.*?)\n/)).to be_empty
+  expect(commands_of_last_run).to be_empty
 end
 
 
@@ -59,10 +59,11 @@ Then(/^it runs the Git commands$/) do |expected_steps|
   # Replace SHA placeholders with the real SHAs of the respective branches
   expected_steps.map_column! 'COMMAND' do |command|
     command.gsub(/\[\[.+?\]\]/) do |sha_expression|
-      branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0] or raise "No branch name found"
+      branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0]
+      fail 'No branch name found' unless branch_name
       sha_of_branch branch_name
     end
   end
 
-  expected_steps.diff! commands_of_last_run
+  expected_steps.diff! commands_of_last_run.unshift(expected_steps.headers)
 end

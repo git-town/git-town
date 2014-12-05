@@ -37,9 +37,6 @@ Feature: git-extract handling cherry-pick conflicts with open changes
       | refactor | git checkout feature    |
       | feature  | git branch -D refactor  |
       | feature  | git stash pop           |
-      | feature  | git cherry-pick --abort |
-      | feature  | git branch -D refactor  |
-      | feature  | git stash pop           |
     And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
