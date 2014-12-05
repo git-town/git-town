@@ -1,5 +1,6 @@
 Given(/^the following commits? exists? in my repository$/) do |commits_table|
   at_path local_repository_path do
+    commits_table.map_headers!(&:downcase)
     create_commits commits_table.hashes
   end
 end
@@ -7,6 +8,7 @@ end
 
 Given(/^the following commits? exists? in Charlie's repository$/) do |commits_table|
   at_path coworker_repository_path do
+    commits_table.map_headers!(&:downcase)
     create_commits commits_table.hashes
   end
 end
