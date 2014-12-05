@@ -59,9 +59,9 @@ Then(/^it runs the Git commands$/) do |expected_steps|
   # Replace SHA placeholders with the real SHAs of the respective branches
   expected_steps.map_column! 'COMMAND' do |command|
     command.gsub(/\[\[.+?\]\]/) do |sha_expression|
-      match = sha_expression.match(/"(.+?)" branch SHA/)
-      fail 'No branch name found' unless match
-      sha_of_branch match.captures[0]
+      branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0]
+      fail 'No branch name found' unless branch_name
+      sha_of_branch branch_name
     end
   end
 
