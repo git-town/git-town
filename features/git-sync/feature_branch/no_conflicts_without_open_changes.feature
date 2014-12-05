@@ -6,7 +6,7 @@ Feature: Git Sync: syncing a feature branch without open changes
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE              | FILE NAME          |
       | main    | local    | local main commit    | local_main_file    |
-      | main    | remote   | remote main commit   | remote_main_file   |
+      |         | remote   | remote main commit   | remote_main_file   |
       | feature | local    | local feature commit | local_feature_file |
     When I run `git sync`
     Then I am still on the "feature" branch
@@ -30,9 +30,9 @@ Feature: Git Sync: syncing a feature branch without open changes
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |
-      | main    | remote   | remote main commit    | remote_main_file    |
+      |         | remote   | remote main commit    | remote_main_file    |
       | feature | local    | local feature commit  | local_feature_file  |
-      | feature | remote   | remote feature commit | remote_feature_file |
+      |         | remote   | remote feature commit | remote_feature_file |
     When I run `git sync`
     Then I am still on the "feature" branch
     And I have the following commits

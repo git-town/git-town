@@ -6,7 +6,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I run `git sync` while allowing errors
 
 
@@ -23,7 +23,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILES              |
       | main   | remote   | conflicting remote commit | conflicting_file   |
-      | main   | local    | conflicting local commit  | conflicting_file   |
+      |        | local    | conflicting local commit  | conflicting_file   |
     And I still have the following committed files
       | BRANCH | FILES              | CONTENT                   |
       | main   | conflicting_file   | local conflicting content |

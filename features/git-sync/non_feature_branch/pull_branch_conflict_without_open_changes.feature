@@ -7,7 +7,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I run `git sync` while allowing errors
 
 
@@ -24,7 +24,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILES              |
       | qa     | remote   | conflicting remote commit | conflicting_file   |
-      | qa     | local    | conflicting local commit  | conflicting_file   |
+      |        | local    | conflicting local commit  | conflicting_file   |
     And I still have the following committed files
       | BRANCH | FILES              | CONTENT                   |
       | qa     | conflicting_file   | local conflicting content |

@@ -7,7 +7,7 @@ Feature: Git Sync: syncing a non-feature branch with open changes
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | qa     | local            | local commit  | local_file  |
-      | qa     | remote           | remote commit | remote_file |
+      |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
