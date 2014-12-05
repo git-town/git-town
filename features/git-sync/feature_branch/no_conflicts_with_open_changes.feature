@@ -16,11 +16,11 @@ Feature: Git Sync: syncing a feature branch with open changes
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES              |
       | main    | local and remote | local main commit                | local_main_file    |
-      | main    | local and remote | remote main commit               | remote_main_file   |
+      |         |                  | remote main commit               | remote_main_file   |
       | feature | local and remote | Merge branch 'main' into feature |                    |
-      | feature | local and remote | local main commit                | local_main_file    |
-      | feature | local and remote | remote main commit               | remote_main_file   |
-      | feature | local and remote | local feature commit             | local_feature_file |
+      |         |                  | local main commit                | local_main_file    |
+      |         |                  | remote main commit               | remote_main_file   |
+      |         |                  | local feature commit             | local_feature_file |
     And now I have the following committed files
       | BRANCH  | FILES                                                 |
       | main    | local_main_file, remote_main_file                     |
@@ -42,13 +42,13 @@ Feature: Git Sync: syncing a feature branch with open changes
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES               |
       | main    | local and remote | local main commit                                          | local_main_file     |
-      | main    | local and remote | remote main commit                                         | remote_main_file    |
+      |         |                  | remote main commit                                         | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature                           |                     |
-      | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                     |
-      | feature | local and remote | local main commit                                          | local_main_file     |
-      | feature | local and remote | remote main commit                                         | remote_main_file    |
-      | feature | local and remote | local feature commit                                       | local_feature_file  |
-      | feature | local and remote | remote feature commit                                      | remote_feature_file |
+      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
+      |         |                  | local main commit                                          | local_main_file     |
+      |         |                  | remote main commit                                         | remote_main_file    |
+      |         |                  | local feature commit                                       | local_feature_file  |
+      |         |                  | remote feature commit                                      | remote_feature_file |
     And now I have the following committed files
       | BRANCH  | FILES               |
       | main    | local_main_file, remote_main_file |

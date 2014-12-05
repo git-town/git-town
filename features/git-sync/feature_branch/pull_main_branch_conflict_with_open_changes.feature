@@ -50,9 +50,9 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
       | main    | local and remote | conflicting remote commit | conflicting_file |
-      | main    | local and remote | conflicting local commit  | conflicting_file |
+      |         |                  | conflicting local commit  | conflicting_file |
       | feature | local and remote | conflicting remote commit | conflicting_file |
-      | feature | local and remote | conflicting local commit  | conflicting_file |
+      |         |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -69,9 +69,9 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
       | main    | local and remote | conflicting remote commit | conflicting_file |
-      | main    | local and remote | conflicting local commit  | conflicting_file |
+      |         |                  | conflicting local commit  | conflicting_file |
       | feature | local and remote | conflicting remote commit | conflicting_file |
-      | feature | local and remote | conflicting local commit  | conflicting_file |
+      |         |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | resolved content |

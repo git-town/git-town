@@ -50,7 +50,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
-      | qa     | local and remote | conflicting local commit  | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH | FILES            | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -66,7 +66,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
-      | qa     | local and remote | conflicting local commit  | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH | FILES            | CONTENT          |
       | qa     | conflicting_file | resolved content |

@@ -13,7 +13,7 @@ Feature: Git Sync: syncing the main branch without open changes
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILES       |
       | main   | local and remote | local commit  | local_file  |
-      | main   | local and remote | remote commit | remote_file |
+      |        |                  | remote commit | remote_file |
     And now I have the following committed files
       | BRANCH | FILES       |
       | main   | local_file  |

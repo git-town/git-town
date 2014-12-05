@@ -15,7 +15,7 @@ Feature: Git Sync: syncing a non-feature branch without open changes
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILES       |
       | qa     | local and remote | local commit  | local_file  |
-      | qa     | local and remote | remote commit | remote_file |
+      |        |                  | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     And now I have the following committed files
       | BRANCH | FILES                   |
