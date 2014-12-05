@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+if [ "$#" == 0 ]; then
+  bundle exec parallel_cucumber features
+else
+  bundle exec parallel_cucumber "$@"
+fi

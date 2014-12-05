@@ -133,5 +133,5 @@ end
 
 
 Then(/^the existing branches are$/) do |table|
-  verify_branches table.hashes
+  verify_branches table
 end

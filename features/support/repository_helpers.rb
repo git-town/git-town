@@ -1,35 +1,29 @@
-def repositiory_base
-  '/tmp'
-end
-
 def remote_repository_path
-  "#{repositiory_base}/git_town_specs_remote"
+  "#{REPOSITORY_BASE}/git_town_specs_remote"
 end
 
 def coworker_repository_path
-  "#{repositiory_base}/git_town_specs_coworker"
+  "#{REPOSITORY_BASE}/git_town_specs_coworker"
 end
 
 def local_repository_path
-  "#{repositiory_base}/git_town_specs_local"
+  "#{REPOSITORY_BASE}/git_town_specs_local"
 end
 
 def upstream_remote_repository_path
-  "#{repositiory_base}/git_town_specs_upstream_remote"
+  "#{REPOSITORY_BASE}/git_town_specs_upstream_remote"
 end
 
 def upstream_local_repository_path
-  "#{repositiory_base}/git_town_specs_upstream_local"
+  "#{REPOSITORY_BASE}/git_town_specs_upstream_local"
 end
 
 def create_repository path
-  delete_repository path
   Dir.mkdir path
   run "git init --bare #{path}"
 end
 
 def clone_repository remote_path, path, bare: false
-  delete_repository path
   run "git clone #{'--bare' if bare} #{remote_path} #{path}"
 end
 
@@ -39,8 +33,4 @@ def at_path path
   result = yield
   Dir.chdir cwd
   result
-end
-
-def delete_repository path
-  FileUtils.rm_r path, force: true
 end

@@ -123,6 +123,7 @@ end
 # Verifies that the commits in the repository at the given path
 # are similar to the expected commits in the given Cucumber table
 def verify_commits commits_table:, repository_path:
+  commits_table.map_headers!(&:downcase)
   expected_commits = commits_table.hashes.map do |commit_data|
     normalize_expected_commit_data commit_data
   end.flatten
