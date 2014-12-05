@@ -19,13 +19,13 @@ function store_configuration {
 
 # Persists the main branch configuration
 function store_main_branch_name {
-  store_configuration "main-branch-name" "$1"
+  store_configuration main-branch-name "$1"
 }
 
 
 # Persists the non-feature branch configuration
 function store_non_feature_branch_names {
-  store_configuration "non-feature-branch-names" "$1"
+  store_configuration non-feature-branch-names "$1"
 }
 
 
