@@ -65,7 +65,7 @@ function pop_line {
   local file=$1
   local temp=$(temp_filename)
   head -n 1 "$file"
-  sed '1d' "$file" > $temp
+  tail -n +2 "$file" > "$temp"
   mv "$temp" "$file"
 }
 
