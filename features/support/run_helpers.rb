@@ -14,7 +14,7 @@ end
 
 
 def git_town_command? command
-  %w(extract hack pr prune-branches ship sync-fork sync kill).any? do |subcommand|
+  %w(extract hack kill pr prune-branches ship sync-fork sync town).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end
@@ -28,8 +28,8 @@ def print_result result
 end
 
 
-def run command, allow_failures: false, debug: false, input: nil
-  result = run_shell_command command, input
+def run command, allow_failures: false, debug: false, inputs: []
+  result = run_shell_command command, inputs
   should_error = result.error && !allow_failures
 
   print_result(result) if should_error || should_print_command_output?(command, debug)
@@ -41,12 +41,12 @@ def run command, allow_failures: false, debug: false, input: nil
 end
 
 
-def run_shell_command command, input
+def run_shell_command command, inputs
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
   command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    stdin.puts input if input
+    inputs.each { |input| stdin.puts input }
     stdin.close
     result.out = stdout.read
   end
@@ -56,7 +56,15 @@ def run_shell_command command, input
 end
 
 
-
 def should_print_command_output? command, debug
   debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
+end
+
+
+def prepare_user_input input
+  if input == 'an empty commit message'
+    ['dGZZ']
+  else
+    Kappamaki.from_sentence(input)
+  end
 end
