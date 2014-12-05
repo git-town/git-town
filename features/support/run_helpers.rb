@@ -56,7 +56,15 @@ def run_shell_command command, inputs
 end
 
 
-
 def should_print_command_output? command, debug
   debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
+end
+
+
+def prepare_user_input input
+  if input == 'an empty commit message'
+    ['dGZZ']
+  else
+    Kappamaki.from_sentence(input)
+  end
 end
