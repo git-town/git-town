@@ -41,6 +41,20 @@ def run command, allow_failures: false, debug: false, inputs: []
 end
 
 
+# Returns an array of the Git commands that were run in the last invocation of "run"
+# with the form [<branch_name>, <command>]
+def commands_of_last_run
+  command_regex = /
+    \[1m          # bold text
+    \[(.*?)\]     # branch name in square brackets
+    \s            # space between branch name and Git command
+    (.*?)         # the Git command
+    \n            # newline at the end
+  /x
+  @last_run_result.out.scan command_regex
+end
+
+
 def run_shell_command command, inputs
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
   command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
