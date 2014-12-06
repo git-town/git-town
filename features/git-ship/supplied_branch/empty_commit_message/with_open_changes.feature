@@ -1,6 +1,5 @@
 Feature: aborting ship of supplied branch by entering an empty commit message with open changes
 
-
   Background:
     Given I have feature branches named "feature" and "other_feature"
     And the following commit exists in my repository

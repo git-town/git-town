@@ -31,9 +31,9 @@ Given(/^I am on the local "(.+?)" branch$/) do |branch_name|
 end
 
 
-Given(/^I have feature branches named (.+?)$/) do |branch_names|
+Given(/^I have (local )?feature branches named (.+?)$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
-    create_branch branch_name
+    create_branch branch_name, remote: !local
   end
 end
 
