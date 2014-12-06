@@ -1,6 +1,6 @@
 # Git Town Release Notes
 
-## 0.5
+## Currently in master
 * **git kill:** branchname parameter
   ([#126](https://github.com/Originate/git-town/issues/126))
 
