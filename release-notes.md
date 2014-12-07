@@ -1,5 +1,8 @@
 # Git Town Release Notes
 
+* auto-completion for [Fish shell](http://fishshell.com)
+  ([#177](https://github.com/Originate/git-town/issues/177))
+
 
 ## 0.4.1 (2014-12-02)
 
