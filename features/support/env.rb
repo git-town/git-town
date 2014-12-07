@@ -20,7 +20,6 @@ Before do
   # Create the local repository
   clone_repository remote_repository_path, local_repository_path
   at_path local_repository_path do
-
     # Create the master branch
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
 
@@ -36,7 +35,7 @@ Before do
 
   # Set the default branch
   at_path remote_repository_path do
-    run 'git symbolic-ref HEAD refs/head/main'
+    run 'git symbolic-ref HEAD refs/heads/main'
   end
 
   # Fetch the default branch
@@ -47,7 +46,6 @@ Before do
   # Create the coworker repository
   clone_repository remote_repository_path, coworker_repository_path
   at_path coworker_repository_path do
-    run 'git checkout main'
     run 'git config git-town.main-branch-name main'
   end
 
