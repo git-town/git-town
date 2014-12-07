@@ -36,8 +36,17 @@ if [[ -f ".main_branch_name" ]]; then
 fi
 
 
-# Read main branch name from config, ask and store it if it isn't known yet.
 main_branch_name=$(get_configuration main-branch-name)
+non_feature_branch_names=$(get_configuration non-feature-branch-names)
+
+
+# Bypass the configuration if requested by caller (e.g. git-town)
+if [[ $1 == "--bypass-automatic-configuration" ]]; then
+  return 0
+fi
+
+
+# Ask and store main-branch-name, if it isn't known yet.
 if [[ -z "$main_branch_name" ]]; then
   echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
   read main_branch_name
@@ -53,9 +62,7 @@ if [[ -z "$main_branch_name" ]]; then
   echo "main branch stored as '$main_branch_name'."
 fi
 
-
-# Read non feature branch names from config, ask and store if needed
-non_feature_branch_names=$(get_configuration non-feature-branch-names)
+# Ask and store non-feature-branch-names, if needed
 if [[ $? == '1' ]]; then
   echo "Git Town supports non-feature branches like 'release' or 'production'."
   echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
