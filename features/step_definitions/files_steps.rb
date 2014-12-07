@@ -26,20 +26,10 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
   end.flatten
 
   # Get all existing files in all branches
-  actual_files = []
-  without_open_changes do
-    existing_local_branches.each do |branch|
-      on_branch branch do
-        existing_files.each do |file|
-          if file != 'uncommitted'
-            actual_files << { branch: branch, name: file, content: IO.read(file) }
-          end
-        end
-      end
-    end
-  end
+  actual_files = all_files_in_all_branches except: ['.gitignore']
 
   # Remove the keys that are not used in the expected data
+  # TODO: replace this with Charlie's "subhash" command once it is available
   used_keys = expected_files[0].keys
   actual_files.each do |actual_file|
     actual_file.keys.each do |key|
