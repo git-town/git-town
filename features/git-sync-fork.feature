@@ -4,17 +4,17 @@ Feature: Git Sync-Fork
     Given I am on the main branch
     And my repo has an upstream repo
     And the following commits exist in my repository
-      | branch | location | message         | file name     |
+      | BRANCH | LOCATION | MESSAGE         | FILE NAME     |
       | main   | upstream | upstream commit | upstream_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I see the following commits
-      | branch | location                    | message         | files         |
+      | BRANCH | LOCATION                    | MESSAGE         | FILES         |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
-      | branch | files         |
+      | BRANCH | FILES         |
       | main   | upstream_file |
 
 
@@ -22,17 +22,17 @@ Feature: Git Sync-Fork
     Given I am on a feature branch
     And my repo has an upstream repo
     And the following commits exist in my repository
-      | branch | location | message         | file name     |
+      | BRANCH | LOCATION | MESSAGE         | FILE NAME     |
       | main   | upstream | upstream commit | upstream_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I see the following commits
-      | branch | location                | message         | files         |
+      | BRANCH | LOCATION                | MESSAGE         | FILES         |
       | main   | local, remote, upstream | upstream commit | upstream_file |
     And now I have the following committed files
-      | branch | files         |
+      | BRANCH | FILES         |
       | main   | upstream_file |
 
 
@@ -40,7 +40,7 @@ Feature: Git Sync-Fork
     Given I am on a feature branch
     And my repo has an upstream repo
     And the following commits exist in my repository
-      | branch | location | message         | file name        | file content     |
+      | BRANCH | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
       | main   | upstream | upstream commit | conflicting_file | upstream content |
       | main   | local    | local commit    | conflicting_file | local content    |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -55,11 +55,11 @@ Feature: Git Sync-Fork
     And there is no rebase in progress
     And there is no abort script for "git sync-fork" anymore
     And I still have the following commits
-      | branch | location | message         | files            |
+      | BRANCH | LOCATION | MESSAGE         | FILES            |
       | main   | upstream | upstream commit | conflicting_file |
       | main   | local    | local commit    | conflicting_file |
     And I still have the following committed files
-      | branch | files            | content       |
+      | BRANCH | FILES            | CONTENT       |
       | main   | conflicting_file | local content |
 
 

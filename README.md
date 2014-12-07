@@ -11,7 +11,7 @@ It is designed for workflows that have a main branch
 from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
-<a href="https://bitbucket.org" target="_blank">BitBucket</a>.
+<a href="https://bitbucket.org" target="_blank">Bitbucket</a>.
 
 
 ## commands
@@ -135,15 +135,18 @@ bundle
 brew install shellcheck  # bash linter
 
 # rake tasks
-rake            # Run all linters and tests
+rake            # Run all linters and specs
 rake lint       # Run all linters
 rake lint:bash  # Run bash linter
 rake lint:ruby  # Run ruby linter
-rake spec       # Run tests
+rake spec       # Run specs
 
 # run single test
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
+
+# run cucumber in parallel
+bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?

@@ -1,5 +1,4 @@
 require 'active_support/all'
-require 'fuubar-cucumber'
 require 'kappamaki'
 require 'open4'
 require 'rspec'
@@ -9,8 +8,11 @@ SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 # The files to ignore when checking files
 IGNORED_FILES = %w(tags)
 
+REPOSITORY_BASE = Dir.mktmpdir
+
 Before do
-  Dir.chdir repositiory_base
+  Dir.chdir REPOSITORY_BASE
+  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
 
   # Create remote repository
   create_repository remote_repository_path
@@ -37,9 +39,9 @@ Before do
     run 'git symbolic-ref HEAD refs/head/main'
   end
 
-  # Pull the default branch
+  # Fetch the default branch
   at_path local_repository_path do
-    run 'git pull'
+    run 'git fetch'
   end
 
   # Create the coworker repository
@@ -59,8 +61,5 @@ end
 
 
 at_exit do
-  Dir.chdir repositiory_base
-  delete_repository remote_repository_path
-  delete_repository local_repository_path
-  delete_repository coworker_repository_path
+  FileUtils.rm_rf REPOSITORY_BASE
 end
