@@ -101,7 +101,7 @@ To install the Fish autocompletion, copy
 <a href="https://github.com/Originate/git-town/blob/kg-autocomplete-fish/autocomplete/git.fish" target="_blank">
 Git Town's Fish shell autocompletion definitions file</a>
 into your `~/.config/fish/completions/` folder.
-Create it if necessary.
+Create the folder if necessary.
 
 
 ## configuration
