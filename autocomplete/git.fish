@@ -9,6 +9,9 @@ complete --command git --arguments 'sync' --description 'Update the current bran
 complete --command git --arguments 'sync-fork' --description 'Pull upstream updates into a forked repository' --no-files
 complete --command git --arguments 'town' --description 'Git Town ' --no-files
 
+# autocomplete Git branch names
+complete --command git --arguments "(git branch | tr -d '* ')"
+
 # command-line switches
 complete --command git -l 'abort' --description 'Abort the current command'
 complete --command git -l 'continue' --description 'Continue the current command'
