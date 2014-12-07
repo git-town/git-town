@@ -22,6 +22,18 @@ function __fish_complete_git_town_no_command
 end
 
 
+# Returns whether the currently autocompleted Git Town command takes
+# a Git branch as the next parameter.
+function __fish_complete_git_town_command_takes_branch
+  set arguments (commandline -opc)
+  switch "$arguments"
+    case 'git extract' 'git kill' 'git ship'
+      return 0
+  end
+  return 1
+end
+
+
 # define the Git Town commands
 complete --command git --arguments 'extract' --description 'Copy selected commits from the current branch into their own branch' --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'hack' --description 'Cut a new feature branch off the main branch' --condition '__fish_complete_git_town_no_command' --no-files
@@ -34,7 +46,7 @@ complete --command git --arguments 'sync-fork' --description 'Pull upstream upda
 complete --command git --arguments 'town' --description 'Git Town management' --condition '__fish_complete_git_town_no_command' --no-files
 
 # autocomplete Git branch names
-complete --command git --arguments "(git branch | tr -d '* ')"
+complete --command git --arguments "(git branch | tr -d '* ')" --condition '__fish_complete_git_town_command_takes_branch' --no-files
 
 # command-line switches
 complete --command git -l 'abort' --description 'Abort the current command'
