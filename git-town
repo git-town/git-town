@@ -2,7 +2,17 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" "--bypass-automatic-configuration"
 
 function show_config {
+  show_main_branch
+  show_non_feature_branches
+}
+
+
+function show_main_branch {
   echo "Main branch: '$main_branch_name'"
+}
+
+
+function show_non_feature_branches {
   echo "Non-feature branches: '$non_feature_branch_names'"
 }
 
@@ -19,6 +29,18 @@ function show_help {
 
 if [ "$1" == "--config" ]; then
   show_config
+elif [ "$1" == "main-branch" ]; then
+  if [ -n "$2" ]; then
+    store_main_branch_name_with_confirmation_text "$2"
+  else
+    show_main_branch
+  fi
+elif [ "$1" == "non-feature-branches" ]; then
+  if [ -n "$2" ]; then
+    set_non_feature_branches "$2"
+  else
+    show_non_feature_branches
+  fi
 elif [ "$1" == "--version" ]; then
   show_version
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
