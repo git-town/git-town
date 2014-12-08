@@ -4,7 +4,7 @@ Feature: Git Ship: errors while shipping the supplied branch without open change
   Scenario: feature branch that does not exist
     Given I am on the "feature" branch
     When I run `git ship other_feature -m 'feature done'` while allowing errors
-    Then I get the error "There is no branch named 'other_feature'."
+    Then I get the error "There is no branch named 'other_feature'"
     And I end up on the "feature" branch
 
 

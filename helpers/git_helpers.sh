@@ -51,8 +51,10 @@ function cherry_pick {
 
 # Commits all open changes into the current branch
 function commit_open_changes {
-  run_command "git add -A"
-  run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  if [ "$initial_open_changes" = true ]; then
+    run_command "git add -A"
+    run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  fi
 }
 
 
@@ -140,7 +142,7 @@ function ensure_has_branch {
   local branch_name=$1
   if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
-    echo_error "There is no branch named '$branch_name'."
+    echo_error "There is no branch named '$branch_name'"
     exit_with_error
   fi
 }

@@ -1,6 +1,8 @@
 # Git Town Release Notes
 
 ## Currently in master
+* **git kill:** branchname parameter
+  ([#126](https://github.com/Originate/git-town/issues/126))
 
 
 ## 0.4.1 (2014-12-02)

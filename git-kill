@@ -3,30 +3,55 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
 function create_undo_script {
-  local current_sha=$(sha_of_branch "$initial_branch_name")
-  add_to_undo_script "create_and_checkout_branch $initial_branch_name $current_sha"
+  local original_branch_sha=$1
+  local branch_to_kill=$2
+  local current_sha=$(sha_of_branch "$branch_to_kill")
+  add_to_undo_script "create_and_checkout_branch $branch_to_kill $current_sha"
   if [ "$initial_open_changes" == true ]; then
     add_to_undo_script "reset_to_sha $original_branch_sha"
   fi
   if [ "$(has_tracking_branch "$initial_branch_name")" == true ]; then
     add_to_undo_script "push_branch"
   fi
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
+    add_to_undo_script "git checkout $initial_branch_name"
+  fi
+}
+
+
+# Returns the name of the branch to kill.
+# This is either the branch given as a parameter,
+# or the current branch.
+function determine_branch_to_kill {
+  if [ -z "$1" ]; then
+    echo "$initial_branch_name"
+  else
+    echo "$1"
+  fi
 }
 
 
 function perform_kill {
-  ensure_on_feature_branch "You can only kill feature branches."
-  original_branch_sha=$(sha_of_branch "$initial_branch_name")
+  local branch_to_kill=$(determine_branch_to_kill "$*")
 
-  # Remove open changes
-  if [ "$initial_open_changes" == true ]; then
+  if [ "$branch_to_kill" != "$initial_branch_name" ]; then
+    ensure_has_branch "$branch_to_kill"
+  fi
+
+  ensure_is_feature_branch "$branch_to_kill" "You can only kill feature branches."
+
+  # The SHA of where the branch to kill needs to point to when restored
+  local original_branch_sha=$(sha_of_branch "$branch_to_kill")
+
+  if [ "$branch_to_kill" == "$initial_branch_name" ]; then
     commit_open_changes
   fi
 
-  create_undo_script
-
-  checkout_main_branch
-  delete_branch "$initial_branch_name" force
+  create_undo_script "$original_branch_sha" "$branch_to_kill"
+  if [ "$branch_to_kill" == "$initial_branch_name" ]; then
+    checkout_main_branch
+  fi
+  delete_branch "$branch_to_kill" force
 }
 
 

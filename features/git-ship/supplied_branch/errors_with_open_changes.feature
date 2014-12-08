@@ -5,7 +5,7 @@ Feature: Git Ship: errors while shipping the supplied branch with open changes
     Given I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship other_feature -m 'feature done'` while allowing errors
-    Then I get the error "There is no branch named 'other_feature'."
+    Then I get the error "There is no branch named 'other_feature'"
     And I end up on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 

@@ -46,6 +46,11 @@ Then(/^I don't have an uncommitted file with name: "(.+?)"$/) do |file_name|
 end
 
 
+Then(/^I don't have any uncommitted files$/) do
+  expect(uncommitted_files).to be_empty
+end
+
+
 Then(/^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) do |file_name, content|
   expect(uncommitted_files).to eql [file_name]
   expect(IO.read file_name).to eql content
