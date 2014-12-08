@@ -6,7 +6,7 @@ Feature: git-extract handling cherry-pick conflicts with open changes
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT     |
       | main    | local    | conflicting commit | conflicting_file | main content     |
       | feature | local    | feature commit     | feature_file     |                  |
-      | feature | local    | refactor commit    | conflicting_file | refactor content |
+      |         |          | refactor commit    | conflicting_file | refactor content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha while allowing errors
@@ -44,6 +44,6 @@ Feature: git-extract handling cherry-pick conflicts with open changes
       | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | conflicting commit | conflicting_file |
       | feature  | local            | feature commit     | feature_file     |
-      | feature  | local            | refactor commit    | conflicting_file |
+      |          |                  | refactor commit    | conflicting_file |
     And my repo has no cherry-pick in progress
     And there is no abort script for "git extract" anymore

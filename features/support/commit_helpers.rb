@@ -61,8 +61,8 @@ end
 # | file content | default file content   | content of the file to be committed                        |
 def create_commits commits_array
   commits_array = [commits_array] if commits_array.is_a? Hash
+  normalize_commit_data commits_array
   commits_array.each do |commit_data|
-    symbolize_keys_deep! commit_data
     commit_data.reverse_merge!(default_commit_attributes)
     create_commit commit_data
   end
@@ -98,11 +98,19 @@ def default_commit_attributes
 end
 
 
+# Normalize commits_array by converting all keys to symbols and
+# filling in any data implied from the previous commit
+def normalize_commit_data commits_array
+  commits_array = commits_array.each(&:symbolize_keys_deep!)
+  commits_array.each_cons(2) do |previous_commit_data, commit_data|
+    commit_data.default_blank! previous_commit_data.subhash(:branch, :location)
+  end
+end
+
+
 # Normalize commit_data by parsing the files and location
 # Returns an array of commit_data
 def normalize_expected_commit_data commit_data
-  symbolize_keys_deep! commit_data
-
   # Convert file string list into real array
   commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
 
@@ -120,16 +128,15 @@ def recent_commit_shas count
 end
 
 
-# Verifies that the commits in the repository at the given path
-# are similar to the expected commits in the given Cucumber table
-def verify_commits commits_table:, repository_path:
-  commits_table.map_headers!(&:downcase)
-  expected_commits = commits_table.hashes.map do |commit_data|
+# Verifies the commits in the repository
+def verify_commits commits_array
+  normalize_commit_data commits_array
+
+  expected_commits = commits_array.map do |commit_data|
     normalize_expected_commit_data commit_data
   end.flatten
 
-  at_path repository_path do
-    actual_commits = commits_in_repo
-    expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
-  end
+  actual_commits = commits_in_repo
+
+  expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
 end

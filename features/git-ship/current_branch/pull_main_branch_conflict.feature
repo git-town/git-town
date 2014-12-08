@@ -6,7 +6,7 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I run `git ship` while allowing errors
 
@@ -24,7 +24,7 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |
       | main    | remote   | conflicting remote commit | conflicting_file |
-      | main    | local    | conflicting local commit  | conflicting_file |
+      |         | local    | conflicting local commit  | conflicting_file |
       | feature | local    | feature commit            | feature_file     |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT                   |
