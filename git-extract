@@ -2,6 +2,35 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
+function ensure_preconditions {
+  ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
+  target_branch_name=$1
+  ensure_has_target_branch
+  ensure_does_not_have_branch "$target_branch_name"
+  shift
+  get_shas "$*"
+  ensure_has_shas
+}
+
+
+function ensure_has_target_branch {
+  if [ -z "$target_branch_name" ]; then
+    echo_error_header
+    echo_error "No branch name provided."
+    exit_with_error
+  fi
+}
+
+
+function ensure_has_shas {
+  if [ -z "$SHAs" ]; then
+    echo_error_header
+    echo_error "Nothing selected, aborting extract."
+    exit_with_error
+  fi
+}
+
+
 # Called when the cherry_pick fails
 function error_cherry_pick {
   # Create the abort script
@@ -22,58 +51,43 @@ function error_pull_main_branch {
 }
 
 
-# Performs the extract operation
-function perform_extract {
-  if [ -z "$user_input" ]; then
+# Get the SHAs to cherry pick
+function get_shas {
+  SHAs="$*"
+
+  if [ -z "$SHAs" ]; then
+    ensure_tool_installed 'dialog'
     local file=$(temp_filename)
 
     git log --oneline "$main_branch_name..$initial_branch_name"               | # Get a list of all commits in the feature branch.
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
       tail -r                                                                 | # Reverse the order of lines.
-      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$1' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$file"   # Ask the user for commits
+      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$target_branch_name' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$file"  # Ask the user for commits
     clear
 
-    user_input=$(cat "$file")
+    SHAs=$(cat "$file")
     rm "$file"
   fi
+}
 
-  if [ -z "$user_input" ]; then
-    echo_error_header
-    echo_error "Nothing selected, aborting script."
-    exit_with_error
-  fi
 
+# Performs the extract operation
+function perform_extract {
   stash_open_changes
   checkout_main_branch
   sync_branch 'rebase'
   create_and_checkout_feature_branch "$target_branch_name"
-  cherry_pick "$user_input"
+  cherry_pick "$SHAs"
   push_branch
   restore_open_changes
 }
 
 
-# Exit with a help screen if parameters are missing.
-if [ -z "$1" ]; then
-  echo_usage_header
-  echo_usage "git extract [name of the new branch to create]"
-  exit_with_error
-fi
-
-ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
-
 if [ "$1" == "--abort" ]; then
   run_abort_script
 else
-  target_branch_name=$1
-  ensure_does_not_have_branch "$target_branch_name"
-  shift
-  user_input="$*"
-
-  if [ -z "$user_input" ]; then
-    ensure_tool_installed 'dialog'
-  fi
-  perform_extract "$@"
+  ensure_preconditions "$@"
+  perform_extract
 fi
 
 exit_with_success
