@@ -6,7 +6,7 @@ Feature: cannot extract if no branch name is provided
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
-      | feature | local    | refactor commit    | refactor_file    |
+      |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
     When I run `git extract` while allowing errors
 
