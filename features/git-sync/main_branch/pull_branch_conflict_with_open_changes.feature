@@ -14,7 +14,6 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
   @finishes-with-non-empty-stash
   Scenario: result
     Then my repo has a rebase in progress
-    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
 
 
@@ -23,7 +22,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES              |
       | main    | remote   | conflicting remote commit | conflicting_file   |
@@ -46,7 +45,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     When I run `git sync --continue`
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
       | main    | local and remote | conflicting remote commit | conflicting_file |
@@ -62,7 +61,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     When I run `git sync --continue`
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
       | main    | local and remote | conflicting remote commit | conflicting_file |

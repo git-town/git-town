@@ -10,25 +10,39 @@ function abort_cherry_pick {
 
 
 # Abort a merge
-function abort_merge {
+function abort_merge_branch {
   run_command "git merge --abort"
 }
 
 
+# Abort a merge
+function abort_merge_tracking_branch {
+  abort_merge_branch
+}
+
+
 # Abort a rebase
-function abort_rebase {
+function abort_rebase_branch {
   run_command "git rebase --abort"
 }
 
 
-# Checks out the branch with the given name.
-#
-# Skips this operation if the requested branch
-# is already checked out.
+# Abort a rebase
+function abort_rebase_tracking_branch {
+  abort_rebase_branch
+}
+
+
+# Checks out the branch with the given name (if necessary)
 function checkout_branch {
-  local branch_name=$1
-  if [ ! "$(get_current_branch_name)" = "$branch_name" ]; then
-    run_command "git checkout $branch_name"
+  local new_branch=$1
+  local old_branch="$(get_current_branch_name)"
+  if [ "old_branch" != "$new_branch" ]; then
+    run_command "git checkout $new_branch"
+
+    if [ "$abortable" = true ]; then
+      add_to_abort_command_list "checkout_branch $old_branch"
+    fi
   fi
 }
 
@@ -57,18 +71,30 @@ function commit_open_changes {
 
 
 # Continues merge if one is in progress
-function continue_merge {
+function continue_merge_branch {
   if [ "$(has_open_changes)" == true ]; then
     run_command "git commit --no-edit"
   fi
 }
 
 
+# Continues merge if one is in progress
+function continue_merge_tracking_branch {
+  continue_merge_branch
+}
+
+
 # Continues rebase if one is in progress
-function continue_rebase {
+function continue_rebase_branch {
   if [ "$(rebase_in_progress)" == true ]; then
     run_command "git rebase --continue"
   fi
+}
+
+
+# Continues rebase if one is in progress
+function continue_rebase_tracking_branch {
+  continue_rebase_branch
 }
 
 
@@ -178,7 +204,7 @@ function ensure_is_feature_branch {
 function ensure_no_conflicts {
   if [ "$(has_conflicts)" == true ]; then
     echo_error_header
-    echo_error "$*"
+    echo_error "You must resolve the conflicts before continuing the $git_command"
     exit_with_error
   fi
 }
@@ -306,11 +332,6 @@ function local_merged_branches {
 function merge_branch {
   local branch_name=$1
   run_command "git merge --no-edit $branch_name"
-  if [ $? != 0 ]; then
-    write_merge_conflict_abort_script
-    prepend_to_command_list 'continue_merge'
-    exit_with_script_messages
-  fi
 }
 
 
@@ -358,11 +379,6 @@ function push_tags {
 function rebase_branch {
   local branch_name=$1
   run_command "git rebase $branch_name"
-  if [ $? != 0 ]; then
-    write_rebase_conflict_abort_script
-    prepend_to_command_list 'continue_rebase'
-    exit_with_script_messages
-  fi
 }
 
 
@@ -423,14 +439,6 @@ function restore_open_changes {
 }
 
 
-# Unstashes changes if needed
-function restore_open_changes_if_needed {
-  if [ "$initial_open_changes" = true ]; then
-    restore_open_changes
-  fi
-}
-
-
 # Returns the SHA that the given branch points to
 function sha_of_branch {
   local branch_name=$1
@@ -457,12 +465,9 @@ function squash_merge {
 # Stashes uncommitted changes
 function stash_open_changes {
   run_command "git stash -u"
-}
 
-
-# Stashes uncommited changes if needed
-function stash_open_changes_if_needed {
-  if [ "$initial_open_changes" = true ]; then
-    stash_open_changes
+  if [ "$abortable" = true ]; then
+    add_to_abort_command_list "restore_open_changes"
   fi
 }
+

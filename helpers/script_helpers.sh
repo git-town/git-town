@@ -2,58 +2,62 @@
 
 # Helper methods for dealing with abort/continue scripts
 
-
-function add_to_abort_script {
-  add_to_file "$1" "$abort_script_filename"
+function abort_command {
+  local cmd=$(peek_command "$command_list")
+  eval "abort_$cmd"
+  run_command_list "$abort_command_list" 'cleanup'
 }
 
 
-function add_to_command_list {
-  add_to_file "$1" "$command_list_filename"
+function continue_command {
+  local cmd=$(peek_command "$command_list")
+  pop_command "$command_list"
+  eval "continue_$cmd"
+  run_command_list "$command_list" 'cleanup'
 }
 
 
-function add_to_file {
-  local content=$1
-  local filename=$2
-  local operator=">"
-  if [ -e "$filename" ]; then operator=">>"; fi
-  eval "echo '$content' $operator $filename"
+function undo_command {
+  run_command_list "$undo_command_list"
 }
 
 
-function add_to_undo_script {
-  add_to_file "$1" "$undo_script_filename"
+function ensure_abortable {
+  if [ "$(has_file "$command_list")" = false ]; then
+    echo_red "Cannot abort"
+    exit_with_error
+  fi
 }
 
 
-function execute_command_list {
-  while [ "$(wc -l < "$command_list_filename" | tr -d ' ')" -gt 0 ]; do
-    local cmd=$(pop_line "$command_list_filename")
-    $cmd
-    if [ $? != 0 ]; then exit_with_error; fi
-  done
-
-  remove_scripts
+function ensure_continuable {
+  if [ "$(has_file "$command_list")" = false ]; then
+    echo_red "Cannot continue"
+    exit_with_error
+  fi
 }
 
 
-function exit_with_script_messages {
-  local cmd="${program/-/ }"
+function ensure_undoable {
+  if [ "$(has_file "$undo_command_list")" = false ]; then
+    echo_red "Cannot undo"
+    exit_with_error
+  fi
+}
 
+
+function exit_with_messages {
   echo
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    echo_red "To abort, run \"$cmd --abort\"."
-  fi
-  if [ "$(has_script "$command_list_filename")" == true ]; then
-    echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
-  fi
+  echo_red "To abort, run \"$git_command --abort\"."
+  echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
   exit_with_error
 }
 
 
-function has_script {
-  if [ -n "$1" -a -f "$1" ]; then
+function has_commands {
+  local file="$1"
+
+  if [ "$(has_file "$file")" = true -a "$(number_of_commands "$file")" -gt 0 ]; then
     echo true
   else
     echo false
@@ -61,71 +65,95 @@ function has_script {
 }
 
 
-function pop_line {
-  local file=$1
-  local temp=$(temp_filename)
+function has_file {
+  local file="$1"
+
+  if [ -n "$file" -a -f "$file" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
+function number_of_commands {
+  local file="$1"
+  wc -l < "$file" | tr -d ' '
+}
+
+
+function peek_command {
+  local file="$1"
   head -n 1 "$file"
-  tail -n +2 "$file" > "$temp"
-  mv "$temp" "$file"
 }
 
 
-function prepend_to_command_list {
-  if [ "$(has_script "$command_list_filename")" == true ]; then
-    local file=$(temp_filename)
-    echo "$1" | cat - "$command_list_filename" > "$file" && mv "$file" "$command_list_filename"
-  fi
-}
-
-
-function remove_scripts {
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    rm "$abort_script_filename"
-  fi
-  if [ "$(has_script "$command_list_filename")" == true ]; then
-    rm "$command_list_filename"
-  fi
-  if [ "$(has_script "$undo_script_filename")" == true ]; then
-    rm "$undo_script_filename"
-  fi
-}
-
-
-function run_abort_script {
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    source "$abort_script_filename"
-    remove_scripts
+function pop_command {
+  local file="$1"
+  if [ "$(number_of_commands "$file")" -gt 1 ]; then
+    local temp=$(temp_filename)
+    tail -n +2 "$file" > "$temp"
+    mv "$temp" "$file"
   else
-    echo_red "Cannot find abort definition file"
+    rm "$file"
   fi
 }
 
 
-function run_undo_script {
-  if [ "$(has_script "$undo_script_filename")" == true ]; then
-    source "$undo_script_filename"
-    remove_scripts
+function remove_command_lists {
+  if [ "$(has_file "$abort_command_list")" = true ]; then
+    rm "$abort_command_list"
+  fi
+  if [ "$(has_file "$command_list")" = true ]; then
+    rm "$command_list"
+  fi
+  if [ "$(has_file "$undo_command_list")" = true ]; then
+    rm "$undo_command_list"
+  fi
+}
+
+
+export abortable=false
+function run {
+  if [ "$1" = "--abort" ]; then
+    ensure_abortable
+    abort_command
+    remove_command_lists
+  elif [ "$1" = "--undo" ]; then
+    ensure_undoable
+    undo_command
+  elif [ "$1" = "--continue" ]; then
+    ensure_continuable
+    ensure_no_conflicts
+    continue_command
+    remove_command_lists
   else
-    echo_red "Cannot find undo definition file"
+    abortable=true
+    remove_command_lists
+    build_command_list "$@"
+    run_command_list "$command_list"
   fi
 }
 
 
-function write_conflict_abort_script {
-  add_to_abort_script "checkout_branch $initial_branch_name"
-  if [ "$initial_open_changes" = true ]; then
-    add_to_abort_script "restore_open_changes"
+function run_command_list {
+  local file="$1"
+  local cleanup="$2"
+
+  while [ "$(has_commands "$file")" = true ]; do
+    local cmd=$(peek_command "$file")
+    $cmd
+
+    if [ $? != 0 ]; then
+      exit_with_messages
+    else
+      pop_command "$file"
+    fi
+  done
+
+  if [ -n "$cleanup" ]; then
+    remove_command_lists
   fi
-}
 
-
-function write_merge_conflict_abort_script {
-  add_to_abort_script "abort_merge"
-  write_conflict_abort_script
-}
-
-
-function write_rebase_conflict_abort_script {
-  add_to_abort_script "abort_rebase"
-  write_conflict_abort_script
+  exit_with_success
 }

@@ -16,7 +16,6 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     Then I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
@@ -24,7 +23,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     Then I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                  | FILES            |
       | main    | local and remote | conflicting main commit  | conflicting_file |
@@ -49,7 +48,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And I run `git sync --continue`
     Then I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES            |
       | main    | local and remote | conflicting main commit          | conflicting_file |
@@ -68,7 +67,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And I run `git sync --continue`
     Then I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES            |
       | main    | local and remote | conflicting main commit          | conflicting_file |

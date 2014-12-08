@@ -16,7 +16,6 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Then I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
@@ -24,7 +23,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES              |
       | feature | local    | local conflicting commit  | conflicting_file   |
@@ -48,7 +47,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     When I run `git sync --continue`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
@@ -65,7 +64,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     When I run `git sync --continue`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
+    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |

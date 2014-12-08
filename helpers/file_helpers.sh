@@ -6,23 +6,44 @@
 # Unique string that identifies the current directory
 temp_filename_suffix="$(pwd | tr '/' '_')"
 
-# Scripts filenames
-for action in "abort" "undo"; do
-  declare -r ${action}_script_filename="/tmp/${program}_${action}_${temp_filename_suffix}"
-done
-
-export command_list_filename="/tmp/${program}_command_list_${temp_filename_suffix}"
+# Command lists
+export command_list="/tmp/${program}_${temp_filename_suffix}"
+export abort_command_list="/tmp/${program}_abort_${temp_filename_suffix}"
+export undo_command_list="/tmp/${program}_undo_${temp_filename_suffix}"
 
 
-# Ensures that the given tool is installed.
-function ensure_tool_installed {
-  local toolname=$1
-  if [ "$(which "$toolname" | wc -l)" == 0 ]; then
-    echo_error_header
-    echo_error "You need the '$toolname' tool in order to run tests."
-    echo_error "Please install it using your package manager,"
-    echo_error "or on OS X with 'brew install $toolname'."
-    exit_with_error
+function add_to_abort_command_list {
+  prepend_to_file "$1" "$abort_command_list"
+}
+
+
+function add_to_command_list {
+  add_to_file "$1" "$command_list"
+}
+
+
+function add_to_file {
+  local content=$1
+  local file=$2
+  local operator=">"
+  if [ -e "$file" ]; then operator=">>"; fi
+  eval "echo '$content' $operator $file"
+}
+
+
+function add_to_undo_command_list {
+  prepend_to_file "$1" "$undo_command_list"
+}
+
+
+function prepend_to_file {
+  local content=$1
+  local file=$2
+  if [ "$(has_file "$file")" = true ]; then
+    local temp=$(temp_filename)
+    echo "$1" | cat - "$file" > "$temp" && mv "$temp" "$file"
+  else
+    add_to_file "$@"
   fi
 }
 
