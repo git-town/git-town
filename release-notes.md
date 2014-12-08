@@ -1,5 +1,7 @@
 # Git Town Release Notes
 
+## Currently in master
+
 
 ## 0.4.1 (2014-12-02)
 
