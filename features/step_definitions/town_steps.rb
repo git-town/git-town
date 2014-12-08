@@ -47,6 +47,10 @@ Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name
 end
 
 
-Then(/^the non\-feature branches include "(.*?)"$/) do |non_feature_branch|
-  expect(non_feature_branch_configuration).to include non_feature_branch
+Then(/^the non\-feature branches( don't)? include "(.*?)"$/) do |negate, non_feature_branch|
+  if negate
+    expect(non_feature_branch_configuration).not_to include non_feature_branch
+  else
+    expect(non_feature_branch_configuration).to include non_feature_branch
+  end
 end

@@ -25,13 +25,21 @@ function add_non_feature_branch {
   else
     local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
-    echo "Added '$branch_name'"
+    echo "Added '$branch_name' as a non-feature branch"
   fi
 }
 
 
 function remove_non_feature_branch {
-  echo "removing $1"
+  local branch_name=$1
+
+  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+    local new_branches=$(remove_string "$non_feature_branch_names" ',' "$branch_name")
+    store_configuration non-feature-branch-names "$new_branches"
+    echo "Removed '$branch_name' from non-feature branches"
+  else
+    echo "Nothing to do, '$branch_name' is not a non-feature branch"
+  fi
 }
 
 
