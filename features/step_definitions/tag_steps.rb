@@ -5,6 +5,6 @@ end
 
 
 
-Then(/^tag "(.*?)" has been pushed to the remote$/) do |tag_name|
+Then(/^tag "(.+?)" has been pushed to the remote$/) do |tag_name|
   expect(unpushed_tags).to_not include tag_name
 end
