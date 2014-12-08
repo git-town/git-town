@@ -22,5 +22,5 @@ function temp_filename {
 
 
 function temp_filename_unsafe {
-  echo "/tmp/git-town$RANDOM$RANDOM.tmp"
+  echo "/tmp/git-town$RANDOM.tmp"
 }
