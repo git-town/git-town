@@ -2,7 +2,7 @@
 Git Town is a collection of additional Git commands that
 help implement higher-level Git workflows, like GitHub flow.
 
-usage: git town [--config] [--version]
+usage: git town [--config] [--version] <command>
 
 Git Town introduces the following commands:
     git extract         Copy selected commits from the current branch into their own branch
@@ -18,6 +18,15 @@ Git Town introduces the following commands:
 Configuration
     Git Town will automatically prompt you for the main and non-feature branches
     of your current repository if they haven't been set.
+
+    Main branch
+        'git town main-branch'                                  Print the main branch
+        'git town main-branch <branch_name>'                    Set the main branch
+
+    Non-feature branches
+        'git town non-feature-branches'                         Print the non-feature branches
+        'git town non-feature-branches --add    <branch_name>'  Set a new non-feature branch
+        'git town non-feature-branches --remove <branch_name>'  Remove branch from non-feature branches
 
 Help
     All the Git Town commands listed above support the '--help' flag.
