@@ -21,6 +21,34 @@ function abort_rebase {
 }
 
 
+# Returns whether or not the two branches are in sync
+function branches_in_sync  {
+  local branch_one=$1
+  local branch_two=$2
+  if [ "$(git rev-list --left-right "$branch_one..$branch_two" | wc -l | tr -d ' ')" = 0 ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
+# Returns whether or not the branch is in sync with its tracking branch
+function branch_in_sync {
+  local branch_name=$1
+  if [ "$(has_tracking_branch "$branch_name")" = true ]; then
+    local tracking_branch_name=$(tracking_branch "$branch_name")
+    if [ "$(branches_in_sync "$branch_name" "$tracking_branch_name")" = true ]; then
+      echo true
+    else
+      echo false
+    fi
+  else
+    echo true
+  fi
+}
+
+
 # Checks out the branch with the given name.
 #
 # Skips this operation if the requested branch
@@ -122,6 +150,18 @@ function discard_open_changes {
 
 
 # Exits the application with an error message if the
+# branch is not in sync
+function ensure_branch_in_sync {
+  local branch_name=$1
+  if [ "$(branch_in_sync "$branch_name")" == false ]; then
+    echo_error_header
+    echo_error "The '$branch_name' branch is out of sync. Run 'git sync' to resolve."
+    exit_with_error
+  fi
+}
+
+
+# Exits the application with an error message if the
 # repository has a branch with the given name.
 function ensure_does_not_have_branch {
   local branch_name=$1
@@ -146,14 +186,14 @@ function ensure_has_branch {
 }
 
 
-# Exit if the current branch does not have shippable changes
+# Exit if the given branch does not have shippable changes
 function ensure_has_shippable_changes {
-  local current_branch_name=$(get_current_branch_name)
-  if [ "$(has_shippable_changes "$current_branch_name")" == false ]; then
+  local branch_name=$1
+  if [ "$(has_shippable_changes "$branch_name")" == false ]; then
     return_to_initial_branch
 
     echo_error_header
-    echo_error "The branch '$current_branch_name' has no shippable changes."
+    echo_error "The branch '$branch_name' has no shippable changes."
     exit_with_error
   fi
 }
@@ -289,7 +329,7 @@ function has_shippable_changes {
 # Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
   local branch_name=$1
-  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
+  if [ -z "$(tracking_branch "$branch_name")" ]; then
     echo false
   else
     echo true
@@ -464,4 +504,13 @@ function sync_branch {
   local strategy=$1
   pull_branch "$strategy"
   push_branch
+}
+
+
+# Returns the name of the tracking branch for the given branch
+function tracking_branch {
+  local branch_name=$1
+  local result
+  result=$(git rev-parse --abbrev-ref "${branch_name}@{u}")
+  if [ "$?" = 0 ]; then echo "$result"; fi
 }

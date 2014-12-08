@@ -1,6 +1,5 @@
 Feature: aborting ship of current branch by entering an empty commit message
 
-
   Background:
     Given I am on the "feature" branch
     And the following commit exists in my repository

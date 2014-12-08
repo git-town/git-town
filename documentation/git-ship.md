@@ -15,9 +15,6 @@ git ship --abort
 
 Squash merges the current branch, or `<branchname>` if given, into the main branch, leading to linear history on the main branch.
 
-* sync the main branch
-* pull remote updates for `<branchname>`
-* merges the main branch into `<branchname>`
 * squash-merges `<branchname>` into the main branch
 * pushes the main branch to the remote repository
 * deletes `<branchname>` from the local and remote repositories
