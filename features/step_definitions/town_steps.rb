@@ -45,3 +45,8 @@ end
 Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name|
   expect(main_branch_configuration).to eql main_branch_name
 end
+
+
+Then(/^the non\-feature branches include "(.*?)"$/) do |non_feature_branch|
+  expect(non_feature_branch_configuration).to include non_feature_branch
+end

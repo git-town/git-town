@@ -17,6 +17,24 @@ function show_non_feature_branches {
 }
 
 
+function add_non_feature_branch {
+  local branch_name=$1
+
+  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+    echo "'$branch_name' is already a non-feature branch"
+  else
+    local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
+    store_configuration non-feature-branch-names "$new_branches"
+    echo "Added '$branch_name'"
+  fi
+}
+
+
+function remove_non_feature_branch {
+  echo "removing $1"
+}
+
+
 function show_version {
   echo "Git Town 0.4.1"
 }
@@ -37,7 +55,16 @@ elif [ "$1" == "main-branch" ]; then
   fi
 elif [ "$1" == "non-feature-branches" ]; then
   if [ -n "$2" ]; then
-    set_non_feature_branches "$2"
+    if [ -n "$3" ]; then
+      if [ "$2" == "--add" ]; then
+        add_non_feature_branch "$3"
+      elif [ "$2" == "--remove" ]; then
+        remove_non_feature_branch "$3"
+      fi
+    else
+      echo "Missing branch name"
+      echo "usage: git town non-feature-branches (--add|--remove) <branch-name>"
+    fi
   else
     show_non_feature_branches
   fi

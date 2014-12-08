@@ -14,6 +14,15 @@ function store_configuration {
   local config_setting_name=$1
   local value=$2
   git config "git-town.$config_setting_name" "$value"
+
+  # update $main_branch_name and $non_feature_branch_names accordingly
+  if [ $? == '0' ]; then
+    if [ "$config_setting_name" == "main-branch-name" ]; then
+      main_branch_name="$value"
+    elif [ "$config_setting_name" == "non-feature-branch-names" ]; then
+      non_feature_branch_names="$value"
+    fi
+  fi
 }
 
 
@@ -60,7 +69,7 @@ if [[ -z "$main_branch_name" ]]; then
     exit_with_error
   fi
   echo
-  store_main_branch_name_with_confirmation_text
+  store_main_branch_name_with_confirmation_text "$main_branch_name"
 fi
 
 # Ask and store non-feature-branch-names, if needed
@@ -72,5 +81,5 @@ if [[ $? == '1' ]]; then
   echo "Example: 'qa, production'"
   read non_feature_branch_names
   echo
-  store_non_feature_branch_names_with_confirmation_tex
+  store_non_feature_branch_names_with_confirmation_text "$non_feature_branch_names"
 fi
