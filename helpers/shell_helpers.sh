@@ -8,7 +8,7 @@ function split_string {
   local string=$1
   local delimiter=$2
 
-  echo $string | tr "$delimiter" '\n' | sed 's/^ *//;s/ *$//'
+  echo "$string" | tr "$delimiter" '\n' | sed 's/^ *//;s/ *$//'
 }
 
 
