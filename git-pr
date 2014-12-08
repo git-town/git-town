@@ -19,7 +19,7 @@ elif [ "$domain" == bitbucket.org ]; then
   pr_path="pull-request/new?source=$(bitbucket_source)"
 else
   echo_error_header
-  echo_usage "Unsupported hosting service. Pull requests can only be created on Bitbucket and Github"
+  echo_usage "Unsupported hosting service. Pull requests can only be created on Bitbucket and GitHub"
   exit_with_error
 fi
 

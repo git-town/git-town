@@ -11,10 +11,10 @@ It is designed for workflows that have a main branch
 from which feature branches are cut and into which they are merged,
 and assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
-<a href="https://bitbucket.org" target="_blank">BitBucket</a>.
+<a href="https://bitbucket.org" target="_blank">Bitbucket</a>.
 
 
-## commands
+## Commands
 
 * [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
@@ -26,7 +26,7 @@ and assumes you use a central code repository like
 * [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
-#### notes
+#### Notes
 
 * minimizes network requests
   * each command performs a single fetch
@@ -34,7 +34,7 @@ and assumes you use a central code repository like
 * automatically prunes deleted remote branches
 
 
-## installation
+## Installation
 
 Git Town is 100% Bash script, so it runs anywhere where Git and Bash runs.
 Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
@@ -99,7 +99,7 @@ other platforms need to install manually.
 
 
 
-## configuration
+## Configuration
 
 On first use, Git Town will ask for the main branch name and the names of any other non feature branches.
 Git Town stores its configuration in the Git configuration of your project.
@@ -116,7 +116,7 @@ git config git-town.main-branch-name master
 git config git-town.non-feature-branch-names 'qa, production'
 ```
 
-## documentation
+## Documentation
 
 In addition to the online documentation here,
 you can run `git help town` on the command line
@@ -125,7 +125,7 @@ or `git help <command>` (e.g. `git help sync`)
 for help on an individual command.
 
 
-## development
+## Development
 
 tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
 
@@ -135,15 +135,18 @@ bundle
 brew install shellcheck  # bash linter
 
 # rake tasks
-rake            # Run all linters and tests
+rake            # Run all linters and specs
 rake lint       # Run all linters
 rake lint:bash  # Run bash linter
 rake lint:ruby  # Run ruby linter
-rake spec       # Run tests
+rake spec       # Run specs
 
 # run single test
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
+
+# run cucumber in parallel
+bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?
@@ -153,7 +156,7 @@ or - even better - get down, go to town, and fire a feature-tested and linter-pa
 our way!
 
 
-## roadmap
+## Roadmap
 
 The future roadmap is planned using
 <a href="https://github.com/Originate/git-town/issues" target="_blank">GitHub issues</a>.
@@ -164,4 +167,3 @@ please <a href="https://github.com/Originate/git-town/issues/new" target="_blank
 Our team will add the <a href="https://github.com/Originate/git-town/labels/idea" target="_blank">idea</a> tag.
 Once we reach agreement about this idea, it will be tagged as <a href="https://github.com/Originate/git-town/labels/enhancement" target="_blank">enhancement</a>
 or <a href="https://github.com/Originate/git-town/labels/bug" target="_blank">bug</a>.
-
