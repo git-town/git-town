@@ -13,16 +13,3 @@ export user_input_filename="/tmp/git-town-user-input_${temp_filename_suffix}"
 for action in "abort" "continue" "undo"; do
   declare -r ${action}_script_filename="/tmp/${program}_${action}_${temp_filename_suffix}"
 done
-
-
-# Ensures that the given tool is installed.
-function ensure_tool_installed {
-  local toolname=$1
-  if [ "$(which "$toolname" | wc -l)" == 0 ]; then
-    echo_error_header
-    echo_error "You need the '$toolname' tool in order to run tests."
-    echo_error "Please install it using your package manager,"
-    echo_error "or on OS X with 'brew install $toolname'."
-    exit_with_error
-  fi
-}
