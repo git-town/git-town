@@ -6,7 +6,7 @@ end
 
 # Provides the files that exist in the given branch
 def files_in branch:
-  array_output_of("git ls-tree -r --name-only #{branch}") - ['.gitignore', 'tags']
+  array_output_of("git ls-tree -r --name-only #{branch}") - ['.gitignore']
 end
 
 
