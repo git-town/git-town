@@ -12,7 +12,15 @@ Feature: git-hack on a feature branch with open changes
 
 
   Scenario: result
-    Then I end up on the "other_feature" branch
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | feature       | git stash -u                       |
+      | feature       | git checkout main                  |
+      | main          | git fetch --prune                  |
+      | main          | git rebase origin/main             |
+      | main          | git checkout -b other_feature main |
+      | other_feature | git stash pop                      |
+    And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILES        |

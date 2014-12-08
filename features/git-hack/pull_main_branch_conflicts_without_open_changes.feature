@@ -11,13 +11,22 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                |
+      | feature | git checkout main      |
+      | main    | git fetch --prune      |
+      | main    | git rebase origin/main |
+    And my repo has a rebase in progress
     And there is an abort script for "git hack"
 
 
   Scenario: aborting
     When I run `git hack --abort`
-    Then I end up on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND              |
+      | HEAD    | git rebase --abort   |
+      | main    | git checkout feature |
+    And I end up on the "feature" branch
     And there is no rebase in progress
     And there is no abort script for "git hack" anymore
     And I have the following commits
