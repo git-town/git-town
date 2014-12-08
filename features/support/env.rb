@@ -5,9 +5,6 @@ require 'rspec'
 
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
-# The files to ignore when checking files
-IGNORED_FILES = %w(tags)
-
 REPOSITORY_BASE = Dir.mktmpdir
 
 Before do
