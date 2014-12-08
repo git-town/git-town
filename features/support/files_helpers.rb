@@ -6,23 +6,19 @@ end
 
 # Provides the files that exist in the given branch
 def files_in branch:
-  array_output_of "git ls-tree -r --name-only #{branch}"
+  array_output_of("git ls-tree -r --name-only #{branch}") - ['.gitignore']
 end
 
 
 # Returns a table of all files in all branches.
 # This is for comparing against expected files in a Cucumber table.
-def all_files_in_all_branches except: []
-  [].tap do |result|
-    existing_local_branches.each do |branch|
-      files_in(branch: branch).each do |file_path|
-        next if except.include? file_path
-        result << { branch: branch,
-                    name: file_path,
-                    content: content_of(file: file_path, in_branch: branch) }
-      end
+def files_in_branches
+  existing_local_branches.map do |branch|
+    files_in(branch: branch).map do |file|
+      content = content_of file: file, in_branch: branch
+      { branch: branch, name: file, content: content }
     end
-  end
+  end.flatten
 end
 
 

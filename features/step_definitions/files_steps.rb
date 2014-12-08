@@ -26,7 +26,7 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
   end.flatten
 
   # Get all existing files in all branches
-  actual_files = all_files_in_all_branches except: ['.gitignore']
+  actual_files = files_in_branches
 
   # Remove the keys that are not used in the expected data
   # TODO: replace this with Charlie's "subhash" command once it is available
