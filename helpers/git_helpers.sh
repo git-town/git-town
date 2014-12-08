@@ -206,18 +206,6 @@ function ensure_on_feature_branch {
 }
 
 
-# Called by pull_branch when the merge/rebase fails with conflicts
-function error_pull_branch {
-  if [ "$(is_feature_branch "$1")" == true ]; then
-    error_pull_feature_branch
-  elif [ "$1" == "$main_branch_name" ]; then
-    error_pull_main_branch
-  else
-    error_pull_non_feature_branch
-  fi
-}
-
-
 # Fetches updates from the central repository.
 #
 # It is safe to call this method multiple times per session,
@@ -317,9 +305,17 @@ function local_merged_branches {
 # Merges the given branch into the current branch
 function merge_branch {
   local branch_name=$1
-  local current_branch_name=$(get_current_branch_name)
   run_command "git merge --no-edit $branch_name"
-  if [ $? != 0 ]; then error_merge_branch; fi
+  if [ $? != 0 ]; then error_merge_branch "$branch_name"; fi
+}
+
+
+# Merges the tracking branch, if one exists, into the current branch
+function merge_tracking_branch {
+  local branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
+    merge_branch "origin/$branch_name"
+  fi
 }
 
 
@@ -332,28 +328,6 @@ function needs_pushing {
   else
     echo false
   fi
-}
-
-
-# Pulls updates of the feature branch from the remote repo
-function pull_branch {
-  local strategy=$1
-  local current_branch_name=$(get_current_branch_name)
-  if [ -z "$strategy" ]; then strategy='merge'; fi
-  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
-    fetch_repo
-    run_command "git $strategy origin/$current_branch_name"
-    if [ $? != 0 ]; then error_pull_branch "$current_branch_name"; fi
-  fi
-}
-
-
-# Pulls updates of the current branch from the upstream repo
-function pull_upstream_branch {
-  local current_branch_name=$(get_current_branch_name)
-  fetch_upstream
-  run_command "git rebase upstream/$current_branch_name"
-  if [ $? != 0 ]; then error_pull_upstream_branch; fi
 }
 
 
@@ -376,12 +350,29 @@ function push_tags {
 }
 
 
+# Rebases the given branch into the current branch
+function rebase_branch {
+  local branch_name=$1
+  run_command "git rebase $branch_name"
+  if [ $? != 0 ]; then error_rebase_branch "$branch_name"; fi
+}
+
+
 # Determines whether the current branch has a rebase in progress
 function rebase_in_progress {
   if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
     echo true
   else
     echo false
+  fi
+}
+
+
+# Rebases the tracking branch, if one exists, into the current branch
+function rebase_tracking_branch {
+  local branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
+    rebase_branch "origin/$branch_name"
   fi
 }
 
@@ -408,7 +399,6 @@ function remote_domain {
 function remote_repository_name {
   remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
 }
-
 
 
 # Resets the current branch to the commit described by the given SHA
@@ -456,12 +446,4 @@ function stash_open_changes {
   if [ "$initial_open_changes" = true ]; then
     run_command "git stash -u"
   fi
-}
-
-
-# Push and pull the current branch
-function sync_branch {
-  local strategy=$1
-  pull_branch "$strategy"
-  push_branch
 }
