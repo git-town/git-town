@@ -1,10 +1,5 @@
 Feature: cancel shipping a supplied branch by entering an empty commit message with open changes
 
-  As a developer accidentally shipping the wrong branch
-  I can abort the shipping process by entering an empty commit message for the squash commit
-  So that the rest of the developers aren't affected by my mistake.
-
-
   Background:
     Given I have feature branches named "feature" and "other_feature"
     And the following commit exists in my repository
