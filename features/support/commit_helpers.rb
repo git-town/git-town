@@ -98,12 +98,12 @@ def default_commit_attributes
 end
 
 
-# Normatlize commits_array by converting all keys to symbols and
+# Normalize commits_array by converting all keys to symbols and
 # filling in any data implied from the previous commit
 def normalize_commit_data commits_array
   commits_array = commits_array.each(&:symbolize_keys_deep!)
   commits_array.each_cons(2) do |previous_commit_data, commit_data|
-    commit_data.default_blank!(previous_commit_data.subhash(:branch, :location))
+    commit_data.default_blank! previous_commit_data.subhash(:branch, :location)
   end
 end
 

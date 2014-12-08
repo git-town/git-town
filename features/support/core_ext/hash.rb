@@ -1,5 +1,6 @@
-# Extend the hash class
+# Monkey patches to the Hash class that make testing easier
 class Hash
+
   # Converts all keys to symbols
   def symbolize_keys_deep!
     keys.each do |key|
@@ -17,8 +18,10 @@ class Hash
     end
   end
 
-  # Creates a subhash with just the following keys
+
+  # Returns a copy self with just the given keys
   def subhash *keys
     select { |key| keys.include?(key) }
   end
+
 end
