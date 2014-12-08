@@ -5,7 +5,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     Given the following commit exists in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | remote   | remote_conflicting_commit | conflicting_file | remote content |
-      | main   | local    | local_conflicting_commit  | conflicting_file | local content  |
+      |        | local    | local_conflicting_commit  | conflicting_file | local content  |
     And I am on the "feature" branch
     When I run `git hack other_feature` while allowing errors
 
@@ -23,4 +23,4 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And I have the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILES            |
       | main   | remote   | remote_conflicting_commit | conflicting_file |
-      | main   | local    | local_conflicting_commit  | conflicting_file |
+      |        | local    | local_conflicting_commit  | conflicting_file |

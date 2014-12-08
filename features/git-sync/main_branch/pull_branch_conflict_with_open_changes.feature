@@ -6,7 +6,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
@@ -26,7 +26,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES              |
       | main    | remote   | conflicting remote commit | conflicting_file   |
-      | main    | local    | conflicting local commit  | conflicting_file   |
+      |         | local    | conflicting local commit  | conflicting_file   |
     And I still have the following committed files
       | BRANCH | FILES              | CONTENT                   |
       | main   | conflicting_file   | local conflicting content |
@@ -47,9 +47,9 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync"
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      | main    | local and remote | conflicting local commit  | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -63,9 +63,9 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync"
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      | main    | local and remote | conflicting local commit  | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | resolved content |

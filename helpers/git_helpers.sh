@@ -65,8 +65,10 @@ function cherry_pick {
 
 # Commits all open changes into the current branch
 function commit_open_changes {
-  run_command "git add -A"
-  run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  if [ "$initial_open_changes" = true ]; then
+    run_command "git add -A"
+    run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  fi
 }
 
 
@@ -166,7 +168,7 @@ function ensure_has_branch {
   local branch_name=$1
   if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
-    echo_error "There is no branch named '$branch_name'."
+    echo_error "There is no branch named '$branch_name'"
     exit_with_error
   fi
 }
@@ -332,6 +334,7 @@ function local_merged_branches {
 function merge_branch {
   local branch_name=$1
   run_command "git merge --no-edit $branch_name"
+  if [ $? != 0 ]; then error_merge_branch "$branch_name"; fi
 }
 
 
@@ -379,6 +382,7 @@ function push_tags {
 function rebase_branch {
   local branch_name=$1
   run_command "git rebase $branch_name"
+  if [ $? != 0 ]; then error_rebase_branch "$branch_name"; fi
 }
 
 
@@ -397,6 +401,15 @@ function rebase_in_progress {
     echo true
   else
     echo false
+  fi
+}
+
+
+# Rebases the tracking branch, if one exists, into the current branch
+function rebase_tracking_branch {
+  local branch_name=$(get_current_branch_name)
+  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
+    rebase_branch "origin/$branch_name"
   fi
 }
 
@@ -423,7 +436,6 @@ function remote_domain {
 function remote_repository_name {
   remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
 }
-
 
 
 # Resets the current branch to the commit described by the given SHA
@@ -470,4 +482,3 @@ function stash_open_changes {
     add_to_abort_command_list "restore_open_changes"
   fi
 }
-

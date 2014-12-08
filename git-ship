@@ -28,6 +28,20 @@ function error_is_not_feature_branch {
 }
 
 
+# Called when rebase_branch fails on the main branch
+function error_rebase_branch {
+  create_rebase_conflict_abort_script
+  exit_with_script_messages
+}
+
+
+# Called when merge_branch fails
+function error_merge_branch {
+  create_merge_conflict_abort_script
+  exit_with_script_messages
+}
+
+
 # Parses the options and reruns the message
 function extract_message {
   message=''

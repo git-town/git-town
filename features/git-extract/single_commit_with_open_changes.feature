@@ -6,7 +6,7 @@ Feature: git-extract with a single commit
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
-      | feature | local    | refactor commit    | refactor_file    |
+      |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha
@@ -19,9 +19,9 @@ Feature: git-extract with a single commit
       | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
-      | feature  | local            | refactor commit    | refactor_file    |
+      |          |                  | refactor commit    | refactor_file    |
       | refactor | local and remote | remote main commit | remote_main_file |
-      | refactor | local and remote | refactor commit    | refactor_file    |
+      |          |                  | refactor commit    | refactor_file    |
     And now I have the following committed files
       | BRANCH   | FILES                           |
       | main     | remote_main_file                |

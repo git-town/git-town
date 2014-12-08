@@ -38,6 +38,11 @@ Given(/^I have feature branches named (.+?)$/) do |branch_names|
 end
 
 
+Given(/^I have a local feature branch named "(.+?)"$/) do |branch_name|
+  create_branch branch_name, remote: false
+end
+
+
 Given(/^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   create_branch branch_name
   if relation
@@ -54,7 +59,7 @@ Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
 end
 
 
-Given(/^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
+Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   at_path coworker_repository_path do
     create_branch branch_name
     if relation
@@ -65,7 +70,7 @@ Given(/^my coworker has a feature branch named "(.*)"(?: (behind|ahead of) main)
 end
 
 
-Given(/the "(.+)" branch gets deleted on the remote/) do |branch_name|
+Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
   at_path coworker_repository_path do
     run "git push origin :#{branch_name}"
   end
@@ -101,7 +106,7 @@ Then(/^my coworker ends up on the "(.+?)" branch$/) do |branch_name|
 end
 
 
-Then(/^the branch "(.*?)" has not been pushed to the repository$/) do |branch_name|
+Then(/^the branch "(.+?)" has not been pushed to the repository$/) do |branch_name|
   expect(existing_remote_branches).to_not include(branch_name)
 end
 
@@ -116,7 +121,7 @@ Then(/^there are no more feature branches$/) do
 end
 
 
-Then(/^the branch "(.*?)" is deleted everywhere$/) do |branch_name|
+Then(/^the branch "(.+?)" is deleted everywhere$/) do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
 
   at_path coworker_repository_path do

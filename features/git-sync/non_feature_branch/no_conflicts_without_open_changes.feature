@@ -7,7 +7,7 @@ Feature: Git Sync: syncing a non-feature branch without open changes
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | qa     | local            | local commit  | local_file  |
-      | qa     | remote           | remote commit | remote_file |
+      |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     When I run `git sync`
     Then I am still on the "qa" branch
@@ -15,7 +15,7 @@ Feature: Git Sync: syncing a non-feature branch without open changes
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILES       |
       | qa     | local and remote | local commit  | local_file  |
-      | qa     | local and remote | remote commit | remote_file |
+      |        |                  | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     And now I have the following committed files
       | BRANCH | FILES                   |

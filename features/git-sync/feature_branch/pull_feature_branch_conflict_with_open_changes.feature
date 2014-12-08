@@ -6,7 +6,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME          | FILE CONTENT               |
       | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
-      | feature | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+      |         | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
@@ -27,7 +27,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES              |
       | feature | local    | local conflicting commit  | conflicting_file   |
-      | feature | remote   | remote conflicting commit | conflicting_file   |
+      |         | remote   | remote conflicting commit | conflicting_file   |
     And I still have the following committed files
       | BRANCH  | FILES              | CONTENT                   |
       | feature | conflicting_file   | local conflicting content |
@@ -51,8 +51,8 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
-      | feature | local and remote | local conflicting commit                                   | conflicting_file |
+      |         |                  | remote conflicting commit                                  | conflicting_file |
+      |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES              | CONTENT            |
       | feature | conflicting_file   | resolved content   |
@@ -68,8 +68,8 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
-      | feature | local and remote | local conflicting commit                                   | conflicting_file |
+      |         |                  | remote conflicting commit                                  | conflicting_file |
+      |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
       | BRANCH  | FILES              | CONTENT            |
       | feature | conflicting_file   | resolved content   |

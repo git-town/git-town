@@ -2,6 +2,13 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
+# Called when rebase_branch fails
+function error_rebase_branch {
+  create_rebase_conflict_abort_script
+  exit_with_script_messages
+}
+
+
 # Outputs error and exits
 function error_with_upstream_required {
   echo_error_header

@@ -6,6 +6,7 @@
 # Unique string that identifies the current directory
 temp_filename_suffix="$(pwd | tr '/' '_')"
 
+
 # Command lists
 export command_list="/tmp/${program}_${temp_filename_suffix}"
 export abort_command_list="/tmp/${program}_abort_${temp_filename_suffix}"
@@ -58,5 +59,5 @@ function temp_filename {
 
 
 function temp_filename_unsafe {
-  echo "/tmp/git-town$RANDOM$RANDOM.tmp"
+  echo "/tmp/git-town$RANDOM.tmp"
 }

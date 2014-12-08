@@ -1,5 +1,11 @@
 # Git Town Release Notes
 
+## Currently in master
+* **git kill:** branchname parameter
+  ([#126](https://github.com/Originate/git-town/issues/126))
+* auto-completion for [Fish shell](http://fishshell.com)
+  ([#177](https://github.com/Originate/git-town/issues/177))
+
 
 ## 0.4.1 (2014-12-02)
 

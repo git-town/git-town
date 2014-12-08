@@ -6,19 +6,27 @@ git-kill - remove an obsolete feature branch
 #### SYNOPSIS
 
 ```
-git kill
+git kill [<branchname>]
 git kill --undo
 ```
 
 
 #### DESCRIPTION
 
-Deletes the branch from the local and remote repositories.
+Deletes the current branch, or `<branchname>` if given,
+from the local and remote repositories.
+
+Does not delete non-feature branches nor the main branch.
+
 
 
 #### OPTIONS
 
 ```
+<branchname>
+    The branch to remove.
+    If not provided, uses the current branch.
+
 --undo
-    Undo the previous operation
+    Undo the previous `git kill` operation.
 ```

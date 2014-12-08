@@ -10,7 +10,7 @@ Feature: Git Sync-Fork
     When I run `git sync-fork`
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I see the following commits
+    And I have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILES         |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
@@ -28,7 +28,7 @@ Feature: Git Sync-Fork
     When I run `git sync-fork`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I see the following commits
+    And I have the following commits
       | BRANCH | LOCATION                | MESSAGE         | FILES         |
       | main   | local, remote, upstream | upstream commit | upstream_file |
     And now I have the following committed files
@@ -42,7 +42,7 @@ Feature: Git Sync-Fork
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
       | main   | upstream | upstream commit | conflicting_file | upstream content |
-      | main   | local    | local commit    | conflicting_file | local content    |
+      |        | local    | local commit    | conflicting_file | local content    |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork` while allowing errors
     Then my repo has a rebase in progress
@@ -57,7 +57,7 @@ Feature: Git Sync-Fork
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE         | FILES            |
       | main   | upstream | upstream commit | conflicting_file |
-      | main   | local    | local commit    | conflicting_file |
+      |        | local    | local commit    | conflicting_file |
     And I still have the following committed files
       | BRANCH | FILES            | CONTENT       |
       | main   | conflicting_file | local content |
