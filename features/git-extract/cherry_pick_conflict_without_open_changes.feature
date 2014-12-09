@@ -1,7 +1,6 @@
 Feature: git-extract lets the user resolve extracts that conflict with changes in main
 
   As a developer extracting a commit that conflicts with the main branch
-  Without open changes in my workspace
   I want to get a chance to resolve these conflicts
   So that I can finish the extract as I originally planned.
 
