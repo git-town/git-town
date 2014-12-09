@@ -2,8 +2,8 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when rebase_branch fails
-function error_rebase_branch {
+# Called when rebase fails
+function error_rebase {
   create_rebase_conflict_abort_script
   exit_with_script_messages
 }
@@ -27,9 +27,9 @@ function sync_fork {
   stash_open_changes
   checkout_main_branch
   fetch_upstream
-  rebase_branch "upstream/$main_branch_name"
-  push_branch
-  checkout_branch "$branch_name"
+  rebase "upstream/$main_branch_name"
+  push
+  checkout "$branch_name"
   restore_open_changes
 }
 
