@@ -5,8 +5,10 @@ When(/^(?:Charlie|my coworker) runs `([^`]+)`$/) do |command|
 end
 
 
-When(/^I run `([^`]+)`( while allowing errors)?$/) do |command, allow_failures|
-  run command, allow_failures: allow_failures
+When(/^I run `([^`]+)`( while allowing errors)?$/) do |commands, allow_failures|
+  commands.split(';').each do |command|
+    run command, allow_failures: allow_failures
+  end
 end
 
 
