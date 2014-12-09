@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Creates and checkouts a new branch with the given name off the given parent branch
+function create_and_checkout_branch {
+  local new_branch_name=$1
+  local parent_branch_name=$2
+  run_command "git checkout -b $new_branch_name $parent_branch_name"
+}
+
+
+# Creates and checkouts a new branch off the main branch with the given name
+function create_and_checkout_feature_branch {
+  create_and_checkout_branch "$1" "$main_branch_name"
+}
+
 
 # Deletes the given branch from both the local machine and on remote.
 function delete_branch {
