@@ -29,7 +29,7 @@ function sync_fork {
   fetch_upstream
   rebase "upstream/$main_branch_name"
   push_branch
-  checkout_branch "$branch_name"
+  checkout "$branch_name"
   restore_open_changes
 }
 

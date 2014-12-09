@@ -5,7 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 # Called when squash_merge fails due to empty commit message
 function error_empty_commit {
   discard_open_changes
-  checkout_branch "$initial_branch_name"
+  checkout "$initial_branch_name"
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
     restore_open_changes
   fi
@@ -71,7 +71,7 @@ function perform_ship {
   fetch_repo
   rebase_tracking_branch
   push_branch
-  checkout_branch "$target_branch_name"
+  checkout "$target_branch_name"
   merge_tracking_branch
   merge "$main_branch_name"
   ensure_has_shippable_changes
@@ -86,7 +86,7 @@ function perform_ship {
 
 function return_to_initial_branch {
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    checkout_branch "$initial_branch_name"
+    checkout "$initial_branch_name"
     restore_open_changes
   fi
 }

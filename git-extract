@@ -36,7 +36,7 @@ function error_cherry_pick {
   # Create the abort script
   add_to_abort_script "initial_open_changes=$initial_open_changes"
   add_to_abort_script "abort_cherry_pick"
-  add_to_abort_script "checkout_branch $initial_branch_name"
+  add_to_abort_script "checkout $initial_branch_name"
   add_to_abort_script "delete_local_branch $target_branch_name force"
   add_to_abort_script "restore_open_changes"
 

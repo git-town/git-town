@@ -30,7 +30,7 @@ function error_rebase {
   add_to_continue_script "continue_rebase"
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     add_to_continue_script "push_branch"
-    add_to_continue_script "checkout_branch $initial_branch_name"
+    add_to_continue_script "checkout $initial_branch_name"
     add_to_continue_script "merge_tracking_branch"
     add_to_continue_script "merge $main_branch_name"
     add_to_continue_script "push_branch"
@@ -57,7 +57,7 @@ function perform_sync {
   push_branch
 
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
-    checkout_branch "$initial_branch_name"
+    checkout "$initial_branch_name"
     merge_tracking_branch
     merge "$main_branch_name"
     push_branch
