@@ -1,4 +1,10 @@
-Feature: git-extract handling cherry-pick conflicts with open changes
+Feature: git-extract lets the user resolve conflicts while extracting
+
+  As a developer who extracts a commit that conflicts with the main branch
+  While having open changes in my workspace
+  I want to get a chance to finish the extract by resolving the conflicts
+  So that my feature branches remain focussed and code reviews are efficient.
+
 
   Background:
     Given I have a feature branch named "feature"
