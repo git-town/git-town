@@ -31,4 +31,3 @@ function rebase_in_progress {
     echo false
   fi
 }
-
