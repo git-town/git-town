@@ -1,7 +1,7 @@
 #!/bin/bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
-fetch_repo
+fetch
 
 for remote_branch_name in $(remote_merged_branches); do
   if [ "$(is_feature_branch "$remote_branch_name")" == true ]; then

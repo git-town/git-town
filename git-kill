@@ -11,7 +11,7 @@ function create_undo_script {
     add_to_undo_script "reset_to_sha $original_branch_sha"
   fi
   if [ "$(has_tracking_branch "$initial_branch_name")" == true ]; then
-    add_to_undo_script "push_branch"
+    add_to_undo_script "push"
   fi
   if [ "$branch_to_kill" != "$initial_branch_name" ]; then
     add_to_undo_script "git checkout $initial_branch_name"

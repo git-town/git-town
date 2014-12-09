@@ -68,16 +68,16 @@ function perform_ship {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
 
   checkout_main_branch
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
+  push
   checkout "$target_branch_name"
   merge_tracking_branch
   merge "$main_branch_name"
   ensure_has_shippable_changes
   checkout_main_branch
   squash_merge "$target_branch_name" "$message"
-  push_branch
+  push
   delete_branch "$target_branch_name" "force"
 
   return_to_initial_branch

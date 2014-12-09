@@ -14,7 +14,7 @@ function error_merge {
   if [ "$branch_being_merged" != "$main_branch_name" ]; then
     add_to_continue_script "merge $main_branch_name"
   fi
-  add_to_continue_script "push_branch"
+  add_to_continue_script "push"
   add_to_continue_script "restore_open_changes"
 
   exit_with_script_messages
@@ -29,13 +29,13 @@ function error_rebase {
   add_to_continue_script "initial_open_changes=$initial_open_changes"
   add_to_continue_script "continue_rebase"
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
-    add_to_continue_script "push_branch"
+    add_to_continue_script "push"
     add_to_continue_script "checkout $initial_branch_name"
     add_to_continue_script "merge_tracking_branch"
     add_to_continue_script "merge $main_branch_name"
-    add_to_continue_script "push_branch"
+    add_to_continue_script "push"
   else
-    add_to_continue_script "push_branch"
+    add_to_continue_script "push"
     add_to_continue_script "push_tags"
   fi
   add_to_continue_script "restore_open_changes"
@@ -52,15 +52,15 @@ function perform_sync {
     checkout_main_branch
   fi
 
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
+  push
 
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     checkout "$initial_branch_name"
     merge_tracking_branch
     merge "$main_branch_name"
-    push_branch
+    push
   else
     push_tags
   fi

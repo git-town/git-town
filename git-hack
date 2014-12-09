@@ -22,9 +22,9 @@ function perform_hack {
   ensure_does_not_have_branch "$target_branch_name"
   stash_open_changes
   checkout_main_branch
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
+  push
   create_and_checkout_feature_branch "$target_branch_name"
   restore_open_changes
 }
