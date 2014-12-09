@@ -35,9 +35,11 @@ Before do
     run 'git symbolic-ref HEAD refs/heads/main'
   end
 
-  # Fetch the default branch
+  # Fetch the default branch, delete master
   at_path local_repository_path do
     run 'git fetch'
+    run 'git push origin :master'
+    run 'git branch -d master'
   end
 
   # Create the coworker repository
