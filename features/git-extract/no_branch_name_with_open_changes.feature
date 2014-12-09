@@ -1,4 +1,4 @@
-Feature: cannot extract if no branch name is provided
+Feature: git extract errors without a branch name with open changes
 
   Background:
     Given I have a feature branch named "feature"
@@ -8,6 +8,7 @@ Feature: cannot extract if no branch name is provided
       | feature | local    | feature commit     | feature_file     |
       |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract` while allowing errors
 
 
@@ -15,3 +16,4 @@ Feature: cannot extract if no branch name is provided
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
