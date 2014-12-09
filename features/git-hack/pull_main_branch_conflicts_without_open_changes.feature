@@ -33,7 +33,6 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
       |        | local    | conflicting local commit  | conflicting_file |
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git hack --continue` while allowing errors
     Then I get the error "You must resolve the conflicts before continuing the git hack"

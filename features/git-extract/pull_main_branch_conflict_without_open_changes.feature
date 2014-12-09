@@ -28,7 +28,6 @@ Feature: git-extract handling conflicting remote main branch updates without ope
     And there is no rebase in progress
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
     Then I get the error "You must resolve the conflicts before continuing the git extract"
