@@ -8,12 +8,6 @@ function create_and_checkout_branch {
 }
 
 
-# Creates and checkouts a new branch off the main branch with the given name
-function create_and_checkout_feature_branch {
-  create_and_checkout_branch "$1" "$main_branch_name"
-}
-
-
 # Deletes the given branch from both the local machine and on remote.
 function delete_branch {
   local branch_name=$1

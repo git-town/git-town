@@ -1,6 +1,12 @@
 #!/bin/bash
 
 
+# Creates and checkouts a new branch off the main branch with the given name
+function create_and_checkout_feature_branch {
+  create_and_checkout_branch "$1" "$main_branch_name"
+}
+
+
 # Exits if the supplied branch is not a feature branch
 function ensure_is_feature_branch {
   local branch_name=$1
