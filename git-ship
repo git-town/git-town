@@ -61,7 +61,7 @@ function perform_ship {
 
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
     ensure_has_branch "$target_branch_name"
-    stash_open_changes_if_needed
+    stash_open_changes
   fi
 
   ensure_no_open_changes "You cannot ship with uncommitted changes."

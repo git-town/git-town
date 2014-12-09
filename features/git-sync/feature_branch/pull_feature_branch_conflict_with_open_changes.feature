@@ -16,7 +16,6 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Then I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting

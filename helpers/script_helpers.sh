@@ -18,7 +18,7 @@ function continue_command {
 
 
 function undo_command {
-  run_command_list "$undo_command_list"
+  run_command_list "$undo_command_list" 'cleanup'
 }
 
 
@@ -131,28 +131,31 @@ function run {
     abortable=true
     remove_command_lists
     build_command_list "$@"
-    run_command_list "$command_list"
+    run_command_list "$command_list" 'build_undo'
   fi
 }
 
 
 function run_command_list {
   local file="$1"
-  local cleanup="$2"
+  local option="$2"
 
   while [ "$(has_commands "$file")" = true ]; do
+    local branch=$(get_current_branch_name)
     local cmd=$(peek_command "$file")
     $cmd
 
     if [ $? != 0 ]; then
       exit_with_messages
     else
-      add_undo_command_for "$cmd"
+      if [ "$option" = 'build_undo' ]; then
+        add_undo_command_for "$branch" "$cmd"
+      fi
       pop_command "$file"
     fi
   done
 
-  if [ -n "$cleanup" ]; then
+  if [ "$option" = 'cleanup' ]; then
     remove_command_lists
   fi
 

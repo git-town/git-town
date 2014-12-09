@@ -13,7 +13,6 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
   Scenario: result
     Then I am still on the "feature" branch
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
