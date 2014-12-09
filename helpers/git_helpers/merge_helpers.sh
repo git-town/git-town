@@ -19,7 +19,6 @@ function continue_merge {
 function merge {
   local branch_name=$1
   run_command "git merge --no-edit $branch_name"
-  if [ $? != 0 ]; then error_merge "$branch_name"; fi
 }
 
 

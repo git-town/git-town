@@ -147,6 +147,7 @@ function run_command_list {
     if [ $? != 0 ]; then
       exit_with_messages
     else
+      add_undo_command_for "$cmd"
       pop_command "$file"
     fi
   done
