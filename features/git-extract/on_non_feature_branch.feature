@@ -1,5 +1,10 @@
 Feature: git-extract errors on a non-feature branch
 
+  As a developer accidentally running `git extract` on a non-feature branch
+  I want to be reminded about running this command on a feature branch
+  So that I can use Git Town correctly without having to memorize the syntax.
+
+
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "production" branch

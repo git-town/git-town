@@ -1,8 +1,8 @@
 Feature: git-extract: allow resolving conflicts with main branch
 
   As a developer extracting a commit that conflicts with the main branch
-  I want to get a chance to finish the extract by resolving the conflicts
-  So that my feature branches remain focussed and code reviews are efficient.
+  I want the tool to be able to handle this situation properly
+  So that I can use it safely in all edge cases.
 
 
   Background:
