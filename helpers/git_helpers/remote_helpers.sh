@@ -68,11 +68,3 @@ function remote_domain {
 function remote_repository_name {
   remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
 }
-
-
-# Push and pull the current branch
-function sync_branch {
-  local strategy=$1
-  pull_branch "$strategy"
-  push_branch
-}
