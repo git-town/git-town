@@ -19,7 +19,6 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no merge in progress
-    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |
       | feature | local    | local conflicting commit  | conflicting_file |
@@ -40,7 +39,6 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     Given I resolve the conflict in "conflicting_file"
     When I run `<command>`
     Then I am still on the "feature" branch
-    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |

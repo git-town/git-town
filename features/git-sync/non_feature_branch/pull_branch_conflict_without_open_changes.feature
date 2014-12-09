@@ -19,7 +19,6 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     When I run `git sync --abort`
     Then I am still on the "qa" branch
     And there is no rebase in progress
-    And there are no abort and continue scripts for "git sync"
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILES              |
       | qa     | remote   | conflicting remote commit | conflicting_file   |
@@ -39,7 +38,6 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     Given I resolve the conflict in "conflicting_file"
     When I run `<command>`
     Then I am still on the "qa" branch
-    And there are no abort and continue scripts for "git sync"
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
