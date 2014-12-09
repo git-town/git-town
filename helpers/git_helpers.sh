@@ -59,7 +59,16 @@ function checkout_main_branch {
 function cherry_pick {
   local SHAs="$*"
   run_command "git cherry-pick $SHAs"
-  if [ $? != 0 ]; then error_cherry_pick "$SHAs"; fi
+}
+
+
+# Determines whether the current branch has a cherry-pick in progress
+function cherry_pick_in_progress {
+  if [ "$(git status | grep -c "You are currently cherry-picking")" == 1 ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 
@@ -68,6 +77,18 @@ function commit_open_changes {
   if [ "$initial_open_changes" = true ]; then
     run_command "git add -A"
     run_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  fi
+}
+
+
+# Continues cherry-pick if one is in progress
+function continue_cherry_pick {
+  if [ "$(has_open_changes)" == true ]; then
+    run_command "git commit --no-edit"
+  fi
+
+  if [ "$(cherry_pick_in_progress)" == true ]; then
+    run_command "git cherry-pick --continue"
   fi
 }
 
@@ -104,7 +125,13 @@ function continue_rebase_tracking_branch {
 function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
+  local current_branch=$(get_current_branch_name)
   run_command "git checkout -b $new_branch_name $parent_branch_name"
+
+  if [ "$abortable" = true ]; then
+    add_to_abort_command_list "delete_local_branch $new_branch_name"
+    add_to_abort_command_list "checkout_branch $current_branch"
+  fi
 }
 
 

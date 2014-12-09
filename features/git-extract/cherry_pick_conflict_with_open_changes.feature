@@ -3,10 +3,10 @@ Feature: git-extract handling cherry-pick conflicts with open changes
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT     |
-      | main    | local    | conflicting commit | conflicting_file | main content     |
-      | feature | local    | feature commit     | feature_file     |                  |
-      |         |          | refactor commit    | conflicting_file | refactor content |
+      | BRANCH  | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
+      | main    | local    | main commit     | conflicting_file | main content     |
+      | feature | local    | feature commit  | feature_file     |                  |
+      |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha while allowing errors
@@ -26,7 +26,6 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
-    And there is an abort script for "git extract"
 
 
   Scenario: aborting
@@ -34,16 +33,54 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      | refactor | git checkout feature    |
-      | feature  | git branch -D refactor  |
+      | refactor | git checkout main       |
+      | main     | git branch -d refactor  |
+      | main     | git checkout feature    |
       | feature  | git stash pop           |
     And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
-      | main     | local and remote | conflicting commit | conflicting_file |
-      | feature  | local            | feature commit     | feature_file     |
-      |          |                  | refactor commit    | conflicting_file |
+      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | main     | local and remote | main commit     | conflicting_file |
+      | feature  | local            | feature commit  | feature_file     |
+      |          |                  | refactor commit | conflicting_file |
     And my repo has no cherry-pick in progress
-    And there is no abort script for "git extract" anymore
+
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing without resolving conflicts
+    When I run `git extract --continue` while allowing errors
+    Then I get the error "You must resolve the conflicts before continuing the git extract"
+    And I am still on the "refactor" branch
+    And I don't have an uncommitted file with name: "uncommitted"
+    And my repo has a cherry-pick in progress
+
+
+  Scenario: continuing after resolving conflicts
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git extract --continue`
+    Then I end up on the "refactor" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | main     | local and remote | main commit     | conflicting_file |
+      | feature  | local            | feature commit  | feature_file     |
+      | feature  | local            | refactor commit | conflicting_file |
+      | refactor | local and remote | main commit     | conflicting_file |
+      | refactor | local and remote | refactor commit | conflicting_file |
+
+
+  Scenario: continuing after resolving conflicts and continuing the cherry-pick
+    Given I resolve the conflict in "conflicting_file"
+    And I run `git commit --no-edit`
+    When I run `git extract --continue`
+    Then I end up on the "refactor" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | main     | local and remote | main commit     | conflicting_file |
+      | feature  | local            | feature commit  | feature_file     |
+      | feature  | local            | refactor commit | conflicting_file |
+      | refactor | local and remote | main commit     | conflicting_file |
+      | refactor | local and remote | refactor commit | conflicting_file |

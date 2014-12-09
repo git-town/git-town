@@ -13,7 +13,6 @@ Feature: git-extract handling conflicting remote main branch updates without ope
 
   Scenario: result
     Then my repo has a rebase in progress
-    And there is an abort script for "git extract"
 
 
   Scenario: aborting
@@ -27,4 +26,42 @@ Feature: git-extract handling conflicting remote main branch updates without ope
       | feature | local    | feature commit            | feature_file     |
       |         |          | refactor commit           | refactor_file    |
     And there is no rebase in progress
-    And there is no abort script for "git extract" anymore
+
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing without resolving conflicts
+    When I run `git extract --continue` while allowing errors
+    Then I get the error "You must resolve the conflicts before continuing the git extract"
+    And I don't have an uncommitted file with name: "uncommitted"
+    And my repo has a rebase in progress
+
+
+  Scenario: continuing after resolving conflicts
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git extract --continue`
+    Then I end up on the "refactor" branch
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
+      | main     | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      | feature  | local            | feature commit            | feature_file     |
+      |          |                  | refactor commit           | refactor_file    |
+      | refactor | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      |          |                  | refactor commit           | refactor_file    |
+
+
+  Scenario: continuing after resolving conflicts and continuing the rebase
+    Given I resolve the conflict in "conflicting_file"
+    And I run `git rebase --continue`
+    When I run `git extract --continue`
+    Then I end up on the "refactor" branch
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
+      | main     | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      | feature  | local            | feature commit            | feature_file     |
+      |          |                  | refactor commit           | refactor_file    |
+      | refactor | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      |          |                  | refactor commit           | refactor_file    |
