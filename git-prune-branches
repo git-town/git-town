@@ -6,7 +6,7 @@ function should_delete_branch {
   local branch_name=$1
 
   if [ "$(is_feature_branch "$branch_name")" = true ]; then
-    if [ "$initial_branch_name" = "$branch_name" -a "$initial_open_changes" = true ]; then
+    if [ "$initial_branch_name" = "$branch_name" ] && [ "$initial_open_changes" = true ]; then
       echo false
     else
       echo true

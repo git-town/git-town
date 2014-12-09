@@ -57,7 +57,7 @@ function exit_with_messages {
 function has_commands {
   local file="$1"
 
-  if [ "$(has_file "$file")" = true -a "$(number_of_commands "$file")" -gt 0 ]; then
+  if [ "$(has_file "$file")" = true ] && [ "$(number_of_commands "$file")" -gt 0 ]; then
     echo true
   else
     echo false
