@@ -1,4 +1,4 @@
-Feature: git-extract lets the user resolve conflicts while extracting
+Feature: git-extract: allow resolving conflicts with main branch
 
   As a developer extracting a commit that conflicts with the main branch
   I want to get a chance to finish the extract by resolving the conflicts
