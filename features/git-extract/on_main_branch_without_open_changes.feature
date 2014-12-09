@@ -1,5 +1,10 @@
 Feature: git-extract errors on the main branch without open changes
 
+  As a developer accidentally running `git extract` on the main branch
+  I want to be reminded about running this command on a feature branch
+  So that I can use Git Town correctly without having to memorize the syntax.
+
+
   Background:
     Given I am on the "main" branch
     When I run `git extract refactor` while allowing errors

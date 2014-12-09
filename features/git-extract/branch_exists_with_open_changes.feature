@@ -1,5 +1,10 @@
 Feature: cannot extract if a branch already exists with that name
 
+  As a developer refactoring my branches
+  I should not be able to extract commits into already existing feature branches
+  So that feature branches remain focussed and code reviews effective
+
+
   Background:
     Given I have feature branches named "feature" and "refactor"
     And the following commits exist in my repository
