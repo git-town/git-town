@@ -30,7 +30,7 @@ function add_to_undo_script {
 function create_merge_conflict_abort_script {
   add_to_abort_script "initial_open_changes=$initial_open_changes"
   add_to_abort_script "abort_merge"
-  add_to_abort_script "checkout_branch $initial_branch_name"
+  add_to_abort_script "checkout $initial_branch_name"
   add_to_abort_script "restore_open_changes"
 }
 
@@ -38,7 +38,7 @@ function create_merge_conflict_abort_script {
 function create_rebase_conflict_abort_script {
   add_to_abort_script "initial_open_changes=$initial_open_changes"
   add_to_abort_script "abort_rebase"
-  add_to_abort_script "checkout_branch $initial_branch_name"
+  add_to_abort_script "checkout $initial_branch_name"
   add_to_abort_script "restore_open_changes"
 }
 

@@ -11,7 +11,13 @@ Feature: git-hack on a feature branch without open changes
 
 
   Scenario: result
-    Then I end up on the "other_feature" branch
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | feature       | git checkout main                  |
+      | main          | git fetch --prune                  |
+      | main          | git rebase origin/main             |
+      | main          | git checkout -b other_feature main |
+    And I end up on the "other_feature" branch
     And I have the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILES        |
       | main          | local and remote | main commit    | main_file    |
