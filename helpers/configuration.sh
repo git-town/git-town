@@ -2,6 +2,20 @@
 
 # Helper methods for dealing with configuration.
 
+# Returns git-town configuration
+function get_configuration {
+  local config_setting_name=$1
+  git config "git-town.$config_setting_name"
+}
+
+
+# Persists git-town configuration
+function store_configuration {
+  local config_setting_name=$1
+  local value=$2
+  git config "git-town.$config_setting_name" "$value"
+}
+
 
 # Exits if the supplied branch is not a feature branch
 function ensure_is_feature_branch {
@@ -38,13 +52,13 @@ function is_feature_branch {
 
 # Persists the main branch configuration
 function store_main_branch_name {
-  git config git-town.main-branch-name "$1"
+  store_configuration main-branch-name "$1"
 }
 
 
 # Persists the non-feature branch configuration
 function store_non_feature_branch_names {
-  git config git-town.non-feature-branch-names "$1"
+  store_configuration non-feature-branch-names "$1"
 }
 
 
@@ -56,7 +70,7 @@ fi
 
 
 # Read main branch name from config, ask and store it if it isn't known yet.
-main_branch_name=$(git config git-town.main-branch-name)
+main_branch_name=$(get_configuration main-branch-name)
 if [[ -z "$main_branch_name" ]]; then
   echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
   read main_branch_name
@@ -74,7 +88,7 @@ fi
 
 
 # Read non feature branch names from config, ask and store if needed
-non_feature_branch_names=$(git config git-town.non-feature-branch-names)
+non_feature_branch_names=$(get_configuration non-feature-branch-names)
 if [[ $? == '1' ]]; then
   echo "Git Town supports non-feature branches like 'release' or 'production'."
   echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."

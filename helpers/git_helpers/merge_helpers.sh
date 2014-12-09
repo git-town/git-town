@@ -16,10 +16,10 @@ function continue_merge {
 
 
 # Merges the given branch into the current branch
-function merge_branch {
+function merge {
   local branch_name=$1
   run_command "git merge --no-edit $branch_name"
-  if [ $? != 0 ]; then error_merge_branch; fi
+  if [ $? != 0 ]; then error_merge "$branch_name"; fi
 }
 
 

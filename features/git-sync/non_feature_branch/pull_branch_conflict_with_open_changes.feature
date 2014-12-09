@@ -4,9 +4,9 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     Given non-feature branch configuration "qa, production"
     And I am on the "qa" branch
     And the following commits exist in my repository
-      | branch | location | message                   | file name        | file content               |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
@@ -25,11 +25,11 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And there is no rebase in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
-      | branch | location | message                   | files              |
+      | BRANCH | LOCATION | MESSAGE                   | FILES              |
       | qa     | remote   | conflicting remote commit | conflicting_file   |
-      | qa     | local    | conflicting local commit  | conflicting_file   |
+      |        | local    | conflicting local commit  | conflicting_file   |
     And I still have the following committed files
-      | branch | files              | content                   |
+      | BRANCH | FILES              | CONTENT                   |
       | qa     | conflicting_file   | local conflicting content |
 
 
@@ -48,11 +48,11 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch | location         | message                   | files            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
-      | qa     | local and remote | conflicting local commit  | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | branch | files            | content          |
+      | BRANCH | FILES            | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
 
@@ -64,9 +64,9 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch | location         | message                   | files            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
-      | qa     | local and remote | conflicting local commit  | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | branch | files            | content          |
+      | BRANCH | FILES            | CONTENT          |
       | qa     | conflicting_file | resolved content |

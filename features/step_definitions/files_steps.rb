@@ -1,4 +1,4 @@
-Given(/^I have an uncommitted file with name: "(.*?)" and content: "(.*?)"$/) do |name, content|
+Given(/^I have an uncommitted file with name: "(.+?)" and content: "(.+?)"$/) do |name, content|
   IO.write name, content
 end
 
@@ -12,10 +12,11 @@ end
 
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
+  files_data.map_headers!(&:downcase)
 
   # Get all expected files
   expected_files = files_data.hashes.map do |expected_file|
-    symbolize_keys_deep! expected_file
+    expected_file.symbolize_keys_deep!
     filenames = expected_file.delete :files
     Kappamaki.from_sentence(filenames).map do |filename|
       result = expected_file.clone
@@ -25,17 +26,10 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
   end.flatten
 
   # Get all existing files in all branches
-  actual_files = []
-  existing_local_branches.each do |branch|
-    run "git checkout #{branch}"
-    existing_files.each do |file|
-      if file != 'uncommitted'
-        actual_files << { branch: branch, name: file, content: IO.read(file) }
-      end
-    end
-  end
+  actual_files = files_in_branches
 
   # Remove the keys that are not used in the expected data
+  # TODO: replace this with Charlie's "subhash" command once it is available
   used_keys = expected_files[0].keys
   actual_files.each do |actual_file|
     actual_file.keys.each do |key|
@@ -47,8 +41,13 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 end
 
 
-Then(/^I don't have an uncommitted file with name: "(.*?)"$/) do |file_name|
+Then(/^I don't have an uncommitted file with name: "(.+?)"$/) do |file_name|
   expect(uncommitted_files).to_not include file_name
+end
+
+
+Then(/^I don't have any uncommitted files$/) do
+  expect(uncommitted_files).to be_empty
 end
 
 

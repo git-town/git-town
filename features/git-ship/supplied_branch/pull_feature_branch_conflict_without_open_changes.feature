@@ -4,9 +4,9 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
   Background:
     Given I have feature branches named "feature" and "other_feature"
     And the following commits exist in my repository
-      | branch  | location | message                   | file name        | file content               |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
-      | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
+      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "other_feature" branch
     And I run `git ship feature -m 'feature done'` while allowing errors
 
@@ -23,9 +23,9 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     And there is no merge in progress
     And there is no abort script for "git ship" anymore
     And I still have the following commits
-      | branch  | location | message                   | files            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
       | feature | local    | local conflicting commit  | conflicting_file |
-      | feature | remote   | remote conflicting commit | conflicting_file |
+      |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
-      | branch   | files            | content                   |
+      | BRANCH  | FILES            | CONTENT                   |
       | feature | conflicting_file | local conflicting content |

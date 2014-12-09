@@ -1,18 +1,6 @@
 #!/bin/bash
 
 
-# Called by pull_branch when the merge/rebase fails with conflicts
-function error_pull_branch {
-  if [ "$(is_feature_branch "$1")" == true ]; then
-    error_pull_feature_branch
-  elif [ "$1" == "$main_branch_name" ]; then
-    error_pull_main_branch
-  else
-    error_pull_non_feature_branch
-  fi
-}
-
-
 # Fetches updates from the central repository.
 #
 # It is safe to call this method multiple times per session,
@@ -42,28 +30,6 @@ function needs_pushing {
   else
     echo false
   fi
-}
-
-
-# Pulls updates of the feature branch from the remote repo
-function pull_branch {
-  local strategy=$1
-  local current_branch_name=$(get_current_branch_name)
-  if [ -z "$strategy" ]; then strategy='merge'; fi
-  if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
-    fetch_repo
-    run_command "git $strategy origin/$current_branch_name"
-    if [ $? != 0 ]; then error_pull_branch "$current_branch_name"; fi
-  fi
-}
-
-
-# Pulls updates of the current branch from the upstream repo
-function pull_upstream_branch {
-  local current_branch_name=$(get_current_branch_name)
-  fetch_upstream
-  run_command "git rebase upstream/$current_branch_name"
-  if [ $? != 0 ]; then error_pull_upstream_branch; fi
 }
 
 

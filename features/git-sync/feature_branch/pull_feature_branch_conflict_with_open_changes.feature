@@ -4,9 +4,9 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
-      | branch  | location | message                   | file name          | file content               |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME          | FILE CONTENT               |
       | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
-      | feature | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+      |         | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
@@ -26,11 +26,11 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And there is no merge in progress
     And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
-      | branch  | location | message                   | files              |
+      | BRANCH  | LOCATION | MESSAGE                   | FILES              |
       | feature | local    | local conflicting commit  | conflicting_file   |
-      | feature | remote   | remote conflicting commit | conflicting_file   |
+      |         | remote   | remote conflicting commit | conflicting_file   |
     And I still have the following committed files
-      | branch  | files              | content                   |
+      | BRANCH  | FILES              | CONTENT                   |
       | feature | conflicting_file   | local conflicting content |
 
 
@@ -50,12 +50,12 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch  | location         | message                                                    | files            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
-      | feature | local and remote | local conflicting commit                                   | conflicting_file |
+      |         |                  | remote conflicting commit                                  | conflicting_file |
+      |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
-      | branch  | files              | content            |
+      | BRANCH  | FILES              | CONTENT            |
       | feature | conflicting_file   | resolved content   |
 
 
@@ -67,10 +67,10 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
-      | branch  | location         | message                                                    | files            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      | feature | local and remote | remote conflicting commit                                  | conflicting_file |
-      | feature | local and remote | local conflicting commit                                   | conflicting_file |
+      |         |                  | remote conflicting commit                                  | conflicting_file |
+      |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
-      | branch  | files              | content            |
+      | BRANCH  | FILES              | CONTENT            |
       | feature | conflicting_file   | resolved content   |

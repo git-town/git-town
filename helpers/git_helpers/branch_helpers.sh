@@ -45,7 +45,7 @@ function ensure_has_branch {
   local branch_name=$1
   if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
-    echo_error "There is no branch named '$branch_name'."
+    echo_error "There is no branch named '$branch_name'"
     exit_with_error
   fi
 }
@@ -61,17 +61,6 @@ function get_current_branch_name {
 function has_branch {
   local branch_name=$1
   if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
-# Determines whether the given branch has a remote tracking branch.
-function has_tracking_branch {
-  local branch_name=$1
-  if [ "$(git branch -r | tr -d ' ' | grep -c "^origin\/$branch_name\$")" == 0 ]; then
     echo false
   else
     echo true

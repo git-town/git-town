@@ -2,14 +2,18 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when pull_branch fails on the feature branch
-function error_pull_feature_branch {
+# Called when merge fails
+function error_merge {
+  local branch_being_merged="$1"
+
   create_merge_conflict_abort_script
 
   # Create the continue script
   add_to_continue_script "initial_open_changes=$initial_open_changes"
   add_to_continue_script "continue_merge"
-  add_to_continue_script "merge_branch $main_branch_name"
+  if [ "$branch_being_merged" != "$main_branch_name" ]; then
+    add_to_continue_script "merge $main_branch_name"
+  fi
   add_to_continue_script "push_branch"
   add_to_continue_script "restore_open_changes"
 
@@ -17,8 +21,8 @@ function error_pull_feature_branch {
 }
 
 
-# Called when pull_branch fails on the main branch
-function error_pull_main_branch {
+# Called when rebase fails
+function error_rebase {
   create_rebase_conflict_abort_script
 
   # Create the continue script
@@ -27,8 +31,8 @@ function error_pull_main_branch {
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     add_to_continue_script "push_branch"
     add_to_continue_script "checkout_branch $initial_branch_name"
-    add_to_continue_script "pull_branch"
-    add_to_continue_script "merge_branch $main_branch_name"
+    add_to_continue_script "merge_tracking_branch"
+    add_to_continue_script "merge $main_branch_name"
     add_to_continue_script "push_branch"
   else
     add_to_continue_script "push_branch"
@@ -40,49 +44,27 @@ function error_pull_main_branch {
 }
 
 
-# Called when pull_branch fails on a non feature branch
-function error_pull_non_feature_branch {
-  create_rebase_conflict_abort_script
-
-  # Create the continue script
-  add_to_continue_script "initial_open_changes=$initial_open_changes"
-  add_to_continue_script "continue_rebase"
-  add_to_continue_script "push_branch"
-  add_to_continue_script "push_tags"
-  add_to_continue_script "restore_open_changes"
-
-  exit_with_script_messages
-}
-
-
-# Called when merge_branch fails
-function error_merge_branch {
-  create_merge_conflict_abort_script
-
-  # Create the continue script
-  add_to_continue_script "initial_open_changes=$initial_open_changes"
-  add_to_continue_script "continue_merge"
-  add_to_continue_script "push_branch"
-  add_to_continue_script "restore_open_changes"
-
-  exit_with_script_messages
-}
-
-
 # Perform the sync operation
 function perform_sync {
   stash_open_changes
+
   if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     checkout_main_branch
-    sync_branch 'rebase'
+  fi
+
+  fetch_repo
+  rebase_tracking_branch
+  push_branch
+
+  if [ "$(is_feature_branch "$initial_branch_name")" == true ]; then
     checkout_branch "$initial_branch_name"
-    pull_branch
-    merge_branch "$main_branch_name"
+    merge_tracking_branch
+    merge "$main_branch_name"
     push_branch
   else
-    sync_branch 'rebase'
     push_tags
   fi
+
   restore_open_changes
 }
 

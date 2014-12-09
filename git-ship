@@ -28,22 +28,15 @@ function error_is_not_feature_branch {
 }
 
 
-# Called when pull_branch fails on the feature branch
-function error_pull_feature_branch {
-  create_merge_conflict_abort_script
-  exit_with_script_messages
-}
-
-
-# Called when pull_branch fails on the main branch
-function error_pull_main_branch {
+# Called when rebase fails on the main branch
+function error_rebase {
   create_rebase_conflict_abort_script
   exit_with_script_messages
 }
 
 
-# Called when merge_branch fails
-function error_merge_branch {
+# Called when merge fails
+function error_merge {
   create_merge_conflict_abort_script
   exit_with_script_messages
 }
@@ -53,7 +46,7 @@ function error_merge_branch {
 function extract_message {
   message=''
 
-  while getopts "m::" opt; do
+  while getopts "m:" opt; do
     case "$opt" in
     m) message=$OPTARG
     esac
@@ -75,10 +68,12 @@ function perform_ship {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
 
   checkout_main_branch
-  sync_branch 'rebase'
+  fetch_repo
+  rebase_tracking_branch
+  push_branch
   checkout_branch "$target_branch_name"
-  pull_branch
-  merge_branch "$main_branch_name"
+  merge_tracking_branch
+  merge "$main_branch_name"
   ensure_has_shippable_changes
   checkout_main_branch
   squash_merge "$target_branch_name" "$message"
@@ -107,7 +102,7 @@ else
     target_branch_name=$(get_current_branch_name)
   fi
 
-  perform_ship "$*"
+  perform_ship "$@"
 fi
 
 exit_with_success

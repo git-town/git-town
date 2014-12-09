@@ -3,9 +3,9 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
   Background:
     Given I have a feature branch named "feature"
     Given the following commit exists in my repository
-      | branch | location | message                   | file name        | file content   |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | remote   | remote_conflicting_commit | conflicting_file | remote content |
-      | main   | local    | local_conflicting_commit  | conflicting_file | local content  |
+      |        | local    | local_conflicting_commit  | conflicting_file | local content  |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack other_feature` while allowing errors
@@ -25,6 +25,6 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And there is no rebase in progress
     And there is no abort script for "git hack" anymore
     And I have the following commits
-      | branch | location | message                   | files            |
+      | BRANCH | LOCATION | MESSAGE                   | FILES            |
       | main   | remote   | remote_conflicting_commit | conflicting_file |
-      | main   | local    | local_conflicting_commit  | conflicting_file |
+      |        | local    | local_conflicting_commit  | conflicting_file |

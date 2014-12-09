@@ -15,6 +15,14 @@ function continue_rebase {
 }
 
 
+# Rebases the given branch into the current branch
+function rebase {
+  local branch_name=$1
+  run_command "git rebase $branch_name"
+  if [ $? != 0 ]; then error_rebase "$branch_name"; fi
+}
+
+
 # Determines whether the current branch has a rebase in progress
 function rebase_in_progress {
   if [ "$(git status | grep -c "rebase in progress")" == 1 ]; then
