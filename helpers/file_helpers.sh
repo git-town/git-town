@@ -9,13 +9,7 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 
 # Command lists
 export command_list="/tmp/${program}_${temp_filename_suffix}"
-export abort_command_list="/tmp/${program}_abort_${temp_filename_suffix}"
 export undo_command_list="/tmp/${program}_undo_${temp_filename_suffix}"
-
-
-function add_to_abort_command_list {
-  prepend_to_file "$1" "$abort_command_list"
-}
 
 
 function add_to_command_list {

@@ -40,9 +40,9 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And my repo still has a rebase in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario Outline: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git sync --continue`
+    When I run `<command>`
     Then I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there are no abort and continue scripts for "git sync"
@@ -54,18 +54,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
       | BRANCH | FILES            | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
-
-  Scenario: continuing after resolving conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue`
-    When I run `git sync --continue`
-    Then I am still on the "qa" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync"
-    And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
-      | qa     | local and remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            | CONTENT          |
-      | qa     | conflicting_file | resolved content |
+    Examples:
+      | command                                    |
+      | git sync --continue                        |
+      | git rebase --continue; git sync --continue |

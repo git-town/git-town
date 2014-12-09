@@ -5,7 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 # Called when squash_merge fails due to empty commit message
 function error_empty_commit {
   discard_open_changes
-  checkout_branch "$initial_branch_name"
+  checkout "$initial_branch_name"
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
     restore_open_changes
   fi
@@ -28,15 +28,15 @@ function error_is_not_feature_branch {
 }
 
 
-# Called when rebase_branch fails on the main branch
-function error_rebase_branch {
+# Called when rebase fails on the main branch
+function error_rebase {
   create_rebase_conflict_abort_script
   exit_with_script_messages
 }
 
 
-# Called when merge_branch fails
-function error_merge_branch {
+# Called when merge fails
+function error_merge {
   create_merge_conflict_abort_script
   exit_with_script_messages
 }
@@ -68,16 +68,16 @@ function perform_ship {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
 
   checkout_main_branch
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
-  checkout_branch "$target_branch_name"
+  push
+  checkout "$target_branch_name"
   merge_tracking_branch
-  merge_branch "$main_branch_name"
+  merge "$main_branch_name"
   ensure_has_shippable_changes
   checkout_main_branch
   squash_merge "$target_branch_name" "$message"
-  push_branch
+  push
   delete_branch "$target_branch_name" "force"
 
   return_to_initial_branch
@@ -86,8 +86,8 @@ function perform_ship {
 
 function return_to_initial_branch {
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    checkout_branch "$initial_branch_name"
-    restore_open_changes_if_needed
+    checkout "$initial_branch_name"
+    restore_open_changes
   fi
 }
 

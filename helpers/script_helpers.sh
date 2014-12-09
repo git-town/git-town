@@ -5,7 +5,7 @@
 function abort_command {
   local cmd=$(peek_command "$command_list")
   eval "abort_$cmd"
-  run_command_list "$abort_command_list" 'cleanup'
+  undo_command
 }
 
 

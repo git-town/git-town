@@ -10,12 +10,12 @@ function build_command_list {
   fi
 
   add_to_command_list "checkout_main_branch"
-  add_to_command_list "fetch_repo"
+  add_to_command_list "fetch"
   add_to_command_list "rebase_tracking_branch"
-  add_to_command_list "push_branch"
+  add_to_command_list "push"
   add_to_command_list "create_and_checkout_feature_branch '$target_branch_name'"
   add_to_command_list "cherry_pick '$SHAs'"
-  add_to_command_list "push_branch"
+  add_to_command_list "push"
 
   if [ "$initial_open_changes" = true ]; then
     add_to_command_list "restore_open_changes"
