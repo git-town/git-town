@@ -18,8 +18,8 @@ function ensure_preconditions {
 }
 
 
-# Called when rebase_branch fails on the main branch
-function error_rebase_branch {
+# Called when rebase fails on the main branch
+function error_rebase {
   create_rebase_conflict_abort_script
   exit_with_script_messages
 }
@@ -28,9 +28,9 @@ function error_rebase_branch {
 function perform_hack {
   stash_open_changes
   checkout_main_branch
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
+  push
   create_and_checkout_feature_branch "$target_branch_name"
   restore_open_changes
 }
