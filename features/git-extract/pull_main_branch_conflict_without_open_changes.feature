@@ -35,9 +35,9 @@ Feature: git-extract handling conflicting remote main branch updates without ope
     And my repo has a rebase in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario Outline: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git extract --continue`
+    When I run `<command>`
     Then I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
@@ -49,18 +49,7 @@ Feature: git-extract handling conflicting remote main branch updates without ope
       |          |                  | conflicting local commit  | conflicting_file |
       |          |                  | refactor commit           | refactor_file    |
 
-
-  Scenario: continuing after resolving conflicts and continuing the rebase
-    Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue`
-    When I run `git extract --continue`
-    Then I end up on the "refactor" branch
-    And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
-      | main     | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      | feature  | local            | feature commit            | feature_file     |
-      |          |                  | refactor commit           | refactor_file    |
-      | refactor | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      |          |                  | refactor commit           | refactor_file    |
+    Examples:
+      | command                                       |
+      | git extract --continue                        |
+      | git rebase --continue; git extract --continue |
