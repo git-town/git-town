@@ -85,3 +85,14 @@ function local_merged_branches {
 function remote_merged_branches {
   git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
+
+
+function remote_only_merged_branches {
+  local local_temp=$(temp_filename)
+  local remote_temp=$(temp_filename)
+  local_merged_branches > "$local_temp"
+  remote_merged_branches > "$remote_temp"
+  comm -13 <(sort "$local_temp") <(sort "$remote_temp")
+  rm "$local_temp"
+  rm "$remote_temp"
+}
