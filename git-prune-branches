@@ -17,9 +17,6 @@ function should_delete_branch {
 }
 
 
-
-
-
 function build_command_list {
   local initial_branch_deleted=false
 
