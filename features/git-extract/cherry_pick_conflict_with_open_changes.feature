@@ -52,3 +52,12 @@ Feature: git-extract: allow resolving conflicts with main branch
       |          |                  | refactor commit    | conflicting_file |
     And my repo has no cherry-pick in progress
     And there is no abort script for "git extract" anymore
+
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing after resolving the conflicts
+    Given TODO: the user should be able to continue here
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing without resolving the conflicts
+    Given TODO: we should show an error message here and abort
