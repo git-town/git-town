@@ -44,3 +44,12 @@ Feature: git-hack handles conflicting remote main branch updates while moving op
       | BRANCH | LOCATION | MESSAGE                   | FILES            |
       | main   | remote   | remote_conflicting_commit | conflicting_file |
       |        | local    | local_conflicting_commit  | conflicting_file |
+
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing after resolving the conflicts
+    Given TODO: the user should be able to continue here
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing without resolving the conflicts
+    Given TODO: we should show an error message here and abort
