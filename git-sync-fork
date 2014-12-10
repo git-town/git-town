@@ -2,42 +2,31 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when rebase fails
-function error_rebase {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
+function build_command_list {
+  ensure_has_upstream
 
-
-# Outputs error and exits
-function error_with_upstream_required {
-  echo_error_header
-  echo_error "Please add a remote 'upstream'"
-  exit_with_error
-}
-
-
-# Sync the current branch with the upstream repository
-function sync_fork {
-  if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
-    error_with_upstream_required
+  if [ "$initial_open_changes" = true ]; then
+    add_to_command_list "stash_open_changes"
   fi
 
-  local branch_name=$(get_current_branch_name)
-  stash_open_changes
-  checkout_main_branch
-  fetch_upstream
-  rebase "upstream/$main_branch_name"
-  push
-  checkout "$branch_name"
-  restore_open_changes
+  add_to_command_list "checkout_main_branch"
+  add_to_command_list "fetch_upstream"
+  add_to_command_list "rebase upstream/$main_branch_name"
+  add_to_command_list "push"
+  add_to_command_list "checkout $initial_branch_name"
+
+  if [ "$initial_open_changes" = true ]; then
+    add_to_command_list "restore_open_changes"
+  fi
 }
 
 
-if [ "$1" == "--abort" ]; then
-  run_abort_script
-else
-  sync_fork
-fi
+function ensure_has_upstream {
+  if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
+    echo_error_header
+    echo_error "Please add a remote 'upstream'"
+    exit_with_error
+  fi
+}
 
-exit_with_success
+run "$@"
