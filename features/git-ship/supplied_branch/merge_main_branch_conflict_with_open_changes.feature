@@ -17,7 +17,6 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     Then I end up on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
-    And there is an abort script for "git ship"
 
 
   Scenario: aborting
@@ -25,7 +24,6 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     Then I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
-    And there is no abort script for "git ship" anymore
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILES            |
       | main    | local and remote | conflicting main commit    | conflicting_file |
@@ -34,3 +32,23 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
       | BRANCH  | FILES            | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
+
+
+  Scenario Outline: continuing after resolving conflicts
+    Given I resolve the conflict in "conflicting_file"
+    When I run `<command>`
+    Then I end up on the "other_feature" branch
+    And there is no "feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have the following commits
+      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
+      | main    | local and remote | conflicting main commit | conflicting_file |
+      |         |                  | feature done            | conflicting_file |
+    And now I have the following committed files
+      | BRANCH  | FILES            |
+      | main    | conflicting_file |
+
+    Examples:
+      | command                                   |
+      | git ship --continue                       |
+      | git commit --no-edit; git ship --continue |

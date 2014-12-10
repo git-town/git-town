@@ -14,14 +14,12 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
 
   Scenario: result
     Then my repo has a rebase in progress
-    And there is an abort script for "git ship"
 
 
   Scenario: aborting
     When I run `git ship --abort`
     Then I am still on the "other_feature" branch
     And there is no rebase in progress
-    And there is no abort script for "git ship" anymore
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |
       | main    | remote   | conflicting remote commit | conflicting_file |
@@ -31,3 +29,23 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
       | BRANCH  | FILES            | CONTENT                   |
       | main    | conflicting_file | local conflicting content |
       | feature | feature_file     | feature content           |
+
+
+  Scenario Outline: continuing after resolving conflicts
+    Given I resolve the conflict in "conflicting_file"
+    When I run `<command>`
+    Then I end up on the "other_feature" branch
+    And there is no "feature" branch
+    And I still have the following commits
+      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
+      | main    | local and remote | conflicting remote commit | conflicting_file |
+      |         |                  | conflicting local commit  | conflicting_file |
+      |         |                  | feature done              | feature_file     |
+    And now I have the following committed files
+      | BRANCH  | FILES                          |
+      | main    | conflicting_file, feature_file |
+
+    Examples:
+      | command                                    |
+      | git ship --continue                        |
+      | git rebase --continue; git ship --continue |

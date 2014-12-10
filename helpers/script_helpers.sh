@@ -47,10 +47,12 @@ function ensure_undoable {
 
 
 function exit_with_messages {
-  echo
-  echo_red "To abort, run \"$git_command --abort\"."
-  echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
-  exit_with_error
+  if [ "$(has_file "$command_list")" = true ]; then
+    echo
+    echo_red "To abort, run \"$git_command --abort\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
+    exit_with_error
+  fi
 }
 
 
@@ -113,7 +115,6 @@ function remove_command_lists {
 }
 
 
-export abortable=false
 function run {
   if [ "$1" = "--abort" ]; then
     ensure_abortable
@@ -128,11 +129,12 @@ function run {
     continue_command
     remove_command_lists
   else
-    abortable=true
     remove_command_lists
     build_command_list "$@"
     run_command_list "$command_list" 'build_undo'
   fi
+
+  exit_with_success
 }
 
 
@@ -143,7 +145,7 @@ function run_command_list {
   while [ "$(has_commands "$file")" = true ]; do
     local branch=$(get_current_branch_name)
     local cmd=$(peek_command "$file")
-    $cmd
+    eval "$cmd"
 
     if [ $? != 0 ]; then
       exit_with_messages
@@ -158,6 +160,4 @@ function run_command_list {
   if [ "$option" = 'cleanup' ]; then
     remove_command_lists
   fi
-
-  exit_with_success
 }

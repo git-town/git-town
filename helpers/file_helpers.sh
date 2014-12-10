@@ -18,7 +18,7 @@ function add_to_command_list {
 
 
 function add_to_file {
-  local content=$1
+  local content=${1//\'/\"}
   local file=$2
   local operator=">"
   if [ -e "$file" ]; then operator=">>"; fi
