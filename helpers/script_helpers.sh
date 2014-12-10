@@ -143,15 +143,19 @@ function run_command_list {
   local option="$2"
 
   while [ "$(has_commands "$file")" = true ]; do
-    local branch=$(get_current_branch_name)
     local cmd=$(peek_command "$file")
+    if [ "$option" = 'build_undo' ]; then
+      local undo_cmds=$(undo_commands_for "$cmd")
+    fi
     eval "$cmd"
 
     if [ $? != 0 ]; then
       exit_with_messages
     else
       if [ "$option" = 'build_undo' ]; then
-        add_undo_command_for "$branch" "$cmd"
+        for undo_cmd in "${undo_cmds[@]}"; do
+          add_to_undo_command_list "$undo_cmd"
+        done
       fi
       pop_command "$file"
     fi

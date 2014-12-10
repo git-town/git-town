@@ -1,5 +1,14 @@
 #!/bin/bash
 
+
+# Creates a new branch with the given name off the given parent branch
+function create_branch {
+  local new_branch_name=$1
+  local parent_branch_name=$2
+  run_command "git branch $new_branch_name $parent_branch_name"
+}
+
+
 # Creates and checkouts a new branch with the given name off the given parent branch
 function create_and_checkout_branch {
   local new_branch_name=$1
@@ -78,6 +87,24 @@ function has_branch {
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
+}
+
+
+# Pushes the branch with the given name to origin
+function push_branch {
+  local branch_name=$1
+  local force=$2
+  if [ "$(has_tracking_branch "$branch_name")" = true ]; then
+    if [ "$(needs_push "$branch_name")" = true ]; then
+      if [ -n "$force" ]; then
+        run_command "git push -f origin $branch_name"
+      else
+        run_command "git push origin $branch_name"
+      fi
+    fi
+  else
+    run_command "git push -u origin $branch_name"
+  fi
 }
 
 
