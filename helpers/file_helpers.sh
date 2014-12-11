@@ -13,21 +13,21 @@ export undo_list="/tmp/${program}_undo_${temp_filename_suffix}"
 
 
 function add_to_command_list {
-  add_to_file "$1" "$command_list"
-}
-
-
-function add_to_file {
-  local content=${1//\'/\"}
-  local file=$2
-  local operator=">"
-  if [ -e "$file" ]; then operator=">>"; fi
-  eval "echo '$content' $operator $file"
+  append_to_file "$1" "$command_list"
 }
 
 
 function add_to_undo_list {
   prepend_to_file "$1" "$undo_list"
+}
+
+
+function append_to_file {
+  local content=${1//\'/\"}
+  local file=$2
+  local operator=">"
+  if [ -e "$file" ]; then operator=">>"; fi
+  eval "echo '$content' $operator $file"
 }
 
 
@@ -38,7 +38,7 @@ function prepend_to_file {
     local temp=$(temp_filename)
     echo "$1" | cat - "$file" > "$temp" && mv "$temp" "$file"
   else
-    add_to_file "$@"
+    append_to_file "$@"
   fi
 }
 
