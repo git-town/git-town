@@ -2,6 +2,35 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
+function build_command_list {
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    if [ "$initial_open_changes" = true ]; then
+      add_to_command_list "stash_open_changes"
+    fi
+  fi
+
+  add_to_command_list "checkout_main_branch"
+  add_to_command_list "fetch"
+  add_to_command_list "rebase_tracking_branch"
+  add_to_command_list "push"
+  add_to_command_list "checkout $target_branch_name"
+  add_to_command_list "merge_tracking_branch"
+  add_to_command_list "merge $main_branch_name"
+  add_to_command_list "ensure_has_shippable_changes"
+  add_to_command_list "checkout_main_branch"
+  add_to_command_list "squash_merge $target_branch_name '$message'"
+  add_to_command_list "push"
+  add_to_command_list "delete_branch $target_branch_name force"
+
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    add_to_command_list "checkout $initial_branch_name"
+    if [ "$initial_open_changes" = true ]; then
+      add_to_command_list "restore_open_changes"
+    fi
+  fi
+}
+
+
 function ensure_preconditions {
   if [ "$#" -gt 0 ] && [ "$1" != "-m" ]; then
     target_branch_name=$1
@@ -35,37 +64,6 @@ function extract_message {
     m) message=$OPTARG
     esac
   done
-}
-
-
-function build_command_list {
-  ensure_preconditions "$@"
-
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    if [ "$initial_open_changes" = true ]; then
-      add_to_command_list "stash_open_changes"
-    fi
-  fi
-
-  add_to_command_list "checkout_main_branch"
-  add_to_command_list "fetch"
-  add_to_command_list "rebase_tracking_branch"
-  add_to_command_list "push"
-  add_to_command_list "checkout $target_branch_name"
-  add_to_command_list "merge_tracking_branch"
-  add_to_command_list "merge $main_branch_name"
-  add_to_command_list "ensure_has_shippable_changes"
-  add_to_command_list "checkout_main_branch"
-  add_to_command_list "squash_merge $target_branch_name '$message'"
-  add_to_command_list "push"
-  add_to_command_list "delete_branch $target_branch_name force"
-
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    add_to_command_list "checkout $initial_branch_name"
-    if [ "$initial_open_changes" = true ]; then
-      add_to_command_list "restore_open_changes"
-    fi
-  fi
 }
 
 

@@ -2,24 +2,22 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function branch_to_kill {
-  if [ -z "$1" ]; then
-    echo "$initial_branch_name"
-  else
-    echo "$1"
-  fi
-}
-
-
 function build_command_list {
-  ensure_preconditions "$@"
-
   if [ "$target_branch" = "$initial_branch_name" ]; then
     add_to_command_list "commit_open_changes"
     add_to_command_list "checkout_main_branch"
   fi
 
   add_to_command_list "delete_branch $target_branch force"
+}
+
+
+function branch_to_kill {
+  if [ -z "$1" ]; then
+    echo "$initial_branch_name"
+  else
+    echo "$1"
+  fi
 }
 
 

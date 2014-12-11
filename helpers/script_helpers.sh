@@ -37,6 +37,12 @@ function ensure_continuable {
 }
 
 
+# Placeholder for any scripts that have no preconditions
+function ensure_preconditions {
+  true
+}
+
+
 function ensure_undoable {
   if [ "$(has_file "$undo_list")" = false ]; then
     echo_red "Cannot undo"
@@ -134,7 +140,8 @@ function run {
     continue_command
   else
     remove_command_lists
-    build_command_list "$@"
+    ensure_preconditions "$@"
+    build_command_list
     run_command_list "$command_list" undoable
   fi
 
