@@ -10,8 +10,7 @@ function abort_command {
 
 
 function continue_command {
-  local cmd=$(peek_command "$command_list")
-  pop_command "$command_list"
+  local cmd=$(pop_command "$command_list")
   eval "continue_$cmd"
   run_command_list "$command_list" cleanup
 }
@@ -92,6 +91,13 @@ function peek_command {
 
 function pop_command {
   local file="$1"
+  peek_command "$file"
+  remove_command "$file"
+}
+
+
+function remove_command {
+  local file="$1"
   if [ "$(number_of_commands "$file")" -gt 1 ]; then
     local temp=$(temp_filename)
     tail -n +2 "$file" > "$temp"
@@ -155,7 +161,7 @@ function run_command_list {
           add_to_undo_list "$undo_cmd"
         done
       fi
-      pop_command "$file"
+      remove_command "$file"
     fi
   done
 
