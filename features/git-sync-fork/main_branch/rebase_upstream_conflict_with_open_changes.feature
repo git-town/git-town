@@ -31,10 +31,15 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | conflicting_file | local content |
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
-    Then I end up on the "main" branch
+    When I run `git sync-fork --continue`
+    Then it runs the Git commands
+      | BRANCH | COMMAND               |
+      | HEAD   | git rebase --continue |
+      | main   | git push              |
+      | main   | git stash pop         |
+    And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILES            |
@@ -44,7 +49,20 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | BRANCH | FILES            | CONTENT          |
       | main   | conflicting_file | resolved content |
 
-    Examples:
-      | command                                         |
-      | git sync-fork --continue                        |
-      | git rebase --continue; git sync-fork --continue |
+
+  Scenario: continuing after resolving conflicts and continuing the rebase
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git rebase --continue; git sync-fork --continue`
+    Then it runs the Git commands
+      | BRANCH | COMMAND       |
+      | main   | git push      |
+      | main   | git stash pop |
+    And I end up on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have the following commits
+      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | main   | local, remote, and upstream | upstream commit | conflicting_file |
+      | main   | local, remote               | local commit    | conflicting_file |
+    And now I have the following committed files
+      | BRANCH | FILES            | CONTENT          |
+      | main   | conflicting_file | resolved content |

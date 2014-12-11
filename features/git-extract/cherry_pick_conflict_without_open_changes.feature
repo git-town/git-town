@@ -35,10 +35,14 @@ Feature: git-extract handling cherry-pick conflicts without open changes
     And my repo has a cherry-pick in progress
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
-    Then I end up on the "refactor" branch
+    When I run `git extract --continue`
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                     |
+      | refactor | git commit --no-edit        |
+      | refactor | git push -u origin refactor |
+    And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE         | FILES            |
       | main     | local and remote | main commit     | conflicting_file |
@@ -47,7 +51,18 @@ Feature: git-extract handling cherry-pick conflicts without open changes
       | refactor | local and remote | main commit     | conflicting_file |
       |          |                  | refactor commit | conflicting_file |
 
-    Examples:
-      | command                                      |
-      | git extract --continue                       |
-      | git commit --no-edit; git extract --continue |
+
+  Scenario: continuing after resolving conflicts and committing
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git commit --no-edit; git extract --continue`
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                     |
+      | refactor | git push -u origin refactor |
+    And I end up on the "refactor" branch
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | main     | local and remote | main commit     | conflicting_file |
+      | feature  | local            | feature commit  | feature_file     |
+      |          |                  | refactor commit | conflicting_file |
+      | refactor | local and remote | main commit     | conflicting_file |
+      |          |                  | refactor commit | conflicting_file |

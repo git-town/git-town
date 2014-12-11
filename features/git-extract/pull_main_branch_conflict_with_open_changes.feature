@@ -40,10 +40,18 @@ Feature: git-extract handling conflicting remote main branch updates with open c
     And my repo has a rebase in progress
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
-    Then I end up on the "refactor" branch
+    When I run `git extract --continue`
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                                  |
+      | HEAD     | git rebase --continue                    |
+      | main     | git push                                 |
+      | main     | git checkout -b refactor main            |
+      | refactor | git cherry-pick [["feature" branch SHA]] |
+      | refactor | git push -u origin refactor              |
+      | refactor | git stash pop                            |
+    And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
@@ -55,7 +63,25 @@ Feature: git-extract handling conflicting remote main branch updates with open c
       |          |                  | conflicting local commit  | conflicting_file |
       |          |                  | refactor commit           | refactor_file    |
 
-    Examples:
-      | command                                       |
-      | git extract --continue                        |
-      | git rebase --continue; git extract --continue |
+
+  Scenario: continuing after resolving conflicts and continuing the rebase
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git rebase --continue; git extract --continue`
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                                  |
+      | main     | git push                                 |
+      | main     | git checkout -b refactor main            |
+      | refactor | git cherry-pick [["feature" branch SHA]] |
+      | refactor | git push -u origin refactor              |
+      | refactor | git stash pop                            |
+    And I end up on the "refactor" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And now I have the following commits
+      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
+      | main     | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      | feature  | local            | feature commit            | feature_file     |
+      |          |                  | refactor commit           | refactor_file    |
+      | refactor | local and remote | conflicting remote commit | conflicting_file |
+      |          |                  | conflicting local commit  | conflicting_file |
+      |          |                  | refactor commit           | refactor_file    |

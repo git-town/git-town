@@ -30,10 +30,20 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
       | feature | conflicting_file | feature content |
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
-    Then I end up on the "other_feature" branch
+    When I run `git ship --continue`
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                         |
+      | feature | git commit --no-edit            |
+      | feature | git checkout main               |
+      | main    | git merge --squash feature      |
+      | main    | git commit -a -m 'feature done' |
+      | main    | git push                        |
+      | main    | git push origin :feature        |
+      | main    | git branch -D feature           |
+      | main    | git checkout other_feature      |
+    And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
@@ -43,7 +53,25 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
       | BRANCH  | FILES            |
       | main    | conflicting_file |
 
-    Examples:
-      | command                                   |
-      | git ship --continue                       |
-      | git commit --no-edit; git ship --continue |
+
+  Scenario: continuing after resolving conflicts and comitting
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git commit --no-edit; git ship --continue`
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                         |
+      | feature | git checkout main               |
+      | main    | git merge --squash feature      |
+      | main    | git commit -a -m 'feature done' |
+      | main    | git push                        |
+      | main    | git push origin :feature        |
+      | main    | git branch -D feature           |
+      | main    | git checkout other_feature      |
+    And I end up on the "other_feature" branch
+    And there is no "feature" branch
+    And I still have the following commits
+      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
+      | main    | local and remote | conflicting main commit | conflicting_file |
+      |         |                  | feature done            | conflicting_file |
+    And now I have the following committed files
+      | BRANCH  | FILES            |
+      | main    | conflicting_file |

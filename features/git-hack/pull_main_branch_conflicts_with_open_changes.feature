@@ -2,7 +2,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
 
   Background:
     Given I have a feature branch named "feature"
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | remote   | conflicting remote commit | conflicting_file | remote content |
       |        | local    | conflicting local commit  | conflicting_file | local content  |
@@ -47,10 +47,16 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And my repo still has a rebase in progress
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
-    Then I end up on the "other_feature" branch
+    When I run `git hack --continue `
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | HEAD          | git rebase --continue              |
+      | main          | git push                           |
+      | main          | git checkout -b other_feature main |
+      | other_feature | git stash pop                      |
+    And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
       | BRANCH        | LOCATION         | MESSAGE                   | FILES            |
@@ -63,7 +69,24 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
       | main          | conflicting_file | resolved content |
       | other_feature | conflicting_file | resolved content |
 
-    Examples:
-      | command                                    |
-      | git hack --continue                        |
-      | git rebase --continue; git hack --continue |
+
+  Scenario: continuing after resolving conflicts and continuing the rebase
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git rebase --continue; git hack --continue `
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | main          | git push                           |
+      | main          | git checkout -b other_feature main |
+      | other_feature | git stash pop                      |
+    And I end up on the "other_feature" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And now I have the following commits
+      | BRANCH        | LOCATION         | MESSAGE                   | FILES            |
+      | main          | local and remote | conflicting remote commit | conflicting_file |
+      |               |                  | conflicting local commit  | conflicting_file |
+      | other_feature | local            | conflicting remote commit | conflicting_file |
+      |               |                  | conflicting local commit  | conflicting_file |
+    And now I have the following committed files
+      | BRANCH        | FILES            | CONTENT          |
+      | main          | conflicting_file | resolved content |
+      | other_feature | conflicting_file | resolved content |
