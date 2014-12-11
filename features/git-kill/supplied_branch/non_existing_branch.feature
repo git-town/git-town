@@ -1,5 +1,10 @@
 Feature: Git Kill: does not delete the given non-existing branch
 
+  As a developer trying to remove a non-existing feature branch
+  I want the tool to recognize this situation and abort cleanly
+  So that I become aware about what I'm doing wrong and can do it better next time.
+
+
   Background:
     Given I am on the "good-feature" branch
     And the following commits exist in my repository

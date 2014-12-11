@@ -1,5 +1,9 @@
 Feature: Git Kill: Non-feature branches are not killed
 
+  As a developer accidentally running "git kill" on a non-feature branch
+  I want the command to not perform the operation
+  So that my release infrastructure remains intact and my project remains shippable.
+
 
   Background:
     Given I have a feature branch named "good-feature"

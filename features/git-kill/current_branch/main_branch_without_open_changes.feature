@@ -1,5 +1,10 @@
 Feature: Git Kill: The main branch is not killed
 
+  As a developer accidentally running "git kill" on the main branch
+  I want the command to not perform the operation
+  So that my main development line remains intact and my project remains shippable.
+
+
   Background:
     Given I have a feature branch named "good-feature"
     And I am on the "main" branch

@@ -1,5 +1,10 @@
 Feature: Git Kill: killing the current feature by name, without open changes
 
+  As a developer on a dead-end feature branch
+  I want to be able to remove a feature branch even when I'm currently on it
+  So that killing branches is easy and robust and I can use it frequently to keep my code base well organized.
+
+
   Background:
     Given I have feature branches named "good-feature" and "delete-by-name"
     And the following commits exist in my repository
