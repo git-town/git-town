@@ -18,7 +18,7 @@ function continue_command {
 
 
 function undo_command {
-  run_command_list "$undo_command_list" 'cleanup'
+  run_command_list "$undo_list" 'cleanup'
 }
 
 
@@ -39,7 +39,7 @@ function ensure_continuable {
 
 
 function ensure_undoable {
-  if [ "$(has_file "$undo_command_list")" = false ]; then
+  if [ "$(has_file "$undo_list")" = false ]; then
     echo_red "Cannot undo"
     exit_with_error
   fi
@@ -109,8 +109,8 @@ function remove_command_lists {
   if [ "$(has_file "$command_list")" = true ]; then
     rm "$command_list"
   fi
-  if [ "$(has_file "$undo_command_list")" = true ]; then
-    rm "$undo_command_list"
+  if [ "$(has_file "$undo_list")" = true ]; then
+    rm "$undo_list"
   fi
 }
 
@@ -154,7 +154,7 @@ function run_command_list {
     else
       if [ "$option" = 'build_undo' ]; then
         for undo_cmd in "${undo_cmds[@]}"; do
-          add_to_undo_command_list "$undo_cmd"
+          add_to_undo_list "$undo_cmd"
         done
       fi
       pop_command "$file"
