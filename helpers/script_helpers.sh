@@ -13,12 +13,12 @@ function continue_command {
   local cmd=$(peek_command "$command_list")
   pop_command "$command_list"
   eval "continue_$cmd"
-  run_command_list "$command_list" 'cleanup'
+  run_command_list "$command_list" cleanup
 }
 
 
 function undo_command {
-  run_command_list "$undo_list" 'cleanup'
+  run_command_list "$undo_list" cleanup
 }
 
 
@@ -119,7 +119,6 @@ function run {
   if [ "$1" = "--abort" ]; then
     ensure_abortable
     abort_command
-    remove_command_lists
   elif [ "$1" = "--undo" ]; then
     ensure_undoable
     undo_command
@@ -127,11 +126,10 @@ function run {
     ensure_continuable
     ensure_no_conflicts
     continue_command
-    remove_command_lists
   else
     remove_command_lists
     build_command_list "$@"
-    run_command_list "$command_list" 'build_undo'
+    run_command_list "$command_list" undoable
   fi
 
   exit_with_success
@@ -144,7 +142,7 @@ function run_command_list {
 
   while [ "$(has_commands "$file")" = true ]; do
     local cmd=$(peek_command "$file")
-    if [ "$option" = 'build_undo' ]; then
+    if [ "$option" = undoable ]; then
       local undo_cmds=$(undo_commands_for "$cmd")
     fi
     eval "$cmd"
@@ -152,7 +150,7 @@ function run_command_list {
     if [ $? != 0 ]; then
       exit_with_messages
     else
-      if [ "$option" = 'build_undo' ]; then
+      if [ "$option" = undoable ]; then
         for undo_cmd in "${undo_cmds[@]}"; do
           add_to_undo_list "$undo_cmd"
         done
@@ -161,7 +159,7 @@ function run_command_list {
     fi
   done
 
-  if [ "$option" = 'cleanup' ]; then
+  if [ "$option" = cleanup ]; then
     remove_command_lists
   fi
 }
