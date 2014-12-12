@@ -7,9 +7,9 @@ Feature: git ship: does not ship a non-existing branch (without open changes)
 
   Background:
     Given I am on the "feature" branch
-    When I run `git ship other_feature -m 'feature done'` while allowing errors
+    When I run `git ship non-existing-branch -m 'feature done'` while allowing errors
 
 
   Scenario: result
-    Then I get the error "There is no branch named 'other_feature'"
+    Then I get the error "There is no branch named 'non-existing-branch'"
     And I end up on the "feature" branch
