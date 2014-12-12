@@ -1,4 +1,4 @@
-Feature: git-pr when origin is on GitHub over HTTPS
+Feature: git-pr: when origin is on GitHub over HTTPS
 
   As a developer having finished a feature on a repository hosted on GitHub over HTTPS
   I want to be able to easily create a pull request

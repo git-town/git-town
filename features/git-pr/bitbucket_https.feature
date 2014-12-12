@@ -1,4 +1,4 @@
-Feature: git-pr when origin is on Bitbucket over HTTPS
+Feature: git-pr: when origin is on Bitbucket over HTTPS
 
   As a developer having finished a feature on a repository hosted on Bitbucket over HTTPS
   I want to be able to easily create a pull request

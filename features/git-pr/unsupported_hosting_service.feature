@@ -1,4 +1,4 @@
-Feature: git-pr when origin is unsupported
+Feature: git-pr: when origin is unsupported
 
   As a developer trying to create a pull request for a repository on an unknown hosting service
   I want to get a clear error message explaining why the feature doesn't work, and what to do to make it work
