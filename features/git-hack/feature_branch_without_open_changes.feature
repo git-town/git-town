@@ -1,4 +1,4 @@
-Feature: git-hack allows starting a new feature after finishing the old one
+Feature: git hack: allows starting a new feature after finishing the old one
 
   As a developer planning to code something unrelated to my current feature branch
   I should be able to create a new feature branch and start my work on it with one command

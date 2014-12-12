@@ -1,4 +1,4 @@
-Feature: git-hack allows starting a new feature from the main branch
+Feature: git hack: allows starting a new feature from the main branch
 
   As a developer checking something on the main branch and planning to code a new feature now
   I should be able to create a new feature branch and start my work on it with one command

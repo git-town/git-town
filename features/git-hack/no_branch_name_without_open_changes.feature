@@ -1,4 +1,4 @@
-Feature: git hack enforces being given a branch name when starting a new feature
+Feature: git hack: enforces being given a branch name when starting a new feature
 
   As a developer trying to create a new feature branch but forgetting to provide the new branch name
   I should be reminded about the correct syntax for this command

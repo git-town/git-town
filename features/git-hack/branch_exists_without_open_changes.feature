@@ -1,4 +1,4 @@
-Feature: git-hack enforces unique branch names while starting a new feature
+Feature: git hack: enforces unique branch names while starting a new feature
 
   As a developer starting work on a new branch
   I want to be told when the branch name is taken

@@ -1,4 +1,4 @@
-Feature: git-hack enforces unique branch names while moving open changes
+Feature: git hack: enforces unique branch names while moving open changes
 
   As a developer trying to move my open changes onto a new feature branch
   I want to be told when the branch name is taken
