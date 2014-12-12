@@ -1,4 +1,4 @@
-Feature: git extract: errors without a branch name with open changes
+Feature: git extract: aborts if no branch name is given (with open changes)
 
   As a developer about to extract commits into a new branch
   I want to be told when I forget to provide the branch name

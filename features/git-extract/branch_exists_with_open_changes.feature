@@ -1,4 +1,4 @@
-Feature: git extract: refuses to extract into an already existing branch
+Feature: git extract: refuses to extract into an already existing branch (with open changes)
 
   As a developer refactoring my branches
   I should not be able to extract commits into already existing feature branches

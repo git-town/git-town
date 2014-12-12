@@ -1,4 +1,4 @@
-Feature: git extract: errors on the main branch without open changes
+Feature: git extract: does not allow to extract from the main branch (without open changes)
 
   As a developer trying to extract commits from the main branch
   I want to be reminded that this command can only be run on feature branches

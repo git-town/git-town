@@ -1,4 +1,4 @@
-Feature: git extract: handling conflicting remote main branch updates with open changes
+Feature: git extract: allows to resolve conflicting remote main branch updates (with open changes)
 
   As a developer extracting a commit while there are conflicing changes on the remote main branch
   I want the tool to be able to handle this situation properly

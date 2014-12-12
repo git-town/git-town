@@ -1,4 +1,4 @@
-Feature: git extract: with a single commit
+Feature: git extract: can extract a single commit (without open changes)
 
   As a developer having a feature branch with a commit around an unrelated issue
   I want to be able to extract this commit into its own feature branch
