@@ -25,3 +25,18 @@ end
 def uncommitted_files
   array_output_of "git status --porcelain | awk '{print $2}'"
 end
+
+
+def verify_files files_array
+  expected_files = files_array.map do |file_data|
+    file_data.symbolize_keys_deep!
+    Kappamaki.from_sentence(file_data.delete :files).map do |file|
+      content = content_of file: file, in_branch: file_data[:branch]
+      file_data.clone.reverse_merge name: file, content: content
+    end
+  end.flatten
+
+  actual_files = files_in_branches
+
+  expect(actual_files).to match_array expected_files
+end
