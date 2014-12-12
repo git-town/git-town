@@ -1,8 +1,8 @@
 Feature: git-hack enforces unique branch names while starting a new feature
 
-  As a developer
-  I should not be able to add a new feature into an already existing feature branch
-  So that feature branches remain focussed and code reviews effective
+  As a developer starting work on a new branch
+  I want to be told when the branch name is taken
+  So that I don't mix features, code reviews are easy, and the team productivity remains high.
 
 
   Background:

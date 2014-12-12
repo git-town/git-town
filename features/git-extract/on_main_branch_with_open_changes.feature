@@ -1,8 +1,8 @@
 Feature: git-extract errors on the main branch with open changes
 
-  As a developer accidentally running `git extract` on the main branch
-  I want to be reminded about running this command on a feature branch
-  So that I can use Git Town correctly without having to memorize the syntax.
+  As a developer trying to extract commits from the main branch
+  I want to be reminded that this command can only be run on feature branches
+  So that I know how to do this correctly without having to memorize everything.
 
 
   Background:

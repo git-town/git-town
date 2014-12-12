@@ -1,8 +1,8 @@
 Feature: git-hack enforces unique branch names while moving open changes
 
   As a developer trying to move my open changes onto a new feature branch
-  I should not be able to accidentally add them to an already existing feature branch
-  So that feature branches remain focussed and code reviews effective
+  I want to be told when the branch name is taken
+  So that I don't mix features, code reviews are easy, and the team productivity remains high.
 
   Background:
     Given I have a feature branch named "existing_feature"

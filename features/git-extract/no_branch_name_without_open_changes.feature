@@ -1,8 +1,8 @@
 Feature: git extract errors without a branch name without open changes
 
-  As a developer forgetting to provide the target branch to extract into
-  I want to be reminded about the correct syntax for this command
-  So that I can use Git Town correctly without having to memorize the syntax.
+  As a developer about to extract commits into a new branch
+  I want to be told when I forget to provide the branch name
+  So that I know how to do this correctly without having to read the manual.
 
 
   Background:

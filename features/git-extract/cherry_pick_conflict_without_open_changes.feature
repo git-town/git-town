@@ -1,8 +1,8 @@
 Feature: git-extract: allow resolving conflicts with main branch
 
   As a developer extracting a commit that conflicts with the main branch
-  I want the tool to be able to handle this situation properly
-  So that I can use it safely in all edge cases.
+  I want to have the option to either abort or resolve conflicts and continue
+  So that I can choose how I want to handle the conflict
 
 
   Background:
