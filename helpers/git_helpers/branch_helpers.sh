@@ -114,6 +114,8 @@ function remote_merged_branches {
 }
 
 
+# Returns the names of remote branches that have been merged into main
+# that have not been checked out locally
 function remote_only_merged_branches {
   local local_temp=$(temp_filename)
   local remote_temp=$(temp_filename)

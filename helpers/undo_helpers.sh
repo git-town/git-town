@@ -2,7 +2,7 @@
 
 function undo_commands_for {
   local cmd_with_arguments
-  read -a cmd_with_arguments <<< "$1"
+  read -a cmd_with_arguments <<< "$1" # Split string into array
 
   local cmd="${cmd_with_arguments[0]}"
   local arguments="${cmd_with_arguments[*]:1}"
