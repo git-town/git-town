@@ -1,4 +1,4 @@
-Feature: Git Kill: The main branch is not killed
+Feature: git kill: The main branch is not killed
 
   As a developer accidentally running "git kill" while developing on the main branch
   I want the command to not perform the operation

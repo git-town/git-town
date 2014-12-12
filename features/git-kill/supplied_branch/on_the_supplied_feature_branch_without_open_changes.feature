@@ -1,4 +1,4 @@
-Feature: Git Kill: killing the current feature by name, without open changes
+Feature: git kill: killing the current feature by name, without open changes
 
   As a developer on a dead-end feature branch
   I want to be able to remove a feature branch even when I'm currently on it
