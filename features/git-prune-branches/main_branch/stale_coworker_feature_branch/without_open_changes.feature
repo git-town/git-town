@@ -1,4 +1,4 @@
-Feature: git prune-branches: removes stale coworker branches when run on the main branch without open changes
+Feature: git prune-branches: removes stale coworker branches when run on the main branch (without open changes)
 
   As a developer having empty feature branches of a coworker in my local repository
   I want them all to be cleaned out

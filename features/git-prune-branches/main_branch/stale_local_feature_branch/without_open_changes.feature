@@ -1,4 +1,4 @@
-Feature: git prune-branches: removes stale local feature branches when run on the main branch without open changes
+Feature: git prune-branches: removes stale local feature branches when run on the main branch (without open changes)
 
   As a developer having empty local feature branches in my repository
   I want them all to be cleaned out
