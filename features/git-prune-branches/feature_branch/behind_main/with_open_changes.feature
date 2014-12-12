@@ -1,4 +1,9 @@
-Feature: git-prune-branches: on a feature branch behind main with open changes
+Feature: git-prune-branches: removes stale feature branches when run on a feature branch with open changes
+
+  As a developer having empty feature branches
+  I want them all to be cleaned out
+  So that all my remaining branches are relevant and I can focus on my current work.
+
 
   Background:
     Given I have a feature branch named "feature" behind main
@@ -25,3 +30,6 @@ Feature: git-prune-branches: on a feature branch behind main with open changes
       | local      | main, feature |
       | remote     | main, feature |
       | coworker   | main          |
+
+  Scenario: [note]
+    Given TODO: this feature specifies two behaviors: that branches ahead of main are not deleted, and that old branches are. Specify only one feature per spec.
