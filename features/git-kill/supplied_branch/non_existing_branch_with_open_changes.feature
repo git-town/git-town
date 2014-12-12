@@ -1,4 +1,4 @@
-Feature: git kill: does not delete the given non-existing branch
+Feature: git kill: does not delete a misspelled branch (with open changes)
 
   As a developer trying to remove a non-existing feature branch
   I want the tool to recognize this situation and abort cleanly

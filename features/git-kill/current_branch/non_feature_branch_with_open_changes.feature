@@ -1,4 +1,4 @@
-Feature: git kill: Non-feature branches are not killed
+Feature: git kill: does not remove non-feature branches (with open changes)
 
   As a developer accidentally running "git kill" on a non-feature branch
   I want the command to not perform the operation

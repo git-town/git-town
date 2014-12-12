@@ -1,4 +1,4 @@
-Feature: git kill: Killing the current feature branch without open changes
+Feature: git kill: killing the current feature branch (without open changes)
 
   As a developer being on a dead-end feature branch
   I want to be able to cleanly delete the current branch
