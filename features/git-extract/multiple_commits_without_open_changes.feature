@@ -1,4 +1,4 @@
-Feature: git-extract with multiple commits
+Feature: git extract: with multiple commits
 
   As a developer having a feature branch with many commits around unrelated issues
   I want to be able to extract all commits about separate issues into their own branches

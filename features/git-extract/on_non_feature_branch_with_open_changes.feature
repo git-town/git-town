@@ -1,4 +1,4 @@
-Feature: git-extract errors on a non-feature branch
+Feature: git extract: errors on a non-feature branch
 
   As a developer accidentally running `git extract` on a non-feature branch
   I want to be reminded about running this command on a feature branch
