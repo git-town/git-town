@@ -1,4 +1,4 @@
-Feature: git-prune-branches: keeps used feature branches when run on a feature branch without open changes
+Feature: git prune-branches: keeps used feature branches when run on a feature branch without open changes
 
   As a developer having feature branches with commits
   I want them all to survive a "prune branch" command
