@@ -1,4 +1,9 @@
-Feature: Git Ship: errors when the branch diff is empty with open changes
+Feature: git ship: does'nt ship a feature branch without changes (with open changes)
+
+  As a developer shipping a feature branch that doesn't result in any changes on main
+  I want to be notified about this situation
+  So that I can investigate and resolve it safely, don't ship the wrong things, and my users see meaningful progress.
+
 
   Background:
     Given I have feature branches named "feature" and "other_feature"

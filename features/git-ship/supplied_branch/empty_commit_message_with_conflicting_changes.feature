@@ -1,4 +1,9 @@
-Feature: cancel shipping a supplied branch by entering an empty commit message with open changes
+Feature: git ship: abort shipping the given feature branch by entering an empty commit message (with conflicting changes)
+
+  As a user shipping another feature branch
+  I want to be able to abort the ship when I realize its the wrong branch by entering an empty commit message
+  So that the wrong feature branch doesn't end up on the main development line, my team mates are unaffected by my mistake and remain productive, and my users don't see broken functionality.
+
 
   Background:
     Given I have feature branches named "feature" and "other_feature"

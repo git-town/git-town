@@ -1,4 +1,8 @@
-Feature: Git Ship: shipping the supplied feature branch with open changes
+Feature: git ship: shipping the supplied feature branch (with conflicting changes)
+
+  As a developer getting the LGTM for another feature branch
+  I want to be able to ship it despite currently working on things that conflict with the main branch
+  So that I don't have to execute a bunch of boilerplate Git commands, and remain productive and focussed on my current feature.
 
 
   Scenario: local feature branch
