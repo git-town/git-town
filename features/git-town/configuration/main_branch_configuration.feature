@@ -3,7 +3,7 @@ Feature: main-branch configuration
   Scenario: printing the main branch when it's not yet configured
     Given I don't have a main branch name configured
     When I run `git town main-branch`
-    Then I see "Main branch: ''"
+    Then I see "Main branch: [not configured yet]"
 
 
   Scenario: printing the main branch when it's configured
