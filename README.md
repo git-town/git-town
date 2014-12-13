@@ -3,15 +3,14 @@
 
 Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
-<a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub Flow</a>
+[GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html)
 and other workflows.
 
 It is designed for workflows that have a main branch
 (typically "development" or "master")
 from which feature branches are cut and into which they are merged,
 and it assumes you use a central code repository like
-<a href="http://github.com" target="_blank">GitHub</a> or
-<a href="https://bitbucket.org" target="_blank">Bitbucket</a>.
+[GitHub](http://github.com/) or [Bitbucket](https://bitbucket.org/).
 
 
 ## Commands
@@ -37,8 +36,8 @@ and it assumes you use a central code repository like
 ## Installation
 
 100% of Git Town is written with Bash script, so it runs anywhere Git and Bash runs.
-Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
-other platforms need to install manually.
+Installation on OS X can be done using [Homebrew](http://brew.sh/).
+Other platforms need to install manually.
 
 <table>
   <tr>
@@ -98,8 +97,7 @@ other platforms need to install manually.
 </table>
 
 To install the Fish autocompletion, copy
-<a href="https://github.com/Originate/git-town/blob/kg-autocomplete-fish/autocomplete/git.fish" target="_blank">
-Git Town's Fish shell autocompletion definitions file</a>
+[Git Town's Fish shell autocompletion definitions file](https://github.com/Originate/git-town/blob/kg-autocomplete-fish/autocomplete/git.fish)
 into your `~/.config/fish/completions/` folder.
 Create the folder if necessary.
 
@@ -108,7 +106,7 @@ Create the folder if necessary.
 
 On first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
 Git Town stores its configuration in the Git configuration of your project.
-If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config" target="_blank">git config</a>.
+If these ever need to change, the configuration can be updated using [git config](http://git-scm.com/docs/git-config).
 
 
 ```bash
@@ -132,7 +130,7 @@ for help on an individual command.
 
 ## Development
 
-Tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
+Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
 
 ```bash
 # install tools
@@ -155,20 +153,20 @@ bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?
-<a href="https://github.com/Originate/git-town/issues/new" target="_blank">Open an issue</a>
+[Open an issue](https://github.com/Originate/git-town/issues/new)
 or - even better - get down, go to town, and fire a feature-tested and linter-passing
-<a href="https://help.github.com/articles/using-pull-requests" target="_blank">pull request</a>
+[pull request](https://help.github.com/articles/using-pull-requests/)
 our way!
 
 
 ## Roadmap
 
-The future roadmap is planned using
-<a href="https://github.com/Originate/git-town/issues" target="_blank">GitHub issues</a>.
+The future roadmap is planned using [GitHub issues](https://github.com/Originate/git-town/issues).
 The past roadmap is in the <a href="release-notes.md" target="_blank">release notes</a>.
 
 If you have an idea about a cool feature you would like to see in Git Town,
-please <a href="https://github.com/Originate/git-town/issues/new" target="_blank">open a ticket</a>.
-Our team will add the <a href="https://github.com/Originate/git-town/labels/idea" target="_blank">idea</a> tag.
-Once we reach agreement about this idea, it will be tagged as an <a href="https://github.com/Originate/git-town/labels/enhancement" target="_blank">enhancement</a>
-or a <a href="https://github.com/Originate/git-town/labels/bug" target="_blank">bug</a>.
+please [open a ticket](https://github.com/Originate/git-town/issues/new).
+Our team will add the [idea](https://github.com/Originate/git-town/labels/idea) tag.
+Once we reach agreement about this idea, it will be tagged as an
+[enhancement](https://github.com/Originate/git-town/labels/enhancement)
+or a [bug](https://github.com/Originate/git-town/labels/bug).
