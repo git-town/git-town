@@ -1,4 +1,9 @@
-Feature: git-hack handling conflicting remote main branch updates with open changes
+Feature: git hack: resolving conflicting remote main branch updates while moving open changes
+
+  As a developer working on changes that conflict with updates on the main branch
+  I want to be given a chance to resolve the differences when moving them to a new feature branch
+  So that my work based off the latest state of the code base, I don't run into bigger merge conflicts later, and remain productive.
+
 
   Background:
     Given I have a feature branch named "feature"

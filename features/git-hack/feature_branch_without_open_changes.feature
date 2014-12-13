@@ -1,4 +1,9 @@
-Feature: git-hack on a feature branch without open changes
+Feature: git hack: starting a new feature after finishing the old one
+
+  As a developer planning to code something unrelated to my current feature branch
+  I want to be able to create a new up-to-date feature branch and start my work on it with one command
+  So that it is easy to keep my feature branches focussed and code reviews efficient.
+
 
   Background:
     Given I have a feature branch named "feature"

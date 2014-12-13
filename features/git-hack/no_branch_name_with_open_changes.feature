@@ -1,4 +1,9 @@
-Feature: git hack errors without a branch name with open changes
+Feature: git hack: enforces being given a branch name when moving open changes
+
+  As a developer trying to create a new feature branch but forgetting to provide the new branch name
+  I should be reminded about the correct syntax for this command
+  So that I can use it correctly without having to look that up the readme.
+
 
   Background:
     Given I have a feature branch named "feature"

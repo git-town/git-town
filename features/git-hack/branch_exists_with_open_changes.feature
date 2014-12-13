@@ -1,4 +1,9 @@
-Feature: git-hack errors when branch exists with open changes
+Feature: git hack: enforces unique branch names while moving open changes
+
+  As a developer trying to move my current work onto an existing feature branch
+  I should be warned if a branch with that name already exists
+  So that I don't mix features, code reviews are easy, and the team productivity remains high.
+
 
   Background:
     Given I have a feature branch named "feature"

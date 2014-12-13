@@ -1,4 +1,9 @@
-Feature: git-hack on the main branch with open changes
+Feature: git hack: moving existing open changes from the main branch into a new feature branch
+
+  As a developer working on a new feature while still being on the main branch
+  I want to be able to create a new feature branch and continue my work on it with one command
+  So that it is easy to keep the code quality high by getting my code reviewed before merging into main.
+
 
   Background:
     Given the following commit exists in my repository

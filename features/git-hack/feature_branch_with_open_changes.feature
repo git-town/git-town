@@ -1,4 +1,9 @@
-Feature: git-hack on a feature branch with open changes
+Feature: git hack: moving existing open changes from an old feature branch into a new one
+
+  As a developer working on something unrelated to my current feature branch
+  I want to be able to create a new up-to-date feature branch and continue my work on it with one command
+  So that it is easy to keep my feature branches focussed and code reviews remain efficient.
+
 
   Background:
     Given I have a feature branch named "feature"
