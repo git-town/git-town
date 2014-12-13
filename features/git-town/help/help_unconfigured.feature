@@ -1,4 +1,4 @@
-Feature: show help screen when Git Town is unconfigured
+Feature: show help screen when Git Town is not configured
 
   Background:
     Given I haven't configured Git Town yet
