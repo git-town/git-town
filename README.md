@@ -59,9 +59,11 @@ Other platforms need to install manually.
       <code>brew install git-town</code>
     </td>
     <td>
-      clone the repo to your machine (into DIR)<br>
-      add DIR to your <code>$PATH</code><br>
-      add DIR/man to your <code>$MANPATH</code>
+      <ol>
+        <li>clone the repo to your machine (into DIR)</li>
+        <li>add DIR to your <code>$PATH</code></li>
+        <li>add DIR/man to your <code>$MANPATH</code></li>
+      </ol>
     </td>
   </tr>
   <tr>
@@ -75,7 +77,9 @@ Other platforms need to install manually.
       <code>brew upgrade git-town</code>
     </td>
     <td>
-      run <code>git pull</code> in DIR<br>
+      <ol>
+        <li>run <code>git pull</code> in DIR</li>
+      </ol>
     </td>
   </tr>
   <tr>
@@ -89,9 +93,11 @@ Other platforms need to install manually.
       <code>brew untap Originate/gittown</code>
     </td>
     <td>
-      remove DIR<br>
-      remove DIR from your <code>$PATH</code><br>
-      remove DIR/man from your <code>$MANPATH</code>
+      <ol>
+        <li>remove DIR</li>
+        <li>remove DIR from your <code>$PATH</code></li>
+        <li>remove DIR/man from your <code>$MANPATH</code></li>
+      </ol>
     </td>
   </tr>
 </table>
