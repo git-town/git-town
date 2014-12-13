@@ -7,7 +7,7 @@ repository=$(remote_repository_name)
 
 if [ "$domain" != github.com ] && [ "$domain" != bitbucket.org ]; then
   echo_error_header
-  echo_usage "Unsupported hosting service. Repositories can only be opened from Bitbucket and GitHub"
+  echo_usage "Unsupported hosting service. Can only view repositories on Bitbucket and GitHub"
   exit_with_error
 fi
 
