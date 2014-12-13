@@ -77,7 +77,7 @@ if [[ $? == '1' ]]; then
   echo
   echo "Git Town supports non-feature branches like 'release' or 'production'."
   echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
-  echo "Please enter the names of all your non-feature branches as a comma seperated list."
+  echo "Please enter the names of all your non-feature branches as a comma separated list."
   echo "Example: 'qa, production'"
   read non_feature_branch_names
   echo
