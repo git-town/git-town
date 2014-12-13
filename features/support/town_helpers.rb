@@ -1,3 +1,8 @@
+def configure_non_feature_branches configuration
+  set_configuration 'non-feature-branch-names', configuration
+end
+
+
 def delete_main_branch_configuration
   run 'git config --unset git-town.main-branch-name'
 end
@@ -20,9 +25,4 @@ end
 
 def set_configuration configuration, value
   run "git config git-town.#{configuration} '#{value}'"
-end
-
-
-def configure_non_feature_branches configuration
-  set_configuration 'non-feature-branch-names', configuration
 end
