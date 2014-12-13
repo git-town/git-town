@@ -1,5 +1,8 @@
-Feature: Git Sync: collaborative feature branch syncing
+Feature: git sync: collaborative feature branch syncing
 
+  As a developer collaborating with others on a feature
+  I want each person to be able to sync their changes with the rest of the team
+  So that our collaboration is effective.
 
   Scenario: merging work
     Given I am on a feature branch

@@ -1,4 +1,8 @@
-Feature: Git Sync: handling merge conflicts between feature and main branch when syncing a feature branch with open changes
+Feature: git sync: resolving merge conflicts between feature and main branch on a feature branch with open changes
+
+  As a developer in the middle of ongoing work
+  I want to be given an opportunity to resolve differences between my work and the lastest finished features
+  So that my work stays stays in sync with the progress of the team, can be easily merged later, and I remain productive.
 
 
   Background:

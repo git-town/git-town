@@ -1,4 +1,8 @@
-Feature: Git Sync: syncing a non-feature branch without open changes
+Feature: git sync: syncing a non-feature branch (without open changes)
+
+  As a developer working directly off a non-feature branch
+  I want to be able update my local work to include the latest finished features from the rest of the team
+  So that our work stays in sync, and our collaboration remains productive.
 
 
   Scenario: no conflict

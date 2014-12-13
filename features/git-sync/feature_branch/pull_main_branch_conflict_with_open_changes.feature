@@ -1,4 +1,8 @@
-Feature: Git Sync: handling conflicting remote main branch updates when syncing a feature branch with open changes
+Feature: git sync: resolving conflicting remote main branch updates when syncing a feature branch with open changes
+
+  As a developer in the middle of ongoing work
+  I want to be given an opportunity to resolve differences between unpushed finished local features and the progress of the rest of the team
+  So that our work stays in sync, and our collaboration is productive.
 
 
   Background:

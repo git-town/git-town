@@ -1,4 +1,8 @@
-Feature: Git Sync: syncing a feature branch without open changes
+Feature: git sync: on a feature branch (without open changes)
+
+  As a developer on a local feature branch
+  I want to be able to easily update my feature branch to include the lastest changes from the rest of the team
+  So that my work stays in sync to the main development line, can be merged easily later, and I remain productive.
 
 
   Scenario: without a remote branch
