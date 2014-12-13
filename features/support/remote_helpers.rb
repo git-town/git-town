@@ -1,11 +1,9 @@
 # Returns the base URL for the given domain
 def base_url domain
-  if domain == 'Bitbucket'
-    'https://bitbucket.org'
-  elsif domain == 'GitHub'
-    'https://github.com'
-  else
-    fail "Unknown domain: #{domain}"
+  case domain
+  when 'Bitbucket' then 'https://bitbucket.org'
+  when 'GitHub' then 'https://github.com'
+  else fail "Unknown domain: #{domain}"
   end
 end
 
