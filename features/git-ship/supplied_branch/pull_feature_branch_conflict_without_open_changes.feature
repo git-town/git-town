@@ -1,4 +1,8 @@
-Feature: Git Ship: handling conflicting remote feature branch updates when shipping the supplied feature branch without open changes
+Feature: git ship: resolving remote feature branch updates when shipping a given feature branch (without open changes)
+
+  As a developer shipping another feature branch with conflicting remote updates
+  I want to get a chance to resolve them
+  So that I can ship the branch as planned without further boilerplate Git commands and remain productive.
 
 
   Background:

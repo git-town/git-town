@@ -1,4 +1,8 @@
-Feature: Git Ship: handling conflicting remote main branch updates when shipping the current feature branch
+Feature: git ship: allows to resolve conflicts while updating the main branch
+
+  As a developer shipping a feature branch while my local main branch has conflicting updates with the remote main branch
+  I want to be given a chance to resolve these conflicts and continue the ship
+  So that I can ship the feature as planned and remain productive by moving on to the next feature.
 
 
   Background:

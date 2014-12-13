@@ -1,4 +1,8 @@
-Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
+Feature: Git Ship: resolving conflicts between the supplied feature and main branch (with open changes)
+
+  As a developer shipping an outdated feature that conflicts with updates on the main branch
+  I want to be given an opportunity to resolve these conflicts
+  So that I can ship the feature in an updated form, and remain productive by moving on to the next feature.
 
 
   Background:
