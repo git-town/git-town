@@ -35,7 +35,7 @@ and it assumes you use a central code repository like
 
 ## Installation
 
-100% of Git Town is written with Bash script, so it runs anywhere Git and Bash runs.
+100% of Git Town is written in Bash script, so it runs anywhere Git and Bash runs.
 Installation on OS X can be done using [Homebrew](http://brew.sh/).
 Other platforms need to install manually.
 
@@ -162,7 +162,7 @@ our way!
 ## Roadmap
 
 The future roadmap is planned using [GitHub issues](https://github.com/Originate/git-town/issues).
-The past roadmap is in the <a href="release-notes.md" target="_blank">release notes</a>.
+The past roadmap is in the [release notes](release-notes.md).
 
 If you have an idea about a cool feature you would like to see in Git Town,
 please [open a ticket](https://github.com/Originate/git-town/issues/new).
