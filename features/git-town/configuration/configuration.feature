@@ -4,15 +4,15 @@ Feature: listing the configuration
     Given I have configured the main branch name as "main"
     And my non-feature branches are configured as "qa, staging"
     When I run `git town --config`
-    Then I see "Main branch: 'main'"
-    And I see "Non-feature branches: 'qa, staging'"
+    Then I see "Main branch: main"
+    And I see "Non-feature branches: qa, staging"
 
 
   Scenario: the main branch is configured but the non-feature branches are not
     Given I have configured the main branch name as "main"
     And my non-feature branches are not configured
     When I run `git town --config`
-    Then I see "Main branch: 'main'"
+    Then I see "Main branch: main"
     And I see "Non-feature branches: [none]"
 
 
@@ -21,7 +21,7 @@ Feature: listing the configuration
     And my non-feature branches are configured as "qa"
     When I run `git town --config`
     Then I see "Main branch: [not configured yet]"
-    And I see "Non-feature branches: 'qa'"
+    And I see "Non-feature branches: qa"
 
 
   Scenario: nothing is configured yet

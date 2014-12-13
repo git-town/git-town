@@ -9,7 +9,7 @@ Feature: main-branch configuration
   Scenario: printing the main branch when it's configured
     Given I have configured the main branch name as "main"
     When I run `git town main-branch`
-    Then I see "Main branch: 'main'"
+    Then I see "Main branch: main"
 
 
   Scenario: setting the main branch
