@@ -1,4 +1,9 @@
-Feature: git-extract handling cherry-pick conflicts without open changes
+Feature: git extract: resolving conflicts with main branch (without open changes)
+
+  As a developer extracting a commit that conflicts with the main branch
+  I want to have the opportunity to resolve these differences
+  So that my work is always based on the lastest state, I don't run into bigger conflicts later, and I remain productive.
+
 
   Background:
     Given I have a feature branch named "feature"

@@ -1,4 +1,9 @@
-Feature: git extract errors without a branch name without open changes
+Feature: git extract: abort if no branch name is given (without open changes)
+
+  As a developer about to extract commits into a new branch
+  I should be told when I forget to provide the branch name
+  So that I know how to do this correctly without having to read the manual.
+
 
   Background:
     Given I have a feature branch named "feature"

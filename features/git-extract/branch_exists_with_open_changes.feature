@@ -1,4 +1,9 @@
-Feature: cannot extract if a branch already exists with that name
+Feature: git extract: don't extract into an already existing branch (with open changes)
+
+  As a developer trying to extract commits into already existing feature branches
+  I should get a warning that the target branch already exists
+  So that feature branches remain focussed and code reviews effective
+
 
   Background:
     Given I have feature branches named "feature" and "refactor"

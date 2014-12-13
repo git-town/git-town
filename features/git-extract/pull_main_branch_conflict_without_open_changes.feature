@@ -1,4 +1,9 @@
-Feature: git-extract handling conflicting remote main branch updates without open changes
+Feature: git extract: resolving conflicting remote main branch updates (without open changes)
+
+  As a developer extracting a commit while there are conflicing updates on the remote main branch
+  I want to be given an opportunity to resolve the differences
+  So that my work is always based on the latest state, I don't run into bigger merge conflicts later, and remain productive.
+
 
   Background:
     Given I am on a feature branch
