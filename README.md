@@ -56,15 +56,13 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      ```bash
-      brew tap Originate/gittown
-      brew install git-town
-      ```
+      <code>brew tap Originate/gittown</code><br>
+      <code>brew install git-town</code>
     </td>
     <td>
       clone the repo to your machine (into DIR)<br>
-      add DIR to your `$PATH`<br>
-      add DIR/man to your `$MANPATH`
+      add DIR to your <code>$PATH</code><br>
+      add DIR/man to your <code>$MANPATH</code>
     </td>
   </tr>
   <tr>
@@ -74,10 +72,8 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      ```bash
-      brew update
-      brew upgrade git-town
-      ```
+      <code>brew update</code><br>
+      <code>brew upgrade git-town</code>
     </td>
     <td>
       run <code>git pull</code> in DIR<br>
@@ -90,15 +86,13 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      ```bash
-      brew uninstall git-town
-      brew untap Originate/gittown
-      ```
+      <code>brew uninstall git-town</code><br>
+      <code>brew untap Originate/gittown</code>
     </td>
     <td>
       remove DIR<br>
-      remove DIR from your `$PATH`<br>
-      remove DIR/man from your `$MANPATH`
+      remove DIR from your <code>$PATH</code><br>
+      remove DIR/man from your <code>$MANPATH</code>
     </td>
   </tr>
 </table>
