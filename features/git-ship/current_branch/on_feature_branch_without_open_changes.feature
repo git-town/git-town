@@ -1,4 +1,8 @@
-Feature: Git Ship: shipping the current feature branch
+Feature: git ship: shipping the current feature branch
+
+  As a developer having finished a feature
+  I want to be able to ship it safely in one easy step
+  So that I can quickly move on to the next feature and remain productive.
 
 
   Scenario: local feature branch

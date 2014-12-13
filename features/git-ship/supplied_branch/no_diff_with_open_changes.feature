@@ -1,17 +1,22 @@
-Feature: Git Ship: errors when the branch diff is empty with open changes
+Feature: git ship: does'nt ship a feature branch without changes (with open changes)
+
+  As a developer shipping a feature branch that doesn't result in any changes on main
+  I want to be notified about this situation
+  So that I can investigate and resolve it safely, don't ship the wrong things, and my users see meaningful progress.
+
 
   Background:
-    Given I have feature branches named "feature" and "other_feature"
+    Given I have feature branches named "no-real-changes" and "other_feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION | FILE NAME   | FILE CONTENT   |
-      | main    | remote   | common_file | common content |
-      | feature | local    | common_file | common content |
+      | BRANCH          | LOCATION | FILE NAME   | FILE CONTENT   |
+      | main            | remote   | common_file | common content |
+      | no-real-changes | local    | common_file | common content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship feature` while allowing errors
+    When I run `git ship no-real-changes` while allowing errors
 
 
   Scenario: result
-    Then I get the error "The branch 'feature' has no shippable changes"
+    Then I get the error "The branch 'no-real-changes' has no shippable changes"
     And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

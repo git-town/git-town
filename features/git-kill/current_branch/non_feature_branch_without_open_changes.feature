@@ -1,4 +1,8 @@
-Feature: Git Kill: Non-feature branches are not killed
+Feature: git kill: does not remove non-feature branches (without open changes)
+
+  As a developer accidentally running "git kill" on a non-feature branch
+  I want the command to not perform the operation
+  So that my release infrastructure remains intact and my project remains shippable.
 
 
   Background:
@@ -9,14 +13,12 @@ Feature: Git Kill: Non-feature branches are not killed
       | good-feature | local and remote | good commit | good_file |
       | qa           | local and remote | qa commit   | qa_file   |
     And I am on the "qa" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill` while allowing errors
 
 
   Scenario: result
     Then I get the error "You can only kill feature branches"
     And I am still on the "qa" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | repository | branches               |
       | local      | main, qa, good-feature |

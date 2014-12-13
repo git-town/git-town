@@ -1,8 +1,13 @@
-Feature: git-prune-branches: on the main branch with no stale feature branches without open changes
+Feature: git prune-branches: leaves used feature branches when called on the main branch (without open changes)
+
+  As a developer having feature branches with commits
+  I want them all to survive a "prune branch" command
+  So that I can keep my repository clean without loosing work.
+
 
   Background:
-    Given I have a feature branch named "feature1" ahead of main
-    And my coworker has a feature branch named "feature2" ahead of main
+    Given I have a feature branch named "my-feature" ahead of main
+    And my coworker has a feature branch named "charlies-feature" ahead of main
     And I am on the "main" branch
     When I run `git prune-branches`
 
@@ -13,7 +18,7 @@ Feature: git-prune-branches: on the main branch with no stale feature branches w
       | main   | git fetch --prune |
     Then I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES                 |
-      | local      | main, feature1           |
-      | remote     | main, feature1, feature2 |
-      | coworker   | main, feature2           |
+      | REPOSITORY | BRANCHES                           |
+      | local      | main, my-feature                   |
+      | remote     | main, my-feature, charlies-feature |
+      | coworker   | main, charlies-feature             |

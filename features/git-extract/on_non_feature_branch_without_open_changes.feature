@@ -1,4 +1,9 @@
-Feature: git-extract errors on a non-feature branch
+Feature: git extract: does not allow to extract from a non-feature branch (without open changes)
+
+  As a developer accidentally running `git extract` on a non-feature branch
+  I want to be reminded about running this command on a feature branch
+  So that I can use Git Town correctly without having to memorize the syntax.
+
 
   Background:
     Given non-feature branch configuration "qa, production"

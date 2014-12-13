@@ -1,4 +1,9 @@
-Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the current feature branch
+Feature: git ship: allows to resolve merge conflicts between feature and main branch
+
+  As a developer shipping an outdated feature that conflicts with the main branch
+  I want to be given a chance to resolve these conflicts
+  So that I can ship the feature as I had planned, and remain productive by moving on to the next feature.
+
 
   Background:
     Given I am on the "feature" branch
@@ -28,3 +33,11 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
       | BRANCH  | FILES            | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
+
+
+  Scenario: continue after resolving the conflict
+    Given TODO: make this work
+
+
+  Scenario: continue without resolving the conflict
+    Given TODO: make this work

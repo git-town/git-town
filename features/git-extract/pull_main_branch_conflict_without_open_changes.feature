@@ -1,4 +1,9 @@
-Feature: git-extract handling conflicting remote main branch updates without open changes
+Feature: git extract: allows to resolve conflicting remote main branch updates (without open changes)
+
+  As a developer extracting a commit while there are conflicing changes on the remote main branch
+  I want the tool to handle this situation properly
+  So that I can use it safely in all edge cases.
+
 
   Background:
     Given I am on a feature branch
@@ -28,3 +33,12 @@ Feature: git-extract handling conflicting remote main branch updates without ope
       |         |          | refactor commit           | refactor_file    |
     And there is no rebase in progress
     And there is no abort script for "git extract" anymore
+
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing after resolving the conflicts
+    Given TODO: the user should be able to continue here
+
+  @finishes-with-non-empty-stash
+  Scenario: continuing without resolving the conflicts
+    Given TODO: we should show an error message here and abort
