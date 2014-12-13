@@ -2,10 +2,100 @@
 
 # Helper methods for dealing with configuration.
 
+# Add a new non-feature branch if possible, and show confirmation
+function add_non_feature_branch {
+  local branch_name=$1
+
+  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+    echo "'$branch_name' is already a non-feature branch"
+  else
+    local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
+    store_configuration non-feature-branch-names "$new_branches"
+    echo "Added '$branch_name' as a non-feature branch"
+  fi
+}
+
+# Add or remove non-feature branch if possible, and show confirmation
+function add_or_remove_non_feature_branches {
+  local operation=$1
+  local branch_name=$2
+
+  if [ -z "$branch_name" ]; then
+    echo "Missing branch name"
+    echo "usage: git town non-feature-branches (--add|--remove) <branchname>"
+  else
+    if [ "$operation" == "--add" ]; then
+      add_non_feature_branch "$branch_name"
+    elif [ "$operation" == "--remove" ]; then
+      remove_non_feature_branch "$branch_name"
+    fi
+  fi
+}
+
+
 # Returns git-town configuration
 function get_configuration {
   local config_setting_name=$1
   git config "git-town.$config_setting_name"
+}
+
+
+# Remove a non-feature branch if possible, and show confirmation
+function remove_non_feature_branch {
+  local branch_name=$1
+
+  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+    local new_branches=$(remove_string "$non_feature_branch_names" ',' "$branch_name")
+    store_configuration non-feature-branch-names "$new_branches"
+    echo "Removed '$branch_name' from non-feature branches"
+  else
+    echo "'$branch_name' is not a non-feature branch"
+  fi
+}
+
+
+function show_config {
+  show_main_branch
+  show_non_feature_branches
+}
+
+
+function show_main_branch {
+  if [ -z "$main_branch_name" ]; then
+    echo 'Main branch: [not configured yet]'
+  else
+    echo "Main branch: $main_branch_name"
+  fi
+}
+
+
+function show_non_feature_branches {
+  if [ -z "$non_feature_branch_names" ]; then
+    echo 'Non-feature branches: [none]'
+  else
+   echo "Non-feature branches: $non_feature_branch_names"
+ fi
+}
+
+
+function show_or_update_main_branch {
+  local branch_name=$1
+  if [ -n "$branch_name" ]; then
+    store_main_branch_name_with_confirmation_text "$branch_name"
+  else
+    show_main_branch
+  fi
+}
+
+
+function show_or_update_non_feature_branches {
+  local operation=$1
+  local branch_name=$2
+  if [ -n "$operation" ]; then
+    add_or_remove_non_feature_branches "$operation" "$branch_name"
+  else
+    show_non_feature_branches
+  fi
 }
 
 
