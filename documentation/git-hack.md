@@ -7,7 +7,7 @@ git-hack - cut a new feature branch off the main branch
 
 ```
 git hack <branchname>
-git hack -abort
+git hack --abort
 ```
 
 
