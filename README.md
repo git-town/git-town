@@ -3,13 +3,13 @@
 
 Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
-<a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub flow</a>
-and others.
+<a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub Flow</a>
+and other workflows.
 
 It is designed for workflows that have a main branch
 (typically "development" or "master")
 from which feature branches are cut and into which they are merged,
-and assumes you use a central code repository like
+and it assumes you use a central code repository like
 <a href="http://github.com" target="_blank">GitHub</a> or
 <a href="https://bitbucket.org" target="_blank">Bitbucket</a>.
 
@@ -36,7 +36,7 @@ and assumes you use a central code repository like
 
 ## Installation
 
-Git Town is 100% Bash script, so it runs anywhere where Git and Bash runs.
+100% of Git Town is written with Bash script, so it runs anywhere Git and Bash runs.
 Installation on OS X can be done using <a href="http://brew.sh" target="_blank">Homebrew</a>,
 other platforms need to install manually.
 
@@ -56,13 +56,15 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      brew tap Originate/gittown<br>
+      ```bash
+      brew tap Originate/gittown
       brew install git-town
+      ```
     </td>
     <td>
       clone the repo to your machine (into DIR)<br>
-      add DIR to your path<br>
-      add DIR/man to your manpath
+      add DIR to your `$PATH`<br>
+      add DIR/man to your `$MANPATH`
     </td>
   </tr>
   <tr>
@@ -72,8 +74,10 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      brew update<br>
+      ```bash
+      brew update
       brew upgrade git-town
+      ```
     </td>
     <td>
       run <code>git pull</code> in DIR<br>
@@ -86,13 +90,15 @@ other platforms need to install manually.
   </tr>
   <tr>
     <td>
-      brew uninstall git-town<br>
+      ```bash
+      brew uninstall git-town
       brew untap Originate/gittown
+      ```
     </td>
     <td>
       remove DIR<br>
-      remove DIR from your path<br>
-      remove DIR/man from your manpath
+      remove DIR from your `$PATH`<br>
+      remove DIR/man from your `$MANPATH`
     </td>
   </tr>
 </table>
@@ -106,7 +112,7 @@ Create the folder if necessary.
 
 ## Configuration
 
-On first use, Git Town will ask for the main branch name and the names of any other non feature branches.
+On first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
 Git Town stores its configuration in the Git configuration of your project.
 If these ever need to change, the configuration can be updated using <a href="http://git-scm.com/docs/git-config" target="_blank">git config</a>.
 
@@ -132,9 +138,9 @@ for help on an individual command.
 
 ## Development
 
-tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
+Tests are written in <a href="http://cukes.info/" target="_blank">Cucumber</a> and <a href="http://rspec.info/" target="_blank">RSpec</a>
 
-```
+```bash
 # install tools
 bundle
 brew install shellcheck  # bash linter
@@ -170,5 +176,5 @@ The past roadmap is in the <a href="release-notes.md" target="_blank">release no
 If you have an idea about a cool feature you would like to see in Git Town,
 please <a href="https://github.com/Originate/git-town/issues/new" target="_blank">open a ticket</a>.
 Our team will add the <a href="https://github.com/Originate/git-town/labels/idea" target="_blank">idea</a> tag.
-Once we reach agreement about this idea, it will be tagged as <a href="https://github.com/Originate/git-town/labels/enhancement" target="_blank">enhancement</a>
-or <a href="https://github.com/Originate/git-town/labels/bug" target="_blank">bug</a>.
+Once we reach agreement about this idea, it will be tagged as an <a href="https://github.com/Originate/git-town/labels/enhancement" target="_blank">enhancement</a>
+or a <a href="https://github.com/Originate/git-town/labels/bug" target="_blank">bug</a>.
