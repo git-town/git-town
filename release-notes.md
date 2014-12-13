@@ -1,6 +1,8 @@
 # Git Town Release Notes
 
 ## Currently in master
+* **git repo:** view the repository homepage
+  ([#126](https://github.com/Originate/git-town/issues/126))
 * **git kill:** branchname parameter
   ([#126](https://github.com/Originate/git-town/issues/126))
 * auto-completion for [Fish shell](http://fishshell.com)
