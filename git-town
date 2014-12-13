@@ -38,7 +38,7 @@ function remove_non_feature_branch {
     store_configuration non-feature-branch-names "$new_branches"
     echo "Removed '$branch_name' from non-feature branches"
   else
-    echo "Nothing to do, '$branch_name' is not a non-feature branch"
+    echo "'$branch_name' is not a non-feature branch"
   fi
 }
 
