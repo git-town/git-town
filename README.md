@@ -35,7 +35,7 @@ and it assumes you use a central code repository like
 
 ## Installation
 
-100% of Git Town is written in Bash script, so it runs anywhere Git and Bash runs.
+Git Town is written in Bash, so it runs anywhere Git and Bash runs.
 Installation on OS X can be done using [Homebrew](http://brew.sh/).
 Other platforms need to install manually.
 
