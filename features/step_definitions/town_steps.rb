@@ -27,7 +27,7 @@ end
 
 
 Given(/^my non-feature branch(?:es are| is) "(.*)"$/) do |data|
-  non_feature_branches = Kappamaki.from_sentence(data).join(", ")
+  non_feature_branches = Kappamaki.from_sentence(data).join(', ')
   set_configuration 'non-feature-branch-names', non_feature_branches
 end
 
