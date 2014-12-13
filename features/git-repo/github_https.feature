@@ -5,5 +5,5 @@ Feature: git-repo when origin is on GitHub over HTTPS
     When I run `git repo`
 
 
-  Scenario:
+  Scenario: result
     Then I see a browser window for my repository homepage on GitHub
