@@ -41,25 +41,20 @@ end
 
 # Returns the names of all existing local branches.
 #
-# Does not return the "master" branch nor remote branches.
-#
 # The branches are ordered this ways:
 # * main branch
 # * feature branches ordered alphabetically
 def existing_local_branches
   actual_branches = array_output_of "git branch | tr -d '*'"
-  actual_branches.delete 'master'
   actual_main_branch = actual_branches.delete 'main'
   [actual_main_branch].concat(actual_branches)
 end
 
 
 # Returns the names of all existing remote branches.
-#
-# Does not return the "master" branch.
 def existing_remote_branches
   remote_branches = array_output_of 'git branch -r'
-  remote_branches.reject { |b| b.include?('HEAD') || b.include?('master') }
+  remote_branches.reject { |b| b.include?('HEAD') }
 end
 
 

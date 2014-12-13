@@ -12,4 +12,4 @@ git prune-branches
 
 #### DESCRIPTION
 
-Deletes merged branches in the local and remote repositories
+Deletes merged branches in the local and remote repositories.

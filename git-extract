@@ -2,17 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function ensure_preconditions {
-  ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
-  target_branch_name=$1
-  ensure_has_target_branch
-  ensure_does_not_have_branch "$target_branch_name"
-  shift
-  get_shas "$*"
-  ensure_has_shas
-}
-
-
 function ensure_has_target_branch {
   if [ -z "$target_branch_name" ]; then
     echo_error_header
@@ -31,12 +20,23 @@ function ensure_has_shas {
 }
 
 
+function ensure_preconditions {
+  ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
+  target_branch_name=$1
+  ensure_has_target_branch
+  ensure_does_not_have_branch "$target_branch_name"
+  shift
+  get_shas "$*"
+  ensure_has_shas
+}
+
+
 # Called when the cherry_pick fails
 function error_cherry_pick {
   # Create the abort script
   add_to_abort_script "initial_open_changes=$initial_open_changes"
   add_to_abort_script "abort_cherry_pick"
-  add_to_abort_script "checkout_branch $initial_branch_name"
+  add_to_abort_script "checkout $initial_branch_name"
   add_to_abort_script "delete_local_branch $target_branch_name force"
   add_to_abort_script "restore_open_changes"
 
@@ -44,8 +44,8 @@ function error_cherry_pick {
 }
 
 
-# Called when rebase_branch fails on the main branch
-function error_rebase_branch {
+# Called when rebase fails on the main branch
+function error_rebase {
   create_rebase_conflict_abort_script
   exit_with_script_messages
 }
@@ -75,12 +75,12 @@ function get_shas {
 function perform_extract {
   stash_open_changes
   checkout_main_branch
-  fetch_repo
+  fetch
   rebase_tracking_branch
-  push_branch
+  push
   create_and_checkout_feature_branch "$target_branch_name"
   cherry_pick "$SHAs"
-  push_branch
+  push
   restore_open_changes
 }
 

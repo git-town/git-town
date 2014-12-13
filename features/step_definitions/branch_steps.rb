@@ -38,13 +38,8 @@ Given(/^I have feature branches named (.+?)$/) do |branch_names|
 end
 
 
-Given(/^I have a local feature branch named "(.+?)"$/) do |branch_name|
-  create_branch branch_name, remote: false
-end
-
-
-Given(/^I have a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
-  create_branch branch_name
+Given(/^I have a( local)? feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |local, branch_name, relation|
+  create_branch branch_name, remote: !local
   if relation
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
     create_commits branch: commit_to_branch
