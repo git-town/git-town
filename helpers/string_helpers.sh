@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Helper function for working with shell scripting
+# Helper functions for working with strings
 
 
 # Split string with delimiter onto separate lines

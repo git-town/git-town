@@ -21,7 +21,7 @@ source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 source "$current_dir/configuration.sh" "$1"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/script_helpers.sh"
-source "$current_dir/shell_helpers.sh"
+source "$current_dir/string_helpers.sh"
 source "$current_dir/terminal_helpers.sh"
 source "$current_dir/tool_helpers.sh"
 
