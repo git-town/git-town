@@ -29,7 +29,7 @@ Feature: non-feature branch configuration
   Scenario: removing a non-feature-branch that doesn't exist
     Given my non-feature branches are configured as "staging, qa"
     When I run `git town non-feature-branches --remove stage`
-    Then I see "Nothing to do, 'stage' is not a non-feature branch"
+    Then I see "'stage' is not a non-feature branch"
     And the non-feature branches include "staging"
     And the non-feature branches include "qa"
 

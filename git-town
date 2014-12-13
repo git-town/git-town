@@ -53,29 +53,50 @@ function show_help {
 }
 
 
-if [ "$1" == "--config" ]; then
-  show_config
-elif [ "$1" == "main-branch" ]; then
-  if [ -n "$2" ]; then
-    store_main_branch_name_with_confirmation_text "$2"
+function show_or_update_main_branch {
+  local branch_name=$1
+  if [ -n "$branch_name" ]; then
+    store_main_branch_name_with_confirmation_text "$branch_name"
   else
     show_main_branch
   fi
-elif [ "$1" == "non-feature-branches" ]; then
-  if [ -n "$2" ]; then
-    if [ -n "$3" ]; then
-      if [ "$2" == "--add" ]; then
-        add_non_feature_branch "$3"
-      elif [ "$2" == "--remove" ]; then
-        remove_non_feature_branch "$3"
-      fi
-    else
-      echo "Missing branch name"
-      echo "usage: git town non-feature-branches (--add|--remove) <branch-name>"
-    fi
+}
+
+
+function show_or_update_non_feature_branches {
+  local operation=$1
+  local branch_name=$2
+  if [ -n "$operation" ]; then
+    add_or_remove_non_feature_branches "$operation" "$branch_name"
   else
     show_non_feature_branches
   fi
+}
+
+
+function add_or_remove_non_feature_branches {
+  local operation=$1
+  local branch_name=$2
+
+  if [ -z "$branch_name" ]; then
+    echo "Missing branch name"
+    echo "usage: git town non-feature-branches (--add|--remove) <branchname>"
+  else
+    if [ "$operation" == "--add" ]; then
+      add_non_feature_branch "$branch_name"
+    elif [ "$operation" == "--remove" ]; then
+      remove_non_feature_branch "$branch_name"
+    fi
+  fi
+}
+
+
+if [ "$1" == "--config" ]; then
+  show_config
+elif [ "$1" == "main-branch" ]; then
+  show_or_update_main_branch "$2"
+elif [ "$1" == "non-feature-branches" ]; then
+  show_or_update_non_feature_branches "$2" "$3"
 elif [ "$1" == "--version" ]; then
   show_version
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
