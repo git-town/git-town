@@ -12,7 +12,7 @@ Feature: non-feature branch configuration
     Then I see "Non-feature branches: qa"
 
 
-  Scenario: adding a non-feature-branch that doesn't exist
+  Scenario: adding a new non-feature-branch
     Given my non-feature branches are configured as "qa"
     When I run `git town non-feature-branches --add staging`
     Then I see "Added 'staging' as a non-feature branch"
@@ -28,8 +28,8 @@ Feature: non-feature branch configuration
 
   Scenario: removing a non-feature-branch that doesn't exist
     Given my non-feature branches are configured as "staging, qa"
-    When I run `git town non-feature-branches --remove stage`
-    Then I see "'stage' is not a non-feature branch"
+    When I run `git town non-feature-branches --remove non-existing-branch`
+    Then I see "'non-existing-branch' is not a non-feature branch"
     And the non-feature branches include "staging"
     And the non-feature branches include "qa"
 
