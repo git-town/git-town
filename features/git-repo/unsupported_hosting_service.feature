@@ -5,4 +5,4 @@ Feature: git-repo when origin is unsupported
 
 
   Scenario: result
-    Then I get the error "Unsupported hosting service. Can only view repositories on Bitbucket and GitHub"
+    Then I get the error "Unsupported hosting service. Repositories can only be viewed on Bitbucket and GitHub"
