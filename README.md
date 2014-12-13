@@ -61,7 +61,7 @@ Other platforms need to install manually.
     <td>
       <ol>
         <li>clone the repo to your machine (into DIR)</li>
-        <li>add DIR to your <code>$PATH</code></li>
+        <li>add DIR/src to your <code>$PATH</code></li>
         <li>add DIR/man to your <code>$MANPATH</code></li>
       </ol>
     </td>
@@ -95,7 +95,7 @@ Other platforms need to install manually.
     <td>
       <ol>
         <li>remove DIR</li>
-        <li>remove DIR from your <code>$PATH</code></li>
+        <li>remove DIR/src from your <code>$PATH</code></li>
         <li>remove DIR/man from your <code>$MANPATH</code></li>
       </ol>
     </td>
