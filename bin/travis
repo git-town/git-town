@@ -7,5 +7,5 @@ cabal install --verbose=0 shellcheck
 export PATH=~/.cabal/bin/:$PATH
 
 # Run the full test suite
-export PATH=$(pwd):$PATH
+export PATH=$(pwd/src):$PATH
 bundle exec rake
