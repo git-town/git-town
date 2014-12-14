@@ -7,5 +7,5 @@ Feature: git-pr when origin is on Bitbucket over SSH
     When I run `git pr`
 
 
-  Scenario:
+  Scenario: result
     Then I see a browser window for a new pull request on Bitbucket for the "feature" branch
