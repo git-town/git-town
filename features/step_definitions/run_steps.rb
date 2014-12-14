@@ -43,7 +43,12 @@ end
 
 
 Then(/^I see a browser window for a new pull request on (.+?) for the "(.+?)" branch$/) do |domain, branch_name|
-  expect(@last_run_result.out).to eql "open called with: #{remote_pull_request_url domain, branch_name}\n"
+  expect(@last_run_result.out).to eql "open called with: #{pull_request_url domain, branch_name}\n"
+end
+
+
+Then(/^I see a browser window for my repository homepage on (.+?)$/) do |domain|
+  expect(@last_run_result.out).to eql "open called with: #{repository_homepage_url domain}\n"
 end
 
 
