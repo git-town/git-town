@@ -7,6 +7,14 @@ Feature: set the main branch configuration
 
 
   Scenario: main branch is configured
-    Given I have configured the main branch name as "main-old"
+    Given I have a branches named "main-old" and "main-new"
+    And I have configured the main branch name as "main-old"
     When I run `git town main-branch main-new`
     Then I see "main branch stored as 'main-new'"
+
+
+  Scenario: invalid branch name
+    Given I have a branch named "main-old"
+    And I have configured the main branch name as "main-old"
+    When I run `git town main-branch main-new`
+    Then I see "'main-new' is not a valid branch name"
