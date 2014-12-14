@@ -28,3 +28,16 @@ Feature: modifying the non-feature branch configuration
     Then I see "Removed 'staging' from non-feature branches"
     And the non-feature branches don't include "staging"
     And the non-feature branches include "qa"
+
+
+  Scenario: using invalid parameter
+    Given my non-feature branches are "staging" and "qa"
+    When I run `git town non-feature-branches --invalid-parameter staging`
+    Then I see "usage: git town non-feature-branches (--add|--remove) <branchname>"
+
+
+  Scenario: missing branch name
+    Given my non-feature branches are "staging" and "qa"
+    When I run `git town non-feature-branches --add`
+    Then I see "Missing branch name"
+    And I see "usage: git town non-feature-branches (--add|--remove) <branchname>"

@@ -28,6 +28,8 @@ function add_or_remove_non_feature_branches {
       add_non_feature_branch "$branch_name"
     elif [ "$operation" == "--remove" ]; then
       remove_non_feature_branch "$branch_name"
+    else
+      echo "usage: git town non-feature-branches (--add|--remove) <branchname>"
     fi
   fi
 }
