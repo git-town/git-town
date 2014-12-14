@@ -3,26 +3,26 @@
 # Helper methods for dealing with abort/continue scripts
 
 function abort_command {
-  local cmd=$(peek_command "$command_list")
+  local cmd=$(peek_line "$steps")
   eval "abort_$cmd"
   undo_command
 }
 
 
 function continue_command {
-  local cmd=$(pop_command "$command_list")
+  local cmd=$(pop_line "$steps")
   eval "continue_$cmd"
-  run_command_list "$command_list" cleanup
+  run_steps "$steps" cleanup
 }
 
 
 function undo_command {
-  run_command_list "$undo_list" cleanup
+  run_steps "$undo_steps" cleanup
 }
 
 
 function ensure_abortable {
-  if [ "$(has_file "$command_list")" = false ]; then
+  if [ "$(has_file "$steps")" = false ]; then
     echo_red "Cannot abort"
     exit_with_error
   fi
@@ -30,7 +30,7 @@ function ensure_abortable {
 
 
 function ensure_continuable {
-  if [ "$(has_file "$command_list")" = false ]; then
+  if [ "$(has_file "$steps")" = false ]; then
     echo_red "Cannot continue"
     exit_with_error
   fi
@@ -38,13 +38,13 @@ function ensure_continuable {
 
 
 # Placeholder for any scripts that have no preconditions
-function ensure_preconditions {
+function preconditions {
   true
 }
 
 
 function ensure_undoable {
-  if [ "$(has_file "$undo_list")" = false ]; then
+  if [ "$(has_file "$undo_steps")" = false ]; then
     echo_red "Cannot undo"
     exit_with_error
   fi
@@ -52,7 +52,7 @@ function ensure_undoable {
 
 
 function exit_with_messages {
-  if [ "$(has_file "$command_list")" = true ]; then
+  if [ "$(has_file "$steps")" = true ]; then
     echo
     echo_red "To abort, run \"$git_command --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
@@ -61,10 +61,10 @@ function exit_with_messages {
 }
 
 
-function has_commands {
+function has_lines {
   local file="$1"
 
-  if [ "$(has_file "$file")" = true ] && [ "$(number_of_commands "$file")" -gt 0 ]; then
+  if [ "$(has_file "$file")" = true ] && [ "$(number_of_lines "$file")" -gt 0 ]; then
     echo true
   else
     echo false
@@ -83,28 +83,28 @@ function has_file {
 }
 
 
-function number_of_commands {
+function number_of_lines {
   local file="$1"
   wc -l < "$file" | tr -d ' '
 }
 
 
-function peek_command {
+function peek_line {
   local file="$1"
   head -n 1 "$file"
 }
 
 
-function pop_command {
+function pop_line {
   local file="$1"
-  peek_command "$file"
-  remove_command "$file"
+  peek_line "$file"
+  remove_line "$file"
 }
 
 
-function remove_command {
+function remove_line {
   local file="$1"
-  if [ "$(number_of_commands "$file")" -gt 1 ]; then
+  if [ "$(number_of_lines "$file")" -gt 1 ]; then
     local temp=$(temp_filename)
     tail -n +2 "$file" > "$temp"
     mv "$temp" "$file"
@@ -114,15 +114,12 @@ function remove_command {
 }
 
 
-function remove_command_lists {
-  if [ "$(has_file "$abort_command_list")" = true ]; then
-    rm "$abort_command_list"
+function remove_step_files {
+  if [ "$(has_file "$steps")" = true ]; then
+    rm "$steps"
   fi
-  if [ "$(has_file "$command_list")" = true ]; then
-    rm "$command_list"
-  fi
-  if [ "$(has_file "$undo_list")" = true ]; then
-    rm "$undo_list"
+  if [ "$(has_file "$undo_steps")" = true ]; then
+    rm "$undo_steps"
   fi
 }
 
@@ -139,22 +136,22 @@ function run {
     ensure_no_conflicts
     continue_command
   else
-    remove_command_lists
-    ensure_preconditions "$@"
-    build_command_list
-    run_command_list "$command_list" undoable
+    remove_step_files
+    preconditions "$@"
+    add_steps
+    run_steps "$steps" undoable
   fi
 
   exit_with_success
 }
 
 
-function run_command_list {
+function run_steps {
   local file="$1"
   local option="$2"
 
-  while [ "$(has_commands "$file")" = true ]; do
-    local cmd=$(peek_command "$file")
+  while [ "$(has_lines "$file")" = true ]; do
+    local cmd=$(peek_line "$file")
     if [ "$option" = undoable ]; then
       local undo_cmds=$(undo_commands_for "$cmd")
     fi
@@ -165,14 +162,14 @@ function run_command_list {
     else
       if [ "$option" = undoable ]; then
         for undo_cmd in "${undo_cmds[@]}"; do
-          add_to_undo_list "$undo_cmd"
+          add_undo_step "$undo_cmd"
         done
       fi
-      remove_command "$file"
+      remove_line "$file"
     fi
   done
 
   if [ "$option" = cleanup ]; then
-    remove_command_lists
+    remove_step_files
   fi
 }

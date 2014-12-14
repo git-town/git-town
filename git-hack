@@ -2,19 +2,19 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function build_command_list {
+function add_steps {
   if [ "$initial_open_changes" = true ]; then
-    add_to_command_list "stash_open_changes"
+    add_step "stash_open_changes"
   fi
 
-  add_to_command_list "checkout_main_branch"
-  add_to_command_list "fetch"
-  add_to_command_list "rebase_tracking_branch"
-  add_to_command_list "push"
-  add_to_command_list "create_and_checkout_feature_branch '$target_branch_name'"
+  add_step "checkout_main_branch"
+  add_step "fetch"
+  add_step "rebase_tracking_branch"
+  add_step "push"
+  add_step "create_and_checkout_feature_branch '$target_branch_name'"
 
   if [ "$initial_open_changes" = true ]; then
-    add_to_command_list "restore_open_changes"
+    add_step "restore_open_changes"
   fi
 }
 
@@ -28,7 +28,7 @@ function ensure_has_target_branch {
 }
 
 
-function ensure_preconditions {
+function preconditions {
   target_branch_name=$1
   ensure_has_target_branch
   ensure_does_not_have_branch "$target_branch_name"

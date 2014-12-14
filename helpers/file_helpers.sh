@@ -8,17 +8,17 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 
 
 # Command lists
-export command_list="/tmp/${program}_${temp_filename_suffix}"
-export undo_list="/tmp/${program}_undo_${temp_filename_suffix}"
+export steps="/tmp/${program}_${temp_filename_suffix}"
+export undo_steps="/tmp/${program}_undo_${temp_filename_suffix}"
 
 
-function add_to_command_list {
-  append_to_file "$1" "$command_list"
+function add_step {
+  append_to_file "$1" "$steps"
 }
 
 
-function add_to_undo_list {
-  prepend_to_file "$1" "$undo_list"
+function add_undo_step {
+  prepend_to_file "$1" "$undo_steps"
 }
 
 
