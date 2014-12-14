@@ -2,7 +2,7 @@
 Git Town is a collection of additional Git commands that
 help implement higher-level Git workflows, like GitHub flow.
 
-usage: git town [--config] [--version] <command>
+usage: git town [config] [version] <command>
 
 Git Town introduces the following commands:
     git extract         Copy selected commits from the current branch into their own branch

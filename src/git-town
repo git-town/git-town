@@ -12,13 +12,13 @@ function show_version {
 }
 
 
-if [ "$1" == "--config" ]; then
+if [ "$1" == "config" ]; then
   show_config
 elif [ "$1" == "main-branch" ]; then
   show_or_update_main_branch "$2"
 elif [ "$1" == "non-feature-branches" ]; then
   show_or_update_non_feature_branches "$2" "$3"
-elif [ "$1" == "--version" ]; then
+elif [ "$1" == "version" ]; then
   show_version
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
   show_help
