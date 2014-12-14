@@ -62,7 +62,7 @@ function show_config {
 
 function show_main_branch {
   if [ -z "$main_branch_name" ]; then
-    echo 'Main branch: [not configured yet]'
+    echo 'Main branch: [none]'
   else
     echo "Main branch: $main_branch_name"
   fi
