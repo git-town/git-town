@@ -2,6 +2,8 @@
 
 ## Currently in master
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
+* **git repo:** view the repository homepage
+  ([#140](https://github.com/Originate/git-town/issues/140))
 * **git kill:** branchname parameter
   ([#126](https://github.com/Originate/git-town/issues/126))
 * auto-completion for [Fish shell](http://fishshell.com)
