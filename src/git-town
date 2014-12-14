@@ -3,7 +3,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" "-
 
 
 function show_help {
-  cat "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/help.txt"
+  man git-town
 }
 
 
