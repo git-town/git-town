@@ -74,13 +74,9 @@ function pop_line {
 
 function remove_line {
   local file="$1"
-  if [ "$(number_of_lines "$file")" -gt 1 ]; then
-    local temp=$(temp_filename)
-    tail -n +2 "$file" > "$temp"
-    mv "$temp" "$file"
-  else
-    rm "$file"
-  fi
+  local temp=$(temp_filename)
+  tail -n +2 "$file" > "$temp"
+  mv "$temp" "$file"
 }
 
 
