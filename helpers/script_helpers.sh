@@ -3,26 +3,26 @@
 # Helper methods for dealing with abort/continue scripts
 
 function abort_command {
-  local cmd=$(peek_line "$steps")
+  local cmd=$(peek_line "$steps_file")
   eval "abort_$cmd"
   undo_command
 }
 
 
 function continue_command {
-  local cmd=$(pop_line "$steps")
+  local cmd=$(pop_line "$steps_file")
   eval "continue_$cmd"
-  run_steps "$steps" cleanup
+  run_steps "$steps_file" cleanup
 }
 
 
 function undo_command {
-  run_steps "$undo_steps" cleanup
+  run_steps "$undo_steps_file" cleanup
 }
 
 
 function ensure_abortable {
-  if [ "$(has_file "$steps")" = false ]; then
+  if [ "$(has_file "$steps_file")" = false ]; then
     echo_red "Cannot abort"
     exit_with_error
   fi
@@ -30,7 +30,7 @@ function ensure_abortable {
 
 
 function ensure_continuable {
-  if [ "$(has_file "$steps")" = false ]; then
+  if [ "$(has_file "$steps_file")" = false ]; then
     echo_red "Cannot continue"
     exit_with_error
   fi
@@ -44,7 +44,7 @@ function preconditions {
 
 
 function ensure_undoable {
-  if [ "$(has_file "$undo_steps")" = false ]; then
+  if [ "$(has_file "$undo_steps_file")" = false ]; then
     echo_red "Cannot undo"
     exit_with_error
   fi
@@ -52,7 +52,7 @@ function ensure_undoable {
 
 
 function exit_with_messages {
-  if [ "$(has_file "$steps")" = true ]; then
+  if [ "$(has_file "$steps_file")" = true ]; then
     echo
     echo_red "To abort, run \"$git_command --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
@@ -62,11 +62,11 @@ function exit_with_messages {
 
 
 function remove_step_files {
-  if [ "$(has_file "$steps")" = true ]; then
-    rm "$steps"
+  if [ "$(has_file "$steps_file")" = true ]; then
+    rm "$steps_file"
   fi
-  if [ "$(has_file "$undo_steps")" = true ]; then
-    rm "$undo_steps"
+  if [ "$(has_file "$undo_steps_file")" = true ]; then
+    rm "$undo_steps_file"
   fi
 }
 
@@ -86,7 +86,7 @@ function run {
     remove_step_files
     preconditions "$@"
     add_steps
-    run_steps "$steps" undoable
+    run_steps "$steps_file" undoable
   fi
 
   exit_with_success
@@ -98,18 +98,18 @@ function run_steps {
   local option="$2"
 
   while [ "$(has_lines "$file")" = true ]; do
-    local cmd=$(peek_line "$file")
+    local step=$(peek_line "$file")
     if [ "$option" = undoable ]; then
-      local undo_cmds=$(undo_commands_for "$cmd")
+      local undo_steps=$(undo_steps_for "$step")
     fi
-    eval "$cmd"
+    eval "$step"
 
     if [ $? != 0 ]; then
       exit_with_messages
     else
       if [ "$option" = undoable ]; then
-        for undo_cmd in "${undo_cmds[@]}"; do
-          add_undo_step "$undo_cmd"
+        for undo_step in "${undo_steps[@]}"; do
+          add_undo_step "$undo_step"
         done
       fi
       remove_line "$file"
