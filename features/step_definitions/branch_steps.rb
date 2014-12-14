@@ -31,18 +31,14 @@ Given(/^I am on the local "(.+?)" branch$/) do |branch_name|
 end
 
 
-Given(/^I have(?: a)?(?: feature)? branch(?:es)? named (.+?)$/) do |branch_names|
+Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named (.+?)(?: (behind|ahead of) main)?$/) do
+  |local, branch_names, relation|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
-    create_branch branch_name
-  end
-end
-
-
-Given(/^I have a( local)? feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |local, branch_name, relation|
-  create_branch branch_name, remote: !local
-  if relation
-    commit_to_branch = relation == 'behind' ? 'main' : branch_name
-    create_commits branch: commit_to_branch
+    create_branch branch_name, remote: !local
+    if relation
+      commit_to_branch = relation == 'behind' ? 'main' : branch_name
+      create_commits branch: commit_to_branch
+    end
   end
 end
 

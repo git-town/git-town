@@ -25,9 +25,8 @@ function add_or_remove_non_feature_branches {
   if [ -z "$branch_name" ]; then
     if [ "$operation" == "--add" ] || [ "$operation" == "--remove" ]; then
       echo "Missing branch name"
-    else
-      echo "usage: git town non-feature-branches [--add|--remove] <branchname>"
     fi
+    echo "usage: git town non-feature-branches [--add|--remove] <branchname>"
   else
     if [ "$operation" == "--add" ]; then
       add_non_feature_branch "$branch_name"
