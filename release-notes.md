@@ -8,7 +8,6 @@
   ([#177](https://github.com/Originate/git-town/issues/177))
 
 
-
 ## 0.4.1 (2014-12-02)
 
 * **git pr:** create a new pull request
