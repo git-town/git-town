@@ -48,3 +48,18 @@ function restore_open_changes {
 function stash_open_changes {
   run_command "git stash -u"
 }
+
+
+function undo_steps_for_commit_open_changes {
+  local branch=$(get_current_branch_name)
+  local sha=$(sha_of_branch "$branch")
+  echo "reset_to_sha $sha"
+  if [ "$(has_tracking_branch "$branch")" = true ]; then
+    echo "push_branch $branch force"
+  fi
+}
+
+
+function undo_steps_for_stash_open_changes {
+  echo "restore_open_changes"
+}

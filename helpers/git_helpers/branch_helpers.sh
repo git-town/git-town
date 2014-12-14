@@ -125,3 +125,22 @@ function remote_only_merged_branches {
   rm "$local_temp"
   rm "$remote_temp"
 }
+
+
+function undo_steps_for_create_and_checkout_feature_branch {
+  local branch=$(get_current_branch_name)
+  local branch_to_create="$1"
+  echo "checkout $branch"
+  echo "delete_branch $branch_to_create"
+}
+
+
+function undo_steps_for_delete_branch {
+  local branch_to_delete="$1"
+  local sha=$(sha_of_branch "$branch_to_delete")
+  echo "create_branch $branch_to_delete $sha"
+  if [ "$(has_tracking_branch "$branch_to_delete")" = true ]; then
+    echo "push_branch $branch_to_delete"
+  fi
+}
+
