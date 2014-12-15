@@ -1,8 +1,8 @@
 Feature: git hack: moving existing open changes from an old feature branch into a new one
 
   As a developer working on something unrelated to my current feature branch
-  I want to be able to create a new up-to-date feature branch and continue my work on it with one command
-  So that it is easy to keep my feature branches focussed and code reviews remain efficient.
+  I want to be able to create a new up-to-date feature branch and continue working there
+  So that my new branch has all my open changes and my flow is not interrupted.
 
 
   Background:

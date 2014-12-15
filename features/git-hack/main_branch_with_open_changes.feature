@@ -1,8 +1,8 @@
 Feature: git hack: moving existing open changes from the main branch into a new feature branch
 
   As a developer working on a new feature while still being on the main branch
-  I want to be able to create a new feature branch and continue my work on it with one command
-  So that it is easy to keep the code quality high by getting my code reviewed before merging into main.
+  I want to be able to create a new up-to-date feature branch and continue working there
+  So that my new branch has all my open changes and my flow is not interrupted.
 
 
   Background:

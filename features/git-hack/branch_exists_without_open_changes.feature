@@ -1,8 +1,8 @@
 Feature: git hack: enforces unique branch names while starting a new feature
 
-  As a developer starting work on a new branch
-  I should be told when the branch name is taken
-  So that I don't mix features, code reviews are easy, and the team productivity remains high.
+  As a developer trying to start a new feature on an already existing branch
+  I should see an error telling me that the branch name is taken
+  So that my feature branches are focussed, code reviews easy, and the team productivity remains high.
 
 
   Background:
