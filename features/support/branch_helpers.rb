@@ -21,9 +21,9 @@ end
 
 
 # Creates and pushes a branch
-def create_branch branch_name
+def create_branch branch_name, remote: true
   run "git checkout -b #{branch_name} main"
-  run "git push -u origin #{branch_name}"
+  run "git push -u origin #{branch_name}" if remote
 end
 
 
@@ -41,25 +41,20 @@ end
 
 # Returns the names of all existing local branches.
 #
-# Does not return the "master" branch nor remote branches.
-#
 # The branches are ordered this ways:
 # * main branch
 # * feature branches ordered alphabetically
 def existing_local_branches
   actual_branches = array_output_of "git branch | tr -d '*'"
-  actual_branches.delete 'master'
   actual_main_branch = actual_branches.delete 'main'
   [actual_main_branch].concat(actual_branches)
 end
 
 
 # Returns the names of all existing remote branches.
-#
-# Does not return the "master" branch.
 def existing_remote_branches
   remote_branches = array_output_of 'git branch -r'
-  remote_branches.reject { |b| b.include?('HEAD') || b.include?('master') }
+  remote_branches.reject { |b| b.include?('HEAD') }
 end
 
 
@@ -79,9 +74,16 @@ def on_branch branch_name
 end
 
 
+# Returns the SHA of the given branch
+def sha_of_branch branch_name
+  output_of "git rev-parse #{branch_name}"
+end
+
+
 # Verifies the branches in each repository
-def verify_branches branch_data_array
-  branch_data_array.each do |branch_data|
+def verify_branches branch_table
+  branch_table.map_headers!(&:downcase)
+  branch_table.hashes.each do |branch_data|
     repository = branch_data['repository']
     expected_branches = Kappamaki.from_sentence branch_data['branches']
     expected_branches.map! { |branch_name| branch_name_for_location repository, branch_name }

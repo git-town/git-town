@@ -1,14 +1,16 @@
 .TH "GIT-EXTRACT" "1" "12/02/2014" "Git Town 0\&.4\&.1" "Git Town Manual"
 
-.SH NAME
+.SH "NAME"
 git extract \- copy selected commits from the current branch into their own branch
 
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 \fIgit extract\fR <branchname> [<commit>...]
 .br
 \fIgit extract\fR --abort
+.br
+\fIgit extract\fR --continue
 
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 If no commits are provided, prompts the user to select from a list of commits unique to the current branch.
 .PP
 * sync the main branch
@@ -17,7 +19,7 @@ If no commits are provided, prompts the user to select from a list of commits un
 .br
 * cherry pick commits
 
-.SH OPTIONS
+.SH "OPTIONS"
 .IP "<branchname>" 4
 The name of the branch to create.
 
@@ -26,3 +28,6 @@ SHA to be cherry-picked into the new branch.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.

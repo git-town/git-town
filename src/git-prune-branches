@@ -1,0 +1,60 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function preconditions {
+  fetch
+}
+
+
+function should_delete_branch {
+  local branch_name=$1
+
+  if [ "$(is_feature_branch "$branch_name")" = true ]; then
+    if [ "$initial_branch_name" = "$branch_name" ] && [ "$initial_open_changes" = true ]; then
+      echo false
+    else
+      echo true
+    fi
+  else
+    echo false
+  fi
+}
+
+
+function steps {
+  local initial_branch_deleted=false
+
+  if [ "$initial_branch_name" != "$main_branch_name" ]; then
+    if [ "$initial_open_changes" = true ]; then
+      echo "stash_open_changes"
+    fi
+    echo "checkout_main_branch"
+  fi
+
+  for local_branch_name in $(local_merged_branches); do
+    if [ "$(should_delete_branch "$local_branch_name")" = true ]; then
+      if [ "$initial_branch_name" = "$local_branch_name" ]; then
+        initial_branch_deleted=true
+      fi
+      echo "delete_branch $local_branch_name"
+    fi
+  done
+
+  for remote_branch_name in $(remote_only_merged_branches); do
+    if [ "$(should_delete_branch "$remote_branch_name")" = true ]; then
+      echo "delete_remote_branch $remote_branch_name"
+    fi
+  done
+
+  if [ "$initial_branch_name" != "$main_branch_name" ] && [ "$initial_branch_deleted" = false ]; then
+    echo "checkout $initial_branch_name"
+
+    if [ "$initial_open_changes" = true ]; then
+      echo "restore_open_changes"
+    fi
+  fi
+}
+
+
+run "$@"

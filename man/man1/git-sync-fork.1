@@ -7,10 +7,15 @@ git sync-fork \- pull upstream updates into a forked repository
 \fIgit sync-fork\fR
 .br
 \fIgit sync-fork\fR --abort
+.br
+\fIgit sync-fork\fR --continue
 
 .SH "DESCRIPTION"
 Pulls updates from the upstream main branch into the main branch of this repository.
 
-.SH OPTIONS
+.SH "OPTIONS"
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.

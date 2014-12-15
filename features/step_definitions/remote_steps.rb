@@ -10,6 +10,6 @@ Given(/^my repo has an upstream repo$/) do
 end
 
 
-Given(/^my remote origin is on (Github|Bitbucket) through (HTTPS|SSH)$/) do |domain, protocol|
-  run "git remote set-url origin #{remote_url domain, protocol}"
+Given(/^my remote origin is on (GitHub|Bitbucket) through (HTTPS|SSH)$/) do |domain, protocol|
+  run "git remote set-url origin #{git_url domain, protocol}"
 end

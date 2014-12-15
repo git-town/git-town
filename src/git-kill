@@ -1,0 +1,33 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function branch_to_kill {
+  if [ -z "$1" ]; then
+    echo "$initial_branch_name"
+  else
+    echo "$1"
+  fi
+}
+
+
+function preconditions {
+  target_branch=$(branch_to_kill "$@")
+  if [ "$target_branch" != "$initial_branch_name" ]; then
+    ensure_has_branch "$target_branch"
+  fi
+  ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
+}
+
+
+function steps {
+  if [ "$target_branch" = "$initial_branch_name" ]; then
+    echo "commit_open_changes"
+    echo "checkout_main_branch"
+  fi
+
+  echo "delete_branch $target_branch force"
+}
+
+
+run "$@"

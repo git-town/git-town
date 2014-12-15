@@ -6,5 +6,5 @@ Feature: git-pr when origin is unsupported
     When I run `git pr` while allowing errors
 
 
-  Scenario:
-    Then I get the error "Unsupported hosting service. Pull requests can only be created on Bitbucket and Github"
+  Scenario: result
+    Then I get the error "Unsupported hosting service. Pull requests can only be created on Bitbucket and GitHub"
