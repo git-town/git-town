@@ -1,15 +1,5 @@
-def output_of command
-  run(command).out.strip
-end
-
-
 def array_output_of command
   output_of(command).split("\n").map(&:strip)
-end
-
-
-def shell_error? result
-  result.out.include? File.expand_path('../../../src/', __FILE__)
 end
 
 
@@ -21,6 +11,20 @@ end
 def git_town_command? command
   %w(extract hack kill pr prune-branches repo ship sync-fork sync town).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
+  end
+end
+
+
+def output_of command
+  run(command).out.strip
+end
+
+
+def prepare_user_input input
+  if input == 'an empty commit message'
+    ['dGZZ']
+  else
+    Kappamaki.from_sentence(input)
   end
 end
 
@@ -75,20 +79,16 @@ def run_shell_command command, inputs
 end
 
 
-def should_print_command_output? command, debug
-  debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
-end
-
-
-def prepare_user_input input
-  if input == 'an empty commit message'
-    ['dGZZ']
-  else
-    Kappamaki.from_sentence(input)
-  end
+def shell_error? result
+  result.out.include? File.expand_path('../../../src/', __FILE__)
 end
 
 
 def should_error? result, allow_failures
   (result.error && !allow_failures) || shell_error?(result)
+end
+
+
+def should_print_command_output? command, debug
+  debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
 end
