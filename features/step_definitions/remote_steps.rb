@@ -11,5 +11,5 @@ end
 
 
 Given(/^my remote origin is on (GitHub|Bitbucket) through (HTTPS|SSH)$/) do |domain, protocol|
-  run "git remote set-url origin #{remote_url domain, protocol}"
+  run "git remote set-url origin #{git_url domain, protocol}"
 end
