@@ -19,8 +19,6 @@ function discard_open_changes {
 # Exists if there are uncommitted changes
 function ensure_no_open_changes {
   if [ "$(has_open_changes)" == true ]; then
-    error_has_open_changes
-
     echo_error_header
     echo_error "$*"
     exit_with_error
