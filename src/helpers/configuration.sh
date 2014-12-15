@@ -78,7 +78,7 @@ function show_non_feature_branches {
   if [ -z "$non_feature_branch_names" ]; then
     echo 'Non-feature branches: [none]'
   else
-   echo "Non-feature branches: $non_feature_branch_names"
+    echo "Non-feature branches: $non_feature_branch_names"
  fi
 }
 
@@ -112,7 +112,7 @@ function store_configuration {
   git config "git-town.$config_setting_name" "$value"
 
   # update $main_branch_name and $non_feature_branch_names accordingly
-  if [ $? == '0' ]; then
+  if [ $? == 0 ]; then
     if [ "$config_setting_name" == "main-branch-name" ]; then
       main_branch_name="$value"
     elif [ "$config_setting_name" == "non-feature-branch-names" ]; then
