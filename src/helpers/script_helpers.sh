@@ -93,6 +93,9 @@ function run {
 }
 
 
+# possible values for option
+#   undoable - builds an undo_steps_file
+#   cleanup - calls remove_step_files after successfully running all steps
 function run_steps {
   local file="$1"
   local option="$2"
