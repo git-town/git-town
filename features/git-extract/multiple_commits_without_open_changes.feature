@@ -1,8 +1,8 @@
 Feature: git extract: extracting multiple commits (with open changes)
 
-  As a developer having a feature branch with many commits around unrelated issues
-  I want to be able to extract all commits about separate issues into their own branches
-  So that my feature branches remain focussed and code reviews are efficient.
+  As a developer having a feature branch with many commits around an unrelated issue
+  I want to be able to extract the commits into their own branch
+  So that the issue can be reviewed separately and my feature branch remains focussed
 
 
   Background:
