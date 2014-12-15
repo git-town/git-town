@@ -6,9 +6,8 @@
 function add_non_feature_branch {
   local branch_name=$1
 
-  if [ "$(has_branch "$branch_name")" == false ]; then
-    echo "'$branch_name' is not a valid branch name"
-  elif [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+  ensure_has_branch "$branch_name"
+  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
     echo "'$branch_name' is already a non-feature branch"
   else
     local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
@@ -87,11 +86,8 @@ function show_non_feature_branches {
 function show_or_update_main_branch {
   local branch_name=$1
   if [ -n "$branch_name" ]; then
-    if [ "$(has_branch "$branch_name")" == false ]; then
-      echo "'$branch_name' is not a valid branch name"
-    else
-      store_main_branch_name_with_confirmation_text "$branch_name"
-    fi
+    ensure_has_branch "$branch_name"
+    store_main_branch_name_with_confirmation_text "$branch_name"
   else
     show_main_branch
   fi
