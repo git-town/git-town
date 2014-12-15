@@ -1,7 +1,7 @@
 Feature: show help screen
 
 
-  Scenario: called with no command-line parameters
+  Scenario: called with no parameters
     When I run `git town`
     Then I see "Git Town is a collection of additional Git commands"
 
