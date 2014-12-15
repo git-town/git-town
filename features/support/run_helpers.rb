@@ -8,6 +8,11 @@ def array_output_of command
 end
 
 
+def shell_error? result
+  result.out.include? File.expand_path('../../../src/', __FILE__)
+end
+
+
 def integer_output_of command
   output_of(command).to_i
 end
@@ -30,7 +35,7 @@ end
 
 def run command, allow_failures: false, debug: false, inputs: []
   result = run_shell_command command, inputs
-  should_error = result.error && !allow_failures
+  should_error = should_error? result, allow_failures
 
   print_result(result) if should_error || should_print_command_output?(command, debug)
   fail 'Command not successful!' if should_error
@@ -81,4 +86,9 @@ def prepare_user_input input
   else
     Kappamaki.from_sentence(input)
   end
+end
+
+
+def should_error? result, allow_failures
+  (result.error && !allow_failures) || shell_error?(result)
 end
