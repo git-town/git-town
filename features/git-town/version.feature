@@ -1,6 +1,6 @@
 Feature: git town: show the current Git Town version
 
-  As an administrator unsure about which version of Git Town is installed on a machine
+  As a user unsure about which version of Git Town is installed on a machine
   I want to be able to quickly get this information using a single command
   So that I can manage my Git Town deployment effectively.
 
