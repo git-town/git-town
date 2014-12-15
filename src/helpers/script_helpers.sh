@@ -85,7 +85,7 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    add_steps
+    steps > "$steps_file"
     run_steps "$steps_file" undoable
   fi
 

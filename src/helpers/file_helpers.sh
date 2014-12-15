@@ -12,22 +12,8 @@ export steps_file="/tmp/${program}_${temp_filename_suffix}"
 export undo_steps_file="/tmp/${program}_undo_${temp_filename_suffix}"
 
 
-function add_step {
-  append_to_file "$1" "$steps_file"
-}
-
-
 function add_undo_step {
   prepend_to_file "$1" "$undo_steps_file"
-}
-
-
-function append_to_file {
-  local content=${1//\'/\"}
-  local file=$2
-  local operator=">"
-  if [ -e "$file" ]; then operator=">>"; fi
-  eval "echo '$content' $operator $file"
 }
 
 
@@ -85,9 +71,9 @@ function prepend_to_file {
   local file=$2
   if [ "$(has_file "$file")" = true ]; then
     local temp=$(temp_filename)
-    echo "$1" | cat - "$file" > "$temp" && mv "$temp" "$file"
+    echo "$content" | cat - "$file" > "$temp" && mv "$temp" "$file"
   else
-    append_to_file "$@"
+    echo "$content" > "$file"
   fi
 }
 

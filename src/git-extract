@@ -2,25 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function add_steps {
-  if [ "$initial_open_changes" = true ]; then
-    add_step "stash_open_changes"
-  fi
-
-  add_step "checkout_main_branch"
-  add_step "fetch"
-  add_step "rebase_tracking_branch"
-  add_step "push"
-  add_step "create_and_checkout_feature_branch '$target_branch_name'"
-  add_step "cherry_pick '$SHAs'"
-  add_step "push"
-
-  if [ "$initial_open_changes" = true ]; then
-    add_step "restore_open_changes"
-  fi
-}
-
-
 function ensure_has_target_branch {
   if [ -z "$target_branch_name" ]; then
     echo_error_header
@@ -65,6 +46,25 @@ function get_shas {
 
     SHAs=$(cat "$file")
     rm "$file"
+  fi
+}
+
+
+function steps {
+  if [ "$initial_open_changes" = true ]; then
+    echo "stash_open_changes"
+  fi
+
+  echo "checkout_main_branch"
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+  echo "create_and_checkout_feature_branch '$target_branch_name'"
+  echo "cherry_pick '$SHAs'"
+  echo "push"
+
+  if [ "$initial_open_changes" = true ]; then
+    echo "restore_open_changes"
   fi
 }
 
