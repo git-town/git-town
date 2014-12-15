@@ -43,11 +43,11 @@ Feature: modifying the non-feature branch configuration
   Scenario: using invalid parameter
     Given my non-feature branches are "staging" and "qa"
     When I run `git town non-feature-branches --invalid-parameter staging`
-    Then I see "usage: git town non-feature-branches [--add|--remove] <branchname>"
+    Then I see "usage: git town non-feature-branches (--add | --remove) <branchname>"
 
 
   Scenario: missing branch name
     Given my non-feature branches are "staging" and "qa"
     When I run `git town non-feature-branches --add`
     Then I see "Missing branch name"
-    And I see "usage: git town non-feature-branches [--add|--remove] <branchname>"
+    And I see "usage: git town non-feature-branches (--add | --remove) <branchname>"

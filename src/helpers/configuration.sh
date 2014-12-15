@@ -25,14 +25,14 @@ function add_or_remove_non_feature_branches {
     if [ "$operation" == "--add" ] || [ "$operation" == "--remove" ]; then
       echo "Missing branch name"
     fi
-    echo "usage: git town non-feature-branches [--add|--remove] <branchname>"
+    echo "usage: git town non-feature-branches (--add | --remove) <branchname>"
   else
     if [ "$operation" == "--add" ]; then
       add_non_feature_branch "$branch_name"
     elif [ "$operation" == "--remove" ]; then
       remove_non_feature_branch "$branch_name"
     else
-      echo "usage: git town non-feature-branches [--add|--remove] <branchname>"
+      echo "usage: git town non-feature-branches (--add | --remove) <branchname>"
     fi
   fi
 }

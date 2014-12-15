@@ -29,6 +29,6 @@ elif [ -n "$1" ]; then
   echo "       git town config"
   echo "       git town help"
   echo "       git town main-branch [<branchname>]"
-  echo "       git town non-feature-branches [--add|--remove <branchname>]"
+  echo "       git town non-feature-branches [(--add | --remove) <branchname>]"
   echo "       git town version"
 fi
