@@ -2,7 +2,8 @@ Feature: git sync: syncing the main branch pushes tags to the remote
 
   As a developer tagging commits on the main branch
   I want my tags to be published as part of the sync process
-  So that I can do tagging work effectively on my local machine and have more time for other work.
+  So that tags are shared with the team
+
 
   Scenario: Tags
     Given I am on the main branch
