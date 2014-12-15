@@ -7,5 +7,5 @@ Feature: git-pr when origin is on GitHub over SSH
     When I run `git pr`
 
 
-  Scenario:
+  Scenario: result
     Then I see a browser window for a new pull request on GitHub for the "feature" branch
