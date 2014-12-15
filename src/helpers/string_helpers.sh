@@ -39,5 +39,5 @@ function remove_string {
   local string_to_remove=$3
 
   local split="$(split_string "$delimiter_separated_string" "$delimiter")"
-  join_string "$(echo "$split" | sed "s/^$string_to_remove$//")" "$delimiter"
+  join_string "$(echo "$split" | sed "s/^${string_to_remove}$//;/^$/d")" "$delimiter"
 }
