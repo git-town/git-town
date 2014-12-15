@@ -24,6 +24,7 @@ and it assumes you use a central code repository like
 * [git ship](/documentation/git-ship.md) - deliver a completed feature branch
 * [git sync](/documentation/git-sync.md) - update the current branch with all relevant changes
 * [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
+* [git town](/documentation/git-town.md) - view and change Git Town configuration and easily view help page
 
 
 #### Notes
