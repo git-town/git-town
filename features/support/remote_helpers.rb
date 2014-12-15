@@ -9,8 +9,8 @@ end
 
 
 # Returns the remote git URL for domain / protocol
-def git_url domain, protocol
-  "#{git_url_prefix domain, protocol}Originate/git-town.git"
+def git_url domain, protocol, suffix
+  "#{git_url_prefix domain, protocol}Originate/git-town#{suffix}"
 end
 
 
