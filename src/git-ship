@@ -2,13 +2,9 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Called when squash_merge fails due to empty commit message
 function error_empty_commit {
   discard_open_changes
-  checkout "$initial_branch_name"
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    restore_open_changes
-  fi
+  undo_command
 
   echo_error_header
   echo_error "Aborting ship due to empty commit message"
@@ -16,33 +12,6 @@ function error_empty_commit {
 }
 
 
-# Called when ensure_no_open_changes is exiting with error
-function error_has_open_changes {
-  return_to_initial_branch
-}
-
-
-# Called when ensure_is_feature_branch is exiting with error
-function error_is_not_feature_branch {
-  return_to_initial_branch
-}
-
-
-# Called when rebase fails on the main branch
-function error_rebase {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
-
-
-# Called when merge fails
-function error_merge {
-  create_merge_conflict_abort_script
-  exit_with_script_messages
-}
-
-
-# Parses the options and reruns the message
 function extract_message {
   message=''
 
@@ -51,58 +20,51 @@ function extract_message {
     m) message=$OPTARG
     esac
   done
-
-  echo "$message"
 }
 
 
-function perform_ship {
-  local message=$(extract_message "$@")
-
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    ensure_has_branch "$target_branch_name"
-    stash_open_changes
-  fi
-
-  ensure_no_open_changes "You cannot ship with uncommitted changes."
-  ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
-
-  checkout_main_branch
-  fetch
-  rebase_tracking_branch
-  push
-  checkout "$target_branch_name"
-  merge_tracking_branch
-  merge "$main_branch_name"
-  ensure_has_shippable_changes
-  checkout_main_branch
-  squash_merge "$target_branch_name" "$message"
-  push
-  delete_branch "$target_branch_name" "force"
-
-  return_to_initial_branch
-}
-
-
-function return_to_initial_branch {
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    checkout "$initial_branch_name"
-    restore_open_changes
-  fi
-}
-
-
-if [ "$1" == "--abort" ]; then
-  run_abort_script
-else
-  if [ "$#" -gt 0 -a "$1" != "-m" ]; then
+function preconditions {
+  if [ "$#" -gt 0 ] && [ "$1" != "-m" ]; then
     target_branch_name=$1
+    ensure_has_branch "$target_branch_name"
     shift
   else
     target_branch_name=$(get_current_branch_name)
+    ensure_no_open_changes "You cannot ship with uncommitted changes."
   fi
 
-  perform_ship "$@"
-fi
+  ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
+  extract_message "$@"
+}
 
-exit_with_success
+
+function steps {
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    if [ "$initial_open_changes" = true ]; then
+      echo "stash_open_changes"
+    fi
+  fi
+
+  echo "checkout_main_branch"
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+  echo "checkout $target_branch_name"
+  echo "merge_tracking_branch"
+  echo "merge $main_branch_name"
+  echo "ensure_has_shippable_changes"
+  echo "checkout_main_branch"
+  echo "squash_merge $target_branch_name '$message'"
+  echo "push"
+  echo "delete_branch $target_branch_name force"
+
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    echo "checkout $initial_branch_name"
+    if [ "$initial_open_changes" = true ]; then
+      echo "restore_open_changes"
+    fi
+  fi
+}
+
+
+run "$@"

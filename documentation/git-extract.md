@@ -7,7 +7,8 @@ git-extract - copy selected commits from the current branch into their own branc
 
 ```
 git extract <branchname> [<commit>...]
-git extract -abort
+git extract --abort
+git extract --continue
 ```
 
 
@@ -31,4 +32,7 @@ If no commits are provided, prompts the user to select from a list of commits un
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
+
+--continue
+    Continue the operation after resolving conflicts.
 ```
