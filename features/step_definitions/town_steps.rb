@@ -49,9 +49,6 @@ end
 
 
 Then(/^the non\-feature branches( don't)? include "(.*?)"$/) do |negate, non_feature_branch|
-  if negate
-    expect(non_feature_branch_configuration).not_to include non_feature_branch
-  else
-    expect(non_feature_branch_configuration).to include non_feature_branch
-  end
+  method = negate ? :not_to : :to
+  expect(non_feature_branch_configuration).public_send(method, include(non_feature_branch))
 end
