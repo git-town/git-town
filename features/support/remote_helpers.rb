@@ -17,8 +17,10 @@ end
 # Returns the remote git URL prefix for the given domain and protocol
 def git_url_prefix domain, protocol
   case [domain, protocol]
+  when %w(Bitbucket HTTP) then 'http://username@bitbucket.org/'
   when %w(Bitbucket HTTPS) then 'https://username@bitbucket.org/'
   when %w(Bitbucket SSH) then 'git@bitbucket.org:'
+  when %w(GitHub HTTP) then 'http://github.com/'
   when %w(GitHub HTTPS) then 'https://github.com/'
   when %w(GitHub SSH) then 'git@github.com:'
   else fail "Unknown domain/protocol pairing: #{domain}/#{protocol}"

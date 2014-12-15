@@ -9,6 +9,8 @@ Feature: git-pr when origin is on Bitbucket
 
     Examples:
       | protocol                   |
+      | HTTP ending with .git      |
+      | HTTP not ending with .git  |
       | HTTPS ending with .git     |
       | HTTPS not ending with .git |
       | SSH ending with .git       |
