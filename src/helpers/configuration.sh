@@ -66,20 +66,12 @@ function show_config {
 
 
 function show_main_branch {
-  if [ -z "$main_branch_name" ]; then
-    echo 'Main branch: [none]'
-  else
-    echo "Main branch: $main_branch_name"
-  fi
+  echo "Main branch: $(value_or_none "$main_branch_name")"
 }
 
 
 function show_non_feature_branches {
-  if [ -z "$non_feature_branch_names" ]; then
-    echo 'Non-feature branches: [none]'
-  else
-    echo "Non-feature branches: $non_feature_branch_names"
- fi
+  echo "Non-feature branches: $(value_or_none "$non_feature_branch_names")"
 }
 
 
@@ -133,6 +125,15 @@ function store_main_branch_name_with_confirmation_text {
 function store_non_feature_branch_names_with_confirmation_text {
   store_configuration non-feature-branch-names "$1"
   echo "non-feature branches stored as '$1'"
+}
+
+
+function value_or_none {
+  if [ -z "$1" ]; then
+    echo "[none]"
+  else
+    echo "$1"
+  fi
 }
 
 
