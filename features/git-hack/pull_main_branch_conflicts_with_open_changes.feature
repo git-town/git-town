@@ -2,7 +2,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
 
   Background:
     Given I have a feature branch named "existing_feature"
-    Given the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | remote   | conflicting remote commit | conflicting_file | remote content |
       |        | local    | conflicting local commit  | conflicting_file | local content  |
