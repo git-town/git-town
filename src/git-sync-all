@@ -1,0 +1,62 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function preconditions {
+  fetch
+}
+
+
+function skip_message {
+  echo "To skip the sync of the '$(get_current_branch_name)' branch"
+}
+
+
+function skip_steps {
+  while [ "$(has_lines "$steps_files")" = true ]; do
+    local step=$(peek_line "$steps_files")
+    if [[ "$step" =~ ^checkout ]]; then
+      remove_line "$steps_files"
+    else
+      break
+    fi
+  done
+}
+
+
+function skippable {
+  if [ "$(is_feature_branch "$(get_current_branch_name)")" = true ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
+function steps {
+  if [ "$initial_open_changes" = true ]; then
+    echo "stash_open_changes"
+  fi
+
+  echo "checkout_main_branch"
+  echo "rebase_tracking_branch"
+  echo "push"
+
+  local_branches | while read branch_name; do
+    if [ "$(is_feature_branch "$branch_name")" = true ]; then
+      echo "checkout $branch_name"
+      echo "merge_tracking_branch"
+      echo "merge $main_branch_name"
+      echo "push"
+    fi
+  done
+
+  echo "checkout $initial_branch_name"
+
+  if [ "$initial_open_changes" = true ]; then
+    echo "restore_open_changes"
+  fi
+}
+
+
+run "$@"

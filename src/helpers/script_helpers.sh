@@ -12,7 +12,15 @@ function abort_command {
 function continue_command {
   local cmd=$(pop_line "$steps_file")
   eval "continue_$cmd"
-  run_steps "$steps_file" cleanup
+  run_steps "$steps_file" undoable
+}
+
+
+function skip_command {
+  local cmd=$(pop_line "$steps_file")
+  eval "abort_$cmd"
+  skip_steps
+  run_steps "$steps_file" undoable
 }
 
 
@@ -37,12 +45,6 @@ function ensure_continuable {
 }
 
 
-# Placeholder for any scripts that have no preconditions
-function preconditions {
-  true
-}
-
-
 function ensure_undoable {
   if [ "$(has_file "$undo_steps_file")" = false ]; then
     echo_red "Cannot undo"
@@ -56,8 +58,17 @@ function exit_with_messages {
     echo
     echo_red "To abort, run \"$git_command --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
+    if [ "$(skippable)" = true ]; then
+      echo_red "$(skip_message), run \"$git_command --skip\"."
+    fi
     exit_with_error
   fi
+}
+
+
+# Placeholder for any scripts that have no preconditions
+function preconditions {
+  true
 }
 
 
@@ -75,13 +86,16 @@ function run {
   if [ "$1" = "--abort" ]; then
     ensure_abortable
     abort_command
-  elif [ "$1" = "--undo" ]; then
-    ensure_undoable
-    undo_command
   elif [ "$1" = "--continue" ]; then
     ensure_continuable
     ensure_no_conflicts
     continue_command
+  elif [ "$1" = "--skip" ]; then
+    ensure_skippable
+    skip_command
+  elif [ "$1" = "--undo" ]; then
+    ensure_undoable
+    undo_command
   else
     remove_step_files
     preconditions "$@"
@@ -122,4 +136,9 @@ function run_steps {
   if [ "$option" = cleanup ]; then
     remove_step_files
   fi
+}
+
+# Placeholder for any scripts that do have the skip interface
+function skippable {
+  echo false
 }

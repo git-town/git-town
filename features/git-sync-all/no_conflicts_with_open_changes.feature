@@ -13,11 +13,13 @@ Feature: git-sync-all from the main branch
       | feature3         | local            | feature3 commit        | feature3_file        |
       | coworker_feature | remote           | coworker commit        | coworker_file        |
     And I am on the "main" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-all`
 
 
   Scenario: result
     Then I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
       | branch           | location         | message                                                      | files                |

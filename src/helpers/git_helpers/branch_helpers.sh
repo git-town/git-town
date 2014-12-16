@@ -84,6 +84,12 @@ function has_branch {
 }
 
 
+# Returns the names of local branches
+function local_branches {
+  git branch | tr -d ' ' | sed 's/\*//g'
+}
+
+
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'

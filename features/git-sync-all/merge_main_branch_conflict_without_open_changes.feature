@@ -17,13 +17,11 @@ Feature: git-sync-all from the main branch
   Scenario: result
     Then I end up on the "feature" branch
     And my repo has a merge in progress
-    And there are abort, skip, and continue scripts for "git sync-all"
 
 
   Scenario: aborting
     When I run `git sync-all --abort`
     Then I end up on the "main" branch
-    And there are no abort, skip and continue scripts for "git sync-all" anymore
     And I have the following commits
       | branch         | location         | message               | files               |
       | main           | local and remote | main commit           | conflicting_file    |
@@ -35,14 +33,13 @@ Feature: git-sync-all from the main branch
   Scenario: skipping
     When I run `git sync-all --skip`
     Then I end up on the "main" branch
-    And there are no abort, skip and continue scripts for "git sync-all" anymore
     And I have the following commits
       | branch         | location         | message                                | files               |
       | main           | local and remote | main commit                            | conflicting_file    |
       | feature        | local and remote | feature commit                         | conflicting_file    |
       | local_feature  | local and remote | Merge branch 'main' into local_feature |                     |
-      | local_feature  | local and remote | main commit                            | conflicting_file    |
-      | local_feature  | local and remote | local feature commit                   | local_feature_file  |
+      |                |                  | main commit                            | conflicting_file    |
+      |                |                  | local feature commit                   | local_feature_file  |
       | remote_feature | remote           | remote feature commit                  | remote_feature_file |
 
 
@@ -58,32 +55,29 @@ Feature: git-sync-all from the main branch
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync-all --continue`
     Then I end up on the "main" branch
-    And there are no abort, skip and continue scripts for "git sync-all" anymore
     And I have the following commits
       | branch         | location         | message                                | files               |
       | main           | local and remote | main commit                            | conflicting_file    |
       | feature        | local and remote | Merge branch 'main' into feature       |                     |
-      | feature        | local and remote | main commit                            | conflicting_file    |
-      | feature        | local and remote | feature commit                         | conflicting_file    |
+      |                |                  | main commit                            | conflicting_file    |
+      |                |                  | feature commit                         | conflicting_file    |
       | local_feature  | local and remote | Merge branch 'main' into local_feature |                     |
-      | local_feature  | local and remote | main commit                            | conflicting_file    |
-      | local_feature  | local and remote | local feature commit                   | local_feature_file  |
+      |                |                  | main commit                            | conflicting_file    |
+      |                |                  | local feature commit                   | local_feature_file  |
       | remote_feature | remote           | remote feature commit                  | remote_feature_file |
 
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit`
-    And I run `git sync-all --continue`
+    And I run `git commit --no-edit; git sync-all --continue`
     Then I end up on the "main" branch
-    And there are no abort, skip and continue scripts for "git sync-all" anymore
     And I have the following commits
       | branch         | location         | message                                | files               |
       | main           | local and remote | main commit                            | conflicting_file    |
       | feature        | local and remote | Merge branch 'main' into feature       |                     |
-      | feature        | local and remote | main commit                            | conflicting_file    |
-      | feature        | local and remote | feature commit                         | conflicting_file    |
+      |                |                  | main commit                            | conflicting_file    |
+      |                |                  | feature commit                         | conflicting_file    |
       | local_feature  | local and remote | Merge branch 'main' into local_feature |                     |
-      | local_feature  | local and remote | main commit                            | conflicting_file    |
-      | local_feature  | local and remote | local feature commit                   | local_feature_file  |
+      |                |                  | main commit                            | conflicting_file    |
+      |                |                  | local feature commit                   | local_feature_file  |
       | remote_feature | remote           | remote feature commit                  | remote_feature_file |
