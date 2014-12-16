@@ -12,14 +12,12 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
 
   Scenario: result
     Then my repo has a rebase in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no rebase in progress
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |
       | main    | remote   | conflicting remote commit | conflicting_file |
@@ -39,7 +37,6 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     Given I resolve the conflict in "conflicting_file"
     When I run `<command>`
     Then I am still on the "feature" branch
-    And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
       | main    | local and remote | conflicting remote commit | conflicting_file |
