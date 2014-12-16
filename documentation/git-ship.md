@@ -8,6 +8,7 @@ git-ship - deliver a completed feature branch
 ```
 git ship [<branchname>] [-m <message>]
 git ship --abort
+git ship --continue
 ```
 
 
@@ -36,4 +37,7 @@ Squash merges the current branch, or `<branchname>` if given, into the main bran
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
+
+--continue
+    Continue the operation after resolving conflicts.
 ```

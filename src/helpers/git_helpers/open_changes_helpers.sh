@@ -19,8 +19,6 @@ function discard_open_changes {
 # Exists if there are uncommitted changes
 function ensure_no_open_changes {
   if [ "$(has_open_changes)" == true ]; then
-    error_has_open_changes
-
     echo_error_header
     echo_error "$*"
     exit_with_error
@@ -38,19 +36,28 @@ function has_open_changes {
 }
 
 
-# Unstashes changes that were stashed in the beginning of a script.
-#
-# Only does this if there were open changes when the script was started.
+# Unstashes changes
 function restore_open_changes {
-  if [ "$initial_open_changes" = true ]; then
-    run_command "git stash pop"
+  run_command "git stash pop"
+}
+
+
+# Stashes uncommitted changes
+function stash_open_changes {
+  run_command "git stash -u"
+}
+
+
+function undo_steps_for_commit_open_changes {
+  local branch=$(get_current_branch_name)
+  local sha=$(sha_of_branch "$branch")
+  echo "reset_to_sha $sha"
+  if [ "$(has_tracking_branch "$branch")" = true ]; then
+    echo "push_branch $branch force"
   fi
 }
 
 
-# Stashes uncommitted changes if they exist.
-function stash_open_changes {
-  if [ "$initial_open_changes" = true ]; then
-    run_command "git stash -u"
-  fi
+function undo_steps_for_stash_open_changes {
+  echo "restore_open_changes"
 }
