@@ -19,7 +19,6 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
   @finishes-with-non-empty-stash
   Scenario: result
     Then my repo has a rebase in progress
-    And there are abort and continue scripts for "git sync"
     And I don't have an uncommitted file with name: "uncommitted"
 
 
@@ -28,7 +27,6 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
     Then I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE                   | FILES              |
       | qa     | remote   | conflicting remote commit | conflicting_file   |
@@ -51,7 +49,6 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
     When I run `<command>`
     Then I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |

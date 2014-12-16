@@ -17,14 +17,12 @@ Feature: git sync: resolving merge conflicts between feature and main branch whe
   Scenario: result
     Then I am still on the "feature" branch
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
     When I run `git sync --abort`
     Then I am still on the "feature" branch
     And there is no merge in progress
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                  | FILES            |
       | main    | local and remote | conflicting main commit  | conflicting_file |
@@ -46,7 +44,6 @@ Feature: git sync: resolving merge conflicts between feature and main branch whe
     Given I resolve the conflict in "conflicting_file"
     When I run `<command>`
     Then I am still on the "feature" branch
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES            |
       | main    | local and remote | conflicting main commit          | conflicting_file |

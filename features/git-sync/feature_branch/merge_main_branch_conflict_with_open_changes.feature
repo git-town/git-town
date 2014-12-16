@@ -20,7 +20,6 @@ Feature: git sync: resolving merge conflicts between feature and main branch on 
     Then I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
-    And there are abort and continue scripts for "git sync"
 
 
   Scenario: aborting
@@ -28,7 +27,6 @@ Feature: git sync: resolving merge conflicts between feature and main branch on 
     Then I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                  | FILES            |
       | main    | local and remote | conflicting main commit  | conflicting_file |
@@ -53,7 +51,6 @@ Feature: git sync: resolving merge conflicts between feature and main branch on 
     When I run `<command>`
     Then I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And there are no abort and continue scripts for "git sync" anymore
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES            |
       | main    | local and remote | conflicting main commit          | conflicting_file |
