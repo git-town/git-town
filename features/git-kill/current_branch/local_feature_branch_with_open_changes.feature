@@ -7,7 +7,7 @@ Feature: Git Kill: Killing the current local feature branch
       | branch       | location         | message         | file name        |
       | good-feature | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
-    And I am on the "dead-end-feature" branch
+    And I am on the "dead-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
 
