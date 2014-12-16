@@ -1,4 +1,4 @@
-eature: git sync: on a feature branch (with open changes)
+Feature: git sync: on a feature branch (with open changes)
 
   As a developer working on a feature
   I want to be able to easily update my feature branch to include the latest changes from the rest of the team
