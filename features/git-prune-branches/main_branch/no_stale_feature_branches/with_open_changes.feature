@@ -1,4 +1,9 @@
-Feature: git-prune-branches: on the main branch with no stale feature branches with open changes
+Feature: git prune-branches: leave used feature branches when called on the main branch (with open changes)
+
+  As a developer having feature branches with commits
+  I want them all to survive a "prune branch" command
+  So that I can keep my repository clean without loosing work.
+
 
   Background:
     Given I have a feature branch named "feature1" ahead of main
