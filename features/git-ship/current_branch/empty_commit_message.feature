@@ -1,4 +1,8 @@
-Feature: aborting ship of current branch by entering an empty commit message
+Feature: git ship: abort shipping the current branch by entering an empty commit message
+
+  As a developer accidentally shipping a wrong branch
+  I want to be able to abort the shipping process by entering an empty commit message for the final squash commit
+  So that my main development line remains clean, my team unaffected by my mistake, and my customers don't experience a broken product.
 
 
   Background:
