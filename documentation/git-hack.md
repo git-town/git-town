@@ -8,6 +8,7 @@ git-hack - cut a new feature branch off the main branch
 ```
 git hack <branchname>
 git hack --abort
+git hack --continue
 ```
 
 
@@ -25,4 +26,7 @@ Brings over all uncommitted changes.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
+
+--continue
+    Continue the operation after resolving conflicts.
 ```

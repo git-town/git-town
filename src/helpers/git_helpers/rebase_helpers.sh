@@ -19,7 +19,6 @@ function continue_rebase {
 function rebase {
   local branch_name=$1
   run_command "git rebase $branch_name"
-  if [ $? != 0 ]; then error_rebase "$branch_name"; fi
 }
 
 
