@@ -1,5 +1,10 @@
 Feature: git kill: don't delete a misspelled branch (without open changes)
 
+  As a developer mistyping the branch name to remove
+  I should be warned that the given branch does not exist
+  So that I can delete the correct branch
+
+
   Background:
     Given I am on the "good-feature" branch
     And the following commits exist in my repository
