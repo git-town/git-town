@@ -1,12 +1,12 @@
 Feature: Git Kill: Killing the current feature branch without open changes
 
   Background:
-    Given I have feature branches named "good-feature" and "dead-end-feature"
+    Given I have feature branches named "good-feature" and "dead-feature"
     And the following commits exist in my repository
-      | branch           | location         | message         | file name        |
-      | good-feature     | local and remote | good commit     | good_file        |
-      | dead-end-feature | local and remote | dead-end commit | unfortunate_file |
-    And I am on the "dead-end-feature" branch
+      | branch       | location         | message         | file name        |
+      | good-feature | local and remote | good commit     | good_file        |
+      | dead-feature | local and remote | dead-end commit | unfortunate_file |
+    And I am on the "dead-feature" branch
     When I run `git kill`
 
 
@@ -23,12 +23,12 @@ Feature: Git Kill: Killing the current feature branch without open changes
 
   Scenario: Undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "dead-end-feature" branch
+    Then I end up on the "dead-feature" branch
     And the existing branches are
-      | repository | branches                             |
-      | local      | main, dead-end-feature, good-feature |
-      | remote     | main, dead-end-feature, good-feature |
+      | repository | branches                         |
+      | local      | main, dead-feature, good-feature |
+      | remote     | main, dead-feature, good-feature |
     And I have the following commits
-      | branch           | location         | message         | files            |
-      | good-feature     | local and remote | good commit     | good_file        |
-      | dead-end-feature | local and remote | dead-end commit | unfortunate_file |
+      | branch       | location         | message         | files            |
+      | good-feature | local and remote | good commit     | good_file        |
+      | dead-feature | local and remote | dead-end commit | unfortunate_file |
