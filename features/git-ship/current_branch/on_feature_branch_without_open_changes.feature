@@ -1,5 +1,10 @@
 Feature: git ship: shipping the current feature branch
 
+  As a developer having finished a feature
+  I want to be able to ship it safely in one easy step
+  So that I can quickly move on to the next feature and remain productive.
+
+
   Scenario: local feature branch
     Given I am on a local feature branch
     And the following commit exists in my repository

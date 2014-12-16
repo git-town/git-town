@@ -1,5 +1,10 @@
 Feature: git ship: don't ship non-feature branches (without open changes)
 
+  As a developer accidentally trying to ship a non-feature branch
+  I should be notified about my mistake
+  So that I can ship the correct branch and remain productive.
+
+
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "feature" branch
