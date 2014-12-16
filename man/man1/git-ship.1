@@ -7,6 +7,8 @@ git ship \- deliver a completed feature branch
 \fIgit ship\fR [<branchname>] [-m <message>]
 .br
 \fIgit ship\fR --abort
+.br
+\fIgit ship\fR --continue
 
 .SH "DESCRIPTION"
 Squash merges the current branch, or <branchname> if given,
@@ -35,3 +37,6 @@ If not provided, will be prompted for it.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.

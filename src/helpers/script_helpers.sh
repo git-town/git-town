@@ -2,108 +2,124 @@
 
 # Helper methods for dealing with abort/continue scripts
 
-
-function add_to_abort_script {
-  add_to_script "$1" "$abort_script_filename"
+function abort_command {
+  local cmd=$(peek_line "$steps_file")
+  eval "abort_$cmd"
+  undo_command
 }
 
 
-function add_to_continue_script {
-  add_to_script "$1" "$continue_script_filename"
+function continue_command {
+  local cmd=$(pop_line "$steps_file")
+  eval "continue_$cmd"
+  run_steps "$steps_file" cleanup
 }
 
 
-function add_to_script {
-  local content=$1
-  local filename=$2
-  local operator=">"
-  if [ -e "$filename" ]; then operator=">>"; fi
-  eval "echo '$content' $operator $filename"
+function undo_command {
+  run_steps "$undo_steps_file" cleanup
 }
 
 
-function add_to_undo_script {
-  add_to_script "$1" "$undo_script_filename"
-}
-
-
-function create_merge_conflict_abort_script {
-  add_to_abort_script "initial_open_changes=$initial_open_changes"
-  add_to_abort_script "abort_merge"
-  add_to_abort_script "checkout $initial_branch_name"
-  add_to_abort_script "restore_open_changes"
-}
-
-
-function create_rebase_conflict_abort_script {
-  add_to_abort_script "initial_open_changes=$initial_open_changes"
-  add_to_abort_script "abort_rebase"
-  add_to_abort_script "checkout $initial_branch_name"
-  add_to_abort_script "restore_open_changes"
-}
-
-
-function exit_with_script_messages {
-  local cmd="${program/-/ }"
-
-  echo
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    echo_red "To abort, run \"$cmd --abort\"."
+function ensure_abortable {
+  if [ "$(has_file "$steps_file")" = false ]; then
+    echo_red "Cannot abort"
+    exit_with_error
   fi
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
-    echo_red "To continue after you have resolved the conflicts, run \"$cmd --continue\"."
-  fi
-  exit_with_error
 }
 
 
-function has_script {
-  if [ -n "$1" -a -f "$1" ]; then
-    echo true
+function ensure_continuable {
+  if [ "$(has_file "$steps_file")" = false ]; then
+    echo_red "Cannot continue"
+    exit_with_error
+  fi
+}
+
+
+# Placeholder for any scripts that have no preconditions
+function preconditions {
+  true
+}
+
+
+function ensure_undoable {
+  if [ "$(has_file "$undo_steps_file")" = false ]; then
+    echo_red "Cannot undo"
+    exit_with_error
+  fi
+}
+
+
+function exit_with_messages {
+  if [ "$(has_file "$steps_file")" = true ]; then
+    echo
+    echo_red "To abort, run \"$git_command --abort\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
+    exit_with_error
+  fi
+}
+
+
+function remove_step_files {
+  if [ "$(has_file "$steps_file")" = true ]; then
+    rm "$steps_file"
+  fi
+  if [ "$(has_file "$undo_steps_file")" = true ]; then
+    rm "$undo_steps_file"
+  fi
+}
+
+
+function run {
+  if [ "$1" = "--abort" ]; then
+    ensure_abortable
+    abort_command
+  elif [ "$1" = "--undo" ]; then
+    ensure_undoable
+    undo_command
+  elif [ "$1" = "--continue" ]; then
+    ensure_continuable
+    ensure_no_conflicts
+    continue_command
   else
-    echo false
+    remove_step_files
+    preconditions "$@"
+    steps > "$steps_file"
+    run_steps "$steps_file" undoable
   fi
+
+  exit_with_success
 }
 
 
-function remove_scripts {
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    rm "$abort_script_filename"
-  fi
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
-    rm "$continue_script_filename"
-  fi
-  if [ "$(has_script "$undo_script_filename")" == true ]; then
-    rm "$undo_script_filename"
-  fi
-}
+# possible values for option
+#   undoable - builds an undo_steps_file
+#   cleanup - calls remove_step_files after successfully running all steps
+function run_steps {
+  local file="$1"
+  local option="$2"
 
+  while [ "$(has_lines "$file")" = true ]; do
+    local step=$(peek_line "$file")
+    if [ "$option" = undoable ]; then
+      local undo_steps=$(undo_steps_for "$step")
+    fi
+    eval "$step"
 
-function run_abort_script {
-  if [ "$(has_script "$abort_script_filename")" == true ]; then
-    source "$abort_script_filename"
-    remove_scripts
-  else
-    echo_red "Cannot find abort definition file"
-  fi
-}
+    if [ $? != 0 ]; then
+      exit_with_messages
+    else
+      if [ "$option" = undoable ]; then
+        for undo_step in "${undo_steps[@]}"; do
+          add_undo_step "$undo_step"
+        done
+      fi
+      remove_line "$file"
+    fi
+  done
 
-
-function run_continue_script {
-  if [ "$(has_script "$continue_script_filename")" == true ]; then
-    source "$continue_script_filename"
-    remove_scripts
-  else
-    echo_red "Cannot find continue definition file"
-  fi
-}
-
-
-function run_undo_script {
-  if [ "$(has_script "$undo_script_filename")" == true ]; then
-    source "$undo_script_filename"
-    remove_scripts
-  else
-    echo_red "Cannot find undo definition file"
+  if [ "$option" = cleanup ]; then
+    remove_step_files
   fi
 }
