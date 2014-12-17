@@ -3,6 +3,17 @@
 git-town - view and change Git Town configuration and easily view help page
 
 
+#### SYNOPSIS
+
+```
+git town
+git town config
+git town help
+git town main-branch [<branchname>]
+git town non-feature-branches [(--add | --remove) <branchname>]
+git town version
+```
+
 #### USAGE
 
 View help screen:
@@ -21,9 +32,10 @@ View your current Git Town configuration:
 git town config
 ```
 
-View just your main branch configuration:
+View just your main branch or non-feature branch configuration:
 ```bash
 git town main-branch
+git town non-feature-branches
 ```
 
 Set your main branch to <branchname>:
@@ -31,17 +43,8 @@ Set your main branch to <branchname>:
 git town main-branch <branchname>
 ```
 
-View just your non-feature branches:
+Add/remove a non-feature branch:
 ```bash
-git town non-feature-branches
-```
-
-Add a new non-feature branch:
-```bash
-git town non-feature-branches --add <branchname>
-```
-
-Remove branch from non-feature branches:
-```bash
+git town non-feature-branches --add    <branchname>
 git town non-feature-branches --remove <branchname>
 ```
