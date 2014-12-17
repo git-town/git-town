@@ -112,20 +112,27 @@ Create the folder if necessary.
 
 ## Configuration
 
-On first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
+Upon first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
 Git Town stores its configuration in the Git configuration of your project.
-If these ever need to change, the configuration can be updated using [git config](http://git-scm.com/docs/git-config).
-
 
 ```bash
-# Read configuration
-git config git-town.main-branch-name
-git config git-town.non-feature-branch-names
+# View your current Git Town configuration
+git town config
 
-# Write configuration
-git config git-town.main-branch-name master
-git config git-town.non-feature-branch-names 'qa, production'
+# View just your main branch or non-feature branch configuration
+git town main-branch
+git town non-feature-branches
+
+# Set your main branch to *master*
+git town main-branch master
+
+# Add *qa* as a non-feature branch
+git town non-feature-branches --add qa
+
+# Remove *staging* from non-feature branches
+git town non-feature-branches --remove staging
 ```
+
 
 ## Documentation
 
