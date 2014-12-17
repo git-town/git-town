@@ -87,6 +87,7 @@ end
 
 Then(/^there is no "(.+?)" branch$/) do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
+  expect(existing_remote_branches).to_not include("origin/#{branch_name}")
 end
 
 

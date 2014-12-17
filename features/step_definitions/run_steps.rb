@@ -7,7 +7,7 @@ end
 
 When(/^I run `([^`]+)`( while allowing errors)?$/) do |commands, allow_failures|
   commands.split(';').each do |command|
-    run command, allow_failures: allow_failures
+    run command.strip, allow_failures: allow_failures
   end
 end
 

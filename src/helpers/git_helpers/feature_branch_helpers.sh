@@ -12,8 +12,6 @@ function ensure_is_feature_branch {
   local branch_name=$1
   local error_message=$2
   if [ "$(is_feature_branch "$branch_name")" == false ]; then
-    error_is_not_feature_branch
-
     echo_error_header
     echo_error "The branch '$branch_name' is not a feature branch. $error_message"
     exit_with_error

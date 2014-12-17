@@ -5,7 +5,7 @@
 function ensure_has_shippable_changes {
   local current_branch_name=$(get_current_branch_name)
   if [ "$(has_shippable_changes "$current_branch_name")" == false ]; then
-    return_to_initial_branch
+    undo_command
 
     echo_error_header
     echo_error "The branch '$current_branch_name' has no shippable changes."
