@@ -16,30 +16,12 @@ end
 
 # Returns the remote git URL prefix for the given domain and protocol
 def git_url_prefix domain, protocol
-  case domain
-  when 'Bitbucket' then git_url_prefix_bitbucket protocol
-  when 'GitHub' then git_url_prefix_github protocol
-  else fail "Unknown domain: #{domain}"
-  end
-end
-
-
-# Returns the remote git URL prefix on Bitbucket for the given protocol
-def git_url_prefix_bitbucket protocol
-  case protocol
-  when 'HTTP', 'HTTPS' then "#{protocol.downcase}://username@bitbucket.org/"
-  when 'SSH' then 'git@bitbucket.org:'
-  else fail "Unknown protocol: #{protocol}"
-  end
-end
-
-
-# Returns the remote git URL prefix on GitHub for the given protocol
-def git_url_prefix_github protocol
-  case protocol
-  when 'HTTP', 'HTTPS' then "#{protocol.downcase}://github.com/"
-  when 'SSH' then 'git@github.com:'
-  else fail "Unknown protocol: #{protocol}"
+  case [domain, protocol]
+  when %w(Bitbucket HTTP), %w(Bitbucket HTTPS) then "#{protocol.downcase}://username@bitbucket.org/"
+  when %w(Bitbucket SSH) then 'git@bitbucket.org:'
+  when %w(GitHub HTTP), %w(GitHub HTTPS) then "#{protocol.downcase}://github.com/"
+  when %w(GitHub SSH) then 'git@github.com:'
+  else fail "Unknown domain/protocol pairing: #{domain}/#{protocol}"
   end
 end
 
