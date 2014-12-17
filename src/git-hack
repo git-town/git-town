@@ -11,36 +11,28 @@ function ensure_has_target_branch {
 }
 
 
-function ensure_preconditions {
+function preconditions {
   target_branch_name=$1
   ensure_has_target_branch
   ensure_does_not_have_branch "$target_branch_name"
 }
 
 
-# Called when rebase fails on the main branch
-function error_rebase {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
+function steps {
+  if [ "$initial_open_changes" = true ]; then
+    echo "stash_open_changes"
+  fi
+
+  echo "checkout_main_branch"
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+  echo "create_and_checkout_feature_branch '$target_branch_name'"
+
+  if [ "$initial_open_changes" = true ]; then
+    echo "restore_open_changes"
+  fi
 }
 
 
-function perform_hack {
-  stash_open_changes
-  checkout_main_branch
-  fetch
-  rebase_tracking_branch
-  push
-  create_and_checkout_feature_branch "$target_branch_name"
-  restore_open_changes
-}
-
-
-if [ "$1" == "--abort" ]; then
-  run_abort_script
-else
-  ensure_preconditions "$@"
-  perform_hack
-fi
-
-exit_with_success
+run "$@"
