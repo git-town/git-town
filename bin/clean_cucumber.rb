@@ -1,25 +1,3 @@
-def line_column_sizes line
-  pieces = line.split('|')
-  pieces.each_with_index.map do |piece, index|
-    if index == 0 || index == pieces.length - 1
-      piece.length
-    else
-      piece.strip!
-      piece.length + 2 # one space padding on each side
-    end
-  end
-end
-
-
-def table_column_sizes lines
-  sizes_by_row = lines.map { |line| line_column_sizes line }
-  column_sizes = sizes_by_row[0].zip(*sizes_by_row[1..-1])
-  column_sizes.each_with_index.map do |column_size, i|
-    i == 0 ? column_size.min : column_size.max
-  end
-end
-
-
 def format_piece piece, index, column_sizes
   if index == 0
     ' ' * column_sizes[index]
@@ -40,6 +18,28 @@ def format_table lines
     line.split('|').each_with_index.map do |piece, index|
       format_piece piece, index, sizes
     end.join('|')
+  end
+end
+
+
+def line_column_sizes line
+  pieces = line.split('|')
+  pieces.each_with_index.map do |piece, index|
+    if index == 0 || index == pieces.length - 1
+      piece.length
+    else
+      piece.strip!
+      piece.length + 2 # one space padding on each side
+    end
+  end
+end
+
+
+def table_column_sizes lines
+  sizes_by_row = lines.map { |line| line_column_sizes line }
+  column_sizes = sizes_by_row[0].zip(*sizes_by_row[1..-1])
+  column_sizes.each_with_index.map do |column_size, i|
+    i == 0 ? column_size.min : column_size.max
   end
 end
 
