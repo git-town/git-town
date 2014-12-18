@@ -1,4 +1,4 @@
-def column_sizes line
+def line_column_sizes line
   pieces = line.split('|')
   pieces.each_with_index.map do |piece, index|
     if index == 0 || index == pieces.length - 1
@@ -11,28 +11,28 @@ def column_sizes line
 end
 
 
-def determine_table_column_size lines
-  row_sizes = lines.map { |line| column_sizes line }
-  column_sizes = row_sizes[0].zip(*row_sizes[1..-1])
+def table_column_sizes lines
+  sizes_by_row = lines.map { |line| line_column_sizes line }
+  column_sizes = sizes_by_row[0].zip(*sizes_by_row[1..-1])
   column_sizes.each_with_index.map do |column_size, i|
     i == 0 ? column_size.min : column_size.max
   end
 end
 
 
-def format_piece piece, index, sizes
+def format_piece piece, index, column_sizes
   if index == 0
-    ' ' * sizes[index]
-  elsif index == sizes.length - 1
+    ' ' * column_sizes[index]
+  elsif index == column_sizes.length - 1
     "\n"
   else
-    " #{piece.strip} ".ljust sizes[index]
+    " #{piece.strip} ".ljust column_sizes[index]
   end
 end
 
 
 def format_table lines
-  sizes = determine_table_column_size lines
+  sizes = table_column_sizes lines
 
   lines.each_with_index.map do |line, line_index|
     line.upcase! if line_index == 0
