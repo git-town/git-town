@@ -3,6 +3,20 @@ def array_output_of command
 end
 
 
+# Returns an array of the Git commands that were run in the last invocation of "run"
+# with the form [<branch_name>, <command>]
+def commands_of_last_run
+  command_regex = /
+    \[1m          # bold text
+    \[(.*?)\]     # branch name in square brackets
+    \s            # space between branch name and Git command
+    (.*?)         # the Git command
+    \n            # newline at the end
+  /x
+  @last_run_result.out.scan command_regex
+end
+
+
 def integer_output_of command
   output_of(command).to_i
 end
@@ -50,17 +64,10 @@ def run command, allow_failures: false, debug: false, inputs: []
 end
 
 
-# Returns an array of the Git commands that were run in the last invocation of "run"
-# with the form [<branch_name>, <command>]
-def commands_of_last_run
-  command_regex = /
-    \[1m          # bold text
-    \[(.*?)\]     # branch name in square brackets
-    \s            # space between branch name and Git command
-    (.*?)         # the Git command
-    \n            # newline at the end
-  /x
-  @last_run_result.out.scan command_regex
+def result_has_shell_error? result
+  # Shell errors have the format
+  #   <filename>: line <line number>: <error message>
+  result.out.include? File.expand_path('../../../src/', __FILE__)
 end
 
 
@@ -79,13 +86,8 @@ def run_shell_command command, inputs
 end
 
 
-def shell_error? result
-  result.out.include? File.expand_path('../../../src/', __FILE__)
-end
-
-
 def should_error? result, allow_failures
-  (result.error && !allow_failures) || shell_error?(result)
+  (result.error && !allow_failures) || result_has_shell_error?(result)
 end
 
 
