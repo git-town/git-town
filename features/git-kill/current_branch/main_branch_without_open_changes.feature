@@ -10,6 +10,6 @@ Feature: Git Kill: The main branch is not killed
     Then I get the error "You can only kill feature branches"
     And I am still on the "main" branch
     And the existing branches are
-      | repository | branches           |
+      | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |

@@ -4,9 +4,9 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME          | FILE CONTENT               |
-      | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
-      |         | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
+      | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
+      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I run `git ship -m 'feature done'` while allowing errors
 
 
@@ -20,12 +20,12 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     Then I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES              |
-      | feature | local    | local conflicting commit  | conflicting_file   |
-      |         | remote   | remote conflicting commit | conflicting_file   |
+      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | feature | local    | local conflicting commit  | conflicting_file |
+      |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
-      | BRANCH  | FILES              | CONTENT                   |
-      | feature | conflicting_file   | local conflicting content |
+      | BRANCH  | FILES            | CONTENT                   |
+      | feature | conflicting_file | local conflicting content |
 
 
   Scenario: continuing after resolving conflicts
@@ -44,11 +44,11 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE      | FILES            |
-      | main    | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -66,8 +66,8 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE      | FILES            |
-      | main    | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
