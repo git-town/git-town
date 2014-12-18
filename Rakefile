@@ -6,7 +6,7 @@ task 'lint' => %w(lint:bash lint:ruby lint:cucumber)
 
 desc 'Run bash linter'
 task 'lint:bash' do
-  sh 'bin/lint'
+  sh 'bin/lint_bash'
 end
 
 desc 'Run ruby linter'
@@ -16,7 +16,7 @@ end
 
 desc 'Run cucumber linter'
 task 'lint:cucumber' do
-  sh 'ruby bin/clean_cucumber_tables.rb --query'
+  sh 'bin/lint_cucumber'
 end
 
 desc 'Run specs'

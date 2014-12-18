@@ -73,7 +73,7 @@ Dir.glob('./features/**/*.feature').each do |filename|
   elsif File.read(filename) != out_lines.join('')
     puts ''
     puts "#{filename} has an ill-formatted cucumber table"
-    puts 'Run "ruby bin/clean_cucumber_tables.rb" to fix.'
+    puts 'Run "bin/clean_cucumber" to fix.'
     puts ''
     exit 1
   end
