@@ -1,7 +1,7 @@
 Feature: git prune-branches: keep used feature branches when run on a feature branch (without open changes)
 
-  As a developer having feature branches with commits
-  I want them all to survive a "prune branch" command
+  As a developer pruning branches
+  I want my feature branches with commits to not be deleted
   So that I can keep my repository clean without losing work.
 
 
