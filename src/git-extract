@@ -24,6 +24,7 @@ function get_shas {
   SHAs="$*"
 
   if [ -z "$SHAs" ]; then
+    ensure_has_extractable_commits
     ensure_tool_installed 'dialog'
     local file=$(temp_filename)
 
@@ -40,7 +41,6 @@ function get_shas {
 
 
 function preconditions {
-  ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
   target_branch_name=$1
   ensure_has_target_branch
   ensure_does_not_have_branch "$target_branch_name"
