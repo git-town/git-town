@@ -27,7 +27,6 @@ function steps {
     echo "commit_open_changes"
     echo "checkout_main_branch"
   fi
-
   echo "delete_branch $target_branch force"
 }
 
