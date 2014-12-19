@@ -17,17 +17,6 @@ function create_and_checkout_branch {
 }
 
 
-# Deletes the given branch from both the local machine and on remote.
-function delete_branch {
-  local branch_name=$1
-  local force=$2
-  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
-    delete_remote_branch "$branch_name"
-  fi
-  delete_local_branch "$branch_name" "$force"
-}
-
-
 # Deletes the local branch with the given name
 function delete_local_branch {
   local branch_name=$1
@@ -135,11 +124,15 @@ function undo_steps_for_create_and_checkout_feature_branch {
 }
 
 
-function undo_steps_for_delete_branch {
+function undo_steps_for_delete_local_branch {
   local branch_to_delete="$1"
   local sha=$(sha_of_branch "$branch_to_delete")
   echo "create_branch $branch_to_delete $sha"
-  if [ "$(has_tracking_branch "$branch_to_delete")" = true ]; then
-    echo "push_branch $branch_to_delete"
-  fi
 }
+
+
+function undo_steps_for_delete_remote_branch {
+  local branch_to_delete="$1"
+  echo "push_branch $branch_to_delete"
+}
+
