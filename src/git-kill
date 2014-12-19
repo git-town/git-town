@@ -27,12 +27,7 @@ function steps {
     echo "commit_open_changes"
     echo "checkout_main_branch"
   fi
-
-  if [ "$(has_tracking_branch "$target_branch")" = true ]; then
-    echo "delete_remote_branch $target_branch"
-  fi
-
-  echo "delete_local_branch $target_branch force"
+  echo "delete_branch $target_branch force"
 }
 
 
