@@ -1,7 +1,7 @@
 Feature: git-sync: restore a deleted tracking branch
 
-  As a developer on a feature branch whose remote branch was deleted by somebody else
-  I want a new tracking branch to be created for my local branch as part of syncing it
+  As a developer syncing a feature branch whose tracking branch has been deleted
+  I want a new tracking branch to be created
   So that my work is safe in case my local copy gets lost.
 
 
