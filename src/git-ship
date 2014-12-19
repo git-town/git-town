@@ -56,10 +56,7 @@ function steps {
   echo "checkout_main_branch"
   echo "squash_merge $target_branch_name '$message'"
   echo "push"
-  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
-    echo "delete_remote_branch $target_branch_name"
-  fi
-  echo "delete_local_branch $target_branch_name force"
+  echo "delete_branch $target_branch_name force"
 
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
     echo "checkout $initial_branch_name"
