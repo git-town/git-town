@@ -1,4 +1,4 @@
-Feature: cannot extract if a branch already exists with that name
+Feature: git-extract errors when branch exists on local (with open changes)
 
   Background:
     Given I have feature branches named "feature" and "existing-feature"
@@ -13,7 +13,9 @@ Feature: cannot extract if a branch already exists with that name
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH  | COMMAND           |
+      | feature | git fetch --prune |
     And I get the error "A branch named 'existing-feature' already exists"
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
