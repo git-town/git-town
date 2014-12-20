@@ -1,4 +1,5 @@
 Given(/^I have "(.+?)" installed$/) do |tool|
+  @tool = tool
   update_installed_tools [tool]
 end
 
