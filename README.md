@@ -113,7 +113,7 @@ Create the folder if necessary.
 ## Configuration
 
 Upon first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
-Use the [`git town [...]`](/documentation/git-town.md) command to view and edit your configuration at any time.
+Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
 
 
 ## Documentation
