@@ -3,9 +3,10 @@ Feature: git-pr when origin is on GitHub
   Scenario Outline: result
     Given I have a feature branch named "feature"
     And my remote origin is on GitHub through <protocol>
+    And I have open installed
     And I am on the "feature" branch
     When I run `git pr`
-    Then I see a browser window for a new pull request on GitHub for the "feature" branch
+    Then it opens a browser to a new GitHub pull request for the "feature" branch (open)
 
     Examples:
       | protocol                   |

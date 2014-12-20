@@ -42,13 +42,13 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see a browser window for a new pull request on (.+?) for the "(.+?)" branch$/) do |domain, branch_name|
-  expect(@last_run_result.out).to eql "open called with: #{pull_request_url domain, branch_name}\n"
+Then(/^it opens a browser to a new (.+?) pull request for the "(.+?)" branch \((.+?)\)$/) do |domain, branch_name, tool|
+  expect(@last_run_result.out).to eql "#{tool} called with: #{pull_request_url domain, branch_name}\n"
 end
 
 
-Then(/^I see a browser window for my repository homepage on (.+?)$/) do |domain|
-  expect(@last_run_result.out).to eql "open called with: #{repository_homepage_url domain}\n"
+Then(/^it opens a browser to the homepage of my (.+?) repository \((.+?)\)$/) do |domain, tool|
+  expect(@last_run_result.out).to eql "#{tool} called with: #{repository_homepage_url domain}\n"
 end
 
 

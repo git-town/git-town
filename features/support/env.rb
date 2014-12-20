@@ -6,6 +6,7 @@ require 'rspec'
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
 REPOSITORY_BASE = Dir.mktmpdir
+TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
 Before do
   Dir.chdir REPOSITORY_BASE

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ "$(cat "$WHICH_SOURCE" | grep -c "^$1\$")" != 0 ]; then
+  echo "/$1"
+fi
