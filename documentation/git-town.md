@@ -14,23 +14,35 @@ git town non-feature-branches [(--add | --remove) <branchname>]
 git town version
 ```
 
-#### COMMANDS
+
+#### OPTIONS
 
 * *help*
-> View help screen. Running `git town` bare will also show the help screen.
+> Displays the help screen.
 
 * *version*
-> View the Git Town version.
+> Displays the Git Town version.
 
 * *config*
-> View your current Git Town configuration.
+> Displays the current Git Town configuration.
 
 * *main-branch*
-> View your main-branch configuration.
+> Displays the name of the main development branch.
 >
 > With an optional branch name `<branchname>`, specify a branch to assign as the main branch.
+> ```bash
+> # Set "master" as the main branch
+> git town main-branch master
+> ```
 
 * *non-feature-branches*
-> View your non-feature branch configuration.
+> Displays the names of all non-feature branches.
 >
-> With the `--add` or `--remove` option paired with a `<branchname>`, you may update your non-feature branches accordingly.
+> With the `--add` or `--remove` option, you may update your non-feature branches.
+> ```bash
+> # Register the "qa" branch as a non-feature branch
+> git town non-feature-branches --add qa
+>
+> # Remove "qa" branch from the list of non-feature branches
+> git town non-feature-branches --remove qa
+> ```
