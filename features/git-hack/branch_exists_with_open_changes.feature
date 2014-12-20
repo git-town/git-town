@@ -2,7 +2,7 @@ Feature: git hack: enforces unique branch names while moving open changes
 
   As a developer trying to move my current work onto an existing feature branch
   I should see an error telling me that a branch with that name already exists
-  So that I don't mix features, code reviews are easy, and the team productivity remains high.
+  So that I can move my current work onto its own feature branch, code reviews are easy, and the team productivity remains high.
 
 
   Background:
