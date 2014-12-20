@@ -12,6 +12,8 @@ function branch_to_kill {
 
 
 function preconditions {
+  fetch
+
   target_branch=$(branch_to_kill "$@")
   if [ "$target_branch" != "$initial_branch_name" ]; then
     ensure_has_branch "$target_branch"
@@ -26,7 +28,11 @@ function steps {
     echo "checkout_main_branch"
   fi
 
-  echo "delete_branch $target_branch force"
+  if [ "$(has_tracking_branch "$target_branch")" = true ]; then
+    echo "delete_remote_branch $target_branch"
+  fi
+
+  echo "delete_local_branch $target_branch force"
 }
 
 

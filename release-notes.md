@@ -4,8 +4,18 @@
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
 * **git repo:** view the repository homepage
   ([#140](https://github.com/Originate/git-town/issues/140))
-* **git kill:** branchname parameter
-  ([#126](https://github.com/Originate/git-town/issues/126))
+* **git extract:**
+  * remove restriction that you need to be on a feature branch
+    ([#269](https://github.com/Originate/git-town/issues/269))
+  * added restriction if no commits are provided errors if the current branch does not have any have extractable commits (commits not in the main branch)
+    ([#269](https://github.com/Originate/git-town/issues/269))
+* **git kill:**
+  * takes an optional branch name
+    ([#126](https://github.com/Originate/git-town/issues/126))
+  * does not error if tracking branch has already been deleted
+    ([#196](https://github.com/Originate/git-town/issues/196))
+* **git pr:** works with more variants of specifying a Bitbucket or GitHub remote
+  ([#140](https://github.com/Originate/git-town/issues/140))
 * auto-completion for [Fish shell](http://fishshell.com)
   ([#177](https://github.com/Originate/git-town/issues/177))
 
