@@ -1,7 +1,7 @@
 Feature: git kill: don't remove non-feature branches (with open changes)
 
   As a developer accidentally trying to kill a non-feature branch
-  I should be warned that this branch type can not be removed
+  I should see an error that this branch type can not be removed
   So that my release infrastructure remains intact.
 
 
