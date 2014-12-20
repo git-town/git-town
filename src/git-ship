@@ -1,0 +1,73 @@
+#!/bin/bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function error_empty_commit {
+  discard_open_changes
+  undo_command
+
+  echo_error_header
+  echo_error "Aborting ship due to empty commit message"
+  exit_with_error
+}
+
+
+function extract_message {
+  message=''
+
+  while getopts "m:" opt; do
+    case "$opt" in
+    m) message=$OPTARG
+    esac
+  done
+}
+
+
+function preconditions {
+  if [ "$#" -gt 0 ] && [ "$1" != "-m" ]; then
+    target_branch_name=$1
+    ensure_has_branch "$target_branch_name"
+    shift
+  else
+    target_branch_name=$(get_current_branch_name)
+    ensure_no_open_changes "You cannot ship with uncommitted changes."
+  fi
+
+  ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
+  extract_message "$@"
+}
+
+
+function steps {
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    if [ "$initial_open_changes" = true ]; then
+      echo "stash_open_changes"
+    fi
+  fi
+
+  echo "checkout_main_branch"
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+  echo "checkout $target_branch_name"
+  echo "merge_tracking_branch"
+  echo "merge $main_branch_name"
+  echo "ensure_has_shippable_changes"
+  echo "checkout_main_branch"
+  echo "squash_merge $target_branch_name '$message'"
+  echo "push"
+  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
+    echo "delete_remote_branch $target_branch_name"
+  fi
+  echo "delete_local_branch $target_branch_name force"
+
+  if [ "$target_branch_name" != "$initial_branch_name" ]; then
+    echo "checkout $initial_branch_name"
+    if [ "$initial_open_changes" = true ]; then
+      echo "restore_open_changes"
+    fi
+  fi
+}
+
+
+run "$@"
