@@ -2,15 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function ensure_has_target_branch {
-  if [ -z "$target_branch_name" ]; then
-    echo_error_header
-    echo_error "No branch name provided."
-    exit_with_error
-  fi
-}
-
-
 function ensure_has_shas {
   if [ -z "$SHAs" ]; then
     echo_error_header
@@ -20,42 +11,20 @@ function ensure_has_shas {
 }
 
 
-function ensure_preconditions {
-  ensure_on_feature_branch "You must be on a feature branch in order to extract commits."
-  target_branch_name=$1
-  ensure_has_target_branch
-  ensure_does_not_have_branch "$target_branch_name"
-  shift
-  get_shas "$*"
-  ensure_has_shas
+function ensure_has_target_branch {
+  if [ -z "$target_branch_name" ]; then
+    echo_error_header
+    echo_error "No branch name provided."
+    exit_with_error
+  fi
 }
 
 
-# Called when the cherry_pick fails
-function error_cherry_pick {
-  # Create the abort script
-  add_to_abort_script "initial_open_changes=$initial_open_changes"
-  add_to_abort_script "abort_cherry_pick"
-  add_to_abort_script "checkout $initial_branch_name"
-  add_to_abort_script "delete_local_branch $target_branch_name force"
-  add_to_abort_script "restore_open_changes"
-
-  exit_with_script_messages
-}
-
-
-# Called when rebase fails on the main branch
-function error_rebase {
-  create_rebase_conflict_abort_script
-  exit_with_script_messages
-}
-
-
-# Get the SHAs to cherry pick
 function get_shas {
   SHAs="$*"
 
   if [ -z "$SHAs" ]; then
+    ensure_has_extractable_commits
     ensure_tool_installed 'dialog'
     local file=$(temp_filename)
 
@@ -71,25 +40,33 @@ function get_shas {
 }
 
 
-# Performs the extract operation
-function perform_extract {
-  stash_open_changes
-  checkout_main_branch
-  fetch
-  rebase_tracking_branch
-  push
-  create_and_checkout_feature_branch "$target_branch_name"
-  cherry_pick "$SHAs"
-  push
-  restore_open_changes
+function preconditions {
+  target_branch_name=$1
+  ensure_has_target_branch
+  ensure_does_not_have_branch "$target_branch_name"
+  shift
+  get_shas "$*"
+  ensure_has_shas
 }
 
 
-if [ "$1" == "--abort" ]; then
-  run_abort_script
-else
-  ensure_preconditions "$@"
-  perform_extract
-fi
+function steps {
+  if [ "$initial_open_changes" = true ]; then
+    echo "stash_open_changes"
+  fi
 
-exit_with_success
+  echo "checkout_main_branch"
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+  echo "create_and_checkout_feature_branch '$target_branch_name'"
+  echo "cherry_pick '$SHAs'"
+  echo "push"
+
+  if [ "$initial_open_changes" = true ]; then
+    echo "restore_open_changes"
+  fi
+}
+
+
+run "$@"

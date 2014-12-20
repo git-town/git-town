@@ -22,22 +22,6 @@ function __fish_complete_git_town_no_command
 end
 
 
-# Returns whether the currently autocompleted Git Town command takes
-# a Git branch as the next parameter.
-function __fish_complete_git_town_command_takes_branch
-  # NOTE: Must convert command-line list to a string here
-  #       in order to use it in switch.
-  #       This is done by assigning to a temp variable.
-  #       There might be a better way.
-  set arguments (commandline -opc)
-  switch "$arguments"
-    case 'git extract' 'git kill' 'git ship'
-      return 0
-  end
-  return 1
-end
-
-
 # Define autocompletion for the Git Town commands themselves.
 #
 # These only get autocompleted if there is no Git Town command present in the
@@ -58,7 +42,7 @@ complete --command git --arguments 'town'           --description 'Git Town mana
 #
 # This is only enabled for commands that take branch names.
 # This is achieved through __fish_complete_git_town_command_takes_branch
-complete --command git --arguments "(git branch | tr -d '* ')" --condition '__fish_complete_git_town_command_takes_branch' --no-files
+complete --command git --arguments "(git branch | tr -d '* ')" --no-files
 
 
 # Define autocompletion for command-line switches
