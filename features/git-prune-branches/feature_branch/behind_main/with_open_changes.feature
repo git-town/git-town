@@ -1,8 +1,8 @@
-Feature: git prune-branches: remove stale feature branches when run on a feature branch (with open changes)
+Feature: git prune-branches: don't remove the current empty feature branch with open changes
 
   As a developer pruning branches
-  I want all merged branches to be deleted
-  So that all my remaining branches are relevant and I can focus on my current work.
+  I don't want my current empty branch deleted if I have open changes
+  So that I can prune my branches without losing current work.
 
 
   Background:
