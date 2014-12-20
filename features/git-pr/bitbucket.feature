@@ -6,7 +6,7 @@ Feature: git-pr when origin is on Bitbucket
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git pr`
-    Then it opens a browser to a new Bitbucket pull request for the "feature" branch (open)
+    Then I see a browser open to a new Bitbucket pull request for the "feature" branch (open)
 
     Examples:
       | protocol                   |

@@ -4,7 +4,7 @@ Feature: git-repo when origin is on GitHub
     Given my remote origin is on GitHub through <protocol>
     And I have "open" installed
     When I run `git repo`
-    Then it opens a browser to the homepage of my GitHub repository (open)
+    Then I see a browser open to the homepage of my GitHub repository (open)
 
     Examples:
       | protocol                   |

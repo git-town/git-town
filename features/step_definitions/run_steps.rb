@@ -42,12 +42,12 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it opens a browser to a new (.+?) pull request for the "(.+?)" branch \((.+?)\)$/) do |domain, branch_name, tool|
+Then(/^I see a browser open to a new (.+?) pull request for the "(.+?)" branch \((.+?)\)$/) do |domain, branch_name, tool|
   expect(@last_run_result.out).to eql "#{tool} called with: #{pull_request_url domain, branch_name}\n"
 end
 
 
-Then(/^it opens a browser to the homepage of my (.+?) repository \((.+?)\)$/) do |domain, tool|
+Then(/^I see a browser open to the homepage of my (.+?) repository \((.+?)\)$/) do |domain, tool|
   expect(@last_run_result.out).to eql "#{tool} called with: #{repository_homepage_url domain}\n"
 end
 

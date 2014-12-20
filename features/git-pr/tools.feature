@@ -6,7 +6,7 @@ Feature: git-pr with different tools
     And I have "<TOOL>" installed
     And I am on the "feature" branch
     When I run `git pr`
-    Then it opens a browser to a new GitHub pull request for the "feature" branch (<TOOL>)
+    Then I see a browser open to a new GitHub pull request for the "feature" branch (<TOOL>)
 
     Examples:
       | TOOL     |
