@@ -1,6 +1,30 @@
 #!/bin/bash
 
 
+# Abort a merge of the tracking branch
+function abort_merge_tracking_branch {
+  abort_merge
+}
+
+
+# Abort a rebase of the tracking branch
+function abort_rebase_tracking_branch {
+  abort_rebase
+}
+
+
+# Continue a merge of the tracking branch
+function continue_merge_tracking_branch {
+  continue_merge
+}
+
+
+# Continue a rebase of the tracking branch
+function continue_rebase_tracking_branch {
+  continue_rebase
+}
+
+
 # Determines whether the given branch has a remote tracking branch.
 function has_tracking_branch {
   local branch_name=$1

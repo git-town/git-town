@@ -14,3 +14,14 @@ function checkout {
 function checkout_main_branch {
   checkout "$main_branch_name"
 }
+
+
+function undo_steps_for_checkout {
+  local branch=$(get_current_branch_name)
+  echo "checkout $branch"
+}
+
+
+function undo_steps_for_checkout_main_branch {
+  undo_steps_for_checkout
+}
