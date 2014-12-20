@@ -1,6 +1,6 @@
 #### NAME
 
-git-town - view and change Git Town configuration and easily view help page
+git-town - general Git Town help, view and change Git Town configuration
 
 
 #### SYNOPSIS
