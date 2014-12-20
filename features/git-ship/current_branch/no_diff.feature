@@ -6,15 +6,15 @@ Feature: git ship: don't ship empty feature branches
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given I have a feature branch named "empty-feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION | FILE NAME   | FILE CONTENT   |
-      | main    | remote   | common_file | common content |
-      | feature | local    | common_file | common content |
-    And I am on the "feature" branch
-    When I run `git ship -m 'feature done'` while allowing errors
+      | BRANCH        | LOCATION | FILE NAME   | FILE CONTENT   |
+      | main          | remote   | common_file | common content |
+      | empty-feature | local    | common_file | common content |
+    And I am on the "empty-feature" branch
+    When I run `git ship` while allowing errors
 
 
   Scenario: result
-    Then I get the error "The branch 'feature' has no shippable changes"
-    And I am still on the "feature" branch
+    Then I get the error "The branch 'empty-feature' has no shippable changes"
+    And I am still on the "empty-feature" branch

@@ -24,9 +24,9 @@ Feature: git ship: allows resolving feature branch conflicts when shipping the c
     Then I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES              |
-      | feature | local    | local conflicting commit  | conflicting_file   |
-      |         | remote   | remote conflicting commit | conflicting_file   |
+      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | feature | local    | local conflicting commit  | conflicting_file |
+      |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
       | BRANCH  | FILES              | CONTENT                   |
       | feature | conflicting_file   | local conflicting content |
