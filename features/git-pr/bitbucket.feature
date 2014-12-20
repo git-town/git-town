@@ -3,7 +3,7 @@ Feature: git-pr when origin is on Bitbucket
   Scenario Outline: result
     Given I have a feature branch named "feature"
     And my remote origin is on Bitbucket through <protocol>
-    And I have open installed
+    And I have "open" installed
     And I am on the "feature" branch
     When I run `git pr`
     Then it opens a browser to a new Bitbucket pull request for the "feature" branch (open)
