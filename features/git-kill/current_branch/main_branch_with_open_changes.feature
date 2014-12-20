@@ -1,7 +1,7 @@
 Feature: git kill: don't remove the main branch (with open changes)
 
   As a developer accidentally trying to kill the main branch
-  I should be warned that the command does not remove the main branch
+  I should see an error that I cannot delete the main branch
   So that my main development line remains intact and my project stays shippable.
 
 
