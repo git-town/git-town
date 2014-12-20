@@ -1,12 +1,7 @@
-Feature: git-extract errors when branch exists on local (without open changes)
+Feature: git-extract errors when the branch exists locally (without open changes)
 
   Background:
     Given I have feature branches named "feature" and "existing-feature"
-    And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
-      | main    | remote   | remote main commit | remote_main_file |
-      | feature | local    | feature commit     | feature_file     |
-      |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
     When I run `git extract existing-feature` while allowing errors
 

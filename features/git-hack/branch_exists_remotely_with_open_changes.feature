@@ -1,4 +1,4 @@
-Feature: git-hack errors when branch exists on remote (with open changes)
+Feature: git-hack errors when the branch exists remotely (with open changes)
 
   Background:
     Given my coworker has a feature branch named "existing_feature"

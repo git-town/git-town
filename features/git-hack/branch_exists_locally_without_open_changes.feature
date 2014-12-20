@@ -1,7 +1,7 @@
-Feature: git-hack errors when branch exists on remote (without open changes)
+Feature: git-hack errors when the branch exists on locally  (without open changes)
 
   Background:
-    Given my coworker has a feature branch named "existing_feature"
+    Given I have a feature branch named "existing_feature"
     And I am on the main branch
     When I run `git hack existing_feature` while allowing errors
 

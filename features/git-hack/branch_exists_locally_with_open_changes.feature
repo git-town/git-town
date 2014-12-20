@@ -1,8 +1,9 @@
-Feature: git-hack errors when branch exists on local (without open changes)
+Feature: git-hack errors when the branch exists on locally (with open changes)
 
   Background:
     Given I have a feature branch named "existing_feature"
     And I am on the main branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack existing_feature` while allowing errors
 
 
@@ -12,3 +13,4 @@ Feature: git-hack errors when branch exists on local (without open changes)
       | main   | git fetch --prune |
     And I get the error "A branch named 'existing_feature' already exists"
     And I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
