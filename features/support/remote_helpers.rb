@@ -9,17 +9,17 @@ end
 
 
 # Returns the remote git URL for domain / protocol
-def git_url domain, protocol
-  "#{git_url_prefix domain, protocol}Originate/git-town.git"
+def git_url domain, protocol, suffix
+  "#{git_url_prefix domain, protocol}Originate/git-town#{suffix}"
 end
 
 
 # Returns the remote git URL prefix for the given domain and protocol
 def git_url_prefix domain, protocol
   case [domain, protocol]
-  when %w(Bitbucket HTTPS) then 'https://username@bitbucket.org/'
+  when %w(Bitbucket HTTP), %w(Bitbucket HTTPS) then "#{protocol.downcase}://username@bitbucket.org/"
   when %w(Bitbucket SSH) then 'git@bitbucket.org:'
-  when %w(GitHub HTTPS) then 'https://github.com/'
+  when %w(GitHub HTTP), %w(GitHub HTTPS) then "#{protocol.downcase}://github.com/"
   when %w(GitHub SSH) then 'git@github.com:'
   else fail "Unknown domain/protocol pairing: #{domain}/#{protocol}"
   end
