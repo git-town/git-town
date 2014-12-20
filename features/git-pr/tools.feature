@@ -1,6 +1,6 @@
 Feature: git-pr with different tools
 
-  Scenario Outline: with a supported tool
+  Scenario Outline: supported tool installed
     Given I have a feature branch named "feature"
     And my remote origin is on GitHub through HTTPS ending with .git
     And I have <TOOL> installed
@@ -14,7 +14,7 @@ Feature: git-pr with different tools
       | xdg-open |
 
 
-  Scenario: without a supported tool
+  Scenario: no supported tool installed
     Given I have a feature branch named "feature"
     And my remote origin is on GitHub through HTTPS ending with .git
     And I have nothing installed

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# WHICH_SOURCE is a file which contains all the commands we want the test to think are installed
 if [ "$(cat "$WHICH_SOURCE" | grep -c "^$1\$")" != 0 ]; then
-  echo "/$1"
+  echo "$1"
 fi

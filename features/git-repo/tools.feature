@@ -1,6 +1,6 @@
 Feature: git-repo with different tools
 
-  Scenario Outline: with a supported tool
+  Scenario Outline: supported tool installed
     Given my remote origin is on GitHub through HTTPS ending with .git
     And I have <TOOL> installed
     When I run `git repo`
@@ -12,7 +12,7 @@ Feature: git-repo with different tools
       | xdg-open |
 
 
-  Scenario: without a supported tool
+  Scenario: no supported tool installedol
     Given my remote origin is on GitHub through HTTPS ending with .git
     And I have nothing installed
     When I run `git repo` while allowing errors
