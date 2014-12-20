@@ -1,8 +1,8 @@
 Feature: git extract: allows to resolve conflicting remote main branch updates (with open changes)
 
-  As a developer extracting a commit while there are conflicing updates on the remote main branch
-  I want to be given an opportunity to resolve the differences
-  So that my work is always based on the latest state, I don't run into bigger merge conflicts later, and remain productive.
+  As a developer extracting a commit when the main branch update has conflicts
+  I want to be given an opportunity to either abort or resolve the differences and continue
+  So that I can extract the commits into a new branch, and code reviews remain effective.
 
 
   Background:

@@ -1,8 +1,8 @@
 Feature: git extract: resolving conflicts with main branch (with open changes)
 
   As a developer extracting a commit that conflicts with the main branch
-  I want to have the option to either abort or resolve these differences
-  So that I can deal with these conflicts at the best time without hurting my productivity.
+  I want to have the option to either abort or resolve these differences and continue
+  So that I can extract the commits into a new branch
 
 
   Background:

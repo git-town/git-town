@@ -2,7 +2,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
 
   As a developer extracting a commit while there are conflicing updates on the remote main branch
   I want to be given an opportunity to resolve the differences
-  So that my work is always based on the latest state, I don't run into bigger merge conflicts later, and remain productive.
+  So that I can extract the commits into a new branch, and code reviews remain effective.
 
 
   Background:
