@@ -112,8 +112,8 @@ Create the folder if necessary.
 
 ## Configuration
 
-Upon first use, Git Town will ask the user for all required configuration information.
-Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
+Git Town is configured on a per-repository basis. Upon first use in a given repository, Git Town will ask the user for all required
+configuration information. Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
 
 
 ## Documentation
