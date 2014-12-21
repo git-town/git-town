@@ -1,4 +1,4 @@
-Feature: git extract: don't extract into an already existing branch (without open changes )
+Feature: git extract: don't extract into an already existing branch (without open changes)
 
   As a developer trying to extract commits into already existing feature branches
   I should get a warning that the target branch already exists
