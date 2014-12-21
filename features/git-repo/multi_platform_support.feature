@@ -1,4 +1,4 @@
-Feature: git-repo with different tools
+Feature: git-repo: multi-platform support
 
   Scenario Outline: supported tool installed
     Given my remote origin is on GitHub through HTTPS ending with .git

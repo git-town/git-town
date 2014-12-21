@@ -1,4 +1,4 @@
-Feature: git-pr with different tools
+Feature: git-pr: multi-platform support
 
   Scenario Outline: supported tool installed
     Given I have a feature branch named "feature"
