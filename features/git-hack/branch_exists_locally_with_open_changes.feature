@@ -1,4 +1,4 @@
-Feature: git-hack errors when the branch exists on locally (with open changes)
+Feature: git-hack errors when the branch exists locally (with open changes)
 
   Background:
     Given I have a feature branch named "existing_feature"
