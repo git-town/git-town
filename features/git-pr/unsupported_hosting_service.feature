@@ -1,8 +1,8 @@
 Feature: git-pr: when origin is unsupported
 
-  As a developer trying to create a pull request for a repository on an unknown hosting service
-  I want to get a clear error message explaining why the feature doesn't work, and what to do to make it work
-  So that I can configure and use this tool the right way without having to read the manual and have more time for coding.
+  As a developer trying to create a pull request for a repository on an unsupported hosting service
+  I should get an error that my hosting service is not supported
+  So I know why the command does not work.
 
 
   Background:
