@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/charlierudolph/cucumber_table_formatter.git
+  revision: 345c0c14904df84cb47028393d4939ad268f3b61
+  specs:
+    cucumber_table_formatter (0.0.1)
+      colorize (~> 0.7.5)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -11,6 +18,7 @@ GEM
     astrolabe (1.3.0)
       parser (>= 2.2.0.pre.3, < 3.0)
     builder (3.2.2)
+    colorize (0.7.5)
     cucumber (1.3.17)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -66,6 +74,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   cucumber
+  cucumber_table_formatter!
   kappamaki
   open4
   parallel_tests

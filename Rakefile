@@ -16,7 +16,7 @@ end
 
 desc 'Run cucumber linter'
 task 'lint:cucumber' do
-  sh 'bin/lint_cucumber'
+  sh 'bundle exec cucumber_table_formatter -i'
 end
 
 desc 'Run specs'

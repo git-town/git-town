@@ -1,3 +1,0 @@
-#!/bin/bash -e
-
-ruby "$( dirname "${BASH_SOURCE[0]}" )/clean_cucumber.rb"
