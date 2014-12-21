@@ -6,7 +6,7 @@ task 'lint' => %w(lint:bash lint:ruby lint:cucumber)
 
 desc 'Run bash linter'
 task 'lint:bash' do
-  sh 'bin/lint_bash'
+  sh 'bin/lint'
 end
 
 desc 'Run ruby linter'
