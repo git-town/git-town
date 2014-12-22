@@ -1,8 +1,8 @@
-Feature: git-extract errors if there are not extractable commits
+Feature: git-extract: errors if there are not extractable commits
 
-  As a developer trying to extract commits from the main branch
-  I should be reminded that this command can only be run on feature branches
-  So that I know how to do this correctly without having to memorize everything.
+  As a developer trying to extract commits from a branch that has no extractable commits
+  I should see an error telling me that there are no extractable commits
+  So that I know how to use this command correctly.
 
 
   Background:

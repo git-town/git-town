@@ -2,7 +2,7 @@ Feature: git extract: don't extract into an already existing branch (without ope
 
   As a developer trying to extract commits into already existing feature branches
   I should get a warning that the target branch already exists
-  So that feature branches remain focused and code reviews effective
+  So that I can extract the commits into a new branch.
 
 
   Background:

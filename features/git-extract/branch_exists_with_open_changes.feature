@@ -2,7 +2,7 @@ Feature: git extract: don't extract into an already existing branch (with open c
 
   As a developer trying to extract commits into an existing feature branch
   I should get a warning that the target branch already exists
-  So that I can extract the commits into a new branch
+  So that I can extract the commits into a new branch.
 
 
   Background:
