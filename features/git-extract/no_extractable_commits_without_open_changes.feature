@@ -12,6 +12,8 @@ Feature: git-extract: errors if there are not extractable commits
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH  | COMMAND           |
+      | feature | git fetch --prune |
     And I get the error "The branch 'feature' has no extractable commits."
     And I am still on the "feature" branch

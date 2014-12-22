@@ -21,9 +21,9 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
   Scenario: result
     Then it runs the Git commands
       | BRANCH   | COMMAND                                  |
+      | feature  | git fetch --prune                        |
       | feature  | git stash -u                             |
       | feature  | git checkout main                        |
-      | main     | git fetch --prune                        |
       | main     | git rebase origin/main                   |
       | main     | git push                                 |
       | main     | git checkout -b refactor main            |
