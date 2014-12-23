@@ -1,6 +1,6 @@
 Feature: git-pr when origin is on GitHub
 
-  As a developer having finished a feature on a repository hosted on GitHub
+  As a developer having finished a feature in a repository hosted on GitHub
   I want to be able to easily create a pull request
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
