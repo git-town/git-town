@@ -1,6 +1,6 @@
 Feature: git-hack: errors when the branch exists locally (with open changes)
 
-  As a developer trying to create an already existing branch for my current work
+  As a developer trying to create an already existing branch
   I should see an error telling me that a branch with that name already exists
   So that my new feature branch is unique.
 
