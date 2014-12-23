@@ -1,5 +1,8 @@
 Feature: git-hack errors when the branch exists remotely (without open changes)
 
+  (see branch_exsts_remotely_with_open_changes.feature)
+
+
   Background:
     Given my coworker has a feature branch named "existing_feature"
     And I am on the main branch

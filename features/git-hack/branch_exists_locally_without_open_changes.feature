@@ -1,8 +1,8 @@
 Feature: git-hack: errors when the branch exists locally (without open changes)
 
-  As a developer trying to start a new feature on an already existing branch
-  I should see an error telling me that the branch name is taken
-  So that my feature branches are focussed, code reviews easy, and the team productivity remains high.
+  As a developer trying to create an already existing branch
+  I should see an error telling me that a branch with that name already exists
+  So that my new feature branch is unique.
 
 
   Background:

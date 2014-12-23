@@ -1,8 +1,6 @@
-Feature: git hack: enforces being given a branch name when starting a new feature
+Feature: git hack: enforces being given a branch name (without open changes)
 
-  As a developer trying to create a new feature branch but forgetting to provide the new branch name
-  I should be reminded about the correct syntax for this command
-  So that I can use it correctly without having to look that up the readme.
+  (see no_branch_name_with_open_changes.feature)
 
 
   Background:

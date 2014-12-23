@@ -1,8 +1,8 @@
 Feature: git hack: starting a new feature after finishing the old one
 
   As a developer planning to code something unrelated to my current feature branch
-  I want to be able to create a new up-to-date feature branch and start my work on it with one command
-  So that it is easy to keep my feature branches focussed and code reviews efficient.
+  I want to be able to create a new up-to-date feature branch and start my work on it
+  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
 
 
   Background:
