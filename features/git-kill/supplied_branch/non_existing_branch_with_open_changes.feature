@@ -1,8 +1,8 @@
 Feature: git kill: don't delete a misspelled branch (with open changes)
 
-  As a developer mistyping the branch name to remove
+  As a developer mistyping the branch name to kill
   I should see an error that the given branch does not exist
-  So that I can delete the correct branch
+  So that I can try again with the correct branch name.
 
 
   Background:
