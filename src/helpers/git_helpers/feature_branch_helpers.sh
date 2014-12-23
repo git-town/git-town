@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Creates and checkouts a new branch off the main branch with the given name
