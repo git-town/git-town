@@ -20,9 +20,9 @@ Feature: git hack: resolving conflicting remote main branch updates while moving
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                |
+      | existing_feature | git fetch --prune      |
       | existing_feature | git stash -u           |
       | existing_feature | git checkout main      |
-      | main             | git fetch --prune      |
       | main             | git rebase origin/main |
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"

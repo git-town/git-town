@@ -1,4 +1,4 @@
-Feature: git hack: enforces unique branch names while starting a new feature
+Feature: git-hack: errors when the branch exists locally (without open changes)
 
   As a developer trying to start a new feature on an already existing branch
   I should see an error telling me that the branch name is taken
@@ -12,6 +12,8 @@ Feature: git hack: enforces unique branch names while starting a new feature
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH | COMMAND           |
+      | main   | git fetch --prune |
     And I get the error "A branch named 'existing_feature' already exists"
     And I am still on the "main" branch

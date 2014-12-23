@@ -17,8 +17,8 @@ Feature: git hack: moving existing open changes from the main branch into a new 
   Scenario: result
     Then it runs the Git commands
       | BRANCH      | COMMAND                          |
-      | main        | git stash -u                     |
       | main        | git fetch --prune                |
+      | main        | git stash -u                     |
       | main        | git rebase origin/main           |
       | main        | git checkout -b new_feature main |
       | new_feature | git stash pop                    |
