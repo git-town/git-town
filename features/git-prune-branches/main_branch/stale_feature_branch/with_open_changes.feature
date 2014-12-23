@@ -1,8 +1,6 @@
 Feature: git prune-branches: remove stale feature branches when run on the main branch (with open changes)
 
-  As a developer pruning branches on the main branch
-  I want all stale branches to be deleted
-  So that all remaining branches are relevant, and I can focus on my current work.
+  (see ../../feature_branch/behind_main/without_open_changes.feature)
 
 
   Background:

@@ -1,6 +1,6 @@
 Feature: git prune-branches: remove stale local feature branches when run on the main branch (without open changes)
 
-  (see ../stale_feature_branch/with_open_changes.feature)
+  (see ../../feature_branch/behind_main/without_open_changes.feature)
 
 
   Background:
