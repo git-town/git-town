@@ -1,6 +1,6 @@
 Feature: git-hack: errors when the branch already exists remotely (without open changes)
 
-  (see branch_exsts_remotely_with_open_changes.feature)
+  (see ./branch_exsts_remotely_with_open_changes.feature)
 
 
   Background:

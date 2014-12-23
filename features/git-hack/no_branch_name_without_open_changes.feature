@@ -1,6 +1,6 @@
 Feature: git hack: requires a branch name (without open changes)
 
-  (see no_branch_name_with_open_changes.feature)
+  (see ./no_branch_name_with_open_changes.feature)
 
 
   Background:
