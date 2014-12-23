@@ -1,4 +1,4 @@
-Feature: git hack: moving existing open changes from the main branch into a new feature branch
+Feature: git hack: moving open changes on the main branch into a new feature branch
 
   As a developer working on a new feature on the main branch
   I want to be able to create a new up-to-date feature branch and continue my work there
