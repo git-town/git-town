@@ -1,7 +1,7 @@
-Feature: git hack: enforces being given a branch name (with open changes)
+Feature: git hack: requires a branch name (with open changes)
 
-  As a developer trying to create a new feature branch but forgetting to provide the new branch name
-  I should be reminded that I have to provide a branch name to this command
+  As a developer forgetting to provide the name of the new branch to be created
+  I should be reminded that I have to provide the branch name to this command
   So that I can use it correctly without having to look that fact up in the readme.
 
 

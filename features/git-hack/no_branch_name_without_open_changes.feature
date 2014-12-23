@@ -1,4 +1,4 @@
-Feature: git hack: enforces being given a branch name (without open changes)
+Feature: git hack: requires a branch name (without open changes)
 
   (see no_branch_name_with_open_changes.feature)
 
