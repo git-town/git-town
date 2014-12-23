@@ -1,6 +1,6 @@
 Feature: git kill: don't remove the main branch (without open changes)
 
-  (see main_branch_with_open_changes.feature)
+  (see ./main_branch_with_open_changes.feature)
 
 
   Background:

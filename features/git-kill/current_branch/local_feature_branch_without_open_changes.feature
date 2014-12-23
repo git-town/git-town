@@ -1,6 +1,6 @@
 Feature: git kill: removing the current local feature branch (without open changes)
 
-  (see local_feature_branch_with_open_changes.feature)
+  (see ./local_feature_branch_with_open_changes.feature)
 
 
   Background:
