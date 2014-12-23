@@ -1,8 +1,8 @@
 Feature: git extract: don't extract into an already existing branch (with open changes)
 
   As a developer trying to extract commits into an existing feature branch
-  I should get a warning that the target branch already exists
-  So that I can extract the commits into a new branch.
+  I should get an error that this branch already exists
+  So that all my feature branches are unique.
 
 
   Background:

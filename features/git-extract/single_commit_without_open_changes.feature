@@ -1,8 +1,6 @@
 Feature: git extract: extracting a single commit (without open changes)
 
-  As a developer having a feature branch with a commit around an unrelated issue
-  I want to be able to extract this commit into its own feature branch
-  So that my feature branches remain focussed and code reviews are efficient.
+  (see ./single_commit_with_open_changes.feature)
 
 
   Background:

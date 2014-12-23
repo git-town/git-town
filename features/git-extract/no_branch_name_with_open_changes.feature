@@ -1,8 +1,8 @@
 Feature: git extract: abort if no branch name is given (with open changes)
 
-  As a developer about to extract commits into a new branch
-  I should be told when I forget to provide the branch name
-  So that I know how to do this correctly without having to read the manual.
+  As a developer forgetting to provide the name of the branch to extract into
+  I should see an error explaining the usage of this command
+  So that I can use it correctly without having to read the readme again.
 
 
   Background:

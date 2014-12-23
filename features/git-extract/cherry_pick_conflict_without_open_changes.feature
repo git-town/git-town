@@ -1,8 +1,6 @@
 Feature: git extract: resolving conflicts with main branch (without open changes)
 
-  As a developer extracting a commit that conflicts with the main branch
-  I want to have the option to either abort or resolve these differences and continue
-  So that I can extract the commits into a new branch
+  (see ./cherry_pick_conflict_with_open_changes.feature)
 
 
   Background:
