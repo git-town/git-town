@@ -1,6 +1,6 @@
 Feature: git sync: syncing the main branch (with open changes)
 
-  As a developer working directly on the main branch
+  As a developer syncing the main branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
