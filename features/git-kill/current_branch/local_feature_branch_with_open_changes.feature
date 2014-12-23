@@ -1,8 +1,8 @@
 Feature: git kill: removing the current local feature branch (with open changes)
 
   As a developer working on a local dead-end feature branch
-  I want to be able to cleanly delete the current branch including open changes
-  So that my workspace is ready to work on something else and my productivity remains high.
+  I want to be able to remove the current branch including open changes
+  So that my workspace contains only relevant branches, and my productivity remains high.
 
 
   Background:

@@ -2,7 +2,7 @@ Feature: git kill: removing the current feature branch (with open changes)
 
   As a developer working on a dead-end feature branch
   I want to be able to cleanly delete the current branch including open changes
-  So that my workspace doesn't contain irrelevant branches and my productivity remains high.
+  So that my workspace contains only relevant branches, and my productivity remains high.
 
 
   Background:
