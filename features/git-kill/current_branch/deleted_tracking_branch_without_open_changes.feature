@@ -1,8 +1,6 @@
 Feature: git kill: killing the current feature branch with a deleted tracking branch (without open changes)
 
-  As a user killing my current feature branch whose remote branch has been deleted
-  I want that my branch is killed and restored cleanly
-  So that killing works correctly and predictably in this edge case, and I can use it intuitively.
+  (see deleted_tracking_branch_with_open_changes.feature)
 
 
   Background:
