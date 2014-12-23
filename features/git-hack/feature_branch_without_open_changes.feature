@@ -13,8 +13,8 @@ Feature: git-hack on a feature branch without open changes
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                          |
+      | existing_feature | git fetch --prune                |
       | existing_feature | git checkout main                |
-      | main             | git fetch --prune                |
       | main             | git rebase origin/main           |
       | main             | git checkout -b new_feature main |
     And I end up on the "new_feature" branch

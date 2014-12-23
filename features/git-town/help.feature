@@ -4,11 +4,12 @@ Feature: git town: show help screen
   I want to be able to get help easily
   So that I can refresh my memory quickly, move on to what I actually wanted to do, and remain efficient.
 
-  Scenario: git town, with no flags
+
+  Scenario: called with no parameters
     When I run `git town`
     Then I see "Git Town is a collection of additional Git commands"
 
 
-  Scenario: git town, with "help" subcommand
+  Scenario: called with "help" subcommand
     When I run `git town help`
     Then I see "Git Town is a collection of additional Git commands"
