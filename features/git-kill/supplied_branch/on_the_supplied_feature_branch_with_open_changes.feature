@@ -1,8 +1,8 @@
 Feature: git kill: removes the given feature branch when on it (with open changes)
 
-  As a developer working on a dead-end feature branch
+  As a developer on a dead-end feature branch
   I want to be able to remove a feature branch even when I'm currently on it
-  So that cleaning out branches is easy and robust, and I can use it frequently to keep my code base well organized.
+  So that cleaning out branches is easy and robust.
 
 
   Background:
