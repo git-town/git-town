@@ -1,4 +1,4 @@
-Feature: git-hack: errors when the branch exists locally (with open changes)
+Feature: git-hack: errors when the branch already exists locally (with open changes)
 
   As a developer trying to create an already existing branch
   I should see an error telling me that a branch with that name already exists
