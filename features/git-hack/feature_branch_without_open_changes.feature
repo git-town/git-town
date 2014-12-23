@@ -1,4 +1,4 @@
-Feature: git hack: starting a new feature after finishing the old one
+Feature: git hack: starting a new feature (without open changes)
 
   As a developer planning to code something unrelated to my current feature branch
   I want to be able to create a new up-to-date feature branch and start my work on it
