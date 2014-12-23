@@ -1,4 +1,4 @@
-Feature: git kill: don't remove non-feature branches (with open changes)
+Feature: git kill: don't remove a given non-feature branch (with open changes)
 
   As a developer accidentally trying to kill a non-feature branch
   I should see an error that this branch type can not be removed
