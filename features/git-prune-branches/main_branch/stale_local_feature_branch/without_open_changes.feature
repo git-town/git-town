@@ -1,8 +1,6 @@
 Feature: git prune-branches: remove stale local feature branches when run on the main branch (without open changes)
 
-  As a developer pruning branches
-  I want all merged branches to be deleted
-  So that all my remaining branches are relevant and I can focus on my current work.
+  (see ../stale_feature_branch/with_open_changes.feature)
 
 
   Background:

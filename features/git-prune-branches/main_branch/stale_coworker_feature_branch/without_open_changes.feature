@@ -1,8 +1,6 @@
 Feature: git prune-branches: remove stale coworker branches when run on the main branch (without open changes)
 
-  As a developer pruning branches
-  I want my coworker's merged branches to be deleted
-  So that all remaining branches are relevant and my team can focus on their current work.
+  (see ./with_open_changes.feature)
 
 
   Background:

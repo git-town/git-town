@@ -1,8 +1,6 @@
 Feature: git prune-branches: don't remove stale non-feature branches when called from the main branch (without open changes)
 
-  As a developer pruning branches
-  I want non-feature branches to not be deleted
-  So that I can keep my repository clean without messing up my deployment infrastructure.
+  (see ./with_open_changes.feature)
 
 
   Background:
