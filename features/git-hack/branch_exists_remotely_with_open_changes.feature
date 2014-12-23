@@ -1,6 +1,6 @@
-Feature: git-hack: errors when the branch exists remotely (with open changes)
+Feature: git-hack: errors when the branch already exists remotely (with open changes)
 
-  As a developer trying to move my current work onto a feature branch that already exists remotely
+  As a developer trying to create a feature branch that already exists remotely
   I should see an error telling me that a branch with that name already exists
   So that my new feature branch is unique.
 
