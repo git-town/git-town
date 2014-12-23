@@ -1,4 +1,4 @@
-Feature: git hack: resolving conflicting remote main branch updates while starting a new feature
+Feature: git hack: handling conflicting remote main branch updates while starting a new feature
 
   (see pull_main_branch_coflicts_with_open_changes.feature)
 
