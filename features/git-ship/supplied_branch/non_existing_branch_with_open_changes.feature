@@ -1,8 +1,8 @@
 Feature: git ship: don't ship non-existing branches (with open changes)
 
-  As a developer mistyping the branch to be shipped
-  I should be notified that the branch I provided doesn't exist
-  So that I can correct my mistake, ship the correct branch, and remain productive.
+  As a developer trying to ship a branch that doesn't exist
+  I should see an error telling me about this
+  So that I can ship the correct branch and remain productive.
 
 
   Background:

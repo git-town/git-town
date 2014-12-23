@@ -1,8 +1,6 @@
 Feature: git ship: shipping the supplied feature branch (without open changes)
 
-  As a developer getting the LGTM for a feature branch
-  I want to be able to ship it no matter on what branch I'm currently on
-  So that I don't have to execute a bunch of boilerplate Git commands to ship, and remain productive and focussed on my current work.
+  (see ./no_conflicts_with_conflicting_changes.feature)
 
 
   Scenario: local feature branch

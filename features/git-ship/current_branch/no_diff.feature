@@ -1,8 +1,8 @@
-Feature: git ship: don't ship empty feature branches
+Feature: git ship: don't ship empty features
 
   As a developer trying to ship a feature branch that doesn't result in any changes on main
-  I should be notified about this situation
-  So that I can investigate and resolve this issue safely, and my users always see meaningful progress.
+  I should see an error telling me about this
+  So that I can investigate this issue, and my users always see meaningful progress.
 
 
   Background:

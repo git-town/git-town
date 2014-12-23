@@ -1,8 +1,6 @@
 Feature: git ship: resolving conflicting main branch updates when shipping a given feature branch (without open changes)
 
-  As a developer shipping another feature branch while my main branch has conflicting remote updates
-  I want to get a chance to resolve them
-  So that I can ship the branch as planned without further boilerplate Git commands and remain productive.
+  (see ../current_branch/pull_main_branch_conflict.feature)
 
 
   Background:

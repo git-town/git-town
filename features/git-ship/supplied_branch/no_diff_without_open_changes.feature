@@ -1,8 +1,6 @@
 Feature: git ship: don't ship a feature branch without changes (without open changes)
 
-  As a developer shipping a feature branch that doesn't result in any changes on main
-  I want to be notified about this situation
-  So that I can investigate and resolve this issue safely, and my users always see meaningful progress.
+  (see ../current_branch/no_diff.feature)
 
 
   Background:

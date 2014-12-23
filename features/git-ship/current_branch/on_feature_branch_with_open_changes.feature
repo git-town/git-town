@@ -1,8 +1,8 @@
-Feature: git ship: don't ship unfinished work on the current branch
+Feature: git ship: don't ship unfinished features
 
   As a developer in the middle of ongoing work on a feature branch
   I should be prevented from accidentally shipping an unfinished state that contains uncommitted changes
-  So that my users don't experience a broken product.
+  So that my users don't experience half-baked features.
 
 
   Background:

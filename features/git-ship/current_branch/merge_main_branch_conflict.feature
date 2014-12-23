@@ -2,7 +2,7 @@ Feature: git ship: resolving conflicts between feature and main branch
 
   As a developer shipping an outdated feature that conflicts with updates on the main branch
   I want to be given an opportunity to resolve these conflicts
-  So that I can ship the feature in an updated form, and remain productive by moving on to the next feature.
+  So that my new feature doesn't break the main branch, and my product remains shippable.
 
 
   Background:

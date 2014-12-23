@@ -1,8 +1,8 @@
-Feature: git ship: does not ship non-feature branches
+Feature: git ship: don't ship non-feature branches
 
   As a developer accidentally trying to ship a non-feature branch
-  I should be reminded that this is not possible
-  So that I can ship the right things without having to read the manual, and can focus on real work.
+  I should see an error that this is not possible
+  So that I know how to ship things correctly without having to read the manual.
 
 
   Background:

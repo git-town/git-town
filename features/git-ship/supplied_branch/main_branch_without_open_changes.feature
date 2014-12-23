@@ -1,8 +1,6 @@
 Feature: git ship: don't ship the main branch (without open changes)
 
-  As a developer accidentally trying to ship the main branch
-  I should be notified about my mistake
-  So that I can ship the correct branch and remain productive.
+  (see ../current_branch/on_main_branch.feature)
 
 
   Background:
