@@ -1,8 +1,7 @@
 Feature: git sync: syncing the main branch (without open changes)
 
-  As a developer working directly on the main branch
-  I want to be able update my finished work to include the latest finished features from the rest of the team
-  So that our collaboration remains effective.
+  (see ./no_conflicts_with_open_changes.feature)
+
 
   Scenario: no conflicts
     Given I am on the main branch

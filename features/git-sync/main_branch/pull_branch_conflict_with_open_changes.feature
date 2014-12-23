@@ -2,7 +2,7 @@ Feature: git sync: resolving conflicting remote branch updates when syncing the 
 
   As a developer syncing directly on the main branch
   I want to be given an opportunity to resolve differences between my ongoing work and progress from the rest of the team
-  So that our work stays in sync, and our collaboration remains productive.
+  So that our work stays in sync and our collaboration remains productive.
 
 
   Background:
