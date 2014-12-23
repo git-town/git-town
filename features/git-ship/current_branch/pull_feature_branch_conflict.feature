@@ -2,7 +2,7 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
 
   As a developer shipping a feature branch with conflicting remote updates
   I want to be given a chance to resolve these conflicts
-  So that I can ship the branch as planned, and remain productive.
+  So that I can ship the feature as planned and remain productive.
 
 
   Background:
