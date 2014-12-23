@@ -1,8 +1,6 @@
 Feature: git kill: don't remove a given non-feature branch (without open changes)
 
-  As a developer accidentally trying to kill a non-feature branch
-  I should be told that only feature branches can be removed
-  So that my release infrastructure remains intact.
+  (see non_feature_branch_with_open_changes.feature)
 
 
   Background:
