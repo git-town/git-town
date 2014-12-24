@@ -1,8 +1,6 @@
 Feature: git hack: starting a new feature (without open changes)
 
-  As a developer planning to code something unrelated to my current feature branch
-  I want to be able to create a new up-to-date feature branch and start my work on it
-  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
+  (see ./feature_branch_with_open_changes.feature)
 
 
   Background:
