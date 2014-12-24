@@ -1,40 +1,65 @@
 .TH "GIT-TOWN" "1" "12/02/2014" "Git Town 0\&.4\&.1" "Git Town Manual"
 
+.SH "SYNOPSIS"
+\fIgit town\fR config
+.br
+\fIgit town\fR help
+.br
+\fIgit town\fR main-branch [<branchname>]
+.br
+\fIgit town\fR non-feature-branches [(--add | --remove) <branchname>]
+.br
+\fIgit town\fR version
+
+
 .SH "DESCRIPTION"
-Git Town is a collection of additional Git commands that help implement
-higher-level Git workflows like GitHub flow:
+Git Town is a collection of additional Git commands that help implement higher-level Git workflows like GitHub Flow.
+
+For more information and full documentation, please visit: \fihttps://github.com/Originate/git-town\fR
+
+
+.SH "GIT COMMANDS"
+\fBgit extract\fR         Copy selected commits from the current branch into their own branch
 .br
-(\fIhttp://guides.github.com/introduction/flow/index.html\fR)
-
-For more information, please visit
+\fBgit hack\fR            Cut a new feature branch off the main branch
 .br
-\fihttps://github.com/Originate/git-town\fR
+\fBgit kill\fR            Remove an obsolete feature branch
+.br
+\fBgit pr\fR              Create a new pull request
+.br
+\fBgit prune-branches\fR  Delete merged branches
+.br
+\fBgit repo\fR            View the repository homepage
+.br
+\fBgit ship\fR            Deliver a completed feature branch
+.br
+\fBgit sync\fR            Update the current branch with all relevant changes
+.br
+\fBgit sync-fork\fR       Pull upstream updates into a forked repository
 
-.SH "COMMANDS"
+All commands listed here support the '--help' flag.
 
-.B git extract
-- copy selected commits from the current branch into their own branch
 
-.B git hack
-- cut a new feature branch off the main branch
+.SH "CONFIGURATION COMMANDS"
+Git Town will automatically prompt you for the main and non-feature branches
+of your current repository if they haven't been set.
 
-.B git kill
-- remove an obsolete feature branch
+You may also manually view and modify the configurations:
 
-.B git pr
-- create a new pull request
+.IP "git town config" 4
+Displays your current Git Town configuration
 
-.B git prune-branches
-- delete merged branches
+.IP "git town main-branch" 4
+Displays your main branch
 
-.B git repo
-- view the repository homepage
+.IP "git town main-branch <branchname>" 4
+Set your main branch to <branchname>
 
-.B git ship
-- deliver a completed feature branch
+.IP "git town non-feature-branches" 4
+Displays your non-feature branches
 
-.B git sync
-- update the current branch with all relevant changes
+.IP "git town non-feature-branches --add <branchname>" 4
+Add a new non-feature branch
 
-.B git sync-fork
-- pull upstream updates into a forked repository
+.IP "git town non-feature-branches --remove <branchname>" 4
+Remove branch from non-feature branches
