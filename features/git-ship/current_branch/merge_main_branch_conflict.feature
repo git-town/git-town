@@ -1,6 +1,6 @@
 Feature: git ship: resolving conflicts between feature and main branch
 
-  As a developer shipping an outdated feature that conflicts with updates on the main branch
+  As a developer shipping a branch that conflicts with the main branch
   I want to be given an opportunity to resolve these conflicts
   So that my new feature doesn't break the main branch, and my product remains shippable.
 

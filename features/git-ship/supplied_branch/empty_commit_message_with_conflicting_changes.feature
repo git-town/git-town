@@ -1,8 +1,6 @@
 Feature: git ship: abort shipping the given feature branch by entering an empty commit message (with conflicting changes)
 
-  As a user accidentally shipping a wrong feature branch
-  I want to be able to abort the shipping process by entering an empty commit message
-  So that my team mates unaffected by my mistake, and my customers don't experience a broken product.
+  (see ../current_branch/empty_commit_message.feature)
 
 
   Background:

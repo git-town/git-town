@@ -1,6 +1,6 @@
 Feature: git ship: don't ship empty features
 
-  As a developer trying to ship a feature branch that doesn't result in any changes on main
+  As a developer shipping a branch that has no differences with the main branch
   I should see an error telling me about this
   So that I can investigate this issue, and my users always see meaningful progress.
 

@@ -1,6 +1,6 @@
 Feature: git ship: abort shipping the given feature branch by entering an empty commit message (with open changes)
 
-  (see ./empty_commit_message_with_conflicting_changes.feature)
+  (see ../current_branch/empty_commit_message.feature)
 
 
   Background:

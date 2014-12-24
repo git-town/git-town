@@ -1,6 +1,6 @@
 Feature: git ship: resolving conflicts while updating the main branch
 
-  As a developer shipping a feature branch while my local main branch has conflicting updates with the remote main branch
+  As a developer shipping a branch while there are conflicts between the local and remote main branches
   I want to be given a chance to resolve these conflicts
   So that I can ship the feature as planned and remain productive.
 
