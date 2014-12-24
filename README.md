@@ -24,6 +24,7 @@ and it assumes you use a central code repository like
 * [git ship](/documentation/git-ship.md) - deliver a completed feature branch
 * [git sync](/documentation/git-sync.md) - update the current branch with all relevant changes
 * [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
+* [git town](/documentation/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
 #### Notes
@@ -111,20 +112,9 @@ Create the folder if necessary.
 
 ## Configuration
 
-On first use, Git Town will ask for the main branch name and the names of any other non-feature branches.
-Git Town stores its configuration in the Git configuration of your project.
-If these ever need to change, the configuration can be updated using [git config](http://git-scm.com/docs/git-config).
+Git Town is configured on a per-repository basis. Upon first use in a given repository, Git Town will ask the user for all required
+configuration information. Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
 
-
-```bash
-# Read configuration
-git config git-town.main-branch-name
-git config git-town.non-feature-branch-names
-
-# Write configuration
-git config git-town.main-branch-name master
-git config git-town.non-feature-branch-names 'qa, production'
-```
 
 ## Documentation
 
