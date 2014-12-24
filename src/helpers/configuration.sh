@@ -16,7 +16,7 @@ export non_feature_branch_names=$(get_configuration non-feature-branch-names)
 
 
 # Bypass the configuration
-if [[ $@ =~ "--bypass-automatic-configuration" ]]; then
+if [[ $@ =~ --bypass-automatic-configuration ]]; then
   return 0
 fi
 
