@@ -30,5 +30,5 @@ source "$current_dir/terminal_helpers.sh"
 source "$current_dir/tool_helpers.sh"
 source "$current_dir/undo_helpers.sh"
 
-source "$current_dir/configuration.sh" "$@"
 source "$current_dir/environment.sh" "$@"
+source "$current_dir/configuration.sh" "$@"
