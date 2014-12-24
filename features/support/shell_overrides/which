@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# WHICH_SOURCE is a file which contains all the commands we want the test to think are installed
+# A test mock for "which" (locates a program file)
+# Git Town uses `which` to determine what tools are installed
+#
+# WHICH_SOURCE is a file which contains all the commands we want the
+# test eviornment to think are installed
+
 if [ "$(cat "$WHICH_SOURCE" | grep -c "^$1\$")" != 0 ]; then
   echo "$1"
 fi
