@@ -12,7 +12,7 @@ Feature: git-repo: multi-platform support
       | xdg-open |
 
 
-  Scenario: no supported tool installedol
+  Scenario: no supported tool installed
     Given my remote origin is on GitHub through HTTPS ending with .git
     And I have no command that opens browsers installed
     When I run `git repo` while allowing errors
