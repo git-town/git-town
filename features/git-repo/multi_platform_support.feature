@@ -4,7 +4,7 @@ Feature: git-repo: multi-platform support
     Given my remote origin is on GitHub through HTTPS ending with .git
     And I have "<TOOL>" installed
     When I run `git repo`
-    Then I see a browser open to the homepage of my GitHub repository
+    Then I see the homepage of my GitHub repository in my browser
 
     Examples:
       | TOOL     |
