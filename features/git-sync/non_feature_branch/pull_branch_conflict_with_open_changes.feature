@@ -1,8 +1,8 @@
 Feature: git sync: handling conflicting remote branch updates when syncing a non-feature branch (with open changes)
 
-  As a developer syncing directly off a non-feature branch
-  I want to be given an opportunity to resolve differences between my ongoing work and progress from the rest of the team
-  So that our work stays in sync, and our collaboration remains productive.
+  As a developer syncing a non-feature branch that conflicts with its tracking branch
+  I want an opportunity to resolve these differences
+  So that my team's work stays in sync, and our collaboration remains productive.
 
 
   Background:

@@ -1,8 +1,8 @@
 Feature: git sync: resolving merge conflicts between feature and main branch on a feature branch with open changes
 
-  As a developer syncing a feature branch
-  I want to be given an opportunity to resolve differences between my work and the lastest finished features
-  So that my work stays stays in sync with the progress of the team, can be easily merged later, and I remain productive.
+  As a developer syncing a feature branch that conflicts with the main branch
+  I want an opportunity to resolve the differences
+  So that my work stays in sync with the progress of the team, can be easily merged later, and I remain productive.
 
 
   Background:

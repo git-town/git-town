@@ -1,6 +1,8 @@
 Feature: git sync: resolving conflicting remote main branch updates when syncing a feature branch with open changes
 
-  (see ./pull_feature_branch_conflict_with_open_changes.feature)
+  As a developer syncing a feature branch when there are conflicts between the local and remote main branches
+  I want an opportunity to resolve differences
+  So that my work stays in sync with the progress of the team, can be easily merged later, and I remain productive.
 
 
   Background:

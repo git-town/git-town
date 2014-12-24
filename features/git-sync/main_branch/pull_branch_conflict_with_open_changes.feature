@@ -1,8 +1,8 @@
 Feature: git sync: resolving conflicting remote branch updates when syncing the main branch (with open changes)
 
-  As a developer syncing the main branch
-  I want to be given an opportunity to resolve differences between my ongoing work and progress from the rest of the team
-  So that our work stays in sync and our collaboration remains productive.
+  As a developer syncing the main branch when it conflicts with its tracking branch
+  I want an opportunity to resolve these differences
+  So that my work stays in sync with the progress of the team, can be easily merged later, and I remain productive.
 
 
   Background:

@@ -1,7 +1,7 @@
 Feature: git sync: syncing the main branch pushes tags to the remote
 
   As a developer syncing the main branch
-  I want my tags to be published as part of the sync process
+  I want my tags to be published
   So that tags are shared with the team
 
 
