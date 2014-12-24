@@ -72,8 +72,9 @@ Then(/^it runs the Git commands$/) do |expected_steps|
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  expect(@last_run_result.out).to include string
+Then(/^I(?: do|( don't))? see "(.*)"$/) do |negate, string|
+  method = negate ? :not_to : :to
+  expect(@last_run_result.out).public_send(method, include(string))
 end
 
 
