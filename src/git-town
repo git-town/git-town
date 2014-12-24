@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" "--bypass-automatic-configuration"
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" --bypass-automatic-configuration --bypass-environment-checks
 
 
 function show_help {
@@ -13,10 +13,13 @@ function show_version {
 
 
 if [ "$1" == "config" ]; then
+  ensure_git_repository
   show_config
 elif [ "$1" == "main-branch" ]; then
+  ensure_git_repository
   show_or_update_main_branch "$2"
 elif [ "$1" == "non-feature-branches" ]; then
+  ensure_git_repository
   show_or_update_non_feature_branches "$2" "$3"
 elif [ "$1" == "version" ]; then
   show_version

@@ -22,7 +22,7 @@ source "$current_dir/git_helpers/sha_helpers.sh"
 source "$current_dir/git_helpers/shippable_changes_helpers.sh"
 source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 
-source "$current_dir/configuration.sh" "$1"
+source "$current_dir/configuration_helpers.sh"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/script_helpers.sh"
 source "$current_dir/string_helpers.sh"
@@ -30,5 +30,5 @@ source "$current_dir/terminal_helpers.sh"
 source "$current_dir/tool_helpers.sh"
 source "$current_dir/undo_helpers.sh"
 
-export initial_branch_name=$(get_current_branch_name)
-export initial_open_changes=$(has_open_changes)
+source "$current_dir/configuration.sh" "$@"
+source "$current_dir/environment.sh" "$@"
