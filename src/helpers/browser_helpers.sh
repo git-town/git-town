@@ -6,8 +6,8 @@
 # Opens a browser to the given URL, errors if no tool is available
 function open_browser {
   local url=$1
-  local tools=(open xdg-open)
 
+  local tools=(open xdg-open)
   for tool in "${tools[@]}"; do
     if [ "$(has_tool "$tool")" = true ]; then
       eval "$tool $url"
