@@ -31,14 +31,14 @@ Given(/^I am on the local "(.+?)" branch$/) do |branch_name|
 end
 
 
-Given(/^I have feature branches named (.+?)$/) do |branch_names|
+Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
-    create_branch branch_name
+    create_branch branch_name, remote: !local
   end
 end
 
 
-Given(/^I have a( local)? feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |local, branch_name, relation|
+Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/) do |local, branch_name, relation|
   create_branch branch_name, remote: !local
   if relation
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
@@ -91,6 +91,7 @@ end
 
 Then(/^there is no "(.+?)" branch$/) do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
+  expect(existing_remote_branches).to_not include("origin/#{branch_name}")
 end
 
 

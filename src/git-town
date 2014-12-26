@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" "--bypass-automatic-configuration"
+
+
+function show_help {
+  man git-town
+}
+
+
+function show_version {
+  echo "Git Town 0.4.1"
+}
+
+
+if [ "$1" == "config" ]; then
+  show_config
+elif [ "$1" == "main-branch" ]; then
+  show_or_update_main_branch "$2"
+elif [ "$1" == "non-feature-branches" ]; then
+  show_or_update_non_feature_branches "$2" "$3"
+elif [ "$1" == "version" ]; then
+  show_version
+elif [ -z "$1" ] || [ "$1" == "help" ]; then
+  show_help
+elif [ -n "$1" ]; then
+  echo "'$1' is not a valid Git Town command"
+  echo_usage_header
+  echo_usage "git town"
+  echo_usage "git town config"
+  echo_usage "git town help"
+  echo_usage "git town main-branch [<branchname>]"
+  echo_usage "git town non-feature-branches [(--add | --remove) <branchname>]"
+  echo_usage "git town version"
+fi

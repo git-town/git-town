@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function steps {
+  if [ "$initial_open_changes" = true ]; then
+    echo "stash_open_changes"
+  fi
+
+  if [ "$(is_feature_branch "$initial_branch_name")" = true ]; then
+    echo "checkout_main_branch"
+  fi
+
+  echo "fetch"
+  echo "rebase_tracking_branch"
+  echo "push"
+
+  if [ "$(is_feature_branch "$initial_branch_name")" = true ]; then
+    echo "checkout $initial_branch_name"
+    echo "merge_tracking_branch"
+    echo "merge $main_branch_name"
+    echo "push"
+  else
+    echo "push_tags"
+  fi
+
+  if [ "$initial_open_changes" = true ]; then
+    echo "restore_open_changes"
+  fi
+}
+
+
+run "$@"
