@@ -1,4 +1,7 @@
-Feature: git-prune-branches: on a feature branch ahead of main without open changes
+Feature: git prune-branches: keep used feature branches when run on a feature branch (without open changes)
+
+  (see ./with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature" ahead of main
