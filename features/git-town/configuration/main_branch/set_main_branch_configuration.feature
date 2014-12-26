@@ -1,5 +1,10 @@
 Feature: set the main branch configuration
 
+  As a user or tool configuring Git Town
+  I want an easy way to specifically set the main development branch
+  So that I can configure Git Town safely, and the tool does exactly what I want.
+
+
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git town main-branch main`
