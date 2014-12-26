@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+# Note: "set -e" causes failures here
+
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export program="$(echo "$0" | grep -o "[^/]*$")"
