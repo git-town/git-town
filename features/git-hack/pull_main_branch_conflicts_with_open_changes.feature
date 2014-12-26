@@ -1,8 +1,8 @@
 Feature: git hack: handling conflicting remote main branch updates (with open changes)
 
   As a developer creating a new feature branch while there are conflicting updates on the local and remote main branch
-  I want to be given a chance to resolve these differences
-  So that I can finish the operation and remain productive.
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
