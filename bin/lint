@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 find src -name 'git-*' -print0 | xargs -0 shellcheck
 find src -name '*.sh' -print0 | xargs -0 shellcheck

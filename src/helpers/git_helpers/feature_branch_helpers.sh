@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Creates and checkouts a new branch off the main branch with the given name
@@ -30,9 +30,21 @@ function ensure_on_feature_branch {
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
-  if [ "$branch_name" == "$main_branch_name" -o "$(echo "$non_feature_branch_names" | tr ',' '\n' | grep -c "$branch_name")" == 1 ]; then
+  if [ "$branch_name" == "$main_branch_name" -o "$(is_non_feature_branch "$branch_name")" == true ]; then
     echo false
   else
     echo true
+  fi
+}
+
+
+# Returns true if the given branch is a non-feature branch
+function is_non_feature_branch {
+  local branch_name=$1
+
+  if echo "$non_feature_branch_names" | tr ',' '\n' | grep -q "^ *$branch_name *$"; then
+    echo true
+  else
+    echo false
   fi
 }

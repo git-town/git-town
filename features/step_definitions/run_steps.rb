@@ -75,3 +75,8 @@ end
 Then(/^I see "(.*)"$/) do |string|
   expect(@last_run_result.out).to include string
 end
+
+
+Then(/^I see the (.+?) man page$/) do |manpage|
+  expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
+end
