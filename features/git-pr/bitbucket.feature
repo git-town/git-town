@@ -1,5 +1,10 @@
 Feature: git-pr when origin is on Bitbucket
 
+  As a developer having finished a feature in a repository hosted on Bitbucket
+  I want to be able to quickly create a pull request
+  So that I have more time for coding the next feature instead of wasting it with process boilerplate.
+
+
   Scenario Outline: result
     Given I have a feature branch named "feature"
     And my remote origin is on Bitbucket through <PROTOCOL>

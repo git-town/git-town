@@ -1,4 +1,7 @@
-Feature: git-prune-branches: on the main branch with a stale non-feature branch without open changes
+Feature: git prune-branches: don't remove stale non-feature branches when called from the main branch (without open changes)
+
+  (see ./with_open_changes.feature)
+
 
   Background:
     Given I have a non-feature branch "production" behind main

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Checks out the branch with the given name (if not alread checked out)
