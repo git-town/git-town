@@ -30,7 +30,7 @@ and it assumes you use a central code repository like
 #### Notes
 
 * minimizes network requests
-  * a single fetch per command
+  * just one fetch per command
   * unnecessary pushes are skipped
 * automatically prunes deleted remote branches
 
