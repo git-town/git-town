@@ -30,8 +30,8 @@ and it assumes you use a central code repository like
 #### Notes
 
 * minimizes network requests
-  * each command performs a single fetch
-  * skips unnecessary pushes
+  * a single fetch per command
+  * unnecessary pushes are skipped
 * automatically prunes deleted remote branches
 
 
@@ -163,7 +163,3 @@ The past roadmap is in the [release notes](release-notes.md).
 
 If you have an idea about a cool feature you would like to see in Git Town,
 please [open a ticket](https://github.com/Originate/git-town/issues/new).
-Our team will add the [idea](https://github.com/Originate/git-town/labels/idea) tag.
-Once we reach agreement about this idea, it will be tagged as an
-[enhancement](https://github.com/Originate/git-town/labels/enhancement)
-or a [bug](https://github.com/Originate/git-town/labels/bug).
