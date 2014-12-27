@@ -2,8 +2,9 @@ Feature: git-repo when origin is on Bitbucket
 
   Scenario Outline: result
     Given my remote origin is on Bitbucket through <protocol>
+    And I have "open" installed
     When I run `git repo`
-    Then I see a browser window for my repository homepage on Bitbucket
+    Then I see the homepage of my Bitbucket repository in my browser
 
     Examples:
       | protocol                   |
