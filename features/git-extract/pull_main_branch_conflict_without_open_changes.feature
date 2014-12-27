@@ -39,12 +39,12 @@ Feature: git-extract handling conflicting remote main branch updates without ope
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | HEAD     | git rebase --continue                    |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
-      | refactor | git push -u origin refactor              |
+      | BRANCH   | COMMAND                               |
+      | HEAD     | git rebase --continue                 |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
+      | refactor | git push -u origin refactor           |
     And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
@@ -61,11 +61,11 @@ Feature: git-extract handling conflicting remote main branch updates without ope
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git extract --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
-      | refactor | git push -u origin refactor              |
+      | BRANCH   | COMMAND                               |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
+      | refactor | git push -u origin refactor           |
     And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILES            |

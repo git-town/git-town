@@ -1,6 +1,5 @@
 Feature: Git Kill: Killing the current feature branch with open changes
 
-
   Background:
     Given I have feature branches named "good-feature" and "dead-feature"
     And the following commits exist in my repository
@@ -13,7 +12,15 @@ Feature: Git Kill: Killing the current feature branch with open changes
 
 
   Scenario: result
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                             |
+      | dead-feature | git fetch --prune                   |
+      | dead-feature | git add -A                          |
+      | dead-feature | git commit -m 'WIP on dead-feature' |
+      | dead-feature | git checkout main                   |
+      | main         | git push origin :dead-feature       |
+      | main         | git branch -D dead-feature          |
+    And I end up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES           |
@@ -26,7 +33,14 @@ Feature: Git Kill: Killing the current feature branch with open changes
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "dead-feature" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                                           |
+      | main         | git branch dead-feature [SHA:WIP on dead-feature] |
+      | main         | git push -u origin dead-feature                   |
+      | main         | git checkout dead-feature                         |
+      | dead-feature | git reset [SHA:dead-end commit]                   |
+      | dead-feature | git push -f origin dead-feature                   |
+    And I end up on the "dead-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | REPOSITORY | BRANCHES                         |

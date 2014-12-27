@@ -12,7 +12,8 @@ Feature: git kill: don't remove a given non-feature branch (without open changes
 
 
   Scenario: result
-    Then I get the error "You can only kill feature branches"
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
     And I am still on the "good-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES               |

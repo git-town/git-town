@@ -13,7 +13,8 @@ Feature: git kill: don't remove non-feature branches (with open changes)
 
 
   Scenario: result
-    Then I get the error "You can only kill feature branches"
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

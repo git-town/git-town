@@ -44,13 +44,13 @@ Feature: git-extract handling conflicting remote main branch updates with open c
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | HEAD     | git rebase --continue                    |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
-      | refactor | git push -u origin refactor              |
-      | refactor | git stash pop                            |
+      | BRANCH   | COMMAND                               |
+      | HEAD     | git rebase --continue                 |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
+      | refactor | git push -u origin refactor           |
+      | refactor | git stash pop                         |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -68,12 +68,12 @@ Feature: git-extract handling conflicting remote main branch updates with open c
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git extract --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
-      | refactor | git push -u origin refactor              |
-      | refactor | git stash pop                            |
+      | BRANCH   | COMMAND                               |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
+      | refactor | git push -u origin refactor           |
+      | refactor | git stash pop                         |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

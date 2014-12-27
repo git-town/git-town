@@ -12,7 +12,12 @@ Feature: Git Kill: Killing the current local feature branch
 
 
   Scenario: result
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                    |
+      | dead-feature | git fetch --prune          |
+      | dead-feature | git checkout main          |
+      | main         | git branch -D dead-feature |
+    And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
@@ -24,7 +29,11 @@ Feature: Git Kill: Killing the current local feature branch
 
   Scenario: Undoing a kill of a local feature branch
     When I run `git kill --undo`
-    Then I end up on the "dead-feature" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND                                       |
+      | main   | git branch dead-feature [SHA:dead-end commit] |
+      | main   | git checkout dead-feature                     |
+    And I end up on the "dead-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |

@@ -1,17 +1,19 @@
-Feature: git kill: don't delete a misspelled branch (with open changes)
+Feature: git kill: don't remove the main branch (with open changes)
 
   Background:
-    Given I am on the "good-feature" branch
+    Given I have a feature branch named "good-feature"
     And the following commits exist in my repository
       | BRANCH       | LOCATION         | MESSAGE     | FILE NAME |
       | good-feature | local and remote | good commit | good_file |
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git kill non-existing-feature` while allowing errors
+      | main         | local and remote | main commit | main_file |
+    And I am on the "good-feature" branch
+    When I run `git kill main` while allowing errors
+
 
   Scenario: result
-    Then I get the error "There is no branch named 'non-existing-feature'"
-    And I end up on the "good-feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
+    And I am still on the "good-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
@@ -19,3 +21,4 @@ Feature: git kill: don't delete a misspelled branch (with open changes)
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE     | FILES     |
       | good-feature | local and remote | good commit | good_file |
+      | main         | local and remote | main commit | main_file |

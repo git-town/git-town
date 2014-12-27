@@ -8,7 +8,10 @@ Feature: git kill: don't delete a misspelled branch (without open changes)
     When I run `git kill non-existing-feature` while allowing errors
 
   Scenario: result
-    Then I get the error "There is no branch named 'non-existing-feature'"
+    Then it runs the Git commands
+      | BRANCH       | COMMAND           |
+      | good-feature | git fetch --prune |
+    And I get the error "There is no branch named 'non-existing-feature'"
     And I end up on the "good-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES           |
