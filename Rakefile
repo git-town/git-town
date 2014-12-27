@@ -1,8 +1,18 @@
 desc 'Run all linters and specs'
-task 'default' => %w(lint spec)
+task default: %w(lint spec)
+
+
+desc 'Run all formatters'
+task format: %w(format:cucumber)
+
+desc 'Run cucumber formatter'
+task 'format:cucumber' do
+  sh 'bundle exec cucumber_table_formatter'
+end
+
 
 desc 'Run all linters'
-task 'lint' => %w(lint:bash lint:ruby lint:cucumber)
+task lint: %w(lint:bash lint:ruby lint:cucumber)
 
 desc 'Run bash linter'
 task 'lint:bash' do
@@ -16,10 +26,11 @@ end
 
 desc 'Run cucumber linter'
 task 'lint:cucumber' do
-  sh 'bundle exec cucumber_table_formatter -i'
+  sh 'bundle exec cucumber_table_formatter --lint'
 end
 
+
 desc 'Run specs'
-task 'spec' do
+task :spec do
   sh 'bin/cuke'
 end
