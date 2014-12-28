@@ -52,3 +52,8 @@ function rebase_tracking_branch {
     rebase "origin/$branch_name"
   fi
 }
+
+
+function undo_steps_for_merge_tracking_branch {
+  undo_steps_for_merge
+}
