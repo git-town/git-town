@@ -12,7 +12,16 @@ Feature: git-sync-fork on a feature branch with open changes
 
 
   Scenario: result
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                  |
+      | feature | git stash -u             |
+      | feature | git checkout main        |
+      | main    | git fetch upstream       |
+      | main    | git rebase upstream/main |
+      | main    | git push                 |
+      | main    | git checkout feature     |
+      | feature | git stash pop            |
+    And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILES         |

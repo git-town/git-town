@@ -10,13 +10,27 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
 
 
   Scenario: result
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                            |
+      | feature | git checkout main                  |
+      | main    | git fetch --prune                  |
+      | main    | git rebase origin/main             |
+      | main    | git push                           |
+      | main    | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      | feature | git merge --no-edit main           |
+    And I am still on the "feature" branch
     And my repo has a merge in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND              |
+      | feature | git merge --abort    |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILES            |
