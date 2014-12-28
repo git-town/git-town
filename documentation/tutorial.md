@@ -1,6 +1,6 @@
 # Git Town Tutorial
 
-Let's assume your name is Jessie, and you are part of a development team with Bob and Carol. You follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html), and your repository is hosted on GitHub.
+Let's assume your name is Jessie, and you are part of a development team with Bob and Carol. Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
 
 
 ## Starting a new feature
@@ -14,14 +14,14 @@ You run `git hack password-reset`. This command
 * cuts a new feature branch called "password-reset" from your now up-to-date master branch
 * checks out that new branch
 
-You are now given the best possible start to code on the password reset feature. 
+This gives you the best possible start for the new password reset feature. 
 
 
 ## Synchronizing the branch
 
-After coding for a while, you overhear that Bob shipped a number of important bug fixes that affect your work, and that Carol shipped some UI updates. Those bug fixes affect you, so you want to have them in your branch. And doing any more changes in your branch with the old UI risks creating conflicts with the latest one. 
+After coding for a while, you overhear that Bob shipped a number of important bug fixes, and that Carol shipped some UI updates. Both affect your work, so you want them in your branch. 
 
-In order to get both into your branch, you run `git sync`. This command
+In order to achieve that, you run `git sync`. This command
 
 * stashes away your currently open changes
 * checks out the master branch
@@ -36,7 +36,7 @@ You are now exactly where you were before, but your branch now also contains Bob
 
 ## Creating a pull request
 
-When you are done, you run `git pr`. It opens your browser with the GitHub page for creating a new pull requests. Many fields like the branches are prepopulated. You fill out the rest, and create the pull request.
+When you are done, you run `git pr`. It opens your browser with the GitHub page for creating a new pull requests. Many fields like the branches are prepopulated. You fill out the rest, and submit the pull request.
 
 
 ## Shipping the feature
@@ -52,3 +52,5 @@ After a while, your pull request gets the approval to be merged. You run `git sh
 * squash-merges the password-reset branch into the master branch (this makes it look like a single commit, without the convoluted merge history and the many intermediate commits on your branch)
 * pushes the updated master branch to the repository
 * deletes the password-reset branch from your local machine and the repository
+
+What all of this achieves is that your feature is safely merged as a single additional commit onto the master branch.
