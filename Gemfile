@@ -4,7 +4,7 @@ ruby '2.1.5'
 
 gem 'activesupport'
 gem 'cucumber'
-gem 'cucumber_table_formatter'
+gem 'cucumber_lint'
 gem 'kappamaki'
 gem 'open4'
 gem 'parallel_tests'

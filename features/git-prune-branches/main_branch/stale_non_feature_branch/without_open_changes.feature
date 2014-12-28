@@ -13,7 +13,7 @@ Feature: git prune-branches: don't remove stale non-feature branches when called
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    Then I end up on the "main" branch
+    And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES         |
       | local      | main, production |
