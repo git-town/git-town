@@ -18,7 +18,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
       | main    | git push origin :stale_feature |
       | main    | git branch -d stale_feature    |
       | main    | git checkout feature           |
-    Then I end up on the "feature" branch
+    And I end up on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
