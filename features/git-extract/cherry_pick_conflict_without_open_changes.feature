@@ -24,10 +24,10 @@ Feature: git extract: resolving conflicts with main branch (without open changes
     Then I end up on the "feature" branch
     And there is no "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
-      | main     | local and remote | main commit     | conflicting_file |
-      | feature  | local            | feature commit  | feature_file     |
-      |          |                  | refactor commit | conflicting_file |
+      | BRANCH  | LOCATION         | MESSAGE         | FILES            |
+      | main    | local and remote | main commit     | conflicting_file |
+      | feature | local            | feature commit  | feature_file     |
+      |         |                  | refactor commit | conflicting_file |
     And my repo has no cherry-pick in progress
 
 

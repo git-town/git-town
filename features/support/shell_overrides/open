@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# A test mock for "open" (opens browsers on Linux)
 
 echo "open called with: $@"

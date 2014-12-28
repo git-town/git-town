@@ -3,7 +3,7 @@ Feature: Git Kill: The main branch is not killed
   Background:
     Given I have a feature branch named "good-feature"
     And the following commits exist in my repository
-      | branch       | location         | message     | file name |
+      | BRANCH       | LOCATION         | MESSAGE     | FILE NAME |
       | good-feature | local and remote | good commit | good_file |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -15,9 +15,9 @@ Feature: Git Kill: The main branch is not killed
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
-      | repository | branches           |
+      | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
+      | BRANCH       | LOCATION         | MESSAGE     | FILES     |
       | good-feature | local and remote | good commit | good_file |

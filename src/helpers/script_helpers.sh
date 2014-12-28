@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Helper methods for dealing with abort/continue scripts
+
 
 function abort_command {
   local cmd=$(peek_line "$steps_file")

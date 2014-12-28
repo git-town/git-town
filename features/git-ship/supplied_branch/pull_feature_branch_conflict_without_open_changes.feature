@@ -46,11 +46,11 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE      | FILES            |
-      | main    | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -69,8 +69,8 @@ Feature: Git Ship: handling conflicting remote feature branch updates when shipp
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE      | FILES            |
-      | main    | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |

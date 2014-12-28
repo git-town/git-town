@@ -28,8 +28,8 @@ Feature: Git Ship: shipping the supplied feature branch without open changes
     Then I end up on the "other_feature" branch
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE      | FILES        |
-      | main    | local and remote | feature done | feature_file |
+      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |
       | main   | feature_file |
