@@ -104,10 +104,20 @@ Other platforms need to install manually.
   </tr>
 </table>
 
-To install the Fish autocompletion, copy
-[Git Town's Fish shell autocompletion definitions file](autocomplete/git.fish)
-into your `~/.config/fish/completions/` folder.
-Create the folder if necessary.
+
+### Optional tools that make Git Town better
+
+* __Autocompletion for [Fish shell](http://fishshell.com)__
+
+    ```
+    mkdir -p ~/.config/fish/completions/
+    curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish
+    ```
+
+* __[Dialog](http://en.wikipedia.org/wiki/Dialog_(software))__ (used by [git-extract](/documentation/git-extract.md))
+
+    Dialog is automatically installed when installing Git Town via Homebrew.
+    On Linux, please install dialog through your package manager.
 
 
 ## Configuration
