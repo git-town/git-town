@@ -7,7 +7,7 @@ Feature: git kill: removing the current local feature branch (without open chang
     Given I have a feature branch named "good-feature"
     And I have a local feature branch named "dead-feature"
     And the following commits exist in my repository
-      | branch       | location         | message         | file name        |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | good-feature | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
     And I am on the local "dead-feature" branch
@@ -17,11 +17,11 @@ Feature: git kill: removing the current local feature branch (without open chang
   Scenario: result
     Then I end up on the "main" branch
     And the existing branches are
-      | repository | branches           |
+      | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
+      | BRANCH       | LOCATION         | MESSAGE     | FILES     |
       | good-feature | local and remote | good commit | good_file |
 
 
@@ -29,10 +29,10 @@ Feature: git kill: removing the current local feature branch (without open chang
     When I run `git kill --undo`
     Then I end up on the "dead-feature" branch
     And the existing branches are
-      | repository | branches                         |
+      | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
       | remote     | main, good-feature               |
     And I have the following commits
-      | branch       | location         | message         | files            |
+      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
       | good-feature | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |

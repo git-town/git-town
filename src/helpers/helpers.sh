@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+# Note: "set -e" causes failures here
+
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export program="$(echo "$0" | grep -o "[^/]*$")"
@@ -20,6 +22,7 @@ source "$current_dir/git_helpers/sha_helpers.sh"
 source "$current_dir/git_helpers/shippable_changes_helpers.sh"
 source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 
+source "$current_dir/browser_helpers.sh"
 source "$current_dir/configuration.sh" "$1"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/script_helpers.sh"

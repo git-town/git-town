@@ -8,8 +8,8 @@ Feature: git kill: removing the current feature branch (with open changes)
   Background:
     Given I have feature branches named "good-feature" and "dead-feature"
     And the following commits exist in my repository
-      | branch           | location         | message         | file name        |
-      | good-feature     | local and remote | good commit     | good_file        |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
+      | good-feature | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
     And I am on the "dead-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -20,11 +20,11 @@ Feature: git kill: removing the current feature branch (with open changes)
     Then I end up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
-      | repository | branches           |
+      | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
+      | BRANCH       | LOCATION         | MESSAGE     | FILES     |
       | good-feature | local and remote | good commit | good_file |
 
 
@@ -33,10 +33,10 @@ Feature: git kill: removing the current feature branch (with open changes)
     Then I end up on the "dead-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
-      | repository | branches                        |
+      | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
     And I have the following commits
-      | branch           | location         | message         | files            |
-      | good-feature     | local and remote | good commit     | good_file        |
+      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
+      | good-feature | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
