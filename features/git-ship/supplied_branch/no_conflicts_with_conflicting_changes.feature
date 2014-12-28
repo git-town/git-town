@@ -1,7 +1,7 @@
 Feature: git ship: shipping the supplied feature branch (with conflicting changes)
 
-  As a developer getting the LGTM for a feature branch
-  I want to be able to ship it despite currently working on unrelated things that conflict with the main branch
+  As a developer getting the LGTM for a feature branch while working on unrelated things that conflict with the main branch
+  I want to be able to ship the approved branch anyways
   So that I don't have to execute a bunch of boilerplate Git commands to ship, and remain productive and focussed on my current work.
 
 
