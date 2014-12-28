@@ -1,5 +1,8 @@
 Feature: git-extract errors when the branch exists locally (without open changes)
 
+  (see ./branch_exists_locally_with_open_changes.feature)
+
+
   Background:
     Given I have feature branches named "feature" and "existing-feature"
     And I am on the "feature" branch

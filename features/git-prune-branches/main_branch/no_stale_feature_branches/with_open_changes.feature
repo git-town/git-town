@@ -17,7 +17,7 @@ Feature: git prune-branches: don't remove used feature branches when called on t
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    Then I end up on the "main" branch
+    And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | REPOSITORY | BRANCHES                     |

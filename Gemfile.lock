@@ -18,7 +18,7 @@ GEM
       gherkin (~> 2.12)
       multi_json (>= 1.7.5, < 2.0)
       multi_test (>= 0.1.1)
-    cucumber_table_formatter (0.0.2)
+    cucumber_lint (0.0.3)
       colorize (~> 0.7.5)
     diff-lcs (1.2.5)
     gherkin (2.12.2)
@@ -69,7 +69,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   cucumber
-  cucumber_table_formatter
+  cucumber_lint
   kappamaki
   open4
   parallel_tests
