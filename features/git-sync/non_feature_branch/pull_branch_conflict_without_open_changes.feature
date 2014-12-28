@@ -49,7 +49,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
       | HEAD   | git rebase --continue |
       | qa     | git push              |
       | qa     | git push --tags       |
-    Then I am still on the "qa" branch
+    And I am still on the "qa" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
@@ -66,7 +66,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
       | BRANCH | COMMAND         |
       | qa     | git push        |
       | qa     | git push --tags |
-    Then I am still on the "qa" branch
+    And I am still on the "qa" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
