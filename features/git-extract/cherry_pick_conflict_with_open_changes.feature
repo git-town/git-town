@@ -56,7 +56,8 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts before continuing the git extract"
+    Then it runs no Git commands
+    And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
