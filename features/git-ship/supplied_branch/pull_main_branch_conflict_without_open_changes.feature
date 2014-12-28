@@ -1,4 +1,6 @@
-Feature: Git Ship: handling conflicting remote main branch updates when shipping the supplied feature branch without open changes
+Feature: git ship: resolving conflicting main branch updates when shipping a given feature branch (without open changes)
+
+  (see ../current_branch/pull_main_branch_conflict.feature)
 
 
   Background:

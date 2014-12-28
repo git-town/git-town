@@ -1,4 +1,6 @@
-Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
+Feature: Git Ship: resolving conflicts between the supplied feature and main branch (with open changes)
+
+  (see ../current_branch/merge_main_branch_conflict.feature)
 
 
   Background:

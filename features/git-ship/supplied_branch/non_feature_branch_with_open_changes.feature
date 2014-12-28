@@ -1,5 +1,8 @@
 Feature: git ship: don't ship non-feature branches (with open changes)
 
+  (see ../current_branch/on_non_feature_branch.feature)
+
+
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "feature" branch

@@ -1,5 +1,8 @@
 Feature: git ship: don't ship the main branch (with open changes)
 
+  (see ../current_branch/on_main_branch.feature)
+
+
   Background:
     Given I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
