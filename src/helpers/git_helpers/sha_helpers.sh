@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 
+# Returns the sha of the current branch
 function current_sha {
   sha_of_branch HEAD
 }
@@ -11,7 +12,6 @@ function sha_of_branch {
   local branch_name=$1
   git rev-parse "$branch_name"
 }
-
 
 
 # Resets the current branch to the commit described by the given SHA
