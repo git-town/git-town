@@ -1,22 +1,22 @@
 Feature: git kill: don't delete a misspelled branch (without open changes)
 
   Background:
-    Given I am on the "good-feature" branch
+    Given I am on the "feature" branch
     And the following commits exist in my repository
-      | BRANCH       | LOCATION         | MESSAGE     | FILE NAME |
-      | good-feature | local and remote | good commit | good_file |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
+      | feature | local and remote | good commit | good_file |
     When I run `git kill non-existing-feature` while allowing errors
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH       | COMMAND           |
-      | good-feature | git fetch --prune |
+      | BRANCH  | COMMAND           |
+      | feature | git fetch --prune |
     And I get the error "There is no branch named 'non-existing-feature'"
-    And I end up on the "good-feature" branch
+    And I end up on the "feature" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE     | FILES     |
-      | good-feature | local and remote | good commit | good_file |
+      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | feature | local and remote | good commit | good_file |

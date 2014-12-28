@@ -1,10 +1,10 @@
 Feature: git kill: killing the current feature branch with a deleted tracking branch (without open changes)
 
   Background:
-    Given I have feature branches named "good-feature" and "dead-feature"
+    Given I have feature branches named "feature" and "dead-feature"
     And the following commits exist in my repository
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | good-feature | local and remote | good commit     | good_file        |
+      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
     And the "dead-feature" branch gets deleted on the remote
     And I am on the "dead-feature" branch
@@ -19,12 +19,12 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | main         | git branch -D dead-feature |
     And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
-      | good-feature | local and remote | good commit | good_file |
+      | branch  | location         | message     | files     |
+      | feature | local and remote | good commit | good_file |
 
 
   Scenario: undoing the kill
@@ -35,10 +35,10 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | main   | git checkout dead-feature                     |
     And I end up on the "dead-feature" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES                         |
-      | local      | main, dead-feature, good-feature |
-      | remote     | main, good-feature               |
+      | REPOSITORY | BRANCHES                    |
+      | local      | main, dead-feature, feature |
+      | remote     | main, feature               |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILES            |
-      | good-feature | local and remote | good commit     | good_file        |
+      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
