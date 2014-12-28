@@ -1,8 +1,8 @@
 Feature: git extract: allows to resolve conflicting remote main branch updates (with open changes)
 
   As a developer extracting a commit when the main branch has conflicting local and remote updates
-  I want to be given an opportunity to resolve the differences
-  So that I finish the command as planned, and remain productive.
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
