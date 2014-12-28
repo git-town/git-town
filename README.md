@@ -1,6 +1,6 @@
 ## _Git Automation for Agile Development Teams_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat)](http://www.mit-license.org)
+[![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](http://www.mit-license.org)
 
 Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
