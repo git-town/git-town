@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+
+function add_undo_steps {
+  prepend_to_file "$1" "$undo_steps_file"
+}
+
+
 function undo_steps_for {
   local step_with_arguments
   read -a step_with_arguments <<< "$1" # Split string into array

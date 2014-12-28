@@ -11,7 +11,22 @@ Feature: aborting ship of supplied branch by entering an empty commit message wi
 
 
   Scenario: result
-    Then I get the error "Aborting ship due to empty commit message"
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | other_feature | git checkout main                  |
+      | main          | git fetch --prune                  |
+      | main          | git rebase origin/main             |
+      | main          | git checkout feature               |
+      | feature       | git merge --no-edit origin/feature |
+      | feature       | git merge --no-edit main           |
+      | feature       | git checkout main                  |
+      | main          | git merge --squash feature         |
+      | main          | git commit -a                      |
+      | main          | git reset --hard                   |
+      | main          | git checkout feature               |
+      | feature       | git checkout main                  |
+      | main          | git checkout other_feature         |
+    And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILES        |

@@ -11,12 +11,19 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch upstream       |
+      | main   | git rebase upstream/main |
+    And my repo has a rebase in progress
 
 
   Scenario: aborting
     When I run `git sync-fork --abort`
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND            |
+      | HEAD   | git rebase --abort |
+    And I end up on the "main" branch
     And there is no rebase in progress
     And I still have the following commits
       | BRANCH | LOCATION | MESSAGE         | FILES            |
