@@ -1,6 +1,6 @@
 Feature: git extract: extracting a single commit (without open changes)
 
-  (see ./single_commit_with_open_changes.feature)
+  (see ./multiple_commits_with_open_changes.feature)
 
 
   Background:

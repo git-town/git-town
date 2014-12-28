@@ -1,6 +1,6 @@
 Feature: git extract: don't extract into an already existing branch (with open changes)
 
-  As a developer trying to extract commits into an existing feature branch
+  As a developer trying to extract commits into a branch with the name of an existing branch
   I should get an error that this branch already exists
   So that all my feature branches are unique.
 
