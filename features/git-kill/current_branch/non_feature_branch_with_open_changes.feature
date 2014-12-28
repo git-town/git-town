@@ -2,7 +2,7 @@ Feature: git kill: don't remove non-feature branches (with open changes)
 
   Background:
     Given I have a feature branch named "feature"
-    Given non-feature branch configuration "qa"
+    And non-feature branch configuration "qa"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |

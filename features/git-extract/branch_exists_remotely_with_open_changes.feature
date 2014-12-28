@@ -1,5 +1,8 @@
 Feature: git-extract errors when the branch exists remotely (with open changes)
 
+  (see ./branch_exists_locally_with_open_changes.feature)
+
+
   Background:
     Given I have a feature branch named "feature"
     And my coworker has a feature branch named "existing-feature"

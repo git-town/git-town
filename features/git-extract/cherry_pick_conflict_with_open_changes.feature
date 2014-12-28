@@ -1,4 +1,9 @@
-Feature: git-extract handling cherry-pick conflicts with open changes
+Feature: git extract: resolving conflicts with main branch (with open changes)
+
+  As a developer extracting a commit that conflicts with the main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "feature"
