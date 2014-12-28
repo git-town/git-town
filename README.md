@@ -1,19 +1,22 @@
 ## _Git Automation for Agile Development Teams_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 
-Git Town provides a number of additional Git commands that
-automate the typical high-level operations in
-[GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html)
-and other workflows.
+<img src="documentation/logo.png">
 
-It is designed for workflows that have a main branch
-(typically "development" or "master")
-from which feature branches are cut and into which they are merged,
-and it assumes you use a central code repository like
-[GitHub](http://github.com/) or [Bitbucket](https://bitbucket.org/).
+Git Town makes software development teams who use Git even more productive and happy.
+It extends Git to support
+[GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
+[Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
+the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
+[GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
+and other workflows better, and allows to perform many common tasks faster and easier.
+
+Check out [the big picture](documentation/big-picture.md) for more background on Git Town.
 
 
 ## Commands
+
+Git Town provides these additional Git commands:
 
 * [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
@@ -27,24 +30,17 @@ and it assumes you use a central code repository like
 * [git town](/documentation/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
-#### Notes
-
-* minimizes network requests
-  * each command performs a single fetch
-  * skips unnecessary pushes
-* automatically prunes deleted remote branches
-
-
 ## Installation
 
-Git Town is written in Bash, so it runs anywhere Git and Bash runs.
-Installation on OS X can be done using [Homebrew](http://brew.sh/).
+Git Town is written in 100% [Bash](https://www.gnu.org/software/bash/bash.html),
+so it runs anywhere Git and Bash runs.
+Installation on OS X can be done using [Homebrew](http://brew.sh).
 Other platforms need to install manually.
 
 <table>
   <tr>
     <th width="300px">
-      Using Homebrew
+      Using <a href="http://brew.sh">Homebrew</a>
     </th>
     <th width="400px">
       Manually
@@ -61,11 +57,11 @@ Other platforms need to install manually.
       <code>brew install git-town</code>
     </td>
     <td>
-      <ol>
+      <ul>
         <li>clone the repo to your machine (into DIR)</li>
         <li>add DIR/src to your <code>$PATH</code></li>
         <li>add DIR/man to your <code>$MANPATH</code></li>
-      </ol>
+      </ul>
     </td>
   </tr>
   <tr>
@@ -79,9 +75,9 @@ Other platforms need to install manually.
       <code>brew upgrade git-town</code>
     </td>
     <td>
-      <ol>
+      <ul>
         <li>run <code>git pull</code> in DIR</li>
-      </ol>
+      </ul>
     </td>
   </tr>
   <tr>
@@ -95,11 +91,11 @@ Other platforms need to install manually.
       <code>brew untap Originate/gittown</code>
     </td>
     <td>
-      <ol>
+      <ul>
         <li>remove DIR</li>
         <li>remove DIR/src from your <code>$PATH</code></li>
         <li>remove DIR/man from your <code>$MANPATH</code></li>
-      </ol>
+      </ul>
     </td>
   </tr>
 </table>
@@ -112,8 +108,10 @@ Create the folder if necessary.
 
 ## Configuration
 
-Git Town is configured on a per-repository basis. Upon first use in a given repository, Git Town will ask the user for all required
-configuration information. Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
+Git Town is configured on a per-repository basis.
+Upon first use in a repository, Git Town will ask for all required
+configuration information.
+Use the [git town](/documentation/git-town.md) command to view or update your configuration at any time.
 
 
 ## Documentation
@@ -130,20 +128,19 @@ for help on an individual command.
 Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
 
 ```bash
-# install tools
+# install tools needed for development
 bundle
 brew install shellcheck  # bash linter
 
-# rake tasks
-rake                # Run all linters and specs
-rake lint           # Run all linters
-rake lint:bash      # Run bash linter
-rake lint:ruby      # Run ruby linter
+# various ways to verify/test the code
+rake            # Run all linters and specs
+rake lint       # Run all linters
+rake lint:bash  # Run bash linter
+rake lint:ruby  # Run ruby linter
 rake lint:cucumber  # Run cucumber linter
-rake spec           # Run specs
+rake spec       # Run specs
 
-# run single test
-cucumber -n 'scenario/feature name'
+# run a single test
 cucumber [filename]:[lineno]
 
 # run cucumber in parallel
@@ -151,7 +148,7 @@ bin/cuke [<folder>...]
 ```
 
 Found a bug or want to contribute a feature?
-[Open an issue](https://github.com/Originate/git-town/issues/new)
+Please [open an issue](https://github.com/Originate/git-town/issues/new)
 or - even better - get down, go to town, and fire a feature-tested and linter-passing
 [pull request](https://help.github.com/articles/using-pull-requests/)
 our way!
@@ -163,8 +160,4 @@ The future roadmap is planned using [GitHub issues](https://github.com/Originate
 The past roadmap is in the [release notes](release-notes.md).
 
 If you have an idea about a cool feature you would like to see in Git Town,
-please [open a ticket](https://github.com/Originate/git-town/issues/new).
-Our team will add the [idea](https://github.com/Originate/git-town/labels/idea) tag.
-Once we reach agreement about this idea, it will be tagged as an
-[enhancement](https://github.com/Originate/git-town/labels/enhancement)
-or a [bug](https://github.com/Originate/git-town/labels/bug).
+please [open a ticket](https://github.com/Originate/git-town/issues/new)!
