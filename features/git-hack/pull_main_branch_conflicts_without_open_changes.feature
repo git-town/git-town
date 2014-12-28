@@ -1,4 +1,7 @@
-Feature: git-hack handling conflicting remote main branch updates with open changes
+Feature: git hack: handling conflicting remote main branch updates while starting a new feature
+
+  (see ./pull_main_branch_coflicts_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -13,8 +16,8 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                |
+      | existing_feature | git fetch --prune      |
       | existing_feature | git checkout main      |
-      | main             | git fetch --prune      |
       | main             | git rebase origin/main |
     And my repo has a rebase in progress
 
@@ -22,9 +25,9 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
   Scenario: aborting
     When I run `git hack --abort`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                       |
-      | HEAD    | git rebase --abort            |
-      | main    | git checkout existing_feature |
+      | BRANCH | COMMAND                       |
+      | HEAD   | git rebase --abort            |
+      | main   | git checkout existing_feature |
     And I end up on the "existing_feature" branch
     And there is no rebase in progress
     And I have the following commits
@@ -43,10 +46,10 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     Given I resolve the conflict in "conflicting_file"
     When I run `git hack --continue `
     Then it runs the Git commands
-      | BRANCH  | COMMAND                          |
-      | HEAD    | git rebase --continue            |
-      | main    | git push                         |
-      | main    | git checkout -b new_feature main |
+      | BRANCH | COMMAND                          |
+      | HEAD   | git rebase --continue            |
+      | main   | git push                         |
+      | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILES            |

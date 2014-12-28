@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Creates a new branch with the given name off the given parent branch
@@ -65,7 +65,7 @@ function get_current_branch_name {
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
-  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
+  if [ "$(git branch -a | tr -d '* ' | sed 's/remotes\/origin\///' | grep -c "^$branch_name\$")" = 0 ]; then
     echo false
   else
     echo true

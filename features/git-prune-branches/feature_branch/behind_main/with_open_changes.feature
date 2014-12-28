@@ -1,4 +1,9 @@
-Feature: git-prune-branches: on a feature branch behind main with open changes
+Feature: git prune-branches: don't remove the current empty feature branch if there are open changes
+
+  As a developer pruning branches
+  I don't want my current empty branch deleted if I have open changes
+  So that I can prune my branches without losing current work.
+
 
   Background:
     Given I have a feature branch named "feature" behind main
@@ -18,7 +23,7 @@ Feature: git-prune-branches: on a feature branch behind main with open changes
       | main    | git branch -d stale_feature    |
       | main    | git checkout feature           |
       | feature | git stash pop                  |
-    Then I end up on the "feature" branch
+    And I end up on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | REPOSITORY | BRANCHES      |

@@ -1,4 +1,7 @@
-Feature: Git Ship: errors when the branch diff is empty with open changes
+Feature: git ship: don't ship empty feature branches (with open changes)
+
+  (see ../current_branch/no_diff.feature)
+
 
   Background:
     Given I have feature branches named "empty-feature" and "other_feature"
@@ -12,6 +15,18 @@ Feature: Git Ship: errors when the branch diff is empty with open changes
 
 
   Scenario: result
-    Then I get the error "The branch 'empty-feature' has no shippable changes"
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                                  |
+      | other_feature | git stash -u                             |
+      | other_feature | git checkout main                        |
+      | main          | git fetch --prune                        |
+      | main          | git rebase origin/main                   |
+      | main          | git checkout empty-feature               |
+      | empty-feature | git merge --no-edit origin/empty-feature |
+      | empty-feature | git merge --no-edit main                 |
+      | empty-feature | git checkout main                        |
+      | main          | git checkout other_feature               |
+      | other_feature | git stash pop                            |
+    And I get the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

@@ -1,4 +1,7 @@
-Feature: git-extract errors if there are not extractable commits
+Feature: git-extract: errors if there are not extractable commits
+
+  (see ./no_extractable_commits_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature"
@@ -7,6 +10,8 @@ Feature: git-extract errors if there are not extractable commits
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH  | COMMAND           |
+      | feature | git fetch --prune |
     And I get the error "The branch 'feature' has no extractable commits."
     And I am still on the "feature" branch

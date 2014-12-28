@@ -1,5 +1,8 @@
 Feature: git kill: killing the current feature branch with a deleted tracking branch (without open changes)
 
+  (see ./deleted_tracking_branch_with_open_changes.feature)
+
+
   Background:
     Given I have feature branches named "good-feature" and "orphaned-feature"
     And the following commits exist in my repository
@@ -12,24 +15,33 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
 
 
   Scenario: result
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                    |
+      | dead-feature | git fetch --prune          |
+      | dead-feature | git checkout main          |
+      | main         | git branch -D dead-feature |
+    And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
-      | good-feature | local and remote | good commit | good_file |
+      | branch  | location         | message     | files     |
+      | feature | local and remote | good commit | good_file |
 
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then I end up on the "orphaned-feature" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND                                       |
+      | main   | git branch dead-feature [SHA:dead-end commit] |
+      | main   | git checkout dead-feature                     |
+    And I end up on the "orphaned-feature" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES                             |
+      | REPOSITORY | BRANCHES                    |
       | local      | main, orphaned-feature, good-feature |
       | remote     | main, good-feature                   |
     And I have the following commits
-      | BRANCH           | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
       | good-feature     | local and remote | good commit     | good_file        |
       | orphaned-feature | local            | orphaned commit | unfortunate_file |

@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Helper methods for dealing with abort/continue scripts
+
 
 function abort_command {
   local cmd=$(peek_line "$steps_file")
@@ -111,9 +112,7 @@ function run_steps {
       exit_with_messages
     else
       if [ "$option" = undoable ]; then
-        for undo_step in "${undo_steps[@]}"; do
-          add_undo_step "$undo_step"
-        done
+        add_undo_steps "$undo_steps"
       fi
       remove_line "$file"
     fi

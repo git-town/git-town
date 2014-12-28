@@ -1,4 +1,7 @@
-Feature: git-extract with a single commit
+Feature: git extract: extracting a single commit (with open changes)
+
+  (see ./multiple_commits_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature"

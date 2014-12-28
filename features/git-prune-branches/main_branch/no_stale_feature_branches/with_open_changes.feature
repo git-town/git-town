@@ -1,4 +1,9 @@
-Feature: git-prune-branches: on the main branch with no stale feature branches with open changes
+Feature: git prune-branches: don't remove used feature branches when called on the main branch (with open changes)
+
+  As a developer pruning branches
+  I want my feature branches with commits to not be deleted
+  So that I can keep my branches organized without losing work.
+
 
   Background:
     Given I have a feature branch named "my-feature" ahead of main
@@ -12,7 +17,7 @@ Feature: git-prune-branches: on the main branch with no stale feature branches w
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    Then I end up on the "main" branch
+    And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | REPOSITORY | BRANCHES                     |

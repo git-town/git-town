@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Helper methods for dealing with files and temp files.
 
@@ -10,11 +10,6 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 # Command lists
 export steps_file="/tmp/${program}_${temp_filename_suffix}"
 export undo_steps_file="/tmp/${program}_undo_${temp_filename_suffix}"
-
-
-function add_undo_step {
-  prepend_to_file "$1" "$undo_steps_file"
-}
 
 
 function has_lines {

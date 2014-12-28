@@ -1,4 +1,7 @@
-Feature: git-hack errors when branch exists without open changes
+Feature: git-hack: errors when the branch already exists locally (without open changes)
+
+  (see ./branch_exists_locally_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -7,6 +10,8 @@ Feature: git-hack errors when branch exists without open changes
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH | COMMAND           |
+      | main   | git fetch --prune |
     And I get the error "A branch named 'existing_feature' already exists"
     And I am still on the "main" branch
