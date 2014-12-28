@@ -4,7 +4,8 @@ Feature: git sync: syncing the main branch (with open changes)
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
-  Scenario: no conflicts
+
+  Background:
     Given I am on the main branch
     And the following commits exist in my repository
       | LOCATION | MESSAGE       | FILE NAME   |
@@ -12,6 +13,9 @@ Feature: git sync: syncing the main branch (with open changes)
       | remote   | remote commit | remote_file |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
+
+
+  Scenario: result
     Then I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized

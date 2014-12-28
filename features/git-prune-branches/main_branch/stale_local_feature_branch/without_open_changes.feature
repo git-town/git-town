@@ -1,4 +1,7 @@
-Feature: git-prune-branches: on the main branch with a stale local feature branch without open changes
+Feature: git prune-branches: remove stale local feature branches when run on the main branch (without open changes)
+
+  (see ../../feature_branch/behind_main/without_open_changes.feature)
+
 
   Background:
     Given I have a local feature branch named "stale_feature" behind main
@@ -8,9 +11,9 @@ Feature: git-prune-branches: on the main branch with a stale local feature branc
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH | COMMAND                        |
-      | main   | git fetch --prune              |
-      | main   | git branch -d stale_feature    |
+      | BRANCH | COMMAND                     |
+      | main   | git fetch --prune           |
+      | main   | git branch -d stale_feature |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |

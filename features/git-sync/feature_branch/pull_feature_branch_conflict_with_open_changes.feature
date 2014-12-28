@@ -8,9 +8,9 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME          | FILE CONTENT               |
-      | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
-      |         | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
+      | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
+      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
@@ -28,12 +28,12 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES              |
-      | feature | local    | local conflicting commit  | conflicting_file   |
-      |         | remote   | remote conflicting commit | conflicting_file   |
+      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | feature | local    | local conflicting commit  | conflicting_file |
+      |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
-      | BRANCH  | FILES              | CONTENT                   |
-      | feature | conflicting_file   | local conflicting content |
+      | BRANCH  | FILES            | CONTENT                   |
+      | feature | conflicting_file | local conflicting content |
 
 
   @finishes-with-non-empty-stash
@@ -47,7 +47,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
 
   Scenario Outline: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
+    When I run `<COMMAND>`
     Then I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -56,10 +56,10 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES              | CONTENT            |
-      | feature | conflicting_file   | resolved content   |
+      | BRANCH  | FILES            | CONTENT          |
+      | feature | conflicting_file | resolved content |
 
     Examples:
-      | command                                   |
+      | COMMAND                                   |
       | git sync --continue                       |
       | git commit --no-edit; git sync --continue |

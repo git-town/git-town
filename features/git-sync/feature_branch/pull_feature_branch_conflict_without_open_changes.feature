@@ -6,9 +6,9 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME          | FILE CONTENT               |
-      | feature | remote   | remote conflicting commit | conflicting_file   | remote conflicting content |
-      |         | local    | local conflicting commit  | conflicting_file   | local conflicting content  |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
+      | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
+      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I run `git sync` while allowing errors
 
 
@@ -26,8 +26,8 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | feature | local    | local conflicting commit  | conflicting_file |
       |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
-      | BRANCH  | FILES              | CONTENT                   |
-      | feature | conflicting_file   | local conflicting content |
+      | BRANCH  | FILES            | CONTENT                   |
+      | feature | conflicting_file | local conflicting content |
 
 
   Scenario: continuing without resolving conflicts
@@ -39,7 +39,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
 
   Scenario Outline: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
+    When I run `<COMMAND>`
     Then I am still on the "feature" branch
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
@@ -47,10 +47,10 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES              | CONTENT          |
-      | feature | conflicting_file   | resolved content |
+      | BRANCH  | FILES            | CONTENT          |
+      | feature | conflicting_file | resolved content |
 
     Examples:
-      | command                                   |
+      | COMMAND                                   |
       | git sync --continue                       |
       | git commit --no-edit; git sync --continue |
