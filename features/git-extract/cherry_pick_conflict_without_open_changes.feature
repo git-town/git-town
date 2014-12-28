@@ -1,4 +1,7 @@
-Feature: git-extract handling cherry-pick conflicts without open changes
+Feature: git extract: resolving conflicts with main branch (without open changes)
+
+  (see ./cherry_pick_conflict_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature"

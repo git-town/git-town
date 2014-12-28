@@ -7,7 +7,7 @@ task format: %w(format:cucumber)
 
 desc 'Run cucumber formatter'
 task 'format:cucumber' do
-  sh 'bundle exec cucumber_table_formatter'
+  sh 'bundle exec cucumber_lint --fix'
 end
 
 
@@ -26,7 +26,7 @@ end
 
 desc 'Run cucumber linter'
 task 'lint:cucumber' do
-  sh 'bundle exec cucumber_table_formatter --lint'
+  sh 'bundle exec cucumber_lint'
 end
 
 
