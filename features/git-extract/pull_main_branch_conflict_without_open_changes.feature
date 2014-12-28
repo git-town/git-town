@@ -15,12 +15,21 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                |
+      | feature | git fetch --prune      |
+      | feature | git checkout main      |
+      | main    | git rebase origin/main |
+    And my repo has a rebase in progress
 
 
   Scenario: aborting
     When I run `git extract --abort`
-    Then I end up on my feature branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND              |
+      | HEAD   | git rebase --abort   |
+      | main   | git checkout feature |
+    And I end up on my feature branch
     And there is no "refactor" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |
@@ -33,8 +42,8 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
 
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts before continuing the git extract"
-    And I don't have an uncommitted file with name: "uncommitted"
+    Then it runs no Git commands
+    And I get the error "You must resolve the conflicts before continuing the git extract"
     And my repo has a rebase in progress
 
 

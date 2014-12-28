@@ -14,7 +14,15 @@ Feature: git extract: extracting a single commit (without open changes)
 
 
   Scenario: result
-    Then I end up on the "refactor" branch
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                               |
+      | feature  | git fetch --prune                     |
+      | feature  | git checkout main                     |
+      | main     | git rebase origin/main                |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
+      | refactor | git push -u origin refactor           |
+    And I end up on the "refactor" branch
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE            | FILES            |
       | main     | local and remote | remote main commit | remote_main_file |
