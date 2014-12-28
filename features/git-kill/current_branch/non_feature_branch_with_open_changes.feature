@@ -1,5 +1,10 @@
 Feature: git kill: don't remove non-feature branches (with open changes)
 
+  As a developer accidentally trying to kill a non-feature branch
+  I should see an error that I cannot delete non-feature branches
+  So that my release infrastructure remains intact and my project stays shippable.
+
+
   Background:
     Given I have a feature branch named "feature"
     And non-feature branch configuration "qa"

@@ -1,4 +1,9 @@
-Feature: Git Kill: The main branch is not killed
+Feature: git kill: don't remove the main branch (with open changes)
+
+  As a developer accidentally trying to kill the main branch
+  I should see an error that I cannot delete the main branch
+  So that my main development line remains intact and my project stays shippable.
+
 
   Background:
     Given I have a feature branch named "feature"

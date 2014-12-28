@@ -1,4 +1,7 @@
-Feature: git kill: don't delete a misspelled branch (without open changes)
+Feature: git kill: don't delete a non-existing branch (without open changes)
+
+  (see ./non_existing_branch_with_open_changes.feature)
+
 
   Background:
     Given I am on the "feature" branch

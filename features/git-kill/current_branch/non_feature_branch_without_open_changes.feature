@@ -1,5 +1,8 @@
 Feature: git kill: don't remove non-feature branches (without open changes)
 
+  (see ./non_feature_branch_with_open_changes.feature)
+
+
   Background:
     Given I have a feature branch named "feature"
     And non-feature branch configuration "qa"

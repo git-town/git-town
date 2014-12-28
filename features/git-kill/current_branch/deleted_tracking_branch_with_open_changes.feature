@@ -1,5 +1,10 @@
 Feature: git kill: killing the current feature branch with a deleted tracking branch (with open changes)
 
+  As a user killing the current feature branch whose remote branch has been deleted
+  I want the command to succeed anyways
+  So that killing branches is robust and reliable.
+
+
   Background:
     Given I have feature branches named "feature" and "dead-feature"
     And the following commits exist in my repository

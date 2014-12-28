@@ -1,4 +1,7 @@
-Feature: Git Kill: killing the current feature by name, without open changes
+Feature: git kill: removes the given feature branch when on it (without open changes)
+
+  (see ./on_the_supplied_feature_branch_with_open_changes.feature)
+
 
   Background:
     Given I have feature branches named "feature" and "dead-feature"
