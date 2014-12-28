@@ -5,12 +5,13 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
   So that I can finish the operation as planned or postpone it to a better time.
 
   Background:
-    Given I am on the "feature" branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
-    And I run `git ship -m 'feature done'` while allowing errors
+    And I am on the "feature" branch
+    When I run `git ship -m 'feature done'` while allowing errors
 
 
   Scenario: result

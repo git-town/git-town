@@ -4,13 +4,14 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
 
 
   Background:
-    Given I am on a feature branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main    | remote   | conflicting remote commit | conflicting_file | remote content |
       |         | local    | conflicting local commit  | conflicting_file | local content  |
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
+    And I am on the "feature" branch
     When I run `git extract refactor` with the last commit sha while allowing errors
 
 
@@ -20,7 +21,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
 
   Scenario: aborting
     When I run `git extract --abort`
-    Then I end up on my feature branch
+    Then I end up on the "feature" branch
     And there is no "refactor" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |

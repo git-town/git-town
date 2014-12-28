@@ -5,11 +5,11 @@ Feature: git ship: don't ship non-feature branches (without open changes)
 
   Background:
     Given non-feature branch configuration "qa, production"
-    And I am on the "feature" branch
-    When I run `git ship production -m 'feature done'` while allowing errors
+    And I am on the "main" branch
+    When I run `git ship production` while allowing errors
 
 
   Scenario: result
     Then it runs no Git commands
     And I get the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
-    And I am still on the "feature" branch
+    And I am still on the "main" branch

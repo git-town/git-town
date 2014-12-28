@@ -4,12 +4,13 @@ Feature: git extract: extracting a single commit (without open changes)
 
 
   Background:
-    Given I am on a feature branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | remote   | remote main commit | remote_main_file |
       | feature | local    | feature commit     | feature_file     |
       |         |          | refactor commit    | refactor_file    |
+    And I am on the "feature" branch
     When I run `git extract refactor` with the last commit sha
 
 
