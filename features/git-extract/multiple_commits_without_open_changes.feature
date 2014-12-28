@@ -1,4 +1,7 @@
-Feature: git-extract with multiple commits
+Feature: git extract: extracting multiple commits (without open changes)
+
+  (see ./multiple_commits_with_open_changes.feature)
+
 
   Background:
     Given I am on a feature branch
