@@ -12,11 +12,6 @@ export steps_file="/tmp/${program}_${temp_filename_suffix}"
 export undo_steps_file="/tmp/${program}_undo_${temp_filename_suffix}"
 
 
-function add_undo_step {
-  prepend_to_file "$1" "$undo_steps_file"
-}
-
-
 function has_lines {
   local file="$1"
 
