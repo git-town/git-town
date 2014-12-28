@@ -4,7 +4,6 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
   I want to be able to abort by entering an empty commit message
   So that shipping has the same experience as committing, and Git Town feels like a natural extension to Git.
 
-
   Background:
     Given I am on the "feature" branch
     And the following commit exists in my repository
@@ -14,7 +13,22 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
 
 
   Scenario: result
-    Then I get the error "Aborting ship due to empty commit message"
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                            |
+      | feature | git checkout main                  |
+      | main    | git fetch --prune                  |
+      | main    | git rebase origin/main             |
+      | main    | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      | feature | git merge --no-edit main           |
+      | feature | git checkout main                  |
+      | main    | git merge --squash feature         |
+      | main    | git commit -a                      |
+      | main    | git reset --hard                   |
+      | main    | git checkout feature               |
+      | feature | git checkout main                  |
+      | main    | git checkout feature               |
+    And I get the error "Aborting ship due to empty commit message"
     And I am still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILES        |

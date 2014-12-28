@@ -15,12 +15,21 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                |
+      | other_feature | git checkout main      |
+      | main          | git fetch --prune      |
+      | main          | git rebase origin/main |
+    And my repo has a rebase in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "other_feature" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND                    |
+      | HEAD   | git rebase --abort         |
+      | main   | git checkout other_feature |
+    And I am still on the "other_feature" branch
     And there is no rebase in progress
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |

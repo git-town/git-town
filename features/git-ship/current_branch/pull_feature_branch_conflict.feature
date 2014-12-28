@@ -4,7 +4,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
 
-
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
@@ -15,13 +14,25 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
 
 
   Scenario: result
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                            |
+      | feature | git checkout main                  |
+      | main    | git fetch --prune                  |
+      | main    | git rebase origin/main             |
+      | main    | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+    And I am still on the "feature" branch
     And my repo has a merge in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND              |
+      | feature | git merge --abort    |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |

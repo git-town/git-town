@@ -1,7 +1,5 @@
 Feature: Git Sync: syncing a non-feature branch pushes tags to the remote
 
-
-
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "production" branch
