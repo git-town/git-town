@@ -1,5 +1,8 @@
 Feature: git ship: don't ship the main branch (without open changes)
 
+  (see ../current_branch/on_main_branch.feature)
+
+
   Background:
     Given I am on the "feature" branch
     When I run `git ship main -m 'feature done'` while allowing errors

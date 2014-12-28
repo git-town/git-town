@@ -1,4 +1,9 @@
-Feature: Git Ship: errors when the branch diff is empty
+Feature: git ship: don't ship empty features
+
+  As a developer shipping a branch that has no differences with the main branch
+  I should see an error telling me about this
+  So that I can investigate this issue, and my users always see meaningful progress.
+
 
   Background:
     Given I have a feature branch named "empty-feature"

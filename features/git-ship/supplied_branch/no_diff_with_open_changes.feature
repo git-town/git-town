@@ -1,4 +1,7 @@
-Feature: Git Ship: errors when the branch diff is empty with open changes
+Feature: git ship: don't ship empty feature branches (with open changes)
+
+  (see ../current_branch/no_diff.feature)
+
 
   Background:
     Given I have feature branches named "empty-feature" and "other_feature"

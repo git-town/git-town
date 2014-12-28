@@ -1,5 +1,8 @@
 Feature: git ship: don't ship non-existing branches (without open changes)
 
+  (see ./non_existing_branch_with_open_changes.feature)
+
+
   Background:
     Given I am on the "feature" branch
     When I run `git ship non-existing-branch -m 'feature done'` while allowing errors

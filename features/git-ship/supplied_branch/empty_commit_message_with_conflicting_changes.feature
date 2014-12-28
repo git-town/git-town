@@ -1,4 +1,7 @@
-Feature: cancel shipping a supplied branch by entering an empty commit message with open changes
+Feature: git ship: abort shipping the given feature branch by entering an empty commit message (with conflicting changes)
+
+  (see ../current_branch/empty_commit_message.feature)
+
 
   Background:
     Given I have feature branches named "feature" and "other_feature"

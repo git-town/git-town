@@ -1,4 +1,6 @@
-Feature: Git Ship: shipping the supplied feature branch without open changes
+Feature: git ship: shipping the supplied feature branch (without open changes)
+
+  (see ./no_conflicts_with_conflicting_changes.feature)
 
 
   Scenario: local feature branch
