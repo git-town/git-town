@@ -52,12 +52,12 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -77,9 +77,9 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |

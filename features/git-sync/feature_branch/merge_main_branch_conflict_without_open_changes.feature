@@ -4,9 +4,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
   Background:
     Given I am on the "feature" branch
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT    |
-      | main    | local    | conflicting main commit   | conflicting_file | main content    |
-      | feature | local    | conflicting local commit  | conflicting_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE                  | FILE NAME        | FILE CONTENT    |
+      | main    | local    | conflicting main commit  | conflicting_file | main content    |
+      | feature | local    | conflicting local commit | conflicting_file | feature content |
     And I run `git sync` while allowing errors
 
 
@@ -38,7 +38,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
 
   Scenario Outline: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<command>`
+    When I run `<COMMAND>`
     Then I am still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILES            |
@@ -52,6 +52,6 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | conflicting_file | resolved content |
 
     Examples:
-      | command                                   |
+      | COMMAND                                   |
       | git sync --continue                       |
       | git commit --no-edit; git sync --continue |

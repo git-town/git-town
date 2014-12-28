@@ -73,7 +73,7 @@ end
 
 def run_shell_command command, inputs
   result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
-  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
+  command = "#{shell_overrides}; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
     inputs.each { |input| stdin.puts input }
@@ -83,6 +83,11 @@ def run_shell_command command, inputs
 
   result.error = status.exitstatus != 0
   result
+end
+
+
+def shell_overrides
+  "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME}"
 end
 
 
