@@ -7,5 +7,6 @@ Feature: git ship: don't ship non-feature branches (without open changes)
 
 
   Scenario: result
-    Then I get the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
+    Then it runs no Git commands
+    And I get the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "feature" branch

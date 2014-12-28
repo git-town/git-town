@@ -1,4 +1,7 @@
-Feature: git-extract errors if there are not extractable commits
+Feature: git-extract: errors if there are not extractable commits
+
+  (see ./no_extractable_commits_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature"
