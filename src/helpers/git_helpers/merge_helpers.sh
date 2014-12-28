@@ -37,6 +37,5 @@ function squash_merge {
 
 
 function undo_steps_for_merge {
-  local sha=$(git rev-parse HEAD)
-  echo "reset_to_sha $sha hard"
+  echo "reset_to_sha $(current_sha) hard"
 }
