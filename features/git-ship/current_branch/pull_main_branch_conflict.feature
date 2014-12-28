@@ -53,13 +53,13 @@ Feature: git ship: resolving conflicts while updating the main branch
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
-      |         |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
+      |        |                  | feature done              | feature_file     |
     And now I have the following committed files
-      | BRANCH  | FILES                          |
-      | main    | conflicting_file, feature_file |
+      | BRANCH | FILES                          |
+      | main   | conflicting_file, feature_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -80,10 +80,10 @@ Feature: git ship: resolving conflicts while updating the main branch
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
-      |         |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
+      |        |                  | feature done              | feature_file     |
     And now I have the following committed files
-      | BRANCH  | FILES                          |
-      | main    | conflicting_file, feature_file |
+      | BRANCH | FILES                          |
+      | main   | conflicting_file, feature_file |

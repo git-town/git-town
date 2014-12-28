@@ -48,12 +48,12 @@ Feature: git ship: resolving conflicts between feature and main branch
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -70,9 +70,9 @@ Feature: git ship: resolving conflicts between feature and main branch
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |

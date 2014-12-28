@@ -46,6 +46,6 @@ Feature: Git Sync: syncing a feature branch without open changes
       |         |                  | local feature commit                                       | local_feature_file  |
       |         |                  | remote feature commit                                      | remote_feature_file |
     And now I have the following committed files
-      | BRANCH  | FILES               |
-      | main    | local_main_file, remote_main_file |
+      | BRANCH  | FILES                                                                      |
+      | main    | local_main_file, remote_main_file                                          |
       | feature | local_feature_file, remote_feature_file, local_main_file, remote_main_file |
