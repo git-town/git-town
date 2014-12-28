@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+# Note: "set -e" causes failures here
+
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export program="$(echo "$0" | grep -o "[^/]*$")"
@@ -7,6 +9,7 @@ export git_command="${program/-/ }"
 source "$current_dir/git_helpers/branch_helpers.sh"
 source "$current_dir/git_helpers/checkout_helpers.sh"
 source "$current_dir/git_helpers/cherry_pick_helpers.sh"
+source "$current_dir/git_helpers/commits_helpers.sh"
 source "$current_dir/git_helpers/conflict_helpers.sh"
 source "$current_dir/git_helpers/fetch_helpers.sh"
 source "$current_dir/git_helpers/feature_branch_helpers.sh"
@@ -19,9 +22,11 @@ source "$current_dir/git_helpers/sha_helpers.sh"
 source "$current_dir/git_helpers/shippable_changes_helpers.sh"
 source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 
-source "$current_dir/configuration.sh"
+source "$current_dir/browser_helpers.sh"
+source "$current_dir/configuration.sh" "$1"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/script_helpers.sh"
+source "$current_dir/string_helpers.sh"
 source "$current_dir/terminal_helpers.sh"
 source "$current_dir/tool_helpers.sh"
 source "$current_dir/undo_helpers.sh"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
@@ -37,7 +37,10 @@ function steps {
       if [ "$initial_branch_name" = "$local_branch_name" ]; then
         initial_branch_deleted=true
       fi
-      echo "delete_branch $local_branch_name"
+      if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then
+        echo "delete_remote_branch $local_branch_name"
+      fi
+      echo "delete_local_branch $local_branch_name"
     fi
   done
 

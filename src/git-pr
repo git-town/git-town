@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
@@ -23,4 +23,4 @@ else
   exit_with_error
 fi
 
-open "https://$domain/$repository/$pr_path"
+open_browser "https://$domain/$repository/$pr_path"

@@ -1,4 +1,7 @@
-Feature: git-hack on a feature branch without open changes
+Feature: git hack: starting a new feature (without open changes)
+
+  (see ./feature_branch_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -13,8 +16,8 @@ Feature: git-hack on a feature branch without open changes
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                          |
+      | existing_feature | git fetch --prune                |
       | existing_feature | git checkout main                |
-      | main             | git fetch --prune                |
       | main             | git rebase origin/main           |
       | main             | git checkout -b new_feature main |
     And I end up on the "new_feature" branch

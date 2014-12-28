@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
@@ -11,4 +11,4 @@ if [ "$domain" != github.com ] && [ "$domain" != bitbucket.org ]; then
   exit_with_error
 fi
 
-open "https://$domain/$repository"
+open_browser "https://$domain/$repository"

@@ -1,4 +1,6 @@
-Feature: Git Ship: handling conflicting remote main branch updates when shipping the supplied feature branch with open changes
+Feature: git ship: resolving main branch updates when shipping a given feature branch (with open changes)
+
+  (see ../current_branch/pull_main_branch_conflict.feature)
 
 
   Background:
@@ -15,13 +17,24 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                |
+      | other_feature | git stash -u           |
+      | other_feature | git checkout main      |
+      | main          | git fetch --prune      |
+      | main          | git rebase origin/main |
+    And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "other_feature" branch
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                    |
+      | HEAD          | git rebase --abort         |
+      | main          | git checkout other_feature |
+      | other_feature | git stash pop              |
+    And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
@@ -57,13 +70,13 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
-      |         |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
+      |        |                  | feature done              | feature_file     |
     And now I have the following committed files
-      | BRANCH  | FILES                          |
-      | main    | conflicting_file, feature_file |
+      | BRANCH | FILES                          |
+      | main   | conflicting_file, feature_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -87,10 +100,10 @@ Feature: Git Ship: handling conflicting remote main branch updates when shipping
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILES            |
-      | main    | local and remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
-      |         |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
+      |        |                  | feature done              | feature_file     |
     And now I have the following committed files
-      | BRANCH  | FILES                          |
-      | main    | conflicting_file, feature_file |
+      | BRANCH | FILES                          |
+      | main   | conflicting_file, feature_file |

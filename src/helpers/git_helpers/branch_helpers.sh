@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Creates a new branch with the given name off the given parent branch
@@ -14,17 +14,6 @@ function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
   run_command "git checkout -b $new_branch_name $parent_branch_name"
-}
-
-
-# Deletes the given branch from both the local machine and on remote.
-function delete_branch {
-  local branch_name=$1
-  local force=$2
-  if [ "$(has_tracking_branch "$branch_name")" == true ]; then
-    delete_remote_branch "$branch_name"
-  fi
-  delete_local_branch "$branch_name" "$force"
 }
 
 
@@ -76,7 +65,7 @@ function get_current_branch_name {
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
-  if [ "$(git branch | tr -d '* ' | grep -c "^$branch_name\$")" = 0 ]; then
+  if [ "$(git branch -a | tr -d '* ' | sed 's/remotes\/origin\///' | grep -c "^$branch_name\$")" = 0 ]; then
     echo false
   else
     echo true
@@ -137,16 +126,19 @@ function undo_steps_for_create_and_checkout_feature_branch {
   local branch=$(get_current_branch_name)
   local branch_to_create="$1"
   echo "checkout $branch"
-  echo "delete_branch $branch_to_create"
+  echo "delete_local_branch $branch_to_create"
 }
 
 
-function undo_steps_for_delete_branch {
+function undo_steps_for_delete_local_branch {
   local branch_to_delete="$1"
   local sha=$(sha_of_branch "$branch_to_delete")
   echo "create_branch $branch_to_delete $sha"
-  if [ "$(has_tracking_branch "$branch_to_delete")" = true ]; then
-    echo "push_branch $branch_to_delete"
-  fi
+}
+
+
+function undo_steps_for_delete_remote_branch {
+  local branch_to_delete="$1"
+  echo "push_branch $branch_to_delete"
 }
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 # Returns the url for the remote
@@ -15,5 +15,6 @@ function remote_domain {
 
 # Returns the USER/REPO for the remote repository
 function remote_repository_name {
-  remote_url | sed "s#.*[:/]\([^/]*/[^/]*\)\.git#\1#"
+  local domain=$(remote_domain)
+  remote_url | sed -E "s#.*$domain[/:](.+)#\1#" | sed "s/\.git//"
 }

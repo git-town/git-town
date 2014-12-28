@@ -1,4 +1,9 @@
-Feature: git-hack on a feature branch with open changes
+Feature: git hack: starting a new feature (with open changes)
+
+  As a developer working on something unrelated to my current feature branch
+  I want to be able to create a new up-to-date feature branch and continue my work there
+  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -14,9 +19,9 @@ Feature: git-hack on a feature branch with open changes
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                          |
+      | existing_feature | git fetch --prune                |
       | existing_feature | git stash -u                     |
       | existing_feature | git checkout main                |
-      | main             | git fetch --prune                |
       | main             | git rebase origin/main           |
       | main             | git checkout -b new_feature main |
       | new_feature      | git stash pop                    |

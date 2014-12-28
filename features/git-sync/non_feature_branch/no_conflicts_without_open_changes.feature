@@ -1,7 +1,6 @@
 Feature: Git Sync: syncing a non-feature branch without open changes
 
-
-  Scenario: no conflict
+  Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "qa" branch
     And the following commits exist in my repository
@@ -10,7 +9,16 @@ Feature: Git Sync: syncing a non-feature branch without open changes
       |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     When I run `git sync`
-    Then I am still on the "qa" branch
+
+
+  Scenario: no conflict
+    Then it runs the Git commands
+      | BRANCH | COMMAND              |
+      | qa     | git fetch --prune    |
+      | qa     | git rebase origin/qa |
+      | qa     | git push             |
+      | qa     | git push --tags      |
+    And I am still on the "qa" branch
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILES       |
