@@ -37,7 +37,7 @@ You are now exactly where you were before, but your branch now also contains Bob
 ## Creating a pull request
 
 When you are done, you run `git pr`.
-It opens your browser with the GitHub page for creating a new pull request.
+It opens your browser with the GitHub page for creating a new pull request for your current branch.
 You fill out the title and description, tag the reviewers, and submit.
 
 
