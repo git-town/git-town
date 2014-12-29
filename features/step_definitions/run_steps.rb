@@ -1,13 +1,9 @@
-When(/^(?:Charlie|my coworker) runs `([^`]+)`$/) do |command|
-  at_path coworker_repository_path do
-    run command
-  end
-end
-
-
-When(/^I run `([^`]+)`( while allowing errors)?$/) do |commands, allow_failures|
-  commands.split(';').each do |command|
-    run command.strip, allow_failures: allow_failures
+When(/^(I|my coworker) runs? `([^`]+)`( while allowing errors)?$/) do |who, commands, allow_failures|
+  path = (who == 'I') ? local_repository_path : coworker_repository_path
+  at_path(path) do
+    commands.split(';').each do |command|
+      run command.strip, allow_failures: allow_failures
+    end
   end
 end
 

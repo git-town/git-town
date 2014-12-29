@@ -5,10 +5,11 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
   So that shipping has the same experience as committing, and Git Town feels like a natural extension to Git.
 
   Background:
-    Given I am on the "feature" branch
+    Given I have a feature branch named "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
+    And I am on the "feature" branch
     When I run `git ship` and enter an empty commit message
 
 

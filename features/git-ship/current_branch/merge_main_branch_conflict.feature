@@ -6,11 +6,12 @@ Feature: git ship: resolving conflicts between feature and main branch
 
 
   Background:
-    Given I am on the "feature" branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And I am on the "feature" branch
     And I run `git ship -m 'feature done'` while allowing errors
 
 

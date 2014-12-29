@@ -1,5 +1,6 @@
 ## _Git Automation for Agile Development Teams_
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
+[![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](MIT-LICENSE)
 
 Git Town provides a number of additional Git commands that
 automate the typical high-level operations in
@@ -65,6 +66,10 @@ Other platforms need to install manually.
         <li>clone the repo to your machine (into DIR)</li>
         <li>add DIR/src to your <code>$PATH</code></li>
         <li>add DIR/man to your <code>$MANPATH</code></li>
+        <li>
+          install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
+          (used by <a href="/documentation/git-extract.md">git extract</a>)
+        </li>
       </ol>
     </td>
   </tr>
@@ -104,10 +109,15 @@ Other platforms need to install manually.
   </tr>
 </table>
 
-To install the Fish autocompletion, copy
-[Git Town's Fish shell autocompletion definitions file](autocomplete/git.fish)
-into your `~/.config/fish/completions/` folder.
-Create the folder if necessary.
+
+#### Optional tools that make Git Town better
+
+* __Autocompletion for [Fish shell](http://fishshell.com)__
+
+    ```
+    mkdir -p ~/.config/fish/completions/
+    curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish
+    ```
 
 
 ## Configuration
