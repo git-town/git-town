@@ -1,4 +1,7 @@
-Feature: git-hack on a feature branch without open changes
+Feature: git hack: starting a new feature (without open changes)
+
+  (see ./feature_branch_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"

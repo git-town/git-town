@@ -1,11 +1,16 @@
-Feature: Git Kill: Killing the current local feature branch
+Feature: git kill: removing the current local feature branch (with open changes)
+
+  As a developer working on a local dead-end feature branch
+  I want to be able to remove the current branch including open changes
+  So that my workspace doesn't contain irrelevant branches and my productivity remains high.
+
 
   Background:
-    Given I have a feature branch named "good-feature"
+    Given I have a feature branch named "feature"
     And I have a local feature branch named "dead-feature"
     And the following commits exist in my repository
-      | branch       | location         | message         | file name        |
-      | good-feature | local and remote | good commit     | good_file        |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
+      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
     And I am on the "dead-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -13,25 +18,37 @@ Feature: Git Kill: Killing the current local feature branch
 
 
   Scenario: result
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                             |
+      | dead-feature | git fetch --prune                   |
+      | dead-feature | git add -A                          |
+      | dead-feature | git commit -m 'WIP on dead-feature' |
+      | dead-feature | git checkout main                   |
+      | main         | git branch -D dead-feature          |
+    And I end up on the "main" branch
     And the existing branches are
-      | repository | branches           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
     And I have the following commits
-      | branch       | location         | message     | files     |
-      | good-feature | local and remote | good commit | good_file |
+      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | feature | local and remote | good commit | good_file |
 
 
   Scenario: Undoing a kill of a local feature branch
     When I run `git kill --undo`
-    Then I end up on the "dead-feature" branch
+    Then it runs the Git commands
+      | BRANCH       | COMMAND                                           |
+      | main         | git branch dead-feature [SHA:WIP on dead-feature] |
+      | main         | git checkout dead-feature                         |
+      | dead-feature | git reset [SHA:dead-end commit]                   |
+    And I end up on the "dead-feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
-      | repository | branches                         |
-      | local      | main, dead-feature, good-feature |
-      | remote     | main, good-feature               |
+      | REPOSITORY | BRANCHES                    |
+      | local      | main, dead-feature, feature |
+      | remote     | main, feature               |
     And I have the following commits
-      | branch       | location         | message         | files            |
-      | good-feature | local and remote | good commit     | good_file        |
+      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
+      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |

@@ -12,9 +12,9 @@ Feature: git prune-branches: remove stale local feature branches when run on the
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH | COMMAND                        |
-      | main   | git fetch --prune              |
-      | main   | git branch -d stale_feature    |
+      | BRANCH | COMMAND                     |
+      | main   | git fetch --prune           |
+      | main   | git branch -d stale_feature |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

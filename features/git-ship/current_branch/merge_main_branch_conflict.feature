@@ -1,4 +1,9 @@
-Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the current feature branch
+Feature: git ship: resolving conflicts between feature and main branch
+
+  As a developer shipping a branch that conflicts with the main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I am on the "feature" branch
@@ -10,13 +15,27 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
 
 
   Scenario: result
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                            |
+      | feature | git checkout main                  |
+      | main    | git fetch --prune                  |
+      | main    | git rebase origin/main             |
+      | main    | git push                           |
+      | main    | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      | feature | git merge --no-edit main           |
+    And I am still on the "feature" branch
     And my repo has a merge in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND              |
+      | feature | git merge --abort    |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
+    And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILES            |
@@ -43,12 +62,12 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -65,9 +84,9 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                 | FILES            |
-      | main    | local and remote | conflicting main commit | conflicting_file |
-      |         |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILES            |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
     And now I have the following committed files
-      | BRANCH  | FILES            |
-      | main    | conflicting_file |
+      | BRANCH | FILES            |
+      | main   | conflicting_file |

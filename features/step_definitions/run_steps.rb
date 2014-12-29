@@ -42,13 +42,13 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see a browser window for a new pull request on (.+?) for the "(.+?)" branch$/) do |domain, branch_name|
-  expect(@last_run_result.out).to eql "open called with: #{pull_request_url domain, branch_name}\n"
+Then(/^I see a new (.+?) pull request for the "(.+?)" branch in my browser$/) do |domain, branch_name|
+  expect(@last_run_result.out).to eql "#{@tool} called with: #{pull_request_url domain, branch_name}\n"
 end
 
 
-Then(/^I see a browser window for my repository homepage on (.+?)$/) do |domain|
-  expect(@last_run_result.out).to eql "open called with: #{repository_homepage_url domain}\n"
+Then(/^I see the homepage of my (.+?) repository in my browser$/) do |domain|
+  expect(@last_run_result.out).to eql "#{@tool} called with: #{repository_homepage_url domain}\n"
 end
 
 
@@ -58,13 +58,13 @@ end
 
 
 Then(/^it runs the Git commands$/) do |expected_steps|
+  sha_regex = /\[SHA:(.+?)\]/
 
-  # Replace SHA placeholders with the real SHAs of the respective branches
+  # Replace SHA placeholders with the real SHAs
   expected_steps.map_column! 'COMMAND' do |command|
-    command.gsub(/\[\[.+?\]\]/) do |sha_expression|
-      branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0]
-      fail 'No branch name found' unless branch_name
-      sha_of_branch branch_name
+    command.gsub(sha_regex) do |sha_expression|
+      commit_message = sha_expression.match(sha_regex).captures[0].strip
+      output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
     end
   end
 

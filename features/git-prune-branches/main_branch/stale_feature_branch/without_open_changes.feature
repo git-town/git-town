@@ -15,7 +15,7 @@ Feature: git prune-branches: remove stale feature branches when run on the main 
       | main   | git fetch --prune              |
       | main   | git push origin :stale_feature |
       | main   | git branch -d stale_feature    |
-    Then I end up on the "main" branch
+    And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
