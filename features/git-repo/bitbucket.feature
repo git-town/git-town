@@ -1,13 +1,13 @@
 Feature: git-repo when origin is on Bitbucket
 
   Scenario Outline: result
-    Given my remote origin is <REPOSITORY>
+    Given my remote origin is <ORIGIN>
     And I have "open" installed
     When I run `git repo`
     Then I see the homepage of my Bitbucket repository in my browser
 
     Examples:
-      | REPOSITORY                                            |
+      | ORIGIN                                                |
       | http://username@bitbucket.org/Originate/git-town.git  |
       | http://username@bitbucket.org/Originate/git-town      |
       | https://username@bitbucket.org/Originate/git-town.git |

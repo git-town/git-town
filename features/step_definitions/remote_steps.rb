@@ -10,6 +10,6 @@ Given(/^my repo has an upstream repo$/) do
 end
 
 
-Given(/^my remote origin is (.*?)$/) do |origin|
+Given(/^my remote origin is (.+?)$/) do |origin|
   run "git remote set-url origin #{origin}"
 end
