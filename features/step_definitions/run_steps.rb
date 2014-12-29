@@ -42,11 +42,6 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see a new (.+?) pull request for the "(.+?)" branch in my browser$/) do |domain, branch_name|
-  expect(@last_run_result.out).to eql "#{@tool} called with: #{pull_request_url domain, branch_name}\n"
-end
-
-
 Then(/^I see the homepage of my (.+?) repository in my browser$/) do |domain|
   expect(@last_run_result.out).to eql "#{@tool} called with: #{repository_homepage_url domain}\n"
 end

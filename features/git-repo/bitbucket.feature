@@ -1,16 +1,16 @@
 Feature: git-repo when origin is on Bitbucket
 
   Scenario Outline: result
-    Given my remote origin is on Bitbucket through <PROTOCOL>
+    Given my remote origin is <REPOSITORY>
     And I have "open" installed
     When I run `git repo`
     Then I see the homepage of my Bitbucket repository in my browser
 
     Examples:
-      | PROTOCOL                   |
-      | HTTP ending with .git      |
-      | HTTP not ending with .git  |
-      | HTTPS ending with .git     |
-      | HTTPS not ending with .git |
-      | SSH ending with .git       |
-      | SSH not ending with .git   |
+      | REPOSITORY                                            |
+      | http://username@bitbucket.org/Originate/git-town.git  |
+      | http://username@bitbucket.org/Originate/git-town      |
+      | https://username@bitbucket.org/Originate/git-town.git |
+      | https://username@bitbucket.org/Originate/git-town     |
+      | git@bitbucket.org/Originate/git-town.git              |
+      | git@bitbucket.org/Originate/git-town                  |

@@ -10,7 +10,6 @@ Given(/^my repo has an upstream repo$/) do
 end
 
 
-Given(/^my remote origin is on (\S+?) through (\S+?) (not )?ending with \.git$/) do |domain, protocol, no_suffix|
-  suffix = no_suffix ? '' : '.git'
-  run "git remote set-url origin #{git_url domain, protocol, suffix}"
+Given(/^my remote origin is (.*?)$/) do |origin|
+  run "git remote set-url origin #{origin}"
 end
