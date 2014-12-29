@@ -5,21 +5,21 @@ Let's assume your name is Jessie, and you are part of a development team with Bo
 
 ## Starting a new feature
 
-You are in the middle of the sprint, and have just finished a feature. After a short stretch you take the next ticket from the backlog. It's called "resetting passwords". 
+You are in the middle of the sprint, and have just finished a feature. After a short stretch you take the next ticket from the backlog. It's called "resetting passwords".
 
-You run `git hack password-reset`. This command 
+You run `git hack password-reset`. This command
 
-* checks out the master branch 
+* checks out the master branch
 * pulls updates for the master branch, i.e. the things that Bob and Carol have shipped while you worked on your last feature
 * cuts a new feature branch called "password-reset" from your now up-to-date master branch
 * checks out that new branch
 
-This gives you the best possible start for the new password reset feature. 
+This gives you the best possible start for the new password reset feature.
 
 
 ## Synchronizing the branch
 
-After coding for a while, you overhear that Bob shipped a number of important bug fixes, and that Carol shipped some UI updates. Both affect your work, so you want them in your branch. 
+After coding for a while, you overhear that Bob shipped a number of important bug fixes, and that Carol shipped some UI updates. Both affect your work, so you want them in your branch.
 
 In order to achieve that, you run `git sync`. This command
 
@@ -36,7 +36,9 @@ You are now exactly where you were before, but your branch now also contains Bob
 
 ## Creating a pull request
 
-When you are done, you run `git pr`. It opens your browser with the GitHub page for creating a new pull requests. Many fields like the branches are prepopulated. You fill out the rest, and submit the pull request.
+When you are done, you run `git pr`.
+It opens your browser with the GitHub page for creating a new pull requests.
+You fill out the title and description, tag the reviewers, and submit.
 
 
 ## Shipping the feature
