@@ -35,8 +35,6 @@ Git Town provides these additional Git commands:
 
 Git Town is written in 100% [Bash](https://www.gnu.org/software/bash/bash.html),
 so it runs anywhere Git and Bash runs.
-Installation on OS X can be done using [Homebrew](http://brew.sh).
-Other platforms need to install manually.
 
 <table>
   <tr>
@@ -120,7 +118,7 @@ Other platforms need to install manually.
 
 Git Town is configured on a per-repository basis.
 Upon first use in a repository, Git Town will ask for all required
-configuration information.
+configuration.
 Use the [git town](/documentation/git-town.md) command to view or update your configuration at any time.
 
 
