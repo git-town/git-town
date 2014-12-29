@@ -1,7 +1,7 @@
 Feature: Git Sync: handling conflicting remote branch updates when syncing the main branch with open changes
 
   Background:
-    Given I am on the main branch
+    Given I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |

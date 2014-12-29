@@ -6,13 +6,14 @@ Feature: git extract: allows to resolve conflicting remote main branch updates (
 
 
   Background:
-    Given I am on a feature branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main    | remote   | conflicting remote commit | conflicting_file | remote content |
       |         | local    | conflicting local commit  | conflicting_file | local content  |
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
+    And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha while allowing errors
 
@@ -36,7 +37,7 @@ Feature: git extract: allows to resolve conflicting remote main branch updates (
       | HEAD    | git rebase --abort   |
       | main    | git checkout feature |
       | feature | git stash pop        |
-    And I end up on my feature branch
+    And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits

@@ -9,7 +9,7 @@ Feature: git hack: starting a new feature from the main branch
     Given the following commit exists in my repository
       | BRANCH | LOCATION | MESSAGE     | FILE NAME |
       | main   | remote   | main_commit | main_file |
-    And I am on the main branch
+    And I am on the "main" branch
     When I run `git hack new_feature`
 
 

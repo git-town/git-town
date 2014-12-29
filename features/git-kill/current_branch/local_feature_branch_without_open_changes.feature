@@ -10,7 +10,7 @@ Feature: git kill: removing the current local feature branch (without open chang
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
-    And I am on the local "dead-feature" branch
+    And I am on the "dead-feature" branch
     When I run `git kill`
 
 
