@@ -1,3 +1,13 @@
+# Returns the commit date
+#
+# Used to ensure all commits have a unique date
+# commit SHAs are based on the changes and the date
+def commit_date
+  @date ||= Time.now
+  @date += 1
+end
+
+
 # Returns the commits in the current directory
 def commits_in_repo
   existing_branches.map do |branch_name|
@@ -14,7 +24,7 @@ def create_local_commit branch:, file_name:, file_content:, message:, push: fals
   on_branch(branch) do
     File.write file_name, file_content
     run "git add '#{file_name}'"
-    run "git commit -m '#{message}'"
+    run "git commit -m '#{message}' --date='#{commit_date}'"
     run 'git push' if push
   end
 end
