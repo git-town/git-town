@@ -109,7 +109,7 @@ Other platforms need to install manually.
 </table>
 
 
-### Optional tools that make Git Town better
+#### Optional tools that make Git Town better
 
 * __Autocompletion for [Fish shell](http://fishshell.com)__
 
