@@ -34,3 +34,8 @@ function squash_merge {
   fi
   if [ $? != 0 ]; then error_empty_commit; fi
 }
+
+
+function undo_steps_for_merge {
+  echo "reset_to_sha $(current_sha) hard"
+}
