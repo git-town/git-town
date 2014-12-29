@@ -1,6 +1,8 @@
 Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
   path = (who == 'I') ? local_repository_path : coworker_repository_path
-  at_path(path) { run "git checkout #{branch_name}" }
+  at_path(path) do
+    run "git checkout #{branch_name}"
+  end
 end
 
 
