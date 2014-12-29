@@ -65,6 +65,10 @@ Other platforms need to install manually.
         <li>clone the repo to your machine (into DIR)</li>
         <li>add DIR/src to your <code>$PATH</code></li>
         <li>add DIR/man to your <code>$MANPATH</code></li>
+        <li>
+          install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
+          (used by <a href="/documentation/git-extract.md">git extract</a>)
+        </li>
       </ol>
     </td>
   </tr>
@@ -113,11 +117,6 @@ Other platforms need to install manually.
     mkdir -p ~/.config/fish/completions/
     curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish
     ```
-
-* __[Dialog](http://en.wikipedia.org/wiki/Dialog_(software))__ (used by [git-extract](/documentation/git-extract.md))
-
-    Dialog is automatically installed when installing Git Town via Homebrew.
-    On Linux, please install dialog through your package manager.
 
 
 ## Configuration
