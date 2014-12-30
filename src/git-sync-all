@@ -36,7 +36,7 @@ function steps {
     if [ "$(is_feature_branch "$branch_name")" = true ]; then
       echo "merge_tracking_branch"
       echo "merge $main_branch_name"
-    elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
+    else
       echo "rebase_tracking_branch"
     fi
 
