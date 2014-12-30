@@ -82,11 +82,11 @@ Feature: git-sync-all
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync-all --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                             |
-      | feature2 | git commit --no-edit                |
-      | feature2 | git push                            |
-      | feature2 | git checkout main                   |
-      | main     | git stash pop                       |
+      | BRANCH   | COMMAND              |
+      | feature2 | git commit --no-edit |
+      | feature2 | git push             |
+      | feature2 | git checkout main    |
+      | main     | git stash pop        |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -94,10 +94,10 @@ Feature: git-sync-all
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file |
+      |          |                  | feature1 commit                   | feature1_file    |
       | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | conflicting_file    |
+      |          |                  | feature2 commit                   | conflicting_file |
 
 
 
@@ -105,10 +105,10 @@ Feature: git-sync-all
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git sync-all --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                             |
-      | feature2 | git push                            |
-      | feature2 | git checkout main                   |
-      | main     | git stash pop                       |
+      | BRANCH   | COMMAND           |
+      | feature2 | git push          |
+      | feature2 | git checkout main |
+      | main     | git stash pop     |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -116,7 +116,7 @@ Feature: git-sync-all
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file |
+      |          |                  | feature1 commit                   | feature1_file    |
       | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | conflicting_file    |
+      |          |                  | feature2 commit                   | conflicting_file |

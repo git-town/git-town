@@ -101,7 +101,6 @@ Feature: git-sync-all
       |          |                  | feature2 commit                   | feature2_file    |
 
 
-
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git sync-all --continue`
