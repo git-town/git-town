@@ -1,8 +1,8 @@
 Feature: git-sync-all: handling rebase conflicts between non-feature branch and its tracking branch without open changes
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my non-feature branches are "qa" and "production"
+    Given I have branches named "production" and "qa"
+    And my non-feature branches are "production" and "qa"
     And the following commits exist in my repository
       | branch     | location         | message                  | file name        | file content              |
       | main       | remote           | main commit              | main_file        | main content              |
