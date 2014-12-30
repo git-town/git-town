@@ -1,40 +1,38 @@
 Feature: git-sync-all from the main branch
 
   Background:
-    Given I have feature branches named "feature1", "feature2", and "feature3"
-    And my coworker has a feature branch named "coworker_feature"
+    Given I have feature branches named "feature1" and "feature2"
     And the following commits exist in my repository
-      | branch           | location         | message                | file name            |
-      | main             | local            | main local commit      | main_local_file      |
-      | main             | remote           | main remote commit     | main_remote_file     |
-      | feature1         | local and remote | feature1 commit        | feature1_file        |
-      | feature2         | local            | feature2 local commit  | feature2_local_file  |
-      |                  | remote           | feature2 remote commit | feature2_remote_file |
-      | feature3         | local            | feature3 commit        | feature3_file        |
-      | coworker_feature | remote           | coworker commit        | coworker_file        |
+      | branch   | location         | message         | file name     |
+      | main     | remote           | main commit     | main_file     |
+      | feature1 | local and remote | feature1 commit | feature1_file |
+      | feature2 | local and remote | feature2 commit | feature2_file |
     And I am on the "main" branch
     When I run `git sync-all`
 
 
   Scenario: result
-    Then I am still on the "main" branch
+    Then it runs the Git commands
+      | BRANCH   | COMMAND                             |
+      | main     | git fetch --prune                   |
+      | main     | git rebase origin/main              |
+      | main     | git checkout feature1               |
+      | feature1 | git merge --no-edit origin/feature1 |
+      | feature1 | git merge --no-edit main            |
+      | feature1 | git push                            |
+      | feature1 | git checkout feature2               |
+      | feature2 | git merge --no-edit origin/feature2 |
+      | feature2 | git merge --no-edit main            |
+      | feature2 | git push                            |
+      | feature2 | git checkout main                   |
+    And I am still on the "main" branch
     And all branches are now synchronized
     And I have the following commits
-      | branch           | location         | message                                                      | files                |
-      | main             | local and remote | main local commit                                            | main_local_file      |
-      | main             | local and remote | main remote commit                                           | main_remote_file     |
-      | feature1         | local and remote | Merge branch 'main' into feature1                            |                      |
-      |                  |                  | main local commit                                            | main_local_file      |
-      |                  |                  | main remote commit                                           | main_remote_file     |
-      |                  |                  | feature1 commit                                              | feature1_file        |
-      | feature2         | local and remote | Merge branch 'main' into feature2                            |                      |
-      |                  |                  | Merge remote-tracking branch 'origin/feature2' into feature2 |                      |
-      |                  |                  | main local commit                                            | main_local_file      |
-      |                  |                  | main remote commit                                           | main_remote_file     |
-      |                  |                  | feature2 local commit                                        | feature2_local_file  |
-      |                  |                  | feature2 remote commit                                       | feature2_remote_file |
-      | feature3         | local and remote | Merge branch 'main' into feature3                            |                      |
-      |                  |                  | main local commit                                            | main_local_file      |
-      |                  |                  | main remote commit                                           | main_remote_file     |
-      |                  |                  | feature3 commit                                              | feature3_file        |
-      | coworker_feature | remote           | coworker commit                                              | coworker_file        |
+      | branch   | location         | message                           | files         |
+      | main     | local and remote | main commit                       | main_file     |
+      | feature1 | local and remote | Merge branch 'main' into feature1 |               |
+      |          |                  | main commit                       | main_file     |
+      |          |                  | feature1 commit                   | feature1_file |
+      | feature2 | local and remote | Merge branch 'main' into feature2 |               |
+      |          |                  | main commit                       | main_file     |
+      |          |                  | feature2 commit                   | feature2_file |

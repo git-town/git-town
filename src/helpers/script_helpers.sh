@@ -46,6 +46,14 @@ function ensure_continuable {
 }
 
 
+function ensure_skippable {
+  if [ "$(has_file "$steps_file")" = false ]; then
+    echo_red "Cannot skip"
+    exit_with_error
+  fi
+}
+
+
 function ensure_undoable {
   if [ "$(has_file "$undo_steps_file")" = false ]; then
     echo_red "Cannot undo"
