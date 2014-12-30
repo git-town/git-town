@@ -147,6 +147,7 @@ function run_steps {
 }
 
 
+# Skip any steps on the current branch
 function skip_current_branch_steps {
   while [ "$(has_lines "$steps_file")" = true ]; do
     if [[ "$(peek_line "$steps_file")" =~ ^checkout ]]; then
@@ -158,6 +159,13 @@ function skip_current_branch_steps {
 }
 
 
+# Placeholder for any scripts that do have the skip interface
+function skippable {
+  echo false
+}
+
+
+# Undo any steps on the current branch
 function undo_current_branch_steps {
   while [ "$(has_lines "$undo_steps_file")" = true ]; do
     local step=$(peek_line "$undo_steps_file")
@@ -168,10 +176,4 @@ function undo_current_branch_steps {
       remove_line "$undo_steps_file"
     fi
   done
-}
-
-
-# Placeholder for any scripts that do have the skip interface
-function skippable {
-  echo false
 }
