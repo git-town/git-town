@@ -20,7 +20,7 @@ function continue_command {
 function skip_command {
   local cmd=$(pop_line "$steps_file")
   eval "abort_$cmd"
-  abort_current_branch_steps
+  undo_current_branch_steps
   skip_current_branch_steps
   run_steps "$steps_file" undoable
 }
@@ -158,7 +158,7 @@ function skip_current_branch_steps {
 }
 
 
-function abort_current_branch_steps {
+function undo_current_branch_steps {
   while [ "$(has_lines "$undo_steps_file")" = true ]; do
     local step=$(peek_line "$undo_steps_file")
     if [[ "$step" =~ ^checkout ]]; then
