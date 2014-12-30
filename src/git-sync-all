@@ -12,18 +12,6 @@ function skip_message {
 }
 
 
-function skip_steps {
-  while [ "$(has_lines "$steps_files")" = true ]; do
-    local step=$(peek_line "$steps_files")
-    if [[ "$step" =~ ^checkout ]]; then
-      remove_line "$steps_files"
-    else
-      break
-    fi
-  done
-}
-
-
 function skippable {
   if [ "$(is_feature_branch "$(get_current_branch_name)")" = true ]; then
     echo true

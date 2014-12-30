@@ -20,7 +20,8 @@ function continue_command {
 function skip_command {
   local cmd=$(pop_line "$steps_file")
   eval "abort_$cmd"
-  skip_steps
+  abort_current_branch_steps
+  skip_current_branch_steps
   run_steps "$steps_file" undoable
 }
 
@@ -144,6 +145,31 @@ function run_steps {
     remove_step_files
   fi
 }
+
+
+function skip_current_branch_steps {
+  while [ "$(has_lines "$steps_file")" = true ]; do
+    if [[ "$(peek_line "$steps_file")" =~ ^checkout ]]; then
+      break
+    else
+      remove_line "$steps_file"
+    fi
+  done
+}
+
+
+function abort_current_branch_steps {
+  while [ "$(has_lines "$undo_steps_file")" = true ]; do
+    local step=$(peek_line "$undo_steps_file")
+    if [[ "$step" =~ ^checkout ]]; then
+      break
+    else
+      eval "$step"
+      remove_line "$undo_steps_file"
+    fi
+  done
+}
+
 
 # Placeholder for any scripts that do have the skip interface
 function skippable {
