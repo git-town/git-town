@@ -21,7 +21,7 @@ function skip_command {
   local cmd=$(pop_line "$steps_file")
   eval "abort_$cmd"
   undo_current_branch_steps
-  skip_current_branch_steps
+  skip_current_branch_steps "$steps_file"
   run_steps "$steps_file" undoable
 }
 
@@ -149,11 +149,18 @@ function run_steps {
 
 # Skip any steps on the current branch
 function skip_current_branch_steps {
-  while [ "$(has_lines "$steps_file")" = true ]; do
-    if [[ "$(peek_line "$steps_file")" =~ ^checkout ]]; then
+  local file="$1"
+  local add_noop="$2"
+
+  while [ "$(has_lines "$file")" = true ]; do
+    if [[ "$(peek_line "$file")" =~ ^checkout ]]; then
+      if [ -n "$add_noop" ]; then
+        prepend_to_file "noop" "$file"
+      fi
+
       break
     else
-      remove_line "$steps_file"
+      remove_line "$file"
     fi
   done
 }

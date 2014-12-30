@@ -32,19 +32,8 @@ function push_tags {
 }
 
 
-# Pushes tags to the remote
 function undo_steps_for_push {
-  echo "pop_to_next_checkout"
-}
-
-
-function pop_to_next_checkout {
-  while [ "$(has_lines "$undo_steps_file")" = true ]; do
-    if [[ "$(peek_line "$undo_steps_file")" =~ ^checkout ]]; then
-      prepend_to_file "pop_to_next_checkout" "$undo_steps_file"
-      break
-    else
-      remove_line "$undo_steps_file"
-    fi
-  done
+  # Because skip_current_branch_steps will remove steps (including this one)
+  # need to add a noop back to the file to not lose any steps
+  echo "skip_current_branch_steps $undo_steps_file add_noop"
 }
