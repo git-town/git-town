@@ -1,4 +1,4 @@
-Feature: git-sync-all
+Feature: git-sync-all: handling merge conflicts between feature branch and main branch without open changes
 
   Background:
     Given I have feature branches named "feature1" and "feature2"

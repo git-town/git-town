@@ -1,4 +1,4 @@
-Feature: git-sync-all
+Feature: git-sync-all: without open changes
 
   Background:
     Given I have branches named "feature1", "feature2", and "production"

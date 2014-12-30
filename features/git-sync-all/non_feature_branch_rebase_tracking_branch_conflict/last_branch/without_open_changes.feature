@@ -1,4 +1,4 @@
-Feature: git-sync-all
+Feature: git-sync-all: handling rebase conflicts between non-feature branch and its tracking branch without open changes
 
   Background:
     Given I have branches named "production" and "qa"
