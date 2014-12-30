@@ -13,7 +13,7 @@ function skip_message {
 
 
 function skippable {
-  if [ "$(is_feature_branch "$(get_current_branch_name)")" = true ]; then
+  if [ "$(get_current_branch_name)" != "$main_branch_name" ]; then
     echo true
   else
     echo false
@@ -30,13 +30,17 @@ function steps {
   echo "rebase_tracking_branch"
   echo "push"
 
-  local_branches | while read branch_name; do
+  local_branches_without_main | while read branch_name; do
+    echo "checkout $branch_name"
+
     if [ "$(is_feature_branch "$branch_name")" = true ]; then
-      echo "checkout $branch_name"
       echo "merge_tracking_branch"
       echo "merge $main_branch_name"
-      echo "push"
+    elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
+      echo "rebase_tracking_branch"
     fi
+
+    echo "push"
   done
 
   echo "checkout $initial_branch_name"
