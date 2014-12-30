@@ -30,3 +30,21 @@ function push {
 function push_tags {
   run_command "git push --tags"
 }
+
+
+# Pushes tags to the remote
+function undo_steps_for_push {
+  echo "pop_to_next_checkout"
+}
+
+
+function pop_to_next_checkout {
+  while [ "$(has_lines "$undo_steps_file")" = true ]; do
+    if [[ "$(peek_line "$undo_steps_file")" =~ ^checkout ]]; then
+      prepend_to_file "pop_to_next_checkout" "$undo_steps_file"
+      break
+    else
+      remove_line "$undo_steps_file"
+    fi
+  done
+}

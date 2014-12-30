@@ -5,8 +5,8 @@ Feature: git-sync-all
     And the following commits exist in my repository
       | branch   | location         | message         | file name        | file content     |
       | main     | remote           | main commit     | conflicting_file | main content     |
-      | feature1 | local and remote | feature1 commit | feature1_file | feature1 content |
-      | feature2 | local and remote | feature2 commit | conflicting_file    | feature2 content |
+      | feature1 | local and remote | feature1 commit | feature1_file    | feature1 content |
+      | feature2 | local and remote | feature2 commit | conflicting_file | feature2 content |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-all` while allowing errors
@@ -22,7 +22,7 @@ Feature: git-sync-all
       | main     | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
       | feature1 | git merge --no-edit main            |
-      | feature1 | git push |
+      | feature1 | git push                            |
       | feature1 | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
       | feature2 | git merge --no-edit main            |
@@ -34,40 +34,38 @@ Feature: git-sync-all
   Scenario: aborting
     When I run `git sync-all --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND           |
-      | feature2 | git merge --abort |
+      | BRANCH   | COMMAND               |
+      | feature2 | git merge --abort     |
       | feature2 | git checkout feature1 |
-      | feature1 | git checkout main |
-      | main     | git stash pop     |
-    And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I have the following commits
-      | branch   | location         | message         | files            |
-      | main     | local and remote | main commit     | conflicting_file |
-      | feature1 | local and remote | feature1 commit | conflicting_file |
-      | feature2 | local and remote | feature2 commit | feature2_file    |
-
-
-  Scenario: skipping
-    When I run `git sync-all --skip`
-    Then it runs the Git commands
-      | BRANCH   | COMMAND                             |
-      | feature1 | git merge --abort                   |
-      | feature1 | git checkout feature2               |
-      | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
-      | feature2 | git push                            |
-      | feature2 | git checkout main                   |
-      | main     | git stash pop                       |
+      | feature1 | git checkout main     |
+      | main     | git stash pop         |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | branch   | location         | message                           | files            |
       | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | feature1 commit                   | conflicting_file |
-      | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
+      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | feature2_file    |
+      |          |                  | feature1 commit                   | feature1_file    |
+      | feature2 | local and remote | feature2 commit                   | conflicting_file |
+
+
+  Scenario: skipping
+    When I run `git sync-all --skip`
+    Then it runs the Git commands
+      | BRANCH   | COMMAND           |
+      | feature2 | git merge --abort |
+      | feature2 | git checkout main |
+      | main     | git stash pop     |
+    And I end up on the "main" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have the following commits
+      | branch   | location         | message                           | files            |
+      | main     | local and remote | main commit                       | conflicting_file |
+      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | feature1 commit                   | feature1_file    |
+      | feature2 | local and remote | feature2 commit                   | conflicting_file |
 
 
   @finishes-with-non-empty-stash
@@ -75,7 +73,7 @@ Feature: git-sync-all
     When I run `git sync-all --continue` while allowing errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And I am still on the "feature1" branch
+    And I am still on the "feature2" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo still has a merge in progress
 
@@ -85,11 +83,7 @@ Feature: git-sync-all
     And I run `git sync-all --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND                             |
-      | feature1 | git commit --no-edit                |
-      | feature1 | git push                            |
-      | feature1 | git checkout feature2               |
-      | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
+      | feature2 | git commit --no-edit                |
       | feature2 | git push                            |
       | feature2 | git checkout main                   |
       | main     | git stash pop                       |
@@ -100,10 +94,10 @@ Feature: git-sync-all
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | conflicting_file |
+      |          |                  | feature1 commit                   | feature1_file |
       | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | feature2_file    |
+      |          |                  | feature2 commit                   | conflicting_file    |
 
 
 
@@ -112,10 +106,6 @@ Feature: git-sync-all
     And I run `git commit --no-edit; git sync-all --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND                             |
-      | feature1 | git push                            |
-      | feature1 | git checkout feature2               |
-      | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
       | feature2 | git push                            |
       | feature2 | git checkout main                   |
       | main     | git stash pop                       |
@@ -126,7 +116,7 @@ Feature: git-sync-all
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | conflicting_file |
+      |          |                  | feature1 commit                   | feature1_file |
       | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
       |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | feature2_file    |
+      |          |                  | feature2 commit                   | conflicting_file    |
