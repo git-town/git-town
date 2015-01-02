@@ -36,9 +36,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     And I am still on the "feature" branch
     And there is no merge in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT                   |
-      | feature | conflicting_file | local conflicting content |
 
 
   Scenario: continuing after resolving conflicts

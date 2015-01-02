@@ -43,13 +43,9 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit    | conflicting_file |
-      | feature | local            | conflicting feature commit | conflicting_file |
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT         |
-      | main    | conflicting_file | main content    |
-      | feature | conflicting_file | feature content |
+      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local            | conflicting feature commit | conflicting_file | feature content |
 
 
   Scenario: continuing after resolving conflicts

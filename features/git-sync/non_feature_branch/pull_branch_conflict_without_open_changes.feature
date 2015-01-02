@@ -26,9 +26,6 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I am still on the "qa" branch
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT                   |
-      | qa     | conflicting_file | local conflicting content |
 
 
   Scenario: continuing without resolving conflicts
