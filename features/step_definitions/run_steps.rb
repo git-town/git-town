@@ -1,13 +1,9 @@
-When(/^(?:Charlie|my coworker) runs `([^`]+)`$/) do |command|
-  at_path coworker_repository_path do
-    run command
-  end
-end
-
-
-When(/^I run `([^`]+)`( while allowing errors)?$/) do |commands, allow_failures|
-  commands.split(';').each do |command|
-    run command.strip, allow_failures: allow_failures
+When(/^(I|my coworker) runs? `([^`]+)`( while allowing errors)?$/) do |who, commands, allow_failures|
+  path = (who == 'I') ? local_repository_path : coworker_repository_path
+  at_path(path) do
+    commands.split(';').each do |command|
+      run command.strip, allow_failures: allow_failures
+    end
   end
 end
 
@@ -58,13 +54,13 @@ end
 
 
 Then(/^it runs the Git commands$/) do |expected_steps|
+  sha_regex = /\[SHA:(.+?)\]/
 
-  # Replace SHA placeholders with the real SHAs of the respective branches
+  # Replace SHA placeholders with the real SHAs
   expected_steps.map_column! 'COMMAND' do |command|
-    command.gsub(/\[\[.+?\]\]/) do |sha_expression|
-      branch_name = sha_expression.match(/"(.+?)" branch SHA/).captures[0]
-      fail 'No branch name found' unless branch_name
-      sha_of_branch branch_name
+    command.gsub(sha_regex) do |sha_expression|
+      commit_message = sha_expression.match(sha_regex).captures[0].strip
+      output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
     end
   end
 

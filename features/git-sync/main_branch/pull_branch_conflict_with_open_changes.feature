@@ -1,8 +1,7 @@
 Feature: Git Sync: handling conflicting remote branch updates when syncing the main branch with open changes
 
-
   Background:
-    Given I am on the main branch
+    Given I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
@@ -13,13 +12,22 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH | COMMAND                |
+      | main   | git stash -u           |
+      | main   | git fetch --prune      |
+      | main   | git rebase origin/main |
+    And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then I am still on the "main" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND            |
+      | HEAD   | git rebase --abort |
+      | main   | git stash pop      |
+    And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
@@ -34,15 +42,22 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts before continuing the git sync"
+    Then it runs no Git commands
+    And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo still has a rebase in progress
 
 
-  Scenario Outline: continuing after resolving conflicts
+  Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `<COMMAND>`
-    Then I am still on the "main" branch
+    When I run `git sync --continue`
+    Then it runs the Git commands
+      | BRANCH | COMMAND               |
+      | HEAD   | git rebase --continue |
+      | main   | git push              |
+      | main   | git push --tags       |
+      | main   | git stash pop         |
+    And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILES            |
@@ -52,7 +67,21 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
       | BRANCH | FILES            | CONTENT          |
       | main   | conflicting_file | resolved content |
 
-    Examples:
-      | COMMAND                                    |
-      | git sync --continue                        |
-      | git rebase --continue; git sync --continue |
+
+  Scenario: continuing after resolving conflicts and continuing the rebase
+    Given I resolve the conflict in "conflicting_file"
+    When I run `git rebase --continue; git sync --continue`
+    Then it runs the Git commands
+      | BRANCH | COMMAND         |
+      | main   | git push        |
+      | main   | git push --tags |
+      | main   | git stash pop   |
+    And I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And now I have the following commits
+      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | main   | local and remote | conflicting remote commit | conflicting_file |
+      |        |                  | conflicting local commit  | conflicting_file |
+    And now I have the following committed files
+      | BRANCH | FILES            | CONTENT          |
+      | main   | conflicting_file | resolved content |

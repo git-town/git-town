@@ -1,4 +1,6 @@
-Feature: Git Ship: handling merge conflicts between feature and main branch when shipping the supplied feature branch with open changes
+Feature: Git Ship: resolving conflicts between the supplied feature and main branch (with open changes)
+
+  (see ../current_branch/merge_main_branch_conflict.feature)
 
 
   Background:
@@ -14,14 +16,30 @@ Feature: Git Ship: handling merge conflicts between feature and main branch when
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then I end up on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                            |
+      | other_feature | git stash -u                       |
+      | other_feature | git checkout main                  |
+      | main          | git fetch --prune                  |
+      | main          | git rebase origin/main             |
+      | main          | git push                           |
+      | main          | git checkout feature               |
+      | feature       | git merge --no-edit origin/feature |
+      | feature       | git merge --no-edit main           |
+    And I end up on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I end up on the "other_feature" branch
+    Then it runs the Git commands
+      | BRANCH        | COMMAND                    |
+      | feature       | git merge --abort          |
+      | feature       | git checkout main          |
+      | main          | git checkout other_feature |
+      | other_feature | git stash pop              |
+    And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
