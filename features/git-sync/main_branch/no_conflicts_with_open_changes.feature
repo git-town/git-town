@@ -28,7 +28,7 @@ Feature: git sync: syncing the main branch (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE       | FILES       |
+      | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | main   | local and remote | local commit  | local_file  |
       |        |                  | remote commit | remote_file |
     And now I have the following committed files

@@ -33,7 +33,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
     And I end up on the "feature" branch
     And there is no "refactor" branch
     And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
       | main    | remote   | conflicting remote commit | conflicting_file |
       |         | local    | conflicting local commit  | conflicting_file |
       | feature | local    | feature commit            | feature_file     |
@@ -60,7 +60,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
       | refactor | git push -u origin refactor           |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
       | main     | local and remote | conflicting remote commit | conflicting_file |
       |          |                  | conflicting local commit  | conflicting_file |
       | feature  | local            | feature commit            | feature_file     |
@@ -81,7 +81,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
       | refactor | git push -u origin refactor           |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
       | main     | local and remote | conflicting remote commit | conflicting_file |
       |          |                  | conflicting local commit  | conflicting_file |
       | feature  | local            | feature commit            | feature_file     |

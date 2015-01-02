@@ -81,7 +81,7 @@ def commits_for_branch branch_name
     sha, message = commit.split(' ', 2)
 
     unless message == 'Initial commit'
-      { branch: branch_name, message: message, files: committed_files(sha) }
+      { branch: branch_name, message: message, file_name: committed_files(sha) }
     end
   end.compact
 end
@@ -112,7 +112,7 @@ end
 # Returns an array of commit_data
 def normalize_expected_commit_data commit_data
   # Convert file string list into real array
-  commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
+  commit_data[:file_name] = Kappamaki.from_sentence commit_data[:file_name]
 
   # Create individual expected commits for each location provided
   Kappamaki.from_sentence(commit_data.delete(:location)).map do |location|

@@ -26,5 +26,5 @@ Feature: git-sync: restore a deleted tracking branch
       | feature | git push -u origin feature |
     And I am still on the "feature" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE        | FILES        |
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    |
       | feature | local and remote | feature commit | feature_file |

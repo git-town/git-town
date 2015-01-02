@@ -32,7 +32,7 @@ Feature: git extract: extracting multiple commits (with open changes)
     And I end up on the "refactor" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE            | FILE NAME        |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
       |          |                  | refactor1 commit   | refactor1_file   |

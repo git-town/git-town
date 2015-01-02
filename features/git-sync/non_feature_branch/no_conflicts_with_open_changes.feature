@@ -30,7 +30,7 @@ Feature: git sync: syncing a non-feature branch (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE       | FILES       |
+      | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | qa     | local and remote | local commit  | local_file  |
       |        |                  | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |

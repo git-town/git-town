@@ -37,7 +37,7 @@ Feature: git ship: abort shipping the given feature branch by entering an empty 
     And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "main_file" and content: "conflicting content"
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE        | FILES        |
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    |
       | main    | local and remote | main commit    | main_file    |
       | feature | local            | feature commit | feature_file |
     And I still have the following committed files

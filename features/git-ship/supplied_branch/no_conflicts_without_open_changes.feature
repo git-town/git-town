@@ -28,7 +28,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |
@@ -60,7 +60,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |

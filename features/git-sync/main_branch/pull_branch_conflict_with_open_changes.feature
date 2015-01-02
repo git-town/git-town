@@ -36,7 +36,7 @@ Feature: git sync: resolving conflicting remote branch updates when syncing the 
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
       | main   | remote   | conflicting remote commit | conflicting_file |
       |        | local    | conflicting local commit  | conflicting_file |
     And I still have the following committed files
@@ -65,7 +65,7 @@ Feature: git sync: resolving conflicting remote branch updates when syncing the 
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
@@ -84,7 +84,7 @@ Feature: git sync: resolving conflicting remote branch updates when syncing the 
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files

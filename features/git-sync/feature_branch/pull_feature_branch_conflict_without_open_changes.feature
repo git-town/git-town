@@ -35,7 +35,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
     And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
       | feature | local    | local conflicting commit  | conflicting_file |
       |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
@@ -60,7 +60,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | feature | git push                 |
     And I am still on the "feature" branch
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |
@@ -78,7 +78,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | feature | git push                 |
     And I am still on the "feature" branch
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |

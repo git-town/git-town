@@ -26,7 +26,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I end up on the "main" branch
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE         | FILES            |
+      | BRANCH | LOCATION | MESSAGE         | FILE NAME        |
       | main   | upstream | upstream commit | conflicting_file |
       |        | local    | local commit    | conflicting_file |
     And I still have the following committed files
@@ -43,7 +43,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git push              |
     And I end up on the "main" branch
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
@@ -59,7 +59,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git push |
     And I end up on the "main" branch
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
