@@ -6,7 +6,7 @@ Feature: git ship: don't ship the main branch
 
 
   Background:
-    Given I am on the main branch
+    Given I am on the "main" branch
     When I run `git ship -m 'something done'` while allowing errors
 
 

@@ -1,7 +1,7 @@
 Feature: Git Sync: syncing the main branch without open changes
 
   Background:
-    Given I am on the main branch
+    Given I am on the "main" branch
     And the following commits exist in my repository
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |

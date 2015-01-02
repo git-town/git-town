@@ -6,9 +6,9 @@ Feature: git ship: don't ship empty feature branches (with open changes)
   Background:
     Given I have feature branches named "empty-feature" and "other_feature"
     And the following commit exists in my repository
-      | BRANCH        | LOCATION | FILE NAME   | FILE CONTENT   |
-      | main          | remote   | common_file | common content |
-      | empty-feature | local    | common_file | common content |
+      | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
+      | main          | remote   | main commit    | common_file | common content |
+      | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship empty-feature` while allowing errors
@@ -24,6 +24,7 @@ Feature: git ship: don't ship empty feature branches (with open changes)
       | main          | git checkout empty-feature               |
       | empty-feature | git merge --no-edit origin/empty-feature |
       | empty-feature | git merge --no-edit main                 |
+      | empty-feature | git reset --hard [SHA:feature commit]    |
       | empty-feature | git checkout main                        |
       | main          | git checkout other_feature               |
       | other_feature | git stash pop                            |
