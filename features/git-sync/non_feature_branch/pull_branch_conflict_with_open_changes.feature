@@ -1,4 +1,9 @@
-Feature: Git Sync: handling conflicting remote branch updates when syncing a non-feature branch with open changes
+Feature: git sync: handling conflicting remote branch updates when syncing a non-feature branch (with open changes)
+
+  As a developer syncing a non-feature branch that conflicts with its tracking branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given non-feature branch configuration "qa, production"
@@ -32,7 +37,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
       | qa     | remote   | conflicting remote commit | conflicting_file |
       |        | local    | conflicting local commit  | conflicting_file |
     And I still have the following committed files
@@ -61,7 +66,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
@@ -80,7 +85,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files

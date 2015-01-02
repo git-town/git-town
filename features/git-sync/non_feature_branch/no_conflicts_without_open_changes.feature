@@ -1,4 +1,7 @@
-Feature: Git Sync: syncing a non-feature branch without open changes
+Feature: git sync: syncing a non-feature branch (without open changes)
+
+  (see ./no_conflicts_with_open_changes.feature)
+
 
   Background:
     Given non-feature branch configuration "qa, production"
@@ -21,7 +24,7 @@ Feature: Git Sync: syncing a non-feature branch without open changes
     And I am still on the "qa" branch
     And all branches are now synchronized
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE       | FILES       |
+      | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | qa     | local and remote | local commit  | local_file  |
       |        |                  | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |

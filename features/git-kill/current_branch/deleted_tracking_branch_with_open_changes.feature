@@ -32,7 +32,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | local      | main, feature |
       | remote     | main, feature |
     And I have the following commits
-      | branch  | location         | message     | files     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
 
 
@@ -46,10 +46,10 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
     Then I end up on the "orphaned-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
-      | REPOSITORY | BRANCHES                    |
+      | REPOSITORY | BRANCHES                             |
       | local      | main, orphaned-feature, good-feature |
       | remote     | main, good-feature                   |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
-      | good-feature     | local and remote | good commit     | good_file        |
+      | BRANCH           | LOCATION         | MESSAGE         | FILE NAME        |
+      | feature          | local and remote | good commit     | good_file        |
       | orphaned-feature | local            | orphaned commit | unfortunate_file |

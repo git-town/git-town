@@ -31,7 +31,7 @@ Feature: git kill: removing the current local feature branch (with open changes)
       | local      | main, feature |
       | remote     | main, feature |
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
 
 
@@ -49,6 +49,6 @@ Feature: git kill: removing the current local feature branch (with open changes)
       | local      | main, dead-feature, feature |
       | remote     | main, feature               |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |

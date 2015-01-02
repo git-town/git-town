@@ -1,4 +1,9 @@
-Feature: Git Sync: syncing a non-feature branch pushes tags to the remote
+Feature: git sync: syncing a non-feature branch pushes tags to the remote
+
+  As a developer syncing a non-feature branch
+  I want my tags to be published
+  So that I can do tagging work effectively on my local machine and have more time for other work.
+
 
   Background:
     Given non-feature branch configuration "qa, production"
