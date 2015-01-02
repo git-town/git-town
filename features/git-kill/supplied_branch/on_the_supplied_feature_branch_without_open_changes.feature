@@ -26,7 +26,7 @@ Feature: git kill: removes the given feature branch when on it (without open cha
       | local      | main, feature |
       | remote     | main, feature |
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
 
 
@@ -43,7 +43,7 @@ Feature: git kill: removes the given feature branch when on it (without open cha
       | local      | main, dead-feature, feature |
       | remote     | main, dead-feature, feature |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
 

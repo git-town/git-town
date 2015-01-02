@@ -25,7 +25,7 @@ Feature: Git Sync: syncing a feature branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILES              |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |
       | main    | local and remote | local main commit                | local_main_file    |
       |         |                  | remote main commit               | remote_main_file   |
       | feature | local and remote | Merge branch 'main' into feature |                    |
@@ -64,7 +64,7 @@ Feature: Git Sync: syncing a feature branch with open changes
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES               |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature                           |                     |
