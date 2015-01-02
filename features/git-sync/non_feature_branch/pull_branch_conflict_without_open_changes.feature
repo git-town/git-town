@@ -1,4 +1,6 @@
-Feature: Git Sync: handling conflicting remote branch updates when syncing a non-feature branch without open changes
+Feature: git sync: handling conflicting remote branch updates when syncing a non-feature branch (without open changes)
+
+  (see ./pull_branch_conflict_with_open_changes.feature)
 
   Background:
     Given non-feature branch configuration "qa, production"

@@ -1,4 +1,7 @@
-Feature: Git Sync: handling conflicting remote feature branch updates when syncing a feature branch without open changes
+Feature: git sync: resolving conflicting remote feature branch updates when syncing a feature branch without open changes
+
+  (see ./pull_feature_branch_conflict_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "feature"

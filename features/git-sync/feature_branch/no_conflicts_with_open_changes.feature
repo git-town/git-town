@@ -1,4 +1,9 @@
-Feature: Git Sync: syncing a feature branch with open changes
+Feature: git sync: on a feature branch (with open changes)
+
+  As a developer syncing a feature branch
+  I want my branch to be updated with changes from the tracking branch and the main branch
+  So that my work stays in sync with the main development line, can be merged easily later, and I remain productive.
+
 
   Scenario: without a remote branch
     Given I have a local feature branch named "feature"

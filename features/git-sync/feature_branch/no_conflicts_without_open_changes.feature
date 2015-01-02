@@ -1,4 +1,7 @@
-Feature: Git Sync: syncing a feature branch without open changes
+Feature: git sync: on a feature branch (without open changes)
+
+  (see ./no_conflicts_with_open_changes.feature)
+
 
   Scenario: without a remote branch
     Given I have a local feature branch named "feature"

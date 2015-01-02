@@ -1,4 +1,6 @@
-Feature: Git Sync: syncing the main branch without open changes
+Feature: git sync: syncing the main branch (without open changes)
+
+  (see ./no_conflicts_with_open_changes.feature)
 
   Background:
     Given I am on the "main" branch

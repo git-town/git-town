@@ -1,4 +1,7 @@
-Feature: Git Sync: handling conflicting remote branch updates when syncing the main branch without open changes
+Feature: git sync: handling conflicting remote branch updates when syncing the main branch (without open changes)
+
+  (see ./pull_branch_conflict_with_open_changes.feature)
+
 
   Background:
     Given I am on the "main" branch

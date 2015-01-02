@@ -1,4 +1,9 @@
-Feature: Git Sync: handling conflicting remote main branch updates when syncing a feature branch with open changes
+Feature: git sync: resolving conflicting remote main branch updates when syncing a feature branch with open changes
+
+  As a developer syncing a feature branch when there are conflicts between the local and remote main branches
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "feature"
