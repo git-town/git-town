@@ -25,10 +25,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
       | HEAD   | git rebase --abort |
     And I am still on the "main" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
-      | main   | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
     And I still have the following committed files
       | BRANCH | FILES            | CONTENT                   |
       | main   | conflicting_file | local conflicting content |

@@ -25,10 +25,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | HEAD   | git rebase --abort |
     And I end up on the "main" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE         | FILE NAME        |
-      | main   | upstream | upstream commit | conflicting_file |
-      |        | local    | local commit    | conflicting_file |
+    And I am left with my original commits
     And I still have the following committed files
       | BRANCH | FILES            | CONTENT       |
       | main   | conflicting_file | local content |

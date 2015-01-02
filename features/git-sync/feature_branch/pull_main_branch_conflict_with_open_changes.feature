@@ -33,10 +33,7 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
-      | main   | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
     And I still have the following committed files
       | BRANCH | FILES            | CONTENT                   |
       | main   | conflicting_file | local conflicting content |

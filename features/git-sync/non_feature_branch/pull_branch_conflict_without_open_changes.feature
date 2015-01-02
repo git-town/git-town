@@ -25,10 +25,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing a non
       | HEAD   | git rebase --abort |
     And I am still on the "qa" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
-      | qa     | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
     And I still have the following committed files
       | BRANCH | FILES            | CONTENT                   |
       | qa     | conflicting_file | local conflicting content |

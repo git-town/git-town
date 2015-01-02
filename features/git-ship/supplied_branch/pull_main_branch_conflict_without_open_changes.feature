@@ -31,11 +31,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main   | git checkout other_feature |
     And I am still on the "other_feature" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
-      | main    | remote   | conflicting remote commit | conflicting_file |
-      |         | local    | conflicting local commit  | conflicting_file |
-      | feature | local    | feature commit            | feature_file     |
+    And I am left with my original commits
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT                   |
       | main    | conflicting_file | local conflicting content |
