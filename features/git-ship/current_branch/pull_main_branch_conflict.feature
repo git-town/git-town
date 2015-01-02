@@ -1,23 +1,37 @@
-Feature: Git Ship: handling conflicting remote main branch updates when shipping the current feature branch
+Feature: git ship: resolving conflicts while updating the main branch
+
+  As a developer shipping a branch while there are conflicts between the local and remote main branches
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
-    Given I am on the "feature" branch
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
-    And I run `git ship -m 'feature done'` while allowing errors
+    And I am on the "feature" branch
+    When I run `git ship -m 'feature done'` while allowing errors
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                |
+      | feature | git checkout main      |
+      | main    | git fetch --prune      |
+      | main    | git rebase origin/main |
+    And my repo has a rebase in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND              |
+      | HEAD   | git rebase --abort   |
+      | main   | git checkout feature |
+    And I am still on the "feature" branch
     And there is no rebase in progress
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                   | FILES            |

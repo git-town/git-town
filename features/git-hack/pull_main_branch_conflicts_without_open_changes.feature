@@ -1,4 +1,7 @@
-Feature: git-hack handling conflicting remote main branch updates with open changes
+Feature: git hack: handling conflicting remote main branch updates while starting a new feature
+
+  (see ./pull_main_branch_coflicts_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"

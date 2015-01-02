@@ -12,19 +12,21 @@ function branch_to_kill {
 
 
 function preconditions {
-  fetch
-
   target_branch=$(branch_to_kill "$@")
+
+  ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
+  fetch
   if [ "$target_branch" != "$initial_branch_name" ]; then
     ensure_has_branch "$target_branch"
   fi
-  ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
 }
 
 
 function steps {
   if [ "$target_branch" = "$initial_branch_name" ]; then
-    echo "commit_open_changes"
+    if [ "$initial_open_changes" = true ]; then
+      echo "commit_open_changes"
+    fi
     echo "checkout_main_branch"
   fi
 

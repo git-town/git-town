@@ -1,4 +1,7 @@
-Feature: git hack errors without a branch name without open changes
+Feature: git hack: requires a branch name (without open changes)
+
+  (see ./no_branch_name_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"

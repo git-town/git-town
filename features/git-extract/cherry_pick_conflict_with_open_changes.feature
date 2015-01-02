@@ -20,14 +20,14 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
   @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | feature  | git fetch --prune                        |
-      | feature  | git stash -u                             |
-      | feature  | git checkout main                        |
-      | main     | git rebase origin/main                   |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
+      | BRANCH   | COMMAND                               |
+      | feature  | git fetch --prune                     |
+      | feature  | git stash -u                          |
+      | feature  | git checkout main                     |
+      | main     | git rebase origin/main                |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
     And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
@@ -56,7 +56,8 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts before continuing the git extract"
+    Then it runs no Git commands
+    And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress

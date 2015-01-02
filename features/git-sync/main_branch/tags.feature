@@ -7,7 +7,7 @@ Feature: git sync: syncing the main branch pushes tags to the remote
 
 
   Background:
-    Given I am on the main branch
+    Given I am on the "main" branch
     And I add a local tag "v1.0"
     When I run `git sync`
 
