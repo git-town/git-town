@@ -32,9 +32,6 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT       |
-      | main   | conflicting_file | local content |
 
 
   Scenario: continuing after resolving conflicts

@@ -34,10 +34,6 @@ Feature: git ship: resolving conflicts while updating the main branch
     And I am still on the "feature" branch
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT                   |
-      | main    | conflicting_file | local conflicting content |
-      | feature | feature_file     | feature content           |
 
 
   Scenario: continuing after resolving conflicts

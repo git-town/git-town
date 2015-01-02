@@ -28,9 +28,6 @@ Feature: Git Sync: handling conflicting remote main branch updates when syncing 
     And I am still on the "feature" branch
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT                   |
-      | main   | conflicting_file | local conflicting content |
 
 
   Scenario: continuing without resolving conflicts

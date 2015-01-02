@@ -36,14 +36,10 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit    | conflicting_file |
-      | feature | local            | conflicting feature commit | conflicting_file |
-      |         | remote           | feature commit             | feature_file     |
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT         |
-      | main    | conflicting_file | main content    |
-      | feature | conflicting_file | feature content |
+      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local            | conflicting feature commit | conflicting_file | feature content |
+      |         | remote           | feature commit             | feature_file     | feature content |
 
 
   Scenario: continuing without resolving conflicts

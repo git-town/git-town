@@ -20,9 +20,7 @@ end
 
 
 Then(/^I am left with my original commits$/) do
-  original_hashes = @my_original_commits_table.hashes.each do |hash|
-    hash.delete 'file content'
-  end
+  original_hashes = @my_original_commits_table.hashes
   at_path(local_repository_path) do
     verify_commits original_hashes
   end

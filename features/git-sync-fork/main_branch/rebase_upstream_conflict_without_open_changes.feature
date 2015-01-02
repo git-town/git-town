@@ -26,9 +26,6 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I end up on the "main" branch
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT       |
-      | main   | conflicting_file | local content |
 
 
   Scenario: continuing after resolving conflicts

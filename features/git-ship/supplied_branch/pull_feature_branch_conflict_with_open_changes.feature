@@ -41,9 +41,6 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT                   |
-      | feature | conflicting_file | local conflicting content |
 
 
   Scenario: continuing after resolving conflicts

@@ -26,9 +26,6 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I am still on the "main" branch
     And there is no rebase in progress
     And I am left with my original commits
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT                   |
-      | main   | conflicting_file | local conflicting content |
 
 
   @finishes-with-non-empty-stash
