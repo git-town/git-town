@@ -2,6 +2,7 @@ Feature: git sync: handling conflicting remote branch updates when syncing the m
 
   (see ./pull_branch_conflict_with_open_changes.feature)
 
+
   Background:
     Given I am on the "main" branch
     And the following commits exist in my repository

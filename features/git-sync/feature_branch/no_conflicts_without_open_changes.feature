@@ -2,6 +2,7 @@ Feature: git sync: on a feature branch (without open changes)
 
   (see ./no_conflicts_with_open_changes.feature)
 
+
   Scenario: without a remote branch
     Given I have a local feature branch named "feature"
     And the following commits exist in my repository

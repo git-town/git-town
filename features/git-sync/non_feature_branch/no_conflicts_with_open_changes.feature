@@ -4,6 +4,7 @@ Feature: git sync: syncing a non-feature branch (with open changes)
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
+
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "qa" branch

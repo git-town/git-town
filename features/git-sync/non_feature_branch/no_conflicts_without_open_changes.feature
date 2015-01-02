@@ -2,6 +2,7 @@ Feature: git sync: syncing a non-feature branch (without open changes)
 
   (see ./no_conflicts_with_open_changes.feature)
 
+
   Background:
     Given non-feature branch configuration "qa, production"
     And I am on the "qa" branch

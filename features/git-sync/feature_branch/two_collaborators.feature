@@ -4,6 +4,7 @@ Feature: git sync: collaborative feature branch syncing
   I want each person to be able to sync their changes with the rest of the team
   So that our collaboration is effective.
 
+
   Background:
     Given I have a feature branch named "feature"
     And my coworker fetches updates
