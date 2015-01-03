@@ -46,7 +46,7 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        |
       | main    | local and remote | main commit     | conflicting_file |
       | feature | local            | feature commit  | feature_file     |
       |         |                  | refactor commit | conflicting_file |
@@ -74,7 +74,7 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |
       | feature  | local            | feature commit  | feature_file     |
       |          |                  | refactor commit | conflicting_file |
@@ -92,7 +92,7 @@ Feature: git extract: resolving conflicts with main branch (with open changes)
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |
       | feature  | local            | feature commit  | feature_file     |
       |          |                  | refactor commit | conflicting_file |

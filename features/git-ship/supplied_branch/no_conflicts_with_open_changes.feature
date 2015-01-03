@@ -32,7 +32,7 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |
@@ -68,7 +68,7 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |

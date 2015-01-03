@@ -32,7 +32,7 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE        | FILES        |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
       | feature | local    | feature commit | feature_file |
     And I still have the following committed files
       | BRANCH  | FILES        | CONTENT         |

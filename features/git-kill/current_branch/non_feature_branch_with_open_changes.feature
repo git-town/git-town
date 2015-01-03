@@ -27,6 +27,6 @@ Feature: git kill: don't remove non-feature branches (with open changes)
       | local      | main, qa, feature |
       | remote     | main, qa, feature |
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
       | qa      | local and remote | qa commit   | qa_file   |

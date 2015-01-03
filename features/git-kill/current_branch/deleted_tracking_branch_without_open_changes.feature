@@ -26,7 +26,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | local      | main, feature |
       | remote     | main, feature |
     And I have the following commits
-      | branch  | location         | message     | files     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
 
 
@@ -42,6 +42,6 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | local      | main, dead-feature, feature |
       | remote     | main, feature               |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |

@@ -26,7 +26,7 @@ Feature: git extract: extracting multiple commits (without open changes)
       | refactor | git push -u origin refactor                                   |
     And  I end up on the "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE            | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE            | FILE NAME        |
       | main     | local and remote | remote main commit | remote_main_file |
       | feature  | local            | feature commit     | feature_file     |
       |          |                  | refactor1 commit   | refactor1_file   |

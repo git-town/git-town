@@ -28,7 +28,7 @@ Feature: git hack: starting a new feature (with open changes)
     And I end up on the "new_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | BRANCH           | LOCATION         | MESSAGE                 | FILES        |
+      | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME    |
       | main             | local and remote | main commit             | main_file    |
       | existing_feature | local            | existing feature commit | feature_file |
       | new_feature      | local            | main commit             | main_file    |

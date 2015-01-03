@@ -1,4 +1,7 @@
-Feature: Git Sync: handling conflicting remote branch updates when syncing the main branch without open changes
+Feature: git sync: handling conflicting remote branch updates when syncing the main branch (without open changes)
+
+  (see ./pull_branch_conflict_with_open_changes.feature)
+
 
   Background:
     Given I am on the "main" branch
@@ -26,7 +29,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I am still on the "main" branch
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
       | main   | remote   | conflicting remote commit | conflicting_file |
       |        | local    | conflicting local commit  | conflicting_file |
     And I still have the following committed files
@@ -52,7 +55,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
       | main   | git push --tags       |
     And I am still on the "main" branch
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
@@ -69,7 +72,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
       | main   | git push --tags |
     And I am still on the "main" branch
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
