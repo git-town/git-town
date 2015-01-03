@@ -40,12 +40,7 @@ Feature: git extract: allows to resolve conflicting remote main branch updates (
     And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
-    And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
-      | main    | remote   | conflicting remote commit | conflicting_file |
-      |         | local    | conflicting local commit  | conflicting_file |
-      | feature | local    | feature commit            | feature_file     |
-      |         |          | refactor commit           | refactor_file    |
+    And I am left with my original commits
     And there is no rebase in progress
 
 
