@@ -1,4 +1,9 @@
-Feature: Git Sync: handling conflicting remote branch updates when syncing the main branch with open changes
+Feature: git sync: resolving conflicting remote branch updates when syncing the main branch (with open changes)
+
+  As a developer syncing the main branch when it conflicts with its tracking branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I am on the "main" branch
@@ -31,7 +36,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
       | main   | remote   | conflicting remote commit | conflicting_file |
       |        | local    | conflicting local commit  | conflicting_file |
     And I still have the following committed files
@@ -60,7 +65,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
@@ -79,7 +84,7 @@ Feature: Git Sync: handling conflicting remote branch updates when syncing the m
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files

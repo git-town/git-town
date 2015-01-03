@@ -1,4 +1,7 @@
-Feature: Git Sync: syncing a feature branch without open changes
+Feature: git sync: on a feature branch (without open changes)
+
+  (see ./no_conflicts_with_open_changes.feature)
+
 
   Scenario: without a remote branch
     Given I have a local feature branch named "feature"
@@ -21,7 +24,7 @@ Feature: Git Sync: syncing a feature branch without open changes
     And I am still on the "feature" branch
     And all branches are now synchronized
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILES              |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |
       | main    | local and remote | local main commit                | local_main_file    |
       |         |                  | remote main commit               | remote_main_file   |
       | feature | local and remote | Merge branch 'main' into feature |                    |
@@ -56,7 +59,7 @@ Feature: Git Sync: syncing a feature branch without open changes
       | feature | git push                           |
     And I am still on the "feature" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES               |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature                           |                     |

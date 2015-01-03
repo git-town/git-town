@@ -41,7 +41,7 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
       | feature | local    | local conflicting commit  | conflicting_file |
       |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
@@ -68,7 +68,7 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
       | BRANCH | FILES            |
@@ -93,7 +93,7 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES            |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
     And now I have the following committed files
       | BRANCH | FILES            |

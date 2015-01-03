@@ -38,7 +38,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
       | main    | remote   | conflicting remote commit | conflicting_file |
       |         | local    | conflicting local commit  | conflicting_file |
       | feature | local    | feature commit            | feature_file     |
@@ -70,7 +70,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
@@ -100,7 +100,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
