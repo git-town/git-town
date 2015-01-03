@@ -6,7 +6,7 @@ Let's assume you are part of a development team with Bob and Carol. Your reposit
 ## Starting a new feature
 
 You are in the middle of the sprint, and have just finished a feature.
-After a short stretch you take the next ticket from the backlog.
+You take the next ticket from the backlog.
 Let's say it is called "resetting passwords".
 You run `git hack reset-passwords`. This command
 
