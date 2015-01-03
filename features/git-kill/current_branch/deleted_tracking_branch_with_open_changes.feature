@@ -43,7 +43,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | main             | git branch orphaned-feature [SHA:WIP on orphaned-feature] |
       | main             | git checkout orphaned-feature                             |
       | orphaned-feature | git reset [SHA:orphaned commit]                           |
-    Then I end up on the "orphaned-feature" branch
+    And I end up on the "orphaned-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
