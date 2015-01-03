@@ -51,7 +51,7 @@ After a while, your pull request gets the approval to be merged. You run `git sh
 
 * checks out the _master_ branch
 * pulls updates from the remote master branch (to make sure you ship on top of the latest version of master)
-* checks out your "password-reset" branch
+* checks out your _password-reset_ branch
 * pulls updates from its remote branch (to make sure you ship everything that is in that branch)
 * merges the _master_ branch into the _password-reset_ branch
   (to make sure your branch doesn't create conflicts with _master_,
