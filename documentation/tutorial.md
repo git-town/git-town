@@ -1,6 +1,6 @@
 # Git Town Tutorial
 
-Let's assume your name is Jessie, and you are part of a development team with Bob and Carol. Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
+Let's assume you are part of a development team with Bob and Carol. Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
 
 
 ## Starting a new feature
