@@ -4,7 +4,7 @@ Feature: git-repo: multi-platform support
     Given my remote origin is https://github.com/Originate/git-town.git
     And I have "<TOOL>" installed
     When I run `git repo`
-    Then I see the homepage of my GitHub repository in my browser
+    Then I see the GitHub homepage of the "Originate/git-town" repository in my browser
 
     Examples:
       | TOOL     |

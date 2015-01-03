@@ -26,6 +26,6 @@ end
 
 
 # Returns the remote URL for the homepage of the given domain
-def repository_homepage_url domain
-  "#{base_url domain}/Originate/git-town"
+def repository_homepage_url domain, repository
+  "#{base_url domain}/#{repository}"
 end

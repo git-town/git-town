@@ -38,8 +38,8 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see the homepage of my (.+?) repository in my browser$/) do |domain|
-  expect(@last_run_result.out).to eql "#{@tool} called with: #{repository_homepage_url domain}\n"
+Then(/^I see the (Bitbucket|GitHub) homepage of the "(.+?)" repository in my browser$/) do |domain, repository|
+  expect(@last_run_result.out).to eql "#{@tool} called with: #{repository_homepage_url domain, repository}\n"
 end
 
 
