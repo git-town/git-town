@@ -1,4 +1,4 @@
-Feature: git-sync-all: handling rebase conflicts between main branch and its tracking branch without open changes
+Feature: git sync --all: handling rebase conflicts between main branch and its tracking branch without open changes
 
   Background:
     Given I have a feature branch named "feature"

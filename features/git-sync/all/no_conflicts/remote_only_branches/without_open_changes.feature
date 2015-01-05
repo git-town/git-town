@@ -1,4 +1,4 @@
-Feature: git-sync-all: does not sync remote only branches without open changes
+Feature: git sync --all: does not sync remote only branches without open changes
 
   Background:
     Given I have a feature branch named "my-feature"

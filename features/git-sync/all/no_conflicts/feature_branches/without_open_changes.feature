@@ -1,4 +1,4 @@
-Feature: git-sync-all: syncs all feature branches with open changes
+Feature: git sync --all: syncs all feature branches with open changes
 
   Background:
     Given I have feature branches named "feature1" and "feature2"
