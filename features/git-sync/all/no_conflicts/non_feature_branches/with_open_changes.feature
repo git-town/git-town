@@ -1,4 +1,4 @@
-Feature: git sync --all: syncs all non-feature branches without open changes
+Feature: git sync --all: syncs all non-feature branches with open changes
 
   Background:
     Given I have branches named "production" and "qa"
