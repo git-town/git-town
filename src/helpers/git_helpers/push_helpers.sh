@@ -33,7 +33,5 @@ function push_tags {
 
 
 function undo_steps_for_push {
-  # Because skip_current_branch_steps will remove steps (including this one)
-  # need to add a noop back to the file to not lose any steps
-  echo "skip_current_branch_steps $undo_steps_file add_noop"
+  echo "skip_current_branch_steps $undo_steps_file"
 }

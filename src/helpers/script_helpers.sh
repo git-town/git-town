@@ -69,14 +69,15 @@ function exit_with_messages {
     echo_red "To abort, run \"$git_command --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
     if [ "$(skippable)" = true ]; then
-      echo_red "$(skip_message), run \"$git_command --skip\"."
+      echo_red "To skip $(skip_message), run \"$git_command --skip\"."
     fi
     exit_with_error
   fi
 }
 
 
-# Placeholder for any scripts that have no preconditions
+# Parses arguments, validates necessary state
+# This should be overriden by commands when necessary
 function preconditions {
   true
 }
@@ -150,13 +151,11 @@ function run_steps {
 # Skip any steps on the current branch
 function skip_current_branch_steps {
   local file="$1"
-  local add_noop="$2"
 
   while [ "$(has_lines "$file")" = true ]; do
     if [[ "$(peek_line "$file")" =~ ^checkout ]]; then
-      if [ -n "$add_noop" ]; then
-        prepend_to_file "noop" "$file"
-      fi
+      # Add empty line to file to ensure no step if lost
+      prepend_to_file "" "$file"
       break
     else
       remove_line "$file"
@@ -165,7 +164,8 @@ function skip_current_branch_steps {
 }
 
 
-# Placeholder for any scripts that do have the skip interface
+# Returns whether or not the current step can be skipped
+# This should be overriden in commands when necessary
 function skippable {
   echo false
 }
