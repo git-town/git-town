@@ -1,4 +1,9 @@
-Feature: Git Sync: collaborative feature branch syncing
+Feature: git sync: collaborative feature branch syncing
+
+  As a developer collaborating with others on a feature
+  I want each person to be able to sync their changes with the rest of the team
+  So that our collaboration is effective.
+
 
   Background:
     Given I have a feature branch named "feature"
@@ -23,8 +28,8 @@ Feature: Git Sync: collaborative feature branch syncing
       | feature | git merge --no-edit main           |
       | feature | git push                           |
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE   | FILES   |
-      | feature | local and remote | my commit | my_file |
+      | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
+      | feature | local and remote | my commit | my_file   |
 
     Given my coworker is on the "feature" branch
     When my coworker runs `git sync`
@@ -38,7 +43,7 @@ Feature: Git Sync: collaborative feature branch syncing
       | feature | git merge --no-edit main           |
       | feature | git push                           |
     And now my coworker has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES         |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |               |
       | feature |                  | coworker commit                                            | coworker_file |
       | feature |                  | my commit                                                  | my_file       |
@@ -54,7 +59,7 @@ Feature: Git Sync: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES         |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |               |
       | feature |                  | coworker commit                                            | coworker_file |
       | feature |                  | my commit                                                  | my_file       |

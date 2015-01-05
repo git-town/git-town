@@ -26,7 +26,7 @@ Feature: git hack: moving open changes on the main branch into a new feature bra
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the branch "new_feature" has not been pushed to the repository
     And I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH      | LOCATION         | MESSAGE     | FILE NAME |
       | main        | local and remote | main_commit | main_file |
       | new_feature | local            | main_commit | main_file |
     And now I have the following committed files

@@ -36,7 +36,7 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
     And I still have an uncommitted file with name: "main_file" and content: "conflicting content"
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | main commit  | main_file    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
@@ -73,7 +73,7 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
     And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
     And there is no "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILES        |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
     And now I have the following committed files
       | BRANCH | FILES        |
