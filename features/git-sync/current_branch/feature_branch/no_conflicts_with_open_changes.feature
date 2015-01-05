@@ -17,9 +17,9 @@ Feature: git sync: on a feature branch (with open changes)
     When I run `git sync`
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
+      | feature | git fetch --prune          |
       | feature | git stash -u               |
       | feature | git checkout main          |
-      | main    | git fetch --prune          |
       | main    | git rebase origin/main     |
       | main    | git push                   |
       | main    | git checkout feature       |
@@ -56,9 +56,9 @@ Feature: git sync: on a feature branch (with open changes)
     When I run `git sync`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
+      | feature | git fetch --prune                  |
       | feature | git stash -u                       |
       | feature | git checkout main                  |
-      | main    | git fetch --prune                  |
       | main    | git rebase origin/main             |
       | main    | git push                           |
       | main    | git checkout feature               |

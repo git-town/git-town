@@ -3,13 +3,13 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
   Background:
     Given I have feature branches named "feature1" and "feature2"
     And the following commits exist in my repository
-      | branch   | location         | message         | file name        | file content     |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        | FILE CONTENT     |
       | main     | remote           | main commit     | conflicting_file | main content     |
       | feature1 | local and remote | feature1 commit | feature1_file    | feature1 content |
       | feature2 | local and remote | feature2 commit | conflicting_file | feature2 content |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync-all` while allowing errors
+    When I run `git sync --all` while allowing errors
 
 
   @finishes-with-non-empty-stash
@@ -32,7 +32,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
 
 
   Scenario: aborting
-    When I run `git sync-all --abort`
+    When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH   | COMMAND               |
       | feature2 | git merge --abort     |
@@ -42,7 +42,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | branch   | location         | message                           | files            |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
@@ -51,7 +51,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
 
 
   Scenario: skipping
-    When I run `git sync-all --skip`
+    When I run `git sync --skip`
     Then it runs the Git commands
       | BRANCH   | COMMAND           |
       | feature2 | git merge --abort |
@@ -60,7 +60,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | branch   | location         | message                           | files            |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
@@ -70,7 +70,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync-all --continue` while allowing errors
+    When I run `git sync --continue` while allowing errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature2" branch
@@ -80,7 +80,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
 
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git sync-all --continue`
+    And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND              |
       | feature2 | git commit --no-edit |
@@ -90,7 +90,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | branch   | location         | message                           | files            |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |
@@ -103,7 +103,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit; git sync-all --continue`
+    And I run `git commit --no-edit; git sync --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND           |
       | feature2 | git push          |
@@ -112,7 +112,7 @@ Feature: git-sync-all: handling merge conflicts between feature branch and main 
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | branch   | location         | message                           | files            |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
       |          |                  | main commit                       | conflicting_file |

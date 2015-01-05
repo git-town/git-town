@@ -18,8 +18,8 @@ Feature: git sync: syncing the main branch (with open changes)
   Scenario: result
     Then it runs the Git commands
       | BRANCH | COMMAND                |
-      | main   | git stash -u           |
       | main   | git fetch --prune      |
+      | main   | git stash -u           |
       | main   | git rebase origin/main |
       | main   | git push               |
       | main   | git push --tags        |

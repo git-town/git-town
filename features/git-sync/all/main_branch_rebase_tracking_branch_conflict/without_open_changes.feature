@@ -3,12 +3,12 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | branch  | location | message            | file name        | file content        |
+      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    When I run `git sync-all` while allowing errors
+    When I run `git sync --all` while allowing errors
 
 
   Scenario: result
@@ -20,20 +20,20 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
 
 
   Scenario: aborting
-    When I run `git sync-all --abort`
+    When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | HEAD   | git rebase --abort |
     And I end up on the "main" branch
     And I have the following commits
-      | branch  | location | message            | files            |
+      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | local    | main local commit  | conflicting_file |
       | main    | remote   | main remote commit | conflicting_file |
       | feature | local    | feature commit     | feature_file     |
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync-all --continue` while allowing errors
+    When I run `git sync --continue` while allowing errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
@@ -41,7 +41,7 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
 
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git sync-all --continue`
+    And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | HEAD    | git rebase --continue              |
@@ -53,7 +53,7 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
       | feature | git checkout main                  |
     And I end up on the "main" branch
     And I have the following commits
-      | branch  | location         | message                          | files            |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main local commit                | conflicting_file |
       |         |                  | main remote commit               | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature |                  |
@@ -64,7 +64,7 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
 
   Scenario: continuing after resolving conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue; git sync-all --continue`
+    And I run `git rebase --continue; git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
@@ -75,7 +75,7 @@ Feature: git-sync-all: handling rebase conflicts between main branch and its tra
       | feature | git checkout main                  |
     And I end up on the "main" branch
     And I have the following commits
-      | branch  | location         | message                          | files            |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main local commit                | conflicting_file |
       |         |                  | main remote commit               | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature |                  |

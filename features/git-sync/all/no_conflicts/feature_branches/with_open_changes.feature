@@ -3,13 +3,13 @@ Feature: git-sync-all: syncs all feature branches with open changes
   Background:
     Given I have feature branches named "feature1" and "feature2"
     And the following commits exist in my repository
-      | branch   | location         | message         | file name     |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME     |
       | main     | remote           | main commit     | main_file     |
       | feature1 | local and remote | feature1 commit | feature1_file |
       | feature2 | local and remote | feature2 commit | feature2_file |
     And I am on the "feature1" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync-all`
+    When I run `git sync --all`
 
 
   Scenario: result
@@ -33,7 +33,7 @@ Feature: git-sync-all: syncs all feature branches with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
-      | branch   | location         | message                           | files         |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME     |
       | main     | local and remote | main commit                       | main_file     |
       | feature1 | local and remote | Merge branch 'main' into feature1 |               |
       |          |                  | main commit                       | main_file     |

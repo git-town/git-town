@@ -20,8 +20,8 @@ Feature: git sync: syncing a non-feature branch (with open changes)
   Scenario: no conflict
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | qa     | git stash -u         |
       | qa     | git fetch --prune    |
+      | qa     | git stash -u         |
       | qa     | git rebase origin/qa |
       | qa     | git push             |
       | qa     | git push --tags      |

@@ -19,8 +19,8 @@ Feature: git sync: resolving conflicting remote branch updates when syncing the 
   Scenario: result
     Then it runs the Git commands
       | BRANCH | COMMAND                |
-      | main   | git stash -u           |
       | main   | git fetch --prune      |
+      | main   | git stash -u           |
       | main   | git rebase origin/main |
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"

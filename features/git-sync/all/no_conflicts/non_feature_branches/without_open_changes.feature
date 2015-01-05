@@ -4,14 +4,14 @@ Feature: git-sync-all: syncs all non-feature branches without open changes
     Given I have branches named "production" and "qa"
     And my non-feature branches are "production" and "qa"
     And the following commits exist in my repository
-      | branch     | location | message                  | file name              |
+      | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |
       | production | local    | production local commit  | production_local_file  |
       |            | remote   | production remote commit | production_remote_file |
       | qa         | local    | qa local commit          | qa_local_file          |
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
-    When I run `git sync-all`
+    When I run `git sync --all`
 
 
   Scenario: result
@@ -29,7 +29,7 @@ Feature: git-sync-all: syncs all non-feature branches without open changes
     And I am still on the "main" branch
     And all branches are now synchronized
     And I have the following commits
-      | branch     | location         | message                  | files                  |
+      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME              |
       | main       | local and remote | main commit              | main_file              |
       | production | local and remote | production local commit  | production_local_file  |
       |            | local and remote | production remote commit | production_remote_file |

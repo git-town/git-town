@@ -16,9 +16,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
+      | feature | git fetch --prune                  |
       | feature | git stash -u                       |
       | feature | git checkout main                  |
-      | main    | git fetch --prune                  |
       | main    | git rebase origin/main             |
       | main    | git push                           |
       | main    | git checkout feature               |

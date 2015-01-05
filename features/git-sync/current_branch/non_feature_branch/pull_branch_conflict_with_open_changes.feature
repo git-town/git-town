@@ -20,8 +20,8 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
   Scenario: result
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | qa     | git stash -u         |
       | qa     | git fetch --prune    |
+      | qa     | git stash -u         |
       | qa     | git rebase origin/qa |
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"

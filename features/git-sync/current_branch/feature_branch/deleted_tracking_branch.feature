@@ -18,8 +18,8 @@ Feature: git-sync: restore a deleted tracking branch
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
+      | feature | git fetch --prune          |
       | feature | git checkout main          |
-      | main    | git fetch --prune          |
       | main    | git rebase origin/main     |
       | main    | git checkout feature       |
       | feature | git merge --no-edit main   |

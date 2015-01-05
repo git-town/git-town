@@ -16,8 +16,8 @@ Feature: git sync: resolving conflicting remote main branch updates when syncing
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
+      | feature | git fetch --prune      |
       | feature | git checkout main      |
-      | main    | git fetch --prune      |
       | main    | git rebase origin/main |
     And my repo has a rebase in progress
 
