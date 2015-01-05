@@ -157,7 +157,6 @@ function skip_current_branch_steps {
       if [ -n "$add_noop" ]; then
         prepend_to_file "noop" "$file"
       fi
-
       break
     else
       remove_line "$file"
