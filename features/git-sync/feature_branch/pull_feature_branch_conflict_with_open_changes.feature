@@ -1,4 +1,9 @@
-Feature: Git Sync: handling conflicting remote feature branch updates when syncing a feature branch with open changes
+Feature: git sync: resolving conflicting remote feature branch updates when syncing a feature branch with open changes
+
+  As a developer syncing a feature branch that conflicts with the tracking branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "feature"
@@ -38,7 +43,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
       | feature | local    | local conflicting commit  | conflicting_file |
       |         | remote   | remote conflicting commit | conflicting_file |
     And I still have the following committed files
@@ -67,7 +72,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |
@@ -87,7 +92,7 @@ Feature: Git Sync: handling conflicting remote feature branch updates when synci
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILES            |
+      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | local conflicting commit                                   | conflicting_file |

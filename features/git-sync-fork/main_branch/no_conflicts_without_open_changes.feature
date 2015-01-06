@@ -17,7 +17,7 @@ Feature: git-sync-fork on the main branch without open changes
       | main   | git push                 |
     And I am still on the "main" branch
     And I have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES         |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME     |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
     And now I have the following committed files
       | BRANCH | FILES         |
