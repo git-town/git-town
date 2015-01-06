@@ -13,7 +13,7 @@ set git_town_commands extract hack kill pr prune-branches ship sync sync-fork to
 # - doesn't have command yet: exit code 0
 # - has command already: exit code 1
 function __fish_complete_git_town_no_command
-  for cmd in (commandline -opc)
+  for cmd in (commandline -otc)
     if contains $cmd $git_town_commands
       return 1
     end
