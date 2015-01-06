@@ -129,6 +129,13 @@ def normalize_expected_commit_data commit_data
 end
 
 
+def normalize_expected_commits_array commits_array
+  commits_array.map do |commit_data|
+    normalize_expected_commit_data commit_data
+  end.flatten
+end
+
+
 # Returns an array of length count with the shas of the most recent commits
 def recent_commit_shas count
   array_output_of("git rev-list HEAD -n #{count}")
@@ -139,10 +146,7 @@ end
 def verify_commits commits_array
   normalize_commit_data commits_array
 
-  expected_commits = commits_array.map do |commit_data|
-    normalize_expected_commit_data commit_data
-  end.flatten
-
+  expected_commits = normalize_expected_commits_array
   actual_commits = commits_in_repo
 
   # Leave only the expected keys in actual_commits
