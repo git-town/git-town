@@ -91,6 +91,7 @@ def commits_for_branch branch_name
     }
   end.compact
 end
+# rubocop:enable MethodLength
 
 
 def default_commit_attributes
