@@ -4,10 +4,10 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
 
 
   Background:
-    Given I have feature branches named "good-feature" and "orphaned-feature"
+    Given I have feature branches named "active-feature" and "orphaned-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE         | FILE NAME        |
-      | good-feature     | local and remote | good commit     | good_file        |
+      | active-feature   | local and remote | active commit   | good_file        |
       | orphaned-feature | local and remote | orphaned commit | unfortunate_file |
     And the "orphaned-feature" branch gets deleted on the remote
     And I am on the "orphaned-feature" branch
@@ -22,12 +22,12 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | main             | git branch -D orphaned-feature |
     And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES           |
-      | local      | main, good-feature |
-      | remote     | main, good-feature |
+      | REPOSITORY | BRANCHES             |
+      | local      | main, active-feature |
+      | remote     | main, active-feature |
     And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE     | FILE NAME |
-      | good-feature | local and remote | good commit | good_file |
+      | BRANCH         | LOCATION         | MESSAGE       | FILE NAME |
+      | active-feature | local and remote | active commit | good_file |
 
 
   Scenario: undoing the kill
@@ -38,10 +38,10 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | main   | git checkout orphaned-feature                     |
     And I end up on the "orphaned-feature" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES                             |
-      | local      | main, orphaned-feature, good-feature |
-      | remote     | main, good-feature                   |
+      | REPOSITORY | BRANCHES                               |
+      | local      | main, orphaned-feature, active-feature |
+      | remote     | main, active-feature                   |
     And I have the following commits
       | BRANCH           | LOCATION         | MESSAGE         | FILE NAME        |
-      | good-feature     | local and remote | good commit     | good_file        |
+      | active-feature   | local and remote | active commit   | good_file        |
       | orphaned-feature | local            | orphaned commit | unfortunate_file |
