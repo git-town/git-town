@@ -29,8 +29,8 @@ function preconditions {
 }
 
 
-function skip_message {
-  echo "the sync of the '$(get_current_branch_name)' branch"
+function skip_message_prefix {
+  echo "To skip the sync of the '$(get_current_branch_name)' branch"
 }
 
 

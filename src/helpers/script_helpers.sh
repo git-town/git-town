@@ -69,7 +69,7 @@ function exit_with_messages {
     echo_red "To abort, run \"$git_command --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
     if [ "$(skippable)" = true ]; then
-      echo_red "To skip $(skip_message), run \"$git_command --skip\"."
+      echo_red "$(skip_message_prefix), run \"$git_command --skip\"."
     fi
     exit_with_error
   fi
