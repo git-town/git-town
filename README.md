@@ -142,4 +142,4 @@ or - even better - get down, go to town, and fire a feature-tested and linter-pa
 [pull request](https://help.github.com/articles/using-pull-requests/)
 our way!
 
-Check out our [development notes](/documentation/development.md) if you are planning to contribute
+Check out our [development notes](/documentation/development.md) to start coding.
