@@ -34,8 +34,10 @@ bin/cuke [<folder>...]
 ## Architecture
 
 All commands except for `git-pr`, `git-repo`, and `git-town` run a series of git commands.
-Each command generates a list of steps it will run.
-Each step is a bash function which is a wrapper around a git command.
+These commands inspect the current state and then generates a list of steps to run.
+Each step is a bash function that is a wrapper around a git command.
+This list is then executed one by one.
+
 This architecture is used because it simplifies the ability to abort or continue when there are conflicts.
 
 ## Command documentation
