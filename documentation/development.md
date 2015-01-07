@@ -33,8 +33,10 @@ bin/cuke [<folder>...]
 
 ## Architecture
 
-All commands except for `git-pr`, `git-repo`, and `git-town` run a series of git commands.
-These commands inspect the current state and then generates a list of steps to run.
+*The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
+
+Git town commands are simply running a series of git commands.
+Each command inspects the current state and then generates a list of steps to run.
 Each step is a bash function that is a wrapper around a git command.
 This list is then executed one by one.
 
