@@ -16,16 +16,16 @@ and it assumes you use a central code repository like
 
 ## Commands
 
-* [git extract](../documentation/commands/git-extract.md) - copy selected commits from the current branch into their own branch
-* [git hack](../documentation/commands/git-hack.md) - cut a new feature branch off the main branch
-* [git kill](../documentation/commands/git-kill.md) - remove an obsolete feature branch
-* [git pr](../documentation/commands/git-pr.md) - create a new pull request
-* [git prune-branches](../documentation/commands/git-prune-branches.md) - delete merged branches
-* [git repo](../documentation/commands/git-repo.md) - view the repository homepage
-* [git ship](../documentation/commands/git-ship.md) - deliver a completed feature branch
-* [git sync](../documentation/commands/git-sync.md) - update the current branch with all relevant changes
-* [git sync-fork](../documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
-* [git town](../documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
+* [git extract](/documentation/commands/git-extract.md) - copy selected commits from the current branch into their own branch
+* [git hack](/documentation/commands/git-hack.md) - cut a new feature branch off the main branch
+* [git kill](/documentation/commands/git-kill.md) - remove an obsolete feature branch
+* [git pr](/documentation/commands/git-pr.md) - create a new pull request
+* [git prune-branches](/documentation/commands/git-prune-branches.md) - delete merged branches
+* [git repo](/documentation/commands/git-repo.md) - view the repository homepage
+* [git ship](/documentation/commands/git-ship.md) - deliver a completed feature branch
+* [git sync](/documentation/commands/git-sync.md) - update the current branch with all relevant changes
+* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
+* [git town](/documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
 #### Notes
