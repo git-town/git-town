@@ -122,59 +122,24 @@ Other platforms need to install manually.
 
 ## Configuration
 
-Git Town is configured on a per-repository basis. Upon first use in a given repository, Git Town will ask the user for all required
-configuration information. Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
+Git Town is configured on a per-repository basis.
+Upon first use in a given repository, Git Town will ask the user for all required configuration information.
+Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
 
 
 ## Documentation
 
 In addition to the online documentation here,
-you can run `git help town` on the command line
-for an overview of the git town commands,
-or `git help <command>` (e.g. `git help sync`)
-for help on an individual command.
+you can run `git town` on the command line for an overview of the git town commands,
+or `git help <command>` (e.g. `git help sync`) for help on an individual command.
 
 
-## Development
+## Contributing
 
-Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-
-```bash
-# install tools
-bundle
-brew install shellcheck  # bash linter
-
-# rake tasks
-rake                # Run all linters and specs
-rake lint           # Run all linters
-rake lint:bash      # Run bash linter
-rake lint:ruby      # Run ruby linter
-rake lint:cucumber  # Run cucumber linter
-rake spec           # Run specs
-
-# run single test
-cucumber -n 'scenario/feature name'
-cucumber [filename]:[lineno]
-
-# run cucumber in parallel
-bin/cuke [<folder>...]
-```
-
-Found a bug or want to contribute a feature?
+Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/Originate/git-town/issues/new)
 or - even better - get down, go to town, and fire a feature-tested and linter-passing
 [pull request](https://help.github.com/articles/using-pull-requests/)
 our way!
 
-
-## Roadmap
-
-The future roadmap is planned using [GitHub issues](https://github.com/Originate/git-town/issues).
-The past roadmap is in the [release notes](release-notes.md).
-
-If you have an idea about a cool feature you would like to see in Git Town,
-please [open a ticket](https://github.com/Originate/git-town/issues/new).
-Our team will add the [idea](https://github.com/Originate/git-town/labels/idea) tag.
-Once we reach agreement about this idea, it will be tagged as an
-[enhancement](https://github.com/Originate/git-town/labels/enhancement)
-or a [bug](https://github.com/Originate/git-town/labels/bug).
+Check out our [development notes](/documentation/development.md) if you are planning to contribute
