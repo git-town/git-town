@@ -122,16 +122,17 @@ Other platforms need to install manually.
 
 ## Configuration
 
-Git Town is configured on a per-repository basis.
-Upon first use in a given repository, Git Town will ask the user for all required configuration information.
-Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
+Git Town is configured on a per-repository basis. Upon first use in a given repository, Git Town will ask the user for all required
+configuration information. Use the [`git town`](/documentation/git-town.md) command to view and update your configuration at any time.
 
 
 ## Documentation
 
 In addition to the online documentation here,
-you can run `git town` on the command line for an overview of the git town commands,
-or `git help <command>` (e.g. `git help sync`) for help on an individual command.
+you can run `git help town` on the command line
+for an overview of the git town commands,
+or `git help <command>` (e.g. `git help sync`)
+for help on an individual command.
 
 
 ## Contributing
