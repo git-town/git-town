@@ -1,16 +1,16 @@
 Feature: git-repo when origin is on GitHub
 
   Scenario Outline: result
-    Given my remote origin is on GitHub through <PROTOCOL>
+    Given my remote origin is <ORIGIN>
     And I have "open" installed
     When I run `git repo`
-    Then I see the homepage of my GitHub repository in my browser
+    Then I see the GitHub homepage of the "Originate/git-town" repository in my browser
 
     Examples:
-      | PROTOCOL                   |
-      | HTTP ending with .git      |
-      | HTTP not ending with .git  |
-      | HTTPS ending with .git     |
-      | HTTPS not ending with .git |
-      | SSH ending with .git       |
-      | SSH not ending with .git   |
+      | ORIGIN                                    |
+      | http://github.com/Originate/git-town.git  |
+      | http://github.com/Originate/git-town      |
+      | https://github.com/Originate/git-town.git |
+      | https://github.com/Originate/git-town     |
+      | git@github.com:Originate/git-town.git     |
+      | git@github.com:Originate/git-town         |
