@@ -1,9 +1,8 @@
-# _Git Automation for Agile Development Teams_
-
 <img src="documentation/logo-horizontal.png">
-
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](MIT-LICENSE)
+
+# _Git Automation for Agile Development Teams_
 
 Git Town makes software development teams who use Git even more productive and happy.
 It extends Git to support
