@@ -2,11 +2,11 @@ Feature: git-pr: multi-platform support
 
   Scenario Outline: supported tool installed
     Given I have a feature branch named "feature"
-    And my remote origin is on GitHub through HTTPS ending with .git
+    And my remote origin is https://github.com/Originate/git-town.git
     And I have "<TOOL>" installed
     And I am on the "feature" branch
     When I run `git pr`
-    Then I see a new GitHub pull request for the "feature" branch in my browser
+    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
     Examples:
       | TOOL     |
@@ -16,7 +16,7 @@ Feature: git-pr: multi-platform support
 
   Scenario: no supported tool installed
     Given I have a feature branch named "feature"
-    And my remote origin is on GitHub through HTTPS ending with .git
+    And my remote origin is https://github.com/Originate/git-town.git
     And I have no command that opens browsers installed
     And I am on the "feature" branch
     When I run `git pr` while allowing errors
