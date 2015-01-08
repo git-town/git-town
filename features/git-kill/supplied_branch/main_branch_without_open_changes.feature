@@ -19,6 +19,6 @@ Feature: git kill: don't remove the main branch (with open changes)
       | local      | main, feature |
       | remote     | main, feature |
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
       | main    | local and remote | main commit | main_file |

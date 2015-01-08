@@ -31,7 +31,7 @@ Feature: git hack: handling conflicting remote main branch updates while startin
     And I end up on the "existing_feature" branch
     And there is no rebase in progress
     And I have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
+      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
       | main   | remote   | conflicting remote commit | conflicting_file |
       |        | local    | conflicting local commit  | conflicting_file |
 
@@ -52,7 +52,7 @@ Feature: git hack: handling conflicting remote main branch updates while startin
       | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |
@@ -72,7 +72,7 @@ Feature: git hack: handling conflicting remote main branch updates while startin
       | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |

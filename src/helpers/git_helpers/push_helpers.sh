@@ -30,3 +30,8 @@ function push {
 function push_tags {
   run_command "git push --tags"
 }
+
+
+function undo_steps_for_push {
+  echo "skip_current_branch_steps $undo_steps_file"
+}
