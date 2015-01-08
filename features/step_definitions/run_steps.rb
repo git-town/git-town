@@ -38,11 +38,6 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^I see the (Bitbucket|GitHub) homepage of the "(.+?)" repository in my browser$/) do |domain, repository|
-  expect(@last_run_result.out).to eql "#{@tool} called with: #{repository_homepage_url domain, repository}\n"
-end
-
-
 Then(/^it runs no Git commands$/) do
   expect(commands_of_last_run).to be_empty
 end
