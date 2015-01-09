@@ -1,6 +1,7 @@
 # Git Town Release Notes
 
-## Currently in master
+## 0.5.0 (2015-01-08)
+
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
 * **git extract:**
   * errors if branch exists remotely
@@ -75,7 +76,7 @@
    [ba74cf](https://github.com/Originate/git-town/commit/ba74cf30c8001941769dcd70410dbd18331f2fe9))
 
 
-## 0.4 (2014-11-13)
+## 0.4.0 (2014-11-13)
 
 * **git kill:** completely removes a feature branch
   ([#87](https://github.com/Originate/git-town/issues/87),
@@ -148,7 +149,7 @@
 * better documentation
 
 
-## 0.2 (2014-05-29)
+## 0.2.0 (2014-05-29)
 * displays the duration of specs
 * only pulls the main branch if it has a remote
 * --abort options to abort failed Git Town operations
@@ -160,7 +161,7 @@
 * better documentation
 
 
-## 0.1 (2014-05-22)
+## 0.1.0 (2014-05-22)
 * git hack, git sync, git extract, git ship
 * basic test framework
 * Travis CI integration
