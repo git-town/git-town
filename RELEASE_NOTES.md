@@ -1,23 +1,38 @@
 # Git Town Release Notes
 
-## Currently in master
-* **git town**: view and change Git Town configuration and easily view help page
-  ([#98](https://github.com/Originate/git-town/issues/98))
+## 0.5.0 (2015-01-08)
+
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
-* **git repo:** view the repository homepage
-  ([#140](https://github.com/Originate/git-town/issues/140))
 * **git extract:**
-  * remove restriction that you need to be on a feature branch
+  * errors if branch exists remotely
+    ([#236](https://github.com/Originate/git-town/issues/236))
+  * removed restriction: need to be on a feature branch
     ([#269](https://github.com/Originate/git-town/issues/269))
-  * added restriction if no commits are provided errors if the current branch does not have any have extractable commits (commits not in the main branch)
+  * added restriction: if no commits are provided, errors if the current branch does not have any have extractable commits (commits not in the main branch)
     ([#269](https://github.com/Originate/git-town/issues/269))
+* **git hack:** errors if branch exists remotely
+    ([#237](https://github.com/Originate/git-town/issues/237))
 * **git kill:**
-  * takes an optional branch name
+  * optional branch name
     ([#126](https://github.com/Originate/git-town/issues/126))
   * does not error if tracking branch has already been deleted
     ([#196](https://github.com/Originate/git-town/issues/196))
-* **git pr:** works with more variants of specifying a Bitbucket or GitHub remote
+* **git pr:**
+  * linux compatibility
+    ([#232](https://github.com/Originate/git-town/issues/232))
+  * compatible with more variants of specifying a Bitbucket or GitHub remote
+    ([#271](https://github.com/Originate/git-town/issues/271))
+  * compatible with respository names that contain ".git"
+    ([#305](https://github.com/Originate/git-town/issues/305))
+* **git repo:** view the repository homepage
   ([#140](https://github.com/Originate/git-town/issues/140))
+* **git sync:**
+  * `--all` option to sync all local branches
+    ([#83](https://github.com/Originate/git-town/issues/83))
+  * abort correctly after main branch updates and tracking branch conflicts
+    ([#228](https://github.com/Originate/git-town/issues/228))
+* **git town**: view and change Git Town configuration and easily view help page
+  ([#98](https://github.com/Originate/git-town/issues/98))
 * auto-completion for [Fish shell](http://fishshell.com)
   ([#177](https://github.com/Originate/git-town/issues/177))
 
@@ -60,7 +75,7 @@
    [ba74cf](https://github.com/Originate/git-town/commit/ba74cf30c8001941769dcd70410dbd18331f2fe9))
 
 
-## 0.4 (2014-11-13)
+## 0.4.0 (2014-11-13)
 
 * **git kill:** completely removes a feature branch
   ([#87](https://github.com/Originate/git-town/issues/87),
@@ -133,7 +148,7 @@
 * better documentation
 
 
-## 0.2 (2014-05-29)
+## 0.2.0 (2014-05-29)
 * displays the duration of specs
 * only pulls the main branch if it has a remote
 * --abort options to abort failed Git Town operations
@@ -145,7 +160,7 @@
 * better documentation
 
 
-## 0.1 (2014-05-22)
+## 0.1.0 (2014-05-22)
 * git hack, git sync, git extract, git ship
 * basic test framework
 * Travis CI integration
