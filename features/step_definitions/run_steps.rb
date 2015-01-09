@@ -58,8 +58,19 @@ Then(/^it runs the Git commands$/) do |expected_steps|
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  expect(@last_run_result.out).to include string
+Then(/^I see no output$/) do
+  expect(@last_run_result.out).to eql ''
+end
+
+
+Then(/^I see "(.+?)"$/) do |output|
+  expect(@last_run_result.out_text).to eql "#{output}\n"
+end
+
+
+Then(/^I see$/) do |output|
+  actual = @last_run_result.out.gsub(/\e[^m]+m/, '') # Remove text formatting
+  expect(actual).to eql "#{output}\n"
 end
 
 
