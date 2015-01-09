@@ -23,7 +23,7 @@
   * compatible with more variants of specifying a Bitbucket or GitHub remote
     ([#271](https://github.com/Originate/git-town/issues/271))
   * compatible with respository names that contain ".git"
-    ([#306](https://github.com/Originate/git-town/issues/306))
+    ([#305](https://github.com/Originate/git-town/issues/305))
 * **git repo:** view the repository homepage
   ([#140](https://github.com/Originate/git-town/issues/140))
 * **git sync:**
