@@ -10,8 +10,7 @@
     ([#269](https://github.com/Originate/git-town/issues/269))
   * added restriction: if no commits are provided, errors if the current branch does not have any have extractable commits (commits not in the main branch)
     ([#269](https://github.com/Originate/git-town/issues/269))
-* **git hack:**
-  * errors if branch exists remotely
+* **git hack:** errors if branch exists remotely
     ([#237](https://github.com/Originate/git-town/issues/237))
 * **git kill:**
   * optional branch name
