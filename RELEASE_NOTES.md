@@ -1,23 +1,29 @@
 # Git Town Release Notes
 
 ## Currently in master
-* **git town**: view and change Git Town configuration and easily view help page
-  ([#98](https://github.com/Originate/git-town/issues/98))
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
+* **git sync:** `--all` option to sync all local branches
 * **git repo:** view the repository homepage
   ([#140](https://github.com/Originate/git-town/issues/140))
+* **git town**: view and change Git Town configuration and easily view help page
+  ([#98](https://github.com/Originate/git-town/issues/98))
 * **git extract:**
-  * remove restriction that you need to be on a feature branch
+  * removed restriction: need to be on a feature branch
     ([#269](https://github.com/Originate/git-town/issues/269))
-  * added restriction if no commits are provided errors if the current branch does not have any have extractable commits (commits not in the main branch)
+  * added restriction: if no commits are provided, errors if the current branch does not have any have extractable commits (commits not in the main branch)
     ([#269](https://github.com/Originate/git-town/issues/269))
 * **git kill:**
-  * takes an optional branch name
+  * optional branch name
     ([#126](https://github.com/Originate/git-town/issues/126))
   * does not error if tracking branch has already been deleted
     ([#196](https://github.com/Originate/git-town/issues/196))
-* **git pr:** works with more variants of specifying a Bitbucket or GitHub remote
-  ([#140](https://github.com/Originate/git-town/issues/140))
+* **git pr:**
+  * linux compatibility
+    ([#232](https://github.com/Originate/git-town/issues/232))
+  * compatible with more variants of specifying a Bitbucket or GitHub remote
+    ([#271](https://github.com/Originate/git-town/issues/271))
+  * compatible with respository names that contain ".git"
+    ([#306](https://github.com/Originate/git-town/issues/306))
 * auto-completion for [Fish shell](http://fishshell.com)
   ([#177](https://github.com/Originate/git-town/issues/177))
 
