@@ -3,6 +3,7 @@ require 'kappamaki'
 require 'open4'
 require 'rspec'
 
+SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
 REPOSITORY_BASE = Dir.mktmpdir
