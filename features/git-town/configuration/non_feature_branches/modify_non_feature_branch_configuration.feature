@@ -1,5 +1,10 @@
 Feature: modifying the non-feature branch configuration
 
+  As a user or tool configuring Git Town
+  I want an easy way to specifically configure my set of non-feature branches
+  So that I can configure Git Town safely, and the tool does exactly what I want.
+
+
   Scenario: adding a new non-feature branch
     Given my non-feature branch is "qa"
     And I have a branch named "staging"
