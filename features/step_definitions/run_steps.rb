@@ -64,7 +64,7 @@ end
 
 
 Then(/^I see "(.+?)"$/) do |output|
-  expect(@last_run_result.out_text).to eql "#{output}\n"
+  expect(@last_run_result.out).to eql "#{output}\n"
 end
 
 
