@@ -25,11 +25,7 @@ Before do
     # Create the main branch
     run 'git checkout -b main master ; git push -u origin main'
 
-    # Configuration
-    run 'git config git-town.main-branch-name main'
-    run 'git config git-town.non-feature-branch-names ""'
-    run 'git config push.default simple'
-    run 'git config core.editor vim'
+    configure_git 'local'
   end
 
   # Set the default branch
@@ -47,7 +43,7 @@ Before do
   # Create the coworker repository
   clone_repository remote_repository_path, coworker_repository_path
   at_path coworker_repository_path do
-    run 'git config git-town.main-branch-name main'
+    configure_git 'coworker'
   end
 
   Dir.chdir local_repository_path
