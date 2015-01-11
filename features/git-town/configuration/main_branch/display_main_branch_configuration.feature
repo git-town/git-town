@@ -1,5 +1,10 @@
 Feature: display the main branch configuration
 
+  As a user or tool unsure about which branch is currently configured as the main branch
+  I want to be able to see this information simply and directly
+  So that I can use it without furter thinking or processing, and my Git Town workflows are effective.
+
+
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git town main-branch`

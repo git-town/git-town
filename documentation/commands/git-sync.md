@@ -6,9 +6,10 @@ git-sync - updates the current branch with all relevant changes
 #### SYNOPSIS
 
 ```
-git sync
+git sync [--all]
 git sync --abort
 git sync --continue
+git sync --skip
 ```
 
 #### DESCRIPTION
@@ -29,9 +30,15 @@ When run on the main branch or a non-feature branch
 #### OPTIONS
 
 ```
+--all
+    Syncs all local branches
+
 --abort
     Cancel the operation and reset the workspace to a consistent state.
 
 --continue
     Continue the operation after resolving conflicts.
+
+--skip
+    Continue the operation by skipping the sync of the current branch.
 ```
