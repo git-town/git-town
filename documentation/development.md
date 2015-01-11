@@ -4,7 +4,7 @@
 
 * Ruby 2.1.5
   (install [directly](https://www.ruby-lang.org/en/documentation/installation/)
-   or with [rvm](https://rvm.io/)
+   or with [rvm](https://rvm.io/))
 * [ShellCheck](https://github.com/koalaman/shellcheck)
 
 
