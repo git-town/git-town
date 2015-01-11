@@ -1,12 +1,18 @@
 # Git Town Development
 
+## Requirements
+
+* Ruby 2.1.5
+  (install [directly](https://www.ruby-lang.org/en/documentation/installation/)
+   or with [rvm](https://rvm.io/)
+* [ShellCheck](https://github.com/koalaman/shellcheck)
+
+
 ## Setup
 
 * fork the repo
-* clone your fork to your machine (into DIR)
-* add DIR/src to your `$PATH`
-* `bundle` to install gems
-* install [ShellCheck](https://github.com/koalaman/shellcheck) for bash linting
+* clone your fork to your machine
+* `bundle` to install ruby gems
 
 
 ## Running Tests
@@ -16,12 +22,10 @@
 
 ```bash
 # rake tasks
-rake                # Run all linters and specs
-rake lint           # Run all linters
-rake lint:bash      # Run bash linter
-rake lint:ruby      # Run ruby linter
-rake lint:cucumber  # Run cucumber linter
-rake spec           # Run specs
+rake          # Run linters and specs
+rake format   # Run formatters (fixes some lint errors)
+rake lint     # Run linters
+rake spec     # Run specs
 
 # run single test
 cucumber -n 'scenario/feature name'
