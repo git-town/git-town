@@ -7,17 +7,23 @@ Feature: git-pr when origin is on Bitbucket
 
   Scenario Outline: result
     Given I have a feature branch named "feature"
-    And my remote origin is on Bitbucket through <PROTOCOL>
+    And my remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git pr`
-    Then I see a new Bitbucket pull request for the "feature" branch in my browser
+    Then I see a new Bitbucket pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:
-      | PROTOCOL                   |
-      | HTTP ending with .git      |
-      | HTTP not ending with .git  |
-      | HTTPS ending with .git     |
-      | HTTPS not ending with .git |
-      | SSH ending with .git       |
-      | SSH not ending with .git   |
+      | ORIGIN                                                            | REPOSITORY                     |
+      | http://username@bitbucket.org/Originate/git-town.git              | Originate/git-town             |
+      | http://username@bitbucket.org/Originate/git-town                  | Originate/git-town             |
+      | https://username@bitbucket.org/Originate/git-town.git             | Originate/git-town             |
+      | https://username@bitbucket.org/Originate/git-town                 | Originate/git-town             |
+      | git@bitbucket.org/Originate/git-town.git                          | Originate/git-town             |
+      | git@bitbucket.org/Originate/git-town                              | Originate/git-town             |
+      | http://username@bitbucket.org/Originate/originate.github.com.git  | Originate/originate.github.com |
+      | http://username@bitbucket.org/Originate/originate.github.com      | Originate/originate.github.com |
+      | https://username@bitbucket.org/Originate/originate.github.com.git | Originate/originate.github.com |
+      | https://username@bitbucket.org/Originate/originate.github.com     | Originate/originate.github.com |
+      | git@bitbucket.org/Originate/originate.github.com.git              | Originate/originate.github.com |
+      | git@bitbucket.org/Originate/originate.github.com                  | Originate/originate.github.com |
