@@ -56,16 +56,16 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
-      | BRANCH        | COMMAND                         |
-      | feature       | git commit --no-edit            |
-      | feature       | git checkout main               |
-      | main          | git merge --squash feature      |
-      | main          | git commit -a -m 'feature done' |
-      | main          | git push                        |
-      | main          | git push origin :feature        |
-      | main          | git branch -D feature           |
-      | main          | git checkout other_feature      |
-      | other_feature | git stash pop                   |
+      | BRANCH        | COMMAND                      |
+      | feature       | git commit --no-edit         |
+      | feature       | git checkout main            |
+      | main          | git merge --squash feature   |
+      | main          | git commit -m 'feature done' |
+      | main          | git push                     |
+      | main          | git push origin :feature     |
+      | main          | git branch -D feature        |
+      | main          | git checkout other_feature   |
+      | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
@@ -82,15 +82,15 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
     Then it runs the Git commands
-      | BRANCH        | COMMAND                         |
-      | feature       | git checkout main               |
-      | main          | git merge --squash feature      |
-      | main          | git commit -a -m 'feature done' |
-      | main          | git push                        |
-      | main          | git push origin :feature        |
-      | main          | git branch -D feature           |
-      | main          | git checkout other_feature      |
-      | other_feature | git stash pop                   |
+      | BRANCH        | COMMAND                      |
+      | feature       | git checkout main            |
+      | main          | git merge --squash feature   |
+      | main          | git commit -m 'feature done' |
+      | main          | git push                     |
+      | main          | git push origin :feature     |
+      | main          | git branch -D feature        |
+      | main          | git checkout other_feature   |
+      | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
