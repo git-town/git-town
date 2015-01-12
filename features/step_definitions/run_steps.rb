@@ -69,7 +69,7 @@ end
 
 
 Then(/^I see$/) do |output|
-  actual = @last_run_result.out.gsub(/\e[^m]+m/, '') # Remove text formatting
+  actual = @last_run_result.out.gsub(/\e[^m]+m/, '') # Remove text formatting (ANSI escape sequences)
   expect(actual).to eql "#{output}\n"
 end
 
