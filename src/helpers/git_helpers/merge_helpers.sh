@@ -25,13 +25,13 @@ function merge {
 # Squash merges the given branch into the current branch
 function squash_merge {
   local branch_name=$1
-  local commit_message=$2
   run_command "git merge --squash $branch_name"
-  if [ "$commit_message" == "" ]; then
-    run_command "git commit"
-  else
-    run_command "git commit -m '$commit_message'"
-  fi
+}
+
+
+function commit_squash_merge {
+  local options=$(parameters_as_string "$@")
+  run_command "git commit $options"
   if [ $? != 0 ]; then error_empty_commit; fi
 }
 

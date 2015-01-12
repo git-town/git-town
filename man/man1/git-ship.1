@@ -4,7 +4,7 @@
 git ship \- deliver a completed feature branch
 
 .SH "SYNOPSIS"
-\fIgit ship\fR [<branchname>] [-m <message>]
+\fIgit ship\fR [<branchname>] [<commit-options>]
 .br
 \fIgit ship\fR --abort
 .br
@@ -30,10 +30,8 @@ The branch to ship.
 .br
 If not provided, uses the current branch.
 
-.IP "-m <message>" 4
-The commit message for the squash merge.
-.br
-If not provided, will be prompted for it.
+.IP "<commit-options>" 4
+Options to pass to 'git commit' when commiting the squash merge.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
