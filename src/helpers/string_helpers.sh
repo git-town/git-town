@@ -51,5 +51,5 @@ function parameters_as_string {
     fi
     str="$str $arg"
   done
-  echo "$str" | sed 's/^ //'
+  echo "${str/ /}" # Remove initial space
 }
