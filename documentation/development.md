@@ -46,7 +46,7 @@ Each step is a bash function that is a wrapper around a git command.
 This list is then executed one by one.
 
 For discussion around this architecture see
-[#199](https://github.com/Originate/git-town/issues/199)
+[#199](https://github.com/Originate/git-town/issues/199),
 where it was proposed.
 
 
