@@ -24,7 +24,7 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -a                      |
+      | main    | git commit                         |
       | main    | git reset --hard                   |
       | main    | git checkout feature               |
       | feature | git checkout main                  |
