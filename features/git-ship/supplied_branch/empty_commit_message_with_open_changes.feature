@@ -25,7 +25,7 @@ Feature: git ship: abort shipping the given feature branch by entering an empty 
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -a                      |
+      | main          | git commit                         |
       | main          | git reset --hard                   |
       | main          | git checkout feature               |
       | feature       | git checkout main                  |
