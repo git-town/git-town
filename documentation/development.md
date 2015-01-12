@@ -15,18 +15,18 @@
 * `bundle` to install ruby gems
 
 
-## Running Tests
+## Testing
 
 * Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
 * All features have need to have comprehensive test coverage
-* We are using linters for both the source and test files
+* Source code and test files must pass the linters
 
 ```bash
 # rake tasks
-rake          # Run linters and specs
+rake          # Run linters and tests
 rake format   # Run formatters (fixes some lint errors)
 rake lint     # Run linters
-rake spec     # Run specs
+rake spec     # Run tests
 
 # run single test
 cucumber -n 'scenario/feature name'
@@ -51,10 +51,10 @@ For discussion around this architecture see
 where it was proposed.
 
 
-## Command documentation
+## Documentation
 
 Every Git Town command
 * has a [man page](../man/man1)
-* has a [markdown page](./commands) that is identical to the man page
+* has a [Markdown page](./commands) that is identical to the man page
 * is listed on the [git-town man page](../man/man1/git-town.1)
 * is listed on the [README](../README.md)
