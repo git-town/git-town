@@ -3,15 +3,15 @@
 ## Requirements
 
 * Ruby 2.1.5
-  (install [directly](https://www.ruby-lang.org/en/documentation/installation/)
-   or with [rvm](https://rvm.io/))
+  (install [directly](https://www.ruby-lang.org/en/documentation/installation),
+  or via a ruby manager like [rvm](https://rvm.io/)
+  or [rbenv](https://github.com/sstephenson/rbenv))
 * [ShellCheck](https://github.com/koalaman/shellcheck)
 
 
 ## Setup
 
-* fork the repo
-* clone your fork to your machine
+* fork and clone repository to your machine
 * `bundle` to install ruby gems
 
 
@@ -39,12 +39,17 @@ bin/cuke [<folder>...]
 
 *The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
 
-Git town commands are simply running a series of git commands.
-Each command inspects the current state and then generates a list of steps to run.
+Git Town commands are simply running a series of git commands.
+Each command inspects the current state of the git repository
+(which branch you are on, do you have open changes)
+and generates a list of steps to run.
 Each step is a bash function that is a wrapper around a git command.
 This list is then executed one by one.
 
-This architecture is used because it simplifies the ability to abort or continue when there are conflicts.
+For discussion around this architecture see
+[#199](https://github.com/Originate/git-town/issues/199)
+where it was proposed.
+
 
 ## Command documentation
 
