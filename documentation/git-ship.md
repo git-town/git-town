@@ -6,7 +6,7 @@ git-ship - deliver a completed feature branch
 #### SYNOPSIS
 
 ```
-git ship [<branchname>] [-m <message>]
+git ship [<branchname>] [<commit-options>]
 git ship --abort
 git ship --continue
 ```
@@ -31,9 +31,8 @@ Squash merges the current branch, or `<branchname>` if given, into the main bran
     The branch to ship.
     If not provided, uses the current branch.
 
--m <message>
-    The commit message for the squash merge.
-    If not provided, will be prompted for it.
+<commit-options>
+    Options to pass to 'git commit' when commiting the squash merge.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
