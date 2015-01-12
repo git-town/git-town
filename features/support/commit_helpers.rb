@@ -87,7 +87,7 @@ def commits_for_branch branch_name
       branch: branch_name,
       message: message,
       file_name: filenames,
-      file_content: content_of(file: filenames[0], in_branch: branch_name)
+      file_content: content_of(file: filenames[0], for_sha: sha)
     }
   end.compact
 end
