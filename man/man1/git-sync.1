@@ -4,11 +4,13 @@
 git sync \- update the current branch with all relevant changes
 
 .SH "SYNOPSIS"
-\fIgit sync\fR
+\fIgit sync\fR [--all]
 .br
 \fIgit sync\fR --abort
 .br
 \fIgit sync\fR --continue
+.br
+\fIgit sync\fR --skip
 
 .SH "DESCRIPTION"
 Synchronizes the current branch with the rest of the world.
@@ -32,8 +34,14 @@ When run on the main branch or a non-feature branch
 * pushes tags
 
 .SH "OPTIONS"
+.IP "--all" 4
+Syncs all local branches
+
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
 
 .IP "--continue" 4
 Continue the operation after resolving conflicts.
+
+.IP "--skip" 4
+Continue the operation by skipping the sync of the current branch.
