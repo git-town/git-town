@@ -69,9 +69,6 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -94,6 +91,3 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |

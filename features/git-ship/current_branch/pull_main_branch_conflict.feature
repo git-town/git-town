@@ -59,9 +59,6 @@ Feature: git ship: resolving conflicts while updating the main branch
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -86,6 +83,3 @@ Feature: git ship: resolving conflicts while updating the main branch
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |

@@ -56,9 +56,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -78,6 +75,3 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |
