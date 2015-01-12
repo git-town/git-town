@@ -15,18 +15,12 @@ Given(/^I have an old configuration file with (.+?)$/) do |data|
 end
 
 
-Given(/^non-feature branch configuration "(.+?)"$/) do |configuration|
-  configure_non_feature_branches configuration
-  configuration.split(',').map(&:strip).each { |b| create_branch b }
-end
-
-
 Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
 end
 
 
-Given(/^my non-feature branch(?:es are| is) "(.*)"$/) do |data|
+Given(/^my non-feature branches are configured as (.*)$/) do |data|
   non_feature_branches = Kappamaki.from_sentence(data).join(', ')
   set_configuration 'non-feature-branch-names', non_feature_branches
 end
@@ -48,7 +42,7 @@ Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name
 end
 
 
-Then(/^the non\-feature branches( don't)? include "(.*?)"$/) do |negate, non_feature_branch|
-  method = negate ? :not_to : :to
-  expect(non_feature_branch_configuration).public_send(method, include(non_feature_branch))
+Then(/^my non-feature branches are now configured as (.*)$/) do |data|
+  non_feature_branches = Kappamaki.from_sentence(data)
+  expect(non_feature_branch_configuration.split(',')).to match_array non_feature_branches
 end

@@ -38,6 +38,23 @@ function echo_indented {
   echo "  $*"
 }
 
+# Prints an inline error
+function echo_inline_error {
+  echo_red "error: $*"
+}
+
+
+# Prints an inline usage
+function echo_inline_usage {
+  echo "usage: $*"
+}
+
+
+# Prints a continutation of an inline usage
+function echo_inline_usage_or {
+  echo "   or: $*"
+}
+
 
 # Outputs the given text in red
 function echo_red {

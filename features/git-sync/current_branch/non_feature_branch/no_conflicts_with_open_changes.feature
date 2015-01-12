@@ -6,7 +6,8 @@ Feature: git sync: syncing a non-feature branch (with open changes)
 
 
   Background:
-    Given non-feature branch configuration "qa, production"
+    Given I have branches named "qa" and "production"
+    And my non-feature branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

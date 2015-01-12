@@ -7,16 +7,15 @@ Feature: listing the configuration
 
   Scenario: everything is configured
     Given I have configured the main branch name as "main"
-    And my non-feature branches are "qa" and "staging"
+    And my non-feature branches are configured as "qa" and "staging"
     When I run `git town config`
     Then I see
       """
-      Main branch:
-      main
+      (M = main branch, NF = non-feature branch)
 
-      Non-feature branches:
-      qa
-      staging
+      M  main
+      NF qa
+      NF staging
       """
 
 
@@ -26,26 +25,23 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch:
-      main
+      (M = main branch, NF = non-feature branch)
 
-      Non-feature branches:
-      [none]
+      M  main
       """
 
 
   Scenario: the main branch is not configured but the non-feature branches are
     Given I don't have a main branch name configured
-    And my non-feature branches are "qa" and "staging"
+    And my non-feature branches are configured as "qa" and "staging"
     When I run `git town config`
     Then I see
       """
-      Main branch:
-      [none]
+      (M = main branch, NF = non-feature branch)
 
-      Non-feature branches:
-      qa
-      staging
+      M  [none]
+      NF qa
+      NF staging
       """
 
 
@@ -54,9 +50,7 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch:
-      [none]
+      (M = main branch, NF = non-feature branch)
 
-      Non-feature branches:
-      [none]
+      M  [none]
       """

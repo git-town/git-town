@@ -3,7 +3,8 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
   (see ./pull_branch_conflict_with_open_changes.feature)
 
   Background:
-    Given non-feature branch configuration "qa, production"
+    Given I have branches named "qa" and "production"
+    And my non-feature branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |

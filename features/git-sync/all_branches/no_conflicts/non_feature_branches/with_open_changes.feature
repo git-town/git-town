@@ -2,7 +2,7 @@ Feature: git sync --all: syncs all non-feature branches with open changes
 
   Background:
     Given I have branches named "production" and "qa"
-    And my non-feature branches are "production" and "qa"
+    And my non-feature branches are configured as "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |
