@@ -39,10 +39,9 @@ bin/cuke [<folder>...]
 
 *The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
 
-Git Town commands are simply running a series of git commands.
-Each command inspects the current state of the git repository
-(which branch you are on, do you have open changes)
-and generates a list of steps to run.
+Each Git Town command begins by inspecting the current state of the git repository
+(which branch you are on, do you have open changes).
+If there are no errors, it then generates a list of steps to run.
 Each step is a bash function that is a wrapper around a git command.
 This list is then executed one by one.
 
@@ -53,8 +52,8 @@ where it was proposed.
 
 ## Command documentation
 
-Each command has:
-* [a man page](../man/man1)
-* [a markdown page](./commands)
+Every Git Town command
+* has a [man page](../man/man1)
+* has a [markdown page](./commands)
 * is listed on the [git-town man page](../man/man1/git-town.1)
 * is listed on the [README](../README.md)
