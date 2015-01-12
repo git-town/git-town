@@ -23,10 +23,10 @@
 
 ```bash
 # rake tasks
-rake          # Run linters and tests
-rake format   # Run formatters (fixes some lint errors)
-rake lint     # Run linters
-rake spec     # Run tests
+rake         # Run linters and feature tests
+rake format  # Run formatters (fixes some lint errors)
+rake lint    # Run linters
+rake test    # Run feature tests
 
 # run single scenario/feature
 cucumber -n 'scenario/feature name'
