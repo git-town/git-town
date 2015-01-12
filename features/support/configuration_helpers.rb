@@ -1,6 +1,6 @@
 def configure_git user
   run "git config user.name #{user}"
-  run "git config user.email #{user}@cucumber.com"
+  run "git config user.email #{user}@example.com"
   run 'git config push.default simple'
   run 'git config core.editor vim'
 

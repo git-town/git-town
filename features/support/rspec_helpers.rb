@@ -21,5 +21,8 @@ end
 
 
 def commit_to_s commit
-  "#{commit[:branch]} branch: '#{commit[:message]}' with #{commit[:files]}\n"
+  out = "#{commit[:branch]} branch: '#{commit[:message]}'"
+  out += " with #{commit[:file_name]}" if commit.key?(:file_name)
+  out += " by #{commit[:author]}" if commit.key?(:author)
+  out + "\n"
 end

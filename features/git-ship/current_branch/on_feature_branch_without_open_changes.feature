@@ -38,8 +38,10 @@ Feature: git ship: shipping the current feature branch
   Scenario: feature branch with non-pulled updates in the repo
     Given I have a feature branch named "feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature_file | feature content |
+      | BRANCH  | LOCATION         | FILE NAME    | FILE CONTENT          |
+      | feature | local and remote | feature_file | early feature content |
+      | feature | local and remote | feature_file | mid feature content   |
+      | feature | remote           | feature_file | final feature content |
     And I am on the "feature" branch
     When I run `git ship -m 'feature done'`
     Then it runs the Git commands

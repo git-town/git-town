@@ -1,7 +1,7 @@
 # Returns the commits in the current directory
-def commits_in_repo
+def commits_in_repo keys = [:author, :branch, :file_name, :message]
   existing_branches.map do |branch_name|
-    commits_for_branch branch_name
+    commits_for_branch branch_name, keys
   end.flatten
 end
 
@@ -76,13 +76,16 @@ end
 
 
 # Returns the commits in the currently checked out branch
-def commits_for_branch branch_name
-  array_output_of("git log #{branch_name} --oneline").map do |commit|
-    sha, message = commit.split(' ', 2)
-
-    unless message == 'Initial commit'
-      { branch: branch_name, message: message, file_name: committed_files(sha) }
-    end
+def commits_for_branch branch_name, keys
+  array_output_of("git log #{branch_name} --format='%h|%s|%ae'").map do |commit|
+    sha, message, author = commit.split('|')
+    next if message == 'Initial commit'
+    {
+      author: author,
+      branch: branch_name,
+      message: message,
+      file_name: committed_files(sha)
+    }.select { |k, _| keys.include?(k) }
   end.compact
 end
 
@@ -136,7 +139,7 @@ def verify_commits commits_array
     normalize_expected_commit_data commit_data
   end.flatten
 
-  actual_commits = commits_in_repo
+  actual_commits = commits_in_repo expected_commits[0].keys
 
   expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
 end

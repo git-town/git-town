@@ -17,19 +17,19 @@ Feature: git ship: shipping a coworkers branch
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                                         |
-      | feature | git checkout main                                               |
-      | main    | git fetch --prune                                               |
-      | main    | git rebase origin/main                                          |
-      | main    | git checkout feature                                            |
-      | feature | git merge --no-edit origin/feature                              |
-      | feature | git merge --no-edit main                                        |
-      | feature | git checkout main                                               |
-      | main    | git merge --squash feature                                      |
-      | main    | git commit -a -m 'feature done' --author='coworker@example.com' |
-      | main    | git push                                                        |
-      | main    | git push origin :feature                                        |
-      | main    | git branch -D feature                                           |
+      | BRANCH  | COMMAND                                                                 |
+      | feature | git checkout main                                                       |
+      | main    | git fetch --prune                                                       |
+      | main    | git rebase origin/main                                                  |
+      | main    | git checkout feature                                                    |
+      | feature | git merge --no-edit origin/feature                                      |
+      | feature | git merge --no-edit main                                                |
+      | feature | git checkout main                                                       |
+      | main    | git merge --squash feature                                              |
+      | main    | git commit --author="coworker <coworker@example.com>" -m 'feature done' |
+      | main    | git push                                                                |
+      | main    | git push origin :feature                                                |
+      | main    | git branch -D feature                                                   |
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    | AUTHOR               |
-      | main   | local and remote | feature done | feature_file | coworker@example.com |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR               |
+      | main   | local and remote | feature done | coworker_file | coworker@example.com |
