@@ -11,14 +11,15 @@
 
 ## Setup
 
-* fork and clone repository to your machine
+* fork and clone the repository to your machine
 * `bundle` to install ruby gems
 
 
 ## Running Tests
 
 * Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-* We have linters for bash (source), ruby (tests), and cucumber (tests)
+* All features have need to have comprehensive test coverage
+* We are using linters for both the source and test files
 
 ```bash
 # rake tasks
@@ -39,10 +40,10 @@ bin/cuke [<folder>...]
 
 *The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
 
-Each Git Town command begins by inspecting the current state of the git repository
-(which branch you are on, do you have open changes).
-If there are no errors, it then generates a list of steps to run.
-Each step is a bash function that is a wrapper around a git command.
+Each Git Town command begins by inspecting the current state of the Git repository
+(which branch you are on, whether you have open changes).
+If there are no errors, it generates a list of steps to run.
+Each step is a bash function that wraps an individual Git command.
 This list is then executed one by one.
 
 For discussion around this architecture see
@@ -54,6 +55,6 @@ where it was proposed.
 
 Every Git Town command
 * has a [man page](../man/man1)
-* has a [markdown page](./commands)
+* has a [markdown page](./commands) that is identical to the man page
 * is listed on the [git-town man page](../man/man1/git-town.1)
 * is listed on the [README](../README.md)
