@@ -28,9 +28,9 @@ function squash_merge {
   local commit_message=$2
   run_command "git merge --squash $branch_name"
   if [ "$commit_message" == "" ]; then
-    run_command "git commit -a"
+    run_command "git commit"
   else
-    run_command "git commit -a -m '$commit_message'"
+    run_command "git commit -m '$commit_message'"
   fi
   if [ $? != 0 ]; then error_empty_commit; fi
 }
