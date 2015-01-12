@@ -10,7 +10,8 @@ def commands_of_last_run
     \[1m          # bold text
     \[(.*?)\]     # branch name in square brackets
     \s            # space between branch name and Git command
-    (.*?)         # the Git command
+    (.+?)         # the Git command
+    \s*           # any extra whitespace
     \n            # newline at the end
   /x
   @last_run_result.out.scan command_regex

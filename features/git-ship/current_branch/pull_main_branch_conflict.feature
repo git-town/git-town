@@ -56,7 +56,7 @@ Feature: git ship: resolving conflicts while updating the main branch
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -a -m 'feature done'    |
+      | main    | git commit -m 'feature done'       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
@@ -83,7 +83,7 @@ Feature: git ship: resolving conflicts while updating the main branch
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -a -m 'feature done'    |
+      | main    | git commit -m 'feature done'       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
