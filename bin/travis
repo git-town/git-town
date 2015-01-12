@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+# Install ShellCheck
+sudo apt-get install cabal-install > /dev/null
+cabal update --verbose=0
+cabal install --verbose=0 shellcheck
+export PATH=~/.cabal/bin/:$PATH
+
+# Run the full test suite
+bundle exec rake
