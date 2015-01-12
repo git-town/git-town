@@ -28,11 +28,11 @@ rake format   # Run formatters (fixes some lint errors)
 rake lint     # Run linters
 rake spec     # Run tests
 
-# run single test
+# run single scenario/feature
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
 
-# run cucumber in parallel
+# run cucumber features in parallel
 bin/cuke [<folder>...]
 ```
 
