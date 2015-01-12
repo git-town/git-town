@@ -42,15 +42,15 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                         |
-      | feature | git commit --no-edit            |
-      | feature | git merge --no-edit main        |
-      | feature | git checkout main               |
-      | main    | git merge --squash feature      |
-      | main    | git commit -a -m 'feature done' |
-      | main    | git push                        |
-      | main    | git push origin :feature        |
-      | main    | git branch -D feature           |
+      | BRANCH  | COMMAND                      |
+      | feature | git commit --no-edit         |
+      | feature | git merge --no-edit main     |
+      | feature | git checkout main            |
+      | main    | git merge --squash feature   |
+      | main    | git commit -m 'feature done' |
+      | main    | git push                     |
+      | main    | git push origin :feature     |
+      | main    | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
@@ -65,14 +65,14 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                         |
-      | feature | git merge --no-edit main        |
-      | feature | git checkout main               |
-      | main    | git merge --squash feature      |
-      | main    | git commit -a -m 'feature done' |
-      | main    | git push                        |
-      | main    | git push origin :feature        |
-      | main    | git branch -D feature           |
+      | BRANCH  | COMMAND                      |
+      | feature | git merge --no-edit main     |
+      | feature | git checkout main            |
+      | main    | git merge --squash feature   |
+      | main    | git commit -m 'feature done' |
+      | main    | git push                     |
+      | main    | git push origin :feature     |
+      | main    | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
