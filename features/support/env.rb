@@ -19,13 +19,13 @@ Before do
   # Create the local repository
   clone_repository remote_repository_path, local_repository_path
   at_path local_repository_path do
+    configure_git 'local'
+
     # Create the master branch
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
 
     # Create the main branch
     run 'git checkout -b main master ; git push -u origin main'
-
-    configure_git 'local'
   end
 
   # Set the default branch
