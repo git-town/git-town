@@ -32,7 +32,7 @@ rake test    # Run feature tests
 cucumber -n 'scenario/feature name'
 cucumber [filename]:[lineno]
 
-# run cucumber features in parallel
+# run features in parallel
 bin/cuke [<folder>...]
 ```
 
