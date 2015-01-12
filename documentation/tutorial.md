@@ -1,6 +1,7 @@
 # Git Town Tutorial
 
-Let's assume you are part of a development team with Bob and Carol. Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
+Let's assume you are part of a development team with Bob and Carol.
+Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
 
 
 ## Starting a new feature
@@ -22,8 +23,8 @@ This gives you the best possible start for the new password reset feature.
 
 After coding for a while, you hear that Bob shipped a number of important bug fixes,
 and that Carol shipped some UI design updates.
-Both affect your work, so you want them in your branch before you continue working.
-In order to achieve that, you run `git sync`. This command
+Both changes affect your work, so you want them in your branch before you continue.
+In order to achieve that right now, you run `git sync`. This command
 
 * stashes away your currently open changes
 * checks out the _master_ branch
