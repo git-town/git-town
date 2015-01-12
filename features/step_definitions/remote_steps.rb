@@ -3,6 +3,7 @@ Given(/^my repo has an upstream repo$/) do
   clone_repository upstream_remote_repository_path, upstream_local_repository_path
 
   at_path upstream_local_repository_path do
+    configure_git 'upstream'
     run 'git checkout main'
   end
 
