@@ -146,7 +146,7 @@ end
 def verify_commits commits_array
   normalize_commit_data commits_array
 
-  expected_commits = normalize_expected_commits_array
+  expected_commits = normalize_expected_commits_array commits_array
   actual_commits = commits_in_repo
 
   # Leave only the expected keys in actual_commits
