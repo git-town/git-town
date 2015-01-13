@@ -1,6 +1,6 @@
 Given(/^(I|my coworker) fetch(?:es)? updates$/) do |who|
-  path = (who == 'I') ? local_repository_path : coworker_repository_path
-  at_path path do
+  user = (who == 'I') ? :developer : :coworker
+  in_repository user do
     run 'git fetch'
   end
 end

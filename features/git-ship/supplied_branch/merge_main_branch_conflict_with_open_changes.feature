@@ -11,7 +11,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m 'feature done'` while allowing errors
+    And I run `git ship feature -m "feature done"` while allowing errors
 
 
   @finishes-with-non-empty-stash
@@ -43,13 +43,9 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit    | conflicting_file |
-      | feature | local            | conflicting feature commit | conflicting_file |
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT         |
-      | main    | conflicting_file | main content    |
-      | feature | conflicting_file | feature content |
+      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local            | conflicting feature commit | conflicting_file | feature content |
 
 
   Scenario: continuing after resolving conflicts
@@ -60,7 +56,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | feature       | git commit --no-edit         |
       | feature       | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m 'feature done' |
+      | main          | git commit -m "feature done" |
       | main          | git push                     |
       | main          | git push origin :feature     |
       | main          | git branch -D feature        |
@@ -73,9 +69,6 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -85,7 +78,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | BRANCH        | COMMAND                      |
       | feature       | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m 'feature done' |
+      | main          | git commit -m "feature done" |
       | main          | git push                     |
       | main          | git push origin :feature     |
       | main          | git branch -D feature        |
@@ -98,6 +91,3 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
-    And now I have the following committed files
-      | BRANCH | FILES            |
-      | main   | conflicting_file |

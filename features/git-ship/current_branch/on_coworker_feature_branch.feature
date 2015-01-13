@@ -2,7 +2,7 @@ Feature: git ship: shipping a coworkers branch
 
   As a developer shipping a coworker's feature branch
   I want my coworker to be the author of the commit added to the main branch
-  So my coworker is given credit for their work
+  So that my coworker is given credit for their work
 
 
   Background:
@@ -26,7 +26,7 @@ Feature: git ship: shipping a coworkers branch
       | feature | git merge --no-edit main                                                |
       | feature | git checkout main                                                       |
       | main    | git merge --squash feature                                              |
-      | main    | git commit --author="coworker <coworker@example.com>" -m 'feature done' |
+      | main    | git commit --author="coworker <coworker@example.com>" -m "feature done" |
       | main    | git push                                                                |
       | main    | git push origin :feature                                                |
       | main    | git branch -D feature                                                   |

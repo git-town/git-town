@@ -37,10 +37,6 @@ Feature: git sync: on a feature branch (with open changes)
       |         |                  | local main commit                | local_main_file    |
       |         |                  | remote main commit               | remote_main_file   |
       |         |                  | local feature commit             | local_feature_file |
-    And now I have the following committed files
-      | BRANCH  | FILES                                                 |
-      | main    | local_main_file, remote_main_file                     |
-      | feature | local_feature_file, local_main_file, remote_main_file |
 
 
   Scenario: with a remote branch
@@ -78,7 +74,3 @@ Feature: git sync: on a feature branch (with open changes)
       |         |                  | remote main commit                                         | remote_main_file    |
       |         |                  | local feature commit                                       | local_feature_file  |
       |         |                  | remote feature commit                                      | remote_feature_file |
-    And now I have the following committed files
-      | BRANCH  | FILES                                                                      |
-      | main    | local_main_file, remote_main_file                                          |
-      | feature | local_feature_file, remote_feature_file, local_main_file, remote_main_file |

@@ -10,7 +10,7 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
       | feature | local    | feature_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship feature -m 'feature done'`
+    When I run `git ship feature -m "feature done"`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git stash -u                       |
@@ -22,7 +22,7 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
@@ -34,21 +34,16 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
-    And now I have the following committed files
-      | BRANCH | FILES        |
-      | main   | feature_file |
 
 
   Scenario: feature branch with non-pulled updates in the repo
     Given I have feature branches named "feature" and "other_feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION         | FILE NAME    | FILE CONTENT          |
-      | feature | local and remote | feature_file | early feature content |
-      | feature | local and remote | feature_file | mid feature content   |
-      | feature | remote           | feature_file | final feature content |
+      | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
+      | feature | remote   | feature_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship feature -m 'feature done'`
+    When I run `git ship feature -m "feature done"`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git stash -u                       |
@@ -60,7 +55,7 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
@@ -72,6 +67,3 @@ Feature: git ship: shipping the supplied feature branch (with open changes)
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
-    And now I have the following committed files
-      | BRANCH | FILES        |
-      | main   | feature_file |

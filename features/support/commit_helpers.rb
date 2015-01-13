@@ -21,14 +21,14 @@ end
 
 
 def create_remote_commit commit_data
-  at_path coworker_repository_path do
+  in_secondary_repository do
     create_local_commit commit_data.merge(pull: true, push: true)
   end
 end
 
 
 def create_upstream_commit commit_data
-  at_path upstream_local_repository_path do
+  in_repository :upstream_developer do
     create_local_commit commit_data.merge(push: true)
   end
 end
@@ -41,7 +41,7 @@ def create_commit commit_data
   when %w(local) then create_local_commit commit_data
   when %w(remote) then create_remote_commit commit_data
   when %w(local remote) then create_local_commit commit_data.merge(push: true)
-  when %w(upstream) then  create_upstream_commit commit_data
+  when %w(upstream) then create_upstream_commit commit_data
   else fail "Unknown commit location: #{location}"
   end
 end
@@ -76,18 +76,23 @@ end
 
 
 # Returns the commits in the currently checked out branch
+#
+# rubocop:disable MethodLength
 def commits_for_branch branch_name, keys
-  array_output_of("git log #{branch_name} --format='%h|%s|%ae'").map do |commit|
+  array_output_of("git log #{branch_name} --oneline --format='%h|%s|%ae'").map do |commit|
     sha, message, author = commit.split('|')
     next if message == 'Initial commit'
+    filenames = committed_files sha
     {
       author: author,
       branch: branch_name,
       message: message,
-      file_name: committed_files(sha)
-    }.select { |k, _| keys.include?(k) }
+      file_name: filenames,
+      file_content: content_of(file: filenames[0], for_sha: sha)
+    }.select { |key, _| keys.include? key }
   end.compact
 end
+# rubocop:enable MethodLength
 
 
 def default_commit_attributes
