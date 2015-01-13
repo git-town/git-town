@@ -1,6 +1,6 @@
 # Returns the content of the file with the given name on the given branch
-def content_of file:, in_branch:
-  output_of "git show #{in_branch}:#{file}"
+def content_of file:, for_sha:
+  output_of "git show #{for_sha}:#{file}"
 end
 
 
@@ -15,7 +15,7 @@ end
 def files_in_branches
   existing_local_branches.map do |branch|
     files_in(branch: branch).map do |file|
-      content = content_of file: file, in_branch: branch
+      content = content_of file: file, for_sha: branch
       { branch: branch, name: file, content: content }
     end
   end.flatten
@@ -31,7 +31,7 @@ def verify_files files_array
   expected_files = files_array.map do |file_data|
     file_data.symbolize_keys_deep!
     Kappamaki.from_sentence(file_data.delete :files).map do |file|
-      content = content_of file: file, in_branch: file_data[:branch]
+      content = content_of file: file, for_sha: file_data[:branch]
       file_data.clone.reverse_merge name: file, content: content
     end
   end.flatten
