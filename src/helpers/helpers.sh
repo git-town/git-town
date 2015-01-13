@@ -34,5 +34,7 @@ source "$current_dir/undo_helpers.sh"
 source "$current_dir/environment.sh" "$@"
 source "$current_dir/configuration.sh" "$@"
 
-export initial_branch_name=$(get_current_branch_name)
-export initial_open_changes=$(has_open_changes)
+if [ "$(is_git_repository)" == true ]; then
+  export initial_branch_name=$(get_current_branch_name)
+  export initial_open_changes=$(has_open_changes)
+fi

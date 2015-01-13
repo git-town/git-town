@@ -4,6 +4,7 @@ Feature: Git Town performs correctly depending on the environment
     Given I'm currently not in a git repository
     When I run `<COMMAND>` while allowing errors
     Then I <DO_OR_DONT> see "This is not a git repository."
+    And I don't see "fatal: Not a git repository"
 
   Examples:
     | COMMAND                       | DO_OR_DONT |
