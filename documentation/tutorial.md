@@ -9,34 +9,37 @@ Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides
 You are in the middle of the sprint, and have just finished a feature.
 You take the next ticket from the backlog.
 Let's say it is called "resetting passwords".
-You run `git hack reset-passwords`. This command
+Since we are developing in feature branches, you now need to
 
-* checks out the _master_ branch
-* pulls updates for the _master_ branch, i.e. the things that Bob and Carol have shipped while you worked on your last feature
-* cuts a new feature branch called "password-reset" from your now up-to-date _master_ branch
-* checks out that new branch
+* update your master branch to the latest version on GitHub
+* cut a new feature branch from the master branch
 
-This gives you the best possible start for the new password reset feature.
+Running `git hack reset-passwords` achieves all this in a single command.
+This gives you the best possible start for building the new feature, 
+on top of the latest version of the code base.
 
 
 ## Synchronizing the branch
 
 After coding for a while, you hear that Bob shipped a number of important bug fixes,
 and that Carol shipped some UI design updates.
-Both changes affect your work, so you want them in your branch before you continue.
-In order to achieve that right now, you run `git sync`. This command
+Both changes affect your work, so you want them in your feature branch before you continue.
+On a high level, you need to 
 
-* stashes away your currently open changes
-* checks out the _master_ branch
-* pulls the updates on that branch (Bob's bug fixes and Carol's UI updates)
-* checks out your feature branch again
-* merges the updates from the _master_ branch into your branch
-* pushes your updated feature branch to the repository
-* restores your open changes by popping the stash
+* pull updates for the `master` branch (to get Bob and Carol's changes)
+* merge the master branch into your `reset-passwords` branch
+* push your updated feature branch to the repo, so that others who work on it also get these updates
 
-You are now exactly where you were before, but your branch now also contains Bob's bug fixes and the new UI from Carol.
-Any more changes you make will fit right in.
-Great team work!
+You will need to move between branches to do this, 
+which means you also need to stash away any currently open changes in your repo temporarily.
+All together this simple operation requires between 5 and 7 individual Git commands.
+That's a lot of typing. 
+And this should happen several times per day, for each of your feature branches!
+
+`git sync` runs this whole process in one command, and brings you back to exactly where you started.
+
+With Bob's bug fixes and the new UI from Carol available in your branch, 
+any more modification you make will fit right into their work.
 
 
 ## Creating a pull request
@@ -48,19 +51,24 @@ You fill out the title and description, tag the reviewers, and submit.
 
 ## Shipping the feature
 
-After a while, your pull request gets the approval to be merged. You run `git ship reset-passwords`. This command
+When your pull request gets the approval to be merged, 
+you want to ship it. 
+To do this safely, i.e. without breaking the master branch, you want to
 
-* checks out the _master_ branch
-* pulls updates from the remote master branch (to make sure you ship on top of the latest version of master)
-* checks out your _password-reset_ branch
-* pulls updates from its remote branch (to make sure you ship everything that is in that branch)
-* merges the _master_ branch into the _password-reset_ branch
+* make sure there are no open changes (i.e. all changes are properly committed)
+* pull updates from your remote feature branch (to make sure you ship everything that is in that branch)
+* pull updates for the master branch (to make sure you ship on top of the latest version of master)
+* merge the _master_ branch into the _password-reset_ branch
   (to make sure your branch doesn't create conflicts with _master_,
   and to give you a chance to resolve any issues before merging into _master_)
-* checks out the _master_ branch again
-* squash-merges the _password-reset_ branch into the _master_ branch (this makes it look like a single commit, without the convoluted merge history and the many intermediate commits on your branch)
-* pushes the updated _master_ branch to the repository
-* deletes the _password-reset_ branch from your local machine and the repository
+* squash-merge the _password-reset_ branch into the _master_ branch (this makes it look like a single commit, without the convoluted merge history and the many intermediate commits on your branch)
+* push the updated _master_ branch to the repository (so that your changes are available to Bob and Alice in return)
+* remove the _password-reset_ branch from your local machine and the repository
 
-What all of this achieves is that your feature is safely merged as a single additional commit onto the _master_ branch,
-and then the old feature branch is cleaned up everywhere.
+This requires from 7-9 individual Git commands. 
+Git Town provides a single, convenient command for this as well: 
+`git ship reset-passwords`. 
+
+After running this, your feature is now safely merged as a single additional commit on the _master_ branch,
+then the old feature branch is cleaned up everywhere,
+and you and the repository are ready for the next feature.
