@@ -1,6 +1,6 @@
 Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
-  path = (who == 'I') ? local_repository_path : coworker_repository_path
-  at_path(path) do
+  user = (who == 'I') ? :developer : :coworker
+  in_repository user do
     run "git checkout #{branch_name}"
   end
 end
@@ -30,7 +30,7 @@ end
 
 
 Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
-  at_path coworker_repository_path do
+  in_repository :coworker do
     create_branch branch_name
     if relation
       commit_to_branch = relation == 'behind' ? 'main' : branch_name
@@ -41,7 +41,7 @@ end
 
 
 Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
-  at_path coworker_repository_path do
+  in_repository :coworker do
     run "git push origin :#{branch_name}"
   end
 end

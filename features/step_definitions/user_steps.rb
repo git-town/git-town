@@ -1,5 +1,5 @@
 Given(/^my coworker fetches updates$/) do
-  at_path coworker_repository_path do
+  in_repository :coworker do
     run 'git fetch'
   end
 end

@@ -6,6 +6,4 @@ rvm:
 cache: bundler
 
 script:
-  - git config --global user.email cucumber@git.town
-  - git config --global user.name "Git Town"
   - bin/travis
