@@ -44,10 +44,8 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
   Scenario: feature branch with non-pulled updates in the repo
     Given I have feature branches named "feature" and "other_feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION         | FILE NAME    | FILE CONTENT          |
-      | feature | local and remote | feature_file | early feature content |
-      | feature | local and remote | feature_file | mid feature content   |
-      | feature | remote           | feature_file | final feature content |
+      | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
+      | feature | remote   | feature_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature -m "feature done"`
