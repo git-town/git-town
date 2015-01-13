@@ -1,8 +1,11 @@
-Feature: git-hack errors when the branch exists locally (without open changes)
+Feature: git-hack: errors when the branch already exists locally (without open changes)
+
+  (see ./branch_exists_locally_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
-    And I am on the main branch
+    And I am on the "main" branch
     When I run `git hack existing_feature` while allowing errors
 
 

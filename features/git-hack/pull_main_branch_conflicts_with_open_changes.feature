@@ -1,4 +1,9 @@
-Feature: git-hack handling conflicting remote main branch updates with open changes
+Feature: git hack: handling conflicting remote main branch updates (with open changes)
+
+  As a developer creating a new feature branch while there are conflicting updates on the local and remote main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -33,10 +38,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And I end up on the "existing_feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
-      | main   | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
 
 
   @finishes-with-non-empty-stash
@@ -59,7 +61,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And I end up on the "new_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |
@@ -81,7 +83,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     And I end up on the "new_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |

@@ -1,5 +1,5 @@
-Given(/^my coworker Charlie works on the same feature branch$/) do
-  at_path coworker_repository_path do
-    run 'git pull ; git checkout feature'
+Given(/^my coworker fetches updates$/) do
+  in_repository :coworker do
+    run 'git fetch'
   end
 end

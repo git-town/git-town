@@ -11,10 +11,14 @@ Feature: git-sync-fork on a feature branch without open changes
 
 
   Scenario: result
-    Then I am still on the "feature" branch
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                  |
+      | feature | git checkout main        |
+      | main    | git fetch upstream       |
+      | main    | git rebase upstream/main |
+      | main    | git push                 |
+      | main    | git checkout feature     |
+    And I am still on the "feature" branch
     And I have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES         |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME     |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
-    And now I have the following committed files
-      | BRANCH | FILES         |
-      | main   | upstream_file |

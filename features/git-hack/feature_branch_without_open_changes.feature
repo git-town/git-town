@@ -1,4 +1,7 @@
-Feature: git-hack on a feature branch without open changes
+Feature: git hack: starting a new feature (without open changes)
+
+  (see ./feature_branch_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -19,7 +22,7 @@ Feature: git-hack on a feature branch without open changes
       | main             | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And I have the following commits
-      | BRANCH           | LOCATION         | MESSAGE                 | FILES        |
+      | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME    |
       | main             | local and remote | main commit             | main_file    |
       | existing_feature | local            | existing feature commit | feature_file |
       | new_feature      | local            | main commit             | main_file    |

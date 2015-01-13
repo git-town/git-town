@@ -21,14 +21,14 @@ end
 
 
 def create_remote_commit commit_data
-  at_path coworker_repository_path do
+  in_secondary_repository do
     create_local_commit commit_data.merge(pull: true, push: true)
   end
 end
 
 
 def create_upstream_commit commit_data
-  at_path upstream_local_repository_path do
+  in_repository :upstream_developer do
     create_local_commit commit_data.merge(push: true)
   end
 end
@@ -41,7 +41,7 @@ def create_commit commit_data
   when %w(local) then create_local_commit commit_data
   when %w(remote) then create_remote_commit commit_data
   when %w(local remote) then create_local_commit commit_data.merge(push: true)
-  when %w(upstream) then  create_upstream_commit commit_data
+  when %w(upstream) then create_upstream_commit commit_data
   else fail "Unknown commit location: #{location}"
   end
 end
@@ -76,15 +76,22 @@ end
 
 
 # Returns the commits in the currently checked out branch
+#
+# rubocop:disable MethodLength
 def commits_for_branch branch_name
   array_output_of("git log #{branch_name} --oneline").map do |commit|
     sha, message = commit.split(' ', 2)
-
-    unless message == 'Initial commit'
-      { branch: branch_name, message: message, files: committed_files(sha) }
-    end
+    next if message == 'Initial commit'
+    filenames = committed_files sha
+    {
+      branch: branch_name,
+      message: message,
+      file_name: filenames,
+      file_content: content_of(file: filenames[0], for_sha: sha)
+    }
   end.compact
 end
+# rubocop:enable MethodLength
 
 
 def default_commit_attributes
@@ -112,13 +119,20 @@ end
 # Returns an array of commit_data
 def normalize_expected_commit_data commit_data
   # Convert file string list into real array
-  commit_data[:files] = Kappamaki.from_sentence commit_data[:files]
+  commit_data[:file_name] = Kappamaki.from_sentence commit_data[:file_name]
 
   # Create individual expected commits for each location provided
   Kappamaki.from_sentence(commit_data.delete(:location)).map do |location|
     branch = branch_name_for_location location, commit_data[:branch]
     commit_data.clone.merge branch: branch
   end
+end
+
+
+def normalize_expected_commits_array commits_array
+  commits_array.map do |commit_data|
+    normalize_expected_commit_data commit_data
+  end.flatten
 end
 
 
@@ -132,11 +146,15 @@ end
 def verify_commits commits_array
   normalize_commit_data commits_array
 
-  expected_commits = commits_array.map do |commit_data|
-    normalize_expected_commit_data commit_data
-  end.flatten
-
+  expected_commits = normalize_expected_commits_array commits_array
   actual_commits = commits_in_repo
+
+  # Leave only the expected keys in actual_commits
+  unless expected_commits[0].key? :file_content
+    actual_commits.each do |commit_data|
+      commit_data.delete :file_content
+    end
+  end
 
   expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
 end

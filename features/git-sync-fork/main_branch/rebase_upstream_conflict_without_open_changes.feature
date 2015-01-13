@@ -11,20 +11,21 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
 
 
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH | COMMAND                  |
+      | main   | git fetch upstream       |
+      | main   | git rebase upstream/main |
+    And my repo has a rebase in progress
 
 
   Scenario: aborting
     When I run `git sync-fork --abort`
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND            |
+      | HEAD   | git rebase --abort |
+    And I end up on the "main" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE         | FILES            |
-      | main   | upstream | upstream commit | conflicting_file |
-      |        | local    | local commit    | conflicting_file |
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT       |
-      | main   | conflicting_file | local content |
+    And I am left with my original commits
 
 
   Scenario: continuing after resolving conflicts
@@ -36,7 +37,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git push              |
     And I end up on the "main" branch
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
@@ -52,7 +53,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git push |
     And I end up on the "main" branch
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files

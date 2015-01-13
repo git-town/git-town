@@ -1,4 +1,9 @@
-Feature: git-hack on the main branch with open changes
+Feature: git hack: moving open changes on the main branch into a new feature branch
+
+  As a developer working on a new feature on the main branch
+  I want to be able to create a new up-to-date feature branch and continue my work there
+  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
+
 
   Background:
     Given the following commit exists in my repository
@@ -21,10 +26,6 @@ Feature: git-hack on the main branch with open changes
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the branch "new_feature" has not been pushed to the repository
     And I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE     | FILES     |
+      | BRANCH      | LOCATION         | MESSAGE     | FILE NAME |
       | main        | local and remote | main_commit | main_file |
       | new_feature | local            | main_commit | main_file |
-    And now I have the following committed files
-      | BRANCH      | FILES     |
-      | main        | main_file |
-      | new_feature | main_file |

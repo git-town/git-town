@@ -1,4 +1,7 @@
-Feature: git-hack handling conflicting remote main branch updates with open changes
+Feature: git hack: handling conflicting remote main branch updates while starting a new feature
+
+  (see ./pull_main_branch_coflicts_with_open_changes.feature)
+
 
   Background:
     Given I have a feature branch named "existing_feature"
@@ -22,15 +25,12 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
   Scenario: aborting
     When I run `git hack --abort`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                       |
-      | HEAD    | git rebase --abort            |
-      | main    | git checkout existing_feature |
+      | BRANCH | COMMAND                       |
+      | HEAD   | git rebase --abort            |
+      | main   | git checkout existing_feature |
     And I end up on the "existing_feature" branch
     And there is no rebase in progress
-    And I have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILES            |
-      | main   | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
 
 
   Scenario: continuing without resolving conflicts
@@ -43,13 +43,13 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
     Given I resolve the conflict in "conflicting_file"
     When I run `git hack --continue `
     Then it runs the Git commands
-      | BRANCH  | COMMAND                          |
-      | HEAD    | git rebase --continue            |
-      | main    | git push                         |
-      | main    | git checkout -b new_feature main |
+      | BRANCH | COMMAND                          |
+      | HEAD   | git rebase --continue            |
+      | main   | git push                         |
+      | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |
@@ -69,7 +69,7 @@ Feature: git-hack handling conflicting remote main branch updates with open chan
       | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And now I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILES            |
+      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new_feature | local            | conflicting remote commit | conflicting_file |

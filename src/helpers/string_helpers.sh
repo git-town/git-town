@@ -41,3 +41,16 @@ function remove_string {
   local split="$(split_string "$delimiter_separated_string" "$delimiter")"
   join_string "$(echo "$split" | sed "s/^${string_to_remove}$//;/^$/d")" "$delimiter"
 }
+
+
+function parameters_as_string {
+  local str=""
+  for arg in "$@"; do
+    if [ "$arg" != "${arg/ /}" ]; then
+      # Wrap arg in double quotes, escape double quotes within arg
+      arg="\"${arg//\"/\\\"}\""
+    fi
+    str="$str $arg"
+  done
+  echo "${str/ /}" # Remove initial space
+}

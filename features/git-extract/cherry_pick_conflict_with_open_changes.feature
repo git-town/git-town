@@ -1,4 +1,9 @@
-Feature: git-extract handling cherry-pick conflicts with open changes
+Feature: git extract: resolving conflicts with main branch (with open changes)
+
+  As a developer extracting a commit that conflicts with the main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "feature"
@@ -15,14 +20,14 @@ Feature: git-extract handling cherry-pick conflicts with open changes
   @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                  |
-      | feature  | git fetch --prune                        |
-      | feature  | git stash -u                             |
-      | feature  | git checkout main                        |
-      | main     | git rebase origin/main                   |
-      | main     | git push                                 |
-      | main     | git checkout -b refactor main            |
-      | refactor | git cherry-pick [["feature" branch SHA]] |
+      | BRANCH   | COMMAND                               |
+      | feature  | git fetch --prune                     |
+      | feature  | git stash -u                          |
+      | feature  | git checkout main                     |
+      | main     | git rebase origin/main                |
+      | main     | git push                              |
+      | main     | git checkout -b refactor main         |
+      | refactor | git cherry-pick [SHA:refactor commit] |
     And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
@@ -41,17 +46,18 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
-      | main     | local and remote | main commit     | conflicting_file |
-      | feature  | local            | feature commit  | feature_file     |
-      |          |                  | refactor commit | conflicting_file |
+      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        |
+      | main    | local and remote | main commit     | conflicting_file |
+      | feature | local            | feature commit  | feature_file     |
+      |         |                  | refactor commit | conflicting_file |
     And my repo has no cherry-pick in progress
 
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
-    Then I get the error "You must resolve the conflicts before continuing the git extract"
+    Then it runs no Git commands
+    And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
@@ -68,7 +74,7 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |
       | feature  | local            | feature commit  | feature_file     |
       |          |                  | refactor commit | conflicting_file |
@@ -86,7 +92,7 @@ Feature: git-extract handling cherry-pick conflicts with open changes
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILES            |
+      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |
       | feature  | local            | feature commit  | feature_file     |
       |          |                  | refactor commit | conflicting_file |

@@ -10,7 +10,8 @@ def commands_of_last_run
     \[1m          # bold text
     \[(.*?)\]     # branch name in square brackets
     \s            # space between branch name and Git command
-    (.*?)         # the Git command
+    (.+?)         # the Git command
+    \s*           # any extra whitespace
     \n            # newline at the end
   /x
   @last_run_result.out.scan command_regex
@@ -72,8 +73,8 @@ end
 
 
 def run_shell_command command, inputs
-  result = OpenStruct.new(command: command, location: Dir.pwd.split(/[_\/]/).last)
-  command = "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH; #{command} 2>&1"
+  result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
+  command = "#{shell_overrides}; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
     inputs.each { |input| stdin.puts input }
@@ -83,6 +84,11 @@ def run_shell_command command, inputs
 
   result.error = status.exitstatus != 0
   result
+end
+
+
+def shell_overrides
+  "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH; export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME}"
 end
 
 

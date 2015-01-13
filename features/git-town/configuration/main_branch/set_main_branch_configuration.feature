@@ -1,5 +1,10 @@
 Feature: set the main branch configuration
 
+  As a user or tool configuring Git Town
+  I want an easy way to specifically set the main branch
+  So that I can configure Git Town safely, and the tool does exactly what I want.
+
+
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git town main-branch main`
@@ -14,7 +19,5 @@ Feature: set the main branch configuration
 
 
   Scenario: invalid branch name
-    Given I have a branch named "main-old"
-    And I have configured the main branch name as "main-old"
-    When I run `git town main-branch main-new` while allowing errors
-    Then I see "There is no branch named 'main-new'"
+    When I run `git town main-branch non-existing` while allowing errors
+    Then I see "There is no branch named 'non-existing'"

@@ -13,22 +13,25 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then my repo has a rebase in progress
+    Then it runs the Git commands
+      | BRANCH | COMMAND                  |
+      | main   | git stash -u             |
+      | main   | git fetch upstream       |
+      | main   | git rebase upstream/main |
+    And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
 
   Scenario: aborting
     When I run `git sync-fork --abort`
-    Then I end up on the "main" branch
+    Then it runs the Git commands
+      | BRANCH | COMMAND            |
+      | HEAD   | git rebase --abort |
+      | main   | git stash pop      |
+    And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE         | FILES            |
-      | main   | upstream | upstream commit | conflicting_file |
-      |        | local    | local commit    | conflicting_file |
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT       |
-      | main   | conflicting_file | local content |
+    And I am left with my original commits
 
 
   Scenario: continuing after resolving conflicts
@@ -42,7 +45,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
@@ -60,7 +63,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILES            |
+      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
