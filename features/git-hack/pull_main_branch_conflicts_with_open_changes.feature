@@ -38,10 +38,7 @@ Feature: git hack: handling conflicting remote main branch updates (with open ch
     And I end up on the "existing_feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
-      | main   | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
+    And I am left with my original commits
 
 
   @finishes-with-non-empty-stash

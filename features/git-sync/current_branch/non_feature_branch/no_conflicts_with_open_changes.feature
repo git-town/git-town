@@ -34,7 +34,3 @@ Feature: git sync: syncing a non-feature branch (with open changes)
       | qa     | local and remote | local commit  | local_file  |
       |        |                  | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
-    And now I have the following committed files
-      | BRANCH | FILES                   |
-      | qa     | local_file, remote_file |
-      | main   | main_file               |
