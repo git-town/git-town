@@ -57,9 +57,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | main     | local and remote | main commit                       | conflicting_file     |
       | feature1 | local            | feature1 local commit             | conflicting_file     |
       |          | remote           | feature1 remote commit            | feature1_remote_file |
-      | feature2 | local and remote | Merge branch 'main' into feature2 |                      |
+      | feature2 | local and remote | feature2 commit                   | feature2_file        |
       |          |                  | main commit                       | conflicting_file     |
-      |          |                  | feature2 commit                   | feature2_file        |
+      |          |                  | Merge branch 'main' into feature2 |                      |
 
 
   Scenario: continuing without resolving conflicts

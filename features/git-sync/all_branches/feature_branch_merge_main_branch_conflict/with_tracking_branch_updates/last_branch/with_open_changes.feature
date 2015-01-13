@@ -46,9 +46,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
       | main     | local and remote | main commit                       | conflicting_file     |
-      | feature1 | local and remote | feature1 commit                                              | feature1_file        |
-      |          |                  | main commit                                                  | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature1                            |                      |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
       | feature2 | local            | feature2 local commit             | conflicting_file     |
       |          | remote           | feature2 remote commit            | feature2_remote_file |
 
@@ -66,9 +66,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
       | main     | local and remote | main commit                       | conflicting_file     |
-      | feature1 | local and remote | feature1 commit                                              | feature1_file        |
-      |          |                  | main commit                                                  | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature1                            |                      |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
       | feature2 | local            | feature2 local commit             | conflicting_file     |
       |          | remote           | feature2 remote commit            | feature2_remote_file |
 
