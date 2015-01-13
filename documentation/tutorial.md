@@ -44,9 +44,13 @@ any more modification you make will fit right into their work.
 
 ## Creating a pull request
 
-When you are done, you run `git pr`.
-It opens your browser with the GitHub page for creating a new pull request for your current branch.
-You fill out the title and description, tag the reviewers, and submit.
+Once your feature is ready for review, its time to open a pull request on GitHub.
+You fire up a browser, go to GitHub, navigate to your repository and finally end up on a new pull request form.
+
+`git pr` lets you jump straight from the terminal to filling in the details of your pull request in your browser.
+Your current branch is already selected, 
+so all you need to do is fill out the title and description, 
+tag the reviewers, and submit.
 
 
 ## Shipping the feature
