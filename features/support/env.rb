@@ -37,7 +37,7 @@ Before do
     run 'git branch -d master'
   end
 
-  goto_repository :developer
+  go_to_repository :developer
 end
 
 

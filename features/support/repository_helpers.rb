@@ -23,14 +23,14 @@ def clone_repository parent_identifier, child_identifier, bare: false
   run "git clone #{'--bare' if bare} #{parent_path} #{child_path}"
 
   in_repository child_identifier do
-    user = child_identifier.to_s.gsub('_secondary', '')
+    user = child_identifier.to_s.sub('_secondary', '')
     configure_git user
   end
 end
 
 
 # Move into the repository with the given repository
-def goto_repository identifier
+def go_to_repository identifier
   Dir.chdir repository_path identifier
 end
 
