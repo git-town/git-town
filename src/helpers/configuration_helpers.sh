@@ -16,6 +16,7 @@ function add_non_feature_branch {
   fi
 }
 
+
 # Add or remove non-feature branch if possible, and show confirmation
 function add_or_remove_non_feature_branches {
   local operation=$1
@@ -75,6 +76,8 @@ function show_non_feature_branches {
 }
 
 
+# Update the main branch if a branch name is specified,
+# otherwise show the current main branch name
 function show_or_update_main_branch {
   local branch_name=$1
   if [ -n "$branch_name" ]; then
@@ -86,6 +89,9 @@ function show_or_update_main_branch {
 }
 
 
+# Update the non-feature branches if a branch name and
+# operation is specified, otherwise show the current
+# non-feature branch names
 function show_or_update_non_feature_branches {
   local operation=$1
   local branch_name=$2
@@ -97,7 +103,11 @@ function show_or_update_non_feature_branches {
 }
 
 
-# Persists git-town configuration
+# Persists the given git-town configuration setting
+#
+# The configuration setting is provided as a name-value pair, and
+# the respective main_branch_name or non_feature_branch_names
+# shell variable is updated.
 function store_configuration {
   local config_setting_name=$1
   local value=$2
