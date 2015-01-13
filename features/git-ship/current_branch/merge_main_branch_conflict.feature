@@ -61,7 +61,7 @@ Feature: git ship: resolving conflicts between feature and main branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |   | feature done            | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -80,4 +80,4 @@ Feature: git ship: resolving conflicts between feature and main branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |   | feature done            | conflicting_file |
+      |        |                  | feature done            | conflicting_file |

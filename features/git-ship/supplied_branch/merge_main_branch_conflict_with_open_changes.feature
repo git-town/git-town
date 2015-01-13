@@ -68,7 +68,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |   | feature done            | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -90,4 +90,4 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |   | feature done            | conflicting_file |
+      |        |                  | feature done            | conflicting_file |

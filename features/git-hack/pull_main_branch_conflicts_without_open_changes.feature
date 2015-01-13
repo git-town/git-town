@@ -50,10 +50,10 @@ Feature: git hack: handling conflicting remote main branch updates while startin
     And I end up on the "new_feature" branch
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main        | local and remote | conflicting remote commit  | conflicting_file |
-      |             |                  | conflicting local commit | conflicting_file |
-      | new_feature | local            | conflicting remote commit  | conflicting_file |
-      |             |                  | conflicting local commit | conflicting_file |
+      | main        | local and remote | conflicting remote commit | conflicting_file |
+      |             |                  | conflicting local commit  | conflicting_file |
+      | new_feature | local            | conflicting remote commit | conflicting_file |
+      |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | FILES            | CONTENT          |
       | main        | conflicting_file | resolved content |
@@ -70,10 +70,10 @@ Feature: git hack: handling conflicting remote main branch updates while startin
     And I end up on the "new_feature" branch
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main        | local and remote | conflicting remote commit  | conflicting_file |
-      |             |                  | conflicting local commit | conflicting_file |
-      | new_feature | local            | conflicting remote commit  | conflicting_file |
-      |             |                  | conflicting local commit | conflicting_file |
+      | main        | local and remote | conflicting remote commit | conflicting_file |
+      |             |                  | conflicting local commit  | conflicting_file |
+      | new_feature | local            | conflicting remote commit | conflicting_file |
+      |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | FILES            | CONTENT          |
       | main        | conflicting_file | resolved content |
