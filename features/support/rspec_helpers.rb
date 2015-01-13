@@ -21,6 +21,7 @@ def commit_to_s commit
   "#{commit[:branch]} branch: '#{commit[:message]}' with #{commit[:files]}\n"
 end
 
+
 def extract_commits commit_mapping
   commits = commit_mapping.each_pair.map do |branch, branch_commits|
     branch_commits.map { |commit| commit.merge(branch: branch) }

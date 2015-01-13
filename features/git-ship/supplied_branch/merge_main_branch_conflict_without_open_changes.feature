@@ -62,6 +62,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
 
+
   Scenario: continuing after resolving conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
