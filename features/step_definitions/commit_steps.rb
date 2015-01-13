@@ -25,5 +25,5 @@ end
 
 
 Then(/^there are no commits$/) do
-  expect(commits_in_repo).to eql []
+  expect(commits_in_repo).to be_empty
 end

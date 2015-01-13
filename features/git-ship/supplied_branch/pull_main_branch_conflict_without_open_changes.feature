@@ -55,9 +55,9 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
+      | main   | local and remote | feature done              | feature_file     |
       |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      |        |                  | conflicting remote commit | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -80,6 +80,6 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
+      | main   | local and remote | feature done              | feature_file     |
       |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      |        |                  | conflicting remote commit | conflicting_file |

@@ -69,8 +69,8 @@ Feature: git sync: on a feature branch (with open changes)
       | main    | local and remote | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |
       | feature | local and remote | Merge branch 'main' into feature                           |                     |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
       |         |                  | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |
-      |         |                  | local feature commit                                       | local_feature_file  |
+      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
       |         |                  | remote feature commit                                      | remote_feature_file |
+      |         |                  | local feature commit                                       | local_feature_file  |

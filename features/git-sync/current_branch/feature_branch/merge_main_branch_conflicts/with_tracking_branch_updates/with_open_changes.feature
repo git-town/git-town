@@ -73,9 +73,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | main    | local and remote | conflicting main commit                                    | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature                           |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |
-      |         |                  | conflicting feature commit                                 | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | feature commit                                             | feature_file     |
+      |         |                  | conflicting feature commit                                 | conflicting_file |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -97,9 +97,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | main    | local and remote | conflicting main commit                                    | conflicting_file |
       | feature | local and remote | Merge branch 'main' into feature                           |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |
-      |         |                  | conflicting feature commit                                 | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | feature commit                                             | feature_file     |
+      |         |                  | conflicting feature commit                                 | conflicting_file |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |

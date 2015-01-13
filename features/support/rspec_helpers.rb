@@ -1,6 +1,6 @@
 def commits_diff actual, expected
-  expected.sort_by! { |c| commit_to_s(c) }
-  actual.sort_by! { |c| commit_to_s(c) }
+  expected = extract_commits expected
+  actual = extract_commits actual
 
   section_options = [
     ['Expected commits', expected],

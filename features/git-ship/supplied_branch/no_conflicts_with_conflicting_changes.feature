@@ -37,8 +37,8 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
     And there is no "feature" branch
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
-      | main   | local and remote | main commit  | main_file    |
       | main   | local and remote | feature done | feature_file |
+      |        |                  | main commit  | main_file    |
 
 
   Scenario: feature branch with non-pulled updates in the repo

@@ -101,8 +101,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature2 | local and remote | Merge branch 'main' into feature2                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | Merge remote-tracking branch 'origin/feature2' into feature2 |                  |
-      |          |                  | feature2 local commit                                        | conflicting_file |
       |          |                  | feature2 remote commit                                       | conflicting_file |
+      |          |                  | feature2 local commit                                        | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -125,5 +125,5 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature2 | local and remote | Merge branch 'main' into feature2                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | Merge remote-tracking branch 'origin/feature2' into feature2 |                  |
-      |          |                  | feature2 local commit                                        | conflicting_file |
       |          |                  | feature2 remote commit                                       | conflicting_file |
+      |          |                  | feature2 local commit                                        | conflicting_file |

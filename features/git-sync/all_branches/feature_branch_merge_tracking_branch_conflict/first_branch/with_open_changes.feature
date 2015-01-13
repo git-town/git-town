@@ -99,8 +99,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature1 | local and remote | Merge branch 'main' into feature1                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | Merge remote-tracking branch 'origin/feature1' into feature1 |                  |
-      |          |                  | feature1 local commit                                        | conflicting_file |
       |          |                  | feature1 remote commit                                       | conflicting_file |
+      |          |                  | feature1 local commit                                        | conflicting_file |
       | feature2 | local and remote | Merge branch 'main' into feature2                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | feature2 commit                                              | feature2_file    |
@@ -127,8 +127,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature1 | local and remote | Merge branch 'main' into feature1                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | Merge remote-tracking branch 'origin/feature1' into feature1 |                  |
-      |          |                  | feature1 local commit                                        | conflicting_file |
       |          |                  | feature1 remote commit                                       | conflicting_file |
+      |          |                  | feature1 local commit                                        | conflicting_file |
       | feature2 | local and remote | Merge branch 'main' into feature2                            |                  |
       |          |                  | main commit                                                  | main_file        |
       |          |                  | feature2 commit                                              | feature2_file    |
