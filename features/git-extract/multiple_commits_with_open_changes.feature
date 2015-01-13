@@ -38,4 +38,5 @@ Feature: git extract: extracting multiple commits (with open changes)
       |          |                  | refactor1 commit   | refactor1_file   |
       |          |                  | refactor2 commit   | refactor2_file   |
       | refactor | local and remote | remote main commit | remote_main_file |
+      |          |                  | refactor1 commit   | refactor1_file   |
       |          |                  | refactor2 commit   | refactor2_file   |
