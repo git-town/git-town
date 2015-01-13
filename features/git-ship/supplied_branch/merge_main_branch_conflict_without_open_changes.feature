@@ -59,9 +59,8 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
-      | main   | local and remote | feature done            | conflicting_file |
-      |        |                  | conflicting main commit | conflicting_file |
-
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |   | feature done            | conflicting_file |
 
   Scenario: continuing after resolving conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
@@ -79,5 +78,5 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
-      | main   | local and remote | feature done            | conflicting_file |
-      |        |                  | conflicting main commit | conflicting_file |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |   | feature done            | conflicting_file |

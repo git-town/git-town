@@ -31,18 +31,18 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND               |
-      | feature2 | git merge --abort     |
+      | BRANCH   | COMMAND                                      |
+      | feature2 | git merge --abort                            |
       | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout feature1 |
-      | feature1 | git checkout main     |
+      | feature2 | git checkout feature1                        |
+      | feature1 | git checkout main                            |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | feature1 commit                   | feature1_file    |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | Merge branch 'main' into feature1 |                  |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
+      | main     | local and remote | main commit                       | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
       | feature2 | local            | feature2 local commit             | conflicting_file     |
       |          | remote           | feature2 remote commit            | feature2_remote_file |
 
@@ -50,17 +50,17 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: skipping
     When I run `git sync --skip`
     Then it runs the Git commands
-      | BRANCH   | COMMAND           |
-      | feature2 | git merge --abort |
+      | BRANCH   | COMMAND                                      |
+      | feature2 | git merge --abort                            |
       | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout main |
+      | feature2 | git checkout main                            |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | feature1 commit                   | feature1_file    |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | Merge branch 'main' into feature1 |                  |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
+      | main     | local and remote | main commit                       | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
       | feature2 | local            | feature2 local commit             | conflicting_file     |
       |          | remote           | feature2 remote commit            | feature2_remote_file |
 

@@ -52,9 +52,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
       | feature1 | local and remote | feature1 commit                   | conflicting_file |
-      | feature2 | local and remote | feature2 commit                   | feature2_file        |
-      |          |                  | main commit                       | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature2 |                      |
+      | feature2 | local and remote | feature2 commit                   | feature2_file    |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | Merge branch 'main' into feature2 |                  |
 
 
   Scenario: continuing without resolving conflicts
@@ -81,12 +81,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | feature1 commit                   | conflicting_file        |
-      |          |                  | main commit                       | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature1 |                      |
-      | feature2 | local and remote | feature2 commit                   | feature2_file        |
-      |          |                  | main commit                       | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature2 |                      |
+      | feature1 | local and remote | feature1 commit                   | conflicting_file |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | Merge branch 'main' into feature1 |                  |
+      | feature2 | local and remote | feature2 commit                   | feature2_file    |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | Merge branch 'main' into feature2 |                  |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -104,9 +104,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
       | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | feature1 commit                   | conflicting_file        |
-      |          |                  | main commit                       | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature1 |                      |
-      | feature2 | local and remote | feature2 commit                   | feature2_file        |
-      |          |                  | main commit                       | conflicting_file     |
-      |          |                  | Merge branch 'main' into feature2 |                      |
+      | feature1 | local and remote | feature1 commit                   | conflicting_file |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | Merge branch 'main' into feature1 |                  |
+      | feature2 | local and remote | feature2 commit                   | feature2_file    |
+      |          |                  | main commit                       | conflicting_file |
+      |          |                  | Merge branch 'main' into feature2 |                  |

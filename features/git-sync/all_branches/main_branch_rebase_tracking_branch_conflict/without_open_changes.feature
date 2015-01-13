@@ -54,12 +54,12 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
-      | main    | local and remote | main local commit                | conflicting_file |
-      |         |                  | main remote commit               | conflicting_file |
-      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |
+      | feature | local and remote | feature commit                   | feature_file     |
       |         |                  | main remote commit               | conflicting_file |
-      |         |                  | feature commit                   | feature_file     |
+      |         |                  | main local commit                | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -76,9 +76,9 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
-      | main    | local and remote | main local commit                | conflicting_file |
-      |         |                  | main remote commit               | conflicting_file |
-      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |
+      | feature | local and remote | feature commit                   | feature_file     |
       |         |                  | main remote commit               | conflicting_file |
-      |         |                  | feature commit                   | feature_file     |
+      |         |                  | main local commit                | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |

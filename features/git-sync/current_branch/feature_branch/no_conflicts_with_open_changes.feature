@@ -31,12 +31,12 @@ Feature: git sync: on a feature branch (with open changes)
     And all branches are now synchronized
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |
-      | main    | local and remote | local main commit                | local_main_file    |
-      |         |                  | remote main commit               | remote_main_file   |
-      | feature | local and remote | Merge branch 'main' into feature |                    |
+      | main    | local and remote | remote main commit               | remote_main_file   |
       |         |                  | local main commit                | local_main_file    |
+      | feature | local and remote | local feature commit             | local_feature_file |
       |         |                  | remote main commit               | remote_main_file   |
-      |         |                  | local feature commit             | local_feature_file |
+      |         |                  | local main commit                | local_main_file    |
+      |         |                  | Merge branch 'main' into feature |                    |
 
 
   Scenario: with a remote branch
@@ -66,11 +66,11 @@ Feature: git sync: on a feature branch (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
-      | main    | local and remote | local main commit                                          | local_main_file     |
-      |         |                  | remote main commit                                         | remote_main_file    |
-      | feature | local and remote | Merge branch 'main' into feature                           |                     |
+      | main    | local and remote | remote main commit                                         | remote_main_file    |
       |         |                  | local main commit                                          | local_main_file     |
-      |         |                  | remote main commit                                         | remote_main_file    |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
+      | feature | local and remote | local feature commit                                       | local_feature_file  |
       |         |                  | remote feature commit                                      | remote_feature_file |
-      |         |                  | local feature commit                                       | local_feature_file  |
+      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
+      |         |                  | remote main commit                                         | remote_main_file    |
+      |         |                  | local main commit                                          | local_main_file     |
+      |         |                  | Merge branch 'main' into feature                           |                     |
