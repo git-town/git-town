@@ -1,4 +1,4 @@
-<img src="documentation/logo-horizontal.png" title="Git Town logo">
+<img src="documentation/logo-horizontal.svg" title="Git Town logo">
 
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](MIT-LICENSE)
