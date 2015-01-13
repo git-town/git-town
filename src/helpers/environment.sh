@@ -16,12 +16,6 @@ function ensure_git_repository {
 }
 
 
-# Bypass the environment checks
-if [[ $@ =~ --bypass-environment-checks ]]; then
-  return 0
+if [[ ! $@ =~ --bypass-environment-checks ]]; then
+  ensure_git_repository
 fi
-
-ensure_git_repository
-
-export initial_branch_name=$(get_current_branch_name)
-export initial_open_changes=$(has_open_changes)
