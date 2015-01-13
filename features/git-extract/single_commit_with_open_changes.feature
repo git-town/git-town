@@ -35,8 +35,3 @@ Feature: git extract: extracting a single commit (with open changes)
       |          |                  | refactor commit    | refactor_file    |
       | refactor | local and remote | remote main commit | remote_main_file |
       |          |                  | refactor commit    | refactor_file    |
-    And now I have the following committed files
-      | BRANCH   | FILES                           |
-      | main     | remote_main_file                |
-      | feature  | feature_file, refactor_file     |
-      | refactor | remote_main_file, refactor_file |
