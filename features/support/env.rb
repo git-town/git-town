@@ -13,44 +13,31 @@ Before do
   Dir.chdir REPOSITORY_BASE
   FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
 
-  # Create remote repository
-  create_repository remote_repository_path
+  # Create origin repository
+  create_repository :origin
 
   # Create the local repository
-  clone_repository remote_repository_path, local_repository_path
-  at_path local_repository_path do
-    # Create the master branch
+  clone_repository :origin, :developer
+
+  # Create the main branch
+  in_repository :developer do
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
-
-    # Create the main branch
     run 'git checkout -b main master ; git push -u origin main'
-
-    # Configuration
-    run 'git config git-town.main-branch-name main'
-    run 'git config git-town.non-feature-branch-names ""'
-    run 'git config push.default simple'
-    run 'git config core.editor vim'
   end
 
-  # Set the default branch
-  at_path remote_repository_path do
+  # Set main as the default branch
+  in_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
   end
 
   # Fetch the default branch, delete master
-  at_path local_repository_path do
+  in_repository :developer do
     run 'git fetch'
     run 'git push origin :master'
     run 'git branch -d master'
   end
 
-  # Create the coworker repository
-  clone_repository remote_repository_path, coworker_repository_path
-  at_path coworker_repository_path do
-    run 'git config git-town.main-branch-name main'
-  end
-
-  Dir.chdir local_repository_path
+  go_to_repository :developer
 end
 
 
