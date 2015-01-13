@@ -21,14 +21,14 @@ end
 
 
 def create_remote_commit commit_data
-  at_path coworker_repository_path do
+  in_secondary_repository do
     create_local_commit commit_data.merge(pull: true, push: true)
   end
 end
 
 
 def create_upstream_commit commit_data
-  at_path upstream_local_repository_path do
+  in_repository :upstream_developer do
     create_local_commit commit_data.merge(push: true)
   end
 end
@@ -41,7 +41,7 @@ def create_commit commit_data
   when %w(local) then create_local_commit commit_data
   when %w(remote) then create_remote_commit commit_data
   when %w(local remote) then create_local_commit commit_data.merge(push: true)
-  when %w(upstream) then  create_upstream_commit commit_data
+  when %w(upstream) then create_upstream_commit commit_data
   else fail "Unknown commit location: #{location}"
   end
 end
