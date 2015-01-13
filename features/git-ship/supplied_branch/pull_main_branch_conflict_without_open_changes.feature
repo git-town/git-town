@@ -11,7 +11,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
-    And I run `git ship feature -m 'feature done'` while allowing errors
+    And I run `git ship feature -m "feature done"` while allowing errors
 
 
   Scenario: result
@@ -54,7 +54,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m 'feature done'       |
+      | main    | git commit -m "feature done"       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
@@ -82,7 +82,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m 'feature done'       |
+      | main    | git commit -m "feature done"       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
