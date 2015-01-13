@@ -84,7 +84,7 @@ end
 #
 # rubocop:disable MethodLength
 def commits_for_branch branch_name
-  array_output_of("git log #{branch_name} --oneline --topo-order").map do |commit|
+  array_output_of("git log #{branch_name} --oneline --topo-order --reverse").map do |commit|
     sha, message = commit.split(' ', 2)
     next if message == 'Initial commit'
     filenames = committed_files sha
