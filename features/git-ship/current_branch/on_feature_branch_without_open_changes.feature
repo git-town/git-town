@@ -11,7 +11,7 @@ Feature: git ship: shipping the current feature branch
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git ship -m 'feature done'`
+    When I run `git ship -m "feature done"`
     Then it runs the Git commands
       | BRANCH  | COMMAND                      |
       | feature | git checkout main            |
@@ -21,7 +21,7 @@ Feature: git ship: shipping the current feature branch
       | feature | git merge --no-edit main     |
       | feature | git checkout main            |
       | main    | git merge --squash feature   |
-      | main    | git commit -m 'feature done' |
+      | main    | git commit -m "feature done" |
       | main    | git push                     |
       | main    | git branch -D feature        |
     And I end up on the "main" branch
@@ -38,7 +38,7 @@ Feature: git ship: shipping the current feature branch
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git ship -m 'feature done'`
+    When I run `git ship -m "feature done"`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git checkout main                  |
@@ -49,7 +49,7 @@ Feature: git ship: shipping the current feature branch
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m 'feature done'       |
+      | main    | git commit -m "feature done"       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |

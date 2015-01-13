@@ -47,7 +47,8 @@ function parameters_as_string {
   local str=""
   for arg in "$@"; do
     if [ "$arg" != "${arg/ /}" ]; then
-      arg="'${arg}'"
+      # Wrap arg in double quotes, escape double quotes within arg
+      arg="\"${arg//\"/\\\"}\""
     fi
     str="$str $arg"
   done

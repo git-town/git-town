@@ -9,7 +9,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature_file | feature content |
     And I am on the "other_feature" branch
-    When I run `git ship feature -m 'feature done'`
+    When I run `git ship feature -m "feature done"`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git checkout main                  |
@@ -20,7 +20,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
@@ -38,7 +38,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature_file | feature content |
     And I am on the "other_feature" branch
-    When I run `git ship feature -m 'feature done'`
+    When I run `git ship feature -m "feature done"`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git checkout main                  |
@@ -49,7 +49,7 @@ Feature: git ship: shipping the supplied feature branch (without open changes)
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
