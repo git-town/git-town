@@ -1,5 +1,5 @@
 # Returns the commits in the current directory
-def commits_in_repo keys = [:author, :branch, :file_name, :message]
+def commits_in_repo keys = [:author, :branch, :file_content, :file_name, :message]
   existing_branches.map do |branch_name|
     commits_for_branch branch_name, keys
   end.flatten
