@@ -3,9 +3,6 @@ def commits_diff actual, expected
   actual = extract_commits actual
 
   section_options = [
-    ['Expected commits', expected],
-    ['Actual commits', actual],
-    ['Common commits', expected & actual, skip_if_empty: true],
     ['Expected but not actual commits', expected - actual, skip_if_empty: true],
     ['Actual but not expected commits', actual - expected, skip_if_empty: true]
   ]
@@ -22,4 +19,10 @@ end
 
 def commit_to_s commit
   "#{commit[:branch]} branch: '#{commit[:message]}' with #{commit[:files]}\n"
+end
+
+def extract_commits commit_mapping
+  commit_mapping.each_pair.map do |branch, commits|
+    commits.map { |commit| commit.merge(branch: branch) }
+  end.flatten.sort_by { |commit| commit_to_s commit }
 end

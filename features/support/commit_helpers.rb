@@ -142,7 +142,7 @@ end
 
 # Returns an array of length count with the shas of the most recent commits
 def recent_commit_shas count
-  array_output_of("git rev-list HEAD -n #{count}")
+  array_output_of("git rev-list HEAD -n #{count}").reverse
 end
 
 
@@ -160,7 +160,7 @@ def verify_commits commits_array
     end
   end
 
-  expect(actual_commits).to eql(expected_commits) #, -> { commits_diff(actual_commits, expected_commits) }
+  expect(actual_commits).to eql(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
 end
 
 

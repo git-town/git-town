@@ -26,7 +26,7 @@ Feature: git extract: extracting multiple commits (with open changes)
       | feature  | git checkout main                                             |
       | main     | git rebase origin/main                                        |
       | main     | git checkout -b refactor main                                 |
-      | refactor | git cherry-pick [SHA:refactor2 commit] [SHA:refactor1 commit] |
+      | refactor | git cherry-pick [SHA:refactor1 commit] [SHA:refactor2 commit] |
       | refactor | git push -u origin refactor                                   |
       | refactor | git stash pop                                                 |
     And I end up on the "refactor" branch
@@ -38,5 +38,4 @@ Feature: git extract: extracting multiple commits (with open changes)
       |          |                  | refactor1 commit   | refactor1_file   |
       |          |                  | refactor2 commit   | refactor2_file   |
       | refactor | local and remote | remote main commit | remote_main_file |
-      |          |                  | refactor1 commit   | refactor1_file   |
       |          |                  | refactor2 commit   | refactor2_file   |
