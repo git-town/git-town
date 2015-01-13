@@ -32,12 +32,7 @@ Feature: git extract: resolving conflicting remote main branch updates (without 
       | main   | git checkout feature |
     And I end up on the "feature" branch
     And there is no "refactor" branch
-    And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
-      | main    | remote   | conflicting remote commit | conflicting_file |
-      |         | local    | conflicting local commit  | conflicting_file |
-      | feature | local    | feature commit            | feature_file     |
-      |         |          | refactor commit           | refactor_file    |
+    And I am left with my original commits
     And there is no rebase in progress
 
 

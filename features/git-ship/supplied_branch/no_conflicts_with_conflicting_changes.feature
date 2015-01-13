@@ -39,9 +39,6 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | main commit  | main_file    |
       | main   | local and remote | feature done | feature_file |
-    And now I have the following committed files
-      | BRANCH | FILES                   |
-      | main   | feature_file, main_file |
 
 
   Scenario: feature branch with non-pulled updates in the repo
@@ -75,6 +72,3 @@ Feature: git ship: shipping the supplied feature branch (with conflicting change
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
-    And now I have the following committed files
-      | BRANCH | FILES        |
-      | main   | feature_file |
