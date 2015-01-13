@@ -31,8 +31,5 @@ Feature: git ship: abort shipping the given feature branch by entering an empty 
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
-      | feature | local    | feature commit | feature_file |
-    And I still have the following committed files
-      | BRANCH  | FILES        | CONTENT         |
-      | feature | feature_file | feature content |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
+      | feature | local    | feature commit | feature_file | feature content |

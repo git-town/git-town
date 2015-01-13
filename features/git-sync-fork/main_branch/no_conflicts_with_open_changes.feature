@@ -23,6 +23,3 @@ Feature: git-sync-fork on the main branch with open changes
     And I have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILE NAME     |
       | main   | local, remote, and upstream | upstream commit | upstream_file |
-    And now I have the following committed files
-      | BRANCH | FILES         |
-      | main   | upstream_file |
