@@ -22,7 +22,9 @@ def commit_to_s commit
 end
 
 def extract_commits commit_mapping
-  commit_mapping.each_pair.map do |branch, commits|
-    commits.map { |commit| commit.merge(branch: branch) }
-  end.flatten.sort_by { |commit| commit_to_s commit }
+  commits = commit_mapping.each_pair.map do |branch, branch_commits|
+    branch_commits.map { |commit| commit.merge(branch: branch) }
+  end
+
+  commits.flatten.sort_by { |commit| commit_to_s commit }
 end
