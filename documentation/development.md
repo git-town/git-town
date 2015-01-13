@@ -18,7 +18,7 @@
 ## Testing
 
 * Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-* All features have need to have comprehensive test coverage
+* All features need to have comprehensive test coverage
 * Source code and test files must pass the linters
 
 ```bash
