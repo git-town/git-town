@@ -1,4 +1,4 @@
-<img src="http://originate.github.io/git-town/documentation/logo-horizontal.svg" title="Git Town logo">
+![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 <a href="https://gemnasium.com/Originate/git-town" alt="Dependency Status" target="_blank"><img src="https://img.shields.io/gemnasium/Originate/git-town.svg?style=flat"></a>
