@@ -13,7 +13,11 @@ end
 
 
 def commit_to_s commit
-  "    '#{commit[:message]}' with #{commit[:files]}\n"
+  out = "    '#{commit[:message]}'"
+  out += " by #{commit[:author]}" if commit.key?(:author)
+  out += " with files #{commit[:file_name]}" if commit.key?(:file_name)
+  out += " and content #{commit[:file_content]}" if commit.key?(:file_content)
+  out + "\n"
 end
 
 
