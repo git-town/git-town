@@ -13,12 +13,12 @@ end
 
 
 def commit_to_s commit
-  "'#{commit[:message]}' with #{commit[:files]}\n"
+  "    '#{commit[:message]}' with #{commit[:files]}\n"
 end
 
 
 def commit_list commits
-  commits.map { |commit| "    #{commit_to_s commit}" }.join('')
+  commits.map { |commit| commit_to_s commit }.join('')
 end
 
 
