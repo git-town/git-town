@@ -68,9 +68,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
-      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
       |         |                  | conflicting main commit          | conflicting_file |
-      |         |                  | conflicting feature commit       | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -89,9 +89,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
-      | feature | local and remote | Merge branch 'main' into feature |                  |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
       |         |                  | conflicting main commit          | conflicting_file |
-      |         |                  | conflicting feature commit       | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |

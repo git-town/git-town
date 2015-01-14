@@ -3,10 +3,11 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Background:
     Given I have feature branches named "feature1" and "feature2"
     And the following commits exist in my repository
-      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        | FILE CONTENT     |
-      | main     | remote           | main commit     | conflicting_file | main content     |
-      | feature1 | local and remote | feature1 commit | feature1_file    | feature1 content |
-      | feature2 | local and remote | feature2 commit | conflicting_file | feature2 content |
+      | BRANCH   | LOCATION         | MESSAGE                | FILE NAME            | FILE CONTENT            |
+      | main     | remote           | main commit            | conflicting_file     | main content            |
+      | feature1 | local and remote | feature1 commit        | feature1_file        | feature1 content        |
+      | feature2 | local            | feature2 local commit  | conflicting_file     | feature2 local content  |
+      |          | remote           | feature2 remote commit | feature2_remote_file | feature2 remote content |
     And I am on the "main" branch
     When I run `git sync --all` while allowing errors
 
@@ -30,34 +31,38 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND               |
-      | feature2 | git merge --abort     |
-      | feature2 | git checkout feature1 |
-      | feature1 | git checkout main     |
+      | BRANCH   | COMMAND                                      |
+      | feature2 | git merge --abort                            |
+      | feature2 | git reset --hard [SHA:feature2 local commit] |
+      | feature2 | git checkout feature1                        |
+      | feature1 | git checkout main                            |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file    |
-      | feature2 | local and remote | feature2 commit                   | conflicting_file |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
+      | main     | local and remote | main commit                       | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
+      | feature2 | local            | feature2 local commit             | conflicting_file     |
+      |          | remote           | feature2 remote commit            | feature2_remote_file |
 
 
   Scenario: skipping
     When I run `git sync --skip`
     Then it runs the Git commands
-      | BRANCH   | COMMAND           |
-      | feature2 | git merge --abort |
-      | feature2 | git checkout main |
+      | BRANCH   | COMMAND                                      |
+      | feature2 | git merge --abort                            |
+      | feature2 | git reset --hard [SHA:feature2 local commit] |
+      | feature2 | git checkout main                            |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file    |
-      | feature2 | local and remote | feature2 commit                   | conflicting_file |
+      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
+      | main     | local and remote | main commit                       | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                   | feature1_file        |
+      |          |                  | main commit                       | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1 |                      |
+      | feature2 | local            | feature2 local commit             | conflicting_file     |
+      |          | remote           | feature2 remote commit            | feature2_remote_file |
 
 
   Scenario: continuing without resolving conflicts
@@ -78,14 +83,16 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | git checkout main    |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file    |
-      | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | conflicting_file |
+      | BRANCH   | LOCATION         | MESSAGE                                                      | FILE NAME            |
+      | main     | local and remote | main commit                                                  | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                                              | feature1_file        |
+      |          |                  | main commit                                                  | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1                            |                      |
+      | feature2 | local and remote | feature2 local commit                                        | conflicting_file     |
+      |          |                  | feature2 remote commit                                       | feature2_remote_file |
+      |          |                  | Merge remote-tracking branch 'origin/feature2' into feature2 |                      |
+      |          |                  | main commit                                                  | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature2                            |                      |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -97,11 +104,13 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | git checkout main |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | conflicting_file |
-      | feature1 | local and remote | Merge branch 'main' into feature1 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature1 commit                   | feature1_file    |
-      | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
-      |          |                  | main commit                       | conflicting_file |
-      |          |                  | feature2 commit                   | conflicting_file |
+      | BRANCH   | LOCATION         | MESSAGE                                                      | FILE NAME            |
+      | main     | local and remote | main commit                                                  | conflicting_file     |
+      | feature1 | local and remote | feature1 commit                                              | feature1_file        |
+      |          |                  | main commit                                                  | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature1                            |                      |
+      | feature2 | local and remote | feature2 local commit                                        | conflicting_file     |
+      |          |                  | feature2 remote commit                                       | feature2_remote_file |
+      |          |                  | Merge remote-tracking branch 'origin/feature2' into feature2 |                      |
+      |          |                  | main commit                                                  | conflicting_file     |
+      |          |                  | Merge branch 'main' into feature2                            |                      |
