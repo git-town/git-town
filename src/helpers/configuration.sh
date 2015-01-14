@@ -15,7 +15,7 @@ export main_branch_name=$(get_configuration main-branch-name)
 export non_feature_branch_names=$(get_configuration non-feature-branch-names)
 
 
-# Bypass the configuration
+# Bypass the configuration if requested by caller (e.g. git-town)
 if [[ $@ =~ --bypass-automatic-configuration ]]; then
   return 0
 fi
@@ -33,7 +33,7 @@ if [[ -z "$main_branch_name" ]]; then
     exit_with_error
   fi
   echo
-  store_main_branch_name_with_confirmation_text "$main_branch_name"
+  store_configuration main-branch-name "$main_branch_name"
 fi
 
 # Ask and store non-feature-branch-names, if needed
@@ -45,5 +45,5 @@ if [[ $? == '1' ]]; then
   echo "Example: 'qa, production'"
   read non_feature_branch_names
   echo
-  store_non_feature_branch_names_with_confirmation_text "$non_feature_branch_names"
+  store_configuration non-feature-branch-names "$non_feature_branch_names"
 fi

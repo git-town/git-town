@@ -2,39 +2,45 @@
 
 # Helper methods for dealing with configuration.
 
-# Add a new non-feature branch if possible, and show confirmation
+function echo_non_feature_branch_usage {
+  echo_inline_usage 'git town non-feature-branches (--add | --remove) <branchname>'
+}
+
+
+# Add a new non-feature branch if possible
 function add_non_feature_branch {
   local branch_name=$1
 
-  ensure_has_branch "$branch_name"
-  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
-    echo "'$branch_name' is already a non-feature branch"
+  if [ -z "$branch_name" ]; then
+    echo_inline_error "missing branch name"
+    echo_non_feature_branch_usage
+    exit 1
+  elif [ "$(has_branch "$branch_name")" = false ]; then
+    echo_inline_error "no branch named '$branch_name'"
+    exit 1
+  elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
+    echo_inline_error "'$branch_name' is already a non-feature branch"
+    exit 1
   else
     local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
-    echo "Added '$branch_name' as a non-feature branch"
   fi
 }
 
 
-# Add or remove non-feature branch if possible, and show confirmation
+# Add or remove non-feature branch if possible
 function add_or_remove_non_feature_branches {
-  local operation=$1
+  local option=$1
   local branch_name=$2
 
-  if [ -z "$branch_name" ]; then
-    if [ "$operation" == "--add" ] || [ "$operation" == "--remove" ]; then
-      echo "Missing branch name"
-    fi
-    echo "usage: git town non-feature-branches (--add | --remove) <branchname>"
+  if [ "$option" == "--add" ]; then
+    add_non_feature_branch "$branch_name"
+  elif [ "$option" == "--remove" ]; then
+    remove_non_feature_branch "$branch_name"
   else
-    if [ "$operation" == "--add" ]; then
-      add_non_feature_branch "$branch_name"
-    elif [ "$operation" == "--remove" ]; then
-      remove_non_feature_branch "$branch_name"
-    else
-      echo "usage: git town non-feature-branches (--add | --remove) <branchname>"
-    fi
+    echo_inline_error "unsupported option '$option'"
+    echo_non_feature_branch_usage
+    exit 1
   fi
 }
 
@@ -46,33 +52,50 @@ function get_configuration {
 }
 
 
-# Remove a non-feature branch if possible, and show confirmation
+# Remove a non-feature branch if possible
 function remove_non_feature_branch {
   local branch_name=$1
 
-  if [ "$(is_non_feature_branch "$branch_name")" == true ]; then
+  if [ -z "$branch_name" ]; then
+    echo_inline_error "missing branch name"
+    echo_non_feature_branch_usage
+    exit 1
+  elif [ "$(is_non_feature_branch "$branch_name")" = false ]; then
+    echo_inline_error "'$branch_name' is not a non-feature branch"
+    exit 1
+  else
     local new_branches=$(remove_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
-    echo "Removed '$branch_name' from non-feature branches"
-  else
-    echo "'$branch_name' is not a non-feature branch"
   fi
 }
 
 
 function show_config {
+  echo_inline_bold "Main branch: "
   show_main_branch
-  show_non_feature_branches
+  echo_inline_bold "Non-feature branches:"
+  if [ -n "$non_feature_branch_names" ]; then
+    echo
+    split_string "$non_feature_branch_names" ","
+  else
+    echo ' [none]'
+  fi
 }
 
 
 function show_main_branch {
-  echo "Main branch: $(value_or_none "$main_branch_name")"
+  if [ -n "$main_branch_name" ]; then
+    echo "$main_branch_name"
+  else
+    echo '[none]'
+  fi
 }
 
 
 function show_non_feature_branches {
-  echo "Non-feature branches: $(value_or_none "$non_feature_branch_names")"
+  if [ -n "$non_feature_branch_names" ]; then
+    split_string "$non_feature_branch_names" ","
+  fi
 }
 
 
@@ -81,8 +104,12 @@ function show_non_feature_branches {
 function show_or_update_main_branch {
   local branch_name=$1
   if [ -n "$branch_name" ]; then
-    ensure_has_branch "$branch_name"
-    store_main_branch_name_with_confirmation_text "$branch_name"
+    if [ "$(has_branch "$branch_name")" = true ]; then
+      store_configuration main-branch-name "$branch_name"
+    else
+      echo_inline_error "no branch named '$branch_name'"
+      exit 1
+    fi
   else
     show_main_branch
   fi

@@ -26,12 +26,11 @@ elif [ "$1" == "version" ]; then
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
   show_help
 elif [ -n "$1" ]; then
-  echo "'$1' is not a valid Git Town command"
-  echo_usage_header
-  echo_usage "git town"
-  echo_usage "git town config"
-  echo_usage "git town help"
-  echo_usage "git town main-branch [<branchname>]"
-  echo_usage "git town non-feature-branches [(--add | --remove) <branchname>]"
-  echo_usage "git town version"
+  echo_inline_error "unsupported subcommand '$1'"
+  echo_inline_usage "git town"
+  echo_inline_usage_or "git town config"
+  echo_inline_usage_or "git town help"
+  echo_inline_usage_or "git town main-branch [<branchname>]"
+  echo_inline_usage_or "git town non-feature-branches [(--add | --remove) <branchname>]"
+  echo_inline_usage_or "git town version"
 fi

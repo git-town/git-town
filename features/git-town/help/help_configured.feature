@@ -7,7 +7,7 @@ Feature: show help screen when Git Town is configured
 
   Background:
     Given I have configured the main branch name as "main"
-    And my non-feature branches are "qa" and "staging"
+    And my non-feature branches are configured as "qa" and "staging"
 
 
   Scenario: git town with no flags

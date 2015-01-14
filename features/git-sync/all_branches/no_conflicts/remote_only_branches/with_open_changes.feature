@@ -31,7 +31,7 @@ Feature: git sync --all: does not sync remote only branches with open changes
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE                             | FILE NAME     |
       | main       | local and remote | main commit                         | main_file     |
-      | my-feature | local and remote | Merge branch 'main' into my-feature |               |
+      | my-feature | local and remote | my commit                           | my_file       |
       |            |                  | main commit                         | main_file     |
-      |            |                  | my commit                           | my_file       |
+      |            |                  | Merge branch 'main' into my-feature |               |
       | co-feature | remote           | coworker commit                     | coworker_file |

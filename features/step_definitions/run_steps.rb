@@ -58,9 +58,20 @@ Then(/^it runs the Git commands$/) do |expected_steps|
 end
 
 
-Then(/^I(?: do|( don't))? see "(.*)"$/) do |negate, string|
-  method = negate ? :not_to : :to
+Then(/^I see no output$/) do
+  expect(@last_run_result.out).to eql ''
+end
+
+
+Then(/^I(?: do|( don't))? see "(.*)"$/) do |verb, string|
+  method = verb == "don't" ? :not_to : :to
   expect(@last_run_result.out).public_send(method, include(string))
+end
+
+
+Then(/^I see$/) do |output|
+  actual = @last_run_result.out.gsub(/\e[^m]+m/, '') # Remove text formatting (ANSI escape sequences)
+  expect(actual).to eql "#{output}\n"
 end
 
 
