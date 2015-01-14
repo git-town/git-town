@@ -6,7 +6,8 @@ Feature: git sync: syncing a non-feature branch (with open changes)
 
 
   Background:
-    Given non-feature branch configuration "qa, production"
+    Given I have branches named "qa" and "production"
+    And my non-feature branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
@@ -31,6 +32,6 @@ Feature: git sync: syncing a non-feature branch (with open changes)
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
-      | qa     | local and remote | local commit  | local_file  |
-      |        |                  | remote commit | remote_file |
+      | qa     | local and remote | remote commit | remote_file |
+      |        |                  | local commit  | local_file  |
       | main   | local and remote | main commit   | main_file   |

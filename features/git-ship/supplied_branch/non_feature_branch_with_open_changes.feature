@@ -4,7 +4,8 @@ Feature: git ship: don't ship non-feature branches (with open changes)
 
 
   Background:
-    Given non-feature branch configuration "qa, production"
+    Given I have branches named "qa" and "production"
+    And my non-feature branches are configured as "qa" and "production"
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git ship production` while allowing errors
