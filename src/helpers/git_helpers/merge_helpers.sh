@@ -30,7 +30,13 @@ function squash_merge {
 
 
 function commit_squash_merge {
+  local branch_name=$1
+  shift
   local options=$(parameters_as_string "$@")
+  local author=$(branch_author "$branch_name")
+  if [ "$author" != "$(local_author)" ]; then
+    options="--author=\"$author\" $options"
+  fi
   run_command "git commit $options"
   if [ $? != 0 ]; then error_empty_commit; fi
 }

@@ -1,7 +1,7 @@
 # Returns the commits in the current directory
-def commits_in_repo
+def commits_in_repo keys = [:author, :branch, :file_content, :file_name, :message]
   existing_branches.map do |branch_name|
-    commits_for_branch branch_name
+    commits_for_branch branch_name, keys
   end.flatten
 end
 
@@ -78,17 +78,18 @@ end
 # Returns the commits in the currently checked out branch
 #
 # rubocop:disable MethodLength
-def commits_for_branch branch_name
-  array_output_of("git log #{branch_name} --oneline").map do |commit|
-    sha, message = commit.split(' ', 2)
+def commits_for_branch branch_name, keys
+  array_output_of("git log #{branch_name} --oneline --format='%h|%s|%ae'").map do |commit|
+    sha, message, author = commit.split('|')
     next if message == 'Initial commit'
     filenames = committed_files sha
     {
+      author: author,
       branch: branch_name,
       message: message,
       file_name: filenames,
       file_content: content_of(file: filenames[0], for_sha: sha)
-    }
+    }.select { |key, _| keys.include? key }
   end.compact
 end
 # rubocop:enable MethodLength
@@ -129,13 +130,6 @@ def normalize_expected_commit_data commit_data
 end
 
 
-def normalize_expected_commits_array commits_array
-  commits_array.map do |commit_data|
-    normalize_expected_commit_data commit_data
-  end.flatten
-end
-
-
 # Returns an array of length count with the shas of the most recent commits
 def recent_commit_shas count
   array_output_of("git rev-list HEAD -n #{count}")
@@ -146,15 +140,11 @@ end
 def verify_commits commits_array
   normalize_commit_data commits_array
 
-  expected_commits = normalize_expected_commits_array commits_array
-  actual_commits = commits_in_repo
+  expected_commits = commits_array.map do |commit_data|
+    normalize_expected_commit_data commit_data
+  end.flatten
 
-  # Leave only the expected keys in actual_commits
-  unless expected_commits[0].key? :file_content
-    actual_commits.each do |commit_data|
-      commit_data.delete :file_content
-    end
-  end
+  actual_commits = commits_in_repo expected_commits[0].keys
 
   expect(actual_commits).to match_array(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
 end
