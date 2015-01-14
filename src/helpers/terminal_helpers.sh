@@ -38,6 +38,13 @@ function echo_indented {
   echo "  $*"
 }
 
+# Prints an inline usage
+function echo_inline_bold {
+  output_style_bold
+  printf "$*"
+  output_style_reset
+}
+
 # Prints an inline error
 function echo_inline_error {
   echo_red "error: $*"

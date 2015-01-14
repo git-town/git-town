@@ -11,11 +11,10 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      (M = main branch, NF = non-feature branch)
-
-      M  main
-      NF qa
-      NF staging
+      Main branch: main
+      Non-feature branches:
+      qa
+      staging
       """
 
 
@@ -25,9 +24,8 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      (M = main branch, NF = non-feature branch)
-
-      M  main
+      Main branch: main
+      Non-feature branches: [none]
       """
 
 
@@ -37,11 +35,10 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      (M = main branch, NF = non-feature branch)
-
-      M  [none]
-      NF qa
-      NF staging
+      Main branch: [none]
+      Non-feature branches:
+      qa
+      staging
       """
 
 
@@ -50,7 +47,6 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      (M = main branch, NF = non-feature branch)
-
-      M  [none]
+      Main branch: [none]
+      Non-feature branches: [none]
       """

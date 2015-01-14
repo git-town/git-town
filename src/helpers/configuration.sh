@@ -70,10 +70,15 @@ function remove_non_feature_branch {
 
 
 function show_config {
-  echo '(M = main branch, NF = non-feature branch)'
-  echo
-  show_main_branch | sed -E 's/^/M  /'
-  show_non_feature_branches | sed -E 's/^/NF /'
+  echo_inline_bold "Main branch: "
+  show_main_branch
+  echo_inline_bold "Non-feature branches:"
+  if [ -n "$non_feature_branch_names" ]; then
+    echo
+    split_string "$non_feature_branch_names" ","
+  else
+    echo ' [none]'
+  fi
 }
 
 
