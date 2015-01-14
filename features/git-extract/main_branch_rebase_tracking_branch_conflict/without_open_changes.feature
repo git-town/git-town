@@ -1,4 +1,4 @@
-Feature: git extract: resolving conflicting remote main branch updates (without open changes)
+Feature: git extract: resolving conflicts between main branch and its tracking branch (without open changes)
 
   (see ./with_open_changes.feature)
 
