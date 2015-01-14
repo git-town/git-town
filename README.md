@@ -1,6 +1,7 @@
 # _Git Automation for Agile Development Teams_
 
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
+<a href="https://gemnasium.com/Originate/git-town" alt="Dependency Status" target="_blank"><img src="https://img.shields.io/gemnasium/Originate/git-town.svg?style=flat"></a>
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](MIT-LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.
@@ -11,7 +12,8 @@ the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
 and other workflows better, and allows to perform many common tasks faster and easier.
 
-Check out [the big picture](documentation/big-picture.md) for more background on Git Town.
+Check out [the big picture](documentation/big-picture.md) for more background on Git Town,
+and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 
 ## Commands

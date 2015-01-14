@@ -40,14 +40,8 @@ end
 
 
 # Returns the names of all existing local branches.
-#
-# The branches are ordered this ways:
-# * main branch
-# * feature branches ordered alphabetically
 def existing_local_branches
-  actual_branches = array_output_of "git branch | tr -d '*'"
-  actual_main_branch = actual_branches.delete 'main'
-  [actual_main_branch].concat(actual_branches)
+  array_output_of "git branch | tr -d '*'"
 end
 
 

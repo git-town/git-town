@@ -31,9 +31,9 @@ Feature: git sync --all: syncs all feature branches without open changes
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME     |
       | main     | local and remote | main commit                       | main_file     |
-      | feature1 | local and remote | Merge branch 'main' into feature1 |               |
+      | feature1 | local and remote | feature1 commit                   | feature1_file |
       |          |                  | main commit                       | main_file     |
-      |          |                  | feature1 commit                   | feature1_file |
-      | feature2 | local and remote | Merge branch 'main' into feature2 |               |
+      |          |                  | Merge branch 'main' into feature1 |               |
+      | feature2 | local and remote | feature2 commit                   | feature2_file |
       |          |                  | main commit                       | main_file     |
-      |          |                  | feature2 commit                   | feature2_file |
+      |          |                  | Merge branch 'main' into feature2 |               |

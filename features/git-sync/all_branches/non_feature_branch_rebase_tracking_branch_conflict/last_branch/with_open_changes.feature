@@ -2,7 +2,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
 
   Background:
     Given I have branches named "production" and "qa"
-    And my non-feature branches are "production" and "qa"
+    And my non-feature branches are configured as "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        | FILE CONTENT       |
       | main       | remote           | main commit       | main_file        | main content       |
@@ -88,8 +88,8 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
       | production | local and remote | production commit | production_file  |
-      | qa         | local and remote | qa local commit   | conflicting_file |
-      |            | local and remote | qa remote commit  | conflicting_file |
+      | qa         | local and remote | qa remote commit  | conflicting_file |
+      |            | local and remote | qa local commit   | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -106,5 +106,5 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
       | production | local and remote | production commit | production_file  |
-      | qa         | local and remote | qa local commit   | conflicting_file |
-      |            | local and remote | qa remote commit  | conflicting_file |
+      | qa         | local and remote | qa remote commit  | conflicting_file |
+      |            | local and remote | qa local commit   | conflicting_file |

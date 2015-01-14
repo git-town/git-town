@@ -1,5 +1,6 @@
-Given(/^my coworker fetches updates$/) do
-  in_repository :coworker do
+Given(/^(I|my coworker) fetch(?:es)? updates$/) do |who|
+  user = (who == 'I') ? :developer : :coworker
+  in_repository user do
     run 'git fetch'
   end
 end
