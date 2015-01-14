@@ -1,31 +1,27 @@
 def commits_diff actual, expected
-  expected = extract_commits expected
-  actual = extract_commits actual
+  out = ''
 
-  section_options = [
-    ['Expected but not actual commits', expected - actual, skip_if_empty: true],
-    ['Actual but not expected commits', actual - expected, skip_if_empty: true]
-  ]
+  (expected.keys + actual.keys).uniq.sort.each do |branch|
+    next if expected[branch] == actual[branch]
+    out += "\n#{branch} branch\n"
+    out += commit_list_with_title 'Expected commits', expected[branch]
+    out += commit_list_with_title 'Actual commits', actual[branch]
+  end
 
-  section_options.map { |options| commit_diff_section(*options) }.join('') + "\n"
-end
-
-
-def commit_diff_section title, commits, skip_if_empty: false
-  return '' if skip_if_empty && commits.empty?
-  "\n#{title}:\n" + commits.map { |c| commit_to_s(c) }.join('')
+  out
 end
 
 
 def commit_to_s commit
-  "#{commit[:branch]} branch: '#{commit[:message]}' with #{commit[:files]}\n"
+  "'#{commit[:message]}' with #{commit[:files]}\n"
 end
 
 
-def extract_commits commit_mapping
-  commits = commit_mapping.each_pair.map do |branch, branch_commits|
-    branch_commits.map { |commit| commit.merge(branch: branch) }
-  end
+def commit_list commits
+  commits.map { |commit| "    #{commit_to_s commit}" }.join('')
+end
 
-  commits.flatten.sort_by { |commit| commit_to_s commit }
+
+def commit_list_with_title title, commits
+  "  #{title}\n#{commit_list commits}"
 end
