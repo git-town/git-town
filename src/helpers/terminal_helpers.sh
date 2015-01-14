@@ -41,7 +41,7 @@ function echo_indented {
 # Prints an inline usage
 function echo_inline_bold {
   output_style_bold
-  printf "$*"
+  printf "%s" "$*"
   output_style_reset
 }
 
