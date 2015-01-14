@@ -37,13 +37,7 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH | LOCATION | MESSAGE                   | FILE NAME        |
-      | qa     | remote   | conflicting remote commit | conflicting_file |
-      |        | local    | conflicting local commit  | conflicting_file |
-    And I still have the following committed files
-      | BRANCH | FILES            | CONTENT                   |
-      | qa     | conflicting_file | local conflicting content |
+    And I am left with my original commits
 
 
   @finishes-with-non-empty-stash

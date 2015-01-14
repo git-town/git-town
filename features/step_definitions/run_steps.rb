@@ -1,6 +1,6 @@
 When(/^(I|my coworker) runs? `([^`]+)`( while allowing errors)?$/) do |who, commands, allow_failures|
-  path = (who == 'I') ? local_repository_path : coworker_repository_path
-  at_path(path) do
+  user = (who == 'I') ? :developer : :coworker
+  in_repository user do
     commands.split(';').each do |command|
       run command.strip, allow_failures: allow_failures
     end

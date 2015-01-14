@@ -9,7 +9,7 @@ Feature: git ship: don't ship non-feature branches
     Given I have branches named "qa" and "production"
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "production" branch
-    When I run `git ship -m 'feature done'` while allowing errors
+    When I run `git ship -m "feature done"` while allowing errors
 
 
   Scenario: result

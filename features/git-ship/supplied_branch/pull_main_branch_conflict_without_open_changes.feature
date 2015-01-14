@@ -11,7 +11,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
-    And I run `git ship feature -m 'feature done'` while allowing errors
+    And I run `git ship feature -m "feature done"` while allowing errors
 
 
   Scenario: result
@@ -31,15 +31,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main   | git checkout other_feature |
     And I am still on the "other_feature" branch
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
-      | main    | remote   | conflicting remote commit | conflicting_file |
-      |         | local    | conflicting local commit  | conflicting_file |
-      | feature | local    | feature commit            | feature_file     |
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT                   |
-      | main    | conflicting_file | local conflicting content |
-      | feature | feature_file     | feature content           |
+    And I am left with my original commits
 
 
   Scenario: continuing after resolving conflicts
@@ -54,7 +46,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m 'feature done'       |
+      | main    | git commit -m "feature done"       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
@@ -66,9 +58,6 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -82,7 +71,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | feature | git merge --no-edit main           |
       | feature | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m 'feature done'       |
+      | main    | git commit -m "feature done"       |
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
@@ -94,6 +83,3 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |

@@ -25,7 +25,3 @@ Feature: git hack: starting a new feature from the main branch
       | BRANCH      | LOCATION         | MESSAGE     | FILE NAME |
       | main        | local and remote | main_commit | main_file |
       | new_feature | local            | main_commit | main_file |
-    And now I have the following committed files
-      | BRANCH      | FILES     |
-      | main        | main_file |
-      | new_feature | main_file |

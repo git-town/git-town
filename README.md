@@ -1,6 +1,7 @@
 # _Git Automation for Agile Development Teams_
 
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
+<a href="https://gemnasium.com/Originate/git-town" alt="Dependency Status" target="_blank"><img src="https://img.shields.io/gemnasium/Originate/git-town.svg?style=flat"></a>
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](MIT-LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.
@@ -18,16 +19,16 @@ Check out [the big picture](documentation/big-picture.md) for more background on
 
 Git Town provides these additional Git commands:
 
-* [git extract](/documentation/git-extract.md) - copy selected commits from the current branch into their own branch
-* [git hack](/documentation/git-hack.md) - cut a new feature branch off the main branch
-* [git kill](/documentation/git-kill.md) - remove an obsolete feature branch
-* [git pr](/documentation/git-pr.md) - create a new pull request
-* [git prune-branches](/documentation/git-prune-branches.md) - delete merged branches
-* [git repo](/documentation/git-repo.md) - view the repository homepage
-* [git ship](/documentation/git-ship.md) - deliver a completed feature branch
-* [git sync](/documentation/git-sync.md) - update the current branch with all relevant changes
-* [git sync-fork](/documentation/git-sync-fork.md) - pull upstream updates into a forked repository
-* [git town](/documentation/git-town.md) - general Git Town help, view and change Git Town configuration
+* [git extract](/documentation/commands/git-extract.md) - copy selected commits from the current branch into their own branch
+* [git hack](/documentation/commands/git-hack.md) - cut a new feature branch off the main branch
+* [git kill](/documentation/commands/git-kill.md) - remove an obsolete feature branch
+* [git pr](/documentation/commands/git-pr.md) - create a new pull request
+* [git prune-branches](/documentation/commands/git-prune-branches.md) - delete merged branches
+* [git repo](/documentation/commands/git-repo.md) - view the repository homepage
+* [git ship](/documentation/commands/git-ship.md) - deliver a completed feature branch
+* [git sync](/documentation/commands/git-sync.md) - update the current branch with all relevant changes
+* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
+* [git town](/documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
 ## Installation
@@ -130,41 +131,10 @@ or `git help <command>` (e.g. `git help sync`)
 for help on an individual command.
 
 
-## Development
+## Contributing
 
-Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-
-```bash
-# install tools needed for development
-bundle
-brew install shellcheck  # bash linter
-
-# various ways to verify/test the code
-rake            # Run all linters and specs
-rake lint       # Run all linters
-rake lint:bash  # Run bash linter
-rake lint:ruby  # Run ruby linter
-rake lint:cucumber  # Run cucumber linter
-rake spec       # Run specs
-
-# run a single test
-cucumber [filename]:[lineno]
-
-# run cucumber in parallel
-bin/cuke [<folder>...]
-```
-
-Found a bug or want to contribute a feature?
-Please [open an issue](https://github.com/Originate/git-town/issues/new)
-or - even better - get down, go to town, and fire a feature-tested and linter-passing
+Found a bug or have an idea for a new feature?
+[Open an issue](https://github.com/Originate/git-town/issues/new)
+or - even better - get down, go to town, and fire a feature-tested
 [pull request](https://help.github.com/articles/using-pull-requests/)
-our way!
-
-
-## Roadmap
-
-The future roadmap is planned using [GitHub issues](https://github.com/Originate/git-town/issues).
-The past roadmap is in the [release notes](release-notes.md).
-
-If you have an idea about a cool feature you would like to see in Git Town,
-please [open a ticket](https://github.com/Originate/git-town/issues/new)!
+our way! Check out our [development guide](/documentation/development.md) to start coding.

@@ -12,7 +12,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m 'feature done'` while allowing errors
+    And I run `git ship feature -m "feature done"` while allowing errors
 
 
   @finishes-with-non-empty-stash
@@ -37,15 +37,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
-    And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        |
-      | main    | remote   | conflicting remote commit | conflicting_file |
-      |         | local    | conflicting local commit  | conflicting_file |
-      | feature | local    | feature commit            | feature_file     |
-    And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT                   |
-      | main    | conflicting_file | local conflicting content |
-      | feature | feature_file     | feature content           |
+    And I am left with my original commits
 
 
   Scenario: continuing after resolving conflicts
@@ -60,7 +52,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
@@ -74,9 +66,6 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |
 
 
   Scenario: continuing after resolving conflicts and continuing the rebase
@@ -90,7 +79,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | feature       | git merge --no-edit main           |
       | feature       | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m 'feature done'       |
+      | main          | git commit -m "feature done"       |
       | main          | git push                           |
       | main          | git push origin :feature           |
       | main          | git branch -D feature              |
@@ -104,6 +93,3 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
       |        |                  | feature done              | feature_file     |
-    And now I have the following committed files
-      | BRANCH | FILES                          |
-      | main   | conflicting_file, feature_file |
