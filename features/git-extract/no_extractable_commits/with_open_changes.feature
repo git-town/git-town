@@ -1,4 +1,4 @@
-Feature: git-extract: errors if there are not extractable commits
+Feature: git extract: errors if there are not extractable commits
 
   As a developer trying to extract commits from a branch that has no extractable commits
   I should see an error telling me that there are no extractable commits

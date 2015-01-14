@@ -1,4 +1,4 @@
-Feature: git extract: abort if no branch name is given (without open changes)
+Feature: git extract: errors if no branch name is given (without open changes)
 
   (see ./with_open_changes.feature)
 

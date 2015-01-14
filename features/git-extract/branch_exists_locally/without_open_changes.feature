@@ -1,4 +1,4 @@
-Feature: git-extract errors when the branch exists locally (without open changes)
+Feature: git extract: errors when the branch exists locally (without open changes)
 
   (see ./with_open_changes.feature)
 

@@ -1,4 +1,4 @@
-Feature: git-extract: errors if there are not extractable commits
+Feature: git extract: errors if there are not extractable commits
 
   (see ./with_open_changes.feature)
 
