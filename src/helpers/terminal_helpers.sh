@@ -45,6 +45,7 @@ function echo_inline_bold {
   output_style_reset
 }
 
+
 # Prints an inline error
 function echo_inline_error {
   echo_red "error: $*"
