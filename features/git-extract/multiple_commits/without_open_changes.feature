@@ -1,6 +1,6 @@
 Feature: git extract: extracting multiple commits (without open changes)
 
-  (see ./multiple_commits_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

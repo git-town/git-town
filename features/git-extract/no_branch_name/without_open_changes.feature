@@ -1,6 +1,6 @@
 Feature: git extract: abort if no branch name is given (without open changes)
 
-  (see ./no_branch_name_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

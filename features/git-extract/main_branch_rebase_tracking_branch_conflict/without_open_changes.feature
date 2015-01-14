@@ -1,6 +1,6 @@
 Feature: git extract: resolving conflicting remote main branch updates (without open changes)
 
-  (see ./pull_main_branch_conflict_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

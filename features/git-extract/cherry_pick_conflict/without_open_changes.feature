@@ -1,6 +1,6 @@
 Feature: git extract: resolving conflicts with main branch (without open changes)
 
-  (see ./cherry_pick_conflict_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

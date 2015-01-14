@@ -1,10 +1,11 @@
-Feature: git-extract errors when the branch exists locally (without open changes)
+Feature: git-extract errors when the branch exists remotely (without open changes)
 
-  (see ./branch_exists_locally_with_open_changes.feature)
+  (see ../branch_exists_locally/with_open_changes.feature)
 
 
   Background:
-    Given I have feature branches named "feature" and "existing-feature"
+    Given I have a feature branch named "feature"
+    And my coworker has a feature branch named "existing-feature"
     And I am on the "feature" branch
     When I run `git extract existing-feature` while allowing errors
 

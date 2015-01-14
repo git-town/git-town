@@ -1,6 +1,6 @@
 Feature: git-extract errors when the branch exists remotely (with open changes)
 
-  (see ./branch_exists_locally_with_open_changes.feature)
+  (see ../branch_exists_locally/with_open_changes.feature)
 
 
   Background:

@@ -1,6 +1,6 @@
 Feature: git-extract: errors if there are not extractable commits
 
-  (see ./no_extractable_commits_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:
