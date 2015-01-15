@@ -5,10 +5,13 @@ Feature: git extract: errors when the branch exists locally
   So that all my feature branches are unique.
 
 
-  Scenario: with open changes
+  Background:
     Given I have feature branches named "feature" and "existing-feature"
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract existing-feature` while allowing errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
@@ -19,8 +22,6 @@ Feature: git extract: errors when the branch exists locally
 
 
   Scenario: without open changes
-    Given I have feature branches named "feature" and "existing-feature"
-    And I am on the "feature" branch
     When I run `git extract existing-feature` while allowing errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |

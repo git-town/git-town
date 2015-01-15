@@ -5,10 +5,13 @@ Feature: git extract: errors if there are not extractable commits
   So that I know when to use this command.
 
 
-  Scenario: with open changes
+  Background:
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` while allowing errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
@@ -19,8 +22,6 @@ Feature: git extract: errors if there are not extractable commits
 
 
   Scenario: without open changes
-    Given I have a feature branch named "feature"
-    And I am on the "feature" branch
     When I run `git extract refactor` while allowing errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
