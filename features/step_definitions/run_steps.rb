@@ -63,18 +63,31 @@ Then(/^I see no output$/) do
 end
 
 
-Then(/^I(?: do|( don't))? see "(.*)"$/) do |verb, string|
-  method = verb == "don't" ? :not_to : :to
-  expect(@last_run_result.out).public_send(method, include(string))
+Then(/^I don't see "(.*)"$/) do |string|
+  expect(@last_run_result.out).not_to include(string)
+end
+
+
+Then(/^I see "(.*)"$/) do |string|
+  actual = unformatted_last_run_output.strip
+  expect(actual).to eql string
 end
 
 
 Then(/^I see$/) do |output|
-  actual = @last_run_result.out.gsub(/\e[^m]+m/, '') # Remove text formatting (ANSI escape sequences)
+  actual = unformatted_last_run_output
   expect(actual).to eql "#{output}\n"
 end
 
 
 Then(/^I see the "(.+?)" man page$/) do |manpage|
   expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
+end
+
+
+
+
+# Output of last `run` without text formatting (ANSI escape sequences)
+def unformatted_last_run_output
+  @last_run_result.out.gsub(/\e[^m]+m/, '')
 end
