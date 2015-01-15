@@ -83,11 +83,3 @@ end
 Then(/^I see the "(.+?)" man page$/) do |manpage|
   expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
 end
-
-
-
-
-# Output of last `run` without text formatting (ANSI escape sequences)
-def unformatted_last_run_output
-  @last_run_result.out.gsub(/\e[^m]+m/, '')
-end
