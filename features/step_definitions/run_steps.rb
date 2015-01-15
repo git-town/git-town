@@ -75,6 +75,6 @@ Then(/^I see$/) do |output|
 end
 
 
-Then(/^I see the (.+?) man page$/) do |manpage|
+Then(/^I see the "(.+?)" man page$/) do |manpage|
   expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
 end
