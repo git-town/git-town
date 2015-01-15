@@ -1,17 +1,14 @@
-Feature: git extract: errors when the branch exists remotely (with open changes)
+Feature: git extract: errors when the branch exists remotely
 
   (see ../branch_exists_locally.feature)
 
 
-  Background:
+  Scenario: with open changes
     Given I have a feature branch named "feature"
     And my coworker has a feature branch named "existing-feature"
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract existing-feature` while allowing errors
-
-
-  Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
@@ -20,21 +17,11 @@ Feature: git extract: errors when the branch exists remotely (with open changes)
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
 
 
-
-
-Feature: git extract: errors when the branch exists remotely (without open changes)
-
-  (see ../branch_exists_locally.feature)
-
-
-  Background:
+  Scenario: without open changes
     Given I have a feature branch named "feature"
     And my coworker has a feature branch named "existing-feature"
     And I am on the "feature" branch
     When I run `git extract existing-feature` while allowing errors
-
-
-  Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
