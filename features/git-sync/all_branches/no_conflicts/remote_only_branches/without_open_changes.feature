@@ -31,3 +31,4 @@ Feature: git sync --all: does not sync remote only branches without open changes
       |            |                  | main commit                         | main_file     |
       |            |                  | Merge branch 'main' into my-feature |               |
       | co-feature | remote           | coworker commit                     | coworker_file |
+

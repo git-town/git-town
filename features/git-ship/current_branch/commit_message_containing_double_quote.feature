@@ -15,19 +15,19 @@ Feature: git ship: shipping the current feature branch
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                              |
-      | feature | git checkout main                                    |
-      | main    | git fetch --prune                                    |
-      | main    | git rebase origin/main                               |
-      | main    | git checkout feature                                 |
-      | feature | git merge --no-edit origin/feature                   |
-      | feature | git merge --no-edit main                             |
-      | feature | git checkout main                                    |
-      | main    | git merge --squash feature                           |
-      | main    | git commit -m "message containing \"double quotes\"" |
-      | main    | git push                                             |
-      | main    | git push origin :feature                             |
-      | main    | git branch -D feature                                |
+      | BRANCH  | COMMAND                                                |
+      | feature | git checkout main                                      |
+      | main    | git fetch --prune                                      |
+      | main    | git rebase origin/main                                 |
+      | main    | git checkout feature                                   |
+      | feature | git merge --no-edit origin/feature                     |
+      | feature | git merge --no-edit main                               |
+      | feature | git checkout main                                      |
+      | main    | git merge --squash feature                             |
+      | main    | git commit -m "message containing \\"double quotes\\"" |
+      | main    | git push                                               |
+      | main    | git push origin :feature                               |
+      | main    | git branch -D feature                                  |
     And I end up on the "main" branch
     And there are no more feature branches
     And there are no open changes
