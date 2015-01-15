@@ -14,4 +14,3 @@ Feature: git town: show the current Git Town version
     Given I'm currently not in a git repository
     When I run `git town version`
     Then I see "Git Town 0.5.0"
-    And I don't see "fatal: Not a git repository"
