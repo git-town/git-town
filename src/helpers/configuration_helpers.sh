@@ -149,26 +149,3 @@ function store_configuration {
     fi
   fi
 }
-
-
-# Persists the main branch configuration
-function store_main_branch_name_with_confirmation_text {
-  store_configuration main-branch-name "$1"
-  echo "main branch stored as '$1'"
-}
-
-
-# Persists the non-feature branch configuration
-function store_non_feature_branch_names_with_confirmation_text {
-  store_configuration non-feature-branch-names "$1"
-  echo "non-feature branches stored as '$1'"
-}
-
-
-function value_or_none {
-  if [ -z "$1" ]; then
-    echo "[none]"
-  else
-    echo "$1"
-  fi
-}
