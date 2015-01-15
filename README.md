@@ -1,4 +1,4 @@
-# _Git Automation for Agile Development Teams_
+![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
 <a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
 <a href="https://gemnasium.com/Originate/git-town" alt="Dependency Status" target="_blank"><img src="https://img.shields.io/gemnasium/Originate/git-town.svg?style=flat"></a>
@@ -10,9 +10,9 @@ It extends Git to support
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
-and other workflows better, and allows to perform many common tasks faster and easier.
+and other workflows better, and allows you to perform many common tasks faster and easier.
 
-Check out [the big picture](documentation/big-picture.md) for more background on Git Town,
+Check out [the big picture](documentation/background.md) for more background on Git Town,
 and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 
