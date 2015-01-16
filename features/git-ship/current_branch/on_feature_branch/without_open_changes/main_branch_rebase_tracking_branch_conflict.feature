@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts while updating the main branch
+Feature: git ship: resolving conflicts between main branch and its tracking branch
 
   As a developer shipping a branch while there are conflicts between the local and remote main branches
   I want to be given the choice to resolve the conflicts or abort

@@ -1,4 +1,4 @@
-Feature: git ship: don't ship unfinished features
+Feature: git ship: errors if there are open changes
 
   As a developer trying to ship a branch with uncommitted changes
   I should see an error that my branch is in an unfinished state

@@ -1,17 +1,18 @@
-Feature: git ship: resolving feature branch conflicts when shipping the current feature branch
+Feature: git ship: resolving conflicts between feature branch and main branch
 
-  As a developer shipping a feature branch with conflicting remote updates
+  As a developer shipping a branch that conflicts with the main branch
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
+
 
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
-      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
+      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local    | conflicting main commit    | conflicting_file | main content    |
+      | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
-    When I run `git ship -m "feature done"` while allowing errors
+    And I run `git ship -m "feature done"` while allowing errors
 
 
   Scenario: result
@@ -20,8 +21,10 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
       | feature | git checkout main                  |
       | main    | git fetch --prune                  |
       | main    | git rebase origin/main             |
+      | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
+      | feature | git merge --no-edit main           |
     And I am still on the "feature" branch
     And my repo has a merge in progress
 
@@ -35,7 +38,10 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And I am left with my original commits
+    And I still have the following commits
+      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | feature | local            | conflicting feature commit | conflicting_file | feature content |
 
 
   Scenario: continuing after resolving conflicts
@@ -44,7 +50,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     Then it runs the Git commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
-      | feature | git merge --no-edit main     |
       | feature | git checkout main            |
       | main    | git merge --squash feature   |
       | main    | git commit -m "feature done" |
@@ -54,8 +59,9 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
-      | main   | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |
 
 
   Scenario: continuing after resolving conflicts and committing
@@ -63,7 +69,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     When I run `git commit --no-edit; git ship --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                      |
-      | feature | git merge --no-edit main     |
       | feature | git checkout main            |
       | main    | git merge --squash feature   |
       | main    | git commit -m "feature done" |
@@ -73,5 +78,6 @@ Feature: git ship: resolving feature branch conflicts when shipping the current 
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
-      | main   | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
+      | main   | local and remote | conflicting main commit | conflicting_file |
+      |        |                  | feature done            | conflicting_file |

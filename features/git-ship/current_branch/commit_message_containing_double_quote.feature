@@ -4,6 +4,7 @@ Feature: git ship: shipping the current feature branch
   I want it to still work as expected
   So shipping is a robust process.
 
+
   Background:
     Given I have a feature branch named "feature"
     And the following commit exists in my repository
