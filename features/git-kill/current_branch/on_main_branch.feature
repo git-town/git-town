@@ -1,4 +1,4 @@
-Feature: git kill: don't remove the main branch (with open changes)
+Feature: git kill: errors when trying to kill the main branch
 
   As a developer accidentally trying to kill the main branch
   I should see an error that I cannot delete the main branch
@@ -11,19 +11,21 @@ Feature: git kill: don't remove the main branch (with open changes)
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill` while allowing errors
-
-
-  Scenario: result
     Then it runs no Git commands
     And I get the error "You can only kill feature branches"
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And the existing branches are
-      | REPOSITORY | BRANCHES      |
-      | local      | main, feature |
-      | remote     | main, feature |
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | feature | local and remote | good commit | good_file |
+    And I am left with my original commits
+
+
+  Scenario: without open changes
+    When I run `git kill` while allowing errors
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
+    And I am still on the "main" branch
+    And I am left with my original commits
