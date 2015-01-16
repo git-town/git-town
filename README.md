@@ -118,8 +118,7 @@ so it runs anywhere Git and Bash runs.
 ## Configuration
 
 Git Town is configured on a per-repository basis.
-Upon first use in a repository, Git Town will ask for all required
-configuration.
+Upon first use in a repository, it will ask for all required configuration.
 Use the [git town](/documentation/git-town.md) command to view or update your configuration at any time.
 
 
