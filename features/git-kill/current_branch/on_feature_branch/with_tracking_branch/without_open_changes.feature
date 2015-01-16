@@ -1,4 +1,4 @@
-Feature: git kill: current feature branch with a tracking branch (without open changes)
+Feature: git kill: killing the current feature branch with a tracking branch (without open changes)
 
   (see ./with_open_changes.feature)
 
