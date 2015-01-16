@@ -14,7 +14,8 @@ function show_version {
 
 if [ "$1" == "config" ]; then
   ensure_git_repository
-  show_config
+  shift
+  show_or_reset_config "$@"
 elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
   shift

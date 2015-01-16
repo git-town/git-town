@@ -46,3 +46,8 @@ Then(/^my non-feature branches are now configured as (.*)$/) do |data|
   non_feature_branches = Kappamaki.from_sentence(data)
   expect(non_feature_branch_configuration.split(',')).to match_array non_feature_branches
 end
+
+
+Then(/^Git Town is no longer configured for this repository$/) do
+  expect(run('git config --get-regex git-town', allow_failures: true).out).to eql ''
+end

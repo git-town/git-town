@@ -52,6 +52,12 @@ function get_configuration {
 }
 
 
+# Remove all Git Town configuration
+function remove_all_configuration {
+  git config --remove-section git-town > /dev/null 2>&1
+}
+
+
 # Remove a non-feature branch if possible
 function remove_non_feature_branch {
   local branch_name=$1
@@ -70,15 +76,26 @@ function remove_non_feature_branch {
 }
 
 
-function show_config {
-  echo_inline_bold "Main branch: "
-  show_main_branch
-  echo_inline_bold "Non-feature branches:"
-  if [ -n "$non_feature_branch_names" ]; then
-    echo
-    split_string "$non_feature_branch_names" ","
+function show_or_reset_config {
+  local operation=$1
+
+  if [ -n "$operation" ]; then
+    if [ "$operation" == "--reset" ]; then
+      remove_all_configuration
+      echo "Your Git Town settings have been reset for this repository"
+    else
+      echo "usage: git town config (--reset)"
+    fi
   else
-    echo ' [none]'
+    echo_inline_bold "Main branch: "
+    show_main_branch
+    echo_inline_bold "Non-feature branches:"
+    if [ -n "$non_feature_branch_names" ]; then
+      echo
+      split_string "$non_feature_branch_names" ","
+    else
+      echo ' [none]'
+    fi
   fi
 }
 
