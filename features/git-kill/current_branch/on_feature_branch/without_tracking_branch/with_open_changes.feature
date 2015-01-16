@@ -44,7 +44,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       | dead-feature | git reset [SHA:dead-end commit]                   |
     And I end up on the "dead-feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I am left with my original commits
+    And the existing branches are
       | REPOSITORY | BRANCHES                    |
       | local      | main, dead-feature, feature |
       | remote     | main, feature               |
