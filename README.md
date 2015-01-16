@@ -10,9 +10,9 @@ It extends Git to support
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
-and other workflows better, and allows to perform many common tasks faster and easier.
+and other workflows better, and allows you to perform many common tasks faster and easier.
 
-Check out [the big picture](documentation/big-picture.md) for more background on Git Town,
+Check out [the big picture](documentation/background.md) for more background on Git Town,
 and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 
@@ -118,8 +118,7 @@ so it runs anywhere Git and Bash runs.
 ## Configuration
 
 Git Town is configured on a per-repository basis.
-Upon first use in a repository, Git Town will ask for all required
-configuration.
+Upon first use in a repository, it will ask for all required configuration.
 Use the [git town](/documentation/git-town.md) command to view or update your configuration at any time.
 
 
