@@ -28,4 +28,3 @@ Feature: git hack: requires a branch name (with open changes)
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "existing_feature" branch
-
