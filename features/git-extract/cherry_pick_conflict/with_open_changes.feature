@@ -1,6 +1,8 @@
-Feature: git extract: resolving conflicts with main branch (without open changes)
+Feature: git extract: resolving conflicts between main branch and extracted commits (with open changes)
 
-  (see ./cherry_pick_conflict_with_open_changes.feature)
+  As a developer extracting a commit that conflicts with the main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
@@ -11,19 +13,23 @@ Feature: git extract: resolving conflicts with main branch (without open changes
       | feature | local    | feature commit  | feature_file     |                  |
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha while allowing errors
 
 
+  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH   | COMMAND                               |
       | feature  | git fetch --prune                     |
+      | feature  | git stash -u                          |
       | feature  | git checkout main                     |
       | main     | git rebase origin/main                |
       | main     | git push                              |
       | main     | git checkout -b refactor main         |
       | refactor | git cherry-pick [SHA:refactor commit] |
     And I end up on the "refactor" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
 
 
@@ -35,7 +41,9 @@ Feature: git extract: resolving conflicts with main branch (without open changes
       | refactor | git checkout main       |
       | main     | git branch -d refactor  |
       | main     | git checkout feature    |
+      | feature  | git stash pop           |
     And I end up on the "feature" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "refactor" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        |
@@ -45,11 +53,13 @@ Feature: git extract: resolving conflicts with main branch (without open changes
     And my repo has no cherry-pick in progress
 
 
+  @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git extract --continue` while allowing errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
+    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
 
 
@@ -60,7 +70,9 @@ Feature: git extract: resolving conflicts with main branch (without open changes
       | BRANCH   | COMMAND                     |
       | refactor | git commit --no-edit        |
       | refactor | git push -u origin refactor |
+      | refactor | git stash pop               |
     And I end up on the "refactor" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |
@@ -76,7 +88,9 @@ Feature: git extract: resolving conflicts with main branch (without open changes
     Then it runs the Git commands
       | BRANCH   | COMMAND                     |
       | refactor | git push -u origin refactor |
+      | refactor | git stash pop               |
     And I end up on the "refactor" branch
+    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
       | main     | local and remote | main commit     | conflicting_file |

@@ -1,4 +1,4 @@
-Feature: git extract: abort if no branch name is given (with open changes)
+Feature: git extract: errors if no branch name is given
 
   As a developer forgetting to provide the name of the branch to extract into
   I should see an error explaining the usage of this command
@@ -13,12 +13,19 @@ Feature: git extract: abort if no branch name is given (with open changes)
       | feature | local    | feature commit     | feature_file     |
       |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract` while allowing errors
-
-
-  Scenario: result
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: without open changes
+    When I run `git extract` while allowing errors
+    Then it runs no Git commands
+    And I get the error "No branch name provided"
+    And I am still on the "feature" branch
