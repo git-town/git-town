@@ -75,7 +75,8 @@ function remove_non_feature_branch {
   fi
 }
 
-
+# Reset git town configuration for repository if flag is passed,
+# otherwise show the config
 function show_or_reset_config {
   local operation=$1
 
@@ -87,15 +88,20 @@ function show_or_reset_config {
       echo "usage: git town config (--reset)"
     fi
   else
-    echo_inline_bold "Main branch: "
-    show_main_branch
-    echo_inline_bold "Non-feature branches:"
-    if [ -n "$non_feature_branch_names" ]; then
-      echo
-      split_string "$non_feature_branch_names" ","
-    else
-      echo ' [none]'
-    fi
+    show_config
+  fi
+}
+
+
+function show_config {
+  echo_inline_bold "Main branch: "
+  show_main_branch
+  echo_inline_bold "Non-feature branches:"
+  if [ -n "$non_feature_branch_names" ]; then
+    echo
+    split_string "$non_feature_branch_names" ","
+  else
+    echo ' [none]'
   fi
 }
 
