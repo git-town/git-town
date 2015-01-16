@@ -100,3 +100,9 @@ end
 def should_print_command_output? command, debug
   debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
 end
+
+
+# Output of last `run` without text formatting (ANSI escape sequences)
+def unformatted_last_run_output
+  @last_run_result.out.gsub(/\e[^m]+m/, '')
+end
