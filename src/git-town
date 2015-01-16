@@ -17,10 +17,12 @@ if [ "$1" == "config" ]; then
   show_config
 elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
-  show_or_update_main_branch "$2"
+  shift
+  show_or_update_main_branch "$@"
 elif [ "$1" == "non-feature-branches" ]; then
   ensure_git_repository
-  show_or_update_non_feature_branches "$2" "$3"
+  shift
+  show_or_update_non_feature_branches "$@"
 elif [ "$1" == "version" ]; then
   show_version
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
