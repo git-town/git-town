@@ -41,7 +41,7 @@ is placed before the Homebrew directory in your PATH variable. E.g: `... PATH=~/
 
 ```bash
 # rake tasks
-rake         # Run linters and feature tests
+rake         # Run linters and feature tests in parallel
 rake format  # Run formatters (fixes some lint errors)
 rake lint    # Run linters
 rake test    # Run feature tests
