@@ -9,20 +9,21 @@ end
 
 
 # Create a repository for the given identifier
-def create_repository identifier
-  path = repository_path identifier
+def create_repository identifier, memoized: false
+  path = repository_path identifier, memoized: memoized
   Dir.mkdir path
   run "git init --bare #{path}"
 end
 
 
 # Clone the repository signified by parent_idenifier into child_identifier
-def clone_repository parent_identifier, child_identifier, bare: false
-  parent_path = repository_path parent_identifier
-  child_path = repository_path child_identifier
+def clone_repository parent_identifier, child_identifier, bare: false, memoized: false
+  parent_path = repository_path parent_identifier, memoized: memoized
+  child_path = repository_path child_identifier, memoized: memoized
+
   run "git clone #{'--bare' if bare} #{parent_path} #{child_path}"
 
-  in_repository child_identifier do
+  in_repository child_identifier, memoized: memoized do
     user = child_identifier.to_s.sub('_secondary', '')
     configure_git user
   end
@@ -36,9 +37,9 @@ end
 
 
 # Execute the block in the repository for the given identifier
-def in_repository identifier, parent: :origin, &block
-  path = repository_path identifier
-  clone_repository parent, identifier unless File.directory? path
+def in_repository identifier, parent: :origin, memoized: false, &block
+  path = repository_path identifier, memoized: memoized
+  clone_repository parent, identifier, memoized: memoized unless File.directory? path
   at_path path, &block
 end
 
@@ -51,6 +52,6 @@ end
 
 
 # Returns the repository path for the given identifier
-def repository_path identifier
-  "#{REPOSITORY_BASE}/#{identifier}"
+def repository_path identifier, memoized: false
+  "#{memoized ? MemSingle.instance.val : REPOSITORY_BASE}/#{identifier}"
 end
