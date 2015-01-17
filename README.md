@@ -63,7 +63,7 @@ so it runs anywhere Git and Bash runs.
         <li>add DIR/man to your <code>$MANPATH</code></li>
         <li>
           install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
-          (used by <a href="/documentation/git-extract.md">git extract</a>)
+          (used by <a href="/documentation/commands/git-extract.md">git extract</a>)
         </li>
       </ul>
     </td>
@@ -119,16 +119,14 @@ so it runs anywhere Git and Bash runs.
 
 Git Town is configured on a per-repository basis.
 Upon first use in a repository, it will ask for all required configuration.
-Use the [git town](/documentation/git-town.md) command to view or update your configuration at any time.
+Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
 
 
 ## Documentation
 
 In addition to the online documentation here,
-you can run `git town` on the command line
-for an overview of the git town commands,
-or `git help <command>` (e.g. `git help sync`)
-for help on an individual command.
+you can run `git town` on the command line for an overview of the Git Town commands,
+or `git help <command>` (e.g. `git help sync`) for help with an individual command.
 
 
 ## Contributing
