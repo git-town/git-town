@@ -1,6 +1,6 @@
-Feature: git kill: don't remove a given non-feature branch (with open changes)
+Feature: git kill: errors when trying to kill a non-feature branch
 
-  (see ../current_branch/non_feature_branch_with_open_changes.feature)
+  (see ../current_branch/on_non_feature_branch.feature)
 
 
   Background:
@@ -11,15 +11,30 @@ Feature: git kill: don't remove a given non-feature branch (with open changes)
       | feature | local and remote | good commit | good_file |
       | qa      | local and remote | qa commit   | qa_file   |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill qa` while allowing errors
-
-
-  Scenario: result
     Then it runs no Git commands
     And I get the error "You can only kill feature branches"
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And the existing branches are
+      | REPOSITORY | BRANCHES          |
+      | local      | main, qa, feature |
+      | remote     | main, qa, feature |
+    And I have the following commits
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
+      | qa      | local and remote | qa commit   | qa_file   |
+      | feature | local and remote | good commit | good_file |
+
+
+  Scenario: without open changes
+    When I run `git kill qa` while allowing errors
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
+    And I am still on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES          |
       | local      | main, qa, feature |

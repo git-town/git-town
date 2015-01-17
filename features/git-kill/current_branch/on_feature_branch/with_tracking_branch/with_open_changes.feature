@@ -1,9 +1,8 @@
-Feature: git kill: removes the given feature branch when on it (with open changes)
+Feature: git kill: killing the current feature branch with a tracking branch (with open changes)
 
-  As a developer on a dead-end feature branch
-  I want to be able to kill it by name
-  So that cleaning out branches is easy and robust.
-
+  As a developer working on a dead-end feature branch
+  I want to be able to cleanly delete the current branch including open changes
+  So that my workspace doesn't contain irrelevant branches and my productivity remains high.
 
   Background:
     Given I have feature branches named "feature" and "dead-feature"
@@ -13,7 +12,7 @@ Feature: git kill: removes the given feature branch when on it (with open change
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
     And I am on the "dead-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git kill dead-feature`
+    When I run `git kill`
 
 
   Scenario: result

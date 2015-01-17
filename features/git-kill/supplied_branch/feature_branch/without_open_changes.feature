@@ -1,6 +1,6 @@
-Feature: git kill: removes the given feature branch (without open changes)
+Feature: git kill: killing the given feature branch (without open changes)
 
-  (see ./feature_branch_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

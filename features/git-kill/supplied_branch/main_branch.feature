@@ -1,4 +1,7 @@
-Feature: git kill: don't remove the main branch (with open changes)
+Feature: git kill: errors when trying to kill the main branch
+
+  (see ../current_branch/on_main_branch.feature)
+
 
   Background:
     Given I have a feature branch named "feature"
@@ -7,15 +10,30 @@ Feature: git kill: don't remove the main branch (with open changes)
       | feature | local and remote | good commit | good_file |
       | main    | local and remote | main commit | main_file |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+
+
+  Scenario: with open changes
+    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill main` while allowing errors
-
-
-  Scenario: result
     Then it runs no Git commands
     And I get the error "You can only kill feature branches"
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And the existing branches are
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
+    And I have the following commits
+      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
+      | feature | local and remote | good commit | good_file |
+      | main    | local and remote | main commit | main_file |
+
+
+  Scenario: without open changes
+    When I run `git kill main` while allowing errors
+    Then it runs no Git commands
+    And I get the error "You can only kill feature branches"
+    And I am still on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
