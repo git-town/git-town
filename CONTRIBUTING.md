@@ -1,4 +1,15 @@
-# Git Town Development
+# How to contribute
+
+Git Town is a welcoming community, and we'd love for everyone to bring
+their contributions to make it even better.
+
+We appreciate contributions of any size.
+
+* Found a bug or have an idea for a new feature? - [Open an issue](https://github.com/Originate/git-town/issues/new)
+* Fixed a bug or created a new feature that others will enjoy? - [Create a pull request](https://help.github.com/articles/using-pull-requests/)
+
+This guide will help you get started and outline some things you should know when developing Git Town.
+
 
 ## Requirements
 
@@ -6,7 +17,9 @@
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
+  * Language the tests are written in
 * [ShellCheck](https://github.com/koalaman/shellcheck)
+  * Used in the linting process to find common errors in the Bash code
 
 
 ## Setup

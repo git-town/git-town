@@ -10,9 +10,9 @@ It extends Git to support
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
-and other workflows better, and allows you to perform many common tasks faster and easier.
+and other workflows better, and it allows you to perform many common tasks faster and easier.
 
-Check out [the big picture](documentation/background.md) for more background on Git Town,
+Check out [the big picture](documentation/background.md) for more background on Git Town
 and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 
@@ -125,7 +125,7 @@ Use the [git town](/documentation/git-town.md) command to view or update your co
 ## Documentation
 
 In addition to the online documentation here,
-you can run `git help town` on the command line
+you can run `git town` on the command line
 for an overview of the git town commands,
 or `git help <command>` (e.g. `git help sync`)
 for help on an individual command.
@@ -137,4 +137,4 @@ Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/Originate/git-town/issues/new)
 or - even better - get down, go to town, and fire a feature-tested
 [pull request](https://help.github.com/articles/using-pull-requests/)
-our way! Check out our [development guide](/documentation/development.md) to start coding.
+our way! Check out our [contributing guide](/CONTRIBUTING.md) to start coding.
