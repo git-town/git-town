@@ -1,4 +1,16 @@
-# Git Town Development
+# How to contribute
+
+Git Town is a welcoming community, and we'd love for everyone to bring 
+their contributions to make it even better.
+
+We appreciate contributions of any size.
+
+* Found a bug or have an idea for a new feature? - [Open an issue](https://github.com/Originate/git-town/issues/new)
+* Fixed a bug or created a new feature that others will enjoy? - [Create a pull request](https://help.github.com/articles/using-pull-requests/)
+
+This guide will help you get started and outline some things you should know
+when developing on Git Town.
+
 
 ## Requirements
 
@@ -6,13 +18,19 @@
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
+  * Ruby is the language used to writing our feature specs
 * [ShellCheck](https://github.com/koalaman/shellcheck)
+  * Used in the linting process to find common errors in the Bash code
 
 
 ## Setup
 
 * fork and clone the repository to your machine
 * `bundle` to install ruby gems
+
+Optional: If you used Homebrew to install Git Town, you will need to ensure the development repository
+is placed before the Homebrew directory in your PATH variable. E.g: `... PATH=~/your/dev/path/git-town/src: ...`
+
 
 
 ## Testing
