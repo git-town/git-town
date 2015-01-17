@@ -67,7 +67,7 @@ where it was proposed.
 ## Documentation
 
 Every Git Town command
-* has a [man page](../man/man1)
-* has a [Markdown page](./commands) that is identical to the man page
-* is listed on the [git-town man page](../man/man1/git-town.1)
-* is listed on the [README](../README.md)
+* has a [man page](./man/man1)
+* has a [Markdown page](./documentation/commands) that is identical to the man page
+* is listed on the [git-town man page](./man/man1/git-town.1)
+* is listed on the [README](./README.md)
