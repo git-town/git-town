@@ -1,6 +1,6 @@
 # How to contribute
 
-Git Town is a welcoming community, and we'd love for everyone to bring 
+Git Town is a welcoming community, and we'd love for everyone to bring
 their contributions to make it even better.
 
 We appreciate contributions of any size.
@@ -17,7 +17,7 @@ This guide will help you get started and outline some things you should know whe
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
-  * Ruby is the language used to writing our feature specs
+  * Language the tests are written in
 * [ShellCheck](https://github.com/koalaman/shellcheck)
   * Used in the linting process to find common errors in the Bash code
 
@@ -26,10 +26,6 @@ This guide will help you get started and outline some things you should know whe
 
 * fork and clone the repository to your machine
 * `bundle` to install ruby gems
-
-Optional: If you used Homebrew to install Git Town, you will need to ensure the development repository
-is placed before the Homebrew directory in your PATH variable. E.g: `... PATH=~/your/dev/path/git-town/src: ...`
-
 
 
 ## Testing
@@ -40,7 +36,7 @@ is placed before the Homebrew directory in your PATH variable. E.g: `... PATH=~/
 
 ```bash
 # rake tasks
-rake         # Run linters and feature tests in parallel
+rake         # Run linters and feature tests
 rake format  # Run formatters (fixes some lint errors)
 rake lint    # Run linters
 rake test    # Run feature tests
