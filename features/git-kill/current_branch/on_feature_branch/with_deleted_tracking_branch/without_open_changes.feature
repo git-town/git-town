@@ -1,6 +1,6 @@
 Feature: git kill: killing the current feature branch with a deleted tracking branch (without open changes)
 
-  (see ./deleted_tracking_branch_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

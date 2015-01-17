@@ -1,8 +1,6 @@
-Feature: git hack: starting a new feature from the main branch
+Feature: git hack: starting a new feature from the main branch (without open changes)
 
-  As a developer starting a new feature while being on the main branch
-  I want to be able to create a new feature branch and start my work on it with one command
-  So that it is easy to keep the code quality high by getting my code reviewed before merging into main.
+  (see ./with_open_changes.feature)
 
 
   Background:
