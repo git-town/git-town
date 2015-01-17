@@ -8,8 +8,7 @@ We appreciate contributions of any size.
 * Found a bug or have an idea for a new feature? - [Open an issue](https://github.com/Originate/git-town/issues/new)
 * Fixed a bug or created a new feature that others will enjoy? - [Create a pull request](https://help.github.com/articles/using-pull-requests/)
 
-This guide will help you get started and outline some things you should know
-when developing on Git Town.
+This guide will help you get started and outline some things you should know when developing Git Town.
 
 
 ## Requirements
