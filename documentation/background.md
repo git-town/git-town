@@ -33,7 +33,7 @@ The underlying problem with all these issues is that an intentionally low-level 
 code management tool (Git) is used directly for specific high-level development workflows.
 This will always be inefficient.
 
-_Git Town_ solves these issue by adding [high-level workflow commands](../readme.md#commands) to Git.
+_Git Town_ solves these issue by adding [high-level workflow commands](/README.md#commands) to Git.
 These commands make it super easy to create, merge, synchronize, and clean up feature branches.
 They are robust, safe, and [well-tested](https://github.com/Originate/git-town/tree/master/features).
 
