@@ -1,3 +1,7 @@
+Style/AlignParameters:
+  EnforcedStyle: with_first_parameter
+
+
 Style/EmptyLines:
   Enabled: false
 
