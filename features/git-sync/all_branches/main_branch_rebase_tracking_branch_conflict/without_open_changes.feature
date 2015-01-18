@@ -8,7 +8,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all` it errors
 
 
   Scenario: result
@@ -33,7 +33,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue` it errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress

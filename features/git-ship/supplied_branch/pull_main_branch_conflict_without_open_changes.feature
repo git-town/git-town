@@ -11,7 +11,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"` it errors
 
 
   Scenario: result

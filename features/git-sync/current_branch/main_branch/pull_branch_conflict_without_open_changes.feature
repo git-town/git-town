@@ -9,7 +9,7 @@ Feature: git sync: handling conflicting remote branch updates when syncing the m
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-    And I run `git sync` while allowing errors
+    And I run `git sync` it errors
 
 
   @finishes-with-non-empty-stash
@@ -33,7 +33,7 @@ Feature: git sync: handling conflicting remote branch updates when syncing the m
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue` it errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress

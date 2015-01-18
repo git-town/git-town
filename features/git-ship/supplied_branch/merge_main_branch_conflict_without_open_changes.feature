@@ -10,7 +10,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"` it errors
 
 
   Scenario: result

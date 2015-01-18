@@ -15,5 +15,5 @@ Feature: git-repo: multi-platform support
   Scenario: no supported tool installed
     Given my remote origin is https://github.com/Originate/git-town.git
     And I have no command that opens browsers installed
-    When I run `git repo` while allowing errors
+    When I run `git repo` it errors
     Then I get the error "Opening a browser requires 'open' on Mac or 'xdg-open' on Linux."

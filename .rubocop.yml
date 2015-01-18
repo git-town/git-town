@@ -9,6 +9,9 @@ Style/EmptyLinesAroundClassBody:
 Style/MethodDefParentheses:
   EnforcedStyle: require_no_parentheses
 
+Metrics/CyclomaticComplexity:
+  Max: 7
+
 
 Metrics/LineLength:
   Max: 120

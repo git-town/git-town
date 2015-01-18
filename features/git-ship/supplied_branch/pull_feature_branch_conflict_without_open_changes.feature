@@ -10,7 +10,7 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
       | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "other_feature" branch
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"` it errors
 
 
   Scenario: result

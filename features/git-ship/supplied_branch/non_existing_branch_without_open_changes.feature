@@ -5,7 +5,7 @@ Feature: git ship: don't ship non-existing branches (without open changes)
 
   Background:
     Given I am on the "main" branch
-    When I run `git ship non-existing-branch` while allowing errors
+    When I run `git ship non-existing-branch` it errors
 
 
   Scenario: result

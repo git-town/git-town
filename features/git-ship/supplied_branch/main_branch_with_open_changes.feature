@@ -7,7 +7,7 @@ Feature: git ship: don't ship the main branch (with open changes)
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship main` while allowing errors
+    When I run `git ship main` it errors
 
 
   Scenario: result

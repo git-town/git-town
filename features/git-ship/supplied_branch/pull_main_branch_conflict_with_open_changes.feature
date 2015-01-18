@@ -12,7 +12,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"` it errors
 
 
   @finishes-with-non-empty-stash

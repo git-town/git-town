@@ -13,7 +13,7 @@ Feature: git ship: resolving conflicts while updating the main branch
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
-    When I run `git ship -m "feature done"` while allowing errors
+    When I run `git ship -m "feature done"` it errors
 
 
   Scenario: result

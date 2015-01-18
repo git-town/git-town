@@ -10,7 +10,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
-    And I run `git sync` while allowing errors
+    And I run `git sync` it errors
 
 
   Scenario: result
@@ -38,7 +38,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue` it errors
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
     And my repo still has a merge in progress

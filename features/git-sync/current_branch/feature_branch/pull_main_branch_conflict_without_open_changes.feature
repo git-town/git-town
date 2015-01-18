@@ -10,7 +10,7 @@ Feature: git sync: resolving conflicting remote main branch updates when syncing
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
-    And I run `git sync` while allowing errors
+    And I run `git sync` it errors
 
 
   Scenario: result
@@ -34,7 +34,7 @@ Feature: git sync: resolving conflicting remote main branch updates when syncing
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue` it errors
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"

@@ -12,7 +12,7 @@ Feature: git ship: don't ship empty features
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "empty-feature" branch
-    When I run `git ship` while allowing errors
+    When I run `git ship` it errors
 
 
   Scenario: result

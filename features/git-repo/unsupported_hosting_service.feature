@@ -1,7 +1,7 @@
 Feature: git-repo when origin is unsupported
 
   Background:
-    When I run `git repo` while allowing errors
+    When I run `git repo` it errors
 
 
   Scenario: result
