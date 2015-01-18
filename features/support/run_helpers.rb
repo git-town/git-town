@@ -35,15 +35,6 @@ def output_of command
 end
 
 
-def prepare_user_input input
-  if input == 'an empty commit message'
-    ['dGZZ']
-  else
-    Kappamaki.from_sentence(input)
-  end
-end
-
-
 def print_result result
   puts ''
   puts "#{result.location}$ #{result.command}"
