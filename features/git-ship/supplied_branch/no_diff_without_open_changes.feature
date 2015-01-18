@@ -10,7 +10,7 @@ Feature: git ship: don't ship a feature branch without changes (without open cha
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "other_feature" branch
-    When I run `git ship empty-feature` it errors
+    When I run `git ship empty-feature`, it errors
 
 
   Scenario: result

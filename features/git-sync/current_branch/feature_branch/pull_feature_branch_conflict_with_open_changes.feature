@@ -13,7 +13,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync` it errors
+    And I run `git sync`, it errors
 
 
   @finishes-with-non-empty-stash
@@ -47,7 +47,7 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` it errors
+    When I run `git sync --continue`, it errors
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"

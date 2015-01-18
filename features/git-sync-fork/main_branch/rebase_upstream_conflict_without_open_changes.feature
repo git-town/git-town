@@ -7,7 +7,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | upstream | upstream commit | conflicting_file | upstream content |
       |        | local    | local commit    | conflicting_file | local content    |
     And I am on the "main" branch
-    When I run `git sync-fork` it errors
+    When I run `git sync-fork`, it errors
 
 
   Scenario: result

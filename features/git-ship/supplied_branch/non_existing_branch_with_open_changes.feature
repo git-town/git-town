@@ -8,7 +8,7 @@ Feature: git ship: don't ship non-existing branches (with open changes)
   Background:
     Given I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship non-existing-branch` it errors
+    When I run `git ship non-existing-branch`, it errors
 
 
   Scenario: result

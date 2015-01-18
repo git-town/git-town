@@ -8,7 +8,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync` it errors
+    And I run `git sync`, it errors
 
 
   @finishes-with-non-empty-stash
@@ -47,7 +47,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` it errors
+    When I run `git sync --continue`, it errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch

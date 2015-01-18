@@ -11,7 +11,7 @@ Feature: git ship: don't ship empty feature branches (with open changes)
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship empty-feature` it errors
+    When I run `git ship empty-feature`, it errors
 
 
   Scenario: result

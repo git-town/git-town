@@ -21,7 +21,7 @@ Feature: set the main branch configuration
 
 
   Scenario: invalid branch name
-    When I run `git town main-branch non-existing` it errors
+    When I run `git town main-branch non-existing`, it errors
     Then I see
       """
       error: no branch named 'non-existing'

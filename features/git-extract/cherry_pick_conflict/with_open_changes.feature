@@ -14,7 +14,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git extract refactor` with the last commit sha it errors
+    When I run `git extract refactor` with the last commit sha, it errors
 
 
   @finishes-with-non-empty-stash
@@ -55,7 +55,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git extract --continue` it errors
+    When I run `git extract --continue`, it errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch

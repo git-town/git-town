@@ -7,7 +7,7 @@ Feature: git ship: don't ship non-feature branches (without open changes)
     Given I have branches named "qa" and "production"
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "main" branch
-    When I run `git ship production` it errors
+    When I run `git ship production`, it errors
 
 
   Scenario: result

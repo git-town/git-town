@@ -8,7 +8,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       |        | local    | local commit    | conflicting_file | local content    |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync-fork` it errors
+    When I run `git sync-fork`, it errors
 
 
   @finishes-with-non-empty-stash

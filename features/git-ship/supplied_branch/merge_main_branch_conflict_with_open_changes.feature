@@ -11,7 +11,7 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m "feature done"` it errors
+    And I run `git ship feature -m "feature done"`, it errors
 
 
   @finishes-with-non-empty-stash

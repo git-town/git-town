@@ -12,7 +12,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
     And I am on the "feature" branch
-    When I run `git extract refactor` with the last commit sha it errors
+    When I run `git extract refactor` with the last commit sha, it errors
 
 
   Scenario: result
@@ -37,7 +37,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git extract --continue` it errors
+    When I run `git extract --continue`, it errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And my repo has a rebase in progress

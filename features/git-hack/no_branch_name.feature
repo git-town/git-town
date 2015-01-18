@@ -16,7 +16,7 @@ Feature: git hack: requires a branch name (with open changes)
 
   Scenario: with open changes
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git hack` it errors
+    When I run `git hack`, it errors
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "existing_feature" branch
@@ -24,7 +24,7 @@ Feature: git hack: requires a branch name (with open changes)
 
 
   Scenario: without open changes
-    When I run `git hack` it errors
+    When I run `git hack`, it errors
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "existing_feature" branch

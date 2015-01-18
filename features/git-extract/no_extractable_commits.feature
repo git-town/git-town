@@ -12,7 +12,7 @@ Feature: git extract: errors if there are not extractable commits
 
   Scenario: with open changes
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git extract refactor` it errors
+    When I run `git extract refactor`, it errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
@@ -22,7 +22,7 @@ Feature: git extract: errors if there are not extractable commits
 
 
   Scenario: without open changes
-    When I run `git extract refactor` it errors
+    When I run `git extract refactor`, it errors
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |

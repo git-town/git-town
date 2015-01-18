@@ -1,4 +1,4 @@
-When(/^(I|my coworker) runs? `([^`]+)`( it errors)?$/) do |who, commands, should_error|
+When(/^(I|my coworker) runs? `([^`]+)`(, it errors)?$/) do |who, commands, should_error|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do
     commands.split(';').each do |command|
@@ -9,21 +9,21 @@ When(/^(I|my coworker) runs? `([^`]+)`( it errors)?$/) do |who, commands, should
 end
 
 
-When(/^I run `([^`]+)` with the last( two)? commit shas?( it errors)?$/) do |command, two, should_error|
+When(/^I run `([^`]+)` with the last( two)? commit shas?(, it errors)?$/) do |command, two, should_error|
   count = two ? 2 : 1
   shas = recent_commit_shas(count).join(' ')
   step "I run `#{command} #{shas}`#{should_error}"
 end
 
 
-When(/^I run `(.+?)` and enter "(.+?)"( it errors)?$/) do |command, input, should_error|
+When(/^I run `(.+?)` and enter "(.+?)"(, it errors)?$/) do |command, input, should_error|
   @result = run command, input: input, should_error: should_error
   expect(@last_run_result.error).to be_truthy if should_error
 end
 
 
-When(/^I run `(.+?)` and enter an empty commit message it errors$/) do |command|
-  step "I run `#{command}` and enter \"dGZZ\" it errors"
+When(/^I run `(.+?)` and enter an empty commit message, it errors$/) do |command|
+  step "I run `#{command}` and enter \"dGZZ\", it errors"
 end
 
 

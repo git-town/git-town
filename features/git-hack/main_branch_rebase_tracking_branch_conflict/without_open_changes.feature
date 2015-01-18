@@ -10,7 +10,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | main   | remote   | conflicting remote commit | conflicting_file | remote content |
       |        | local    | conflicting local commit  | conflicting_file | local content  |
     And I am on the "existing_feature" branch
-    When I run `git hack new_feature` it errors
+    When I run `git hack new_feature`, it errors
 
 
   Scenario: result
@@ -34,7 +34,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git hack --continue` it errors
+    When I run `git hack --continue`, it errors
     Then I get the error "You must resolve the conflicts before continuing the git hack"
     And my repo still has a rebase in progress
 
