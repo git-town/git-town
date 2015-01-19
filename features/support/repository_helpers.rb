@@ -20,7 +20,6 @@ end
 def clone_repository parent_identifier, child_identifier, bare: false
   parent_path = repository_path parent_identifier
   child_path = repository_path child_identifier
-
   run "git clone #{'--bare' if bare} #{parent_path} #{child_path}"
 
   in_repository child_identifier do

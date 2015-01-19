@@ -20,7 +20,6 @@ def setup_environment
 
   Dir.chdir REPOSITORY_BASE
   go_to_repository :developer
-  end_time = Time.now
 end
 
 
@@ -31,7 +30,7 @@ def memoize_environment
   # Create origin repository
   create_repository :origin
 
-  # Create the local repository (~1/3)
+  # Create the local repository
   clone_repository :origin, :developer
 
   # Set main as the default branch
@@ -40,11 +39,11 @@ def memoize_environment
   end
 
   in_repository :developer do
-    # Create the main branch (~1/3)
+    # Create the main branch
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
     run 'git checkout -b main master ; git push -u origin main'
 
-    # Fetch the default branch, delete master (~1/3)
+    # Fetch the default branch, delete master
     run 'git fetch'
     run 'git push origin :master'
     run 'git branch -d master'
