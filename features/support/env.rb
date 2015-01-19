@@ -24,9 +24,6 @@ end
 
 # rubocop:disable Style/GlobalVars, Metrics/AbcSize, Metrics/LineLength
 def initialize_environment
-  FileUtils.rm_rf Dir.glob("#{MEMOIZED_REPOSITORY_BASE}/*")
-  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
-
   # Create origin repository
   create_repository :origin
 
@@ -44,14 +41,11 @@ def initialize_environment
     run 'git checkout -b main master ; git push -u origin main'
 
     # Fetch the default branch, delete master
-    run 'git fetch'
-    run 'git push origin :master'
-    run 'git branch -d master'
+    run 'git fetch ; git push origin :master ; git branch -d master'
   end
 
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
-
   $memoization_complete = true
 end
 
