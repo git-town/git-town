@@ -14,6 +14,13 @@ Feature: git ship: resolving conflicts while updating the main branch
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
     When I run `git ship -m "feature done"`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+
+      """
 
 
   Scenario: result
