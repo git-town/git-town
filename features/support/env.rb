@@ -20,7 +20,7 @@ def setup_environment
 end
 
 
-# rubocop:disable Style/GlobalVars, Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Metrics/MethodLength
 def initialize_environment
   # Create origin repository
   create_repository :origin
@@ -44,14 +44,16 @@ def initialize_environment
 
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
-  $memoization_complete = true
 end
-# rubocop:enable Style/GlobalVars, Metrics/AbcSize, Metrics/MethodLength
+# rubocop:enable Metrics/MethodLength
+
+
+AfterConfiguration do
+  initialize_environment
+end
 
 
 Before do
-  $memoization_complete ||= false
-  initialize_environment unless $memoization_complete
   setup_environment
   go_to_repository :developer
 end
