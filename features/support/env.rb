@@ -15,10 +15,8 @@ TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 # load memoized environment by copying contents
 # of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
 def setup_environment
-  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
+  FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.cp_r "#{MEMOIZED_REPOSITORY_BASE}/.", REPOSITORY_BASE
-
-  go_to_repository :developer
 end
 
 
@@ -54,6 +52,7 @@ Before do
   $memoization_complete ||= false
   initialize_environment unless $memoization_complete
   setup_environment
+  go_to_repository :developer
 end
 
 
