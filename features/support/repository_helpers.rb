@@ -53,5 +53,5 @@ end
 
 # Returns the repository path for the given identifier
 def repository_path identifier, memoized: false
-  "#{memoized ? MemSingle.instance.val : REPOSITORY_BASE}/#{identifier}"
+  "#{memoized ? MEMOIZED_REPOSITORY_BASE : REPOSITORY_BASE}/#{identifier}"
 end

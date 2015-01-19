@@ -3,57 +3,33 @@ require 'kappamaki'
 require 'open4'
 require 'rspec'
 
+# rubocop:disable all
+
 SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
-# MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
+MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
-class String
-  # colorization
-  def colorize(color_code)
-    "\e[#{color_code}m#{self}\e[0m"
-  end
 
-  def yellow
-    colorize(43)
-  end
-end
-
-class MemSingle
-  def initialize
-    @log = Dir.mktmpdir 'memoized2'
-  end
-
-  @@instance = MemSingle.new
-
-  def self.instance
-    return @@instance
-  end
-
-  def val
-    puts "Requested MEM DIR by #{caller_locations(1,1)[0].label} by #{caller_locations(2,1)[0].label} by #{caller_locations(3,1)[0].label}".yellow
-    @log
-  end
-
-  private_class_method :new
-end
-
-
-
+# copy entire contents of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
 def setup_environment
+  start_time = Time.now
   FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
-  FileUtils.cp_r "#{MemSingle.instance.val}/.", REPOSITORY_BASE
-  p 'NO MORE MEM ACCESS AFTER THIS POINT'
+  FileUtils.cp_r "#{MEMOIZED_REPOSITORY_BASE}/.", REPOSITORY_BASE
 
   Dir.chdir REPOSITORY_BASE
   go_to_repository :developer
+  end_time = Time.now
+  puts "Time to setup_environment = #{end_time - start_time}"
 end
 
+
 def memoize_environment
-  Dir.chdir MemSingle.instance.val
-  FileUtils.rm_rf Dir.glob("#{MemSingle.instance.val}/*")
+  puts 'MEMOIZING'
+  Dir.chdir MEMOIZED_REPOSITORY_BASE
+  FileUtils.rm_rf Dir.glob("#{MEMOIZED_REPOSITORY_BASE}/*")
 
   # Create origin repository
   create_repository :origin, memoized: true
@@ -78,11 +54,9 @@ def memoize_environment
   end
 
   $memoization_complete = true
-  p 'DONE MEMOIZING ENVIRONMENT'
 end
 
 
-# rubocop:disable Style/GlobalVars
 Before do
   $memoization_complete ||= false
   memoize_environment unless $memoization_complete
@@ -97,7 +71,7 @@ end
 
 at_exit do
   FileUtils.rm_rf REPOSITORY_BASE
-  FileUtils.rm_rf MemSingle.instance.val
+  FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end
 
 # start = Time.now
