@@ -15,34 +15,31 @@ TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
 # copy entire contents of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
 def setup_environment
-  start_time = Time.now
   FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
   FileUtils.cp_r "#{MEMOIZED_REPOSITORY_BASE}/.", REPOSITORY_BASE
 
   Dir.chdir REPOSITORY_BASE
   go_to_repository :developer
   end_time = Time.now
-  puts "Time to setup_environment = #{end_time - start_time}"
 end
 
 
 def memoize_environment
-  puts 'MEMOIZING'
-  Dir.chdir MEMOIZED_REPOSITORY_BASE
   FileUtils.rm_rf Dir.glob("#{MEMOIZED_REPOSITORY_BASE}/*")
+  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
 
   # Create origin repository
-  create_repository :origin, memoized: true
+  create_repository :origin
 
   # Create the local repository (~1/3)
-  clone_repository :origin, :developer, memoized: true
+  clone_repository :origin, :developer
 
   # Set main as the default branch
-  in_repository :origin, memoized: true do
+  in_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
   end
 
-  in_repository :developer, memoized: true do
+  in_repository :developer do
     # Create the main branch (~1/3)
     run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
     run 'git checkout -b main master ; git push -u origin main'
@@ -52,6 +49,8 @@ def memoize_environment
     run 'git push origin :master'
     run 'git branch -d master'
   end
+
+  FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 
   $memoization_complete = true
 end
@@ -73,8 +72,3 @@ at_exit do
   FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end
-
-# start = Time.now
-# finish = Time.now
-# x = finish - start
-# p "AA [#{x}]"
