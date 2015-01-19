@@ -8,7 +8,7 @@ Feature: git-pr: when origin is unsupported
   Background:
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
-    When I run `git pr`, it errors
+    When I run `git pr`
 
 
   Scenario: result

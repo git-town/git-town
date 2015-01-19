@@ -13,7 +13,14 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       |        | local    | conflicting local commit  | conflicting_file | local content  |
     And I am on the "existing_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git hack new_feature`, it errors
+    When I run `git hack new_feature`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git hack --abort".
+      To continue after you have resolved the conflicts, run "git hack --continue".
+
+      """
 
 
   @finishes-with-non-empty-stash
@@ -43,7 +50,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git hack --continue`, it errors
+    When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo still has a rebase in progress

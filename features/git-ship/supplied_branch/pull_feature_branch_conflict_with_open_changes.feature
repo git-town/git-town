@@ -11,7 +11,7 @@ Feature: git ship: resolving remote feature branch updates when shipping a given
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m "feature done"`, it errors
+    And I run `git ship feature -m "feature done"`
 
 
   @finishes-with-non-empty-stash

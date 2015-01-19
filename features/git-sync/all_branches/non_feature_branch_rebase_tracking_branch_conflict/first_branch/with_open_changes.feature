@@ -11,7 +11,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | qa         | local and remote | qa commit                | qa_file          | qa content                |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync --all`, it errors
+    When I run `git sync --all`
 
 
   @finishes-with-non-empty-stash
@@ -65,7 +65,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue`, it errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"

@@ -15,7 +15,7 @@ Feature: git kill: errors when trying to kill the main branch
 
   Scenario: with open changes
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git kill`, it errors
+    When I run `git kill`
     Then it runs no Git commands
     And I get the error "You can only kill feature branches"
     And I am still on the "main" branch
@@ -30,7 +30,7 @@ Feature: git kill: errors when trying to kill the main branch
 
 
   Scenario: without open changes
-    When I run `git kill`, it errors
+    When I run `git kill`
     Then it runs no Git commands
     And I get the error "You can only kill feature branches"
     And I am still on the "main" branch

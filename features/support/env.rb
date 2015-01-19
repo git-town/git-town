@@ -41,6 +41,10 @@ Before do
 end
 
 
+After do
+  expect(@result_with_unexpected_error).to be_nil
+end
+
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
 end

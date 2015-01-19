@@ -43,14 +43,18 @@ def print_result result
 end
 
 
-def run command, should_error: false, debug: false, input: nil
+def run command, debug: false, input: nil
   result = run_shell_command command, input
-  unexpected_error = (result.error && !should_error) || result_has_shell_error?(result)
 
-  print_result(result) if unexpected_error || should_print_command_output?(command, debug)
-  fail 'Command not successful!' if unexpected_error
+  if git_town_command?(command)
+    @last_run_result = result
+    @result_with_unexpected_error = result if result.error || result_has_shell_error?(result)
+  elsif result.error
+    print_result result
+    fail 'Command not successful!'
+  end
 
-  @last_run_result = result if git_town_command?(command)
+  print_result(result) if should_print_command_output?(command, debug)
 
   result
 end

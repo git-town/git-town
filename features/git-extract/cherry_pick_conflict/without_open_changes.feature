@@ -11,7 +11,14 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | feature | local    | feature commit  | feature_file     |                  |
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
-    When I run `git extract refactor` with the last commit sha, it errors
+    When I run `git extract refactor` with the last commit sha
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git extract --abort".
+      To continue after you have resolved the conflicts, run "git extract --continue".
+
+      """
 
 
   Scenario: result
@@ -46,7 +53,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git extract --continue`, it errors
+    When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch

@@ -10,7 +10,7 @@ Feature: git kill: errors if supplied branch does not exist
 
 
   Scenario: with open changes
-    When I run `git kill non-existing-feature`, it errors
+    When I run `git kill non-existing-feature`
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
     Then it runs the Git commands
       | BRANCH | COMMAND           |
@@ -21,7 +21,7 @@ Feature: git kill: errors if supplied branch does not exist
 
 
   Scenario: without open changes
-    When I run `git kill non-existing-feature`, it errors
+    When I run `git kill non-existing-feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |

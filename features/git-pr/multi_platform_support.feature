@@ -19,5 +19,5 @@ Feature: git-pr: multi-platform support
     And my remote origin is https://github.com/Originate/git-town.git
     And I have no command that opens browsers installed
     And I am on the "feature" branch
-    When I run `git pr`, it errors
+    When I run `git pr`
     Then I get the error "Opening a browser requires 'open' on Mac or 'xdg-open' on Linux."

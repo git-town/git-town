@@ -6,7 +6,7 @@ Feature: git ship: don't ship the main branch (without open changes)
   Background:
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
-    When I run `git ship main`, it errors
+    When I run `git ship main`
 
 
   Scenario: result

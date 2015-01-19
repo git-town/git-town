@@ -8,7 +8,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
-    And I run `git sync`, it errors
+    And I run `git sync`
 
 
   Scenario: result
@@ -43,7 +43,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue`, it errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch

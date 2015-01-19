@@ -12,7 +12,7 @@ Feature: git hack: errors when the branch exists locally
 
   Scenario: with open changes
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git hack existing_feature`, it errors
+    When I run `git hack existing_feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
@@ -22,7 +22,7 @@ Feature: git hack: errors when the branch exists locally
 
 
   Scenario: without open changes
-    When I run `git hack existing_feature`, it errors
+    When I run `git hack existing_feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
