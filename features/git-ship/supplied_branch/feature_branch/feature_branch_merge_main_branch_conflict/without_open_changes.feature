@@ -1,6 +1,6 @@
-Feature: Git Ship: resolving conflicts between the supplied feature and main branch (with open changes)
+Feature: git ship: resolving conflicts between the supplied feature branch and the main branch (without open changes)
 
-  (see ../current_branch/merge_main_branch_conflict.feature)
+  (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_main_branch_conflict.feature)
 
 
   Background:
@@ -10,15 +10,12 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git ship feature -m "feature done"` while allowing errors
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | other_feature | git stash -u                       |
       | other_feature | git checkout main                  |
       | main          | git fetch --prune                  |
       | main          | git rebase origin/main             |
@@ -27,20 +24,17 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | feature       | git merge --no-edit origin/feature |
       | feature       | git merge --no-edit main           |
     And I end up on the "feature" branch
-    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
 
 
   Scenario: aborting
     When I run `git ship --abort`
     Then it runs the Git commands
-      | BRANCH        | COMMAND                    |
-      | feature       | git merge --abort          |
-      | feature       | git checkout main          |
-      | main          | git checkout other_feature |
-      | other_feature | git stash pop              |
+      | BRANCH  | COMMAND                    |
+      | feature | git merge --abort          |
+      | feature | git checkout main          |
+      | main    | git checkout other_feature |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -52,18 +46,16 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
-      | BRANCH        | COMMAND                      |
-      | feature       | git commit --no-edit         |
-      | feature       | git checkout main            |
-      | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git push                     |
-      | main          | git push origin :feature     |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
-      | other_feature | git stash pop                |
+      | BRANCH  | COMMAND                      |
+      | feature | git commit --no-edit         |
+      | feature | git checkout main            |
+      | main    | git merge --squash feature   |
+      | main    | git commit -m "feature done" |
+      | main    | git push                     |
+      | main    | git push origin :feature     |
+      | main    | git branch -D feature        |
+      | main    | git checkout other_feature   |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
@@ -75,17 +67,15 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
     Then it runs the Git commands
-      | BRANCH        | COMMAND                      |
-      | feature       | git checkout main            |
-      | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git push                     |
-      | main          | git push origin :feature     |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
-      | other_feature | git stash pop                |
+      | BRANCH  | COMMAND                      |
+      | feature | git checkout main            |
+      | main    | git merge --squash feature   |
+      | main    | git commit -m "feature done" |
+      | main    | git push                     |
+      | main    | git push origin :feature     |
+      | main    | git branch -D feature        |
+      | main    | git checkout other_feature   |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |

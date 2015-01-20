@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts between feature branch and main branch
+Feature: git ship: resolving conflicts between the current feature branch and the main branch
 
   As a developer shipping a branch that conflicts with the main branch
   I want to be given the choice to resolve the conflicts or abort

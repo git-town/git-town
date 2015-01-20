@@ -1,6 +1,6 @@
-Feature: git ship: resolving conflicting main branch updates when shipping a given feature branch (without open changes)
+Feature: git ship: resolving conflicts between the main branch and its tracking branch (without open changes)
 
-  (see ../current_branch/pull_main_branch_conflict.feature)
+  (see ../../../current_branch/on_feature_branch/without_open_changes/main_branch_rebase_tracking_branch_conflict.feature)
 
 
   Background:
