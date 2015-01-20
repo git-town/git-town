@@ -20,32 +20,24 @@ def setup_environment
 end
 
 
-# rubocop:disable Metrics/MethodLength
 def initialize_environment
-  # Create origin repository
-  create_repository :origin
-
-  # Create the local repository
-  clone_repository :origin, :developer
-
-  # Set main as the default branch
-  in_repository :origin do
+  # Create origin repo and set "main" as default branch
+  create_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
   end
 
-  in_repository :developer do
-    # Create the main branch
-    run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
-    run 'git checkout -b main master ; git push -u origin main'
+  clone_repository :origin, :developer
 
-    # Fetch the default branch, delete master
-    run 'git fetch ; git push origin :master ; git branch -d master'
+  # Initialize main branch
+  in_repository :developer do
+    run 'git checkout --orphan main'
+    run 'git commit --allow-empty -m "Initial commit"'
+    run 'git push -u origin main'
   end
 
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 end
-# rubocop:enable Metrics/MethodLength
 
 
 AfterConfiguration do
