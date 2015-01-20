@@ -1,4 +1,4 @@
-Feature: git ship: aborting the shipping process by entering an empty commit message
+Feature: git ship: aborting the ship of the supplied feature branch by entering an empty commit message
 
   (see ../current_branch/empty_commit_message.feature)
 
