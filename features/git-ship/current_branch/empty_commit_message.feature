@@ -14,7 +14,7 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
     Then it errors and the output ends with
       """
 
-      Aborting due to empty commit message
+      Aborting ship due to empty commit message
 
       """
 

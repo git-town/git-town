@@ -10,6 +10,14 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       |          | remote           | feature2 remote commit | conflicting_file | feature2 remote content |
     And I am on the "main" branch
     When I run `git sync --all`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature2' branch, run "git sync --skip".
+
+      """
 
 
   Scenario: result

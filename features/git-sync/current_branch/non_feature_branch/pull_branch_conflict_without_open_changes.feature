@@ -10,7 +10,15 @@ Feature: git sync: handling conflicting remote branch updates when syncing a non
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-    And I run `git sync`
+    When I run `git sync`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'qa' branch, run "git sync --skip".
+
+      """
 
 
   Scenario: result

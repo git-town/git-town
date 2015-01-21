@@ -12,6 +12,13 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git ship feature -m "feature done"`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+
+      """
 
 
   @finishes-with-non-empty-stash

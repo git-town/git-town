@@ -24,36 +24,17 @@ end
 
 
 Then(/^it errors and the output ends with$/) do |str|
-  @result_with_unexpected_error = nil
-
-  expect(@last_run_result.error).to be_truthy
-  expect(unformatted_last_run_output).to end_with(str + "\n"), %(
-    EXPECTED
-    ***************************************************
-    #{@last_run_result.out.gsub '\n', "\n"}
-    ***************************************************
-    TO END WITH
-    ***************************************************
-    #{str.gsub '\n', "\n"}
-    ***************************************************
-  )
+  verify_error :end_with, str + "\n"
 end
 
 
-Then(/^I get the error "(.+?)"$/) do |error_message|
-  @result_with_unexpected_error = nil
+Then(/^I get the error "(.+?)"$/) do |str|
+  verify_error :include, str
+end
 
-  expect(@last_run_result.error).to be_truthy
-  expect(@last_run_result.out).to include(error_message), %(
-    "EXPECTED
-    ***************************************************
 
-    #{@last_run_result.out.gsub '\n', "\n"}
-
-    ***************************************************
-    TO INCLUDE '#{error_message}'
-
-  )
+Then(/^I get the error$/) do |str|
+  verify_error :eql, str + "\n"
 end
 
 

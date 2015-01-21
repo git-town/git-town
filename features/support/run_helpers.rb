@@ -45,17 +45,13 @@ end
 
 def run command, debug: false, input: nil
   result = run_shell_command command, input
+  is_git_town_command = git_town_command?(command)
+  raise_error = (!is_git_town_command && result.error) || result_has_shell_error?(result)
 
-  if git_town_command?(command)
-    @last_run_result = result
-    @result_with_unexpected_error = result if result.error || result_has_shell_error?(result)
-  elsif result.error
-    print_result result
-    fail 'Command not successful!'
-  end
+  print_result(result) if raise_error || should_print_command_output?(command, debug)
+  fail 'Command not successful!' if raise_error
 
-  print_result(result) if should_print_command_output?(command, debug)
-
+  @last_run_result = result if is_git_town_command
   result
 end
 

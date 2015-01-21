@@ -8,7 +8,15 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync`
+    When I run `git sync`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+
+      """
 
 
   @finishes-with-non-empty-stash

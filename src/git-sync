@@ -30,15 +30,20 @@ function preconditions {
 
 
 function skip_message_prefix {
-  echo "To skip the sync of the '$(get_current_branch_name)' branch"
+  local branch_name=$(get_current_branch_name)
+  if [ "$(rebase_in_progress)" = true ]; then
+    branch_name="$(rebasing_branch_name)"
+  fi
+
+  echo "To skip the sync of the '$branch_name' branch"
 }
 
 
 function skippable {
-  if [ "$(get_current_branch_name)" != "$main_branch_name" ]; then
-    echo true
-  else
+  if [ "$(rebase_in_progress)" = true ] && [ "$(rebasing_branch_name)" = "$main_branch_name" ]; then
     echo false
+  else
+    echo true
   fi
 }
 

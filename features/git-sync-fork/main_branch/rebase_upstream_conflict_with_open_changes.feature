@@ -9,6 +9,13 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git sync-fork --abort".
+      To continue after you have resolved the conflicts, run "git sync-fork --continue".
+
+      """
 
 
   @finishes-with-non-empty-stash

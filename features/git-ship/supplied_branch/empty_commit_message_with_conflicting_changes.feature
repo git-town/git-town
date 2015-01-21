@@ -12,6 +12,12 @@ Feature: git ship: abort shipping the given feature branch by entering an empty 
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "main_file" and content: "conflicting content"
     When I run `git ship feature` and enter an empty commit message
+    Then it errors and the output ends with
+      """
+
+      Aborting ship due to empty commit message
+
+      """
 
 
   Scenario: result

@@ -30,3 +30,12 @@ function rebase_in_progress {
     echo false
   fi
 }
+
+
+# Determines what branch is being rebased
+#
+# Only call when rebase_in_progress is true
+function rebasing_branch_name {
+  sed 's/^refs\/heads\///' < .git/rebase-apply/head-name
+}
+

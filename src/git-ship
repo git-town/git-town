@@ -6,8 +6,8 @@ function error_empty_commit {
   discard_open_changes
   undo_command
 
-  echo_error_header
-  echo_error "Aborting ship due to empty commit message"
+  echo
+  echo_red "Aborting ship due to empty commit message"
   exit_with_error
 }
 

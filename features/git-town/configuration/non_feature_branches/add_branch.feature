@@ -18,7 +18,7 @@ Feature: add a branch to the non-feature branches configuration
 
   Scenario: adding a branch that is already a non feature branch
     When I run `git town non-feature-branches --add qa`
-    Then I see
+    Then I get the error
       """
       error: 'qa' is already a non-feature branch
       """
@@ -26,7 +26,7 @@ Feature: add a branch to the non-feature branches configuration
 
   Scenario: adding a branch that does not exist
     When I run `git town non-feature-branches --add branch-does-not-exist`
-    Then I see
+    Then I get the error
       """
       error: no branch named 'branch-does-not-exist'
       """
@@ -34,7 +34,7 @@ Feature: add a branch to the non-feature branches configuration
 
   Scenario: not providing a branch name
     When I run `git town non-feature-branches --add`
-    Then I see
+    Then I get the error
       """
       error: missing branch name
       usage: git town non-feature-branches (--add | --remove) <branchname>

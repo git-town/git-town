@@ -11,6 +11,13 @@ Feature: Git Ship: resolving conflicts between the supplied feature and main bra
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
     And I run `git ship feature -m "feature done"`
+    Then it errors and the output ends with
+      """
+
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+
+      """
 
 
   Scenario: result

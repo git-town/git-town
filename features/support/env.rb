@@ -40,9 +40,12 @@ Before do
   go_to_repository :developer
 end
 
+Before do
+  @error_expected = false
+end
 
 After do
-  expect(@result_with_unexpected_error).to be_nil
+  expect(@last_run_result.error).to be_falsy unless @error_expected
 end
 
 After '~@finishes-with-non-empty-stash' do
