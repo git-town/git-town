@@ -1,4 +1,4 @@
-Feature: git sync: syncing a non-feature branch pushes tags to the remote
+Feature: git sync: syncing the current non-feature branch pushes tags to the remote
 
   As a developer syncing a non-feature branch
   I want my tags to be published
