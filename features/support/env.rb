@@ -40,13 +40,16 @@ Before do
   go_to_repository :developer
 end
 
+
 Before do
   @error_expected = false
 end
 
+
 After do
   expect(@last_run_result.error).to be_falsy unless @error_expected
 end
+
 
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
