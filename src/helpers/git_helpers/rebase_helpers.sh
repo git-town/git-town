@@ -38,4 +38,3 @@ function rebase_in_progress {
 function rebasing_branch_name {
   sed 's/^refs\/heads\///' < .git/rebase-apply/head-name
 }
-
