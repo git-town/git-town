@@ -16,11 +16,20 @@ Feature: add a branch to the non-feature branches configuration
     And my non-feature branches are now configured as "qa" and "staging"
 
 
-  Scenario: adding a branch that is already a non feature branch
+  Scenario: adding a branch that is already a non-feature branch
     When I run `git town non-feature-branches --add qa` while allowing errors
     Then I see
       """
       error: 'qa' is already a non-feature branch
+      """
+
+
+  Scenario: adding a branch that is already set as the main branch
+    Given I have configured the main branch name as "staging"
+    When I run `git town non-feature-branches --add staging` while allowing errors
+    Then I see
+      """
+      error: 'staging' is already set as the main branch
       """
 
 

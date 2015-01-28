@@ -21,6 +21,9 @@ function add_non_feature_branch {
   elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
     echo_inline_error "'$branch_name' is already a non-feature branch"
     exit 1
+  elif [ "$branch_name" == "$main_branch_name" ]; then
+    echo_inline_error "'$branch_name' is already set as the main branch"
+    exit 1
   else
     local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
@@ -52,7 +55,7 @@ function ensure_valid_non_feature_branches {
   split_string "$branches" ',' | while read branch; do
     if [[ "$branch" == "$main_branch_name" ]]; then
       echo_error_header
-      echo_error "'$branch_name' is already set as the main branch."
+      echo_error "'$branch_name' is already set as the main branch"
       exit_with_error
     fi
   done
