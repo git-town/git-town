@@ -45,6 +45,20 @@ function add_or_remove_non_feature_branches {
 }
 
 
+# Ensure that non-feature branches don't contain main branch
+function ensure_valid_non_feature_branches {
+  local branches=$1
+
+  split_string "$branches" ',' | while read branch; do
+    if [[ "$branch" == "$main_branch_name" ]]; then
+      echo_error_header
+      echo_error "'$branch_name' is already set as the main branch."
+      exit_with_error
+    fi
+  done
+}
+
+
 # Returns git-town configuration
 function get_configuration {
   local config_setting_name=$1
@@ -120,7 +134,8 @@ function setup_configuration_non_feature_branches {
   read non_feature_input
 
   if [[ -n "$non_feature_input" ]]; then
-    ensure_has_branches "$non_feature_input"
+    ensure_has_branches "$non_feature_input" &&
+    ensure_valid_non_feature_branches "$non_feature_input"
   fi
 
   if [ $? -eq 0 ]; then
