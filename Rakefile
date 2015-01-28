@@ -2,6 +2,7 @@ desc 'Run linters and feature tests'
 task default: %w(lint test)
 
 
+# Formatters
 desc 'Run formatters'
 task format: %w(format:cucumber)
 
@@ -11,6 +12,7 @@ task 'format:cucumber' do
 end
 
 
+# Linters
 desc 'Run linters'
 task lint: %w(lint:bash lint:ruby lint:cucumber)
 
@@ -30,6 +32,7 @@ task 'lint:cucumber' do
 end
 
 
+# Feature tests
 desc 'Run feature tests'
 task :test do
   sh 'bin/cuke'
