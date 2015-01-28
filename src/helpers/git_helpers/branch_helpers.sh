@@ -61,9 +61,7 @@ function ensure_has_branches {
   local branches=$1
 
   split_string "$branches" ',' | while read branch; do
-    if [ "$(has_branch "$branch")" == false ]; then
-      ensure_has_branch "$branch"
-    fi
+    ensure_has_branch "$branch"
   done
 }
 

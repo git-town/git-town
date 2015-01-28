@@ -53,7 +53,6 @@ Feature: Initial configuration
         Error
         There is no branch named 'invalidbranch'
 
-
       """
     And the main branch name is now configured as "master"
     And my non-feature branches are still not configured

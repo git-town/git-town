@@ -30,8 +30,8 @@ def git_town_command? command
 end
 
 
-def output_of command
-  run(command).out.strip
+def output_of command, allow_failures: false
+  run(command, allow_failures: allow_failures).out.strip
 end
 
 

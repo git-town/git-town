@@ -107,10 +107,7 @@ function setup_configuration_main_branch {
   fi
 
   ensure_has_branch "$main_branch_input"
-
-  if [ $? -eq 0 ]; then
-    store_configuration main-branch-name "$main_branch_input"
-  fi
+  store_configuration main-branch-name "$main_branch_input"
 }
 
 
@@ -123,8 +120,10 @@ function setup_configuration_non_feature_branches {
   read non_feature_input
 
   ensure_has_branches "$non_feature_input"
-  echo
-  store_configuration non-feature-branch-names "$non_feature_input"
+
+  if [ $? -eq 0 ]; then
+    store_configuration non-feature-branch-names "$non_feature_input"
+  fi
 }
 
 
