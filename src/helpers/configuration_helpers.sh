@@ -52,6 +52,16 @@ function get_configuration {
 }
 
 
+# Returns whether or not Git Town is configured
+function is_git_town_configured {
+  if [ -n "$main_branch_name" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 # Remove all Git Town configuration
 function remove_all_configuration {
   git config --remove-section git-town > /dev/null 2>&1
@@ -75,13 +85,47 @@ function remove_non_feature_branch {
   fi
 }
 
+
+#
+function setup_configuration {
+  # Ask and store main-branch-name, if it isn't known yet.
+  if [[ -z "$main_branch_name" ]]; then
+    echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
+    read main_branch_name
+    if [[ -z "$main_branch_name" ]]; then
+      echo_error_header
+      echo_error "You have not provided the name for the main branch."
+      echo_error "This information is necessary to run this script."
+      echo_error "Please try again."
+      exit_with_error
+    fi
+    echo
+    store_configuration main-branch-name "$main_branch_name"
+  fi
+
+  # Ask and store non-feature-branch-names, if needed
+  if [[ -z "$non_feature_branch_names" ]]; then
+    echo
+    echo "Git Town supports non-feature branches like 'release' or 'production'."
+    echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
+    echo "Please enter the names of all your non-feature branches as a comma separated list."
+    echo "Example: 'qa, production'"
+    read non_feature_branch_names
+    echo
+    store_configuration non-feature-branch-names "$non_feature_branch_names"
+  fi
+}
+
+
 # Reset git town configuration for repository if flag is passed,
 # otherwise show the config
-function show_or_reset_config {
+function show_or_setup_or_reset_config {
   local operation=$1
 
   if [ -n "$operation" ]; then
-    if [ "$operation" == "--reset" ]; then
+    if [ "$operation" == "--setup" ]; then
+      setup_configuration
+    elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
       echo "Your Git Town settings have been reset for this repository"
     else

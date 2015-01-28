@@ -15,7 +15,7 @@ function show_version {
 if [ "$1" == "config" ]; then
   ensure_git_repository
   shift
-  show_or_reset_config "$@"
+  show_or_setup_or_reset_config "$@"
 elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
   shift
@@ -31,7 +31,7 @@ elif [ -z "$1" ] || [ "$1" == "help" ]; then
 elif [ -n "$1" ]; then
   echo_inline_error "unsupported subcommand '$1'"
   echo_inline_usage "git town"
-  echo_inline_usage_or "git town config"
+  echo_inline_usage_or "git town config [--reset | --setup]"
   echo_inline_usage_or "git town help"
   echo_inline_usage_or "git town main-branch [<branchname>]"
   echo_inline_usage_or "git town non-feature-branches [(--add | --remove) <branchname>]"
