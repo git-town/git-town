@@ -48,6 +48,11 @@ Then(/^my non-feature branches are now configured as (.*)$/) do |data|
 end
 
 
-Then(/^Git Town is no longer configured for this repository$/) do
+Then(/^my non\-feature branches are still not configured$/) do
+  expect(non_feature_branch_configuration.split(',')).to be_empty
+end
+
+
+Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
   expect(run('git config --get-regex git-town', allow_failures: true).out).to eql ''
 end

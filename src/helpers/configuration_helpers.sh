@@ -88,32 +88,43 @@ function remove_non_feature_branch {
 
 #
 function setup_configuration {
-  # Ask and store main-branch-name, if it isn't known yet.
-  if [[ -z "$main_branch_name" ]]; then
-    echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
-    read main_branch_name
-    if [[ -z "$main_branch_name" ]]; then
-      echo_error_header
-      echo_error "You have not provided the name for the main branch."
-      echo_error "This information is necessary to run this script."
-      echo_error "Please try again."
-      exit_with_error
-    fi
-    echo
-    store_configuration main-branch-name "$main_branch_name"
+  setup_configuration_main_branch
+  echo
+  setup_configuration_non_feature_branches
+}
+
+
+function setup_configuration_main_branch {
+  # Ask and store main-branch-name
+  echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
+  read main_branch_input
+  if [[ -z "$main_branch_input" ]]; then
+    echo_error_header
+    echo_error "You have not provided the name for the main branch."
+    echo_error "This information is necessary to run this script."
+    echo_error "Please try again."
+    exit_with_error
   fi
 
-  # Ask and store non-feature-branch-names, if needed
-  if [[ -z "$non_feature_branch_names" ]]; then
-    echo
-    echo "Git Town supports non-feature branches like 'release' or 'production'."
-    echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
-    echo "Please enter the names of all your non-feature branches as a comma separated list."
-    echo "Example: 'qa, production'"
-    read non_feature_branch_names
-    echo
-    store_configuration non-feature-branch-names "$non_feature_branch_names"
+  ensure_has_branch "$main_branch_input"
+
+  if [ $? -eq 0 ]; then
+    store_configuration main-branch-name "$main_branch_input"
   fi
+}
+
+
+function setup_configuration_non_feature_branches {
+  # Ask and store non-feature-branch-names
+  echo "Git Town supports non-feature branches like 'release' or 'production'."
+  echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
+  echo "Please enter the names of all your non-feature branches as a comma separated list."
+  echo "Example: 'qa, production'"
+  read non_feature_input
+
+  ensure_has_branches "$non_feature_input"
+  echo
+  store_configuration non-feature-branch-names "$non_feature_input"
 }
 
 
@@ -129,7 +140,7 @@ function show_or_setup_or_reset_config {
       remove_all_configuration
       echo "Your Git Town settings have been reset for this repository"
     else
-      echo "usage: git town config (--reset)"
+      echo "usage: git town config [--reset | --setup]"
     fi
   else
     show_config
