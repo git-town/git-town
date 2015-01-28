@@ -119,7 +119,9 @@ function setup_configuration_non_feature_branches {
   echo "Example: 'qa, production'"
   read non_feature_input
 
-  ensure_has_branches "$non_feature_input"
+  if [[ -n "$non_feature_input" ]]; then
+    ensure_has_branches "$non_feature_input"
+  fi
 
   if [ $? -eq 0 ]; then
     store_configuration non-feature-branch-names "$non_feature_input"
