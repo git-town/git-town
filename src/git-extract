@@ -6,7 +6,7 @@ function ensure_has_shas {
   if [ -z "$SHAs" ]; then
     echo_error_header
     echo_error "Nothing selected, aborting extract."
-    exit_with_error
+    echo_and_exit_with_error
   fi
 }
 
@@ -15,7 +15,7 @@ function ensure_has_target_branch {
   if [ -z "$target_branch_name" ]; then
     echo_error_header
     echo_error "No branch name provided."
-    exit_with_error
+    echo_and_exit_with_error
   fi
 }
 

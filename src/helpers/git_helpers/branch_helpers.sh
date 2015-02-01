@@ -39,7 +39,7 @@ function ensure_does_not_have_branch {
   if [ "$(has_branch "$branch_name")" = true ]; then
     echo_error_header
     echo_error "A branch named '$branch_name' already exists"
-    exit_with_error
+    echo_and_exit_with_error
   fi
 }
 
@@ -51,7 +51,7 @@ function ensure_has_branch {
   if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
     echo_error "There is no branch named '$branch_name'"
-    exit_with_error
+    echo_and_exit_with_error
   fi
 }
 

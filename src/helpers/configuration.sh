@@ -30,7 +30,7 @@ if [[ -z "$main_branch_name" ]]; then
     echo_error "You have not provided the name for the main branch."
     echo_error "This information is necessary to run this script."
     echo_error "Please try again."
-    exit_with_error
+    echo_and_exit_with_error
   fi
   echo
   store_configuration main-branch-name "$main_branch_name"

@@ -19,5 +19,5 @@ function open_browser {
   echo_error "Opening a browser requires 'open' on Mac or 'xdg-open' on Linux."
   echo_error "If you would like another command to be supported,"
   echo_error "please open an issue at https://github.com/Originate/git-town/issues"
-  exit_with_error
+  echo_and_exit_with_error
 }

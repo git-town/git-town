@@ -96,15 +96,14 @@ function echo_usage_header {
 
 # Exits the currently running script with an error response code.
 function exit_with_error {
-  echo
   exit 1
 }
 
 
-# Exits the currently running script with a success response code
-function exit_with_success {
+# Prints a newline and exits with an error
+function echo_and_exit_with_error {
   echo
-  exit 0
+  exit_with_error
 }
 
 
