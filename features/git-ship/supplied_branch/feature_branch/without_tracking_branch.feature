@@ -12,7 +12,7 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "main_file" and content: "conflicting content"
+    Given I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature -m "feature done"`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
@@ -32,7 +32,7 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
       | main          | git checkout other_feature         |
       | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "main_file" and content: "conflicting content"
+    And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
     And there is no "feature" branch
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |

@@ -13,7 +13,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "main_file" and content: "conflicting content"
+    Given I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
       | BRANCH        | COMMAND                               |
@@ -35,7 +35,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       | other_feature | git stash pop                         |
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch
-    And I still have an uncommitted file with name: "main_file" and content: "conflicting content"
+    And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
     And I am left with my original commits
 
 
