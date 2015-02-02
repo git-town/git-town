@@ -1,4 +1,4 @@
-Feature: Git Sync: handling merge conflicts between feature and main branch when syncing a feature branch with open changes
+Feature: git sync: resolving conflicts between the current feature branch and the main branch (with open changes)
 
   Background:
     Given I have a feature branch named "feature"

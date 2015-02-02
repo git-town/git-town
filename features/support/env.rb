@@ -3,40 +3,50 @@ require 'kappamaki'
 require 'open4'
 require 'rspec'
 
+
 SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
+MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
-Before do
-  Dir.chdir REPOSITORY_BASE
-  FileUtils.rm_rf Dir.glob("#{REPOSITORY_BASE}/*")
 
-  # Create origin repository
-  create_repository :origin
+# load memoized environment by copying contents
+# of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
+def setup_environment
+  FileUtils.rm_rf REPOSITORY_BASE
+  FileUtils.cp_r "#{MEMOIZED_REPOSITORY_BASE}/.", REPOSITORY_BASE
+end
 
-  # Create the local repository
-  clone_repository :origin, :developer
 
-  # Create the main branch
-  in_repository :developer do
-    run 'touch .gitignore ; git add .gitignore ; git commit -m "Initial commit"; git push -u origin master'
-    run 'git checkout -b main master ; git push -u origin main'
-  end
-
-  # Set main as the default branch
-  in_repository :origin do
+def initialize_environment
+  # Create origin repo and set "main" as default branch
+  create_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
   end
 
-  # Fetch the default branch, delete master
+  clone_repository :origin, :developer
+
+  # Initialize main branch
   in_repository :developer do
-    run 'git fetch'
-    run 'git push origin :master'
-    run 'git branch -d master'
+    run 'git checkout --orphan main'
+    run 'git commit --allow-empty -m "Initial commit"'
+    run 'git push -u origin main'
   end
 
+  # memoize environment by saving directory contents
+  FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
+end
+
+
+AfterConfiguration do
+  initialize_environment
+end
+
+
+Before do
+  setup_environment
   go_to_repository :developer
 end
 
@@ -58,4 +68,5 @@ end
 
 at_exit do
   FileUtils.rm_rf REPOSITORY_BASE
+  FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end

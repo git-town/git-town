@@ -9,10 +9,11 @@ end
 
 
 # Create a repository for the given identifier
-def create_repository identifier
+def create_repository identifier, &block
   path = repository_path identifier
   Dir.mkdir path
   run "git init --bare #{path}"
+  at_path path, &block
 end
 
 
