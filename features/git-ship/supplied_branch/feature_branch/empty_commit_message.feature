@@ -1,6 +1,6 @@
 Feature: git ship: aborting the ship of the supplied feature branch by entering an empty commit message
 
-  (see ../current_branch/empty_commit_message.feature)
+  (see ../../current_branch/on_feature_branch/without_open_changes/empty_commit_message.feature)
 
 
   Background:

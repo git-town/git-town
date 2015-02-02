@@ -1,6 +1,6 @@
 Feature: git ship: errors when trying to ship the supplied feature branch that has no differences with the main branch
 
-  (see ../current_branch/on_feature_branch/no_diff.feature)
+  (see ../../current_branch/on_feature_branch/without_open_changes/no_diff.feature)
 
 
   Background:
