@@ -35,6 +35,3 @@ Feature: git ship: shipping the current feature branch
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE                            | FILE NAME    |
       | main   | local and remote | message containing "double quotes" | feature_file |
-    And now I have the following committed files
-      | BRANCH | FILES        |
-      | main   | feature_file |
