@@ -9,14 +9,6 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
     When I run `git sync`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature' branch, run "git sync --skip".
-
-      """
 
 
   Scenario: result
@@ -29,6 +21,12 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+      """
     And I am still on the "feature" branch
     And my repo has a merge in progress
 

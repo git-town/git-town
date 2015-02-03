@@ -8,13 +8,6 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       |        | local    | local commit    | conflicting_file | local content    |
     And I am on the "main" branch
     When I run `git sync-fork`
-    Then I get the error
-      """
-
-      To abort, run "git sync-fork --abort".
-      To continue after you have resolved the conflicts, run "git sync-fork --continue".
-
-      """
 
 
   Scenario: result
@@ -22,6 +15,11 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | BRANCH | COMMAND                  |
       | main   | git fetch upstream       |
       | main   | git rebase upstream/main |
+    Then I get the error
+      """
+      To abort, run "git sync-fork --abort".
+      To continue after you have resolved the conflicts, run "git sync-fork --continue".
+      """
     And my repo has a rebase in progress
 
 

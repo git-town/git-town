@@ -10,13 +10,6 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync --all`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -26,6 +19,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main   | git fetch --prune      |
       | main   | git stash -u           |
       | main   | git rebase origin/main |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a rebase in progress
 

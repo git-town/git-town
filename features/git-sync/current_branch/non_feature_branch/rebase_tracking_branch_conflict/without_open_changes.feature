@@ -11,14 +11,6 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     When I run `git sync`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'qa' branch, run "git sync --skip".
-
-      """
 
 
   Scenario: result
@@ -26,6 +18,12 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       | qa     | git rebase origin/qa |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'qa' branch, run "git sync --skip".
+      """
     And my repo has a rebase in progress
 
 

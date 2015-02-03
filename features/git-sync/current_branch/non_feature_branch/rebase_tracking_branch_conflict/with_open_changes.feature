@@ -15,14 +15,6 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'qa' branch, run "git sync --skip".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -32,6 +24,12 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | qa     | git fetch --prune    |
       | qa     | git stash -u         |
       | qa     | git rebase origin/qa |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'qa' branch, run "git sync --skip".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 

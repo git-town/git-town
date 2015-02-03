@@ -11,13 +11,6 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
     When I run `git sync`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-
-      """
 
 
   Scenario: result
@@ -26,6 +19,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | feature | git fetch --prune      |
       | feature | git checkout main      |
       | main    | git rebase origin/main |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
 
 

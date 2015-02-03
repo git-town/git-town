@@ -14,13 +14,6 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -31,6 +24,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | feature | git stash -u           |
       | feature | git checkout main      |
       | main    | git rebase origin/main |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 

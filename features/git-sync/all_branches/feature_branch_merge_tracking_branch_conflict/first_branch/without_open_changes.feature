@@ -10,14 +10,6 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature2 | local and remote | feature2 commit        | feature2_file    | feature2 content        |
     And I am on the "main" branch
     When I run `git sync --all`
-    Then I get the error
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature1' branch, run "git sync --skip".
-
-      """
 
 
   Scenario: result
@@ -27,6 +19,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | main     | git rebase origin/main              |
       | main     | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
+    Then I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature1' branch, run "git sync --skip".
+      """
     And I end up on the "feature1" branch
     And my repo has a merge in progress
 
