@@ -15,7 +15,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

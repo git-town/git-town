@@ -13,13 +13,6 @@ Feature: git ship: resolving conflicts between feature and main branch
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
     And I run `git ship -m "feature done"`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git ship --abort".
-      To continue after you have resolved the conflicts, run "git ship --continue".
-
-      """
 
 
   Scenario: result
@@ -32,6 +25,11 @@ Feature: git ship: resolving conflicts between feature and main branch
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And I am still on the "feature" branch
     And my repo has a merge in progress
 

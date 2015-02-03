@@ -10,7 +10,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature2 | local and remote | feature2 commit        | feature2_file    | feature2 content        |
     And I am on the "main" branch
     When I run `git sync --all`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

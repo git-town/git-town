@@ -9,7 +9,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     When I run `git sync --all`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

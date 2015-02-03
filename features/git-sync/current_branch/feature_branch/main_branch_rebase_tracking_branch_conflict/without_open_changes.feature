@@ -11,7 +11,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
     When I run `git sync`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

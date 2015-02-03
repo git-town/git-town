@@ -16,13 +16,6 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git extract --abort".
-      To continue after you have resolved the conflicts, run "git extract --continue".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -33,6 +26,11 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | feature | git stash -u           |
       | feature | git checkout main      |
       | main    | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git extract --abort".
+      To continue after you have resolved the conflicts, run "git extract --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 

@@ -14,7 +14,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

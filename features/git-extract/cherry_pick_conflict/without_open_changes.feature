@@ -12,13 +12,6 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
     When I run `git extract refactor` with the last commit sha
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git extract --abort".
-      To continue after you have resolved the conflicts, run "git extract --continue".
-
-      """
 
 
   Scenario: result
@@ -30,6 +23,11 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | main     | git push                              |
       | main     | git checkout -b refactor main         |
       | refactor | git cherry-pick [SHA:refactor commit] |
+    And I get the error
+      """
+      To abort, run "git extract --abort".
+      To continue after you have resolved the conflicts, run "git extract --continue".
+      """
     And I end up on the "refactor" branch
     And my repo has a cherry-pick in progress
 

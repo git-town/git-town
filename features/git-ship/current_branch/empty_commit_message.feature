@@ -11,12 +11,6 @@ Feature: git ship: aborting the shipping process by entering an empty commit mes
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run `git ship` and enter an empty commit message
-    Then it errors and the output ends with
-      """
-
-      Aborting ship due to empty commit message
-
-      """
 
 
   Scenario: result

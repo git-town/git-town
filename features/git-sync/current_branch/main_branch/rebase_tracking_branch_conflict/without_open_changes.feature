@@ -10,7 +10,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     When I run `git sync`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".

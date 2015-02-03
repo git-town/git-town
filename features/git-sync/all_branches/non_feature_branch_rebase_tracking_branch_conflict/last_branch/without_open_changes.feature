@@ -11,7 +11,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
     When I run `git sync --all`
-    Then it errors and the output ends with
+    Then I get the error
       """
 
       To abort, run "git sync --abort".
