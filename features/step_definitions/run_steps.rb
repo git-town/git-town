@@ -31,7 +31,7 @@ end
 
 
 Then(/^I get the error$/) do |str|
-  verify_error str
+  verify_error str.strip
 end
 
 

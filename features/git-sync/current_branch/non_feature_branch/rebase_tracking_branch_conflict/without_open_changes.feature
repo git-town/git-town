@@ -18,7 +18,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       | qa     | git rebase origin/qa |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".

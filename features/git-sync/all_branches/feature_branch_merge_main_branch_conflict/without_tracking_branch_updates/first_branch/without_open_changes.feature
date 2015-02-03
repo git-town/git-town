@@ -19,7 +19,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | main     | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
       | feature1 | git merge --no-edit main            |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".

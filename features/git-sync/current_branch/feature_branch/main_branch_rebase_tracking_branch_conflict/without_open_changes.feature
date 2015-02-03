@@ -19,7 +19,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | feature | git fetch --prune      |
       | feature | git checkout main      |
       | main    | git rebase origin/main |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".

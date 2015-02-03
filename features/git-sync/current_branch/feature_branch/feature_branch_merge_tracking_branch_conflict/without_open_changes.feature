@@ -21,7 +21,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
       | main    | git rebase origin/main             |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".

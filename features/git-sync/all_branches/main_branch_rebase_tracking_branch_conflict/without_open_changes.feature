@@ -16,7 +16,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       | main   | git rebase origin/main |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".

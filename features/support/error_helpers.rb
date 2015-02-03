@@ -1,6 +1,5 @@
 def verify_error message
   @error_expected = true
-  message.strip!
 
   expect(@last_run_result.error).to be_truthy
   expect(unformatted_last_run_output.strip).to include(message), %(

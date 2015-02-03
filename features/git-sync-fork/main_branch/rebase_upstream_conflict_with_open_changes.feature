@@ -18,7 +18,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git stash -u             |
       | main   | git fetch upstream       |
       | main   | git rebase upstream/main |
-    Then I get the error
+    And I get the error
       """
       To abort, run "git sync-fork --abort".
       To continue after you have resolved the conflicts, run "git sync-fork --continue".
