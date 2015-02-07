@@ -96,14 +96,10 @@ function echo_usage_header {
 
 # Exits the currently running script with an error response code.
 function exit_with_error {
+  if [ "$1" = "newline" ]; then
+    echo
+  fi
   exit 1
-}
-
-
-# Prints a newline and exits with an error
-function echo_and_exit_with_error {
-  echo
-  exit_with_error
 }
 
 

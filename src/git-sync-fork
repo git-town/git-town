@@ -6,7 +6,7 @@ function ensure_has_upstream {
   if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
     echo_error_header
     echo_error "Please add a remote 'upstream'"
-    echo_and_exit_with_error
+    exit_with_error newline
   fi
 }
 

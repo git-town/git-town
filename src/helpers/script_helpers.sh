@@ -71,7 +71,7 @@ function exit_with_messages {
     if [ "$(skippable)" = true ]; then
       echo_red "$(skip_message_prefix), run \"$git_command --skip\"."
     fi
-    echo_and_exit_with_error
+    exit_with_error newline
   fi
 }
 

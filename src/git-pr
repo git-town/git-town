@@ -20,7 +20,7 @@ elif [ "$domain" == bitbucket.org ]; then
 else
   echo_error_header
   echo_usage "Unsupported hosting service. Pull requests can only be created on Bitbucket and GitHub"
-  echo_and_exit_with_error
+  exit_with_error newline
 fi
 
 open_browser "https://$domain/$repository/$pr_path"
