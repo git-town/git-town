@@ -13,13 +13,6 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git ship feature -m "feature done"`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git ship --abort".
-      To continue after you have resolved the conflicts, run "git ship --continue".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -30,6 +23,11 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
       | other_feature | git checkout main      |
       | main          | git fetch --prune      |
       | main          | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 

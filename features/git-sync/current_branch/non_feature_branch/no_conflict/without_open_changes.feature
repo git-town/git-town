@@ -1,8 +1,6 @@
-Feature: git sync: syncing a non-feature branch (with open changes)
+Feature: git sync: syncing the current non-feature branch (without open changes)
 
-  As a developer syncing a non-feature branch
-  I want to be able update my ongoing work to include the latest finished features from the rest of the team
-  So that our collaboration remains effective.
+  (see ./with_open_changes.feature)
 
 
   Background:
@@ -14,7 +12,6 @@ Feature: git sync: syncing a non-feature branch (with open changes)
       | qa     | local            | local commit  | local_file  |
       |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
 
 
@@ -22,13 +19,10 @@ Feature: git sync: syncing a non-feature branch (with open changes)
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      | qa     | git stash -u         |
       | qa     | git rebase origin/qa |
       | qa     | git push             |
       | qa     | git push --tags      |
-      | qa     | git stash pop        |
     And I am still on the "qa" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

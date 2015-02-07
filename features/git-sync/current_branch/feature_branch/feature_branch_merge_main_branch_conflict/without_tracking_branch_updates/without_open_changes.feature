@@ -1,4 +1,4 @@
-Feature: Git Sync: handling merge conflicts between feature and main branch when syncing a feature branch without open changes
+Feature: git sync: resolving conflicts between the current feature branch and the main branch (without open changes)
 
   Background:
     Given I have a feature branch named "feature"
@@ -6,17 +6,8 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
-      |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
     When I run `git sync`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature' branch, run "git sync --skip".
-
-      """
 
 
   Scenario: result
@@ -29,6 +20,12 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+      """
     And I am still on the "feature" branch
     And my repo has a merge in progress
 
@@ -36,18 +33,16 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git merge --abort                                 |
-      | feature | git reset --hard [SHA:conflicting feature commit] |
-      | feature | git checkout main                                 |
-      | main    | git checkout feature                              |
+      | BRANCH  | COMMAND              |
+      | feature | git merge --abort    |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
-      |         | remote           | feature commit             | feature_file     | feature content |
 
 
   Scenario: continuing without resolving conflicts
@@ -67,18 +62,15 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | git push             |
     And I am still on the "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit                                    | conflicting_file |
-      | feature | local and remote | conflicting feature commit                                 | conflicting_file |
-      |         |                  | feature commit                                             | feature_file     |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      |         |                  | conflicting main commit                                    | conflicting_file |
-      |         |                  | Merge branch 'main' into feature                           |                  |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | main    | local and remote | conflicting main commit          | conflicting_file |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
+      |         |                  | conflicting main commit          | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-      | feature | feature_file     | feature content  |
 
 
   Scenario: continuing after resolving conflicts and comitting
@@ -89,15 +81,12 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | git push |
     And I am still on the "feature" branch
     And I still have the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit                                    | conflicting_file |
-      | feature | local and remote | conflicting feature commit                                 | conflicting_file |
-      |         |                  | feature commit                                             | feature_file     |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-      |         |                  | conflicting main commit                                    | conflicting_file |
-      |         |                  | Merge branch 'main' into feature                           |                  |
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | main    | local and remote | conflicting main commit          | conflicting_file |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
+      |         |                  | conflicting main commit          | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
       | BRANCH  | FILES            | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
-      | feature | feature_file     | feature content  |

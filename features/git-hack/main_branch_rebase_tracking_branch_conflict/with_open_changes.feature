@@ -14,13 +14,6 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     And I am on the "existing_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack new_feature`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git hack --abort".
-      To continue after you have resolved the conflicts, run "git hack --continue".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -31,6 +24,11 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | existing_feature | git stash -u           |
       | existing_feature | git checkout main      |
       | main             | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git hack --abort".
+      To continue after you have resolved the conflicts, run "git hack --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 

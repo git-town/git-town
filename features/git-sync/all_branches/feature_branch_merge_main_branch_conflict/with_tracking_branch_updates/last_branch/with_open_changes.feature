@@ -11,14 +11,6 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync --all`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature2' branch, run "git sync --skip".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -35,6 +27,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature1 | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
       | feature2 | git merge --no-edit main            |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature2' branch, run "git sync --skip".
+      """
     And I end up on the "feature2" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress

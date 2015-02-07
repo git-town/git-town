@@ -9,13 +9,6 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     When I run `git sync --all`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-
-      """
 
 
   Scenario: result
@@ -23,6 +16,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       | main   | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
 
 

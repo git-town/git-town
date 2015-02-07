@@ -11,13 +11,6 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       |        | local    | conflicting local commit  | conflicting_file | local content  |
     And I am on the "existing_feature" branch
     When I run `git hack new_feature`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git hack --abort".
-      To continue after you have resolved the conflicts, run "git hack --continue".
-
-      """
 
 
   Scenario: result
@@ -26,6 +19,11 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | existing_feature | git fetch --prune      |
       | existing_feature | git checkout main      |
       | main             | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git hack --abort".
+      To continue after you have resolved the conflicts, run "git hack --continue".
+      """
     And my repo has a rebase in progress
 
 

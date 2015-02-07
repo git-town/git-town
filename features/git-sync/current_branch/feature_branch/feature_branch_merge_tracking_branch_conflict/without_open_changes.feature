@@ -1,4 +1,4 @@
-Feature: git sync: resolving conflicting remote feature branch updates when syncing a feature branch without open changes
+Feature: git sync: resolving conflicts between the current feature branch and its tracking branch (without open changes)
 
   (see ./pull_feature_branch_conflict_with_open_changes.feature)
 
@@ -11,15 +11,6 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
     And I am on the "feature" branch
     When I run `git sync`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature' branch, run "git sync --skip".
-
-      """
-
 
 
   Scenario: result
@@ -30,6 +21,12 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | main    | git rebase origin/main             |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+      """
     And I am still on the "feature" branch
     And my repo has a merge in progress
 

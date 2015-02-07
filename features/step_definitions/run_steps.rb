@@ -23,18 +23,15 @@ When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
 end
 
 
-Then(/^it errors and the output ends with$/) do |str|
-  verify_error :end_with, str + "\n"
-end
 
 
 Then(/^I get the error "(.+?)"$/) do |str|
-  verify_error :include, str
+  verify_error str
 end
 
 
 Then(/^I get the error$/) do |str|
-  verify_error :eql, str + "\n"
+  verify_error str.strip
 end
 
 

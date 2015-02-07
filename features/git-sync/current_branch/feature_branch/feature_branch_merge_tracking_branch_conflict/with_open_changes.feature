@@ -1,4 +1,4 @@
-Feature: git sync: resolving conflicting remote feature branch updates when syncing a feature branch with open changes
+Feature: git sync: resolving conflicts between the current feature branch and its tracking branch (with open changes)
 
   As a developer syncing a feature branch that conflicts with the tracking branch
   I want to be given the choice to resolve the conflicts or abort
@@ -14,14 +14,6 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git sync --abort".
-      To continue after you have resolved the conflicts, run "git sync --continue".
-      To skip the sync of the 'feature' branch, run "git sync --skip".
-
-      """
 
 
   @finishes-with-non-empty-stash
@@ -34,6 +26,12 @@ Feature: git sync: resolving conflicting remote feature branch updates when sync
       | main    | git rebase origin/main             |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+      """
     And I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress

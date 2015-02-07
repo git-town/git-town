@@ -45,7 +45,7 @@ end
 
 def run command, debug: false, input: nil
   result = run_shell_command command, input
-  is_git_town_command = git_town_command?(command)
+  is_git_town_command = git_town_command? command
   raise_error = (!is_git_town_command && result.error) || result_has_shell_error?(result)
 
   print_result(result) if raise_error || should_print_command_output?(command, debug)

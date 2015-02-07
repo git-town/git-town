@@ -12,13 +12,6 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
     And I run `git ship feature -m "feature done"`
-    Then it errors and the output ends with
-      """
-
-      To abort, run "git ship --abort".
-      To continue after you have resolved the conflicts, run "git ship --continue".
-
-      """
 
 
   Scenario: result
@@ -27,6 +20,11 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | other_feature | git checkout main      |
       | main          | git fetch --prune      |
       | main          | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And my repo has a rebase in progress
 
 
