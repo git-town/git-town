@@ -28,7 +28,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
@@ -49,7 +49,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |

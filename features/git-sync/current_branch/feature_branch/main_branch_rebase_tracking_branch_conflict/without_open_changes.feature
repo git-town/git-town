@@ -31,7 +31,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | HEAD   | git rebase --abort   |
+      | main   | git rebase --abort   |
       | main   | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
@@ -50,7 +50,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |

@@ -38,7 +38,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | qa   | git rebase --abort |
       | qa     | git stash pop      |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -60,7 +60,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | qa   | git rebase --continue |
       | qa     | git push              |
       | qa     | git push --tags       |
       | qa     | git stash pop         |

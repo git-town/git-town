@@ -31,7 +31,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
       | main   | git stash pop      |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -44,7 +44,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
       | main   | git stash pop         |
     And I end up on the "main" branch

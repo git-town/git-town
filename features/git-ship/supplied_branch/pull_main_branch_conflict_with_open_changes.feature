@@ -36,7 +36,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     When I run `git ship --abort`
     Then it runs the Git commands
       | BRANCH        | COMMAND                    |
-      | HEAD          | git rebase --abort         |
+      | main          | git rebase --abort         |
       | main          | git checkout other_feature |
       | other_feature | git stash pop              |
     And I am still on the "other_feature" branch
@@ -50,7 +50,7 @@ Feature: git ship: resolving main branch updates when shipping a given feature b
     When I run `git ship --continue`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | HEAD          | git rebase --continue              |
+      | main          | git rebase --continue              |
       | main          | git push                           |
       | main          | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |

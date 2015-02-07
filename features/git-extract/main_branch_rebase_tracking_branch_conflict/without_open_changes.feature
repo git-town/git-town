@@ -33,7 +33,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | HEAD   | git rebase --abort   |
+      | main   | git rebase --abort   |
       | main   | git checkout feature |
     And I end up on the "feature" branch
     And there is no "refactor" branch
@@ -53,7 +53,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND                               |
-      | HEAD     | git rebase --continue                 |
+      | main     | git rebase --continue                 |
       | main     | git push                              |
       | main     | git checkout -b refactor main         |
       | refactor | git cherry-pick [SHA:refactor commit] |

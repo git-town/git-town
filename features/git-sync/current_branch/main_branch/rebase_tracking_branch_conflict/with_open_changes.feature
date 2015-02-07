@@ -35,7 +35,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
       | main   | git stash pop      |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -57,7 +57,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
       | main   | git push --tags       |
       | main   | git stash pop         |

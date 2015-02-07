@@ -37,7 +37,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     When I run `git hack --abort`
     Then it runs the Git commands
       | BRANCH           | COMMAND                       |
-      | HEAD             | git rebase --abort            |
+      | main             | git rebase --abort            |
       | main             | git checkout existing_feature |
       | existing_feature | git stash pop                 |
     And I end up on the "existing_feature" branch
@@ -59,7 +59,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     When I run `git hack --continue `
     Then it runs the Git commands
       | BRANCH      | COMMAND                          |
-      | HEAD        | git rebase --continue            |
+      | main        | git rebase --continue            |
       | main        | git push                         |
       | main        | git checkout -b new_feature main |
       | new_feature | git stash pop                    |

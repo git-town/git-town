@@ -35,7 +35,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH     | COMMAND                 |
-      | HEAD       | git rebase --abort      |
+      | qa       | git rebase --abort      |
       | qa         | git checkout production |
       | production | git checkout main       |
     And I end up on the "main" branch
@@ -51,7 +51,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --skip`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | qa   | git rebase --abort |
       | qa     | git checkout main  |
     And I end up on the "main" branch
     And I have the following commits
@@ -74,7 +74,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | qa   | git rebase --continue |
       | qa     | git push              |
       | qa     | git checkout main     |
     And I end up on the "main" branch

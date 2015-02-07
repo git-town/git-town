@@ -32,7 +32,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
     When I run `git ship --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND                    |
-      | HEAD   | git rebase --abort         |
+      | main   | git rebase --abort         |
       | main   | git checkout other_feature |
     And I am still on the "other_feature" branch
     And there is no rebase in progress
@@ -44,7 +44,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
     When I run `git ship --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
