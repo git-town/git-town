@@ -1,4 +1,4 @@
-Feature: git ship: don't ship empty features
+Feature: git ship: errors when trying to ship the current feature branch that has no differences with the main branch
 
   As a developer shipping a branch that has no differences with the main branch
   I should see an error telling me about this

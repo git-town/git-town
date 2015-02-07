@@ -1,25 +1,27 @@
-Feature: git ship: resolving conflicting main branch updates when shipping a given feature branch (without open changes)
+Feature: git ship: resolving conflicts between the main branch and its tracking branch
 
-  (see ../current_branch/pull_main_branch_conflict.feature)
+  As a developer shipping a branch while there are conflicts between the local and remote main branches
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
-    Given I have feature branches named "feature" and "other_feature"
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
-    And I am on the "other_feature" branch
-    And I run `git ship feature -m "feature done"`
+    And I am on the "feature" branch
+    When I run `git ship -m "feature done"`
 
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH        | COMMAND                |
-      | other_feature | git checkout main      |
-      | main          | git fetch --prune      |
-      | main          | git rebase origin/main |
+      | BRANCH  | COMMAND                |
+      | feature | git checkout main      |
+      | main    | git fetch --prune      |
+      | main    | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".
@@ -31,10 +33,10 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
   Scenario: aborting
     When I run `git ship --abort`
     Then it runs the Git commands
-      | BRANCH | COMMAND                    |
-      | main   | git rebase --abort         |
-      | main   | git checkout other_feature |
-    And I am still on the "other_feature" branch
+      | BRANCH | COMMAND              |
+      | main   | git rebase --abort   |
+      | main   | git checkout feature |
+    And I am still on the "feature" branch
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -55,8 +57,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
-      | main    | git checkout other_feature         |
-    And I end up on the "other_feature" branch
+    And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -80,8 +81,7 @@ Feature: git ship: resolving conflicting main branch updates when shipping a giv
       | main    | git push                           |
       | main    | git push origin :feature           |
       | main    | git branch -D feature              |
-      | main    | git checkout other_feature         |
-    And I end up on the "other_feature" branch
+    And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

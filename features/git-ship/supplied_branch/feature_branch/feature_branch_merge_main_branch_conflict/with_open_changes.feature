@@ -1,6 +1,6 @@
-Feature: Git Ship: resolving conflicts between the supplied feature and main branch (with open changes)
+Feature: git ship: resolving conflicts between the supplied feature branch and the main branch (with open changes)
 
-  (see ../current_branch/merge_main_branch_conflict.feature)
+  (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_main_branch_conflict.feature)
 
 
   Background:
