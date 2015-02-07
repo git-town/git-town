@@ -4,12 +4,13 @@
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.
-It extends Git to support
+It adds additional Git commands that support
 [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
-and other workflows better, and it allows you to perform many common tasks faster and easier.
+and other workflows more directly,
+and it allows you to perform many common Git operations faster and easier.
 
 Check out [the big picture](documentation/background.md) for more background on Git Town
 and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
