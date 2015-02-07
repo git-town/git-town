@@ -12,7 +12,7 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "empty-feature" branch
-    When I run `git ship` while allowing errors
+    When I run `git ship`
 
 
   Scenario: result

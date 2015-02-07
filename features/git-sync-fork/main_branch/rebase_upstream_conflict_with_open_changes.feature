@@ -8,7 +8,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       |        | local    | local commit    | conflicting_file | local content    |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync-fork` while allowing errors
+    When I run `git sync-fork`
 
 
   @finishes-with-non-empty-stash
@@ -18,6 +18,11 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | git stash -u             |
       | main   | git fetch upstream       |
       | main   | git rebase upstream/main |
+    And I get the error
+      """
+      To abort, run "git sync-fork --abort".
+      To continue after you have resolved the conflicts, run "git sync-fork --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
@@ -26,7 +31,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
       | main   | git stash pop      |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -39,7 +44,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
       | main   | git stash pop         |
     And I end up on the "main" branch

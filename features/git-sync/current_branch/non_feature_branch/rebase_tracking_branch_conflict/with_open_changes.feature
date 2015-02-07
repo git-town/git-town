@@ -14,7 +14,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync` while allowing errors
+    When I run `git sync`
 
 
   @finishes-with-non-empty-stash
@@ -24,6 +24,12 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       | qa     | git fetch --prune    |
       | qa     | git stash -u         |
       | qa     | git rebase origin/qa |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'qa' branch, run "git sync --skip".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
@@ -32,7 +38,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | qa     | git rebase --abort |
       | qa     | git stash pop      |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -42,7 +48,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"
@@ -54,7 +60,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | qa     | git rebase --continue |
       | qa     | git push              |
       | qa     | git push --tags       |
       | qa     | git stash pop         |

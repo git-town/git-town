@@ -9,7 +9,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
-    And I run `git sync` while allowing errors
+    When I run `git sync`
 
 
   @finishes-with-non-empty-stash
@@ -18,6 +18,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       | main   | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -25,7 +30,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
     And I am still on the "main" branch
     And there is no rebase in progress
     And I am left with my original commits
@@ -33,7 +38,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
@@ -44,7 +49,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
       | main   | git push --tags       |
     And I am still on the "main" branch

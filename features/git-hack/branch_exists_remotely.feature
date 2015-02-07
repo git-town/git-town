@@ -10,7 +10,7 @@ Feature: git hack: errors when the branch exists remotely
 
   Scenario: with open chanhes
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git hack existing_feature` while allowing errors
+    When I run `git hack existing_feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
@@ -20,7 +20,7 @@ Feature: git hack: errors when the branch exists remotely
 
 
   Scenario: without open changes
-    When I run `git hack existing_feature` while allowing errors
+    When I run `git hack existing_feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |

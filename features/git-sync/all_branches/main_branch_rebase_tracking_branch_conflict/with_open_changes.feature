@@ -9,7 +9,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all`
 
 
   @finishes-with-non-empty-stash
@@ -19,6 +19,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main   | git fetch --prune      |
       | main   | git stash -u           |
       | main   | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a rebase in progress
 
@@ -27,7 +32,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
       | main   | git stash pop      |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -40,7 +45,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"
@@ -52,7 +57,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |

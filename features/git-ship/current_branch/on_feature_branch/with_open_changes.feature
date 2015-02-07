@@ -9,7 +9,7 @@ Feature: git ship: errors if there are open changes
     Given I have a feature branch named "feature"
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I am on the "feature" branch
-    When I run `git ship -m "feature done"` while allowing errors
+    When I run `git ship -m "feature done"`
 
 
   Scenario: result

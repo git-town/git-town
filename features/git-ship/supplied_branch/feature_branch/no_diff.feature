@@ -14,7 +14,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
 
   Scenario: with open changes
     Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git ship empty-feature` while allowing errors
+    When I run `git ship empty-feature`
     Then it runs the Git commands
       | BRANCH        | COMMAND                                  |
       | other_feature | git stash -u                             |
@@ -34,7 +34,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
 
 
   Scenario: without open changes
-    When I run `git ship empty-feature` while allowing errors
+    When I run `git ship empty-feature`
     Then it runs the Git commands
       | BRANCH        | COMMAND                                  |
       | other_feature | git checkout main                        |

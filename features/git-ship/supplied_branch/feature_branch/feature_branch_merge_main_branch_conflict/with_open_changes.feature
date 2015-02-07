@@ -11,7 +11,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"`
 
 
   @finishes-with-non-empty-stash
@@ -26,6 +26,11 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       | main          | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
       | feature       | git merge --no-edit main           |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And I end up on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress

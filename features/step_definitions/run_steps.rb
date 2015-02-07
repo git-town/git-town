@@ -1,40 +1,37 @@
-When(/^(I|my coworker) runs? `([^`]+)`( while allowing errors)?$/) do |who, commands, allow_failures|
+When(/^(I|my coworker) runs? `([^`]+)`$/) do |who, commands|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do
-    commands.split(';').each do |command|
-      run command.strip, allow_failures: allow_failures
-    end
+    commands.split(';').each { |command| run command.strip }
   end
 end
 
 
-When(/^I run `([^`]+)` with the last( two)? commit shas?( while allowing errors)?$/) do |command, two, allow_failures|
+When(/^I run `([^`]+)` with the last( two)? commit shas?$/) do |command, two|
   count = two ? 2 : 1
   shas = recent_commit_shas(count).join(' ')
-  run "#{command} #{shas}", allow_failures: allow_failures
+  step "I run `#{command} #{shas}`"
 end
 
 
-When(/^I run `(.+?)` and enter (.+?)$/) do |command, input|
-  inputs = prepare_user_input input
-  @result = run command, inputs: inputs, allow_failures: true
+When(/^I run `(.+?)` and enter "(.+?)"$/) do |command, input|
+  @result = run command, input: input
+end
+
+
+When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
+  step "I run `#{command}` and enter \"dGZZ\"" # In vim "dG" removes all lines and "ZZ" exits
 end
 
 
 
 
-Then(/^I get the error "(.+?)"$/) do |error_message|
-  expect(@last_run_result.error).to be_truthy
-  expect(@last_run_result.out).to include(error_message), %(
-    "EXPECTED
-    ***************************************************
+Then(/^I get the error "(.+?)"$/) do |str|
+  verify_error str
+end
 
-    #{@last_run_result.out.gsub '\n', "\n"}
 
-    ***************************************************
-    TO INCLUDE '#{error_message}'
-
-  )
+Then(/^I get the error$/) do |str|
+  verify_error str.strip
 end
 
 

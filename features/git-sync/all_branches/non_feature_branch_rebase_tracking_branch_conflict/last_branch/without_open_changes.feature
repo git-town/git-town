@@ -10,7 +10,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | qa         | local            | qa local commit   | conflicting_file | qa local content   |
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all`
 
 
   Scenario: result
@@ -22,6 +22,12 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | production | git rebase origin/production |
       | production | git checkout qa              |
       | qa         | git rebase origin/qa         |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'qa' branch, run "git sync --skip".
+      """
     And my repo has a rebase in progress
 
 
@@ -29,7 +35,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH     | COMMAND                 |
-      | HEAD       | git rebase --abort      |
+      | qa         | git rebase --abort      |
       | qa         | git checkout production |
       | production | git checkout main       |
     And I end up on the "main" branch
@@ -45,7 +51,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --skip`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | qa     | git rebase --abort |
       | qa     | git checkout main  |
     And I end up on the "main" branch
     And I have the following commits
@@ -57,7 +63,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
@@ -68,7 +74,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | qa     | git rebase --continue |
       | qa     | git push              |
       | qa     | git checkout main     |
     And I end up on the "main" branch

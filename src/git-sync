@@ -35,10 +35,10 @@ function skip_message_prefix {
 
 
 function skippable {
-  if [ "$(get_current_branch_name)" != "$main_branch_name" ]; then
-    echo true
-  else
+  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$main_branch_name" ]; then
     echo false
+  else
+    echo true
   fi
 }
 

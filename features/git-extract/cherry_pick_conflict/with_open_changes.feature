@@ -14,7 +14,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git extract refactor` with the last commit sha while allowing errors
+    When I run `git extract refactor` with the last commit sha
 
 
   @finishes-with-non-empty-stash
@@ -28,6 +28,11 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | main     | git push                              |
       | main     | git checkout -b refactor main         |
       | refactor | git cherry-pick [SHA:refactor commit] |
+    And I get the error
+      """
+      To abort, run "git extract --abort".
+      To continue after you have resolved the conflicts, run "git extract --continue".
+      """
     And I end up on the "refactor" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a cherry-pick in progress
@@ -55,7 +60,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git extract --continue` while allowing errors
+    When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch

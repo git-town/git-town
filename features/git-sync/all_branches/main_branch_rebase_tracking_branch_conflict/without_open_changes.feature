@@ -8,7 +8,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all`
 
 
   Scenario: result
@@ -16,6 +16,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       | main   | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -23,7 +28,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
@@ -33,7 +38,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
@@ -44,7 +49,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
