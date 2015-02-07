@@ -19,7 +19,7 @@ end
 
 
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
-  step "I run `#{command}` and enter \"dGZZ\""
+  step "I run `#{command}` and enter \"dGZZ\"" # In vim "dG" removes all lines and "ZZ" exits
 end
 
 
