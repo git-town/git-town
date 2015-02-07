@@ -1,6 +1,6 @@
-Feature: git ship: resolving remote feature branch updates when shipping a given feature branch (with open changes)
+Feature: git ship: resolving conflicts between the supplied feature branch and its tracking branch (with open changes)
 
-  (see ../current_branch/pull_feature_branch_conflict.feature)
+  (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_tracking_branch_conflict.feature)
 
 
   Background:
