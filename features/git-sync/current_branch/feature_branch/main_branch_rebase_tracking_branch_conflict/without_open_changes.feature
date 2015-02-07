@@ -1,6 +1,6 @@
-Feature: git sync: resolving conflicting remote main branch updates when syncing a feature branch without open changes
+Feature: git sync: resolving conflicts between the main branch and its tracking branch when syncing the current feature branch (without open changes)
 
-  (see ./pull_feature_branch_conflict_with_open_changes.feature)
+  (see ./with_open_changes.feature)
 
 
   Background:

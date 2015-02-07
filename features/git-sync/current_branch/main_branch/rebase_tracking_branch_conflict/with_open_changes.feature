@@ -1,4 +1,4 @@
-Feature: git sync: resolving conflicting remote branch updates when syncing the main branch (with open changes)
+Feature: git sync: resolving conflicts between the main branch and its tracking branch when syncing the main branch (with open changes)
 
   As a developer syncing the main branch when it conflicts with its tracking branch
   I want to be given the choice to resolve the conflicts or abort

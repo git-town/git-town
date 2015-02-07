@@ -1,4 +1,4 @@
-Feature: Git Sync: handling merge conflicts between feature and main branch when syncing a feature branch with open changes
+Feature: git sync: resolving conflicts between the current feature branch and the main branch (without open changes)
 
   Background:
     Given I have a feature branch named "feature"
@@ -7,16 +7,13 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I run `git sync` while allowing errors
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git stash -u                       |
       | feature | git checkout main                  |
       | main    | git rebase origin/main             |
       | main    | git push                           |
@@ -24,7 +21,6 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
     And I am still on the "feature" branch
-    And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
 
 
@@ -35,9 +31,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | git merge --abort    |
       | feature | git checkout main    |
       | main    | git checkout feature |
-      | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -45,13 +39,11 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
     When I run `git sync --continue` while allowing errors
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
-    And I don't have an uncommitted file with name: "uncommitted"
     And my repo still has a merge in progress
 
 
@@ -62,9 +54,7 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       | feature | git push             |
-      | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
@@ -81,11 +71,9 @@ Feature: Git Sync: handling merge conflicts between feature and main branch when
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git sync --continue`
     Then it runs the Git commands
-      | BRANCH  | COMMAND       |
-      | feature | git push      |
-      | feature | git stash pop |
+      | BRANCH  | COMMAND  |
+      | feature | git push |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
