@@ -1,4 +1,4 @@
-Feature: git ship: don't ship the main branch
+Feature: git ship: errors when trying to ship the main branch
 
   As a developer accidentally trying to ship the main branch
   I should see an error that this is not possible
