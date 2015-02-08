@@ -68,7 +68,11 @@ function ensure_has_branches {
 
 # Returns the current branch name
 function get_current_branch_name {
-  git rev-parse --abbrev-ref HEAD
+  if [ "$(rebase_in_progress)" = true ]; then
+    sed 's/^refs\/heads\///' < .git/rebase-apply/head-name
+  else
+    git rev-parse --abbrev-ref HEAD
+  fi
 }
 
 

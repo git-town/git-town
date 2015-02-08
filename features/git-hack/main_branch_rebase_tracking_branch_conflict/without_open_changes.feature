@@ -10,7 +10,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | main   | remote   | conflicting remote commit | conflicting_file | remote content |
       |        | local    | conflicting local commit  | conflicting_file | local content  |
     And I am on the "existing_feature" branch
-    When I run `git hack new_feature` while allowing errors
+    When I run `git hack new_feature`
 
 
   Scenario: result
@@ -19,6 +19,11 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | existing_feature | git fetch --prune      |
       | existing_feature | git checkout main      |
       | main             | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git hack --abort".
+      To continue after you have resolved the conflicts, run "git hack --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -26,7 +31,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     When I run `git hack --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND                       |
-      | HEAD   | git rebase --abort            |
+      | main   | git rebase --abort            |
       | main   | git checkout existing_feature |
     And I end up on the "existing_feature" branch
     And there is no rebase in progress
@@ -34,7 +39,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git hack --continue` while allowing errors
+    When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
     And my repo still has a rebase in progress
 
@@ -44,7 +49,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     When I run `git hack --continue `
     Then it runs the Git commands
       | BRANCH | COMMAND                          |
-      | HEAD   | git rebase --continue            |
+      | main   | git rebase --continue            |
       | main   | git push                         |
       | main   | git checkout -b new_feature main |
     And I end up on the "new_feature" branch

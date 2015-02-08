@@ -11,7 +11,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | qa         | local and remote | qa commit                | qa_file          | qa content                |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all`
 
 
   @finishes-with-non-empty-stash
@@ -23,6 +23,12 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | main       | git rebase origin/main       |
       | main       | git checkout production      |
       | production | git rebase origin/production |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'production' branch, run "git sync --skip".
+      """
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a rebase in progress
 
@@ -31,7 +37,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH     | COMMAND            |
-      | HEAD       | git rebase --abort |
+      | production | git rebase --abort |
       | production | git checkout main  |
       | main       | git stash pop      |
     And I end up on the "main" branch
@@ -48,7 +54,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --skip`
     Then it runs the Git commands
       | BRANCH     | COMMAND              |
-      | HEAD       | git rebase --abort   |
+      | production | git rebase --abort   |
       | production | git checkout qa      |
       | qa         | git rebase origin/qa |
       | qa         | git checkout main    |
@@ -65,7 +71,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"
@@ -77,7 +83,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     And I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH     | COMMAND               |
-      | HEAD       | git rebase --continue |
+      | production | git rebase --continue |
       | production | git push              |
       | production | git checkout qa       |
       | qa         | git rebase origin/qa  |

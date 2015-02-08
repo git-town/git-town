@@ -1,4 +1,4 @@
-Feature: git ship: shipping a coworkers branch
+Feature: git ship: shipping a coworker's feature branch
 
   As a developer shipping a coworker's feature branch
   I want my coworker to be the author of the commit added to the main branch

@@ -12,7 +12,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
     And I am on the "feature" branch
-    When I run `git extract refactor` with the last commit sha while allowing errors
+    When I run `git extract refactor` with the last commit sha
 
 
   Scenario: result
@@ -21,6 +21,11 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | feature | git fetch --prune      |
       | feature | git checkout main      |
       | main    | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git extract --abort".
+      To continue after you have resolved the conflicts, run "git extract --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -28,7 +33,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | HEAD   | git rebase --abort   |
+      | main   | git rebase --abort   |
       | main   | git checkout feature |
     And I end up on the "feature" branch
     And there is no "refactor" branch
@@ -37,7 +42,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git extract --continue` while allowing errors
+    When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And my repo has a rebase in progress
@@ -48,7 +53,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --continue`
     Then it runs the Git commands
       | BRANCH   | COMMAND                               |
-      | HEAD     | git rebase --continue                 |
+      | main     | git rebase --continue                 |
       | main     | git push                              |
       | main     | git checkout -b refactor main         |
       | refactor | git cherry-pick [SHA:refactor commit] |

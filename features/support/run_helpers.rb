@@ -35,15 +35,6 @@ def output_of command, allow_failures: false
 end
 
 
-def prepare_user_input input
-  if input == 'an empty commit message'
-    ['dGZZ']
-  else
-    Kappamaki.from_sentence(input)
-  end
-end
-
-
 def print_result result
   puts ''
   puts "#{result.location}$ #{result.command}"
@@ -52,15 +43,15 @@ def print_result result
 end
 
 
-def run command, allow_failures: false, debug: false, inputs: []
-  result = run_shell_command command, inputs
-  should_error = should_error? result, allow_failures
+def run command, debug: false, input: nil
+  result = run_shell_command command, input
+  is_git_town_command = git_town_command? command
+  raise_error = (!is_git_town_command && result.error) || result_has_shell_error?(result)
 
-  print_result(result) if should_error || should_print_command_output?(command, debug)
-  fail 'Command not successful!' if should_error
+  print_result(result) if raise_error || should_print_command_output?(command, debug)
+  fail 'Command not successful!' if raise_error
 
-  @last_run_result = result if git_town_command?(command)
-
+  @last_run_result = result if is_git_town_command
   result
 end
 
@@ -72,12 +63,12 @@ def result_has_shell_error? result
 end
 
 
-def run_shell_command command, inputs
+def run_shell_command command, input
   result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
   command = "#{shell_overrides}; #{command} 2>&1"
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    inputs.each { |input| stdin.puts input }
+    stdin.puts input if input
     stdin.close
     result.out = stdout.read
   end
@@ -89,11 +80,6 @@ end
 
 def shell_overrides
   "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH; export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME}"
-end
-
-
-def should_error? result, allow_failures
-  (result.error && !allow_failures) || result_has_shell_error?(result)
 end
 
 
