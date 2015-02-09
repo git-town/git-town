@@ -14,12 +14,12 @@ end
 
 
 def main_branch_configuration
-  output_of 'git config --get git-town.main-branch-name', allow_failures: true
+  output_of 'git config --get git-town.main-branch-name || true'
 end
 
 
 def non_feature_branch_configuration
-  output_of 'git config --get git-town.non-feature-branch-names', allow_failures: true
+  output_of 'git config --get git-town.non-feature-branch-names || true'
 end
 
 

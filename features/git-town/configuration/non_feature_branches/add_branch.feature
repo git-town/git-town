@@ -26,8 +26,8 @@ Feature: add a branch to the non-feature branches configuration
 
   Scenario: adding a branch that is already set as the main branch
     Given I have configured the main branch name as "staging"
-    When I run `git town non-feature-branches --add staging` while allowing errors
-    Then I see
+    When I run `git town non-feature-branches --add staging`
+    Then I get the error
       """
       error: 'staging' is already set as the main branch
       """

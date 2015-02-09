@@ -14,12 +14,14 @@ end
 
 
 When(/^I run `(.+?)` and enter "(.+?)"$/) do |command, input|
-  @result = run command, input: input
+  inputs = Kappamaki.from_sentence(input)
+  @result = run command, inputs: inputs
 end
 
 
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
-  step "I run `#{command}` and enter \"dGZZ\"" # In vim "dG" removes all lines and "ZZ" exits
+  # In vim "dG" removes all lines and "ZZ" saves and exits
+  step "I run `#{command}` and enter \"dGZZ\""
 end
 
 

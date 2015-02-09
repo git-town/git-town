@@ -5,7 +5,7 @@ Feature: Initial configuration
 
 
   Scenario Outline: Running Git Town commands while Git Town is unconfigured
-    When I run `<COMMAND>` while allowing errors
+    When I run `<COMMAND>`
     Then I see
       """
       Git Town hasn't been configured for this repository.
@@ -28,13 +28,10 @@ Feature: Initial configuration
 
   Scenario: Enter non-existent main branch
     When I run `git town config --setup` and enter "nonexistent"
-    Then I see
+    Then I get the error
       """
-      Please enter the name of the main dev branch (typically 'master' or 'development'):
-
         Error
         There is no branch named 'nonexistent'
-
       """
     And Git Town is still not configured for this repository
 
@@ -42,32 +39,29 @@ Feature: Initial configuration
   Scenario: Enter valid main branch and non-existent non-feature branch
     Given I have a branch named "master"
     When I run `git town config --setup` and enter "master" and "nonexistent"
-    Then I see
+    Then I get the error
       """
-      Please enter the name of the main dev branch (typically 'master' or 'development'):
-
-      Git Town supports non-feature branches like 'release' or 'production'.
-      These branches cannot be shipped and do not merge master when syncing.
-      Please enter the names of all your non-feature branches as a comma separated list.
-      Example: 'qa, production'
-
         Error
         There is no branch named 'nonexistent'
-
       """
     And the main branch name is now configured as "master"
     And my non-feature branches are still not configured
 
 
-    Scenario: Enter valid main branch and valid non-feature branches
-      Given I have branches named "dev" and "qa"
-      When I run `git town config --setup` and enter "dev" and "qa"
-      Then the main branch name is now configured as "dev"
-      And my non-feature branches are now configured as "qa"
+  Scenario: Enter valid main branch and valid non-feature branches
+    Given I have branches named "dev" and "qa"
+    When I run `git town config --setup` and enter "dev" and "qa"
+    Then the main branch name is now configured as "dev"
+    And my non-feature branches are now configured as "qa"
 
 
-    Scenario: Enter valid main branch and invalid non-feature branches
-      Given I have branches named "dev" and "qa"
-      When I run `git town config --setup` and enter "dev" and "dev"
-      Then the main branch name is now configured as "dev"
-      And my non-feature branches are still not configured
+  Scenario: Enter valid main branch and invalid non-feature branches
+    Given I have branches named "dev" and "qa"
+    When I run `git town config --setup` and enter "dev" and "dev"
+    Then I get the error
+      """
+        Error
+        'dev' is already set as the main branch
+      """
+    And the main branch name is now configured as "dev"
+    And my non-feature branches are still not configured

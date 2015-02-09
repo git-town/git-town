@@ -55,7 +55,7 @@ function ensure_valid_non_feature_branches {
   split_string "$branches" ',' | while read branch; do
     if [[ "$branch" == "$main_branch_name" ]]; then
       echo_error_header
-      echo_error "'$branch_name' is already set as the main branch"
+      echo_error "'$branch' is already set as the main branch"
       exit_with_error
     fi
   done
@@ -123,7 +123,7 @@ function setup_configuration_main_branch {
     exit_with_error
   fi
 
-  ensure_has_branch "$main_branch_input"
+  ensure_has_branch "$main_branch_input" || exit_with_error
   store_configuration main-branch-name "$main_branch_input"
 }
 
@@ -137,13 +137,11 @@ function setup_configuration_non_feature_branches {
   read non_feature_input
 
   if [[ -n "$non_feature_input" ]]; then
-    ensure_has_branches "$non_feature_input" &&
-    ensure_valid_non_feature_branches "$non_feature_input"
+    ensure_has_branches "$non_feature_input" || exit_with_error
+    ensure_valid_non_feature_branches "$non_feature_input" || exit_with_error
   fi
 
-  if [ $? -eq 0 ]; then
-    store_configuration non-feature-branch-names "$non_feature_input"
-  fi
+  store_configuration non-feature-branch-names "$non_feature_input"
 }
 
 
