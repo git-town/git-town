@@ -71,7 +71,7 @@ function get_configuration {
 
 # Returns whether or not Git Town is configured
 function is_git_town_configured {
-  if [ -n "$main_branch_name" ]; then
+  if [ -n "$main_branch_name" ] && get_configuration 'non-feature-branch-names'; then
     echo true
   else
     echo false
@@ -103,7 +103,7 @@ function remove_non_feature_branch {
 }
 
 
-#
+# Begin the git town setup wizard
 function setup_configuration {
   setup_configuration_main_branch
   echo
@@ -139,8 +139,9 @@ function setup_configuration_non_feature_branches {
   if [[ -n "$non_feature_input" ]]; then
     ensure_has_branches "$non_feature_input" || exit_with_error
     ensure_valid_non_feature_branches "$non_feature_input" || exit_with_error
-    store_configuration non-feature-branch-names "$non_feature_input"
   fi
+
+  store_configuration non-feature-branch-names "$non_feature_input"
 }
 
 
