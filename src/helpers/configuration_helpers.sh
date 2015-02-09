@@ -111,8 +111,8 @@ function setup_configuration {
 }
 
 
+# Ask and store main-branch-name
 function setup_configuration_main_branch {
-  # Ask and store main-branch-name
   echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
   read main_branch_input
   if [[ -z "$main_branch_input" ]]; then
@@ -128,8 +128,8 @@ function setup_configuration_main_branch {
 }
 
 
+# Ask and store non-feature-branch-names
 function setup_configuration_non_feature_branches {
-  # Ask and store non-feature-branch-names
   echo "Git Town supports non-feature branches like 'release' or 'production'."
   echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
   echo "Please enter the names of all your non-feature branches as a comma separated list."
@@ -139,15 +139,13 @@ function setup_configuration_non_feature_branches {
   if [[ -n "$non_feature_input" ]]; then
     ensure_has_branches "$non_feature_input" || exit_with_error
     ensure_valid_non_feature_branches "$non_feature_input" || exit_with_error
+    store_configuration non-feature-branch-names "$non_feature_input"
   fi
-
-  store_configuration non-feature-branch-names "$non_feature_input"
 }
 
 
-# Reset git town configuration for repository if flag is passed,
-# otherwise show the config
-function show_or_setup_or_reset_config {
+# Perform `git town config` operation ("reset", "setup", "show")
+function run_config_operation {
   local operation=$1
 
   if [ -n "$operation" ]; then
