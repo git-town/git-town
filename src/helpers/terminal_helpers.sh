@@ -3,6 +3,19 @@
 # Helper methods for writing to the terminal.
 
 
+# http://stackoverflow.com/a/12202793/3418047
+function prompt_yn () {
+  while true; do
+    read -p "$1 " yn
+    case $yn in
+      [Yy]* ) return 0;;
+      [Nn]* ) return 1;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
+
+
 # Prints a line in bold
 function echo_bold {
   output_style_bold
