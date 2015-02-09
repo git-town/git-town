@@ -153,7 +153,6 @@ function run_config_operation {
       setup_configuration
     elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
-      echo "Your Git Town settings have been reset for this repository"
     else
       echo "usage: git town config [--reset | --setup]"
     fi
