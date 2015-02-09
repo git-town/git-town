@@ -1,29 +1,12 @@
 Feature: Initial configuration
 
+  As a user who hasn't configured Git Town yet
+  I want to have a simple, dedicated setup command
+  So that I can configure it safely before using any Git Town command
+
+
   Background:
     Given I haven't configured Git Town yet
-
-
-  Scenario Outline: Running Git Town commands while Git Town is unconfigured
-    When I run `<COMMAND>`
-    Then I see
-      """
-      Git Town hasn't been configured for this repository.
-      Please run 'git town config --setup'.
-      Would you like to do that now? y/n
-      """
-
-    Examples:
-    | COMMAND            |
-    | git extract        |
-    | git hack           |
-    | git kill           |
-    | git pr             |
-    | git prune-branches |
-    | git repo           |
-    | git ship           |
-    | git sync           |
-    | git sync-fork      |
 
 
   Scenario: user enters non-existent main branch
