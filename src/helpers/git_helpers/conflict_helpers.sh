@@ -6,7 +6,7 @@ function ensure_no_conflicts {
   if [ "$(has_conflicts)" == true ]; then
     echo_error_header
     echo_error "You must resolve the conflicts before continuing the $git_command"
-    exit_with_error
+    exit_with_error newline
   fi
 }
 

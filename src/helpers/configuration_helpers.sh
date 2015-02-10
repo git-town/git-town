@@ -14,13 +14,13 @@ function add_non_feature_branch {
   if [ -z "$branch_name" ]; then
     echo_inline_error "missing branch name"
     echo_non_feature_branch_usage
-    exit 1
+    exit_with_error
   elif [ "$(has_branch "$branch_name")" = false ]; then
     echo_inline_error "no branch named '$branch_name'"
-    exit 1
+    exit_with_error
   elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
     echo_inline_error "'$branch_name' is already a non-feature branch"
-    exit 1
+    exit_with_error
   else
     local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
@@ -40,7 +40,7 @@ function add_or_remove_non_feature_branches {
   else
     echo_inline_error "unsupported option '$option'"
     echo_non_feature_branch_usage
-    exit 1
+    exit_with_error
   fi
 }
 
@@ -59,10 +59,10 @@ function remove_non_feature_branch {
   if [ -z "$branch_name" ]; then
     echo_inline_error "missing branch name"
     echo_non_feature_branch_usage
-    exit 1
+    exit_with_error
   elif [ "$(is_non_feature_branch "$branch_name")" = false ]; then
     echo_inline_error "'$branch_name' is not a non-feature branch"
-    exit 1
+    exit_with_error
   else
     local new_branches=$(remove_string "$non_feature_branch_names" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
@@ -108,7 +108,7 @@ function show_or_update_main_branch {
       store_configuration main-branch-name "$branch_name"
     else
       echo_inline_error "no branch named '$branch_name'"
-      exit 1
+      exit_with_error
     fi
   else
     show_main_branch
