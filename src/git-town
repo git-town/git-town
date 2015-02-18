@@ -33,5 +33,5 @@ elif [ -n "$1" ]; then
   echo_inline_usage_or "git town main-branch [<branchname>]"
   echo_inline_usage_or "git town non-feature-branches [(--add | --remove) <branchname>]"
   echo_inline_usage_or "git town version"
-  exit 1
+  exit_with_error newline
 fi
