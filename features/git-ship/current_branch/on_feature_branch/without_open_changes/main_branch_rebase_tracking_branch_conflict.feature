@@ -13,7 +13,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
-    When I run `git ship -m "feature done"` while allowing errors
+    When I run `git ship -m "feature done"`
 
 
   Scenario: result
@@ -22,6 +22,11 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | feature | git checkout main      |
       | main    | git fetch --prune      |
       | main    | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -29,7 +34,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     When I run `git ship --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND              |
-      | HEAD   | git rebase --abort   |
+      | main   | git rebase --abort   |
       | main   | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
@@ -41,7 +46,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     When I run `git ship --continue`
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | HEAD    | git rebase --continue              |
+      | main    | git rebase --continue              |
       | main    | git push                           |
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |

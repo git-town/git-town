@@ -16,15 +16,15 @@ Feature: remove a branch from the non-feature branches configuration
 
 
   Scenario: removing a branch that is not a non-feature branch
-    When I run `git town non-feature-branches --remove feature` while allowing errors
-    Then I see
+    When I run `git town non-feature-branches --remove feature`
+    Then I get the error
       """
       error: 'feature' is not a non-feature branch
       """
 
   Scenario: not providing a branch name
-    When I run `git town non-feature-branches --remove` while allowing errors
-    Then I see
+    When I run `git town non-feature-branches --remove`
+    Then I get the error
       """
       error: missing branch name
       usage: git town non-feature-branches (--add | --remove) <branchname>

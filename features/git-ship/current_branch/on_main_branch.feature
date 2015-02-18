@@ -7,7 +7,7 @@ Feature: git ship: errors when trying to ship the main branch
 
   Background:
     Given I am on the "main" branch
-    When I run `git ship -m 'something done'` while allowing errors
+    When I run `git ship -m 'something done'`
 
 
   Scenario: result

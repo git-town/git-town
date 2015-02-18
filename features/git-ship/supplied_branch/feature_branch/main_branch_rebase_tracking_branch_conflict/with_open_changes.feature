@@ -12,7 +12,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git ship feature -m "feature done"` while allowing errors
+    And I run `git ship feature -m "feature done"`
 
 
   @finishes-with-non-empty-stash
@@ -23,6 +23,11 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | other_feature | git checkout main      |
       | main          | git fetch --prune      |
       | main          | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git ship --abort".
+      To continue after you have resolved the conflicts, run "git ship --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
@@ -31,7 +36,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     When I run `git ship --abort`
     Then it runs the Git commands
       | BRANCH        | COMMAND                    |
-      | HEAD          | git rebase --abort         |
+      | main          | git rebase --abort         |
       | main          | git checkout other_feature |
       | other_feature | git stash pop              |
     And I am still on the "other_feature" branch
@@ -45,7 +50,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     When I run `git ship --continue`
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | HEAD          | git rebase --continue              |
+      | main          | git rebase --continue              |
       | main          | git push                           |
       | main          | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |

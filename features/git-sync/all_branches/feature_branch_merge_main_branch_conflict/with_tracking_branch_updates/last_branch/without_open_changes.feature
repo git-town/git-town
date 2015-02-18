@@ -9,7 +9,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local            | feature2 local commit  | conflicting_file     | feature2 local content  |
       |          | remote           | feature2 remote commit | feature2_remote_file | feature2 remote content |
     And I am on the "main" branch
-    When I run `git sync --all` while allowing errors
+    When I run `git sync --all`
 
 
   Scenario: result
@@ -24,6 +24,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature1 | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
       | feature2 | git merge --no-edit main            |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature2' branch, run "git sync --skip".
+      """
     And I end up on the "feature2" branch
     And my repo has a merge in progress
 
@@ -66,7 +72,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
 
 
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature2" branch

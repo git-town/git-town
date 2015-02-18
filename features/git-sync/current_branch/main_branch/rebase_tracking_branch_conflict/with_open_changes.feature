@@ -12,7 +12,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync` while allowing errors
+    When I run `git sync`
 
 
   @finishes-with-non-empty-stash
@@ -22,6 +22,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | git fetch --prune      |
       | main   | git stash -u           |
       | main   | git rebase origin/main |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      """
     And my repo has a rebase in progress
     And I don't have an uncommitted file with name: "uncommitted"
 
@@ -30,7 +35,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
       | main   | git stash pop      |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -40,7 +45,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I don't have an uncommitted file with name: "uncommitted"
@@ -52,7 +57,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
       | main   | git push --tags       |
       | main   | git stash pop         |

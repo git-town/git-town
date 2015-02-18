@@ -39,7 +39,7 @@ function ensure_does_not_have_branch {
   if [ "$(has_branch "$branch_name")" = true ]; then
     echo_error_header
     echo_error "A branch named '$branch_name' already exists"
-    exit_with_error
+    exit_with_error newline
   fi
 }
 
@@ -51,14 +51,18 @@ function ensure_has_branch {
   if [ "$(has_branch "$branch_name")" == false ]; then
     echo_error_header
     echo_error "There is no branch named '$branch_name'"
-    exit_with_error
+    exit_with_error newline
   fi
 }
 
 
 # Returns the current branch name
 function get_current_branch_name {
-  git rev-parse --abbrev-ref HEAD
+  if [ "$(rebase_in_progress)" = true ]; then
+    sed 's/^refs\/heads\///' < .git/rebase-apply/head-name
+  else
+    git rev-parse --abbrev-ref HEAD
+  fi
 }
 
 

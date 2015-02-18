@@ -10,7 +10,7 @@ function ensure_tool_installed {
     echo_error "You need the '$toolname' tool in order to run tests."
     echo_error "Please install it using your package manager,"
     echo_error "or on OS X with 'brew install $toolname'."
-    exit_with_error
+    exit_with_error newline
   fi
 }
 

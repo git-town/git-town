@@ -9,7 +9,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I run `git sync` while allowing errors
+    When I run `git sync`
 
 
   @finishes-with-non-empty-stash
@@ -24,6 +24,12 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | main    | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       | feature | git merge --no-edit main           |
+    And I get the error
+      """
+      To abort, run "git sync --abort".
+      To continue after you have resolved the conflicts, run "git sync --continue".
+      To skip the sync of the 'feature' branch, run "git sync --skip".
+      """
     And I am still on the "feature" branch
     And I don't have an uncommitted file with name: "uncommitted"
     And my repo has a merge in progress
@@ -50,7 +56,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving conflicts
-    When I run `git sync --continue` while allowing errors
+    When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch

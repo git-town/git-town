@@ -7,7 +7,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | upstream | upstream commit | conflicting_file | upstream content |
       |        | local    | local commit    | conflicting_file | local content    |
     And I am on the "main" branch
-    When I run `git sync-fork` while allowing errors
+    When I run `git sync-fork`
 
 
   Scenario: result
@@ -15,6 +15,11 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | BRANCH | COMMAND                  |
       | main   | git fetch upstream       |
       | main   | git rebase upstream/main |
+    And I get the error
+      """
+      To abort, run "git sync-fork --abort".
+      To continue after you have resolved the conflicts, run "git sync-fork --continue".
+      """
     And my repo has a rebase in progress
 
 
@@ -22,7 +27,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --abort`
     Then it runs the Git commands
       | BRANCH | COMMAND            |
-      | HEAD   | git rebase --abort |
+      | main   | git rebase --abort |
     And I end up on the "main" branch
     And there is no rebase in progress
     And I am left with my original commits
@@ -33,7 +38,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork --continue`
     Then it runs the Git commands
       | BRANCH | COMMAND               |
-      | HEAD   | git rebase --continue |
+      | main   | git rebase --continue |
       | main   | git push              |
     And I end up on the "main" branch
     And I still have the following commits

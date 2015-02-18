@@ -9,7 +9,7 @@ Feature: git ship: errors when trying to ship a non-feature branch
     Given I have branches named "qa" and "production"
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "production" branch
-    When I run `git ship -m "feature done"` while allowing errors
+    When I run `git ship -m "feature done"`
 
 
   Scenario: result

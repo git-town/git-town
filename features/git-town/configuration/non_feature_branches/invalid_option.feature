@@ -6,8 +6,8 @@ Feature: passing an invalid option to the non-feature branch configuration
 
 
   Scenario: using invalid option
-    When I run `git town non-feature-branches --invalid-option` while allowing errors
-    Then I see
+    When I run `git town non-feature-branches --invalid-option`
+    Then I get the error
       """
       error: unsupported option '--invalid-option'
       usage: git town non-feature-branches (--add | --remove) <branchname>

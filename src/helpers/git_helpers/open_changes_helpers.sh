@@ -19,7 +19,7 @@ function ensure_no_open_changes {
   if [ "$(has_open_changes)" == true ]; then
     echo_error_header
     echo_error "$*"
-    exit_with_error
+    exit_with_error newline
   fi
 }
 
