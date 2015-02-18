@@ -24,14 +24,13 @@ end
 
 
 
-
-Then(/^I get the error "(.+?)"$/) do |str|
-  verify_error str
+Then(/^I get the error$/) do |error_message|
+  verify_error error_message
 end
 
 
-Then(/^I get the error$/) do |str|
-  verify_error str.strip
+Then(/^I get the error "(.+?)"$/) do |error_message|
+  verify_error error_message.strip
 end
 
 
