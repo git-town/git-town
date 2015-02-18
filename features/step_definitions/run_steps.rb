@@ -26,7 +26,7 @@ end
 
 
 Then(/^I get the error$/) do |error_message|
-  verify_error error_message
+  verify_error error_message.strip
 end
 
 
