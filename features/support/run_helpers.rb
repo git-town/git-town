@@ -92,4 +92,3 @@ end
 def unformatted_last_run_output
   @last_run_result.out.gsub(/\e[^m]+m/, '')
 end
-
