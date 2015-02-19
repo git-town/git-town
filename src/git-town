@@ -2,6 +2,13 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" --bypass-automatic-configuration --bypass-environment-checks
 
 
+# Installs the autocompletion definition for Fish shell
+function install_fish_autocompletion {
+  run_command_outside_git "mkdir -p ~/.config/fish/completions"
+  run_command_outside_git "curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish"
+}
+
+
 function show_help {
   man git-town
 }
@@ -23,6 +30,8 @@ elif [ "$1" == "non-feature-branches" ]; then
   show_or_update_non_feature_branches "$2" "$3"
 elif [ "$1" == "version" ]; then
   show_version
+elif [ "$1" == "install-fish-autocompletion" ]; then
+  install_fish_autocompletion
 elif [ -z "$1" ] || [ "$1" == "help" ]; then
   show_help
 elif [ -n "$1" ]; then
@@ -30,6 +39,7 @@ elif [ -n "$1" ]; then
   echo_inline_usage "git town"
   echo_inline_usage_or "git town config"
   echo_inline_usage_or "git town help"
+  echo_inline_usage_or "git town install-fish-autocompletion"
   echo_inline_usage_or "git town main-branch [<branchname>]"
   echo_inline_usage_or "git town non-feature-branches [(--add | --remove) <branchname>]"
   echo_inline_usage_or "git town version"
