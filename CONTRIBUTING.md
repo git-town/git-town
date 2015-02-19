@@ -48,6 +48,9 @@ cucumber [filename][:lineno]
 # run single scenario/feature while showing the application output
 DEBUG_COMMANDS=true cucumber [filename][:lineno]
 
+# run single scenario/feature while showing the application output
+DEBUG_COMMANDS=true cucumber [filename][:lineno]
+
 # run features in parallel
 bin/cuke [<folder>...]
 ```
