@@ -10,14 +10,14 @@ Feature: Initial configuration
 
 
   Scenario: user enters non-existent main branch
-    When I run `git town config --setup` and enter "nonexistent"
+    When I run `git town config --setup` and enter main branch name "nonexistent"
     Then I get the error "There is no branch named 'nonexistent'"
     And Git Town is still not configured for this repository
 
 
   Scenario: user enters a valid main branch and non-existent non-feature branch
     Given I have a branch named "master"
-    When I run `git town config --setup` and enter "master" and "nonexistent"
+    When I run `git town config --setup` and enter main branch name "master" and non-feature branch names "nonexistent"
     Then I get the error "There is no branch named 'nonexistent'"
     And the main branch name is now configured as "master"
     And my non-feature branches are still not configured
@@ -25,14 +25,14 @@ Feature: Initial configuration
 
   Scenario: user enters valid main branch and valid non-feature branches
     Given I have branches named "dev" and "qa"
-    When I run `git town config --setup` and enter "dev" and "qa"
+    When I run `git town config --setup` and enter main branch name "dev" and non-feature branch names "qa"
     Then the main branch name is now configured as "dev"
     And my non-feature branches are now configured as "qa"
 
 
-  Scenario: user enters valid main branch and invalid non-feature branches
+  Scenario: user enters the existing main branch as feature branches
     Given I have branches named "dev" and "qa"
-    When I run `git town config --setup` and enter "dev" and "dev"
+    When I run `git town config --setup` and enter main branch name "dev" and non-feature branch names "dev"
     Then I get the error "'dev' is already set as the main branch"
     And the main branch name is now configured as "dev"
     And my non-feature branches are still not configured

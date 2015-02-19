@@ -25,6 +25,9 @@ When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
 end
 
 
+When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature branch names "(.+?)")?/) do |command, main, non_feature|
+  @reult = run command, inputs: [main, non_feature].compact
+end
 
 
 Then(/^I get the error "(.+?)"$/) do |str|
