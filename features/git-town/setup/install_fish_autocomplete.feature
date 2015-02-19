@@ -10,4 +10,4 @@ Feature: Installing Fish Shell autocomplete definitions
     Then it runs the following shell commands to install the Fish shell autocompletion
       | COMMAND                                                                                                                      |
       | mkdir -p ~/.config/fish/completions                                                                                          |
-      | curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish |
+      | curl -o ~/.config/fish/completions/git.fish https://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish |

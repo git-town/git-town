@@ -5,7 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" --
 # Installs the autocompletion definition for Fish shell
 function install_fish_autocompletion {
   run_command_outside_git "mkdir -p ~/.config/fish/completions"
-  run_command_outside_git "curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish"
+  run_command_outside_git "curl -o ~/.config/fish/completions/git.fish https://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish"
 }
 
 
