@@ -110,6 +110,7 @@ function setup_configuration {
   setup_configuration_main_branch
   echo
   setup_configuration_non_feature_branches
+  echo "Done with configuration"
 }
 
 
