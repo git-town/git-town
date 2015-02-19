@@ -74,8 +74,20 @@ end
 
 
 Then(/^I see$/) do |output|
+  actual = unformatted_last_run_output.strip
+  expect(actual).to eql "#{output}"
+end
+
+
+Then(/^the output begins with "(.*)"$/) do |output|
   actual = unformatted_last_run_output
-  expect(actual).to eql "#{output}\n"
+  expect(actual).to start_with(output)
+end
+
+
+Then(/^the output contains "(.*)"$/) do |output|
+  actual = unformatted_last_run_output
+  expect(actual).to include(output)
 end
 
 

@@ -66,6 +66,7 @@ end
 def run_shell_command command, inputs
   result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
   command = "#{shell_overrides}; #{command} 2>&1"
+  kill = inputs.pop && true if inputs.last == '^C'
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
     inputs.each { |input| stdin.puts input }
@@ -73,7 +74,7 @@ def run_shell_command command, inputs
     result.out = stdout.read
   end
 
-  result.error = status.exitstatus != 0
+  result.error = status.exitstatus != 0 && !kill
   result
 end
 

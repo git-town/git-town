@@ -3,18 +3,6 @@
 # Helper methods for writing to the terminal.
 
 
-function prompt_yn () {
-  while true; do
-    read yn
-    case $yn in
-      [Yy] ) return 0;;
-      [Nn] ) return 1;;
-      *    ) echo "Please answer yes (y) or no (n).";;
-    esac
-  done
-}
-
-
 # Prints a line in bold
 function echo_bold {
   output_style_bold
@@ -144,6 +132,16 @@ function output_style_reset {
 function print_command {
   local branch_name=$(get_current_branch_name)
   echo_header "[$branch_name] $*"
+}
+
+
+function prompt_yn () {
+  read yn
+  case $yn in
+    [Yy] ) return 0;;
+    [Nn] ) return 1;;
+    *    ) echo "Please answer yes (y) or no (n)."; return 1;;
+  esac
 }
 
 

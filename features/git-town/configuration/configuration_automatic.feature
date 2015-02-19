@@ -5,14 +5,33 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
   So that I use a properly configured tool at all times.
 
 
-  Scenario Outline: Running Git Town commands before Git Town is unconfigured
+  Scenario Outline: Proceeding to configuration upon initial config prompt
     Given I haven't configured Git Town yet
-    When I run `<COMMAND>`
+    When I run `<COMMAND>` and enter "y" and "^C"
+    Then the output begins with "Git Town hasn't been configured for this repository."
+    And the output contains "Please enter the name of the main dev branch"
+
+    Examples:
+    | COMMAND            |
+    | git extract        |
+    | git hack           |
+    | git kill           |
+    | git pr             |
+    | git prune-branches |
+    | git repo           |
+    | git ship           |
+    | git sync           |
+    | git sync-fork      |
+
+
+  Scenario Outline: Not proceeding to configuration upon initial config prompt
+    Given I haven't configured Git Town yet
+    When I run `<COMMAND>` and enter "n" and "^C"
     Then I see
       """
       Git Town hasn't been configured for this repository.
       Please run 'git town config --setup'.
-      Would you like to do that now? y/n
+      Would you like to do that now? [y/n]
       """
 
     Examples:
