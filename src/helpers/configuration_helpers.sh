@@ -81,6 +81,8 @@ function is_git_town_configured {
 
 # Remove all Git Town configuration
 function remove_all_configuration {
+  # output is redirected because git will print an error
+  # to stdout if the config section doesn't exist
   git config --remove-section git-town > /dev/null 2>&1
 }
 

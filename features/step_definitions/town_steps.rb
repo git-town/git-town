@@ -54,5 +54,5 @@ end
 
 
 Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
-  expect(run('git config --get-regex git-town || true').out).to eql ''
+  expect(git_town_configuration).to be_empty
 end
