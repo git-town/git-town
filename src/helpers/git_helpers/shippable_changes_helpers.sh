@@ -9,7 +9,7 @@ function ensure_has_shippable_changes {
 
     echo_error_header
     echo_error "The branch '$current_branch_name' has no shippable changes."
-    exit_with_error
+    exit_with_error newline
   fi
 }
 

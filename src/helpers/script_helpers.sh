@@ -71,7 +71,7 @@ function exit_with_messages {
     if [ "$(skippable)" = true ]; then
       echo_red "$(skip_message_prefix), run \"$git_command --skip\"."
     fi
-    exit_with_error
+    exit_with_error newline
   fi
 }
 
@@ -113,8 +113,6 @@ function run {
     steps > "$steps_file"
     run_steps "$steps_file" undoable
   fi
-
-  exit_with_success
 }
 
 
@@ -145,6 +143,8 @@ function run_steps {
   if [ "$option" = cleanup ]; then
     remove_step_files
   fi
+
+  echo # trailing newline (each git command prints a leading newline)
 }
 
 

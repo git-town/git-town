@@ -7,7 +7,7 @@ function ensure_has_extractable_commits {
   if [ "$(has_extractable_commits "$current_branch_name")" == false ]; then
     echo_error_header
     echo_error "The branch '$current_branch_name' has no extractable commits."
-    exit_with_error
+    exit_with_error newline
   fi
 }
 

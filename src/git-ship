@@ -8,7 +8,7 @@ function error_empty_commit {
 
   echo_error_header
   echo_error "Aborting ship due to empty commit message"
-  exit_with_error
+  exit_with_error newline
 }
 
 function preconditions {

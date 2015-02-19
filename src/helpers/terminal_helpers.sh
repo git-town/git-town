@@ -109,15 +109,10 @@ function echo_usage_header {
 
 # Exits the currently running script with an error response code.
 function exit_with_error {
-  echo
+  if [ "$1" = "newline" ]; then
+    echo
+  fi
   exit 1
-}
-
-
-# Exits the currently running script with a success response code
-function exit_with_success {
-  echo
-  exit 0
 }
 
 
