@@ -5,8 +5,11 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
   So that I use a properly configured tool at all times.
 
 
-  Scenario Outline: Proceeding to configuration upon initial config prompt
+  Background:
     Given I haven't configured Git Town yet
+
+
+  Scenario Outline: Proceeding to configuration upon initial config prompt
     When I run `<COMMAND>` and enter "y" and "^C"
     Then the output begins with "Git Town hasn't been configured for this repository."
     And the output contains "Please enter the name of the main dev branch"
@@ -25,7 +28,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
 
   Scenario Outline: Not proceeding to configuration upon initial config prompt
-    Given I haven't configured Git Town yet
+
     When I run `<COMMAND>` and enter "n" and "^C"
     Then I see
       """

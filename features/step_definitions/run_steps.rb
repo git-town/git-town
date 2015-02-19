@@ -78,7 +78,7 @@ end
 
 Then(/^I see$/) do |output|
   actual = unformatted_last_run_output.strip
-  expect(actual).to eql "#{output}"
+  expect(actual).to eql output
 end
 
 
