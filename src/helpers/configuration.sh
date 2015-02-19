@@ -29,6 +29,6 @@ if [[ "$(is_git_town_configured)" == false ]]; then
     echo
     setup_configuration
   else
-    exit 0
+    exit_with_abort
   fi
 fi

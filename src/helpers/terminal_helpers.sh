@@ -3,14 +3,13 @@
 # Helper methods for writing to the terminal.
 
 
-# http://stackoverflow.com/a/12202793/3418047
 function prompt_yn () {
   while true; do
-    read -p "$1 " yn
+    read yn
     case $yn in
-      [Yy]* ) return 0;;
-      [Nn]* ) return 1;;
-      * ) echo "Please answer yes or no.";;
+      [Yy] ) return 0;;
+      [Nn] ) return 1;;
+      *    ) echo "Please answer yes (y) or no (n).";;
     esac
   done
 }
@@ -107,12 +106,22 @@ function echo_usage_header {
 }
 
 
-# Exits the currently running script with an error response code.
 function exit_with_error {
-  if [ "$1" = "newline" ]; then
+  exit_with_status 1 "$1"
+}
+
+
+function exit_with_abort {
+  exit_with_status 2 "$1"
+}
+
+
+# Exits the currently running script with an exit code.
+function exit_with_status {
+  if [ "$2" = "newline" ]; then
     echo
   fi
-  exit 1
+  exit "$1"
 }
 
 
