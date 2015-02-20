@@ -31,7 +31,7 @@ end
 
 
 Then(/^I get the error$/) do |str|
-  verify_error str.strip
+  verify_error str
 end
 
 
@@ -72,8 +72,7 @@ end
 
 
 Then(/^I see$/) do |output|
-  actual = unformatted_last_run_output
-  expect(actual).to eql "#{output}\n"
+  expect(unformatted_last_run_output).to eql output
 end
 
 
