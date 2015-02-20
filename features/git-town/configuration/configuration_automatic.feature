@@ -28,7 +28,6 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
 
   Scenario Outline: Not proceeding to configuration upon initial config prompt
-
     When I run `<COMMAND>` and enter "n" and "^C"
     Then I see
       """
