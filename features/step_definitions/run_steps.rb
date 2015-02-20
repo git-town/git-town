@@ -66,8 +66,7 @@ end
 
 
 Then(/^I see "(.*)"$/) do |string|
-  actual = unformatted_last_run_output
-  expect(actual).to eql string
+  step 'I see', string
 end
 
 
