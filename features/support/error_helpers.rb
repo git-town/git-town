@@ -1,19 +1,15 @@
-# rubocop:disable MethodLength
 def verify_error message
   @error_expected = true
   expect(@last_run_result.error).to be_truthy
 
-  actual = unformatted_last_run_output
-  expected = message
-  expect(actual).to include(expected), %(
+  expect(unformatted_last_run_output).to include(message), %(
     ACTUAL
     ***************************************************
-    #{actual.dump}
+    #{unformatted_last_run_output.dump}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{expected.dump}
+    #{message.dump}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
-# rubocop:enable MethodLength

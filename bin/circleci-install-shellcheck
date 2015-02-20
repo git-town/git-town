@@ -1,5 +1,6 @@
 #!/bin/bash
-# Helper for circle.ci to install shellcheck if necessary
+# Installs ShellCheck of CircleCI if necessary
+
 set -e
 
 if [ ! -f ~/.cabal/bin/shellcheck ]; then
@@ -7,5 +8,5 @@ if [ ! -f ~/.cabal/bin/shellcheck ]; then
   cabal update --verbose=0
   cabal install --verbose=0 shellcheck
 else
-  echo "Using installed shellcheck"
+  echo "Using cached shellcheck"
 fi
