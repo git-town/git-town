@@ -1,5 +1,5 @@
 #!/bin/bash
-# Installs ShellCheck of CircleCI if necessary
+# Installs ShellCheck on CircleCI if necessary
 
 set -e
 
