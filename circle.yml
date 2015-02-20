@@ -1,7 +1,7 @@
 machine:
   environment:
     PATH: $HOME/.cabal/bin/:$PATH
-    PARALLEL_TEST_PROCESSORS: 16
+    PARALLEL_TEST_PROCESSORS: 8
 
 
 dependencies:

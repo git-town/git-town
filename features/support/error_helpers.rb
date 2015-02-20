@@ -8,11 +8,11 @@ def verify_error message
   expect(actual).to include(expected), %(
     ACTUAL
     ***************************************************
-    #{actual}
+    #{actual.dump}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{expected}
+    #{expected.dump}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
