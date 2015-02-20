@@ -1,6 +1,8 @@
 machine:
   ruby:
     version: 2.2.0
+  environment:
+    PATH: ~/.cabal/bin/:$PATH
 
 
 dependencies:
@@ -8,7 +10,6 @@ dependencies:
     - "~/.cabal" # Keep shellcheck around between builds
   post:
     - bin/circleci-install-shellcheck
-    - export PATH=~/.cabal/bin/:$PATH
 
 
 test:
