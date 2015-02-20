@@ -71,7 +71,7 @@ end
 
 
 Then(/^I see$/) do |output|
-  expect(unformatted_last_run_output.sub(/\n$/, '')).to eql output
+  expect(unformatted_last_run_output).to include(output)
 end
 
 
