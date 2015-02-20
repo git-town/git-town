@@ -7,6 +7,8 @@ machine:
 dependencies:
   cache_directories:
     - "~/.cabal" # Keep shellcheck around between builds
+  pre:
+    - sudo apt-get update; sudo apt-get install git
   post:
     - bin/circleci-install-shellcheck
     - git --version
