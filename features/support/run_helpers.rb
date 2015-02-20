@@ -93,6 +93,6 @@ end
 def unformatted_last_run_output
   @last_run_result.out
     .gsub(/\e[^m]*m/, '')    # remove Bash colors
-    .gsub(/\\x\d*F/, '')     # remove CircleCI characters
+    .gsub('\x0F', '')        # remove CircleCI characters
     .gsub(/\\u\d*F/, '')     # remove CircleCI characters
 end
