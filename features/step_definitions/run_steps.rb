@@ -30,13 +30,24 @@ When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature bran
 end
 
 
-Then(/^I get the error "(.+?)"$/) do |str|
-  verify_error str
+Then(/^I get the error$/) do |error_message|
+  @error_expected = true
+  expect(@last_run_result.error).to be_truthy
+  expect(unformatted_last_run_output.strip).to include(error_message.strip), %(
+    ACTUAL
+    ***************************************************
+    #{@last_run_result.out.gsub '\n', "\n"}
+    ***************************************************
+    EXPECTED TO INCLUDE
+    ***************************************************
+    #{error_message.gsub '\n', "\n"}
+    ***************************************************
+  ).gsub(/^ {4}/, '')
 end
 
 
-Then(/^I get the error$/) do |str|
-  verify_error str.strip
+Then(/^I get the error "(.+?)"$/) do |error_message|
+  step 'I get the error', error_message
 end
 
 
