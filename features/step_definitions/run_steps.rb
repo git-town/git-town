@@ -70,8 +70,8 @@ Then(/^I see "(.*)"$/) do |string|
 end
 
 
-Then(/^I see$/) do |output|
-  expect(unformatted_last_run_output).to include(output)
+Then(/^I see$/) do |string|
+  expect(unformatted_last_run_output).to include(string)
 end
 
 
