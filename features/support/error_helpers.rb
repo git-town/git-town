@@ -4,7 +4,7 @@ def verify_error message
   expect(@last_run_result.error).to be_truthy
 
   actual = unformatted_last_run_output
-  expected = message.gsub(/\W/, '')
+  expected = message
   expect(actual).to include(expected), %(
     ACTUAL
     ***************************************************
