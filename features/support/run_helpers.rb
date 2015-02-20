@@ -91,6 +91,5 @@ end
 # Output of last `run` without text formatting (ANSI escape sequences)
 def unformatted_last_run_output
   # p @last_run_result.gsub '[', '\['
-  # @last_run_result.out.gsub(/\e[^m]*m/, '').gsub('\u000F', '').strip
-  @last_run_result.out.gsub(/\W/, '').strip
+  @last_run_result.out.gsub(/\e[^m]*m/, '').gsub('\u000F', '').gsub(/\W/, '')
 end
