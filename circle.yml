@@ -8,3 +8,8 @@ dependencies:
     - "~/.cabal" # Keep shellcheck around between builds
   post:
     - bin/circleci-install-shellcheck
+
+
+test:
+  override:
+    - bundle exec rake
