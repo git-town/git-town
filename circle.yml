@@ -9,6 +9,7 @@ dependencies:
     - "~/.cabal" # Keep shellcheck around between builds
   post:
     - bin/circleci-install-shellcheck
+    - git --version
 
 
 test:
