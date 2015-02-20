@@ -18,27 +18,18 @@ Feature: add a branch to the non-feature branches configuration
 
   Scenario: adding a branch that is already a non-feature branch
     When I run `git town non-feature-branches --add qa`
-    Then I get the error
-      """
-      error: 'qa' is already a non-feature branch
-      """
+    Then I get the error "'qa' is already a non-feature branch"
 
 
   Scenario: adding a branch that is already set as the main branch
     Given I have configured the main branch name as "staging"
     When I run `git town non-feature-branches --add staging`
-    Then I get the error
-      """
-      error: 'staging' is already set as the main branch
-      """
+    Then I get the error "'staging' is already set as the main branch"
 
 
   Scenario: adding a branch that does not exist
     When I run `git town non-feature-branches --add branch-does-not-exist`
-    Then I get the error
-      """
-      error: no branch named 'branch-does-not-exist'
-      """
+    Then I get the error "no branch named 'branch-does-not-exist'"
 
 
   Scenario: not providing a branch name
