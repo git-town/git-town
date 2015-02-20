@@ -1,0 +1,10 @@
+machine:
+  ruby:
+    version: 2.2.0
+
+
+dependencies:
+  cache_directories:
+    - "~/.cabal" # Keep shellcheck around between builds
+  post:
+    - bin/circle-install-shellcheck
