@@ -8,6 +8,7 @@ dependencies:
     - "~/.cabal" # Keep shellcheck around between builds
   post:
     - bin/circleci-install-shellcheck
+    - export PATH=~/.cabal/bin/:$PATH
 
 
 test:
