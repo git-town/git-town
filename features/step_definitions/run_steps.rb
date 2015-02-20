@@ -14,15 +14,20 @@ end
 
 
 When(/^I run `(.+?)` and enter "(.+?)"$/) do |command, input|
-  @result = run command, input: input
+  inputs = Kappamaki.from_sentence(input)
+  @result = run command, inputs: inputs
 end
 
 
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
-  step "I run `#{command}` and enter \"dGZZ\"" # In vim "dG" removes all lines and "ZZ" exits
+  # In vim "dG" removes all lines and "ZZ" saves and exits
+  step "I run `#{command}` and enter \"dGZZ\""
 end
 
 
+When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature branch names "(.+)")?/) do |cmd, main, non_feature|
+  @result = run cmd, inputs: [main, non_feature].compact
+end
 
 
 Then(/^I get the error "(.+?)"$/) do |str|
@@ -72,6 +77,16 @@ end
 
 Then(/^I see$/) do |string|
   expect(unformatted_last_run_output).to include(string)
+end
+
+
+Then(/^the output begins with "(.*)"$/) do |output|
+  expect(unformatted_last_run_output).to start_with output
+end
+
+
+Then(/^the output contains "(.*)"$/) do |output|
+  expect(unformatted_last_run_output).to include output
 end
 
 
