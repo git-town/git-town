@@ -1,5 +1,6 @@
 #!/bin/bash
 # Helper for circle.ci to install shellcheck if necessary
+set -e
 
 if [ ! -f ~/.cabal/bin/shellcheck ]; then
   sudo apt-get install cabal-install
