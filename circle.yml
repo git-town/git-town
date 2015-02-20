@@ -2,7 +2,7 @@ machine:
   ruby:
     version: 2.2.0
   environment:
-    PATH: ~/.cabal/bin/:$PATH
+    PATH: $HOME/.cabal/bin/:$PATH
 
 
 dependencies:
