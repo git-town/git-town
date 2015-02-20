@@ -40,7 +40,7 @@ Then(/^I get the error$/) do |error_message|
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{message.dump}
+    #{error_message.dump}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
@@ -81,13 +81,13 @@ Then(/^I don't see "(.*)"$/) do |string|
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  step 'I see', string
+Then(/^I see$/) do |string|
+  expect(unformatted_last_run_output).to include(string)
 end
 
 
-Then(/^I see$/) do |string|
-  expect(unformatted_last_run_output).to include(string)
+Then(/^I see "(.*)"$/) do |string|
+  step 'I see', string
 end
 
 
