@@ -2,14 +2,16 @@ def verify_error message
   @error_expected = true
 
   expect(@last_run_result.error).to be_truthy
-  expect(unformatted_last_run_output.strip).to include(message), %(
+  actual = unformatted_last_run_output
+  expected = message.gsub(/\W/, '')
+  expect(actual).to include(expected), %(
     ACTUAL
     ***************************************************
-    #{@last_run_result.out.gsub '\n', "\n"}
+    #{actual}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{message.gsub '\n', "\n"}
+    #{expected}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
