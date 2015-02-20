@@ -7,4 +7,4 @@ dependencies:
   cache_directories:
     - "~/.cabal" # Keep shellcheck around between builds
   post:
-    - bin/circle-install-shellcheck
+    - bin/circleci-install-shellcheck
