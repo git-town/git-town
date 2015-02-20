@@ -26,12 +26,23 @@ end
 
 
 Then(/^I get the error$/) do |error_message|
-  verify_error error_message.strip
+  @error_expected = true
+  expect(@last_run_result.error).to be_truthy
+  expect(unformatted_last_run_output.strip).to include(error_message.strip), %(
+    ACTUAL
+    ***************************************************
+    #{@last_run_result.out.gsub '\n', "\n"}
+    ***************************************************
+    EXPECTED TO INCLUDE
+    ***************************************************
+    #{error_message.gsub '\n', "\n"}
+    ***************************************************
+  ).gsub(/^ {4}/, '')
 end
 
 
 Then(/^I get the error "(.+?)"$/) do |error_message|
-  verify_error error_message.strip
+  step 'I get the error', error_message
 end
 
 
