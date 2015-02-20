@@ -1,7 +1,7 @@
 machine:
   environment:
     PATH: $HOME/.cabal/bin/:$PATH
-    PARALLEL_TEST_PROCESSORS: 8
+    PARALLEL_TEST_PROCESSORS: 16
 
 
 dependencies:
@@ -11,7 +11,6 @@ dependencies:
 
   post:
     - bin/circleci-install-shellcheck
-    - git --version
 
 
 test:
