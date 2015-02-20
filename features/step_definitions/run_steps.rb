@@ -33,10 +33,11 @@ end
 Then(/^I get the error$/) do |error_message|
   @error_expected = true
   expect(@last_run_result.error).to be_truthy
-  expect(unformatted_last_run_output).to include(error_message), %(
+  actual = unformatted_last_run_output
+  expect(actual).to include(error_message), %(
     ACTUAL
     ***************************************************
-    #{unformatted_last_run_output.dump}
+    #{actual.dump}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
