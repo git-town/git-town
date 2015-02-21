@@ -94,12 +94,22 @@ function echo_usage_header {
 }
 
 
-# Exits the currently running script with an error response code.
 function exit_with_error {
-  if [ "$1" = "newline" ]; then
+  exit_with_status 1 "$1"
+}
+
+
+function exit_with_abort {
+  exit_with_status 2 "$1"
+}
+
+
+# Exits the currently running script with an exit code.
+function exit_with_status {
+  if [ "$2" = "newline" ]; then
     echo
   fi
-  exit 1
+  exit "$1"
 }
 
 
@@ -122,6 +132,16 @@ function output_style_reset {
 function print_command {
   local branch_name=$(get_current_branch_name)
   echo_header "[$branch_name] $*"
+}
+
+
+function prompt_yn () {
+  read yn
+  case $yn in
+    [Yy] ) return 0;;
+    [Nn] ) return 1;;
+    *    ) echo "Please answer yes (y) or no (n)."; return 1;;
+  esac
 }
 
 

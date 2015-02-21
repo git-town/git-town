@@ -7,7 +7,7 @@ git-town - general Git Town help, view and change Git Town configuration
 
 ```
 git town
-git town config
+git town config [--reset | --setup]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branchname>]
@@ -26,6 +26,9 @@ git town version
 
 * *config*
 > Displays the current Git Town configuration.
+>
+> With the `--reset` flag, cleanly remove all Git Town configuration from the current repository.
+> With the `--setup` flag, start the Git Town configuration wizard.
 
 * *main-branch*
 > Displays the name of the main development branch.
