@@ -113,13 +113,6 @@ so it runs anywhere Git and Bash runs.
     $ git town install-fish-autocompletion
     ```
 
-    or manually
-
-    ```
-    $ mkdir -p ~/.config/fish/completions/
-    $ curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish
-    ```
-
 
 ## Configuration
 
