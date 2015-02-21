@@ -7,9 +7,7 @@ git-sync - updates the current branch with all relevant changes
 
 ```
 git sync [--all]
-git sync --abort
-git sync --continue
-git sync --skip
+git sync --abort | --continue | --skip
 ```
 
 #### DESCRIPTION
