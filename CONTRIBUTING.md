@@ -27,7 +27,7 @@ This guide will help you get started and outline some things you should know whe
 * install the [requirements](#requirements)
 * fork and clone the repository to your machine
 * run `bundle` to install ruby gems
-* run `rake` to make sure all tests pass
+* run `bundle exec rake` to make sure all tests pass
 
 
 ## Testing
@@ -38,24 +38,24 @@ This guide will help you get started and outline some things you should know whe
 
 ```bash
 # run all tests
-rake
+bundle exec rake
 
 # run individual tests
-rake lint    # Run linters
-rake test    # Run feature tests
+bundle exec rake lint    # Run linters
+bundle exec rake test    # Run feature tests
 
 # run single scenario/feature
-cucumber -n 'scenario/feature name'
-cucumber [filename][:lineno]
+bundle exec cucumber <filename>[:<lineno>]
+bundle exec cucumber -n '<scenario/feature name>'
 
 # run single scenario/feature while showing the application output
-DEBUG_COMMANDS=true cucumber [filename][:lineno]
+DEBUG_COMMANDS=true bundle exec cucumber <filename>[:<lineno>]
 
 # run features in parallel
-bin/cuke [<folder>...]
+bin/cuke [<folder> | <filename>[:<lineno>]]
 
 # fix formatting issues
-rake format  # Run formatters (fixes some lint errors)
+bundle exec rake format  # Run formatters (fixes some lint errors)
 ```
 
 
