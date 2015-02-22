@@ -2,7 +2,6 @@
 
 Git Town is a welcoming community, and we'd love for everyone to bring
 their contributions to make it even better.
-
 We appreciate contributions of any size.
 
 * Found a bug or have an idea for a new feature? - [Open an issue](https://github.com/Originate/git-town/issues/new)
