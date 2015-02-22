@@ -24,8 +24,10 @@ This guide will help you get started and outline some things you should know whe
 
 ## Setup
 
+* install the [requirements](#requirements)
 * fork and clone the repository to your machine
 * run `bundle` to install ruby gems
+* run `rake` to make sure all tests pass
 
 
 ## Testing
