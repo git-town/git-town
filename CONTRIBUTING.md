@@ -57,6 +57,11 @@ bin/cuke [<folder> | <filename>[:<lineno>]]
 bundle exec rake format  # Run formatters (fixes some lint errors)
 ```
 
+Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
+automatically tests all commits and pull requests,
+and notifies you per email and through status badges in pull requests
+if tests fail.
+
 
 ## Merging
 
