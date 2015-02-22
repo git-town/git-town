@@ -93,14 +93,12 @@ end
 
 
 Then(/^the output begins with "(.*)"$/) do |output|
-  actual = unformatted_last_run_output
-  expect(actual).to start_with output
+  expect(unformatted_last_run_output).to start_with output
 end
 
 
 Then(/^the output contains "(.*)"$/) do |output|
-  actual = unformatted_last_run_output
-  expect(actual).to include output
+  expect(unformatted_last_run_output).to include output
 end
 
 
