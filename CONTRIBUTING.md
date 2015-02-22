@@ -57,6 +57,12 @@ rake format  # Run formatters (fixes some lint errors)
 ```
 
 
+## Merging
+
+* use Git Town itself to ship your pull request
+* format your commit message according to the [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+
+
 ## Architecture
 
 *The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
