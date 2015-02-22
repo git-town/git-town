@@ -13,7 +13,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Requirements
 
-* Ruby 2.1.5
+* Ruby 2.2
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
