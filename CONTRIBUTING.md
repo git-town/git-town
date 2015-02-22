@@ -25,7 +25,7 @@ This guide will help you get started and outline some things you should know whe
 ## Setup
 
 * fork and clone the repository to your machine
-* `bundle` to install ruby gems
+* run `bundle` to install ruby gems
 
 
 ## Testing
@@ -35,9 +35,10 @@ This guide will help you get started and outline some things you should know whe
 * Source code and test files must pass the linters
 
 ```bash
-# rake tasks
-rake         # Run linters and feature tests
-rake format  # Run formatters (fixes some lint errors)
+# run all tests
+rake
+
+# run individual tests
 rake lint    # Run linters
 rake test    # Run feature tests
 
@@ -50,6 +51,9 @@ DEBUG_COMMANDS=true cucumber [filename][:lineno]
 
 # run features in parallel
 bin/cuke [<folder>...]
+
+# fix formatting issues
+rake format  # Run formatters (fixes some lint errors)
 ```
 
 
