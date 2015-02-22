@@ -7,6 +7,7 @@
 function open_browser {
   local url=$1
 
+  # Try xdg-open first, because on Linux "open" does not do what we want it to do here
   local tools=(xdg-open open)
   for tool in "${tools[@]}"; do
     if [ "$(has_tool "$tool")" = true ]; then
