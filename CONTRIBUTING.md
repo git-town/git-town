@@ -16,9 +16,9 @@ This guide will help you get started and outline some things you should know whe
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
-  * Language the tests are written in
+  * language the tests are written in
 * [ShellCheck](https://github.com/koalaman/shellcheck)
-  * Used in the linting process to find common errors in the Bash code
+  * used in the linting process to find common errors in the Bash code
 
 
 ## Setup
@@ -31,9 +31,9 @@ This guide will help you get started and outline some things you should know whe
 
 ## Testing
 
-* Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-* All features need to have comprehensive test coverage
-* Source code and test files must pass the linters
+* tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
+* all features need to have comprehensive test coverage
+* source code and test files must pass the linters
 
 ```bash
 # run all tests
