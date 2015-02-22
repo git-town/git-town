@@ -1,3 +1,5 @@
 #!/bin/bash
 
+# A test mock for "man" (displays documentation)
+
 echo "man called with: $@"

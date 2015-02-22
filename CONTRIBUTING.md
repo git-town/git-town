@@ -43,11 +43,15 @@ rake test    # Run feature tests
 
 # run single scenario/feature
 cucumber -n 'scenario/feature name'
-cucumber [filename]:[lineno]
+cucumber [filename][:lineno]
+
+# run single scenario/feature while showing the application output
+DEBUG_COMMANDS=true cucumber [filename][:lineno]
 
 # run features in parallel
 bin/cuke [<folder>...]
 ```
+
 
 ## Architecture
 
