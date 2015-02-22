@@ -59,15 +59,15 @@ bundle exec rake format  # Run formatters (fixes some lint errors)
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
 automatically tests all commits and pull requests,
-and notifies you per email and through status badges in pull requests
+and notifies you via email and through status badges in pull requests
 about problems.
 
 
 ## Merging
 
-* use Git Town itself to ship your pull request
+* use Git Town itself to ship your pull request (you'll get write access)
 * format your commit message according to the [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages) in the body of the commit message, so that it it automatically closed
+* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages) in the body of the commit message, so that it is automatically closed
 
 
 ## Architecture
