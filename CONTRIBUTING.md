@@ -67,6 +67,7 @@ about problems.
 
 * use Git Town itself to ship your pull request
 * format your commit message according to the [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages) in the body of the commit message, so that it it automatically closed
 
 
 ## Architecture
