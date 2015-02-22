@@ -7,7 +7,7 @@ git-extract - copy selected commits from the current branch into their own branc
 
 ```
 git extract <branchname> [<commit>...]
-git extract --abort | --continue
+git extract (--abort | --continue)
 ```
 
 

@@ -7,7 +7,7 @@ git-ship - deliver a completed feature branch
 
 ```
 git ship [<branchname>] [<commit-options>]
-git ship --abort | --continue
+git ship (--abort | --continue)
 ```
 
 
