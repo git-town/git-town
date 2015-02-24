@@ -33,14 +33,15 @@ end
 Then(/^I get the error$/) do |error_message|
   @error_expected = true
   expect(@last_run_result.error).to be_truthy
-  expect(unformatted_last_run_output.strip).to include(error_message.strip), %(
+  actual = unformatted_last_run_output
+  expect(actual).to include(error_message), %(
     ACTUAL
     ***************************************************
-    #{@last_run_result.out.gsub '\n', "\n"}
+    #{actual.dump}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{error_message.gsub '\n', "\n"}
+    #{error_message.dump}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
@@ -86,27 +87,23 @@ Then(/^I don't see "(.*)"$/) do |string|
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  actual = unformatted_last_run_output.strip
-  expect(actual).to eql string
+Then(/^I see$/) do |string|
+  expect(unformatted_last_run_output).to include(string)
 end
 
 
-Then(/^I see$/) do |output|
-  actual = unformatted_last_run_output.strip
-  expect(actual).to eql output
+Then(/^I see "(.*)"$/) do |string|
+  step 'I see', string
 end
 
 
 Then(/^the output begins with "(.*)"$/) do |output|
-  actual = unformatted_last_run_output
-  expect(actual).to start_with output
+  expect(unformatted_last_run_output).to start_with output
 end
 
 
 Then(/^the output contains "(.*)"$/) do |output|
-  actual = unformatted_last_run_output
-  expect(actual).to include output
+  expect(unformatted_last_run_output).to include output
 end
 
 

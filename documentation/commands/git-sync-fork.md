@@ -7,8 +7,7 @@ git-sync-fork - pull upstream updates into a forked repository
 
 ```
 git sync-fork
-git sync-fork --abort
-git sync-fork --continue
+git sync-fork (--abort | --continue)
 ```
 
 
