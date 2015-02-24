@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Installs ShellCheck on CircleCI if necessary
+
+set -e
+
+if [ ! -f ~/.cabal/bin/shellcheck ]; then
+  sudo apt-get install cabal-install
+  cabal update --verbose=0
+  cabal install --verbose=0 shellcheck
+else
+  echo "Using cached shellcheck"
+fi

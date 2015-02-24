@@ -1,9 +1,0 @@
-language: ruby
-
-rvm:
-  - 2.2.0
-
-cache: bundler
-
-script:
-  - bin/travis

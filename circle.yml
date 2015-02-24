@@ -1,0 +1,23 @@
+machine:
+  environment:
+
+    # CircleCI supports up to 32 processors,
+    # but 8 processors yields the fastest results
+    PARALLEL_TEST_PROCESSORS: 8
+
+    PATH: $HOME/.cabal/bin/:$PATH
+
+
+dependencies:
+
+  # Cache ShellCheck for subsequent builds
+  cache_directories:
+    - "~/.cabal"
+
+  post:
+    - bin/circleci-install-shellcheck
+
+
+test:
+  override:
+    - bundle exec rake
