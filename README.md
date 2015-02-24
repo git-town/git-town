@@ -1,6 +1,6 @@
 ![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
-<a href="https://travis-ci.org/Originate/git-town" alt="Build Status" target="_blank"><img src="https://travis-ci.org/Originate/git-town.svg?branch=master"></a>
+[![Build Status](https://circleci.com/gh/Originate/git-town/tree/master.svg?style=shield)](https://circleci.com/gh/Originate/git-town/tree/master)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.
