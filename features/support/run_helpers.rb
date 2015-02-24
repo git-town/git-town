@@ -89,10 +89,10 @@ def should_print_command_output? command, debug
 end
 
 
-# Output of last `run` without text formatting (ANSI escape sequences)
+# Output of last `run` without text formatting
 def unformatted_last_run_output
   @last_run_result.out
-    .gsub(/\e[^m]*m/, '')   # remove Bash colors
-    .gsub("\x0F", '')       # remove CircleCI artifacts
-    .gsub(/\\u\d*F/, '')    # remove CircleCI artifacts
+    .gsub(/\e[^m]*m/, '')   # remove color codes
+    .gsub("\x0F", '')       # remove artifacts created by CircleCI
+    .gsub(/\\u\d*F/, '')    # remove artifacts created by CircleCI
 end
