@@ -5,6 +5,6 @@
 Then(/^show me my repo$/) do
   p "Developer repo: #{repository_path :developer}"
   p "Coworker repo: #{repository_path :coworker}"
-  p "Press ENTER to continue"
+  p 'Press ENTER to continue'
   STDIN.gets
 end
