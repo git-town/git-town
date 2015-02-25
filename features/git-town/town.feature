@@ -8,6 +8,7 @@ Feature: Show correct git town usage
       usage: git town
          or: git town config [--reset | --setup]
          or: git town help
+         or: git town install-fish-autocompletion
          or: git town main-branch [<branchname>]
          or: git town non-feature-branches [(--add | --remove) <branchname>]
          or: git town version

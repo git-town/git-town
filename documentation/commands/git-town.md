@@ -9,6 +9,7 @@ git-town - general Git Town help, view and change Git Town configuration
 git town
 git town config [--reset | --setup]
 git town help
+git town install-fish-autocompletion
 git town main-branch [<branchname>]
 git town non-feature-branches [(--add | --remove) <branchname>]
 git town version
@@ -49,3 +50,6 @@ git town version
 > # Remove "qa" branch from the list of non-feature branches
 > git town non-feature-branches --remove qa
 > ```
+
+* *install-fish-autocompletion*
+> Installs the autocompletion definition for [Fish shell](http://fishshell.com)
