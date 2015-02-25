@@ -110,8 +110,7 @@ so it runs anywhere Git and Bash runs.
 * __Autocompletion for [Fish shell](http://fishshell.com)__
 
     ```
-    mkdir -p ~/.config/fish/completions/
-    curl -o ~/.config/fish/completions/git.fish http://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish
+    $ git town install-fish-autocompletion
     ```
 
 

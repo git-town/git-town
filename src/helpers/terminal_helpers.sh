@@ -151,3 +151,11 @@ function run_command {
   print_command "$cmd"
   eval "$cmd" 2>&1
 }
+
+
+# Run a command, prints command and output
+function run_command_outside_git {
+  local cmd="$*"
+  echo_header "$cmd"
+  eval "$cmd" 2>&1
+}
