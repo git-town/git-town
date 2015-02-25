@@ -26,7 +26,7 @@ This guide will help you get started and outline some things you should know whe
 * install the [requirements](#requirements)
 * fork and clone the repository to your machine
 * run `bundle` to install ruby gems
-* run `bundle exec rake` to make sure all tests pass
+* optionally run `bundle exec rake` to make sure all tests pass on your machine
 
 
 ## Testing
