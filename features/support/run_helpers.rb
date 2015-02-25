@@ -3,6 +3,18 @@ def array_output_of command
 end
 
 
+# Returns an array of the commands that were run in the last invocation of "run"
+def commands_of_last_run_outside_git
+  command_regex = /
+    \[1m          # bold text
+    (.+?)         # the command
+    \s*           # any extra whitespace
+    \n            # newline at the end
+  /x
+  @last_run_result.out.scan command_regex
+end
+
+
 # Returns an array of the Git commands that were run in the last invocation of "run"
 # with the form [<branch_name>, <command>]
 def commands_of_last_run

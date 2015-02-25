@@ -72,6 +72,11 @@ Then(/^it runs the Git commands$/) do |expected_steps|
 end
 
 
+Then(/^it runs the following shell commands/) do |expected_commands|
+  expected_commands.diff! commands_of_last_run_outside_git.unshift(expected_commands.headers)
+end
+
+
 Then(/^I see no output$/) do
   expect(@last_run_result.out).to eql ''
 end
