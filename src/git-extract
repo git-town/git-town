@@ -30,7 +30,7 @@ function get_shas {
 
     git log --oneline "$main_branch_name..$initial_branch_name"               | # Get a list of all commits in the feature branch.
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
-      tail -r                                                                 | # Reverse the order of lines.
+      awk '{ lines[n++] = $0 } END { while(n--) print lines[n] }'             | # Reverse the order of lines.
       xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$target_branch_name' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$file"  # Ask the user for commits
     clear
 
