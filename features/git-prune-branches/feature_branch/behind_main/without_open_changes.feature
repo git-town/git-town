@@ -32,16 +32,15 @@ Feature: git prune-branches: remove stale feature branches when run on a feature
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH | COMMAND                                      |
-      | main   | git branch stale_feature [SHA:stale_feature] |
-      | main   | git push -u origin stale_feature             |
-      | main   | git branch feature [SHA:stale_feature]       |
-      | main   | git push -u origin feature                   |
+      | BRANCH | COMMAND                                              |
+      | main   | git branch stale_feature [SHA:behind feature commit] |
+      | main   | git push -u origin stale_feature                     |
+      | main   | git branch feature [SHA:Initial commit]              |
+      | main   | git push -u origin feature                           |
+      | main   | git checkout feature                                 |
     And I end up on the "feature" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES                     |
       | local      | main, feature, stale_feature |
       | remote     | main, feature, stale_feature |
       | coworker   | main                         |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-

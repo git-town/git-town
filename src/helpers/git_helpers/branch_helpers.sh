@@ -101,7 +101,7 @@ function local_branches_without_main {
 
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
-  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
+  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g' | sort
 }
 
 

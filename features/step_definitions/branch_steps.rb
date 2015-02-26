@@ -17,7 +17,7 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
   create_branch branch_name, remote: !local
   if relation
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
-    create_commits branch: commit_to_branch
+    create_commits branch: commit_to_branch, message: "#{relation} #{branch_name} commit"
   end
 end
 
