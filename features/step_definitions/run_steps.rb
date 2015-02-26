@@ -64,7 +64,12 @@ Then(/^it runs the Git commands$/) do |expected_steps|
   expected_steps.map_column! 'COMMAND' do |command|
     command.gsub(sha_regex) do |sha_expression|
       commit_message = sha_expression.match(sha_regex).captures[0].strip
-      output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+      if commit_message == 'Initial commit'
+        reflog_param = "commit (initial): #{commit_message}"
+      else
+        reflog_param = "commit: #{commit_message}"
+      end
+      output_of "git reflog --grep-reflog='#{reflog_param}' --format='%H'"
     end
   end
 
