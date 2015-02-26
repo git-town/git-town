@@ -29,7 +29,7 @@ Feature: git prune-branches: remove stale feature branches when run on a feature
       | coworker   | main     |
 
 
-  Scenario: undoing the prune
+  Scenario: undoing the operation
     When I run `git prune-branches --undo`
     Then it runs the Git commands
       | BRANCH | COMMAND                                              |
