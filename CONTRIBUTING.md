@@ -53,7 +53,7 @@ bin/cuke [<folder>...]
 ```
 
 
-## Pull Requests
+## Commits / Pull Requests
 
 Each PR should mention the [issue](https://github.com/Originate/git-town/issues)
 it implements in the PR description:
