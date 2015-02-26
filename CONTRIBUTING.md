@@ -56,7 +56,7 @@ bin/cuke [<folder>...]
 ## Pull Requests
 
 Each PR should mention the [issue](https://github.com/Originate/git-town/issues)
-it implements in the PR description
+it implements in the PR description:
 
 ```
 implements #123
@@ -69,7 +69,10 @@ and
 in the commit body
 
 ```
-Add a Foo feature to "git bar"
+Add a foo feature to "git bar"
+
+This allows developers to optionally foo their code before
+they finally bar it into its own feature branch.
 
 Implements #123
 ```
