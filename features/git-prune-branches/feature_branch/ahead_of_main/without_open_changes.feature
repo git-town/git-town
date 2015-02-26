@@ -24,3 +24,20 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
       | local      | main, feature |
       | remote     | main, feature |
       | coworker   | main          |
+
+
+  Scenario: undoing the operation
+    When I run `git prune-branches --undo`
+    Then show me the output of `git log`
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                                       |
+      | feature | git checkout main                             |
+      | main    | git branch stale_feature [SHA:Initial commit] |
+      | main    | git push -u origin stale_feature              |
+      | main    | git checkout feature                          |
+    And I end up on the "feature" branch
+    Then the existing branches are
+      | REPOSITORY | BRANCHES                     |
+      | local      | main, feature, stale_feature |
+      | remote     | main, feature, stale_feature |
+      | coworker   | main                         |
