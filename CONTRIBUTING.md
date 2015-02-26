@@ -62,7 +62,9 @@ bin/cuke [<folder>...]
   implements #123
   ```
 
-* when merging a PR, the commit message should
+* when merging a PR, the message for the squash commit should follow the
+  [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+  and
   [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
   in the commit body
 
