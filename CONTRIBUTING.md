@@ -66,7 +66,7 @@ When merging a PR, the message for the squash commit should follow the
 [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 and
 [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
-in the commit body:
+in the commit body, so that the respective issue is automatically closed.
 
 ```
 Add a foo feature to "git bar"
@@ -76,6 +76,11 @@ they finally bar it into its own feature branch.
 
 Implements #123
 ```
+
+Pull requests from core developers with write access should be submitted using
+"git ship", i.e. squash-merged.
+Pull requests from external developers should be squashed into a single commit
+in their feature branch, and then merged normally.
 
 
 ## Architecture
