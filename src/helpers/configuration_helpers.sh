@@ -110,19 +110,19 @@ function setup_configuration {
   setup_configuration_main_branch
   echo
   setup_configuration_non_feature_branches
-  echo "Done with configuration"
+  echo "Done with configuration:"
+  show_config | indent
 }
 
 
 # Ask and store main-branch-name
 function setup_configuration_main_branch {
-  echo "Please enter the name of the main dev branch (typically 'master' or 'development'):"
+  echo "Please specify the main dev branch (typically 'master' or 'development'):"
   read main_branch_input
   if [[ -z "$main_branch_input" ]]; then
     echo_error_header
     echo_error "You have not provided the name for the main branch."
-    echo_error "This information is necessary to run this script."
-    echo_error "Please try again."
+    echo_error "Aborting Git Town configuration."
     exit_with_error newline
   fi
 
@@ -134,8 +134,8 @@ function setup_configuration_main_branch {
 # Ask and store non-feature-branch-names
 function setup_configuration_non_feature_branches {
   echo "Git Town supports non-feature branches like 'release' or 'production'."
-  echo "These branches cannot be shipped and do not merge $main_branch_name when syncing."
-  echo "Please enter the names of all your non-feature branches as a comma separated list."
+  echo "These branches cannot be shipped and will not merge '$main_branch_name' when syncing."
+  echo "Please enter your non-feature branches as a comma separated list or a blank line to skip."
   echo "Example: 'qa, production'"
   read non_feature_input
 
