@@ -55,24 +55,24 @@ bin/cuke [<folder>...]
 
 ## Pull Requests
 
-* each PR should mention the [issue](https://github.com/Originate/git-town/issues)
-  it implements in the PR description
+Each PR should mention the [issue](https://github.com/Originate/git-town/issues)
+it implements in the PR description
 
-  ```
-  implements #123
-  ```
+```
+implements #123
+```
 
-* when merging a PR, the message for the squash commit should follow the
-  [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-  and
-  [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
-  in the commit body
+When merging a PR, the message for the squash commit should follow the
+[formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+and
+[mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
+in the commit body
 
-  ```
-  Add a Foo feature to "git bar"
+```
+Add a Foo feature to "git bar"
 
-  Implements #123
-  ```
+Implements #123
+```
 
 
 ## Architecture
