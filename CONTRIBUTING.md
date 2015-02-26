@@ -78,7 +78,7 @@ Implements #123
 ```
 
 Pull requests from core developers with write access should be submitted using
-"git ship", i.e. squash-merged.
+`git ship`, i.e. squash-merged.
 Pull requests from external developers should be squashed into a single commit
 in their feature branch, and then merged normally.
 
