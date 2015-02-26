@@ -53,6 +53,26 @@ bin/cuke [<folder>...]
 ```
 
 
+## Pull Requests
+
+* each PR should mention the [issue](https://github.com/Originate/git-town/issues)
+  it implements in the PR description
+
+  ```
+  implements #123
+  ```
+
+* when merging a PR, the commit message should
+  [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
+  in the commit body
+
+  ```
+  Add a Foo feature to "git bar"
+
+  Implements #123
+  ```
+
+
 ## Architecture
 
 *The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
