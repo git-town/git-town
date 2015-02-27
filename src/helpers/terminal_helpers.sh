@@ -33,10 +33,11 @@ function echo_error {
 }
 
 
-# Prints the message idented
+# Prints the message indented
 function echo_indented {
-  echo "  $*"
+  echo "$*" | indent
 }
+
 
 # Prints an inline usage
 function echo_inline_bold {
@@ -58,9 +59,9 @@ function echo_inline_usage {
 }
 
 
-# Prints a continutation of an inline usage
+# Prints a continuation of an inline usage
 function echo_inline_usage_or {
-  echo "   or: $*"
+  echo "or: $*" | indent 3
 }
 
 
@@ -113,6 +114,16 @@ function exit_with_status {
 }
 
 
+# Pipe to this function to indent output (2 spaces by default)
+function indent {
+  local count=$1
+  if [ -z "$1" ]; then count=2; fi
+  local spaces="$(printf "%${count}s")"
+
+  sed "s/^/${spaces}/"
+}
+
+
 function output_style_bold {
   tput bold
 }
@@ -135,7 +146,7 @@ function print_command {
 }
 
 
-function prompt_yn () {
+function prompt_yn {
   read yn
   case $yn in
     [Yy] ) return 0;;
