@@ -16,6 +16,6 @@ function ensure_git_repository {
 }
 
 
-if [[ ! $@ =~ --bypass-environment-checks ]]; then
+if [[ ! "$@" =~ --bypass-environment-checks ]]; then
   ensure_git_repository
 fi

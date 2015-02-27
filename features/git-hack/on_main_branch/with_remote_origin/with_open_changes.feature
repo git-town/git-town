@@ -1,4 +1,4 @@
-Feature: git hack: starting a new feature from the main branch (with open changes)
+Feature: git hack: starting a new feature from the main branch (with open changes and remote repo)
 
   As a developer working on a new feature on the main branch
   I want to be able to create a new up-to-date feature branch and continue my work there
