@@ -56,13 +56,13 @@ bin/cuke [<folder>...]
 ## Pull Requests
 
 Each pull request (PR) should mention the [issue](https://github.com/Originate/git-town/issues)
-it implements in the PR description:
+it resolves in its description:
 
 ```
 implements #123
 ```
 
-When merging a PR, the message for the squash commit should follow the
+When merging a PR, the message for the squashed commit should follow the
 [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 and
 [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
@@ -78,10 +78,9 @@ Implements #123
 ```
 
 Pull requests from core developers with write access should be submitted using
-`git ship`, i.e. squash-merged.
+`git ship`.
 Pull requests from external developers should be squashed into a single commit
-in their feature branch, and then accepted by a core developer
-through a normal Git merge.
+in their feature branch (`git rebase -i master`) before merging.
 
 
 ## Architecture
