@@ -56,6 +56,11 @@ function undo_steps_for_commit_open_changes {
 }
 
 
+function undo_steps_for_restore_open_changes {
+  echo "stash_open_changes"
+}
+
+
 function undo_steps_for_stash_open_changes {
   echo "restore_open_changes"
 }

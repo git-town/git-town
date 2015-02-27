@@ -35,14 +35,13 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                        |
-      | feature | git fetch --prune              |
-      | feature | git stash -u                   |
-      | feature | git checkout main              |
-      | main    | git push origin :stale_feature |
-      | main    | git branch -d stale_feature    |
-      | main    | git checkout feature           |
-      | feature | git stash pop                  |
+      | BRANCH  | COMMAND                                              |
+      | feature | git stash -u                                         |
+      | feature | git checkout main                                    |
+      | main    | git branch stale_feature [SHA:behind feature commit] |
+      | main    | git push -u origin stale_feature                     |
+      | main    | git checkout feature                                 |
+      | feature | git stash pop                                        |
     And I end up on the "feature" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES                     |

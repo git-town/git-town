@@ -28,7 +28,6 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
 
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
-    Then show me the output of `git log`
     Then it runs the Git commands
       | BRANCH  | COMMAND                                       |
       | feature | git checkout main                             |
