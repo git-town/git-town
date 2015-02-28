@@ -66,7 +66,7 @@ After '~@finishes-with-non-empty-stash' do
 end
 
 
-Around '@modifies-fish-autocompletions' do |scenario, block|
+Around '@modifies-fish-autocompletions' do |_scenario, block|
   completions_path = File.expand_path('~/.config/fish/completions')
   backup_path = File.expand_path('~/__config_fish_backup__')
 

@@ -28,7 +28,7 @@ end
 
 Then(/^I still have my different Git autocompletion file$/) do
   expect(IO.read File.expand_path('~/.config/fish/completions/git.fish'))
-      .to eql 'existing Git autocompletion data'
+    .to eql 'existing Git autocompletion data'
 end
 
 
