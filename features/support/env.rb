@@ -66,6 +66,20 @@ After '~@finishes-with-non-empty-stash' do
 end
 
 
+Around '@modifies-fish-autocompletions' do |scenario, block|
+  completions_path = File.expand_path('~/.config/fish/completions')
+  backup_path = File.expand_path('~/__config_fish_backup__')
+
+  FileUtils.cp_r completions_path, backup_path
+
+  block.call
+
+  FileUtils.rm_rf completions_path
+  FileUtils.cp_r backup_path, completions_path
+  FileUtils.rm_rf backup_path
+end
+
+
 at_exit do
   FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE

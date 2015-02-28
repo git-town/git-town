@@ -1,11 +1,29 @@
 #!/usr/bin/env bash
-source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh" --bypass-automatic-configuration --bypass-environment-checks
+base_dir=$( dirname "${BASH_SOURCE[0]}" )
+source "$( cd "$base_dir" && pwd )/helpers/helpers.sh" --bypass-automatic-configuration --bypass-environment-checks
 
 
 # Installs the autocompletion definition for Fish shell
 function install_fish_autocompletion {
-  run_command_outside_git "mkdir -p ~/.config/fish/completions"
-  run_command_outside_git "curl -o ~/.config/fish/completions/git.fish https://raw.githubusercontent.com/Originate/git-town/master/autocomplete/git.fish"
+
+  # Determine the Git Town source code directory that contains the autocompletion data
+  cd "$base_dir/../autocomplete"
+  autocomplete_folder=$(pwd)
+  cd -
+
+  # Optionally create the autocompeletion folder for Fish shell
+  if [ ! -d ~/.config/fish/completions ]; then
+    run_command_outside_git "mkdir -p ~/.config/fish/completions"
+  fi
+
+  # Ensure there are no existing autocompletions for Fish shell
+  if [ -e ~/.config/fish/completions/git.fish ] || [ -h ~/.config/fish/completions/git.fish ]; then
+    echo_inline_error 'You already have an existing Fish shell autocompletion definition for Git'
+    echo_inline_error 'Operation aborted'
+    exit_with_error
+  fi
+
+  run_command_outside_git "ln -s $autocomplete_folder/git.fish ~/.config/fish/completions/git.fish"
 }
 
 
