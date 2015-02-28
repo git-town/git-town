@@ -74,7 +74,8 @@ end
 
 Then(/^it runs the following shell commands/) do |expected_commands|
   expected_commands.map_column! 'COMMAND' do |command|
-    command.gsub '[[GIT_TOWN_DIRECTORY]]', File.expand_path('..', SOURCE_DIRECTORY)
+    GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
+    ERB.new(command).result
   end
   expected_commands.diff! commands_of_last_run_outside_git.unshift(expected_commands.headers)
 end

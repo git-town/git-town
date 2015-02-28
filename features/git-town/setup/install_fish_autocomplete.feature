@@ -10,17 +10,17 @@ Feature: Installing Fish Shell autocomplete definitions
     Given I have no fish autocompletion folder
     When I run `git town install-fish-autocompletion`
     Then it runs the following shell commands to install the Fish shell autocompletion
-      | COMMAND                                                                                |
-      | mkdir -p ~/.config/fish/completions                                                    |
-      | ln -s [[GIT_TOWN_DIRECTORY]]/autocomplete/git.fish ~/.config/fish/completions/git.fish |
+      | COMMAND                                                                                   |
+      | mkdir -p ~/.config/fish/completions                                                       |
+      | ln -s <%= GIT_TOWN_DIRECTORY %>/autocomplete/git.fish ~/.config/fish/completions/git.fish |
 
 
   Scenario: with empty fish autocompletion folder
     Given I have an empty fish autocompletion folder
     When I run `git town install-fish-autocompletion`
     Then it runs the following shell commands to install the Fish shell autocompletion
-      | COMMAND                                                                             |
-      | ln -s [[GIT_TOWN_DIRECTORY]]/autocomplete/git.fish ~/.config/fish/completions/git.fish |
+      | COMMAND                                                                                   |
+      | ln -s <%= GIT_TOWN_DIRECTORY %>/autocomplete/git.fish ~/.config/fish/completions/git.fish |
 
 
   Scenario: with an existing Git autocompletion file
