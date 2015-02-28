@@ -37,15 +37,15 @@ This guide will help you get started and outline some things you should know whe
 
 ```bash
 # run all tests
-bundle exec rake
+rake
 
 # run individual tests
-bundle exec rake lint    # Run linters
-bundle exec rake test    # Run feature tests
+rake lint    # Run linters
+rake test    # Run feature tests
 
 # run single scenario/feature
-bundle exec cucumber <filename>[:<lineno>]
-bundle exec cucumber -n '<scenario/feature name>'
+cucumber <filename>[:<lineno>]
+cucumber -n '<scenario/feature name>'
 
 # run single scenario/feature while showing the application output
 DEBUG_COMMANDS=true bundle exec cucumber <filename>[:<lineno>]
@@ -56,6 +56,9 @@ bin/cuke [<folder> | <filename>[:<lineno>]]
 # fix formatting issues
 bundle exec rake format  # Run formatters (fixes some lint errors)
 ```
+
+Note: the `rake xxx` commands above might have to be run as `bundle exec rake xxx`
+if you encounter issues.
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
 automatically tests all commits and pull requests,
