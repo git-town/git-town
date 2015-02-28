@@ -97,16 +97,6 @@ Then(/^I see "(.*)"$/) do |string|
 end
 
 
-Then(/^the output begins with "(.*)"$/) do |output|
-  expect(unformatted_last_run_output).to start_with output
-end
-
-
-Then(/^the output contains "(.*)"$/) do |output|
-  expect(unformatted_last_run_output).to include output
-end
-
-
 Then(/^I see the "(.+?)" man page$/) do |manpage|
   expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
 end
