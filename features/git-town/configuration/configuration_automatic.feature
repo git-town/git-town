@@ -12,7 +12,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
   Scenario Outline: Proceeding to configuration upon initial config prompt
     When I run `<COMMAND>` and enter "y" and "^C"
     Then the output begins with "Git Town hasn't been configured for this repository."
-    And the output contains "Please enter the name of the main dev branch"
+    And the output contains "Please specify the main dev branch"
 
     Examples:
     | COMMAND            |
