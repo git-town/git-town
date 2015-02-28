@@ -54,7 +54,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     And I don't have an uncommitted file with name: "uncommitted"
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
     Then it runs the Git commands
@@ -80,7 +80,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | feature | conflicting_file | resolved content |
 
 
-  Scenario: continuing after resolving conflicts and continuing the rebase
+  Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git sync --continue`
     Then it runs the Git commands

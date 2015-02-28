@@ -64,7 +64,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     And my repo still has a merge in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
     Then it runs the Git commands
@@ -89,7 +89,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | feature_file     | feature content  |
 
 
-  Scenario: continuing after resolving conflicts and comitting
+  Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git sync --continue`
     Then it runs the Git commands
