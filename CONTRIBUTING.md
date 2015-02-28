@@ -57,7 +57,7 @@ bin/cuke [<folder> | <filename>[:<lineno>]]
 bundle exec rake format  # Run formatters (fixes some lint errors)
 ```
 
-Note: the `rake xxx` commands above might have to be run as `bundle exec rake xxx`
+Note: the `rake [command]` commands above might have to be run as `bundle exec rake [command]`
 if you encounter issues.
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
