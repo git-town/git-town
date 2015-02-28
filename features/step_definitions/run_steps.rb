@@ -52,7 +52,7 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it runs no (?:Git|shell)? commands$/) do
+Then(/^it runs no (?:Git|shell) commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 
