@@ -5,6 +5,7 @@ require 'rspec'
 
 
 SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
+GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
 MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
