@@ -157,7 +157,7 @@ function prompt_yn {
 
 
 # Run a command, prints command and output
-function run_command {
+function run_git_command {
   local cmd="$*"
   print_command "$cmd"
   eval "$cmd" 2>&1
