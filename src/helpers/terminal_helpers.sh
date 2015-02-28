@@ -165,7 +165,7 @@ function run_git_command {
 
 
 # Run a command, prints command and output
-function run_command_outside_git {
+function run_command {
   local cmd="$*"
   echo_header "$cmd"
   eval "$cmd" 2>&1
