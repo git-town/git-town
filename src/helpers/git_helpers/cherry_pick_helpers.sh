@@ -3,14 +3,14 @@
 
 # Abort a cherry-pick
 function abort_cherry_pick {
-  run_command "git cherry-pick --abort"
+  run_git_command "git cherry-pick --abort"
 }
 
 
 # Cherry picks the SHAs into the current branch
 function cherry_pick {
   local SHAs="$*"
-  run_command "git cherry-pick $SHAs"
+  run_git_command "git cherry-pick $SHAs"
 }
 
 
@@ -27,10 +27,10 @@ function cherry_pick_in_progress {
 # Continues cherry-pick if one is in progress
 function continue_cherry_pick {
   if [ "$(has_open_changes)" == true ]; then
-    run_command "git commit --no-edit"
+    run_git_command "git commit --no-edit"
   fi
 
   if [ "$(cherry_pick_in_progress)" == true ]; then
-    run_command "git cherry-pick --continue"
+    run_git_command "git cherry-pick --continue"
   fi
 }
