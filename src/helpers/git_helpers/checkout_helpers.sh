@@ -5,7 +5,7 @@
 function checkout {
   local branch_name=$1
   if [ "$(get_current_branch_name)" != "$branch_name" ]; then
-    run_command "git checkout $branch_name"
+    run_git_command "git checkout $branch_name"
   fi
 }
 
