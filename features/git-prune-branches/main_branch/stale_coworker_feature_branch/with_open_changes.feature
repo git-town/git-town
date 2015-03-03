@@ -24,3 +24,18 @@ Feature: git prune-branches: remove stale coworker branches when run on the main
       | local      | main                |
       | remote     | main                |
       | coworker   | main, stale_feature |
+
+
+  Scenario: undoing the operation
+    When I run `git prune-branches --undo`
+    Then it runs the Git commands
+      | BRANCH | COMMAND                                       |
+      | main   | git branch stale_feature [SHA:Initial commit] |
+      | main   | git push -u origin stale_feature              |
+    And I end up on the "main" branch
+    Then the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, stale_feature |
+      | remote     | main, stale_feature |
+      | coworker   | main, stale_feature |
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
