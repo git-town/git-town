@@ -57,7 +57,9 @@ end
 
 
 After do
-  expect(@last_run_result.try :error).to be_falsy, 'Expected no runtime error' unless @error_expected
+  if @last_run_result && !@error_expected
+    expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
+  end
 end
 
 
