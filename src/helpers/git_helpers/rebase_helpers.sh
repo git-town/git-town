@@ -3,14 +3,14 @@
 
 # Abort a rebase
 function abort_rebase {
-  run_command "git rebase --abort"
+  run_git_command "git rebase --abort"
 }
 
 
 # Continues rebase if one is in progress
 function continue_rebase {
   if [ "$(rebase_in_progress)" == true ]; then
-    run_command "git rebase --continue"
+    run_git_command "git rebase --continue"
   fi
 }
 
@@ -18,7 +18,7 @@ function continue_rebase {
 # Rebases the given branch into the current branch
 function rebase {
   local branch_name=$1
-  run_command "git rebase $branch_name"
+  run_git_command "git rebase $branch_name"
 }
 
 
