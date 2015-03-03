@@ -140,7 +140,7 @@ function output_style_reset {
 
 
 # Prints a command
-function print_command {
+function print_git_command {
   local branch_name=$(get_current_branch_name)
   echo_header "[$branch_name] $*"
 }
@@ -156,17 +156,21 @@ function prompt_yn {
 }
 
 
-# Run a command, prints command and output
+# Run a normal (non Git) command.
+#
+# Prints the command and the output
 function run_command {
   local cmd="$*"
-  print_command "$cmd"
+  echo_header "$cmd"
   eval "$cmd" 2>&1
 }
 
 
-# Run a command, prints command and output
-function run_command_outside_git {
+# Run a Git command
+#
+# Prints the command and the Git branch it is running on, as well as the output.
+function run_git_command {
   local cmd="$*"
-  echo_header "$cmd"
+  print_git_command "$cmd"
   eval "$cmd" 2>&1
 }
