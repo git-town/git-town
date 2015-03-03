@@ -23,7 +23,7 @@ function install_fish_autocompletion {
     exit_with_error
   fi
 
-  run_command_outside_git "ln -s $autocomplete_folder/git.fish ~/.config/fish/completions/git.fish"
+  run_command "ln -s $autocomplete_folder/git.fish ~/.config/fish/completions/git.fish"
 }
 
 
