@@ -20,9 +20,9 @@ function reset_to_sha {
   local hard=$2
   if [ "$sha" != "$(current_sha)" ]; then
     if [ -n "$hard" ]; then
-      run_command "git reset --hard $sha"
+      run_git_command "git reset --hard $sha"
     else
-      run_command "git reset $sha"
+      run_git_command "git reset $sha"
     fi
   fi
 }

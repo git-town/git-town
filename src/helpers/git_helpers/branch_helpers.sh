@@ -5,7 +5,7 @@
 function create_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
-  run_command "git branch $new_branch_name $parent_branch_name"
+  run_git_command "git branch $new_branch_name $parent_branch_name"
 }
 
 
@@ -13,7 +13,7 @@ function create_branch {
 function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
-  run_command "git checkout -b $new_branch_name $parent_branch_name"
+  run_git_command "git checkout -b $new_branch_name $parent_branch_name"
 }
 
 
@@ -22,14 +22,14 @@ function delete_local_branch {
   local branch_name=$1
   local op="d"
   if [ "$2" == "force" ]; then op="D"; fi
-  run_command "git branch -$op $branch_name"
+  run_git_command "git branch -$op $branch_name"
 }
 
 
 # Deletes the remote branch with the given name
 function delete_remote_branch {
   local branch_name=$1
-  run_command "git push origin :${branch_name}"
+  run_git_command "git push origin :${branch_name}"
 }
 
 
@@ -112,13 +112,13 @@ function push_branch {
   if [ "$(has_tracking_branch "$branch_name")" = true ]; then
     if [ "$(needs_push "$branch_name")" = true ]; then
       if [ -n "$force" ]; then
-        run_command "git push -f origin $branch_name"
+        run_git_command "git push -f origin $branch_name"
       else
-        run_command "git push origin $branch_name"
+        run_git_command "git push origin $branch_name"
       fi
     fi
   else
-    run_command "git push -u origin $branch_name"
+    run_git_command "git push -u origin $branch_name"
   fi
 }
 
