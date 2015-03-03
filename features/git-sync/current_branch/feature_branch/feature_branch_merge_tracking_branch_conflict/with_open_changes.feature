@@ -52,7 +52,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch

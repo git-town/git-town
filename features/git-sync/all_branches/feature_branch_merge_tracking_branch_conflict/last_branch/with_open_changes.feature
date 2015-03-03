@@ -77,7 +77,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"

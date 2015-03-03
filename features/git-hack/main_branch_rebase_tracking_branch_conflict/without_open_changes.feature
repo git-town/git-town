@@ -38,7 +38,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     And I am left with my original commits
 
 
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
     And my repo still has a rebase in progress

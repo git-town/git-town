@@ -47,7 +47,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress

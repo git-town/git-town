@@ -50,7 +50,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"

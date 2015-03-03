@@ -47,7 +47,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
     And I don't have an uncommitted file with name: "uncommitted"
