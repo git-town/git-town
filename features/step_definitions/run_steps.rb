@@ -58,18 +58,18 @@ Then(/^it runs no Git commands$/) do
 end
 
 
-Then(/^it runs the Git commands$/) do |expected_steps|
+Then(/^it runs the Git commands$/) do |expected_commands|
   sha_regex = /\[SHA:(.+?)\]/
 
   # Replace SHA placeholders with the real SHAs
-  expected_steps.map_column! 'COMMAND' do |command|
+  expected_commands.map_column! 'COMMAND' do |command|
     command.gsub(sha_regex) do |sha_expression|
       commit_message = sha_expression.match(sha_regex).captures[0].strip
       output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
     end
   end
 
-  expected_steps.diff! commands_of_last_run.unshift(expected_steps.headers)
+  expected_commands.diff! commands_of_last_run.unshift(expected_commands.headers)
 end
 
 
@@ -95,16 +95,6 @@ end
 
 Then(/^I see "(.*)"$/) do |string|
   step 'I see', string
-end
-
-
-Then(/^the output begins with "(.*)"$/) do |output|
-  expect(unformatted_last_run_output).to start_with output
-end
-
-
-Then(/^the output contains "(.*)"$/) do |output|
-  expect(unformatted_last_run_output).to include output
 end
 
 
