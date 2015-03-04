@@ -27,7 +27,7 @@ Feature: Installing Fish Shell autocomplete definitions
     Given I have an existing Git autocompletion file
     When I run `git town install-fish-autocompletion`
     Then it runs no shell commands
-    And I get the error "You already have an existing Fish shell autocompletion definition for Git"
+    And I get the error "Git autocompletion for Fish shell already exists"
     And I get the error "Operation aborted"
     And I still have my original Git autocompletion file
 
@@ -36,6 +36,6 @@ Feature: Installing Fish Shell autocomplete definitions
     Given I already have the Git autocompletion symlink
     When I run `git town install-fish-autocompletion`
     Then it runs no shell commands
-    And I get the error "You already have an existing Fish shell autocompletion definition for Git"
+    And I get the error "Git autocompletion for Fish shell already exists"
     And I get the error "Operation aborted"
     And I still have my original Git autocompletion symlink

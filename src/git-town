@@ -16,7 +16,7 @@ function install_fish_autocompletion {
 
   # Ensure there are no existing autocompletions for Fish shell
   if [ -e ~/.config/fish/completions/git.fish ] || [ -h ~/.config/fish/completions/git.fish ]; then
-    echo_inline_error 'You already have an existing Fish shell autocompletion definition for Git'
+    echo_inline_error 'Git autocompletion for Fish shell already exists'
     echo_inline_error 'Operation aborted'
     exit_with_error
   fi
