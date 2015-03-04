@@ -7,9 +7,7 @@ source "$( cd "$base_dir" && pwd )/helpers/helpers.sh" --bypass-automatic-config
 function install_fish_autocompletion {
 
   # Determine the Git Town source code directory that contains the autocompletion data
-  cd "$base_dir/../autocomplete"
-  autocomplete_folder=$(pwd)
-  cd -
+  local autocomplete_folder=$( cd "$base_dir/../autocomplete" && pwd )
 
   # Optionally create the autocompeletion folder for Fish shell
   if [ ! -d ~/.config/fish/completions ]; then
