@@ -16,7 +16,7 @@ export non_feature_branch_names=$(get_configuration non-feature-branch-names)
 
 
 # Bypass the configuration if requested by caller (e.g. git-town)
-if [[ $@ =~ --bypass-automatic-configuration ]]; then
+if [[ "$@" =~ --bypass-automatic-configuration ]]; then
   return 0
 fi
 
