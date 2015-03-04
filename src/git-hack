@@ -14,7 +14,11 @@ function ensure_has_target_branch {
 function preconditions {
   target_branch_name=$1
   ensure_has_target_branch
-  fetch
+
+  if [ "$(has_remote_url)" = true ]; then
+    fetch
+  fi
+
   ensure_does_not_have_branch "$target_branch_name"
 }
 
@@ -24,9 +28,12 @@ function steps {
     echo "stash_open_changes"
   fi
 
-  echo "checkout_main_branch"
-  echo "rebase_tracking_branch"
-  echo "push"
+  if [ "$(has_remote_url)" = true ]; then
+    echo "checkout_main_branch"
+    echo "rebase_tracking_branch"
+    echo "push"
+  fi
+
   echo "create_and_checkout_feature_branch '$target_branch_name'"
 
   if [ "$initial_open_changes" = true ]; then
