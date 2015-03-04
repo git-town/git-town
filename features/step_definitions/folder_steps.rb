@@ -1,13 +1,13 @@
 Given(/^I already have the Git autocompletion symlink$/) do
-  FileUtils.rm File.expand_path('~/.config/fish/completions/git.fish')
+  FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
   FileUtils.symlink 'foo',
-                    File.expand_path('~/.config/fish/completions/git.fish')
+                    FISH_AUTOCOMPLETIONS_PATH
 end
 
 
 Given(/^I have an existing Git autocompletion file$/) do
-  FileUtils.rm File.expand_path('~/.config/fish/completions/git.fish')
-  IO.write File.expand_path('~/.config/fish/completions/git.fish'),
+  FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
+  IO.write FISH_AUTOCOMPLETIONS_PATH,
            'existing Git autocompletion data'
 end
 
@@ -19,19 +19,18 @@ end
 
 Given(/^I have an empty fish autocompletion folder$/) do
   suppress do
-    FileUtils.rm File.expand_path('~/.config/fish/completions/git.fish')
+    FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
   end
 end
 
 
 
 
-  expect(IO.read File.expand_path('~/.config/fish/completions/git.fish'))
-    .to eql 'existing Git autocompletion data'
 Then(/^I still have my original Git autocompletion file$/) do
+  expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
 end
 
 
-  expect(File.symlink? File.expand_path('~/.config/fish/completions/git.fish')).to be_truthy
 Then(/^I still have my original Git autocompletion symlink$/) do
+  expect(File.symlink? FISH_AUTOCOMPLETIONS_PATH).to be_truthy
 end

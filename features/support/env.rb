@@ -12,6 +12,8 @@ MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
+FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
+
 
 # load memoized environment by copying contents
 # of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
