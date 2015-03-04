@@ -13,7 +13,7 @@ function install_fish_autocompletion {
 
   # Optionally create the autocompeletion folder for Fish shell
   if [ ! -d ~/.config/fish/completions ]; then
-    run_command_outside_git "mkdir -p ~/.config/fish/completions"
+    run_command "mkdir -p ~/.config/fish/completions"
   fi
 
   # Ensure there are no existing autocompletions for Fish shell
