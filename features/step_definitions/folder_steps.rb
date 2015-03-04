@@ -5,7 +5,7 @@ Given(/^I already have the Git autocompletion symlink$/) do
 end
 
 
-Given(/^I have a different Git autocompletion file$/) do
+Given(/^I have an existing Git autocompletion file$/) do
   FileUtils.rm File.expand_path('~/.config/fish/completions/git.fish')
   IO.write File.expand_path('~/.config/fish/completions/git.fish'),
            'existing Git autocompletion data'

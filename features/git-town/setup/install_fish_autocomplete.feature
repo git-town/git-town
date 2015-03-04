@@ -24,7 +24,7 @@ Feature: Installing Fish Shell autocomplete definitions
 
 
   Scenario: with an existing Git autocompletion file
-    Given I have a different Git autocompletion file
+    Given I have an existing Git autocompletion file
     When I run `git town install-fish-autocompletion`
     Then it runs no shell commands
     And I get the error "You already have an existing Fish shell autocompletion definition for Git"
