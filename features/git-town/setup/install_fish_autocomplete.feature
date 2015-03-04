@@ -29,7 +29,7 @@ Feature: Installing Fish Shell autocomplete definitions
     Then it runs no shell commands
     And I get the error "You already have an existing Fish shell autocompletion definition for Git"
     And I get the error "Operation aborted"
-    And I still have my different Git autocompletion file
+    And I still have my original Git autocompletion file
 
 
   Scenario: with existing Git autocompletion symlink
@@ -38,4 +38,4 @@ Feature: Installing Fish Shell autocomplete definitions
     Then it runs no shell commands
     And I get the error "You already have an existing Fish shell autocompletion definition for Git"
     And I get the error "Operation aborted"
-    And I still have my Git autocompletion symlink
+    And I still have my original Git autocompletion symlink

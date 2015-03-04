@@ -26,12 +26,12 @@ end
 
 
 
-Then(/^I still have my different Git autocompletion file$/) do
   expect(IO.read File.expand_path('~/.config/fish/completions/git.fish'))
     .to eql 'existing Git autocompletion data'
+Then(/^I still have my original Git autocompletion file$/) do
 end
 
 
-Then(/^I still have my Git autocompletion symlink$/) do
   expect(File.symlink? File.expand_path('~/.config/fish/completions/git.fish')).to be_truthy
+Then(/^I still have my original Git autocompletion symlink$/) do
 end
