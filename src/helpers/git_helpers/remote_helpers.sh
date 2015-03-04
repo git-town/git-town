@@ -18,3 +18,13 @@ function remote_repository_name {
   local domain=$(remote_domain)
   remote_url | sed -E "s#.*$domain[/:](.+)#\1#" | sed "s/\.git$//"
 }
+
+
+# Returns true if the repository has a remote configured
+function has_remote_url {
+  if [ -z "$(remote_url)" ]; then
+    echo false
+  else
+    echo true
+  fi
+}

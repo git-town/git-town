@@ -1,4 +1,4 @@
-Feature: git hack: starting a new feature from the main branch (without open changes)
+Feature: git hack: starting a new feature from the main branch (without open changes and with remote repo)
 
   (see ./with_open_changes.feature)
 
