@@ -13,7 +13,8 @@ git hack (--abort | --continue)
 
 #### DESCRIPTION
 
-Sync the main branch and create a new feature branch with the given name.
+Syncs the main branch if there is a remote repository.
+Creates a new feature branch with the given name.
 Brings over all uncommitted changes.
 
 

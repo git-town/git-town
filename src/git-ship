@@ -27,16 +27,21 @@ function preconditions {
 
 
 function steps {
+  local has_remote="$(has_remote_url)"
+
   if [ "$target_branch_name" != "$initial_branch_name" ]; then
     if [ "$initial_open_changes" = true ]; then
       echo "stash_open_changes"
     fi
   fi
 
-  echo "checkout_main_branch"
-  echo "fetch"
-  echo "rebase_tracking_branch"
-  echo "push"
+  if [ "$has_remote" = true ]; then
+    echo "checkout_main_branch"
+    echo "fetch"
+    echo "rebase_tracking_branch"
+    echo "push"
+  fi
+
   echo "checkout $target_branch_name"
   echo "merge_tracking_branch"
   echo "merge $main_branch_name"
@@ -44,7 +49,11 @@ function steps {
   echo "checkout_main_branch"
   echo "squash_merge $target_branch_name"
   echo "commit_squash_merge $target_branch_name $commit_options"
-  echo "push"
+
+  if [ "$has_remote" = true ]; then
+    echo "push"
+  fi
+
   if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
     echo "delete_remote_branch $target_branch_name"
   fi
