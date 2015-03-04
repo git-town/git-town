@@ -18,9 +18,7 @@ end
 
 
 Given(/^I have an empty fish autocompletion folder$/) do
-  suppress do
-    FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
-  end
+  FileUtils.rm_r FISH_AUTOCOMPLETIONS_PATH
 end
 
 
