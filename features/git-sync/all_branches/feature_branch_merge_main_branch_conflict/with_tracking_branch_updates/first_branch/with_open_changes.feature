@@ -77,7 +77,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
@@ -86,7 +86,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And my repo still has a merge in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync --continue`
     Then it runs the Git commands
@@ -114,7 +114,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |          |                  | Merge branch 'main' into feature2                            |                      |
 
 
-  Scenario: continuing after resolving conflicts and committing
+  Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git sync --continue`
     Then it runs the Git commands
