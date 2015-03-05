@@ -49,7 +49,8 @@ cucumber -n '<scenario/feature name>'
 DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
 
 # running several features in parallel
-bin/cuke <folder>
+bin/cuke [folder]
+bin/cuke [file]...
 
 # auto-fixing formatting issues
 rake format  # Run formatters (fixes some lint errors)
