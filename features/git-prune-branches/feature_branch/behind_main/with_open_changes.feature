@@ -49,4 +49,3 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
       | remote     | main, feature, stale_feature |
       | coworker   | main                         |
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
-

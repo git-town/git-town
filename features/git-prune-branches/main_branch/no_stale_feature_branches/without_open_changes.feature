@@ -24,7 +24,7 @@ Feature: git prune-branches: don't remove used feature branches when called on t
 
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
-    Then I get the error "Cannot undo"
+    Then I get the error "Nothing to undo"
     And it runs no Git commands
     And I am still on the "main" branch
     Then the existing branches are
