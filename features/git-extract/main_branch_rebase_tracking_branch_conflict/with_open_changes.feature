@@ -50,7 +50,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
@@ -58,7 +58,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     And my repo has a rebase in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
     Then it runs the Git commands
@@ -82,7 +82,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |          |                  | refactor commit           | refactor_file    |
 
 
-  Scenario: continuing after resolving conflicts and continuing the rebase
+  Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git extract --continue`
     Then it runs the Git commands

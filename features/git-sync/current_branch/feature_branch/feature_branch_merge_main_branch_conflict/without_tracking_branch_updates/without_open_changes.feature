@@ -45,7 +45,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
 
 
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
@@ -53,7 +53,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     And my repo still has a merge in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
     Then it runs the Git commands
@@ -73,7 +73,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | conflicting_file | resolved content |
 
 
-  Scenario: continuing after resolving conflicts and comitting
+  Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git sync --continue`
     Then it runs the Git commands
