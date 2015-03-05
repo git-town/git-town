@@ -1,14 +1,12 @@
 Given(/^I already have the Git autocompletion symlink$/) do
   FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
-  FileUtils.symlink 'foo',
-                    FISH_AUTOCOMPLETIONS_PATH
+  FileUtils.symlink 'foo', FISH_AUTOCOMPLETIONS_PATH
 end
 
 
 Given(/^I have an existing Git autocompletion file$/) do
   FileUtils.rm FISH_AUTOCOMPLETIONS_PATH
-  IO.write FISH_AUTOCOMPLETIONS_PATH,
-           'existing Git autocompletion data'
+  IO.write FISH_AUTOCOMPLETIONS_PATH, 'existing Git autocompletion data'
 end
 
 
