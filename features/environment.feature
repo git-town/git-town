@@ -16,7 +16,7 @@ Feature: Git Town performs correctly depending on the environment
       | git extract                   |
       | git hack                      |
       | git kill                      |
-      | git pr                        |
+      | git pull-request              |
       | git prune-branches            |
       | git repo                      |
       | git ship                      |
