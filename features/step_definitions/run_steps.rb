@@ -38,11 +38,11 @@ Then(/^I get the error$/) do |error_message|
   expect(actual).to include(error_message), %(
     ACTUAL
     ***************************************************
-    #{actual.dump}
+    #{actual.dump.gsub '\n', "\n"}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{error_message.dump}
+    #{error_message.dump.gsub '\n', "\n"}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end
