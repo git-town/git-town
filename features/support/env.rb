@@ -5,11 +5,14 @@ require 'rspec'
 
 
 SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
+GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
 SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
 
 MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
+
+FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
 
 # load memoized environment by copying contents
@@ -65,6 +68,20 @@ end
 
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
+end
+
+
+Around '@modifies-fish-autocompletions' do |_scenario, block|
+  completions_path = File.expand_path('~/.config/fish/completions')
+  backup_path = File.expand_path('~/__config_fish_backup__')
+
+  FileUtils.cp_r completions_path, backup_path
+
+  block.call
+
+  FileUtils.rm_rf completions_path
+  FileUtils.cp_r backup_path, completions_path
+  FileUtils.rm_rf backup_path
 end
 
 
