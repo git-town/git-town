@@ -26,7 +26,7 @@ This guide will help you get started and outline some things you should know whe
 * install the [requirements](#requirements)
 * fork and clone the repository to your machine
 * run `bundle` to install ruby gems
-* optionally run `bundle exec rake` to make sure all tests pass on your machine
+* optionally run `rake` to make sure all tests pass on your machine
 
 
 ## Testing
@@ -36,25 +36,23 @@ This guide will help you get started and outline some things you should know whe
 * source code and test files must pass the linters
 
 ```bash
-# run all tests
-rake
+# running the different test types
+rake         # runs all tests
+rake lint    # runs the linters
+rake test    # runs the feature tests
 
-# run individual tests
-rake lint    # Run linters
-rake test    # Run feature tests
-
-# run single scenario/feature
+# running individual scenarios/features
 cucumber <filename>[:<lineno>]
 cucumber -n '<scenario/feature name>'
 
-# run single scenario/feature while showing the application output
-DEBUG_COMMANDS=true bundle exec cucumber <filename>[:<lineno>]
+# runnin   g individual scenarios/features while showing the application output
+DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
 
-# run features in parallel
-bin/cuke [<folder> | <filename>[:<lineno>]]
+# running several features in parallel
+bin/cuke <folder>
 
-# fix formatting issues
-bundle exec rake format  # Run formatters (fixes some lint errors)
+# auto-fixing formatting issues
+rake format  # Run formatters (fixes some lint errors)
 ```
 
 The `rake [parameters]` commands above can also be run as `bundle exec rake [parameters]`
@@ -66,7 +64,7 @@ and notifies you via email and through status badges in pull requests
 about problems.
 
 
-## Merging
+## Merging Pull Requests
 
 * if possible, use Git Town to ship your pull request
 * format your commit message according to the
