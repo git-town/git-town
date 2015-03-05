@@ -33,7 +33,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     And I am left with my original commits
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync-fork --continue`
     Then it runs the Git commands
@@ -50,7 +50,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | conflicting_file | resolved content |
 
 
-  Scenario: continuing after resolving conflicts and continuing the rebase
+  Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git sync-fork --continue`
     Then it runs the Git commands

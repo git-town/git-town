@@ -32,16 +32,17 @@ end
 
 Then(/^I get the error$/) do |error_message|
   @error_expected = true
+  expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
   expect(@last_run_result.error).to be_truthy
   actual = unformatted_last_run_output
   expect(actual).to include(error_message), %(
     ACTUAL
     ***************************************************
-    #{actual.dump}
+    #{actual.dump.gsub '\n', "\n"}
     ***************************************************
     EXPECTED TO INCLUDE
     ***************************************************
-    #{error_message.dump}
+    #{error_message.dump.gsub '\n', "\n"}
     ***************************************************
   ).gsub(/^ {4}/, '')
 end

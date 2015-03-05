@@ -50,7 +50,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     And my repo has no cherry-pick in progress
 
 
-  Scenario: continuing without resolving conflicts
+  Scenario: continuing without resolving the conflicts
     When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
@@ -58,7 +58,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     And my repo has a cherry-pick in progress
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
     Then it runs the Git commands
@@ -75,7 +75,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          |                  | refactor commit | conflicting_file |
 
 
-  Scenario: continuing after resolving conflicts and committing
+  Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git extract --continue`
     Then it runs the Git commands
