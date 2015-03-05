@@ -45,7 +45,7 @@ rake test    # runs the feature tests
 cucumber <filename>[:<lineno>]
 cucumber -n '<scenario/feature name>'
 
-# runnin   g individual scenarios/features while showing the application output
+# running individual scenarios/features while showing the application output
 DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
 
 # running several features in parallel
