@@ -41,7 +41,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     And I am left with my original commits
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
@@ -66,7 +66,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |        |                  | feature done              | feature_file     |
 
 
-  Scenario: continuing after resolving conflicts and continuing the rebase
+  Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git ship --continue`
     Then it runs the Git commands
