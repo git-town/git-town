@@ -44,7 +44,7 @@ Feature: git ship: resolving conflicts between the current feature branch and it
     And I am left with my original commits
 
 
-  Scenario: continuing after resolving conflicts
+  Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
@@ -64,7 +64,7 @@ Feature: git ship: resolving conflicts between the current feature branch and it
       | main   | local and remote | feature done | conflicting_file |
 
 
-  Scenario: continuing after resolving conflicts and committing
+  Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
     Then it runs the Git commands
