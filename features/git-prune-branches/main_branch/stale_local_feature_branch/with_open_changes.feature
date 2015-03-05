@@ -21,7 +21,6 @@ Feature: git prune-branches: remove stale local feature branches when run on the
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-      | coworker   | main     |
 
 
   Scenario: undoing the operation
