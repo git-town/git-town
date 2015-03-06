@@ -6,7 +6,7 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
+Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named (.+?)$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
   end
