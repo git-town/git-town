@@ -84,8 +84,9 @@ Example for a commit message:
 ```
 Add a foo feature to "git bar"
 
-This automatically foos changes before they get barred into a separate branch.
-This keeps the final foo simpler when shipping that branch later.
+This automatically foos changes before they get barred into
+a separate branch. This keeps the final foo simpler when
+shipping that branch later.
 
 Implements #123
 ```
