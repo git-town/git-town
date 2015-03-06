@@ -53,7 +53,7 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it runs no Git commands$/) do
+Then(/^it runs no (?:Git|shell) commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 
@@ -74,6 +74,9 @@ end
 
 
 Then(/^it runs the following shell commands/) do |expected_commands|
+  expected_commands.map_column! 'COMMAND' do |command|
+    ERB.new(command).result
+  end
   expected_commands.diff! commands_of_last_run_outside_git.unshift(expected_commands.headers)
 end
 

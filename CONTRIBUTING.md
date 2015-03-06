@@ -2,7 +2,6 @@
 
 Git Town is a welcoming community, and we'd love for everyone to bring
 their contributions to make it even better.
-
 We appreciate contributions of any size.
 
 * Found a bug or have an idea for a new feature? - [Open an issue](https://github.com/Originate/git-town/issues/new)
@@ -17,40 +16,61 @@ This guide will help you get started and outline some things you should know whe
   (install [directly](https://www.ruby-lang.org/en/documentation/installation),
   or via a ruby manager like [rvm](https://rvm.io/)
   or [rbenv](https://github.com/sstephenson/rbenv))
-  * Language the tests are written in
+  * language the tests are written in
 * [ShellCheck](https://github.com/koalaman/shellcheck)
-  * Used in the linting process to find common errors in the Bash code
+  * used in the linting process to find common errors in the Bash code
 
 
 ## Setup
 
+* install the [requirements](#requirements)
 * fork and clone the repository to your machine
-* `bundle` to install ruby gems
+* run `bundle` to install ruby gems
+* optionally run `rake` to make sure all tests pass on your machine
 
 
 ## Testing
 
-* Tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
-* All features need to have comprehensive test coverage
-* Source code and test files must pass the linters
+* tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
+* all features need to have comprehensive test coverage
+* source code and test files must pass the linters
 
 ```bash
-# rake tasks
-rake         # Run linters and feature tests
+# running the different test types
+rake         # runs all tests
+rake lint    # runs the linters
+rake test    # runs the feature tests
+
+# running individual scenarios/features
+cucumber <filename>[:<lineno>]
+cucumber -n '<scenario/feature name>'
+
+# running individual scenarios/features while showing the application output
+DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
+
+# running several features in parallel
+bin/cuke [cucumber parameters]
+
+# auto-fixing formatting issues
 rake format  # Run formatters (fixes some lint errors)
-rake lint    # Run linters
-rake test    # Run feature tests
-
-# run single scenario/feature
-cucumber -n 'scenario/feature name'
-cucumber [filename][:lineno]
-
-# run single scenario/feature while showing the application output
-DEBUG_COMMANDS=true cucumber [filename][:lineno]
-
-# run features in parallel
-bin/cuke [<folder>...]
 ```
+
+The `rake [parameters]` commands above can also be run as `bundle exec rake [parameters]`
+if you encounter issues.
+
+Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
+automatically tests all commits and pull requests,
+and notifies you via email and through status badges in pull requests
+about problems.
+
+
+## Merging Pull Requests
+
+* if possible, use Git Town to ship your pull request
+* format your commit message according to the
+  [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages)
+  in the body of the commit message, so that it is automatically closed
 
 
 ## Pull Requests
