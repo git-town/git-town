@@ -82,8 +82,8 @@ in the commit body, so that the respective issue is automatically closed.
 ```
 Add a foo feature to "git bar"
 
-This allows developers to optionally foo their code before
-they finally bar it into its own feature branch.
+This automatically foos changes before
+they get barred into a separate branch.
 
 Implements #123
 ```
