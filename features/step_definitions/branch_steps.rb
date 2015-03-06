@@ -6,7 +6,7 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
+Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "([^"]+)"$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
   end
@@ -19,6 +19,11 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
     create_commits branch: commit_to_branch
   end
+end
+
+
+Given(/^I have a feature branch named "(.+?)" cut from "(.+?)"$/) do |branch_name, commit_message|
+  create_branch branch_name, commit: commit_sha(commit_message)
 end
 
 

@@ -74,6 +74,12 @@ def create_commits commits_array
 end
 
 
+# Returns the SHA for the commit with the given message
+def commit_sha commit_message
+  output_of "git log main --oneline | grep '#{commit_message}' | cut -d ' ' -f 1"
+end
+
+
 # Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"

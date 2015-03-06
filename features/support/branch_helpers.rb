@@ -21,8 +21,8 @@ end
 
 
 # Creates and pushes a branch
-def create_branch branch_name, remote: true
-  run "git checkout -b #{branch_name} main"
+def create_branch branch_name, remote: true, commit: 'main'
+  run "git checkout -b #{branch_name} #{commit}"
   run "git push -u origin #{branch_name}" if remote
 end
 
