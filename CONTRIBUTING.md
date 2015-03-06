@@ -82,7 +82,7 @@ in the commit body, so that the respective issue is automatically closed.
 Example for a commit message:
 
 ```
-Add a foo feature to "git bar"
+Automatically foo commits in "git bar"
 
 This automatically foos changes before they get barred into
 a separate branch. This keeps the final foo simpler when
