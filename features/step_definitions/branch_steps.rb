@@ -22,7 +22,7 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
 end
 
 
-Given(/^I have a feature branch named "(.+?)" cut from "(.+?)"$/) do |branch_name, commit_message|
+Given(/^I have a feature branch cut from "(.+?)" named "(.+?)"$/) do |commit_message, branch_name|
   create_branch branch_name, commit: commit_sha(commit_message)
 end
 
