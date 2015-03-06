@@ -67,7 +67,7 @@ about problems.
 ## Pull Requests
 
 Each pull request (PR) should have the same (optional) description that it will have
-when committed into the master branch.
+when committed later.
 Besides a general brief description, this also includes
 the [issue](https://github.com/Originate/git-town/issues)
 it resolves.
