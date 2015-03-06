@@ -82,8 +82,9 @@ in the commit body, so that the respective issue is automatically closed.
 ```
 Add a foo feature to "git bar"
 
-This automatically foos changes before
-they get barred into a separate branch.
+This automatically foos changes before they get
+barred into a separate branch, thereby preventing
+the need to foo later when shipping
 
 Implements #123
 ```
