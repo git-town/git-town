@@ -66,18 +66,17 @@ about problems.
 
 ## Pull Requests
 
-Each pull request (PR) should mention the [issue](https://github.com/Originate/git-town/issues)
-it resolves in its description:
+Each pull request (PR) should have the same (optional) description that it will have
+when committed into the master branch.
+Besides a general brief description, this also includes
+the [issue](https://github.com/Originate/git-town/issues)
+it resolves.
 
-```
-implements #123
-```
-
-If possible, use Git Town to merge (ship) a PR.
-The message for the squashed commit should follow the
-[formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-and
-[mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
+When merging approved PRs:
+* use `git ship`
+* the message for the squashed commit should follow the
+  [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
 in the commit body, so that the respective issue is automatically closed.
 
 ```
