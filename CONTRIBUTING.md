@@ -68,9 +68,7 @@ about problems.
 
 Each pull request (PR) should have the same (optional) description that it will have
 when committed later.
-Besides a general brief description, this also includes
-the [issue](https://github.com/Originate/git-town/issues)
-it resolves.
+This includes the [issue](https://github.com/Originate/git-town/issues) it resolves.
 
 When merging approved PRs:
 * use `git ship`
