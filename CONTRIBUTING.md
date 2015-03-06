@@ -64,15 +64,6 @@ and notifies you via email and through status badges in pull requests
 about problems.
 
 
-## Merging Pull Requests
-
-* if possible, use Git Town to ship your pull request
-* format your commit message according to the
-  [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages)
-  in the body of the commit message, so that it is automatically closed
-
-
 ## Pull Requests
 
 Each pull request (PR) should mention the [issue](https://github.com/Originate/git-town/issues)
@@ -82,7 +73,8 @@ it resolves in its description:
 implements #123
 ```
 
-When merging a PR, the message for the squashed commit should follow the
+If possible, use Git Town to merge (ship) a PR.
+The message for the squashed commit should follow the
 [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 and
 [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
@@ -96,11 +88,6 @@ they finally bar it into its own feature branch.
 
 Implements #123
 ```
-
-Pull requests from core developers with write access should be submitted using
-`git ship`.
-Pull requests from external developers should be squashed into a single commit
-in their feature branch (`git rebase -i master`) before merging.
 
 
 ## Architecture
