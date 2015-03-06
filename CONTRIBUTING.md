@@ -79,6 +79,8 @@ When merging approved PRs:
 * [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
 in the commit body, so that the respective issue is automatically closed.
 
+Example for a commit message:
+
 ```
 Add a foo feature to "git bar"
 
