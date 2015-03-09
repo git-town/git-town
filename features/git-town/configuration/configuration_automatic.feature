@@ -19,8 +19,8 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git extract        |
     | git hack           |
     | git kill           |
-    | git pr             |
     | git prune-branches |
+    | git pull-request   |
     | git repo           |
     | git ship           |
     | git sync           |
@@ -41,8 +41,8 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git extract        |
     | git hack           |
     | git kill           |
-    | git pr             |
     | git prune-branches |
+    | git pull-request   |
     | git repo           |
     | git ship           |
     | git sync           |
