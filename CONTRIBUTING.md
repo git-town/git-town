@@ -66,9 +66,9 @@ about problems.
 
 ## Pull Requests
 
-Each pull request (PR) should have the same (optional) description that it will have
-when committed later.
-This includes the [issue](https://github.com/Originate/git-town/issues) it resolves.
+Each pull request (PR) should have the same (optional) description that it will
+have when committed later and include the
+[issue](https://github.com/Originate/git-town/issues) it resolves.
 
 When merging approved PRs:
 * use `git ship`
@@ -77,7 +77,7 @@ When merging approved PRs:
 * [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
 in the commit body, so that the respective issue is automatically closed.
 
-Example for a commit message:
+Example of a commit message:
 
 ```
 Automatically foo commits in "git bar"
