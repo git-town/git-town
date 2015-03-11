@@ -91,7 +91,7 @@ Implements #123
 
 ## Architecture
 
-*The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
+*The following refers to all commands except `git-pull-request`, `git-repo`, and `git-town`.*
 
 Each Git Town command begins by inspecting the current state of the Git repository
 (which branch you are on, whether you have open changes).
