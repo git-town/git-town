@@ -14,7 +14,7 @@ end
 # This is for comparing against expected files in a Cucumber table.
 def files_in_branches
   result = [%w(BRANCH NAME CONTENT)]
-  existing_local_branches.each do |branch|
+  existing_local_branches(order: :main_first).each do |branch|
     files_in(branch: branch).map do |file|
       content = content_of file: file, for_sha: branch
       result << [branch, file, content]
