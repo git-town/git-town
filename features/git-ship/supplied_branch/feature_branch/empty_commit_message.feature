@@ -16,23 +16,23 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     Given I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
-      | BRANCH        | COMMAND                               |
-      | other_feature | git stash -u                          |
-      | other_feature | git checkout main                     |
-      | main          | git fetch --prune                     |
-      | main          | git rebase origin/main                |
-      | main          | git checkout feature                  |
-      | feature       | git merge --no-edit origin/feature    |
-      | feature       | git merge --no-edit main              |
-      | feature       | git checkout main                     |
-      | main          | git merge --squash feature            |
-      | main          | git commit                            |
-      | main          | git reset --hard                      |
-      | main          | git checkout feature                  |
-      | feature       | git reset --hard [SHA:feature commit] |
-      | feature       | git checkout main                     |
-      | main          | git checkout other_feature            |
-      | other_feature | git stash pop                         |
+      | BRANCH        | COMMAND                                      |
+      | other_feature | git stash -u                                 |
+      | other_feature | git checkout main                            |
+      | main          | git fetch --prune                            |
+      | main          | git rebase origin/main                       |
+      | main          | git checkout feature                         |
+      | feature       | git merge --no-edit origin/feature           |
+      | feature       | git merge --no-edit main                     |
+      | feature       | git checkout main                            |
+      | main          | git merge --squash feature                   |
+      | main          | git commit                                   |
+      | main          | git reset --hard                             |
+      | main          | git checkout feature                         |
+      | feature       | git reset --hard <%= sha 'feature commit' %> |
+      | feature       | git checkout main                            |
+      | main          | git checkout other_feature                   |
+      | other_feature | git stash pop                                |
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch
     And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
@@ -42,21 +42,21 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
   Scenario: without open changes
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
-      | BRANCH        | COMMAND                               |
-      | other_feature | git checkout main                     |
-      | main          | git fetch --prune                     |
-      | main          | git rebase origin/main                |
-      | main          | git checkout feature                  |
-      | feature       | git merge --no-edit origin/feature    |
-      | feature       | git merge --no-edit main              |
-      | feature       | git checkout main                     |
-      | main          | git merge --squash feature            |
-      | main          | git commit                            |
-      | main          | git reset --hard                      |
-      | main          | git checkout feature                  |
-      | feature       | git reset --hard [SHA:feature commit] |
-      | feature       | git checkout main                     |
-      | main          | git checkout other_feature            |
+      | BRANCH        | COMMAND                                      |
+      | other_feature | git checkout main                            |
+      | main          | git fetch --prune                            |
+      | main          | git rebase origin/main                       |
+      | main          | git checkout feature                         |
+      | feature       | git merge --no-edit origin/feature           |
+      | feature       | git merge --no-edit main                     |
+      | feature       | git checkout main                            |
+      | main          | git merge --squash feature                   |
+      | main          | git commit                                   |
+      | main          | git reset --hard                             |
+      | main          | git checkout feature                         |
+      | feature       | git reset --hard <%= sha 'feature commit' %> |
+      | feature       | git checkout main                            |
+      | main          | git checkout other_feature                   |
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch
     And I am left with my original commits

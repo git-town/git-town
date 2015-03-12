@@ -37,11 +37,11 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                      |
-      | feature2 | git merge --abort                            |
-      | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout feature1                        |
-      | feature1 | git checkout main                            |
+      | BRANCH   | COMMAND                                             |
+      | feature2 | git merge --abort                                   |
+      | feature2 | git reset --hard <%= sha 'feature2 local commit' %> |
+      | feature2 | git checkout feature1                               |
+      | feature1 | git checkout main                                   |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |
@@ -56,10 +56,10 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: skipping
     When I run `git sync --skip`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                      |
-      | feature2 | git merge --abort                            |
-      | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout main                            |
+      | BRANCH   | COMMAND                                             |
+      | feature2 | git merge --abort                                   |
+      | feature2 | git reset --hard <%= sha 'feature2 local commit' %> |
+      | feature2 | git checkout main                                   |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME            |

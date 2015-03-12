@@ -59,14 +59,9 @@ end
 
 
 Then(/^it runs the Git commands$/) do |expected_commands|
-  sha_regex = /\[SHA:(.+?)\]/
-
   # Replace SHA placeholders with the real SHAs
   expected_commands.map_column! 'COMMAND' do |command|
-    command.gsub(sha_regex) do |sha_expression|
-      commit_message = sha_expression.match(sha_regex).captures[0].strip
-      output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
-    end
+    ERB.new(command).result
   end
 
   expected_commands.diff! commands_of_last_run.unshift(expected_commands.headers)

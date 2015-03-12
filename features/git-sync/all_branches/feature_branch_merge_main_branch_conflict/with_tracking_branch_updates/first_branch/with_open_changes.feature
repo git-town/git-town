@@ -37,11 +37,11 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                       |
-      | feature1 | git merge --abort                             |
-      | feature1 | git reset --hard [SHA: feature1 local commit] |
-      | feature1 | git checkout main                             |
-      | main     | git stash pop                                 |
+      | BRANCH   | COMMAND                                             |
+      | feature1 | git merge --abort                                   |
+      | feature1 | git reset --hard <%= sha 'feature1 local commit' %> |
+      | feature1 | git checkout main                                   |
+      | main     | git stash pop                                       |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -55,15 +55,15 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: skipping
     When I run `git sync --skip`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                       |
-      | feature1 | git merge --abort                             |
-      | feature1 | git reset --hard [SHA: feature1 local commit] |
-      | feature1 | git checkout feature2                         |
-      | feature2 | git merge --no-edit origin/feature2           |
-      | feature2 | git merge --no-edit main                      |
-      | feature2 | git push                                      |
-      | feature2 | git checkout main                             |
-      | main     | git stash pop                                 |
+      | BRANCH   | COMMAND                                             |
+      | feature1 | git merge --abort                                   |
+      | feature1 | git reset --hard <%= sha 'feature1 local commit' %> |
+      | feature1 | git checkout feature2                               |
+      | feature2 | git merge --no-edit origin/feature2                 |
+      | feature2 | git merge --no-edit main                            |
+      | feature2 | git push                                            |
+      | feature2 | git checkout main                                   |
+      | main     | git stash pop                                       |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
