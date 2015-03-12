@@ -10,6 +10,8 @@ def files_in branch:
 end
 
 
+# Returns a table of all files in all branches.
+# This is for comparing against expected files in a Cucumber table.
 def files_in_branches
   result = [%w(BRANCH NAME CONTENT)]
   existing_local_branches.each do |branch|
