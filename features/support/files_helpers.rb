@@ -21,6 +21,18 @@ def files_in_branches
   end.flatten
 end
 
+def files_in_branches_array
+  result = [%w(BRANCH NAME CONTENT)]
+  existing_local_branches.each do |branch|
+    files_in(branch: branch).map do |file|
+      content = content_of file: file, for_sha: branch
+      result << [branch, file, content]
+    end
+  end
+  result
+end
+
+
 
 def uncommitted_files
   array_output_of "git status --porcelain | awk '{print $2}'"
