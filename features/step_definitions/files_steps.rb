@@ -12,7 +12,7 @@ end
 
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
-  files_data.diff! files_in_branches_array
+  files_data.diff! files_in_branches
 end
 
 
