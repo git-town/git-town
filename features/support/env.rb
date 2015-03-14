@@ -12,6 +12,9 @@ MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
+MOCK_SCRIPT_DIRECTORY = "#{REPOSITORY_BASE}/git-mock"
+MOCK_SCRIPT_FILENAME = "#{MOCK_SCRIPT_DIRECTORY}/git-mock"
+
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
 
