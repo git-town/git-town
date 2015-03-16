@@ -13,3 +13,7 @@ end
 When(/^I run the command pattern script$/) do
   @result = run 'git mock'
 end
+
+Then(/^the steps file for the command pattern script is removed$/) do
+  expect(Dir['/tmp/git-mock_*']).not_to include(steps_filename)
+end

@@ -27,7 +27,7 @@ function skip_command {
 
 
 function undo_command {
-  run_steps "$undo_steps_file" cleanup
+  run_steps "$undo_steps_file"
 }
 
 
@@ -83,13 +83,21 @@ function preconditions {
 }
 
 
-function remove_step_files {
+function remove_steps_file {
   if [ "$(has_file "$steps_file")" = true ]; then
     rm "$steps_file"
   fi
+}
+
+function remove_undo_steps_file {
   if [ "$(has_file "$undo_steps_file")" = true ]; then
     rm "$undo_steps_file"
   fi
+}
+
+function remove_step_files {
+  remove_steps_file
+  remove_undo_steps_file
 }
 
 
@@ -118,7 +126,6 @@ function run {
 
 # possible values for option
 #   undoable - builds an undo_steps_file
-#   cleanup - calls remove_step_files after successfully running all steps
 function run_steps {
   local file="$1"
   local option="$2"
@@ -140,9 +147,7 @@ function run_steps {
     fi
   done
 
-  if [ "$option" = cleanup ]; then
-    remove_step_files
-  fi
+  remove_steps_file
 
   echo # trailing newline (each git command prints a leading newline)
 }
