@@ -65,12 +65,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME        |
-      | main     | local and remote | main commit                       | main_file        |
       | feature1 | local            | feature1 local commit             | conflicting_file |
-      |          | remote           | feature1 remote commit            | conflicting_file |
+      | feature1 | remote           | feature1 remote commit            | conflicting_file |
       | feature2 | local and remote | feature2 commit                   | feature2_file    |
-      |          |                  | main commit                       | main_file        |
-      |          |                  | Merge branch 'main' into feature2 |                  |
+      | feature2 | local and remote | main commit                       | main_file        |
+      | feature2 | local and remote | Merge branch 'main' into feature2 |                  |
+      | main     | local and remote | main commit                       | main_file        |
 
 
   @finishes-with-non-empty-stash

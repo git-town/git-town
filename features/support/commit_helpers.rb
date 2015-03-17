@@ -1,13 +1,91 @@
+# Returns the array of the file names committed for the supplied sha
+def committed_files sha
+  array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
+end
+
+
+# Returns the commits in the currently checked out branch
+#
+# rubocop:disable MethodLength
+def commits_for_branch branch_name, keys
+  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").map do |commit|
+    sha, message, author = commit.split('|')
+    next if message == 'Initial commit'
+    filenames = committed_files sha
+    {
+      author: author,
+      message: message,
+      file_name: filenames,
+      file_content: content_of(file: filenames[0], for_sha: sha)  # TODO: only load file names if requested by keys
+    }.select { |key, _| keys.include? key }
+  end.compact
+end
+# rubocop:enable MethodLength
+
+
+# Adds the commits in the given branch to the given commits table
+#
+# rubocop:disable MethodLength
+def add_commits_for_branch commits, branch_name, keys
+
+  # STEP 1: build a hash of commits
+  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
+    sha, message, author = commit.split('|')
+    next if message == 'Initial commit'
+    location = if branch_name.start_with? 'origin/' then 'remote' else 'local' end
+    local_branch_name = branch_name.sub 'origin/', ''
+    commits[local_branch_name] ||= {}
+    if commits[local_branch_name].has_key? sha
+      # We already have this commit in a different location --> just append the location to the existing commit
+      commits[local_branch_name][sha]['LOCATION'] << location
+    else
+      commit_data = {
+        'BRANCH' => branch_name.sub('origin/', ''),
+        'LOCATION' => [location],
+        'MESSAGE' => message,
+        'FILE NAME' => committed_files(sha).join(' and ')
+      }
+      commit_data['AUTHOR'] = author if keys.include? 'AUTHOR'
+      if keys.include? 'FILE CONTENT'
+        if filenames.size == 1
+          commit_data['FILE CONTENT'] = content_of(file: filenames[0], for_sha: sha)
+        else
+          raise 'Cannot verify file content for multiple files'
+        end
+      end
+      commits[local_branch_name][sha] = commit_data
+    end
+  end
+end
+# rubocop:enable MethodLength
+
+
 # Returns the commits in the current directory
 def commits_in_repo keys = [:author, :file_content, :file_name, :message]
-  out = {}
+  commits = {}
 
   existing_branches.each do |branch_name|
-    commits = commits_for_branch branch_name, keys
-    out[branch_name] = commits unless commits.empty?
+    add_commits_for_branch commits, branch_name, keys
+  end
+end
+
+
+def commits_in_repo_array keys = ['AUTHOR', 'FILE CONTENT', 'FILE NAME', 'MESSAGE']
+
+  # Accumulate all commits in a hash
+  commits = {}
+  existing_branches.each do |branch_name|
+    add_commits_for_branch commits, branch_name, keys
   end
 
-  out
+  result = [keys]
+  commits.keys.each do |branch_name|
+    commits[branch_name].keys.each do |sha|
+      commits[branch_name][sha]['LOCATION'] = commits[branch_name][sha]['LOCATION'].join ' and '
+      result.append commits[branch_name][sha].values
+    end
+  end
+  result
 end
 
 
@@ -74,31 +152,6 @@ def create_commits commits_array
 end
 
 
-# Returns the array of the file names committed for the supplied sha
-def committed_files sha
-  array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
-end
-
-
-# Returns the commits in the currently checked out branch
-#
-# rubocop:disable MethodLength
-def commits_for_branch branch_name, keys
-  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").map do |commit|
-    sha, message, author = commit.split('|')
-    next if message == 'Initial commit'
-    filenames = committed_files sha
-    {
-      author: author,
-      message: message,
-      file_name: filenames,
-      file_content: content_of(file: filenames[0], for_sha: sha)
-    }.select { |key, _| keys.include? key }
-  end.compact
-end
-# rubocop:enable MethodLength
-
-
 def default_commit_attributes
   {
     file_name: "default file name #{SecureRandom.urlsafe_base64}",
@@ -154,15 +207,6 @@ end
 
 
 # Verifies the commits in the repository
-def verify_commits commits_array
-  normalize_commit_data commits_array
-
-  expected_commits = commits_array.map do |commit_data|
-    normalize_expected_commit_data commit_data
-  end.flatten
-
-  expected_commits = group_expected_commits_by_branch expected_commits
-  actual_commits = commits_in_repo commits_array[0].keys
-
-  expect(actual_commits).to eql(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
+def verify_commits expected_commits
+  expected_commits.diff! commits_in_repo_array(expected_commits.headers)
 end

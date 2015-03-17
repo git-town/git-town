@@ -34,8 +34,8 @@ end
 
 
 # Returns the names of the existing feature branches
-def existing_branches
-  existing_local_branches + existing_remote_branches
+def existing_branches order: :alphabetically
+  existing_local_branches(order: order) + existing_remote_branches
 end
 
 

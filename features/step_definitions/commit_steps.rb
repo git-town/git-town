@@ -12,15 +12,14 @@ end
 
 Then(/^(?:now )?(I|my coworker) (?:still )?(?:have|has) the following commits$/) do |who, commits_table|
   user = (who == 'I') ? :developer : :coworker
-  commits_table.map_headers!(&:downcase)
   in_repository user do
-    verify_commits commits_table.hashes
+    verify_commits commits_table
   end
 end
 
 
 Then(/^I am left with my original commits$/) do
-  verify_commits @initial_commits_table.hashes
+  verify_commits @initial_commits_table
 end
 
 
