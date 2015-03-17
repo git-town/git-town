@@ -16,13 +16,13 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH   | COMMAND                               |
-      | feature  | git fetch --prune                     |
-      | feature  | git checkout main                     |
-      | main     | git rebase origin/main                |
-      | main     | git push                              |
-      | main     | git checkout -b refactor main         |
-      | refactor | git cherry-pick [SHA:refactor commit] |
+      | BRANCH   | COMMAND                                      |
+      | feature  | git fetch --prune                            |
+      | feature  | git checkout main                            |
+      | main     | git rebase origin/main                       |
+      | main     | git push                                     |
+      | main     | git checkout -b refactor main                |
+      | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
       """
       To abort, run "git extract --abort".

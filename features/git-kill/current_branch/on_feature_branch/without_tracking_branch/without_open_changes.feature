@@ -33,9 +33,9 @@ Feature: git kill: killing the current feature branch without a tracking branch 
   Scenario: Undoing a kill of a local feature branch
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH | COMMAND                                       |
-      | main   | git branch dead-feature [SHA:dead-end commit] |
-      | main   | git checkout dead-feature                     |
+      | BRANCH | COMMAND                                              |
+      | main   | git branch dead-feature <%= sha 'dead-end commit' %> |
+      | main   | git checkout dead-feature                            |
     And I end up on the "dead-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                    |
