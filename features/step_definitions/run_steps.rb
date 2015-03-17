@@ -59,7 +59,7 @@ end
 
 
 Then(/^it runs the Git commands$/) do |expected_commands|
-  # Replace SHA placeholders with the real SHAs
+  # We need ERB here to fill in commit SHAs in Git commands
   expected_commands.map_column! 'COMMAND' do |command|
     ERB.new(command).result
   end
