@@ -66,9 +66,8 @@ class CommitsFinder
         result.add @commits[branch_name][sha].values
       end
     end
-    result
+    result.table
   end
-
 end
 
 
@@ -76,11 +75,29 @@ class CucumberTableBuilder
   attr_reader :table
 
   def initialize headers
+    @headers = headers
+
     @table = [headers]
+
+    # The previously added values
+    @previous_values = nil
   end
 
-  def add_row values
-    @table << values
+  def add values
+    @table << dry_up(values)
+    @previous_values = values
+  end
+
+  # Dries up the given values based on what came before in the table
+  def dry_up values
+    return values unless @previous_values
+    result = values.clone
+    @previous_values.each_with_index do |previous_value, i|
+      if @headers[i] != 'FILE NAME' && values[i] == previous_value
+        result[i] = ''
+      end
+    end
+    result
   end
 end
 
