@@ -1,4 +1,4 @@
-class CommitsTableBuilder
+class CommitsFinder
 
   def initialize commit_attributes = [:message]
     @commit_attributes = commit_attributes
@@ -58,15 +58,29 @@ class CommitsTableBuilder
 
 
   # Returns the currently known commits as a Cucumber compatible table
-  def table
-    result = [@commit_attributes]
+  def to_table
+    result = CucumberTableBuilder.new @commit_attributes
     @commits.keys.each do |branch_name|
       @commits[branch_name].keys.each do |sha|
         @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].join ' and '
-        result.append @commits[branch_name][sha].values
+        result.add @commits[branch_name][sha].values
       end
     end
     result
+  end
+
+end
+
+
+class CucumberTableBuilder
+  attr_reader :table
+
+  def initialize headers
+    @table = [headers]
+  end
+
+  def add_row values
+    @table << values
   end
 end
 
@@ -202,7 +216,7 @@ end
 
 # Verifies the commits in the repository
 def verify_commits expected_commits
-  expected_commits.diff! CommitsTableBuilder.new(expected_commits.headers)
-                                            .add_commits_in_current_repo
-                                            .table
+  expected_commits.diff! CommitsFinder.new(expected_commits.headers)
+                                      .add_commits_in_current_repo
+                                      .to_table
 end
