@@ -32,7 +32,7 @@ Feature: git kill: killing the given feature branch (with open changes)
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                              | FILE NAME        |
       | main    | local and remote | conflicting with uncommitted changes | conflicting_file |
-      | feature | local and remote | good commit                          | good_file        |
+      | feature |                  | good commit                          | good_file        |
 
 
   Scenario: undoing the kill
@@ -50,5 +50,5 @@ Feature: git kill: killing the given feature branch (with open changes)
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        |
       | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
-      | feature      | local and remote | good commit                          | good_file        |
-      | dead-feature | local and remote | dead-end commit                      | unfortunate_file |
+      | dead-feature |                  | dead-end commit                      | unfortunate_file |
+      | feature      |                  | good commit                          | good_file        |

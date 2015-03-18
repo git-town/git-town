@@ -66,7 +66,7 @@ class CommitsFinder
   def to_table
     result = CucumberTableBuilder.new @commit_attributes
     main_commits = @commits.delete 'main'
-    main_commits.keys.each do |sha|
+    main_commits.try(:keys).try(:each) do |sha|
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].join ' and '
       result.add main_commits[sha].values
     end
