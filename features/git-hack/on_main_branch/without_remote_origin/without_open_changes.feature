@@ -20,4 +20,4 @@ Feature: git hack: starting a new feature from the main branch (without open cha
     And I have the following commits
       | BRANCH      | LOCATION | MESSAGE     | FILE NAME |
       | main        | local    | main_commit | main_file |
-      | new_feature | local    | main_commit | main_file |
+      | new_feature |          | main_commit | main_file |
