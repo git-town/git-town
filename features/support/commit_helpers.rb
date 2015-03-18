@@ -1,91 +1,79 @@
+class CommitsTableBuilder
+
+  def initialize commit_attributes = [:message]
+    @commit_attributes = commit_attributes
+
+    # The currently known commits
+    @commits = {}
+  end
+
+
+  # Adds all commits in the current repo
+  def add_commits_in_current_repo
+    existing_branches.each do |branch_name|
+      add_commits_in_branch branch_name
+    end
+    self
+  end
+
+
+  # Adds the given commit to the list of known commits
+  def add_commit sha:, message:, branch_name:
+    local_branch_name = local_branch_name branch_name
+    @commits[local_branch_name] ||= {}
+    if @commits[local_branch_name].has_key? sha
+      # We already have this commit in a different location --> just append the location to the existing commit
+      @commits[local_branch_name][sha]['LOCATION'] << branch_location(branch_name)
+      return
+    end
+
+    commit_data = {
+      'BRANCH' => local_branch_name,
+      'LOCATION' => [branch_location(branch_name)],
+      'MESSAGE' => message,
+    }
+    if @commit_attributes.include? 'FILE NAME'
+      filenames = committed_files sha
+      commit_data['FILE NAME'] = filenames.join(' and ')
+    end
+    if @commit_attributes.include? 'FILE CONTENT'
+      if filenames.size == 1
+        commit_data['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
+      else
+        raise 'Cannot verify file content for multiple files'
+      end
+    end
+    @commits[local_branch_name][sha] = commit_data
+  end
+
+
+  # Adds all commits in the given branch
+  def add_commits_in_branch branch_name
+    array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
+      sha, message = commit.split('|')
+      next if message == 'Initial commit'
+      add_commit sha: sha, message: message, branch_name: branch_name
+    end
+  end
+
+
+  # Returns the currently known commits as a Cucumber compatible table
+  def table
+    result = [@commit_attributes]
+    @commits.keys.each do |branch_name|
+      @commits[branch_name].keys.each do |sha|
+        @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].join ' and '
+        result.append @commits[branch_name][sha].values
+      end
+    end
+    result
+  end
+end
+
+
 # Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
-end
-
-
-# Returns the commits in the currently checked out branch
-#
-# rubocop:disable MethodLength
-def commits_for_branch branch_name, keys
-  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").map do |commit|
-    sha, message, author = commit.split('|')
-    next if message == 'Initial commit'
-    filenames = committed_files sha
-    {
-      author: author,
-      message: message,
-      file_name: filenames,
-      file_content: content_of(file: filenames[0], for_sha: sha)  # TODO: only load file names if requested by keys
-    }.select { |key, _| keys.include? key }
-  end.compact
-end
-# rubocop:enable MethodLength
-
-
-# Adds the commits in the given branch to the given commits table
-#
-# rubocop:disable MethodLength
-def add_commits_for_branch commits, branch_name, keys
-
-  # STEP 1: build a hash of commits
-  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
-    sha, message, author = commit.split('|')
-    next if message == 'Initial commit'
-    location = if branch_name.start_with? 'origin/' then 'remote' else 'local' end
-    local_branch_name = branch_name.sub 'origin/', ''
-    commits[local_branch_name] ||= {}
-    if commits[local_branch_name].has_key? sha
-      # We already have this commit in a different location --> just append the location to the existing commit
-      commits[local_branch_name][sha]['LOCATION'] << location
-    else
-      commit_data = {
-        'BRANCH' => branch_name.sub('origin/', ''),
-        'LOCATION' => [location],
-        'MESSAGE' => message,
-        'FILE NAME' => committed_files(sha).join(' and ')
-      }
-      commit_data['AUTHOR'] = author if keys.include? 'AUTHOR'
-      if keys.include? 'FILE CONTENT'
-        if filenames.size == 1
-          commit_data['FILE CONTENT'] = content_of(file: filenames[0], for_sha: sha)
-        else
-          raise 'Cannot verify file content for multiple files'
-        end
-      end
-      commits[local_branch_name][sha] = commit_data
-    end
-  end
-end
-# rubocop:enable MethodLength
-
-
-# Returns the commits in the current directory
-def commits_in_repo keys = [:author, :file_content, :file_name, :message]
-  commits = {}
-
-  existing_branches.each do |branch_name|
-    add_commits_for_branch commits, branch_name, keys
-  end
-end
-
-
-def commits_in_repo_array keys = ['AUTHOR', 'FILE CONTENT', 'FILE NAME', 'MESSAGE']
-
-  # Accumulate all commits in a hash
-  commits = {}
-  existing_branches.each do |branch_name|
-    add_commits_for_branch commits, branch_name, keys
-  end
-
-  result = [keys]
-  commits.keys.each do |branch_name|
-    commits[branch_name].keys.each do |sha|
-      commits[branch_name][sha]['LOCATION'] = commits[branch_name][sha]['LOCATION'].join ' and '
-      result.append commits[branch_name][sha].values
-    end
-  end
-  result
 end
 
 
@@ -214,5 +202,7 @@ end
 
 # Verifies the commits in the repository
 def verify_commits expected_commits
-  expected_commits.diff! commits_in_repo_array(expected_commits.headers)
+  expected_commits.diff! CommitsTableBuilder.new(expected_commits.headers)
+                                            .add_commits_in_current_repo
+                                            .table
 end

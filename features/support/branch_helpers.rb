@@ -9,6 +9,16 @@ def branch_name_for_location location, branch
 end
 
 
+# Returns the location of the branch with the given name
+def branch_location branch_name
+  if branch_name.start_with? 'origin/'
+    'remote'
+  else
+    'local'
+  end
+end
+
+
 # Returns the branches for the given repository
 def branches_for_repository repository
   case repository
@@ -54,6 +64,12 @@ end
 def existing_remote_branches
   remote_branches = array_output_of 'git branch -r'
   remote_branches.reject { |b| b.include?('HEAD') }
+end
+
+
+# Returns the name of the given branch if it was local
+def local_branch_name branch_name
+  branch_name.sub 'origin/', ''
 end
 
 
