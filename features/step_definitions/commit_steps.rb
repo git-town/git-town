@@ -1,7 +1,7 @@
 Given(/^the following commits? exists? in (my|my coworker's) repository$/) do |who, commits_table|
   user = (who == 'my') ? :developer : :coworker
-  commits_table.map_headers!(&:downcase)
   @initial_commits_table = commits_table.clone
+  commits_table.map_headers!(&:downcase)
   in_repository user do
     create_commits commits_table.hashes
   end
@@ -19,6 +19,7 @@ end
 
 
 Then(/^I am left with my original commits$/) do
+  @initial_commits_table.map_headers!(&:upcase)
   verify_commits @initial_commits_table
 end
 

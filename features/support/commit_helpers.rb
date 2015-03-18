@@ -2,7 +2,7 @@
 class CommitsFinder
 
   def initialize commit_attributes = [:message]
-    @commit_attributes = commit_attributes
+    @commit_attributes = commit_attributes.map(&:upcase)
 
     # The currently known commits
     @commits = {}
@@ -65,6 +65,11 @@ class CommitsFinder
   # Returns the currently known commits as a Cucumber compatible table
   def to_table
     result = CucumberTableBuilder.new @commit_attributes
+    main_commits = @commits.delete 'main'
+    main_commits.keys.each do |sha|
+      main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].join ' and '
+      result.add main_commits[sha].values
+    end
     @commits.keys.each do |branch_name|
       @commits[branch_name].keys.each do |sha|
         @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].join ' and '
@@ -242,7 +247,6 @@ end
 
 # Verifies the commits in the repository
 def verify_commits expected_commits
-  expected_commits.diff! CommitsFinder.new(expected_commits.headers)
-                                      .add_commits_in_current_repo
-                                      .to_table
+  actual_commits = CommitsFinder.new(expected_commits.headers).add_commits_in_current_repo.to_table
+  expected_commits.diff! actual_commits
 end
