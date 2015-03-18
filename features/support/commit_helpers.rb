@@ -106,7 +106,7 @@ class CucumberTableBuilder
     return values unless @previous_values
     result = values.clone
     @previous_values.each_with_index do |previous_value, i|
-      if @headers[i] != 'FILE NAME' && values[i] == previous_value
+      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && values[i] == previous_value
         result[i] = ''
       end
     end
