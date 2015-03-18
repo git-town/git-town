@@ -21,7 +21,7 @@ class CommitsFinder
   # Adds the given commit to the list of known commits
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
-  def add_commit sha:, message:, branch_name:
+  def add_commit sha:, message:, branch_name:, author:
     local_branch_name = local_branch_name branch_name
     @commits[local_branch_name] ||= {}
     if @commits[local_branch_name].key? sha
@@ -46,6 +46,9 @@ class CommitsFinder
         fail 'Cannot verify file content for multiple files'
       end
     end
+    if @commit_attributes.include? 'AUTHOR'
+      commit_data['AUTHOR'] = author
+    end
     @commits[local_branch_name][sha] = commit_data
   end
   # rubocop:enable MethodLength
@@ -55,10 +58,16 @@ class CommitsFinder
   # Adds all commits in the given branch
   def add_commits_in_branch branch_name
     array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
-      sha, message = commit.split('|')
+      sha, message, author = commit.split('|')
       next if message == 'Initial commit'
-      add_commit sha: sha, message: message, branch_name: branch_name
+      add_commit sha: sha, message: message, branch_name: branch_name, author: author
     end
+  end
+
+
+  # Returns whether currently there are no commits
+  def empty?
+    @commits.empty?
   end
 
 
