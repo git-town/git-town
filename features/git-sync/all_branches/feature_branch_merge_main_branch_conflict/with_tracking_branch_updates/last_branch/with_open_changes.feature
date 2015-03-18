@@ -41,12 +41,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                      |
-      | feature2 | git merge --abort                            |
-      | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout feature1                        |
-      | feature1 | git checkout main                            |
-      | main     | git stash pop                                |
+      | BRANCH   | COMMAND                                             |
+      | feature2 | git merge --abort                                   |
+      | feature2 | git reset --hard <%= sha 'feature2 local commit' %> |
+      | feature2 | git checkout feature1                               |
+      | feature1 | git checkout main                                   |
+      | main     | git stash pop                                       |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -62,11 +62,11 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: skipping
     When I run `git sync --skip`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                      |
-      | feature2 | git merge --abort                            |
-      | feature2 | git reset --hard [SHA:feature2 local commit] |
-      | feature2 | git checkout main                            |
-      | main     | git stash pop                                |
+      | BRANCH   | COMMAND                                             |
+      | feature2 | git merge --abort                                   |
+      | feature2 | git reset --hard <%= sha 'feature2 local commit' %> |
+      | feature2 | git checkout main                                   |
+      | main     | git stash pop                                       |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits

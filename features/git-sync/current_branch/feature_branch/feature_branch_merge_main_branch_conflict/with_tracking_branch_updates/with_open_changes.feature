@@ -38,12 +38,12 @@ Feature: git sync: resolving conflicts between the current feature branch and th
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                           |
-      | feature | git merge --abort                                 |
-      | feature | git reset --hard [SHA:conflicting feature commit] |
-      | feature | git checkout main                                 |
-      | main    | git checkout feature                              |
-      | feature | git stash pop                                     |
+      | BRANCH  | COMMAND                                                  |
+      | feature | git merge --abort                                        |
+      | feature | git reset --hard <%= sha 'conflicting feature commit' %> |
+      | feature | git checkout main                                        |
+      | main    | git checkout feature                                     |
+      | feature | git stash pop                                            |
     And I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress

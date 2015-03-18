@@ -33,10 +33,10 @@ Feature: git kill: killing the given feature branch when on it (without open cha
   Scenario: undoing the kill
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH | COMMAND                                       |
-      | main   | git branch dead-feature [SHA:dead-end commit] |
-      | main   | git push -u origin dead-feature               |
-      | main   | git checkout dead-feature                     |
+      | BRANCH | COMMAND                                              |
+      | main   | git branch dead-feature <%= sha 'dead-end commit' %> |
+      | main   | git push -u origin dead-feature                      |
+      | main   | git checkout dead-feature                            |
     And I end up on the "dead-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                    |
