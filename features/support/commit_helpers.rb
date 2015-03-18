@@ -1,3 +1,4 @@
+# Makes finding Git commits easier
 class CommitsFinder
 
   def initialize commit_attributes = [:message]
@@ -18,10 +19,12 @@ class CommitsFinder
 
 
   # Adds the given commit to the list of known commits
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def add_commit sha:, message:, branch_name:
     local_branch_name = local_branch_name branch_name
     @commits[local_branch_name] ||= {}
-    if @commits[local_branch_name].has_key? sha
+    if @commits[local_branch_name].key? sha
       # We already have this commit in a different location --> just append the location to the existing commit
       @commits[local_branch_name][sha]['LOCATION'] << branch_location(branch_name)
       return
@@ -30,7 +33,7 @@ class CommitsFinder
     commit_data = {
       'BRANCH' => local_branch_name,
       'LOCATION' => [branch_location(branch_name)],
-      'MESSAGE' => message,
+      'MESSAGE' => message
     }
     if @commit_attributes.include? 'FILE NAME'
       filenames = committed_files sha
@@ -40,11 +43,13 @@ class CommitsFinder
       if filenames.size == 1
         commit_data['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
       else
-        raise 'Cannot verify file content for multiple files'
+        fail 'Cannot verify file content for multiple files'
       end
     end
     @commits[local_branch_name][sha] = commit_data
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
 
   # Adds all commits in the given branch
@@ -68,10 +73,13 @@ class CommitsFinder
     end
     result.table
   end
+
 end
 
 
+# Makes it easy to build DRY Cucumber compatible tables
 class CucumberTableBuilder
+
   attr_reader :table
 
   def initialize headers
@@ -99,6 +107,7 @@ class CucumberTableBuilder
     end
     result
   end
+
 end
 
 
