@@ -22,5 +22,5 @@ Feature: git hack: starting a new feature from a feature branch (without open ch
     And I have the following commits
       | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
       | main             | local    | main commit             | main_file    |
-      | existing_feature | local    | existing feature commit | feature_file |
-      | new_feature      | local    | main commit             | main_file    |
+      | existing_feature |          | existing feature commit | feature_file |
+      | new_feature      |          | main commit             | main_file    |
