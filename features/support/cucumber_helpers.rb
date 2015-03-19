@@ -33,7 +33,8 @@ class CucumberTableBuilder
   end
 
 
-  # Dries up the given values based on what came before in the table
+  # Returns a dried up version of the given values
+  # based on the row that came before in the table
   #
   # rubocop:disable MethodLength
   def dry_up values
