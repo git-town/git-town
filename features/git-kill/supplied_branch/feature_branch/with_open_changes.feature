@@ -38,9 +38,9 @@ Feature: git kill: killing the given feature branch (with open changes)
   Scenario: undoing the kill
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                       |
-      | feature | git branch dead-feature [SHA:dead-end commit] |
-      | feature | git push -u origin dead-feature               |
+      | BRANCH  | COMMAND                                              |
+      | feature | git branch dead-feature <%= sha 'dead-end commit' %> |
+      | feature | git push -u origin dead-feature                      |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are

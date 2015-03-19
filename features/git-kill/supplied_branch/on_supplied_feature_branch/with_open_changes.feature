@@ -39,12 +39,12 @@ Feature: git kill: killing the given feature branch when on it (with open change
   Scenario: undoing the kill
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH       | COMMAND                                           |
-      | main         | git branch dead-feature [SHA:WIP on dead-feature] |
-      | main         | git push -u origin dead-feature                   |
-      | main         | git checkout dead-feature                         |
-      | dead-feature | git reset [SHA:dead-end commit]                   |
-      | dead-feature | git push -f origin dead-feature                   |
+      | BRANCH       | COMMAND                                                  |
+      | main         | git branch dead-feature <%= sha 'WIP on dead-feature' %> |
+      | main         | git push -u origin dead-feature                          |
+      | main         | git checkout dead-feature                                |
+      | dead-feature | git reset <%= sha 'dead-end commit' %>                   |
+      | dead-feature | git push -f origin dead-feature                          |
     And I end up on the "dead-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

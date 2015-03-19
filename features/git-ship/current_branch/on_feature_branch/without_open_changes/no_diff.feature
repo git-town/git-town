@@ -17,15 +17,15 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH        | COMMAND                                  |
-      | empty-feature | git checkout main                        |
-      | main          | git fetch --prune                        |
-      | main          | git rebase origin/main                   |
-      | main          | git checkout empty-feature               |
-      | empty-feature | git merge --no-edit origin/empty-feature |
-      | empty-feature | git merge --no-edit main                 |
-      | empty-feature | git reset --hard [SHA:feature commit]    |
-      | empty-feature | git checkout main                        |
-      | main          | git checkout empty-feature               |
+      | BRANCH        | COMMAND                                      |
+      | empty-feature | git checkout main                            |
+      | main          | git fetch --prune                            |
+      | main          | git rebase origin/main                       |
+      | main          | git checkout empty-feature                   |
+      | empty-feature | git merge --no-edit origin/empty-feature     |
+      | empty-feature | git merge --no-edit main                     |
+      | empty-feature | git reset --hard <%= sha 'feature commit' %> |
+      | empty-feature | git checkout main                            |
+      | main          | git checkout empty-feature                   |
     And I get the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "empty-feature" branch

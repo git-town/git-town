@@ -39,10 +39,10 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
   Scenario: undoing the kill
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH           | COMMAND                                                   |
-      | main             | git branch orphaned-feature [SHA:WIP on orphaned-feature] |
-      | main             | git checkout orphaned-feature                             |
-      | orphaned-feature | git reset [SHA:orphaned commit]                           |
+      | BRANCH           | COMMAND                                                          |
+      | main             | git branch orphaned-feature <%= sha 'WIP on orphaned-feature' %> |
+      | main             | git checkout orphaned-feature                                    |
+      | orphaned-feature | git reset <%= sha 'orphaned commit' %>                           |
     And I end up on the "orphaned-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

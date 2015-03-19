@@ -33,9 +33,9 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
   Scenario: undoing the kill
     When I run `git kill --undo`
     Then it runs the Git commands
-      | BRANCH | COMMAND                                           |
-      | main   | git branch orphaned-feature [SHA:orphaned commit] |
-      | main   | git checkout orphaned-feature                     |
+      | BRANCH | COMMAND                                                  |
+      | main   | git branch orphaned-feature <%= sha 'orphaned commit' %> |
+      | main   | git checkout orphaned-feature                            |
     And I end up on the "orphaned-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                               |
