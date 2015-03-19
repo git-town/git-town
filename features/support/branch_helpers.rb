@@ -11,8 +11,8 @@ end
 
 # Returns the location of the branch with the given name
 #
-# 'foo' --> 'local'
-# 'origin/foo' --> 'remote'
+# 'foo'          --> 'local'
+# 'origin/foo'   --> 'remote'
 # 'upstream/foo' --> 'upstream'
 def branch_location branch_name
   case
@@ -72,6 +72,9 @@ end
 
 
 # Returns the name of the given branch if it was local
+# 'foo'          --> 'foo'
+# 'origin/foo'   --> 'foo'
+# 'upstream/foo' --> 'foo'
 def local_branch_name branch_name
   branch_name.sub('origin/', '').sub('upstream/', '')
 end
