@@ -46,9 +46,7 @@ class CommitsFinder
         fail 'Cannot verify file content for multiple files'
       end
     end
-    if @commit_attributes.include? 'AUTHOR'
-      commit_data['AUTHOR'] = author
-    end
+    commit_data['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
     @commits[local_branch_name][sha] = commit_data
   end
   # rubocop:enable MethodLength
@@ -72,6 +70,8 @@ class CommitsFinder
 
 
   # Returns the currently known commits as a Cucumber compatible table
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def to_table
     result = CucumberTableBuilder.new @commit_attributes
     main_commits = @commits.delete 'main'
@@ -87,6 +87,8 @@ class CommitsFinder
     end
     result.table
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
 end
 
@@ -111,6 +113,7 @@ class CucumberTableBuilder
   end
 
   # Dries up the given values based on what came before in the table
+  # rubocop:disable MethodLength
   def dry_up values
     return values unless @previous_values
     result = values.clone
@@ -125,6 +128,7 @@ class CucumberTableBuilder
     end
     result
   end
+  # rubocop:enable MethodLength
 
 end
 

@@ -12,9 +12,9 @@ end
 # Returns the location of the branch with the given name
 def branch_location branch_name
   case
-    when branch_name.start_with?('origin/') then 'remote'
-    when branch_name.start_with?('upstream/') then 'upstream'
-    else 'local'
+  when branch_name.start_with?('origin/') then 'remote'
+  when branch_name.start_with?('upstream/') then 'upstream'
+  else 'local'
   end
 end
 
