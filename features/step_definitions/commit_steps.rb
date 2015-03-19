@@ -19,7 +19,6 @@ end
 
 
 Then(/^I am left with my original commits$/) do
-  @initial_commits_table.map_headers!(&:upcase)
   verify_commits @initial_commits_table
 end
 
