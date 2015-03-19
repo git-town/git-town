@@ -16,7 +16,7 @@ class CommitsFinder
   end
 
 
-  # Adds all commits in the current repo
+  # Adds all commits in the current repo to this CommitsFinder instance
   def add_commits_in_current_repo
     existing_branches.each do |branch_name|
       add_commits_in_branch branch_name
@@ -25,7 +25,8 @@ class CommitsFinder
   end
 
 
-  # Adds the given commit to the list of known commits
+  # Adds the given commit to this CommitsFinder instance
+  #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def add_commit sha:, message:, branch_name:, author:
@@ -60,7 +61,7 @@ class CommitsFinder
   # rubocop:enable AbcSize
 
 
-  # Adds all commits in the given branch
+  # Adds all commits in the given branch to this CommitsFinder instance
   def add_commits_in_branch branch_name
     array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
       sha, message, author = commit.split('|')
@@ -70,13 +71,14 @@ class CommitsFinder
   end
 
 
-  # Returns whether currently there are no commits
+  # Returns whether this CommitsFinder instance has found any commits so far
   def empty?
     @commits.empty?
   end
 
 
-  # Returns the currently known commits as a Cucumber compatible table
+  # Returns the currently found commits as a Cucumber compatible table
+  #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def to_table
@@ -84,12 +86,12 @@ class CommitsFinder
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
-      result.add main_commits[sha].values
+      result.add_row main_commits[sha].values
     end
     @commits.keys.each do |branch_name|
       @commits[branch_name].keys.each do |sha|
         @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].to_sentence
-        result.add @commits[branch_name][sha].values
+        result.add_row @commits[branch_name][sha].values
       end
     end
     result.table
