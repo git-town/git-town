@@ -41,7 +41,10 @@ class CucumberTableBuilder
     result = values.clone
     previous_column_empty = true   # indicates whether the data at the previous value of i was
     @previous_values.each_with_index do |previous_value, i|
-      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && values[i] == previous_value && previous_column_empty
+      if @headers[i] != 'MESSAGE' &&
+         @headers[i] != 'FILE NAME' &&
+         values[i] == previous_value &&
+         previous_column_empty
         result[i] = ''
         previous_column_empty = true
       else
