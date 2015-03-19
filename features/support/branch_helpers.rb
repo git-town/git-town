@@ -10,6 +10,10 @@ end
 
 
 # Returns the location of the branch with the given name
+#
+# 'foo' --> 'local'
+# 'origin/foo' --> 'remote'
+# 'upstream/foo' --> 'upstream'
 def branch_location branch_name
   case
   when branch_name.start_with?('origin/') then 'remote'
