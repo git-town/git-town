@@ -46,7 +46,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
-      | BRANCH | FILES            | CONTENT          |
+      | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
 
@@ -62,5 +62,5 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
       | main   | local, remote               | local commit    | conflicting_file |
     And now I have the following committed files
-      | BRANCH | FILES            | CONTENT          |
+      | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

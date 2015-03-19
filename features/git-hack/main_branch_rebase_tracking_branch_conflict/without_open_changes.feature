@@ -60,7 +60,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | new_feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | BRANCH      | FILES            | CONTENT          |
+      | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new_feature | conflicting_file | resolved content |
 
@@ -80,6 +80,6 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | new_feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | BRANCH      | FILES            | CONTENT          |
+      | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new_feature | conflicting_file | resolved content |

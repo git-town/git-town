@@ -77,7 +77,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
     And now I have the following committed files
-      | BRANCH  | FILES            | CONTENT          |
+      | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
 
@@ -97,5 +97,5 @@ Feature: git sync: resolving conflicts between the current feature branch and it
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
     And now I have the following committed files
-      | BRANCH  | FILES            | CONTENT          |
+      | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

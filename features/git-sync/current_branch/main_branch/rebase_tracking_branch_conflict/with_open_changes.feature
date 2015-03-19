@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | BRANCH | FILES            | CONTENT          |
+      | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
 
@@ -87,5 +87,5 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
-      | BRANCH | FILES            | CONTENT          |
+      | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

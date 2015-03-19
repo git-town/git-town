@@ -40,8 +40,13 @@ end
 
 
 # Returns the names of all existing local branches.
-def existing_local_branches
-  array_output_of "git branch | tr -d '*'"
+def existing_local_branches order: :alphabetically
+  result = array_output_of "git branch | tr -d '*'"
+  if order == :main_first
+    main_branch = result.delete 'main'
+    result = [main_branch].concat result if main_branch
+  end
+  result
 end
 
 
