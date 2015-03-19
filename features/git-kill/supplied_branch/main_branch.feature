@@ -26,7 +26,7 @@ Feature: git kill: errors when trying to kill the main branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | main    | local and remote | main commit | main_file |
-      | feature |                  | good commit | good_file |
+      | feature | local and remote | good commit | good_file |
 
 
   Scenario: without open changes
@@ -41,4 +41,4 @@ Feature: git kill: errors when trying to kill the main branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | main    | local and remote | main commit | main_file |
-      | feature |                  | good commit | good_file |
+      | feature | local and remote | good commit | good_file |

@@ -27,7 +27,7 @@ Feature: git kill: errors when trying to kill a non-feature branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
-      | qa      |                  | qa commit   | qa_file   |
+      | qa      | local and remote | qa commit   | qa_file   |
 
 
   Scenario: without open changes
@@ -42,4 +42,4 @@ Feature: git kill: errors when trying to kill a non-feature branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
-      | qa      |                  | qa commit   | qa_file   |
+      | qa      | local and remote | qa commit   | qa_file   |

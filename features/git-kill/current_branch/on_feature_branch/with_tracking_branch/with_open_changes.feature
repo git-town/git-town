@@ -53,4 +53,4 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
-      | feature      |                  | good commit     | good_file        |
+      | feature      | local and remote | good commit     | good_file        |
