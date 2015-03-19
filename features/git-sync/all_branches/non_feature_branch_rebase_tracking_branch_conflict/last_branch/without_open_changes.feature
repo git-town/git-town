@@ -83,7 +83,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | main       | local and remote | main commit       | main_file        |
       | production | local and remote | production commit | production_file  |
       | qa         | local and remote | qa remote commit  | conflicting_file |
-      |            | local and remote | qa local commit   | conflicting_file |
+      |            |                  | qa local commit   | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
@@ -99,4 +99,4 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | main       | local and remote | main commit       | main_file        |
       | production | local and remote | production commit | production_file  |
       | qa         | local and remote | qa remote commit  | conflicting_file |
-      |            | local and remote | qa local commit   | conflicting_file |
+      |            |                  | qa local commit   | conflicting_file |

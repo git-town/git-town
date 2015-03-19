@@ -37,7 +37,7 @@ class CommitsFinder
     }
     if @commit_attributes.include? 'FILE NAME'
       filenames = committed_files sha
-      commit_data['FILE NAME'] = filenames.join(' and ')
+      commit_data['FILE NAME'] = filenames.to_sentence
     end
     if @commit_attributes.include? 'FILE CONTENT'
       if filenames.size == 1
@@ -76,12 +76,12 @@ class CommitsFinder
     result = CucumberTableBuilder.new @commit_attributes
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
-      main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].join ' and '
+      main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
       result.add main_commits[sha].values
     end
     @commits.keys.each do |branch_name|
       @commits[branch_name].keys.each do |sha|
-        @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].join ' and '
+        @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].to_sentence
         result.add @commits[branch_name][sha].values
       end
     end
@@ -114,9 +114,13 @@ class CucumberTableBuilder
   def dry_up values
     return values unless @previous_values
     result = values.clone
+    previous_column_empty = true   # indicates whether the data at the previous value of i was
     @previous_values.each_with_index do |previous_value, i|
-      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && values[i] == previous_value
+      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && values[i] == previous_value && previous_column_empty
         result[i] = ''
+        previous_column_empty = true
+      else
+        previous_column_empty = false
       end
     end
     result

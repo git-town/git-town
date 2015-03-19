@@ -11,10 +11,10 @@ end
 
 # Returns the location of the branch with the given name
 def branch_location branch_name
-  if branch_name.start_with? 'origin/'
-    'remote'
-  else
-    'local'
+  case
+    when branch_name.start_with?('origin/') then 'remote'
+    when branch_name.start_with?('upstream/') then 'upstream'
+    else 'local'
   end
 end
 
@@ -69,7 +69,7 @@ end
 
 # Returns the name of the given branch if it was local
 def local_branch_name branch_name
-  branch_name.sub 'origin/', ''
+  branch_name.sub('origin/', '').sub('upstream/', '')
 end
 
 
