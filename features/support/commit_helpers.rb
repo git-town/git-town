@@ -100,46 +100,6 @@ class CommitsFinder
 end
 
 
-# Makes it easy to build DRY Cucumber compatible tables
-class CucumberTableBuilder
-
-  attr_reader :table
-
-  def initialize headers
-    @headers = headers
-
-    @table = [headers]
-
-    # The previously added values
-    @previous_values = nil
-  end
-
-  def add values
-    @table << dry_up(values)
-    @previous_values = values
-  end
-
-  # Dries up the given values based on what came before in the table
-  # rubocop:disable MethodLength
-  def dry_up values
-    return values unless @previous_values
-    result = values.clone
-    previous_column_empty = true   # indicates whether the data at the previous value of i was
-    @previous_values.each_with_index do |previous_value, i|
-      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && values[i] == previous_value && previous_column_empty
-        result[i] = ''
-        previous_column_empty = true
-      else
-        previous_column_empty = false
-      end
-    end
-    result
-  end
-  # rubocop:enable MethodLength
-
-end
-
-
 # Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
