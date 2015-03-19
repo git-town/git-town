@@ -1,6 +1,13 @@
 # Makes finding Git commits easier
 class CommitsFinder
 
+  # commit_attributes - the attributes we want to gather for the commits found
+  #                     The default value is the minimalistic set
+  #                     for checking if commits exist at all
+  #
+  # Examples
+  #
+  #   CommitsFinder.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
     @commit_attributes = commit_attributes.map(&:upcase)
 
