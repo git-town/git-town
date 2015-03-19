@@ -8,8 +8,8 @@
 #   table_builder.to_table
 #
 #   =>  [ ['AUTHOR', 'MESSAGE', 'FILES'],
-#       ['Jay', 'hello', 'jay.txt'],
-#       ['Jane', 'hi', 'jane.txt'] ]
+#         ['Jay', 'hello', 'jay.txt'],
+#         ['Jane', 'hi', 'jane.txt'] ]
 class CucumberTableBuilder
 
   attr_reader :table
