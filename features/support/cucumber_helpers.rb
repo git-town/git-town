@@ -14,6 +14,7 @@ class CucumberTableBuilder
 
   attr_reader :table
 
+
   def initialize headers
     @headers = headers
 
@@ -24,11 +25,13 @@ class CucumberTableBuilder
     @previous_values = nil
   end
 
+
   # Adds the given row of values to the table
   def add_row values
     @table << dry_up(values)
     @previous_values = values
   end
+
 
   # Dries up the given values based on what came before in the table
   #
