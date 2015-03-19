@@ -15,9 +15,8 @@ end
 def files_in_branches
   result = [%w(BRANCH NAME CONTENT)]
   existing_local_branches(order: :main_first).each do |branch|
-    files_in(branch: branch).map do |file|
-      content = content_of file: file, for_sha: branch
-      result << [branch, file, content]
+    files_in(branch: branch).each do |file|
+      result << [branch, file, content_of(file: file, for_sha: branch)]
     end
   end
   result
