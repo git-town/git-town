@@ -72,6 +72,7 @@ end
 
 
 # Returns the name of the given branch if it was local
+#
 # 'foo'          --> 'foo'
 # 'origin/foo'   --> 'foo'
 # 'upstream/foo' --> 'foo'
