@@ -21,35 +21,32 @@ class CucumberTableBuilder
     # The resulting Cucumber-compatible table structure
     @table = [headers]
 
-    # The previously added row of values
-    @previous_values = nil
+    # The previously added row
+    @previous_row = nil
   end
 
 
-  # Adds the given row of values to the table
-  def add_row values
-    @table << dry_up(values)
-    @previous_values = values
+  # Adds the given row to the table
+  def add_row row
+    @table << dry_up(row)
+    @previous_row = row
   end
 
 
-  # Returns a dried up version of the given values
+  # Returns a dried up version of the given row
   # based on the row that came before in the table
   #
   # rubocop:disable MethodLength
-  def dry_up values
-    return values unless @previous_values
-    result = values.clone
-    previous_column_empty = true   # indicates whether the data at the previous value of i was
-    @previous_values.each_with_index do |previous_value, i|
+  def dry_up row
+    return row unless @previous_row
+    result = row.clone
+    @previous_row.each_with_index do |previous_value, i|
       if @headers[i] != 'MESSAGE' &&
          @headers[i] != 'FILE NAME' &&
-         values[i] == previous_value &&
-         previous_column_empty
+         row[i] == previous_value
         result[i] = ''
-        previous_column_empty = true
       else
-        previous_column_empty = false
+        break
       end
     end
     result
