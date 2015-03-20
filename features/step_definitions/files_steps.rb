@@ -12,8 +12,7 @@ end
 
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
-  files_data.map_headers!(&:downcase)
-  verify_files files_data.hashes
+  files_data.diff! files_in_branches
 end
 
 

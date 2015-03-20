@@ -159,6 +159,12 @@ def recent_commit_shas count
 end
 
 
+# Returns the SHA of the commit with the given message
+def sha commit_message
+  output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+end
+
+
 # Verifies the commits in the repository
 def verify_commits commits_array
   normalize_commit_data commits_array

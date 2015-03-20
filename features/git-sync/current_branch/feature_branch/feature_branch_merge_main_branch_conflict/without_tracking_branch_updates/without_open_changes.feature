@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         |                  | conflicting main commit          | conflicting_file |
       |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT          |
+      | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
 
@@ -87,6 +87,6 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         |                  | conflicting main commit          | conflicting_file |
       |         |                  | Merge branch 'main' into feature |                  |
     And I still have the following committed files
-      | BRANCH  | FILES            | CONTENT          |
+      | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

@@ -64,18 +64,34 @@ and notifies you via email and through status badges in pull requests
 about problems.
 
 
-## Merging Pull Requests
+## Pull Requests
 
-* if possible, use Git Town to ship your pull request
-* format your commit message according to the
-  [recommended guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-* [mention the associated issue](https://help.github.com/articles/closing-issues-via-commit-messages)
-  in the body of the commit message, so that it is automatically closed
+Each pull request (PR) should have the same (optional) description that it will
+have when committed later and include the
+[issue](https://github.com/Originate/git-town/issues) it resolves.
+
+When merging approved PRs:
+* use `git ship`
+* the message for the squashed commit should follow the
+  [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
+in the commit body, so that the respective issue is automatically closed.
+
+Example of a commit message:
+
+```
+Automatically foo commits in "git bar"
+
+Fooing changes before they get barred into a separate branch
+keeps the final foo simpler when shipping that branch later.
+
+Implements #123
+```
 
 
 ## Architecture
 
-*The following refers to all commands except `git-pr`, `git-repo`, and `git-town`.*
+*The following refers to all commands except `git-pull-request`, `git-repo`, and `git-town`.*
 
 Each Git Town command begins by inspecting the current state of the Git repository
 (which branch you are on, whether you have open changes).
