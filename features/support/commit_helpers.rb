@@ -161,7 +161,11 @@ end
 
 # Returns the SHA of the commit with the given message
 def sha commit_message
-  output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  if commit_message == 'Initial commit'
+    output_of "git reflog --grep-reflog='commit (initial): #{commit_message.strip}' --format='%H'"
+  else
+    output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  end
 end
 
 

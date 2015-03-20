@@ -35,12 +35,12 @@ Feature: git prune-branches: remove stale feature branches when run on a feature
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH | COMMAND                                               |
-      | main   | git branch stale_feature_main [SHA:main commit]       |
-      | main   | git push -u origin stale_feature_main                 |
-      | main   | git branch stale_feature_initial [SHA:Initial commit] |
-      | main   | git push -u origin stale_feature_initial              |
-      | main   | git checkout stale_feature_initial                    |
+      | BRANCH | COMMAND                                                      |
+      | main   | git branch stale_feature_main <%= sha 'main commit' %>       |
+      | main   | git push -u origin stale_feature_main                        |
+      | main   | git branch stale_feature_initial <%= sha 'Initial commit' %> |
+      | main   | git push -u origin stale_feature_initial                     |
+      | main   | git checkout stale_feature_initial                           |
     And I end up on the "stale_feature_initial" branch
     Then the existing branches are
         | REPOSITORY | BRANCHES                                        |
