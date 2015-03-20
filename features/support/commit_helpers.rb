@@ -4,6 +4,12 @@ def committed_files sha
 end
 
 
+# Returns all commits in the current repository as a data table
+def commits_in_current_repo
+  CommitsFinder.new(expected_commits.headers).add_commits_in_current_repo.to_table
+end
+
+
 # Creates a new commit with the given properties.
 #
 # Parameter is a Cucumber table line
@@ -129,6 +135,5 @@ end
 
 # Verifies the commits in the repository
 def verify_commits expected_commits
-  actual_commits = CommitsFinder.new(expected_commits.headers).add_commits_in_current_repo.to_table
-  expected_commits.diff! actual_commits
+  expected_commits.diff! commits_in_current_repo
 end
