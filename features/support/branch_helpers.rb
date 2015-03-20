@@ -77,7 +77,7 @@ end
 # 'origin/foo'   --> 'foo'
 # 'upstream/foo' --> 'foo'
 def local_branch_name branch_name
-  branch_name.sub('origin/', '').sub('upstream/', '')
+  branch_name.sub(/.+\//, '')
 end
 
 

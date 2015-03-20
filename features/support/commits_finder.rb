@@ -34,7 +34,7 @@ class CommitsFinder
       'LOCATION' => [branch_location(branch_name)],
       'MESSAGE' => message
     }
-    if @commit_attributes.include? 'FILE NAME'
+    if has_attribute? 'FILE NAME'
       filenames = committed_files sha
       commit_data['FILE NAME'] = filenames.to_sentence
     end
@@ -74,6 +74,13 @@ class CommitsFinder
   # Returns whether this CommitsFinder instance has found any commits so far
   def empty?
     @commits.empty?
+  end
+
+
+  # Returns whether this CommitsFinder instance is looking for
+  # the given commit attribute
+  def has_attribute? attribute_name
+    @commit_attributes.include? attribute_name
   end
 
 

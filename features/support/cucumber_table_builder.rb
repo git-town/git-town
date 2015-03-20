@@ -35,6 +35,9 @@ class CucumberTableBuilder
 
   # Returns a dried up version of the given row
   # based on the row that came before in the table
+  #
+  # In a dried up row, any values that match the previous row are removed,
+  # stopping on the first difference
   def dry_up row
     return row unless @previous_row
     result = row.clone
