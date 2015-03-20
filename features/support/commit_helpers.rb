@@ -5,8 +5,8 @@ end
 
 
 # Returns all commits in the current repository as a data table
-def commits_in_current_repo
-  CommitsFinder.new(expected_commits.headers).add_commits_in_current_repo.to_table
+def commits_in_current_repo commit_fields
+  CommitsFinder.new(commit_fields).add_commits_in_current_repo.to_table
 end
 
 
@@ -135,5 +135,5 @@ end
 
 # Verifies the commits in the repository
 def verify_commits expected_commits
-  expected_commits.diff! commits_in_current_repo
+  expected_commits.diff! commits_in_current_repo(expected_commits.headers)
 end
