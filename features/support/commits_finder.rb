@@ -16,15 +16,6 @@ class CommitsFinder
   end
 
 
-  # Adds all commits in the current repo to this CommitsFinder instance
-  def add_commits_in_current_repo
-    existing_branches.each do |branch_name|
-      add_commits_in_branch branch_name
-    end
-    self
-  end
-
-
   # Adds the given commit to this CommitsFinder instance
   #
   # rubocop:disable MethodLength
@@ -71,6 +62,15 @@ class CommitsFinder
   end
 
 
+  # Adds all commits in the current repo to this CommitsFinder instance
+  def add_commits_in_current_repo
+    existing_branches.each do |branch_name|
+      add_commits_in_branch branch_name
+    end
+    self
+  end
+
+
   # Returns whether this CommitsFinder instance has found any commits so far
   def empty?
     @commits.empty?
@@ -100,6 +100,3 @@ class CommitsFinder
   # rubocop:enable AbcSize
 
 end
-
-
-
