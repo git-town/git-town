@@ -88,10 +88,10 @@ class CommitsFinder
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
       result.add_row main_commits[sha].values
     end
-    @commits.keys.each do |branch_name|
-      @commits[branch_name].keys.each do |sha|
-        @commits[branch_name][sha]['LOCATION'] = @commits[branch_name][sha]['LOCATION'].to_sentence
-        result.add_row @commits[branch_name][sha].values
+    @commits.values.each do |branch_commits|
+      branch_commits.values.each do |commit|
+        commit['LOCATION'] = commit['LOCATION'].to_sentence
+        result.add_row commit.values
       end
     end
     result.table
