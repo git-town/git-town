@@ -35,15 +35,11 @@ class CucumberTableBuilder
 
   # Returns a dried up version of the given row
   # based on the row that came before in the table
-  #
-  # rubocop:disable MethodLength
   def dry_up row
     return row unless @previous_row
     result = row.clone
     @previous_row.each_with_index do |previous_value, i|
-      if @headers[i] != 'MESSAGE' &&
-         @headers[i] != 'FILE NAME' &&
-         row[i] == previous_value
+      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && row[i] == previous_value
         result[i] = ''
       else
         break
@@ -51,6 +47,5 @@ class CucumberTableBuilder
     end
     result
   end
-  # rubocop:enable MethodLength
 
 end
