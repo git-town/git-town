@@ -34,7 +34,7 @@ class CommitsFinder
       'LOCATION' => [branch_location(branch_name)],
       'MESSAGE' => message
     }
-    if has_attribute? 'FILE NAME'
+    if attribute? 'FILE NAME'
       filenames = committed_files sha
       commit_data['FILE NAME'] = filenames.to_sentence
     end
@@ -79,7 +79,7 @@ class CommitsFinder
 
   # Returns whether this CommitsFinder instance is looking for
   # the given commit attribute
-  def has_attribute? attribute_name
+  def attribute? attribute_name
     @commit_attributes.include? attribute_name
   end
 
@@ -89,7 +89,7 @@ class CommitsFinder
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def to_table
-    result = CucumberTableBuilder.new headers: @commit_attributes, dry: ['BRANCH', 'LOCATION']
+    result = CucumberTableBuilder.new headers: @commit_attributes, dry: %w(BRANCH LOCATION)
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
