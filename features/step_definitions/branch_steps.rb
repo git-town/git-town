@@ -33,7 +33,7 @@ Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main
   in_repository :coworker do
     create_branch branch_name
     if relation
-      commit_to_branch = relation == 'behind' ? 'main' : branch_name
+      commit_to_branch = relation == "behind" ? 'main' : branch_name
       create_commits branch: commit_to_branch
     end
   end
