@@ -25,5 +25,5 @@ end
 
 
 Then(/^there are no commits$/) do
-  expect(CommitsFinder.new.add_commits_in_current_repo).to be_empty
+  expect(CommitsFinder.new.find_commits_in_current_repo).to be_empty
 end
