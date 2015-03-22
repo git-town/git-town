@@ -32,7 +32,11 @@ class CommitListBuilder
       return
     end
 
-    @commits[local_branch_name][sha] = commit_data local_branch_name: local_branch_name, branch_name: branch_name, message: message, sha: sha, author: author
+    @commits[local_branch_name][sha] = commit_data local_branch_name: local_branch_name,
+                                                   branch_name: branch_name,
+                                                   message: message,
+                                                   sha: sha,
+                                                   author: author
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
@@ -63,11 +67,11 @@ class CommitListBuilder
     end
     result.table
   end
-  # rubocop:enable MethodLength
   # rubocop:enable AbcSize
+  # rubocop:enable MethodLength
 
 
-private
+  private
 
   # Returns whether this CommitsFinder instance is looking for
   # the given commit attribute
@@ -76,24 +80,27 @@ private
   end
 
 
+  # rubocop:disable MethodLength
   def commit_data local_branch_name:, branch_name:, message:, sha:, author:
-    commit_data = {
+    result = {
       'BRANCH' => local_branch_name,
       'LOCATION' => [branch_location(branch_name)],
       'MESSAGE' => message
     }
     if attribute? 'FILE NAME'
       filenames = committed_files sha
-      commit_data['FILE NAME'] = filenames.to_sentence
+      result['FILE NAME'] = filenames.to_sentence
     end
     if @commit_attributes.include? 'FILE CONTENT'
       if filenames.size == 1
-        commit_data['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
+        result['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
       else
         fail 'Cannot verify file content for multiple files'
       end
     end
-    commit_data['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
-    commit_data
+    result['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
+    result
   end
+  # rubocop:enable MethodLength
+
 end
