@@ -6,7 +6,7 @@ end
 
 # Returns all commits in the current repository as a data table
 def commits_in_current_repo commit_fields
-  CommitsFinder.new(commit_fields).find_commits_in_current_repo.to_a
+  CommitsFinder.new(commit_fields).find_commits_in_current_repo.to_table
 end
 
 

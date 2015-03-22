@@ -13,7 +13,7 @@ class CommitsFinder
   #
   #   CommitsFinder.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
-    @commits = CommitListBuilder.new commit_attributes
+    @commits = CommitsList.new commit_attributes
   end
 
 
@@ -24,6 +24,7 @@ class CommitsFinder
       next if message == 'Initial commit'
       @commits.add sha: sha, message: message, branch_name: branch_name, author: author
     end
+    @commits
   end
 
 
@@ -32,18 +33,7 @@ class CommitsFinder
     existing_branches.each do |branch_name|
       find_commits_in_branch branch_name
     end
-    self
-  end
-
-
-  # Returns whether this CommitsFinder instance has found any commits so far
-  def empty?
-    @commits.empty?
-  end
-
-
-  def to_a
-    @commits.to_a
+    @commits
   end
 
 end
