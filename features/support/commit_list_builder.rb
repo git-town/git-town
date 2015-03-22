@@ -89,7 +89,7 @@ class CommitListBuilder
     }
     if attribute? 'FILE NAME'
       filenames = committed_files sha
-      result['FILE NAME'] = filenames.to_sentence
+      result['FILE NAME'] = filenames
     end
     if attribute? 'FILE CONTENT'
       if filenames.size == 1
