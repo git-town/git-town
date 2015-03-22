@@ -32,24 +32,7 @@ class CommitListBuilder
       return
     end
 
-    commit_data = {
-      'BRANCH' => local_branch_name,
-      'LOCATION' => [branch_location(branch_name)],
-      'MESSAGE' => message
-    }
-    if attribute? 'FILE NAME'
-      filenames = committed_files sha
-      commit_data['FILE NAME'] = filenames.to_sentence
-    end
-    if @commit_attributes.include? 'FILE CONTENT'
-      if filenames.size == 1
-        commit_data['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
-      else
-        fail 'Cannot verify file content for multiple files'
-      end
-    end
-    commit_data['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
-    @commits[local_branch_name][sha] = commit_data
+    @commits[local_branch_name][sha] = commit_data local_branch_name: local_branch_name, branch_name: branch_name, message: message, sha: sha, author: author
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
@@ -92,4 +75,25 @@ private
     @commit_attributes.include? attribute_name
   end
 
+
+  def commit_data local_branch_name:, branch_name:, message:, sha:, author:
+    commit_data = {
+      'BRANCH' => local_branch_name,
+      'LOCATION' => [branch_location(branch_name)],
+      'MESSAGE' => message
+    }
+    if attribute? 'FILE NAME'
+      filenames = committed_files sha
+      commit_data['FILE NAME'] = filenames.to_sentence
+    end
+    if @commit_attributes.include? 'FILE CONTENT'
+      if filenames.size == 1
+        commit_data['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
+      else
+        fail 'Cannot verify file content for multiple files'
+      end
+    end
+    commit_data['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
+    commit_data
+  end
 end
