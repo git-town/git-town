@@ -13,7 +13,7 @@ class CommitsFinder
   #
   #   CommitsFinder.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
-    @commits = CommitsList.new commit_attributes
+    @commits = CommitList.new commit_attributes
   end
 
 

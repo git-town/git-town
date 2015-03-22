@@ -2,7 +2,7 @@
 #
 # Commit lists contain very specific data about commits.
 # They are also sorted in distinct ways.
-class CommitsList
+class CommitList
 
   # commit_attributes - the attributes we want to gather for the commits found
   #                     The default value is the minimalistic set
@@ -10,7 +10,7 @@ class CommitsList
   #
   # Examples
   #
-  #   CommitsList.new [:branch, :location, :message, :file_name, :file_content, :author]
+  #   CommitList.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
     @commit_attributes = commit_attributes.map(&:upcase)
 
@@ -19,7 +19,7 @@ class CommitsList
   end
 
 
-  # Adds the given commit to this CommitsList instance
+  # Adds the given commit to this CommitList instance
   #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
@@ -42,7 +42,7 @@ class CommitsList
   # rubocop:enable AbcSize
 
 
-  # Returns whether this CommitsList instance has found any commits so far
+  # Returns whether this CommitList instance has found any commits so far
   def empty?
     @commits.empty?
   end
@@ -73,7 +73,7 @@ class CommitsList
 
   private
 
-  # Returns whether this CommitsList instance is looking for
+  # Returns whether this CommitList instance is looking for
   # the given commit attribute
   def attribute? attribute_name
     @commit_attributes.include? attribute_name
