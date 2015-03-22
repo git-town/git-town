@@ -1,4 +1,8 @@
 # Makes finding Git commits easier
+#
+# After initializing with the desired attributes for the commit list,
+# run as many #find_* methods as you want to build up your commit list.
+# When done, call #to_a to get the results as a Cucumber compatible array.
 class CommitsFinder
 
   # commit_attributes - the attributes we want to gather for the commits found
