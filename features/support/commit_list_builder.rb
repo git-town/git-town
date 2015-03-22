@@ -10,7 +10,7 @@ class CommitListBuilder
   #
   # Examples
   #
-  #   CommitsFinder.new [:branch, :location, :message, :file_name, :file_content, :author]
+  #   CommitListBuilder.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
     @commit_attributes = commit_attributes.map(&:upcase)
 
@@ -19,7 +19,7 @@ class CommitListBuilder
   end
 
 
-  # Adds the given commit to this CommitsFinder instance
+  # Adds the given commit to this CommitListBuilder instance
   #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
@@ -42,13 +42,13 @@ class CommitListBuilder
   # rubocop:enable AbcSize
 
 
-  # Returns whether this CommitsFinder instance has found any commits so far
+  # Returns whether this CommitListBuilder instance has found any commits so far
   def empty?
     @commits.empty?
   end
 
 
-  # Returns the currently found commits as a Cucumber compatible table
+  # Returns the currently found commits as a Cucumber compatible array
   #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
@@ -73,7 +73,7 @@ class CommitListBuilder
 
   private
 
-  # Returns whether this CommitsFinder instance is looking for
+  # Returns whether this CommitListBuilder instance is looking for
   # the given commit attribute
   def attribute? attribute_name
     @commit_attributes.include? attribute_name
@@ -91,14 +91,14 @@ class CommitListBuilder
       filenames = committed_files sha
       result['FILE NAME'] = filenames.to_sentence
     end
-    if @commit_attributes.include? 'FILE CONTENT'
+    if attribute? 'FILE CONTENT'
       if filenames.size == 1
         result['FILE CONTENT'] = content_of file: filenames[0], for_sha: sha
       else
         fail 'Cannot verify file content for multiple files'
       end
     end
-    result['AUTHOR'] = author if @commit_attributes.include? 'AUTHOR'
+    result['AUTHOR'] = author if attribute? 'AUTHOR'
     result
   end
   # rubocop:enable MethodLength
