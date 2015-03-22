@@ -43,7 +43,7 @@ class CommitsFinder
 
 
   def to_a
-    @commits.to_table
+    @commits.to_a
   end
 
 end

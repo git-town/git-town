@@ -52,7 +52,7 @@ class CommitListBuilder
   #
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
-  def to_table
+  def to_a
     result = CucumberTableBuilder.new headers: @commit_attributes, dry: %w(BRANCH LOCATION)
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
