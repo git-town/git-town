@@ -91,7 +91,7 @@ class CommitsList
     }
     if attribute? 'FILE NAME'
       filenames = committed_files sha
-      result['FILE NAME'] = filenames
+      result['FILE NAME'] = filenames[0]
     end
     if attribute? 'FILE CONTENT'
       if filenames.size == 1
