@@ -1,22 +1,13 @@
 # Makes it easy to build DRY Cucumber-compatible tables
-#
-# Example
-#
-#   table_builder = CucumberTableBuilder.new ['AUTHOR', 'MESSAGE', 'FILES']
-#   table_builder.add ['Jay', 'hello', 'jay.txt']
-#   table_builder.add ['Jane', 'hi', 'jane.txt']
-#   table_builder.to_table
-#
-#   =>  [ ['AUTHOR', 'MESSAGE', 'FILES'],
-#         ['Jay', 'hello', 'jay.txt'],
-#         ['Jane', 'hi', 'jane.txt'] ]
 class CucumberTableBuilder
 
   attr_reader :table
 
 
-  def initialize headers
+  def initialize headers:, dry: []
     @headers = headers
+
+    @dry = dry
 
     # The resulting Cucumber-compatible table structure
     @table = [headers]
@@ -27,7 +18,7 @@ class CucumberTableBuilder
 
 
   # Adds the given row to the table
-  def add_row row
+  def << row
     @table << dry_up(row)
     @previous_row = row
   end
@@ -42,7 +33,7 @@ class CucumberTableBuilder
     return row unless @previous_row
     result = row.clone
     @previous_row.each_with_index do |previous_value, i|
-      if @headers[i] != 'MESSAGE' && @headers[i] != 'FILE NAME' && row[i] == previous_value
+      if @dry.include?(@headers[i]) && row[i] == previous_value
         result[i] = ''
       else
         break

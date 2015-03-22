@@ -89,16 +89,16 @@ class CommitsFinder
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def to_table
-    result = CucumberTableBuilder.new @commit_attributes
+    result = CucumberTableBuilder.new headers: @commit_attributes, dry: ['BRANCH', 'LOCATION']
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
-      result.add_row main_commits[sha].values
+      result << main_commits[sha].values
     end
     @commits.values.each do |branch_commits|
       branch_commits.values.each do |commit|
         commit['LOCATION'] = commit['LOCATION'].to_sentence
-        result.add_row commit.values
+        result << commit.values
       end
     end
     result.table
