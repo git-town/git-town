@@ -17,8 +17,7 @@ function checkout_main_branch {
 
 
 function undo_steps_for_checkout {
-  local branch=$(get_current_branch_name)
-  echo "checkout $branch"
+  echo "checkout $(get_current_branch_name)"
 }
 
 
