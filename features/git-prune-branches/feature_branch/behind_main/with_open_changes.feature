@@ -9,8 +9,8 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
     Given the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
       | main   | local and remote | main commit | main_file |
-    And I have a feature branch named "stale_feature_initial" with its tip at "Initial commit"
-    And I have a feature branch named "stale_feature_main" with its tip at "main commit"
+    And I have a stale feature branch named "stale_feature_initial" with its tip at "Initial commit"
+    And I have a stale feature branch named "stale_feature_main" with its tip at "main commit"
     And I am on the "stale_feature_initial" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git prune-branches`
