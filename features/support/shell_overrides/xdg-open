@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # A test mock for "xdg-open" (opens browsers on Linux)
 
