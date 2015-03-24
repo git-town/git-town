@@ -147,6 +147,7 @@ function print_git_command {
 
 
 function prompt_yn {
+  echo -n " [Y/n] "
   read yn
   case $yn in
     [Yy] ) return 0;;
