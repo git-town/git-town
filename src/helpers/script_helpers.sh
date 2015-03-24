@@ -83,6 +83,17 @@ function preconditions {
 }
 
 
+# Echos command if condition is true
+function echo_if_true {
+  local git_command="$1"
+  local condition="$2"
+
+  if [ "$condition" = true ]; then
+    echo "$git_command"
+  fi
+}
+
+
 function remove_step_files {
   if [ "$(has_file "$steps_file")" = true ]; then
     rm "$steps_file"
