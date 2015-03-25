@@ -1,15 +1,3 @@
-Style/EmptyLines:
-  Enabled: false
-
-
-Style/EmptyLinesAroundClassBody:
-  EnforcedStyle: empty_lines
-
-
-Style/MethodDefParentheses:
-  EnforcedStyle: require_no_parentheses
-
-
 Metrics/AbcSize:
   Max: 19
 
@@ -24,3 +12,19 @@ Metrics/LineLength:
 
 Metrics/ParameterLists:
   Max: 6
+
+
+Style/EmptyLines:
+  Enabled: false
+
+
+Style/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
+
+
+Style/MethodDefParentheses:
+  EnforcedStyle: require_no_parentheses
+
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
