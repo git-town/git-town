@@ -25,5 +25,5 @@ end
 
 
 Then(/^there are no commits$/) do
-  expect(CommitsFinder.new.find_commits_in_current_repo).to be_empty
+  expect(CommitListBuilder.new.add_commits_in_current_repo).to be_empty
 end
