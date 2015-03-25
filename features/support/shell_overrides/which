@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # A test mock for "which" (locates a program file)
 # Git Town uses `which` to determine what tools are installed
