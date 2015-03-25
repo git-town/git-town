@@ -13,7 +13,7 @@ class CommitListBuilder
   #
   #   CommitsFinder.new [:branch, :location, :message, :file_name, :file_content, :author]
   def initialize commit_attributes = [:message]
-    @commits = CommitList.new commit_attributes
+    @commit_list = CommitList.new commit_attributes
   end
 
 
@@ -22,9 +22,9 @@ class CommitListBuilder
     array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
       sha, message, author = commit.split('|')
       next if message == 'Initial commit'
-      @commits.add sha: sha, message: message, branch_name: branch_name, author: author
+      @commit_list.add sha: sha, message: message, branch_name: branch_name, author: author
     end
-    @commits
+    @commit_list
   end
 
 
@@ -33,7 +33,7 @@ class CommitListBuilder
     existing_branches.each do |branch_name|
       add_commits_in_branch branch_name
     end
-    @commits
+    @commit_list
   end
 
 end
