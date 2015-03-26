@@ -59,5 +59,5 @@ end
 
 
 Then(/^I see the first question of the configuration wizard$/) do
-  step %Q(I see "Please specify the main dev branch")
+  step %(I see "Please specify the main dev branch")
 end
