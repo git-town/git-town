@@ -9,7 +9,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Given I haven't configured Git Town yet
 
 
-  Scenario Outline: Seeing a configuration prompt when running a Git Town command
+  Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
     When I run `<COMMAND>` and enter "^C"
     Then I see the initial configuration prompt
 
@@ -26,7 +26,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git sync-fork      |
 
 
-  Scenario Outline: Explicitly proceeding to configuration wizard upon seeing config prompt
+  Scenario Outline: Starting the wizard by answering "y" to the configuration prompt's question whether to start it
     When I run `<COMMAND>` and enter "y" and "^C"
     Then I see the first line of the configuration wizard
 
@@ -43,7 +43,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git sync-fork      |
 
 
-  Scenario Outline: Implicitly proceeding to configuration wizard upon seeing config prompt
+  Scenario Outline: Starting the wizard by choosing the default answer to the configuration prompt's question whether to start it
     When I run `<COMMAND>` and enter "" and "^C"
     Then I see the first line of the configuration wizard
 
@@ -60,7 +60,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git sync-fork      |
 
 
-  Scenario Outline: Not proceeding to configuration upon initial config prompt
+  Scenario Outline: Not proceeding to the wizard by answering "n" to the configuration prompt's question whether to start it
     When I run `<COMMAND>` and enter "n" and "^C"
     Then I don't see the first line of the configuration wizard
 
