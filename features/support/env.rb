@@ -1,6 +1,7 @@
 require 'active_support/all'
 require 'kappamaki'
 require 'open4'
+require 'pathname'
 require 'rspec'
 
 
