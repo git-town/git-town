@@ -11,7 +11,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
   Scenario Outline: Seeing a configuration prompt when running a Git Town command
     When I run `<COMMAND>` and enter "^C"
-    Then I see "Git Town hasn't been configured for this repository."
+    Then I see the initial configuration prompt
 
     Examples:
     | COMMAND            |
