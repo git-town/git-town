@@ -56,3 +56,8 @@ end
 Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
   expect(git_town_configuration).to be_empty
 end
+
+
+Then(/^I see the first question of the configuration wizard$/) do
+  step %Q(I see "Please specify the main dev branch")
+end

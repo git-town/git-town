@@ -9,10 +9,9 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Given I haven't configured Git Town yet
 
 
-  Scenario Outline: Proceeding to configuration upon initial config prompt
-    When I run `<COMMAND>` and enter "y" and "^C"
+  Scenario Outline: Seeing a configuration prompt when running a Git Town command
+    When I run `<COMMAND>` and enter "^C"
     Then I see "Git Town hasn't been configured for this repository."
-    And I see "Please specify the main dev branch"
 
     Examples:
     | COMMAND            |
@@ -27,10 +26,26 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git sync-fork      |
 
 
-  Scenario Outline: Proceeding to configuration upon initial config prompt (using prompt's default)
+  Scenario Outline: Explicitly proceeding to configuration wizard upon seeing config prompt
+    When I run `<COMMAND>` and enter "y" and "^C"
+    Then I see the first question of the configuration wizard
+
+    Examples:
+    | COMMAND            |
+    | git extract        |
+    | git hack           |
+    | git kill           |
+    | git prune-branches |
+    | git pull-request   |
+    | git repo           |
+    | git ship           |
+    | git sync           |
+    | git sync-fork      |
+
+
+  Scenario Outline: Implicitly proceeding to configuration wizard upon seeing config prompt
     When I run `<COMMAND>` and enter "" and "^C"
-    Then I see "Git Town hasn't been configured for this repository."
-    And I see "Please specify the main dev branch"
+    Then I see the first question of the configuration wizard
 
     Examples:
     | COMMAND            |
