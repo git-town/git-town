@@ -58,6 +58,13 @@ Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
 end
 
 
+Then(/^I see the initial configuration prompt$/) do
+  step %(I see "Git Town hasn't been configured for this repository.")
+  step %(I see "Please run 'git town config --setup'.")
+  step %(I see "Would you like to do that now? [Y/n]")
+end
+
+
 Then(/^I see the first question of the configuration wizard$/) do
   step %(I see "Please specify the main dev branch")
 end
