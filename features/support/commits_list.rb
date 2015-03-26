@@ -53,7 +53,7 @@ class CommitList
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def to_table
-    result = CucumberTableBuilder.new headers: @commit_attributes, dry: %w(BRANCH LOCATION)
+    result = Mortadella.new headers: @commit_attributes, dry: %w(BRANCH LOCATION)
     main_commits = @commits.delete 'main'
     main_commits.try(:keys).try(:each) do |sha|
       main_commits[sha]['LOCATION'] = main_commits[sha]['LOCATION'].to_sentence
