@@ -66,7 +66,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
       """
       Git Town hasn't been configured for this repository.
       Please run 'git town config --setup'.
-      Would you like to do that now?
+      Would you like to do that now? [Y/n]
       """
 
     Examples:
