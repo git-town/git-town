@@ -11,8 +11,8 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | qa     | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
 
