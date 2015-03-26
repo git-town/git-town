@@ -65,6 +65,11 @@ Then(/^I see the initial configuration prompt$/) do
 end
 
 
-Then(/^I see the first question of the configuration wizard$/) do
-  step %(I see "Please specify the main dev branch")
+Then(/^I (don't )?see the first line of the configuration wizard$/) do |negate|
+  configuration_wizard_first_line = 'Please specify the main dev branch'
+  if negate
+    step %(I don't see "#{configuration_wizard_first_line}")
+  else
+    step %(I see "#{configuration_wizard_first_line}")
+  end
 end

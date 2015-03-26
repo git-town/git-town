@@ -28,7 +28,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
   Scenario Outline: Explicitly proceeding to configuration wizard upon seeing config prompt
     When I run `<COMMAND>` and enter "y" and "^C"
-    Then I see the first question of the configuration wizard
+    Then I see the first line of the configuration wizard
 
     Examples:
     | COMMAND            |
@@ -45,7 +45,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
   Scenario Outline: Implicitly proceeding to configuration wizard upon seeing config prompt
     When I run `<COMMAND>` and enter "" and "^C"
-    Then I see the first question of the configuration wizard
+    Then I see the first line of the configuration wizard
 
     Examples:
     | COMMAND            |
@@ -62,12 +62,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
   Scenario Outline: Not proceeding to configuration upon initial config prompt
     When I run `<COMMAND>` and enter "n" and "^C"
-    Then I see
-      """
-      Git Town hasn't been configured for this repository.
-      Please run 'git town config --setup'.
-      Would you like to do that now? [Y/n]
-      """
+    Then I don't see the first line of the configuration wizard
 
     Examples:
     | COMMAND            |
