@@ -35,9 +35,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      | refactor | git checkout main       |
+      |          | git checkout main       |
       | main     | git branch -d refactor  |
-      | main     | git checkout feature    |
+      |          | git checkout feature    |
     And I end up on the "feature" branch
     And there is no "refactor" branch
     And I am left with my original commits
