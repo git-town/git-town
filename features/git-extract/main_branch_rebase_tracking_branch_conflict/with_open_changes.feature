@@ -64,11 +64,11 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | main     | git rebase --continue                        |
-      | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git push                                     |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
-      | refactor | git push -u origin refactor                  |
-      | refactor | git stash pop                                |
+      |          | git push -u origin refactor                  |
+      |          | git stash pop                                |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -88,10 +88,10 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
-      | refactor | git push -u origin refactor                  |
-      | refactor | git stash pop                                |
+      |          | git push -u origin refactor                  |
+      |          | git stash pop                                |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

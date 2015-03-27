@@ -19,11 +19,11 @@ Feature: git extract: extracting multiple commits (without open changes)
     Then it runs the Git commands
       | BRANCH   | COMMAND                                                                     |
       | feature  | git fetch --prune                                                           |
-      | feature  | git checkout main                                                           |
+      |          | git checkout main                                                           |
       | main     | git rebase origin/main                                                      |
-      | main     | git checkout -b refactor main                                               |
+      |          | git checkout -b refactor main                                               |
       | refactor | git cherry-pick <%= sha 'refactor1 commit' %> <%= sha 'refactor2 commit' %> |
-      | refactor | git push -u origin refactor                                                 |
+      |          | git push -u origin refactor                                                 |
     And  I end up on the "refactor" branch
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE            | FILE NAME        |
