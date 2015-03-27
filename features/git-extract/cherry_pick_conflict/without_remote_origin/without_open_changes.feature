@@ -40,11 +40,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | main     | git checkout feature    |
     And I end up on the "feature" branch
     And there is no "refactor" branch
-    And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE         | FILE NAME        |
-      | main    | local    | main commit     | conflicting_file |
-      | feature | local    | feature commit  | feature_file     |
-      |         |          | refactor commit | conflicting_file |
+    And I am left with my original commits
     And my repo has no cherry-pick in progress
 
 
