@@ -33,7 +33,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                    |
       | main   | git rebase --abort         |
-      |              checkout other_feature |
+      |        | git checkout other_feature |
     And I am still on the "other_feature" branch
     And there is no rebase in progress
     And I am left with my original commits

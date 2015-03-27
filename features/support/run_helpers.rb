@@ -32,6 +32,7 @@ GIT_COMMAND_REGEX = /
 def commands_of_last_run
   result = Mortadella.new headers: %w(BRANCH COMMAND), dry: 'BRANCH'
   @last_run_result.out.scan(GIT_COMMAND_REGEX).each { |command| result << command }
+  result
 end
 
 
