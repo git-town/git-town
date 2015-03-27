@@ -9,10 +9,9 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Given I haven't configured Git Town yet
 
 
-  Scenario Outline: Proceeding to configuration upon initial config prompt
-    When I run `<COMMAND>` and enter "y" and "^C"
-    Then I see "Git Town hasn't been configured for this repository."
-    And I see "Please specify the main dev branch"
+  Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
+    When I run `<COMMAND>` and enter "^C"
+    Then I see the initial configuration prompt
 
     Examples:
     | COMMAND            |
@@ -27,14 +26,43 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     | git sync-fork      |
 
 
-  Scenario Outline: Not proceeding to configuration upon initial config prompt
+  Scenario Outline: Starting the wizard by answering "y" to the configuration prompt's question whether to start it
+    When I run `<COMMAND>` and enter "y" and "^C"
+    Then I see the first line of the configuration wizard
+
+    Examples:
+    | COMMAND            |
+    | git extract        |
+    | git hack           |
+    | git kill           |
+    | git prune-branches |
+    | git pull-request   |
+    | git repo           |
+    | git ship           |
+    | git sync           |
+    | git sync-fork      |
+
+
+  Scenario Outline: Starting the wizard by choosing the default answer to the configuration prompt's question whether to start it
+    When I run `<COMMAND>` and enter "" and "^C"
+    Then I see the first line of the configuration wizard
+
+    Examples:
+    | COMMAND            |
+    | git extract        |
+    | git hack           |
+    | git kill           |
+    | git prune-branches |
+    | git pull-request   |
+    | git repo           |
+    | git ship           |
+    | git sync           |
+    | git sync-fork      |
+
+
+  Scenario Outline: Not proceeding to the wizard by answering "n" to the configuration prompt's question whether to start it
     When I run `<COMMAND>` and enter "n" and "^C"
-    Then I see
-      """
-      Git Town hasn't been configured for this repository.
-      Please run 'git town config --setup'.
-      Would you like to do that now? [y/n]
-      """
+    Then I don't see the first line of the configuration wizard
 
     Examples:
     | COMMAND            |
