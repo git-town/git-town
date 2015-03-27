@@ -7,6 +7,7 @@ group :development do
   gem 'cucumber'
   gem 'cucumber_lint'
   gem 'kappamaki'
+  gem 'mortadella'
   gem 'open4'
   gem 'parallel_tests'
   gem 'rake'
