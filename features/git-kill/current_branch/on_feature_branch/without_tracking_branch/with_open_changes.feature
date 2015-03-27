@@ -10,8 +10,8 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     And I have a local feature branch named "dead-feature"
     And the following commits exist in my repository
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |
     And I am on the "dead-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
@@ -50,5 +50,5 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       | remote     | main, feature               |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |
