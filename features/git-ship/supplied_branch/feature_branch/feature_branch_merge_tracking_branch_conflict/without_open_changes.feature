@@ -35,7 +35,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
       | feature | git merge --abort          |
-      |               checkout main          |
+      |         | git checkout main          |
       | main    | git checkout other_feature |
     And I end up on the "other_feature" branch
     And there is no merge in progress

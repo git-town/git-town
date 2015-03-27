@@ -23,7 +23,7 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
       |              | git commit -m 'WIP on dead-feature' |
       |              | git checkout main                   |
       | main         | git push origin :dead-feature       |
-      | main         | git branch -D dead-feature          |
+      |              | git branch -D dead-feature          |
     And I end up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
