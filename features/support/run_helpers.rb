@@ -42,7 +42,7 @@ end
 
 
 def git_town_command? command
-  %w(extract hack kill prune-branches pull-request repo ship sync-fork sync town).any? do |subcommand|
+  %w(extract hack kill prune-branches pull-request repo ship sync-fork sync town mock).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end
@@ -98,7 +98,8 @@ end
 
 
 def shell_overrides
-  "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH; export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME}"
+  "PATH=#{MOCK_SCRIPT_DIRECTORY}:#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH; \
+   export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME}"
 end
 
 
