@@ -7,8 +7,8 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Given I have feature branches named "feature" and "other_feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | feature | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
-      |         | local    | local conflicting commit  | conflicting_file | local conflicting content  |
+      | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
+      |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "other_feature" branch
     And I run `git ship feature -m "feature done"`
 

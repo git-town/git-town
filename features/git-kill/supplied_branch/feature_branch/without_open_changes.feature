@@ -42,5 +42,5 @@ Feature: git kill: killing the given feature branch (without open changes)
       | remote     | main, dead-feature, feature |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |

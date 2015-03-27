@@ -9,8 +9,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Given I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
 
