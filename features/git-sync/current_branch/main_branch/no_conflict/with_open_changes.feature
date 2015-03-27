@@ -19,11 +19,11 @@ Feature: git sync: syncing the main branch (with open changes)
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git stash -u           |
-      | main   | git rebase origin/main |
-      | main   | git push               |
-      | main   | git push --tags        |
-      | main   | git stash pop          |
+      |        | git stash -u           |
+      |        | git rebase origin/main |
+      |        | git push               |
+      |        | git push --tags        |
+      |        | git stash pop          |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
