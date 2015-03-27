@@ -66,7 +66,7 @@ Then(/^it runs the Git commands$/) do |expected_commands|
     ERB.new(command).result
   end
 
-  expected_commands.diff! commands_of_last_run.unshift(expected_commands.headers)
+  expected_commands.diff! commands_of_last_run.table
 end
 
 
