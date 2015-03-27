@@ -15,18 +15,24 @@ def commands_of_last_run_outside_git
 end
 
 
-# Returns an array of the Git commands that were run in the last invocation of "run"
-# with the form [<branch_name>, <command>]
+# This regex parses Git commands out of console output.
+# It is used in commands_of_last_run
+GIT_COMMAND_REGEX = /
+  \[1m          # bold text
+  \[(.*?)\]     # branch name in square brackets
+  \s            # space between branch name and Git command
+  (.+?)         # the Git command
+  \s*           # any extra whitespace
+  \n            # newline at the end
+/x
+
+
+# Returns the Git commands run in the last invocation of "run"
+# as a Cucumber-compatible table.
 def commands_of_last_run
-  command_regex = /
-    \[1m          # bold text
-    \[(.*?)\]     # branch name in square brackets
-    \s            # space between branch name and Git command
-    (.+?)         # the Git command
-    \s*           # any extra whitespace
-    \n            # newline at the end
-  /x
-  @last_run_result.out.scan command_regex
+  result = Mortadella.new headers: %w(BRANCH COMMAND)
+  @last_run_result.out.scan(GIT_COMMAND_REGEX).each { |command| result << command }
+  result.table
 end
 
 
