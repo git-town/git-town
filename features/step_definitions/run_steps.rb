@@ -30,6 +30,8 @@ When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature bran
 end
 
 
+
+
 Then(/^I get the error$/) do |error_message|
   @error_expected = true
   expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
