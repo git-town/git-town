@@ -1,13 +1,12 @@
-# Returns the commits in the current directory
-def commits_in_repo keys = [:author, :file_content, :file_name, :message]
-  out = {}
+# Returns the array of the file names committed for the supplied sha
+def committed_files sha
+  array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
+end
 
-  existing_branches.each do |branch_name|
-    commits = commits_for_branch branch_name, keys
-    out[branch_name] = commits unless commits.empty?
-  end
 
-  out
+# Returns all commits in the current repository as a data table
+def commits_in_current_repo commit_fields
+  CommitListBuilder.new(commit_fields).add_commits_in_current_repo.to_table
 end
 
 
@@ -74,31 +73,6 @@ def create_commits commits_array
 end
 
 
-# Returns the array of the file names committed for the supplied sha
-def committed_files sha
-  array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
-end
-
-
-# Returns the commits in the currently checked out branch
-#
-# rubocop:disable MethodLength
-def commits_for_branch branch_name, keys
-  array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").map do |commit|
-    sha, message, author = commit.split('|')
-    next if message == 'Initial commit'
-    filenames = committed_files sha
-    {
-      author: author,
-      message: message,
-      file_name: filenames,
-      file_content: content_of(file: filenames[0], for_sha: sha)
-    }.select { |key, _| keys.include? key }
-  end.compact
-end
-# rubocop:enable MethodLength
-
-
 def default_commit_attributes
   {
     file_name: "default file name #{SecureRandom.urlsafe_base64}",
@@ -160,15 +134,6 @@ end
 
 
 # Verifies the commits in the repository
-def verify_commits commits_array
-  normalize_commit_data commits_array
-
-  expected_commits = commits_array.map do |commit_data|
-    normalize_expected_commit_data commit_data
-  end.flatten
-
-  expected_commits = group_expected_commits_by_branch expected_commits
-  actual_commits = commits_in_repo commits_array[0].keys
-
-  expect(actual_commits).to eql(expected_commits), -> { commits_diff(actual_commits, expected_commits) }
+def verify_commits expected_commits
+  expected_commits.diff! commits_in_current_repo(expected_commits.headers)
 end

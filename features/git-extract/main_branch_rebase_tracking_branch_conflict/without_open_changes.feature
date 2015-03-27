@@ -7,8 +7,8 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | main    | remote   | conflicting remote commit | conflicting_file | remote content |
-      |         | local    | conflicting local commit  | conflicting_file | local content  |
+      | main    | local    | conflicting local commit  | conflicting_file | local content  |
+      |         | remote   | conflicting remote commit | conflicting_file | remote content |
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
     And I am on the "feature" branch

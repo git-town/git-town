@@ -39,7 +39,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | local    | main local commit  | conflicting_file |
-      | main    | remote   | main remote commit | conflicting_file |
+      |         | remote   | main remote commit | conflicting_file |
       | feature | local    | feature commit     | feature_file     |
 
 
