@@ -27,12 +27,12 @@ GIT_COMMAND_REGEX = /
 /x
 
 
-# Returns the Git commands run in the last invocation of "run"
-# as a Cucumber-compatible table.
+# Returns a Mortadella instance containing the Git commands run
+# in the last invocation of "run".
 def commands_of_last_run
   result = Mortadella.new headers: %w(BRANCH COMMAND)
   @last_run_result.out.scan(GIT_COMMAND_REGEX).each { |command| result << command }
-  result.table
+  result
 end
 
 
