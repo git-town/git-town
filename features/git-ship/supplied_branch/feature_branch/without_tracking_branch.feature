@@ -17,19 +17,19 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git stash -u                       |
-      | other_feature | git checkout main                  |
+      |               | git checkout main                  |
       | main          | git fetch --prune                  |
-      | main          | git rebase origin/main             |
-      | main          | git checkout feature               |
+      |               | git rebase origin/main             |
+      |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
-      | feature       | git merge --no-edit main           |
-      | feature       | git checkout main                  |
+      |               | git merge --no-edit main           |
+      |               | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m "feature done"       |
-      | main          | git push                           |
-      | main          | git push origin :feature           |
-      | main          | git branch -D feature              |
-      | main          | git checkout other_feature         |
+      |               | git commit -m "feature done"       |
+      |               | git push                           |
+      |               | git push origin :feature           |
+      |               | git branch -D feature              |
+      |               | git checkout other_feature         |
       | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
@@ -45,17 +45,17 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
       | BRANCH        | COMMAND                            |
       | other_feature | git checkout main                  |
       | main          | git fetch --prune                  |
-      | main          | git rebase origin/main             |
-      | main          | git checkout feature               |
+      |               | git rebase origin/main             |
+      |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
-      | feature       | git merge --no-edit main           |
-      | feature       | git checkout main                  |
+      |               | git merge --no-edit main           |
+      |               | git checkout main                  |
       | main          | git merge --squash feature         |
-      | main          | git commit -m "feature done"       |
-      | main          | git push                           |
-      | main          | git push origin :feature           |
-      | main          | git branch -D feature              |
-      | main          | git checkout other_feature         |
+      |               | git commit -m "feature done"       |
+      |               | git push                           |
+      |               | git push origin :feature           |
+      |               | git branch -D feature              |
+      |               | git checkout other_feature         |
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I have the following commits

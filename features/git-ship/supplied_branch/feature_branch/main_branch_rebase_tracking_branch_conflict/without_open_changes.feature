@@ -19,7 +19,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | BRANCH        | COMMAND                |
       | other_feature | git checkout main      |
       | main          | git fetch --prune      |
-      | main          | git rebase origin/main |
+      |               | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".
@@ -33,7 +33,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                    |
       | main   | git rebase --abort         |
-      | main   | git checkout other_feature |
+      |              checkout other_feature |
     And I am still on the "other_feature" branch
     And there is no rebase in progress
     And I am left with my original commits
@@ -45,17 +45,17 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m "feature done"       |
-      | main    | git push                           |
-      | main    | git push origin :feature           |
-      | main    | git branch -D feature              |
-      | main    | git checkout other_feature         |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
+      |         | git checkout other_feature         |
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I still have the following commits
@@ -71,16 +71,16 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m "feature done"       |
-      | main    | git push                           |
-      | main    | git push origin :feature           |
-      | main    | git branch -D feature              |
-      | main    | git checkout other_feature         |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
+      |         | git checkout other_feature         |
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I still have the following commits
