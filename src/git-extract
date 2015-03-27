@@ -42,7 +42,11 @@ function get_shas {
 function preconditions {
   target_branch_name=$1
   ensure_has_target_branch
-  fetch
+
+  if [ "$has_remote" = true ]; then
+    fetch
+  fi
+
   ensure_does_not_have_branch "$target_branch_name"
   shift
   get_shas "$*"
@@ -51,20 +55,16 @@ function preconditions {
 
 
 function steps {
-  if [ "$initial_open_changes" = true ]; then
-    echo "stash_open_changes"
-  fi
+  echo_if_true "stash_open_changes" "$initial_open_changes"
 
   echo "checkout_main_branch"
   echo "rebase_tracking_branch"
-  echo "push"
+  echo_if_true "push" "$has_remote"
   echo "create_and_checkout_feature_branch '$target_branch_name'"
   echo "cherry_pick '$SHAs'"
-  echo "push"
+  echo_if_true "push" "$has_remote"
 
-  if [ "$initial_open_changes" = true ]; then
-    echo "restore_open_changes"
-  fi
+  echo_if_true "restore_open_changes" "$initial_open_changes"
 }
 
 

@@ -35,6 +35,17 @@ function echo_error {
 }
 
 
+# Prints the string if the condition is true
+function echo_if_true {
+  local string="$1"
+  local condition="$2"
+
+  if [ "$condition" = true ]; then
+    echo "$string"
+  fi
+}
+
+
 # Prints the message indented
 function echo_indented {
   echo "$*" | indent
