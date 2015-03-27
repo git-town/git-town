@@ -23,8 +23,8 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
-      | feature | git stash -u           |
-      | feature | git checkout main      |
+      |         | git stash -u           |
+      |         | git checkout main      |
       | main    | git rebase origin/main |
     And I get the error
       """
@@ -40,7 +40,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
-      | main    | git checkout feature |
+      |         | git checkout feature |
       | feature | git stash pop        |
     And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"

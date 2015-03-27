@@ -18,10 +18,10 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | feature  | git fetch --prune                            |
-      | feature  | git checkout main                            |
+      |          | git checkout main                            |
       | main     | git rebase origin/main                       |
-      | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git push                                     |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
       """
@@ -37,9 +37,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      | refactor | git checkout main       |
+      |          | git checkout main       |
       | main     | git branch -d refactor  |
-      | main     | git checkout feature    |
+      |          | git checkout feature    |
     And I end up on the "feature" branch
     And there is no "refactor" branch
     And I have the following commits
@@ -64,7 +64,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                     |
       | refactor | git commit --no-edit        |
-      | refactor | git push -u origin refactor |
+      |          | git push -u origin refactor |
     And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
