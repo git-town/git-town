@@ -34,11 +34,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature1 | git merge --abort |
       | feature1 | git checkout main |
     And I end up on the "main" branch
-    And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature1 | local    | feature1 commit | conflicting_file |
-      | feature2 | local    | feature2 commit | feature2_file    |
+    And I am left with my original commits
 
 
   Scenario: skipping
@@ -57,6 +53,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local    | feature2 commit                   | feature2_file    |
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature2 |                  |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | feature1 content |
+      | feature2 | conflicting_file | main content     |
+      | feature2 | feature2_file    | feature2 content |
 
 
   Scenario: continuing without resolving the conflicts
@@ -86,6 +88,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local    | feature2 commit                   | feature2_file    |
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature2 |                  |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | resolved content |
+      | feature2 | conflicting_file | main content     |
+      | feature2 | feature2_file    | feature2 content |
 
 
   Scenario: continuing after resolving the conflicts and committing
@@ -106,3 +114,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local    | feature2 commit                   | feature2_file    |
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature2 |                  |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | resolved content |
+      | feature2 | conflicting_file | main content     |
+      | feature2 | feature2_file    | feature2 content |

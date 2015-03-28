@@ -44,11 +44,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | main     | git stash pop                                 |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
-    And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature1 | local    | feature1 commit | feature1_file    |
-      | feature2 | local    | feature2 commit | conflicting_file |
+    And I am left with my original commits
 
 
   Scenario: skipping
@@ -67,6 +63,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature1 |                  |
       | feature2 | local    | feature2 commit                   | conflicting_file |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | main content     |
+      | feature1 | feature1_file    | feature1 content |
+      | feature2 | conflicting_file | feature2 content |
 
 
   @finishes-with-non-empty-stash
@@ -98,6 +100,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local    | feature2 commit                   | conflicting_file |
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature2 |                  |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | main content     |
+      | feature1 | feature1_file    | feature1 content |
+      | feature2 | conflicting_file | resolved content |
 
 
 
@@ -119,3 +127,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | local    | feature2 commit                   | conflicting_file |
       |          |          | main commit                       | conflicting_file |
       |          |          | Merge branch 'main' into feature2 |                  |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature1 | conflicting_file | main content     |
+      | feature1 | feature1_file    | feature1 content |
+      | feature2 | conflicting_file | resolved content |

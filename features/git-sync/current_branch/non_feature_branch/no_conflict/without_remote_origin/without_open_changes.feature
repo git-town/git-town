@@ -10,14 +10,11 @@ Feature: git sync: syncing the current non-feature branch (without open changes 
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
-      | qa     | local    | local commit | local_file |
       | main   | local    | main commit  | main_file  |
+      | qa     | local    | local commit | local_file |
     When I run `git sync`
 
 
   Scenario: no conflict
     Then I am still on the "qa" branch
-    And I have the following commits
-      | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
-      | qa     | local    | local commit | local_file |
-      | main   | local    | main commit  | main_file  |
+    And I am left with my original commits

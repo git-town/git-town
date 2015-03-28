@@ -32,10 +32,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | git merge --abort |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And I still have the following commits
-      | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local    | conflicting main commit    | conflicting_file | main content    |
-      | feature | local    | conflicting feature commit | conflicting_file | feature content |
+    And I am left with my original commits
 
 
   Scenario: continuing without resolving the conflicts

@@ -7,9 +7,9 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
     Given I have a local feature branch named "feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE              | FILE NAME          |
-      | main    | local    | local main commit    | local_main_file    |
-      | feature | local    | local feature commit | local_feature_file |
+      | BRANCH  | LOCATION | MESSAGE              | FILE NAME          | FILE CONTENT    |
+      | main    | local    | local main commit    | local_main_file    | main content    |
+      | feature | local    | local feature commit | local_feature_file | feature content |
     And I am on the "feature" branch
 
 
@@ -29,6 +29,11 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
       | feature | local    | local feature commit             | local_feature_file |
       |         |          | local main commit                | local_main_file    |
       |         |          | Merge branch 'main' into feature |                    |
+    And now I have the following committed files
+      | BRANCH  | NAME               | CONTENT         |
+      | main    | local_main_file    | main content    |
+      | feature | local_feature_file | feature content |
+      | feature | local_main_file    | main content    |
 
 
   Scenario: without open changes
@@ -43,3 +48,8 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
       | feature | local    | local feature commit             | local_feature_file |
       |         |          | local main commit                | local_main_file    |
       |         |          | Merge branch 'main' into feature |                    |
+    And now I have the following committed files
+      | BRANCH  | NAME               | CONTENT         |
+      | main    | local_main_file    | main content    |
+      | feature | local_feature_file | feature content |
+      | feature | local_main_file    | main content    |
