@@ -45,8 +45,8 @@ Feature: git sync: collaborative feature branch syncing
     And now my coworker has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |
-      | feature |                  | my commit                                                  | my_file       |
-      | feature |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
+      |         |                  | my commit                                                  | my_file       |
+      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
 
     Given I am on the "feature" branch
     When I run `git sync`
@@ -61,5 +61,5 @@ Feature: git sync: collaborative feature branch syncing
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |
-      | feature |                  | my commit                                                  | my_file       |
-      | feature |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
+      |         |                  | my commit                                                  | my_file       |
+      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |

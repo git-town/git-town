@@ -9,8 +9,8 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     Given I have a feature branch named "existing_feature"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | main   | remote   | conflicting remote commit | conflicting_file | remote content |
-      |        | local    | conflicting local commit  | conflicting_file | local content  |
+      | main   | local    | conflicting local commit  | conflicting_file | local content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing_feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git hack new_feature`
