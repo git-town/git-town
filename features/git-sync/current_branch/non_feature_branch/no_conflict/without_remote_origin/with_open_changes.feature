@@ -6,8 +6,8 @@ Feature: git sync: syncing the current non-feature branch (with open changes and
 
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I have local branches named "qa" and "production"
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository

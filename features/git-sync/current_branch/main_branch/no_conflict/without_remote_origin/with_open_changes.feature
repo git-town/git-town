@@ -6,8 +6,8 @@ Feature: git sync: syncing the main branch (with open changes and without remote
 
 
   Background:
-    Given I am on the "main" branch
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |

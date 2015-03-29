@@ -4,8 +4,8 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
 
 
   Background:
-    Given I have a local feature branch named "feature"
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I have a local feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE              | FILE NAME          | FILE CONTENT    |
       | main    | local    | local main commit    | local_main_file    | main content    |

@@ -1,8 +1,8 @@
 Feature: git sync: resolving conflicts between the current feature branch and the main branch (with open changes and without remote repo)
 
   Background:
-    Given I have a feature branch named "feature"
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I have a local feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

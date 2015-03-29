@@ -1,8 +1,8 @@
 Feature: git sync --all: syncs all feature branches (without open changes or remote repo)
 
   Background:
-    Given I have feature branches named "feature1" and "feature2"
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I have local feature branches named "feature1" and "feature2"
     And the following commits exist in my repository
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME     | FILE CONTENT     |
       | main     | local    | main commit     | main_file     | main content     |
