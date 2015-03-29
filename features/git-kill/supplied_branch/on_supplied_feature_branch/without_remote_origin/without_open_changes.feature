@@ -36,7 +36,7 @@ Feature: git kill: killing the given feature branch when on it (without open cha
     Then it runs the Git commands
       | BRANCH | COMMAND                                                        |
       | main   | git branch current-feature <%= sha 'current feature commit' %> |
-      | main   | git checkout current-feature                                   |
+      |        | git checkout current-feature                                   |
     And I end up on the "current-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
