@@ -11,8 +11,8 @@ if [[ -f ".main_branch_name" ]]; then
 fi
 
 
-export main_branch_name=$(get_configuration main-branch-name)
-export non_feature_branch_names=$(get_configuration non-feature-branch-names)
+export MAIN_BRANCH_NAME=$(get_configuration main-branch-name)
+export NON_FEATURE_BRANCH_NAMES=$(get_configuration non-feature-branch-names)
 
 
 # Bypass the configuration if requested by caller (e.g. git-town)

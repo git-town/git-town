@@ -4,7 +4,7 @@
 # Returns the author with the most commits in the given branch that are not in the main branch
 function branch_author {
   local branch_name=$1
-  git log "$main_branch_name..$branch_name" --format='%an <%ae>' | # Authors of commits only in $branch_name
+  git log "$MAIN_BRANCH_NAME..$branch_name" --format='%an <%ae>' | # Authors of commits only in $branch_name
     uniq -c  | # get count for each author
     sort -rn | # reverse numeric sort
     head -1  | # take only the first

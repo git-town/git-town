@@ -33,5 +33,5 @@ function push_tags {
 
 
 function undo_steps_for_push {
-  echo "skip_current_branch_steps $undo_steps_file"
+  echo "skip_current_branch_steps $UNDO_STEPS_FILE"
 }

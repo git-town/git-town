@@ -27,15 +27,15 @@ function preconditions {
 
 
 function steps {
-  local has_remote="$(has_remote_url)"
+  local HAS_REMOTE="$(has_remote_url)"
 
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    if [ "$initial_open_changes" = true ]; then
+  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
+    if [ "$INITIAL_OPEN_CHANGES" = true ]; then
       echo "stash_open_changes"
     fi
   fi
 
-  if [ "$has_remote" = true ]; then
+  if [ "$HAS_REMOTE" = true ]; then
     echo "checkout_main_branch"
     echo "fetch"
     echo "rebase_tracking_branch"
@@ -44,13 +44,13 @@ function steps {
 
   echo "checkout $target_branch_name"
   echo "merge_tracking_branch"
-  echo "merge $main_branch_name"
+  echo "merge $MAIN_BRANCH_NAME"
   echo "ensure_has_shippable_changes"
   echo "checkout_main_branch"
   echo "squash_merge $target_branch_name"
   echo "commit_squash_merge $target_branch_name $commit_options"
 
-  if [ "$has_remote" = true ]; then
+  if [ "$HAS_REMOTE" = true ]; then
     echo "push"
   fi
 
@@ -59,9 +59,9 @@ function steps {
   fi
   echo "delete_local_branch $target_branch_name force"
 
-  if [ "$target_branch_name" != "$initial_branch_name" ]; then
-    echo "checkout $initial_branch_name"
-    if [ "$initial_open_changes" = true ]; then
+  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
+    echo "checkout $INITIAL_BRANCH_NAME"
+    if [ "$INITIAL_OPEN_CHANGES" = true ]; then
       echo "restore_open_changes"
     fi
   fi
