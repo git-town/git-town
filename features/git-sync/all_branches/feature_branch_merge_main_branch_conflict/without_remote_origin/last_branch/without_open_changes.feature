@@ -17,7 +17,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | BRANCH   | COMMAND                  |
       | main     | git checkout feature1    |
       | feature1 | git merge --no-edit main |
-      | feature1 | git checkout feature2    |
+      |          | git checkout feature2    |
       | feature2 | git merge --no-edit main |
     And I get the error
       """
@@ -34,9 +34,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND                                       |
       | feature2 | git merge --abort                             |
-      | feature2 | git checkout feature1                         |
+      |          | git checkout feature1                         |
       | feature1 | git reset --hard <%= sha 'feature1 commit' %> |
-      | feature1 | git checkout main                             |
+      |          | git checkout main                             |
     And I end up on the "main" branch
     And I am left with my original commits
 
@@ -46,7 +46,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND           |
       | feature2 | git merge --abort |
-      | feature2 | git checkout main |
+      |          | git checkout main |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
@@ -77,7 +77,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND              |
       | feature2 | git commit --no-edit |
-      | feature2 | git checkout main    |
+      |          | git checkout main    |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |

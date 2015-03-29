@@ -19,8 +19,8 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
       | feature | git stash -u             |
-      | feature | git merge --no-edit main |
-      | feature | git stash pop            |
+      |         | git merge --no-edit main |
+      |         | git stash pop            |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits

@@ -19,7 +19,7 @@ Feature: git sync: syncing the main branch (with open changes and without remote
     Then it runs the Git commands
       | BRANCH | COMMAND       |
       | main   | git stash -u  |
-      | main   | git stash pop |
+      |        | git stash pop |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I am left with my original commits

@@ -22,7 +22,7 @@ Feature: git sync: syncing the current non-feature branch (with open changes and
     Then it runs the Git commands
       | BRANCH | COMMAND       |
       | qa     | git stash -u  |
-      | qa     | git stash pop |
+      |        | git stash pop |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I am left with my original commits

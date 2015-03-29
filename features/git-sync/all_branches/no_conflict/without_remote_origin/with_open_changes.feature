@@ -17,10 +17,10 @@ Feature: git sync --all: syncs all feature branches (with open changes and witho
     Then it runs the Git commands
       | BRANCH   | COMMAND                  |
       | feature1 | git stash -u             |
-      | feature1 | git merge --no-edit main |
-      | feature1 | git checkout feature2    |
+      |          | git merge --no-edit main |
+      |          | git checkout feature2    |
       | feature2 | git merge --no-edit main |
-      | feature2 | git checkout feature1    |
+      |          | git checkout feature1    |
       | feature1 | git stash pop            |
     And I am still on the "feature1" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

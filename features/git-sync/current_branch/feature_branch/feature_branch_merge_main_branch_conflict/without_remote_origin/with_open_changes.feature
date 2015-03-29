@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
       | feature | git stash -u             |
-      | feature | git merge --no-edit main |
+      |         | git merge --no-edit main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -34,7 +34,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
-      | feature | git stash pop     |
+      |         | git stash pop     |
     And I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no merge in progress
@@ -57,7 +57,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
-      | feature | git stash pop        |
+      |         | git stash pop        |
     And I am still on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits

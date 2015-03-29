@@ -16,9 +16,9 @@ Feature: git sync --all: syncs all feature branches (without open changes or rem
     Then it runs the Git commands
       | BRANCH   | COMMAND                  |
       | feature1 | git merge --no-edit main |
-      | feature1 | git checkout feature2    |
+      |          | git checkout feature2    |
       | feature2 | git merge --no-edit main |
-      | feature2 | git checkout feature1    |
+      |          | git checkout feature1    |
     And I am still on the "feature1" branch
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME     |
