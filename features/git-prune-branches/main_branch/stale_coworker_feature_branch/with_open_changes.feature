@@ -16,7 +16,7 @@ Feature: git prune-branches: remove stale coworker branches when run on the main
     Then it runs the Git commands
       | BRANCH | COMMAND                        |
       | main   | git fetch --prune              |
-      | main   | git push origin :stale_feature |
+      |        | git push origin :stale_feature |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

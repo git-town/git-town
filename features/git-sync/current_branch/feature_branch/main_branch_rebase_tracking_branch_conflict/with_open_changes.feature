@@ -21,8 +21,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
-      | feature | git stash -u           |
-      | feature | git checkout main      |
+      |         | git stash -u           |
+      |         | git checkout main      |
       | main    | git rebase origin/main |
     And I get the error
       """
@@ -38,7 +38,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
-      | main    | git checkout feature |
+      |         | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -60,12 +60,12 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git stash pop                      |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git stash pop                      |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -86,11 +86,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git stash pop                      |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git stash pop                      |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

@@ -16,8 +16,8 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND                  |
       | main   | git stash -u             |
-      | main   | git fetch upstream       |
-      | main   | git rebase upstream/main |
+      |        | git fetch upstream       |
+      |        | git rebase upstream/main |
     And I get the error
       """
       To abort, run "git sync-fork --abort".
@@ -32,7 +32,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      | main   | git stash pop      |
+      |        | git stash pop      |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
@@ -45,8 +45,8 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
-      | main   | git stash pop         |
+      |        | git push              |
+      |        | git stash pop         |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
@@ -64,7 +64,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND       |
       | main   | git push      |
-      | main   | git stash pop |
+      |        | git stash pop |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits

@@ -19,15 +19,15 @@ Feature: git ship: aborting the ship of the current feature branch by entering a
       | BRANCH  | COMMAND                            |
       | feature | git checkout main                  |
       | main    | git fetch --prune                  |
-      | main    | git rebase origin/main             |
-      | main    | git checkout feature               |
+      |         | git rebase origin/main             |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit                         |
-      | main    | git reset --hard                   |
-      | main    | git checkout feature               |
+      |         | git commit                         |
+      |         | git reset --hard                   |
+      |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
     And I get the error "Aborting ship due to empty commit message"

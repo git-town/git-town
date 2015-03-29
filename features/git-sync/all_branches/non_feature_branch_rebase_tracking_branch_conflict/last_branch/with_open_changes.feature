@@ -19,11 +19,11 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     Then it runs the Git commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
-      | main       | git stash -u                 |
-      | main       | git rebase origin/main       |
-      | main       | git checkout production      |
+      |            | git stash -u                 |
+      |            | git rebase origin/main       |
+      |            | git checkout production      |
       | production | git rebase origin/production |
-      | production | git checkout qa              |
+      |            | git checkout qa              |
       | qa         | git rebase origin/qa         |
     And I get the error
       """
@@ -40,7 +40,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     Then it runs the Git commands
       | BRANCH     | COMMAND                 |
       | qa         | git rebase --abort      |
-      | qa         | git checkout production |
+      |            | git checkout production |
       | production | git checkout main       |
       | main       | git stash pop           |
     And I end up on the "main" branch
@@ -58,7 +58,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
-      | qa     | git checkout main  |
+      |        | git checkout main  |
       | main   | git stash pop      |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -85,8 +85,8 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
-      | qa     | git push              |
-      | qa     | git checkout main     |
+      |        | git push              |
+      |        | git checkout main     |
       | main   | git stash pop         |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -104,7 +104,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | qa     | git push          |
-      | qa     | git checkout main |
+      |        | git checkout main |
       | main   | git stash pop     |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"

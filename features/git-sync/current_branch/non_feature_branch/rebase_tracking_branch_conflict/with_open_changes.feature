@@ -22,8 +22,8 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      | qa     | git stash -u         |
-      | qa     | git rebase origin/qa |
+      |        | git stash -u         |
+      |        | git rebase origin/qa |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -39,7 +39,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
-      | qa     | git stash pop      |
+      |        | git stash pop      |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
@@ -61,9 +61,9 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
-      | qa     | git push              |
-      | qa     | git push --tags       |
-      | qa     | git stash pop         |
+      |        | git push              |
+      |        | git push --tags       |
+      |        | git stash pop         |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -81,8 +81,8 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
-      | qa     | git push --tags |
-      | qa     | git stash pop   |
+      |        | git push --tags |
+      |        | git stash pop   |
     And I am still on the "qa" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

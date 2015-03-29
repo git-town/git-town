@@ -15,7 +15,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git rebase origin/main |
+      |        | git rebase origin/main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -50,12 +50,12 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git checkout main                  |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
@@ -73,11 +73,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git checkout main                  |
     And I end up on the "main" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |

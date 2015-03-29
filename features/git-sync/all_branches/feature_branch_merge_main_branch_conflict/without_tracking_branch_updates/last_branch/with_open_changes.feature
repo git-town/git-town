@@ -17,15 +17,15 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND                             |
       | main     | git fetch --prune                   |
-      | main     | git stash -u                        |
-      | main     | git rebase origin/main              |
-      | main     | git checkout feature1               |
+      |          | git stash -u                        |
+      |          | git rebase origin/main              |
+      |          | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
-      | feature1 | git merge --no-edit main            |
-      | feature1 | git push                            |
-      | feature1 | git checkout feature2               |
+      |          | git merge --no-edit main            |
+      |          | git push                            |
+      |          | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
+      |          | git merge --no-edit main            |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -42,7 +42,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND               |
       | feature2 | git merge --abort     |
-      | feature2 | git checkout feature1 |
+      |          | git checkout feature1 |
       | feature1 | git checkout main     |
       | main     | git stash pop         |
     And I end up on the "main" branch
@@ -61,7 +61,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND           |
       | feature2 | git merge --abort |
-      | feature2 | git checkout main |
+      |          | git checkout main |
       | main     | git stash pop     |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -90,8 +90,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND              |
       | feature2 | git commit --no-edit |
-      | feature2 | git push             |
-      | feature2 | git checkout main    |
+      |          | git push             |
+      |          | git checkout main    |
       | main     | git stash pop        |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -113,7 +113,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the Git commands
       | BRANCH   | COMMAND           |
       | feature2 | git push          |
-      | feature2 | git checkout main |
+      |          | git checkout main |
       | main     | git stash pop     |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"

@@ -14,7 +14,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND                  |
       | main   | git fetch upstream       |
-      | main   | git rebase upstream/main |
+      |        | git rebase upstream/main |
     And I get the error
       """
       To abort, run "git sync-fork --abort".
@@ -39,7 +39,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
+      |        | git push              |
     And I end up on the "main" branch
     And I still have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |

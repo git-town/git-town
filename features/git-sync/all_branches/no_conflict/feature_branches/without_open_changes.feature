@@ -15,17 +15,17 @@ Feature: git sync --all: syncs all feature branches without open changes
     Then it runs the Git commands
       | BRANCH   | COMMAND                             |
       | feature1 | git fetch --prune                   |
-      | feature1 | git checkout main                   |
+      |          | git checkout main                   |
       | main     | git rebase origin/main              |
-      | main     | git checkout feature1               |
+      |          | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
-      | feature1 | git merge --no-edit main            |
-      | feature1 | git push                            |
-      | feature1 | git checkout feature2               |
+      |          | git merge --no-edit main            |
+      |          | git push                            |
+      |          | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
-      | feature2 | git push                            |
-      | feature2 | git checkout feature1               |
+      |          | git merge --no-edit main            |
+      |          | git push                            |
+      |          | git checkout feature1               |
     And I am still on the "feature1" branch
     And all branches are now synchronized
     And I have the following commits
