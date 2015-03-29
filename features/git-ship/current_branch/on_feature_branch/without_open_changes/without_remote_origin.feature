@@ -19,10 +19,10 @@ Feature: git ship: shipping the current feature branch without a remote origin
     Then it runs the Git commands
       | BRANCH  | COMMAND                      |
       | feature | git merge --no-edit main     |
-      | feature | git checkout main            |
+      |         | git checkout main            |
       | main    | git merge --squash feature   |
-      | main    | git commit -m "feature done" |
-      | main    | git branch -D feature        |
+      |         | git commit -m "feature done" |
+      |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
     And I have the following commits

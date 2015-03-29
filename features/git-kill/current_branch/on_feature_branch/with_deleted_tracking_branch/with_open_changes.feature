@@ -21,9 +21,9 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
     Then it runs the Git commands
       | BRANCH           | COMMAND                                 |
       | orphaned-feature | git fetch --prune                       |
-      | orphaned-feature | git add -A                              |
-      | orphaned-feature | git commit -m 'WIP on orphaned-feature' |
-      | orphaned-feature | git checkout main                       |
+      |                  | git add -A                              |
+      |                  | git commit -m 'WIP on orphaned-feature' |
+      |                  | git checkout main                       |
       | main             | git branch -D orphaned-feature          |
     And I end up on the "main" branch
     And I don't have any uncommitted files
@@ -41,7 +41,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
     Then it runs the Git commands
       | BRANCH           | COMMAND                                                          |
       | main             | git branch orphaned-feature <%= sha 'WIP on orphaned-feature' %> |
-      | main             | git checkout orphaned-feature                                    |
+      |                  | git checkout orphaned-feature                                    |
       | orphaned-feature | git reset <%= sha 'orphaned commit' %>                           |
     And I end up on the "orphaned-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"

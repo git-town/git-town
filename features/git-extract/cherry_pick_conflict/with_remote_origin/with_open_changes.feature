@@ -22,11 +22,11 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | feature  | git fetch --prune                            |
-      | feature  | git stash -u                                 |
-      | feature  | git checkout main                            |
+      |          | git stash -u                                 |
+      |          | git checkout main                            |
       | main     | git rebase origin/main                       |
-      | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git push                                     |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
       """
@@ -43,9 +43,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      | refactor | git checkout main       |
+      |          | git checkout main       |
       | main     | git branch -d refactor  |
-      | main     | git checkout feature    |
+      |          | git checkout feature    |
       | feature  | git stash pop           |
     And I end up on the "feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -74,8 +74,8 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                     |
       | refactor | git commit --no-edit        |
-      | refactor | git push -u origin refactor |
-      | refactor | git stash pop               |
+      |          | git push -u origin refactor |
+      |          | git stash pop               |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -93,7 +93,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                     |
       | refactor | git push -u origin refactor |
-      | refactor | git stash pop               |
+      |          | git stash pop               |
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

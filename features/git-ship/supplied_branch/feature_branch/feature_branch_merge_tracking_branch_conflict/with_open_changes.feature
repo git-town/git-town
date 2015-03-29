@@ -19,10 +19,10 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git stash -u                       |
-      | other_feature | git checkout main                  |
+      |               | git checkout main                  |
       | main          | git fetch --prune                  |
-      | main          | git rebase origin/main             |
-      | main          | git checkout feature               |
+      |               | git rebase origin/main             |
+      |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
     And I get the error
       """
@@ -39,7 +39,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Then it runs the Git commands
       | BRANCH        | COMMAND                    |
       | feature       | git merge --abort          |
-      | feature       | git checkout main          |
+      |               | git checkout main          |
       | main          | git checkout other_feature |
       | other_feature | git stash pop              |
     And I end up on the "other_feature" branch
@@ -54,14 +54,14 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Then it runs the Git commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
-      | feature       | git merge --no-edit main     |
-      | feature       | git checkout main            |
+      |               | git merge --no-edit main     |
+      |               | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git push                     |
-      | main          | git push origin :feature     |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
+      |               | git commit -m "feature done" |
+      |               | git push                     |
+      |               | git push origin :feature     |
+      |               | git branch -D feature        |
+      |               | git checkout other_feature   |
       | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -77,13 +77,13 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
     Then it runs the Git commands
       | BRANCH        | COMMAND                      |
       | feature       | git merge --no-edit main     |
-      | feature       | git checkout main            |
+      |               | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git push                     |
-      | main          | git push origin :feature     |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
+      |               | git commit -m "feature done" |
+      |               | git push                     |
+      |               | git push origin :feature     |
+      |               | git branch -D feature        |
+      |               | git checkout other_feature   |
       | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

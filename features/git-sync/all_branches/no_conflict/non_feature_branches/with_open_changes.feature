@@ -19,15 +19,15 @@ Feature: git sync --all: syncs all non-feature branches with open changes
     Then it runs the Git commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
-      | main       | git stash -u                 |
-      | main       | git rebase origin/main       |
-      | main       | git checkout production      |
+      |            | git stash -u                 |
+      |            | git rebase origin/main       |
+      |            | git checkout production      |
       | production | git rebase origin/production |
-      | production | git push                     |
-      | production | git checkout qa              |
+      |            | git push                     |
+      |            | git checkout qa              |
       | qa         | git rebase origin/qa         |
-      | qa         | git push                     |
-      | qa         | git checkout main            |
+      |            | git push                     |
+      |            | git checkout main            |
       | main       | git stash pop                |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

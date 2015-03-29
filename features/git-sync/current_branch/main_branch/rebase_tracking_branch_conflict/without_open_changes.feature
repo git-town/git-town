@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git rebase origin/main |
+      |        | git rebase origin/main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -50,8 +50,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
-      | main   | git push --tags       |
+      |        | git push              |
+      |        | git push --tags       |
     And I am still on the "main" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND         |
       | main   | git push        |
-      | main   | git push --tags |
+      |        | git push --tags |
     And I am still on the "main" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

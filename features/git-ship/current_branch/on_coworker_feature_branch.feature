@@ -20,16 +20,16 @@ Feature: git ship: shipping a coworker's feature branch
       | BRANCH  | COMMAND                                                                 |
       | feature | git checkout main                                                       |
       | main    | git fetch --prune                                                       |
-      | main    | git rebase origin/main                                                  |
-      | main    | git checkout feature                                                    |
+      |         | git rebase origin/main                                                  |
+      |         | git checkout feature                                                    |
       | feature | git merge --no-edit origin/feature                                      |
-      | feature | git merge --no-edit main                                                |
-      | feature | git checkout main                                                       |
+      |         | git merge --no-edit main                                                |
+      |         | git checkout main                                                       |
       | main    | git merge --squash feature                                              |
-      | main    | git commit --author="coworker <coworker@example.com>" -m "feature done" |
-      | main    | git push                                                                |
-      | main    | git push origin :feature                                                |
-      | main    | git branch -D feature                                                   |
+      |         | git commit --author="coworker <coworker@example.com>" -m "feature done" |
+      |         | git push                                                                |
+      |         | git push origin :feature                                                |
+      |         | git branch -D feature                                                   |
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR               |
       | main   | local and remote | feature done | coworker_file | coworker@example.com |

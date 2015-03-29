@@ -17,8 +17,8 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git stash -u           |
-      | main   | git rebase origin/main |
+      |        | git stash -u           |
+      |        | git rebase origin/main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -33,7 +33,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      | main   | git stash pop      |
+      |        | git stash pop      |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -58,12 +58,12 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git checkout main                  |
       | main    | git stash pop                      |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -83,11 +83,11 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
+      |         | git checkout main                  |
       | main    | git stash pop                      |
     And I end up on the "main" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
