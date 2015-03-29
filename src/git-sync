@@ -4,13 +4,13 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 function branches_to_sync {
   if [ "$sync_all" = true ]; then
-    echo "$main_branch_name"
+    echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
-  elif [ "$(is_feature_branch "$initial_branch_name")" = true ]; then
-    echo "$main_branch_name"
-    echo "$initial_branch_name"
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
+    echo "$MAIN_BRANCH_NAME"
+    echo "$INITIAL_BRANCH_NAME"
   else
-    echo "$initial_branch_name"
+    echo "$INITIAL_BRANCH_NAME"
   fi
 }
 
@@ -23,7 +23,7 @@ function preconditions {
 
   if [ "$1" = "--all" ]; then
     sync_all=true
-  elif [ "$(is_feature_branch "$initial_branch_name")" = false ]; then
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = false ]; then
     should_push_tags=true
   fi
 }
@@ -35,7 +35,7 @@ function skip_message_prefix {
 
 
 function skippable {
-  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$main_branch_name" ]; then
+  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$MAIN_BRANCH_NAME" ]; then
     echo false
   else
     echo true
@@ -44,7 +44,7 @@ function skippable {
 
 
 function steps {
-  if [ "$initial_open_changes" = true ]; then
+  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
     echo "stash_open_changes"
   fi
 
@@ -53,7 +53,7 @@ function steps {
 
     if [ "$(is_feature_branch "$branch_name")" = true ]; then
       echo "merge_tracking_branch"
-      echo "merge $main_branch_name"
+      echo "merge $MAIN_BRANCH_NAME"
     else
       echo "rebase_tracking_branch"
     fi
@@ -65,9 +65,9 @@ function steps {
     echo "push_tags"
   fi
 
-  echo "checkout $initial_branch_name"
+  echo "checkout $INITIAL_BRANCH_NAME"
 
-  if [ "$initial_open_changes" = true ]; then
+  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
     echo "restore_open_changes"
   fi
 }

@@ -8,8 +8,8 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 
 
 # Command lists
-export steps_file="/tmp/${program}_${temp_filename_suffix}"
-export undo_steps_file="/tmp/${program}_undo_${temp_filename_suffix}"
+export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
+export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
 
 
 function has_lines {
