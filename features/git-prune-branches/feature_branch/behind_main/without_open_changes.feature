@@ -16,11 +16,11 @@ Feature: git prune-branches: remove stale feature branches when run on a feature
     Then it runs the Git commands
       | BRANCH  | COMMAND                        |
       | feature | git fetch --prune              |
-      | feature | git checkout main              |
+      |         | git checkout main              |
       | main    | git push origin :feature       |
-      | main    | git branch -d feature          |
-      | main    | git push origin :stale_feature |
-      | main    | git branch -d stale_feature    |
+      |         | git branch -d feature          |
+      |         | git push origin :stale_feature |
+      |         | git branch -d stale_feature    |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |

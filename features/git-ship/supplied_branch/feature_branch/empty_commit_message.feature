@@ -18,19 +18,19 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
       | other_feature | git stash -u                                 |
-      | other_feature | git checkout main                            |
+      |               | git checkout main                            |
       | main          | git fetch --prune                            |
-      | main          | git rebase origin/main                       |
-      | main          | git checkout feature                         |
+      |               | git rebase origin/main                       |
+      |               | git checkout feature                         |
       | feature       | git merge --no-edit origin/feature           |
-      | feature       | git merge --no-edit main                     |
-      | feature       | git checkout main                            |
+      |               | git merge --no-edit main                     |
+      |               | git checkout main                            |
       | main          | git merge --squash feature                   |
-      | main          | git commit                                   |
-      | main          | git reset --hard                             |
-      | main          | git checkout feature                         |
+      |               | git commit                                   |
+      |               | git reset --hard                             |
+      |               | git checkout feature                         |
       | feature       | git reset --hard <%= sha 'feature commit' %> |
-      | feature       | git checkout main                            |
+      |               | git checkout main                            |
       | main          | git checkout other_feature                   |
       | other_feature | git stash pop                                |
     And I get the error "Aborting ship due to empty commit message"
@@ -45,17 +45,17 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       | BRANCH        | COMMAND                                      |
       | other_feature | git checkout main                            |
       | main          | git fetch --prune                            |
-      | main          | git rebase origin/main                       |
-      | main          | git checkout feature                         |
+      |               | git rebase origin/main                       |
+      |               | git checkout feature                         |
       | feature       | git merge --no-edit origin/feature           |
-      | feature       | git merge --no-edit main                     |
-      | feature       | git checkout main                            |
+      |               | git merge --no-edit main                     |
+      |               | git checkout main                            |
       | main          | git merge --squash feature                   |
-      | main          | git commit                                   |
-      | main          | git reset --hard                             |
-      | main          | git checkout feature                         |
+      |               | git commit                                   |
+      |               | git reset --hard                             |
+      |               | git checkout feature                         |
       | feature       | git reset --hard <%= sha 'feature commit' %> |
-      | feature       | git checkout main                            |
+      |               | git checkout main                            |
       | main          | git checkout other_feature                   |
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other_feature" branch

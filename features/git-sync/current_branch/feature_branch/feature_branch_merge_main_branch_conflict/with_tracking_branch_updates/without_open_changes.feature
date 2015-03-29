@@ -15,12 +15,12 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git checkout main                  |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
+      |         | git merge --no-edit main           |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -36,8 +36,8 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND                                                  |
       | feature | git merge --abort                                        |
-      | feature | git reset --hard <%= sha 'conflicting feature commit' %> |
-      | feature | git checkout main                                        |
+      |         | git reset --hard <%= sha 'conflicting feature commit' %> |
+      |         | git checkout main                                        |
       | main    | git checkout feature                                     |
     And I am still on the "feature" branch
     And there is no merge in progress
@@ -62,7 +62,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the Git commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
-      | feature | git push             |
+      |         | git push             |
     And I am still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |

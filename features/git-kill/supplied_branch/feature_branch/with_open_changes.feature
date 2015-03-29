@@ -21,8 +21,8 @@ Feature: git kill: killing the given feature branch (with open changes)
     Then it runs the Git commands
       | BRANCH  | COMMAND                       |
       | feature | git fetch --prune             |
-      | feature | git push origin :dead-feature |
-      | feature | git branch -D dead-feature    |
+      |         | git push origin :dead-feature |
+      |         | git branch -D dead-feature    |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
@@ -40,7 +40,7 @@ Feature: git kill: killing the given feature branch (with open changes)
     Then it runs the Git commands
       | BRANCH  | COMMAND                                              |
       | feature | git branch dead-feature <%= sha 'dead-end commit' %> |
-      | feature | git push -u origin dead-feature                      |
+      |         | git push -u origin dead-feature                      |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are

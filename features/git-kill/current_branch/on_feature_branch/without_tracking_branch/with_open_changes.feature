@@ -21,9 +21,9 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     Then it runs the Git commands
       | BRANCH       | COMMAND                             |
       | dead-feature | git fetch --prune                   |
-      | dead-feature | git add -A                          |
-      | dead-feature | git commit -m 'WIP on dead-feature' |
-      | dead-feature | git checkout main                   |
+      |              | git add -A                          |
+      |              | git commit -m 'WIP on dead-feature' |
+      |              | git checkout main                   |
       | main         | git branch -D dead-feature          |
     And I end up on the "main" branch
     And the existing branches are
@@ -40,7 +40,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     Then it runs the Git commands
       | BRANCH       | COMMAND                                                  |
       | main         | git branch dead-feature <%= sha 'WIP on dead-feature' %> |
-      | main         | git checkout dead-feature                                |
+      |              | git checkout dead-feature                                |
       | dead-feature | git reset <%= sha 'dead-end commit' %>                   |
     And I end up on the "dead-feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

@@ -21,12 +21,12 @@ Feature: git sync: collaborative feature branch syncing
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git checkout main                  |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
       | feature | local and remote | my commit | my_file   |
@@ -36,12 +36,12 @@ Feature: git sync: collaborative feature branch syncing
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git checkout main                  |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
     And now my coworker has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |
@@ -53,11 +53,11 @@ Feature: git sync: collaborative feature branch syncing
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git checkout main                  |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
+      |         | git merge --no-edit main           |
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |

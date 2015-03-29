@@ -21,10 +21,10 @@ Feature: git sync: resolving conflicts between the current feature branch and it
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      | feature | git stash -u                       |
-      | feature | git checkout main                  |
+      |         | git stash -u                       |
+      |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
     And I get the error
       """
@@ -42,7 +42,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
     Then it runs the Git commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
-      | feature | git checkout main    |
+      |         | git checkout main    |
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
@@ -66,9 +66,9 @@ Feature: git sync: resolving conflicts between the current feature branch and it
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
       | feature | git commit --no-edit     |
-      | feature | git merge --no-edit main |
-      | feature | git push                 |
-      | feature | git stash pop            |
+      |         | git merge --no-edit main |
+      |         | git push                 |
+      |         | git stash pop            |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -87,8 +87,8 @@ Feature: git sync: resolving conflicts between the current feature branch and it
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |
-      | feature | git push                 |
-      | feature | git stash pop            |
+      |         | git push                 |
+      |         | git stash pop            |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

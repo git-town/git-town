@@ -16,12 +16,12 @@ Feature: git sync --all: does not sync remote only branches without open changes
     Then it runs the Git commands
       | BRANCH     | COMMAND                               |
       | main       | git fetch --prune                     |
-      | main       | git rebase origin/main                |
-      | main       | git checkout my-feature               |
+      |            | git rebase origin/main                |
+      |            | git checkout my-feature               |
       | my-feature | git merge --no-edit origin/my-feature |
-      | my-feature | git merge --no-edit main              |
-      | my-feature | git push                              |
-      | my-feature | git checkout main                     |
+      |            | git merge --no-edit main              |
+      |            | git push                              |
+      |            | git checkout main                     |
     And I am still on the "main" branch
     And all branches are now synchronized
     And I have the following commits

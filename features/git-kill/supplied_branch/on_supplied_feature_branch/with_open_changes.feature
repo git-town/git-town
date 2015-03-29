@@ -20,11 +20,11 @@ Feature: git kill: killing the given feature branch when on it (with open change
     Then it runs the Git commands
       | BRANCH       | COMMAND                             |
       | dead-feature | git fetch --prune                   |
-      | dead-feature | git add -A                          |
-      | dead-feature | git commit -m 'WIP on dead-feature' |
-      | dead-feature | git checkout main                   |
+      |              | git add -A                          |
+      |              | git commit -m 'WIP on dead-feature' |
+      |              | git checkout main                   |
       | main         | git push origin :dead-feature       |
-      | main         | git branch -D dead-feature          |
+      |              | git branch -D dead-feature          |
     And I end up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
@@ -41,10 +41,10 @@ Feature: git kill: killing the given feature branch when on it (with open change
     Then it runs the Git commands
       | BRANCH       | COMMAND                                                  |
       | main         | git branch dead-feature <%= sha 'WIP on dead-feature' %> |
-      | main         | git push -u origin dead-feature                          |
-      | main         | git checkout dead-feature                                |
+      |              | git push -u origin dead-feature                          |
+      |              | git checkout dead-feature                                |
       | dead-feature | git reset <%= sha 'dead-end commit' %>                   |
-      | dead-feature | git push -f origin dead-feature                          |
+      |              | git push -f origin dead-feature                          |
     And I end up on the "dead-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

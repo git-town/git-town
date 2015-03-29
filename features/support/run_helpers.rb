@@ -30,7 +30,7 @@ GIT_COMMAND_REGEX = /
 # Returns a Mortadella instance containing the Git commands run
 # in the last invocation of "run".
 def commands_of_last_run
-  result = Mortadella.new headers: %w(BRANCH COMMAND)
+  result = Mortadella.new headers: %w(BRANCH COMMAND), dry: 'BRANCH'
   @last_run_result.out.scan(GIT_COMMAND_REGEX).each { |command| result << command }
   result
 end

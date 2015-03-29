@@ -22,13 +22,13 @@ Feature: git extract: extracting multiple commits (with open changes)
     Then it runs the Git commands
       | BRANCH   | COMMAND                                                                     |
       | feature  | git fetch --prune                                                           |
-      | feature  | git stash -u                                                                |
-      | feature  | git checkout main                                                           |
+      |          | git stash -u                                                                |
+      |          | git checkout main                                                           |
       | main     | git rebase origin/main                                                      |
-      | main     | git checkout -b refactor main                                               |
+      |          | git checkout -b refactor main                                               |
       | refactor | git cherry-pick <%= sha 'refactor1 commit' %> <%= sha 'refactor2 commit' %> |
-      | refactor | git push -u origin refactor                                                 |
-      | refactor | git stash pop                                                               |
+      |          | git push -u origin refactor                                                 |
+      |          | git stash pop                                                               |
     And I end up on the "refactor" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits

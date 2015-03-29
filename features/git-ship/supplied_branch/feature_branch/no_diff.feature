@@ -18,14 +18,14 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
       | other_feature | git stash -u                                 |
-      | other_feature | git checkout main                            |
+      |               | git checkout main                            |
       | main          | git fetch --prune                            |
-      | main          | git rebase origin/main                       |
-      | main          | git checkout empty-feature                   |
+      |               | git rebase origin/main                       |
+      |               | git checkout empty-feature                   |
       | empty-feature | git merge --no-edit origin/empty-feature     |
-      | empty-feature | git merge --no-edit main                     |
-      | empty-feature | git reset --hard <%= sha 'feature commit' %> |
-      | empty-feature | git checkout main                            |
+      |               | git merge --no-edit main                     |
+      |               | git reset --hard <%= sha 'feature commit' %> |
+      |               | git checkout main                            |
       | main          | git checkout other_feature                   |
       | other_feature | git stash pop                                |
     And I get the error "The branch 'empty-feature' has no shippable changes"
@@ -39,12 +39,12 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
       | BRANCH        | COMMAND                                      |
       | other_feature | git checkout main                            |
       | main          | git fetch --prune                            |
-      | main          | git rebase origin/main                       |
-      | main          | git checkout empty-feature                   |
+      |               | git rebase origin/main                       |
+      |               | git checkout empty-feature                   |
       | empty-feature | git merge --no-edit origin/empty-feature     |
-      | empty-feature | git merge --no-edit main                     |
-      | empty-feature | git reset --hard <%= sha 'feature commit' %> |
-      | empty-feature | git checkout main                            |
+      |               | git merge --no-edit main                     |
+      |               | git reset --hard <%= sha 'feature commit' %> |
+      |               | git checkout main                            |
       | main          | git checkout other_feature                   |
     And I get the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "other_feature" branch

@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      | qa     | git rebase origin/qa |
+      |        | git rebase origin/qa |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -50,8 +50,8 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
-      | qa     | git push              |
-      | qa     | git push --tags       |
+      |        | git push              |
+      |        | git push --tags       |
     And I am still on the "qa" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
     Then it runs the Git commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
-      | qa     | git push --tags |
+      |        | git push --tags |
     And I am still on the "qa" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
