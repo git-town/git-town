@@ -4,8 +4,8 @@ Feature: git kill: killing the given feature branch (with open changes and witho
 
 
   Background:
-    Given I have feature branches named "current-feature" and "other-feature"
-    And my repo does not have a remote origin
+    Given my repo does not have a remote origin
+    And I have local feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
       | main            | local    | main commit            | conflicting_file     | main content            |
@@ -26,13 +26,9 @@ Feature: git kill: killing the given feature branch (with open changes and witho
       | REPOSITORY | BRANCHES              |
       | local      | main, current-feature |
     And now I have the following commits
-      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
-      | main            | local    | main commit            | conflicting_file     |
-      | current-feature | local    | current feature commit | current_feature_file |
-    And now I have the following committed files
-      | BRANCH          | NAME                 | CONTENT                 |
-      | main            | conflicting_file     | main content            |
-      | current-feature | current_feature_file | current feature content |
+      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
+      | main            | local    | main commit            | conflicting_file     | main content            |
+      | current-feature | local    | current feature commit | current_feature_file | current feature content |
 
 
   Scenario: undoing the kill
@@ -46,12 +42,7 @@ Feature: git kill: killing the given feature branch (with open changes and witho
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
     And now I have the following commits
-      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
-      | main            | local    | main commit            | conflicting_file     |
-      | current-feature | local    | current feature commit | current_feature_file |
-      | other-feature   | local    | other feature commit   | other_feature_file   |
-    And now I have the following committed files
-      | BRANCH          | NAME                 | CONTENT                 |
-      | main            | conflicting_file     | main content            |
-      | current-feature | current_feature_file | current feature content |
-      | other-feature   | other_feature_file   | other feature content   |
+      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
+      | main            | local    | main commit            | conflicting_file     | main content            |
+      | current-feature | local    | current feature commit | current_feature_file | current feature content |
+      | other-feature   | local    | other feature commit   | other_feature_file   | other feature content   |

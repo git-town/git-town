@@ -33,7 +33,7 @@ function steps {
   fi
 
   if [ "$(has_tracking_branch "$target_branch")" = true ]; then
-      echo "delete_remote_branch $target_branch"
+    echo "delete_remote_branch $target_branch"
   fi
 
   echo "delete_local_branch $target_branch force"
