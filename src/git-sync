@@ -4,10 +4,10 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 function branches_to_sync {
   if [ "$sync_all" = true ]; then
-    echo "$main_branch_name"
+    echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
   elif [ "$(is_feature_branch "$initial_branch_name")" = true ]; then
-    echo "$main_branch_name"
+    echo "$MAIN_BRANCH_NAME"
     echo "$initial_branch_name"
   else
     echo "$initial_branch_name"
@@ -37,7 +37,7 @@ function skip_message_prefix {
 
 
 function skippable {
-  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$main_branch_name" ]; then
+  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$MAIN_BRANCH_NAME" ]; then
     echo false
   else
     echo true
@@ -59,7 +59,7 @@ function steps {
 
       if [ "$is_feature" = true ]; then
         echo "merge_tracking_branch"
-        echo "merge $main_branch_name"
+        echo "merge $MAIN_BRANCH_NAME"
       else
         echo "rebase_tracking_branch"
       fi

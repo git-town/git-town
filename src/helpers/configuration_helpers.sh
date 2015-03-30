@@ -21,7 +21,7 @@ function add_non_feature_branch {
   elif [ "$(is_non_feature_branch "$branch_name")" = true ]; then
     echo_inline_error "'$branch_name' is already a non-feature branch"
     exit_with_error
-  elif [ "$branch_name" == "$main_branch_name" ]; then
+  elif [ "$branch_name" == "$MAIN_BRANCH_NAME" ]; then
     echo_inline_error "'$branch_name' is already set as the main branch"
     exit_with_error
   else
@@ -53,7 +53,7 @@ function ensure_valid_non_feature_branches {
   local branches=$1
 
   split_string "$branches" ',' | while read branch; do
-    if [[ "$branch" == "$main_branch_name" ]]; then
+    if [[ "$branch" == "$MAIN_BRANCH_NAME" ]]; then
       echo_error_header
       echo_error "'$branch' is already set as the main branch"
       exit_with_error
@@ -71,7 +71,7 @@ function get_configuration {
 
 # Returns whether or not Git Town is configured
 function is_git_town_configured {
-  if [ -n "$main_branch_name" ] && get_configuration 'non-feature-branch-names'; then
+  if [ -n "$MAIN_BRANCH_NAME" ] && get_configuration 'non-feature-branch-names'; then
     echo true
   else
     echo false
@@ -134,7 +134,7 @@ function setup_configuration_main_branch {
 # Ask and store non-feature-branch-names
 function setup_configuration_non_feature_branches {
   echo "Git Town supports non-feature branches like 'release' or 'production'."
-  echo "These branches cannot be shipped and will not merge '$main_branch_name' when syncing."
+  echo "These branches cannot be shipped and will not merge '$MAIN_BRANCH_NAME' when syncing."
   echo "Please enter your non-feature branches as a comma separated list or a blank line to skip."
   echo "Example: 'qa, production'"
   read non_feature_input
@@ -180,8 +180,8 @@ function show_config {
 
 
 function show_main_branch {
-  if [ -n "$main_branch_name" ]; then
-    echo "$main_branch_name"
+  if [ -n "$MAIN_BRANCH_NAME" ]; then
+    echo "$MAIN_BRANCH_NAME"
   else
     echo '[none]'
   fi
@@ -229,17 +229,17 @@ function show_or_update_non_feature_branches {
 # Persists the given git-town configuration setting
 #
 # The configuration setting is provided as a name-value pair, and
-# the respective main_branch_name or non_feature_branch_names
+# the respective MAIN_BRANCH_NAME or non_feature_branch_names
 # shell variable is updated.
 function store_configuration {
   local config_setting_name=$1
   local value=$2
   git config "git-town.$config_setting_name" "$value"
 
-  # update $main_branch_name and $non_feature_branch_names accordingly
+  # update $MAIN_BRANCH_NAME and $non_feature_branch_names accordingly
   if [ $? == 0 ]; then
     if [ "$config_setting_name" == "main-branch-name" ]; then
-      main_branch_name="$value"
+      MAIN_BRANCH_NAME="$value"
     elif [ "$config_setting_name" == "non-feature-branch-names" ]; then
       non_feature_branch_names="$value"
     fi

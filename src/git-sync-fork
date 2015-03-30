@@ -23,7 +23,7 @@ function steps {
 
   echo "checkout_main_branch"
   echo "fetch_upstream"
-  echo "rebase upstream/$main_branch_name"
+  echo "rebase upstream/$MAIN_BRANCH_NAME"
   echo "push"
   echo "checkout $initial_branch_name"
 

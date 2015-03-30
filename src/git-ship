@@ -44,7 +44,7 @@ function steps {
 
   echo "checkout $target_branch_name"
   echo "merge_tracking_branch"
-  echo "merge $main_branch_name"
+  echo "merge $MAIN_BRANCH_NAME"
   echo "ensure_has_shippable_changes"
   echo "checkout_main_branch"
   echo "squash_merge $target_branch_name"
