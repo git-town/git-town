@@ -17,7 +17,7 @@ function branches_to_sync {
 
 function preconditions {
   if [ "$has_remote" = true ]; then
-      fetch
+    fetch
   fi
 
   should_push_tags=false
