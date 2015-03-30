@@ -7,8 +7,8 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
-      | main    | remote   | conflicting remote commit | conflicting_file | remote content |
-      |         | local    | conflicting local commit  | conflicting_file | local content  |
+      | main    | local    | conflicting local commit  | conflicting_file | local content  |
+      |         | remote   | conflicting remote commit | conflicting_file | remote content |
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
     And I am on the "feature" branch
@@ -19,7 +19,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
-      | feature | git checkout main      |
+      |         | git checkout main      |
       | main    | git rebase origin/main |
     And I get the error
       """
@@ -34,7 +34,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
-      | main   | git checkout feature |
+      |        | git checkout feature |
     And I end up on the "feature" branch
     And there is no "refactor" branch
     And I am left with my original commits
@@ -54,10 +54,10 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | main     | git rebase --continue                        |
-      | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git push                                     |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
-      | refactor | git push -u origin refactor                  |
+      |          | git push -u origin refactor                  |
     And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -76,9 +76,9 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | main     | git push                                     |
-      | main     | git checkout -b refactor main                |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
-      | refactor | git push -u origin refactor                  |
+      |          | git push -u origin refactor                  |
     And I end up on the "refactor" branch
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |

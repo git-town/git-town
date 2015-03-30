@@ -20,11 +20,11 @@ Feature: git kill: killing the given feature branch when on it (with open change
     Then it runs the Git commands
       | BRANCH          | COMMAND                                |
       | current-feature | git fetch --prune                      |
-      | current-feature | git add -A                             |
-      | current-feature | git commit -m 'WIP on current-feature' |
-      | current-feature | git checkout main                      |
+      |                 | git add -A                             |
+      |                 | git commit -m 'WIP on current-feature' |
+      |                 | git checkout main                      |
       | main            | git push origin :current-feature       |
-      | main            | git branch -D current-feature          |
+      |                 | git branch -D current-feature          |
     And I end up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
@@ -41,10 +41,10 @@ Feature: git kill: killing the given feature branch when on it (with open change
     Then it runs the Git commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
-      | main            | git push -u origin current-feature                             |
-      | main            | git checkout current-feature                                   |
+      |                 | git push -u origin current-feature                             |
+      |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
-      | current-feature | git push -f origin current-feature                             |
+      |                 | git push -f origin current-feature                             |
     And I end up on the "current-feature" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are

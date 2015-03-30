@@ -1,6 +1,9 @@
-Feature: git sync: syncing the main branch (without open changes)
+Feature: git sync: syncing the main branch (with open changes)
 
-  (see ./with_open_changes.feature)
+  As a developer syncing the main branch
+  I want to be able update my ongoing work to include the latest finished features from the rest of the team
+  So that our collaboration remains effective.
+
 
   Background:
     Given I am on the "main" branch
@@ -8,6 +11,7 @@ Feature: git sync: syncing the main branch (without open changes)
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
       | remote   | remote commit | remote_file |
+    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
 
 
@@ -15,10 +19,13 @@ Feature: git sync: syncing the main branch (without open changes)
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git rebase origin/main |
-      | main   | git push               |
-      | main   | git push --tags        |
+      |        | git stash -u           |
+      |        | git rebase origin/main |
+      |        | git push               |
+      |        | git push --tags        |
+      |        | git stash pop          |
     And I am still on the "main" branch
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

@@ -7,8 +7,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
     When I run `git sync`
 
@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
-      | feature | git checkout main      |
+      |         | git checkout main      |
       | main    | git rebase origin/main |
     And I get the error
       """
@@ -32,7 +32,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
-      | main   | git checkout feature |
+      |        | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
     And I am left with my original commits
@@ -51,11 +51,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
     And I am still on the "feature" branch
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -75,10 +75,10 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git push                           |
+      |         | git merge --no-edit main           |
+      |         | git push                           |
     And I am still on the "feature" branch
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |

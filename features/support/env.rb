@@ -1,5 +1,6 @@
 require 'active_support/all'
 require 'kappamaki'
+require 'mortadella'
 require 'open4'
 require 'pathname'
 require 'rspec'

@@ -24,7 +24,7 @@ fi
 if [[ "$(is_git_town_configured)" == false ]]; then
   echo "Git Town hasn't been configured for this repository."
   echo "Please run 'git town config --setup'."
-  echo -n "Would you like to do that now? [y/n] "
+  echo -n "Would you like to do that now?"
 
   if prompt_yn; then
     echo

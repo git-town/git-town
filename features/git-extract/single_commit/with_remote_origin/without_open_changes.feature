@@ -1,6 +1,6 @@
-Feature: git extract: extracting a single commit (with open changes)
+Feature: git extract: extracting a single commit (without open changes)
 
-  (see ../multiple_commits/with_open_changes.feature)
+  (see ../../multiple_commits/with_remote_origin/with_open_changes.feature)
 
 
   Background:
@@ -11,7 +11,6 @@ Feature: git extract: extracting a single commit (with open changes)
       | feature | local    | feature commit     | feature_file     |
       |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git extract refactor` with the last commit sha
 
 
@@ -19,15 +18,12 @@ Feature: git extract: extracting a single commit (with open changes)
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | feature  | git fetch --prune                            |
-      | feature  | git stash -u                                 |
-      | feature  | git checkout main                            |
+      |          | git checkout main                            |
       | main     | git rebase origin/main                       |
-      | main     | git checkout -b refactor main                |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
-      | refactor | git push -u origin refactor                  |
-      | refactor | git stash pop                                |
+      |          | git push -u origin refactor                  |
     And I end up on the "refactor" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE            | FILE NAME        |
       | main     | local and remote | remote main commit | remote_main_file |

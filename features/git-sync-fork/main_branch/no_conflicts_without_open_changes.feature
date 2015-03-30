@@ -13,8 +13,8 @@ Feature: git-sync-fork on the main branch without open changes
     Then it runs the Git commands
       | BRANCH | COMMAND                  |
       | main   | git fetch upstream       |
-      | main   | git rebase upstream/main |
-      | main   | git push                 |
+      |        | git rebase upstream/main |
+      |        | git push                 |
     And I am still on the "main" branch
     And I have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILE NAME     |

@@ -17,9 +17,9 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     Then it runs the Git commands
       | BRANCH          | COMMAND                          |
       | current-feature | git fetch --prune                |
-      | current-feature | git checkout main                |
+      |                 | git checkout main                |
       | main            | git push origin :current-feature |
-      | main            | git branch -D current-feature    |
+      |                 | git branch -D current-feature    |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES            |
@@ -35,8 +35,8 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     Then it runs the Git commands
       | BRANCH | COMMAND                                                        |
       | main   | git branch current-feature <%= sha 'current feature commit' %> |
-      | main   | git push -u origin current-feature                             |
-      | main   | git checkout current-feature                                   |
+      |        | git push -u origin current-feature                             |
+      |        | git checkout current-feature                                   |
     And I end up on the "current-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                             |

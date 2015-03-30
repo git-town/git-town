@@ -4,8 +4,8 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Given my repo has an upstream repo
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
-      | main   | upstream | upstream commit | conflicting_file | upstream content |
-      |        | local    | local commit    | conflicting_file | local content    |
+      | main   | local    | local commit    | conflicting_file | local content    |
+      |        | upstream | upstream commit | conflicting_file | upstream content |
     And I am on the "main" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync-fork`
@@ -16,8 +16,8 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND                  |
       | main   | git stash -u             |
-      | main   | git fetch upstream       |
-      | main   | git rebase upstream/main |
+      |        | git fetch upstream       |
+      |        | git rebase upstream/main |
     And I get the error
       """
       To abort, run "git sync-fork --abort".
@@ -32,7 +32,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      | main   | git stash pop      |
+      |        | git stash pop      |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
@@ -45,14 +45,14 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
-      | main   | git stash pop         |
+      |        | git push              |
+      |        | git stash pop         |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
-      | main   | local, remote               | local commit    | conflicting_file |
+      |        | local and remote            | local commit    | conflicting_file |
     And now I have the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
@@ -64,13 +64,13 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     Then it runs the Git commands
       | BRANCH | COMMAND       |
       | main   | git push      |
-      | main   | git stash pop |
+      |        | git stash pop |
     And I end up on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I still have the following commits
       | BRANCH | LOCATION                    | MESSAGE         | FILE NAME        |
       | main   | local, remote, and upstream | upstream commit | conflicting_file |
-      | main   | local, remote               | local commit    | conflicting_file |
+      |        | local and remote            | local commit    | conflicting_file |
     And now I have the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

@@ -9,8 +9,8 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main    | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |         | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
     When I run `git ship -m "feature done"`
@@ -21,7 +21,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | BRANCH  | COMMAND                |
       | feature | git checkout main      |
       | main    | git fetch --prune      |
-      | main    | git rebase origin/main |
+      |         | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".
@@ -35,7 +35,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
-      | main   | git checkout feature |
+      |        | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
     And I am left with my original commits
@@ -47,16 +47,16 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
-      | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git push                           |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m "feature done"       |
-      | main    | git push                           |
-      | main    | git push origin :feature           |
-      | main    | git branch -D feature              |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
@@ -72,15 +72,15 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
-      | main    | git checkout feature               |
+      |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-      | feature | git merge --no-edit main           |
-      | feature | git checkout main                  |
+      |         | git merge --no-edit main           |
+      |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      | main    | git commit -m "feature done"       |
-      | main    | git push                           |
-      | main    | git push origin :feature           |
-      | main    | git branch -D feature              |
+      |         | git commit -m "feature done"       |
+      |         | git push                           |
+      |         | git push origin :feature           |
+      |         | git branch -D feature              |
     And I end up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
