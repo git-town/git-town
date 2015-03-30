@@ -1,8 +1,8 @@
 Feature: git sync: syncing the current non-feature branch syncs the tags
 
-  As a developer syncing a non-feature branch
-  I want my tags to be published
-  So that I can do tagging work effectively on my local machine and have more time for other work.
+  As a developer using Git tags for release management
+  I want my tags to be published whenever I sync a non-feature branch
+  So that I can do tagging work effectively on my local machine.
 
 
   Background:
