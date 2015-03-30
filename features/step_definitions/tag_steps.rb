@@ -8,5 +8,5 @@ end
 
 
 Then(/^I now have the following tags$/) do |expected_tags|
-  expected_tags.diff! current_tags.table
+  expected_tags.diff! TagFinder.all_tags
 end
