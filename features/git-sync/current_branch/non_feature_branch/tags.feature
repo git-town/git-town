@@ -9,9 +9,13 @@ Feature: git sync: syncing the current non-feature branch pushes tags to the rem
     Given I have branches named "qa" and "production"
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "production" branch
-    And I add a local tag "v1.0"
+    And I have the following tags
+      | NAME | LOCATION |
+      | v1.0 | local    |
     When I run `git sync`
 
 
   Scenario: result
-    Then tag "v1.0" has been pushed to the remote
+    Then I now have the following tags
+      | NAME | LOCATION         |
+      | v1.0 | local and remote |

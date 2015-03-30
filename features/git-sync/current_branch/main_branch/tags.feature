@@ -6,10 +6,16 @@ Feature: git sync: syncing the main branch pushes tags to the remote
 
 
   Background:
-    Given I am on the "main" branch
-    And I add a local tag "v1.0"
+    Given I have the following tags
+      | NAME   | LOCATION |
+      | local  | local    |
+      | remote | remote   |
+    And I am on the "main" branch
     When I run `git sync`
 
 
   Scenario: result
-    Then tag "v1.0" has been pushed to the remote
+    Then I now have the following tags
+      | NAME   | LOCATION         |
+      | local  | local and remote |
+      | remote | local and remote |
