@@ -16,7 +16,7 @@ function branches_to_sync {
 
 
 function preconditions {
-  if [ "$has_remote" = true ]; then
+  if [ "$HAS_REMOTE" = true ]; then
     fetch
   fi
 
@@ -54,7 +54,7 @@ function steps {
     # If there is a remote origin, then checkout and sync all branches because
     # there may be changes to non-feature branches, otherwise only sync feature
     # branches because non-feature branches will not need syncing
-    if [ "$has_remote" = true ] || [ "$is_feature" = true ]; then
+    if [ "$HAS_REMOTE" = true ] || [ "$is_feature" = true ]; then
       echo "checkout $branch_name"
 
       if [ "$is_feature" = true ]; then
@@ -64,11 +64,11 @@ function steps {
         echo "rebase_tracking_branch"
       fi
 
-      echo_if_true "push" "$has_remote"
+      echo_if_true "push" "$HAS_REMOTE"
     fi
   done
 
-  if [ "$has_remote" = true ] && [ "$should_push_tags" = true ]; then
+  if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then
     echo "push_tags"
   fi
 

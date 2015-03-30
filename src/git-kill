@@ -16,7 +16,7 @@ function preconditions {
 
   ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
 
-  if [ "$has_remote" = true ]; then
+  if [ "$HAS_REMOTE" = true ]; then
       fetch
   fi
 

@@ -38,5 +38,5 @@ source "$current_dir/configuration.sh" "$@"
 if [ "$(is_git_repository)" == true ]; then
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
   export initial_open_changes=$(has_open_changes)
-  export has_remote=$(has_remote_url)
+  export HAS_REMOTE=$(has_remote_url)
 fi
