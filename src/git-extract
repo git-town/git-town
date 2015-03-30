@@ -28,9 +28,9 @@ function get_shas {
     ensure_tool_installed 'dialog'
     local file=$(temp_filename)
 
-    git log --oneline --reverse "$MAIN_BRANCH_NAME..$initial_branch_name"     | # Get a list of all commits in the feature branch in reverse order
+    git log --oneline --reverse "$MAIN_BRANCH_NAME..$INITIAL_BRANCH_NAME"     | # Get a list of all commits in the feature branch in reverse order
       awk '{ print $1 " " "\047" substr($0, index($0,$2)) "\047" " " "off" }' | # Put quotes around commit message, append ' off' to each line (required by dialog)
-      xargs dialog --title "Please select all commits to be extracted from the '$initial_branch_name' branch into the '$target_branch_name' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$file"  # Ask the user for commits
+      xargs dialog --title "Please select all commits to be extracted from the '$INITIAL_BRANCH_NAME' branch into the '$target_branch_name' branch" --ok-label "Extract" --cancel-label "Abort" --checklist "" 0 0 0  2> "$file"  # Ask the user for commits
     clear
 
     SHAs=$(cat "$file")

@@ -25,7 +25,7 @@ function steps {
   echo "fetch_upstream"
   echo "rebase upstream/$MAIN_BRANCH_NAME"
   echo "push"
-  echo "checkout $initial_branch_name"
+  echo "checkout $INITIAL_BRANCH_NAME"
 
   if [ "$initial_open_changes" = true ]; then
     echo "restore_open_changes"
