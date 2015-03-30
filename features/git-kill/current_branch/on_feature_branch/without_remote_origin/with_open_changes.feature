@@ -8,8 +8,8 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     And I have local feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
-      | other-feature   | local    | other feature commit   | other_feature_file   | other feature content   |
       | current-feature | local    | current feature commit | current_feature_file | current feature content |
+      | other-feature   | local    | other feature commit   | other_feature_file   | other feature content   |
     And I am on the "current-feature" branch
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git kill`
