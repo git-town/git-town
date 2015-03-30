@@ -28,7 +28,7 @@ function preconditions {
 
 function steps {
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    if [ "$initial_open_changes" = true ]; then
+    if [ "$INITIAL_OPEN_CHANGES" = true ]; then
       echo "stash_open_changes"
     fi
   fi
@@ -59,7 +59,7 @@ function steps {
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
-    if [ "$initial_open_changes" = true ]; then
+    if [ "$INITIAL_OPEN_CHANGES" = true ]; then
       echo "restore_open_changes"
     fi
   fi

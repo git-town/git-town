@@ -46,7 +46,7 @@ function skippable {
 
 
 function steps {
-  echo_if_true "stash_open_changes" "$initial_open_changes"
+  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
   branches_to_sync | while read branch_name; do
     local is_feature="$(is_feature_branch "$branch_name")"
@@ -74,7 +74,7 @@ function steps {
 
   echo "checkout $INITIAL_BRANCH_NAME"
 
-  echo_if_true "restore_open_changes" "$initial_open_changes"
+  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
 
 
