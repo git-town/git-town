@@ -14,10 +14,10 @@ end
 
 # Returns a Mortadella instance with all local and remote tags
 def current_tags
-  TagListBuilder.new
-    .add_tags(:local)
-    .add_tags(:remote)
-    .to_table
+  TagListBuilder.new.
+    add_tags(:local).
+    add_tags(:remote).
+    to_table
 end
 
 
