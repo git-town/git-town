@@ -22,7 +22,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       | main            | git branch -D current-feature |
     And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES      |
+      | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And I have the following commits
