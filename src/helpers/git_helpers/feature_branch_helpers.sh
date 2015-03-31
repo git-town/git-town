@@ -42,7 +42,7 @@ function is_feature_branch {
 function is_non_feature_branch {
   local branch_name=$1
 
-  if echo "$non_feature_branch_names" | tr ',' '\n' | grep -q "^ *$branch_name *$"; then
+  if echo "$NON_FEATURE_BRANCH_NAMES" | tr ',' '\n' | grep -q "^ *$branch_name *$"; then
     echo true
   else
     echo false

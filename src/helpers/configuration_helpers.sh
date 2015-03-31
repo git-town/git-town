@@ -25,7 +25,7 @@ function add_non_feature_branch {
     echo_inline_error "'$branch_name' is already set as the main branch"
     exit_with_error
   else
-    local new_branches=$(insert_string "$non_feature_branch_names" ',' "$branch_name")
+    local new_branches=$(insert_string "$NON_FEATURE_BRANCH_NAMES" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
   fi
 }
@@ -99,7 +99,7 @@ function remove_non_feature_branch {
     echo_inline_error "'$branch_name' is not a non-feature branch"
     exit_with_error
   else
-    local new_branches=$(remove_string "$non_feature_branch_names" ',' "$branch_name")
+    local new_branches=$(remove_string "$NON_FEATURE_BRANCH_NAMES" ',' "$branch_name")
     store_configuration non-feature-branch-names "$new_branches"
   fi
 }
@@ -170,9 +170,9 @@ function show_config {
   echo_inline_bold "Main branch: "
   show_main_branch
   echo_inline_bold "Non-feature branches:"
-  if [ -n "$non_feature_branch_names" ]; then
+  if [ -n "$NON_FEATURE_BRANCH_NAMES" ]; then
     echo
-    split_string "$non_feature_branch_names" ","
+    split_string "$NON_FEATURE_BRANCH_NAMES" ","
   else
     echo ' [none]'
   fi
@@ -189,8 +189,8 @@ function show_main_branch {
 
 
 function show_non_feature_branches {
-  if [ -n "$non_feature_branch_names" ]; then
-    split_string "$non_feature_branch_names" ","
+  if [ -n "$NON_FEATURE_BRANCH_NAMES" ]; then
+    split_string "$NON_FEATURE_BRANCH_NAMES" ","
   fi
 }
 
@@ -229,19 +229,19 @@ function show_or_update_non_feature_branches {
 # Persists the given git-town configuration setting
 #
 # The configuration setting is provided as a name-value pair, and
-# the respective MAIN_BRANCH_NAME or non_feature_branch_names
+# the respective MAIN_BRANCH_NAME or NON_FEATURE_BRANCH_NAMES
 # shell variable is updated.
 function store_configuration {
   local config_setting_name=$1
   local value=$2
   git config "git-town.$config_setting_name" "$value"
 
-  # update $MAIN_BRANCH_NAME and $non_feature_branch_names accordingly
+  # update $MAIN_BRANCH_NAME and $NON_FEATURE_BRANCH_NAMES accordingly
   if [ $? == 0 ]; then
     if [ "$config_setting_name" == "main-branch-name" ]; then
       MAIN_BRANCH_NAME="$value"
     elif [ "$config_setting_name" == "non-feature-branch-names" ]; then
-      non_feature_branch_names="$value"
+      NON_FEATURE_BRANCH_NAMES="$value"
     fi
   fi
 }
