@@ -7,15 +7,15 @@ Feature: git sync: syncing the main branch syncs the tags
 
   Background:
     Given I have the following tags
-      | NAME   | LOCATION |
-      | local  | local    |
-      | remote | remote   |
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
     And I am on the "main" branch
     When I run `git sync`
 
 
   Scenario: result
     Then I now have the following tags
-      | NAME   | LOCATION         |
-      | local  | local and remote |
-      | remote | local and remote |
+      | NAME       | LOCATION         |
+      | local-tag  | local and remote |
+      | remote-tag | local and remote |

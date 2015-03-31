@@ -8,15 +8,15 @@ Feature: git sync: syncing a feature branch pulls tags
   Background:
     Given I have a feature branch named "feature"
     And I have the following tags
-      | NAME   | LOCATION |
-      | local  | local    |
-      | remote | remote   |
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
     And I am on the "feature" branch
     And I run `git sync`
 
 
   Scenario: result
     Then I now have the following tags
-      | NAME   | LOCATION         |
-      | local  | local            |
-      | remote | local and remote |
+      | NAME       | LOCATION         |
+      | local-tag  | local            |
+      | remote-tag | local and remote |

@@ -10,14 +10,14 @@ Feature: git sync: syncing the current non-feature branch syncs the tags
     And my non-feature branches are configured as "qa" and "production"
     And I am on the "production" branch
     And I have the following tags
-      | NAME   | LOCATION |
-      | local  | local    |
-      | remote | remote   |
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
     When I run `git sync`
 
 
   Scenario: result
     Then I now have the following tags
-      | NAME   | LOCATION         |
-      | local  | local and remote |
-      | remote | local and remote |
+      | NAME       | LOCATION         |
+      | local-tag  | local and remote |
+      | remote-tag | local and remote |
