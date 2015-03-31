@@ -27,7 +27,7 @@ function skip_command {
 
 
 function undo_command {
-  run_steps "$undo_steps_file" cleanup
+  run_steps "$UNDO_STEPS_FILE" cleanup
 }
 
 
@@ -56,7 +56,7 @@ function ensure_skippable {
 
 
 function ensure_undoable {
-  if [ "$(has_file "$undo_steps_file")" = false ]; then
+  if [ "$(has_file "$UNDO_STEPS_FILE")" = false ]; then
     echo_red "Cannot undo"
     exit_with_error
   fi
@@ -87,8 +87,8 @@ function remove_step_files {
   if [ "$(has_file "$steps_file")" = true ]; then
     rm "$steps_file"
   fi
-  if [ "$(has_file "$undo_steps_file")" = true ]; then
-    rm "$undo_steps_file"
+  if [ "$(has_file "$UNDO_STEPS_FILE")" = true ]; then
+    rm "$UNDO_STEPS_FILE"
   fi
 }
 
@@ -117,7 +117,7 @@ function run {
 
 
 # possible values for option
-#   undoable - builds an undo_steps_file
+#   undoable - builds an UNDO_STEPS_FILE
 #   cleanup - calls remove_step_files after successfully running all steps
 function run_steps {
   local file="$1"
@@ -173,13 +173,13 @@ function skippable {
 
 # Undo any steps on the current branch
 function undo_current_branch_steps {
-  while [ "$(has_lines "$undo_steps_file")" = true ]; do
-    local step=$(peek_line "$undo_steps_file")
+  while [ "$(has_lines "$UNDO_STEPS_FILE")" = true ]; do
+    local step=$(peek_line "$UNDO_STEPS_FILE")
     if [[ "$step" =~ ^checkout ]]; then
       break
     else
       eval "$step"
-      remove_line "$undo_steps_file"
+      remove_line "$UNDO_STEPS_FILE"
     fi
   done
 }
