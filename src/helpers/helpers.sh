@@ -4,7 +4,7 @@
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export PROGRAM="$(echo "$0" | grep -o "[^/]*$")"
-export git_command="${PROGRAM/-/ }"
+export GIT_COMMAND="${PROGRAM/-/ }"
 
 source "$current_dir/git_helpers/author_helpers.sh"
 source "$current_dir/git_helpers/branch_helpers.sh"

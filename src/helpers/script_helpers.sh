@@ -66,10 +66,10 @@ function ensure_undoable {
 function exit_with_messages {
   if [ "$(has_file "$steps_file")" = true ]; then
     echo
-    echo_red "To abort, run \"$git_command --abort\"."
-    echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
+    echo_red "To abort, run \"$GIT_COMMAND --abort\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$GIT_COMMAND --continue\"."
     if [ "$(skippable)" = true ]; then
-      echo_red "$(skip_message_prefix), run \"$git_command --skip\"."
+      echo_red "$(skip_message_prefix), run \"$GIT_COMMAND --skip\"."
     fi
     exit_with_error newline
   fi
