@@ -4,25 +4,25 @@
 
 
 function abort_command {
-  local cmd=$(peek_line "$steps_file")
+  local cmd=$(peek_line "$STEPS_FILE")
   eval "abort_$cmd"
   undo_command
 }
 
 
 function continue_command {
-  local cmd=$(pop_line "$steps_file")
+  local cmd=$(pop_line "$STEPS_FILE")
   eval "continue_$cmd"
-  run_steps "$steps_file" undoable
+  run_steps "$STEPS_FILE" undoable
 }
 
 
 function skip_command {
-  local cmd=$(pop_line "$steps_file")
+  local cmd=$(pop_line "$STEPS_FILE")
   eval "abort_$cmd"
   undo_current_branch_steps
-  skip_current_branch_steps "$steps_file"
-  run_steps "$steps_file" undoable
+  skip_current_branch_steps "$STEPS_FILE"
+  run_steps "$STEPS_FILE" undoable
 }
 
 
@@ -32,7 +32,7 @@ function undo_command {
 
 
 function ensure_abortable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot abort"
     exit_with_error
   fi
@@ -40,7 +40,7 @@ function ensure_abortable {
 
 
 function ensure_continuable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot continue"
     exit_with_error
   fi
@@ -48,7 +48,7 @@ function ensure_continuable {
 
 
 function ensure_skippable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot skip"
     exit_with_error
   fi
@@ -64,7 +64,7 @@ function ensure_undoable {
 
 
 function exit_with_messages {
-  if [ "$(has_file "$steps_file")" = true ]; then
+  if [ "$(has_file "$STEPS_FILE")" = true ]; then
     echo
     echo_red "To abort, run \"$GIT_COMMAND --abort\"."
     echo_red "To continue after you have resolved the conflicts, run \"$GIT_COMMAND --continue\"."
@@ -84,8 +84,8 @@ function preconditions {
 
 
 function remove_step_files {
-  if [ "$(has_file "$steps_file")" = true ]; then
-    rm "$steps_file"
+  if [ "$(has_file "$STEPS_FILE")" = true ]; then
+    rm "$STEPS_FILE"
   fi
   if [ "$(has_file "$UNDO_STEPS_FILE")" = true ]; then
     rm "$UNDO_STEPS_FILE"
@@ -110,8 +110,8 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    steps > "$steps_file"
-    run_steps "$steps_file" undoable
+    steps > "$STEPS_FILE"
+    run_steps "$STEPS_FILE" undoable
   fi
 }
 

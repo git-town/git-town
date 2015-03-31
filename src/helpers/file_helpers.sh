@@ -8,7 +8,7 @@ temp_filename_suffix="$(pwd | tr '/' '_')"
 
 
 # Command lists
-export steps_file="/tmp/${PROGRAM}_${temp_filename_suffix}"
+export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
 export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
 
 
