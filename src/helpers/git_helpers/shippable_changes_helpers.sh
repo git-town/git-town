@@ -17,7 +17,7 @@ function ensure_has_shippable_changes {
 # Determines whether the given branch has shippable changes
 function has_shippable_changes {
   local branch_name=$1
-  if [ "$(git diff --quiet "$main_branch_name..$branch_name" ; echo $?)" == 0 ]; then
+  if [ "$(git diff --quiet "$MAIN_BRANCH_NAME..$branch_name" ; echo $?)" == 0 ]; then
     echo false
   else
     echo true

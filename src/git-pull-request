@@ -9,7 +9,7 @@ function bitbucket_source {
 }
 
 
-branch=$initial_branch_name
+branch=$INITIAL_BRANCH_NAME
 domain=$(remote_domain)
 repository=$(remote_repository_name)
 

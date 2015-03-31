@@ -24,7 +24,7 @@ function preconditions {
 
 
 function steps {
-  if [ "$initial_open_changes" = true ]; then
+  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
     echo "stash_open_changes"
   fi
 
@@ -36,7 +36,7 @@ function steps {
 
   echo "create_and_checkout_feature_branch '$target_branch_name'"
 
-  if [ "$initial_open_changes" = true ]; then
+  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
     echo "restore_open_changes"
   fi
 }
