@@ -1,13 +1,11 @@
 # Creates a tag with the given name in the local repo
 def create_local_tag tag_name
-  p "CREATING LOCAL TAG"
   run "git tag -a #{tag_name} -m '#{tag_name}'"
 end
 
 
 # Creates a tag with the given name in the remote repo
 def create_remote_tag tag_name
-  p "CREATING REMOTE TAG"
   in_repository :origin do
     create_local_tag tag_name
   end
