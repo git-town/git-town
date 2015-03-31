@@ -44,5 +44,5 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
       | remote     | main, current-feature, other-feature |
     And I have the following commits
       | BRANCH          | LOCATION         | MESSAGE                | FILE NAME            |
-      | other-feature   | local and remote | other feature commit   | other_feature_file   |
       | current-feature | local and remote | current feature commit | current_feature_file |
+      | other-feature   | local and remote | other feature commit   | other_feature_file   |

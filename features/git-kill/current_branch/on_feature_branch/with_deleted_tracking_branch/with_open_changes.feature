@@ -51,5 +51,5 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | remote     | main, other-feature                  |
     And I have the following commits
       | BRANCH          | LOCATION         | MESSAGE                | FILE NAME            |
-      | other-feature   | local and remote | other feature commit   | other_feature_file   |
       | current-feature | local            | current feature commit | current_feature_file |
+      | other-feature   | local and remote | other feature commit   | other_feature_file   |
