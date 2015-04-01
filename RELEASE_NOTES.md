@@ -3,11 +3,11 @@
 ## 0.6.0 (2015-04-02)
 
 * support for working without a remote repository for **git extract**, **git hack**, **git kill**, **git ship**, and **git sync**
-* **git pr** rename to **git pull-request**
+* **git pr** renamed to **git pull-request**
   * set up an alias with `git config --global alias.pr pull-request`
 * **git ship**
   * now accepts all `git commit` options
-  * author with the most commits is automatically set as the author on the shipped
+  * author with the most commits is automatically set as the author (when not the committer)
     ([#335](https://github.com/Originate/git-town/issues/335))
 * **git pr/repo**
   * improved linux compatibility by `trying xdg-open` before `open`
