@@ -9,17 +9,6 @@ function is_git_repository {
 }
 
 
-function is_gittown_nightly {
-  local base_dir=$( dirname "${BASH_SOURCE[0]}" )
-
-  if git -C "$base_dir" remote -v > /dev/null 2>&1 | grep "https://github.com/Homebrew/homebrew.git (fetch)"; then
-    echo false
-  else
-    echo true
-  fi
-}
-
-
 function ensure_git_repository {
   if [ "$(is_git_repository)" == false ]; then
     echo_inline_error "This is not a git repository."
@@ -28,13 +17,13 @@ function ensure_git_repository {
 }
 
 
-function gittown_nightly_version {
+function gittown_dev_version {
   local base_dir=$( dirname "${BASH_SOURCE[0]}" )
   local git_hash=$(git -C "$base_dir" rev-parse --short HEAD)
-  local git_date=$(git -C "$base_dir" --no-pager show -s --format=%ci HEAD | cut -d ' ' -f1 | tr -d '-')
+  local git_date=$(git -C "$base_dir" --no-pager show -s --format=%cD HEAD | cut -d ' ' -f2-4)
 
-  if [ "$(is_gittown_nightly)" == true ]; then
-    echo ".${git_date}-nightly (${git_hash})"
+  if ! git -C "$base_dir" remote -v > /dev/null 2>&1 | grep "https://github.com/Homebrew/homebrew.git (fetch)"; then
+    echo " (${git_date}, ${git_hash})"
   fi
 }
 
