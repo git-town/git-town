@@ -31,7 +31,7 @@ Feature: git prune-branches: remove stale coworker branches when run on the main
     Then it runs the Git commands
       | BRANCH | COMMAND                                              |
       | main   | git branch stale_feature <%= sha 'Initial commit' %> |
-      | main   | git push -u origin stale_feature                     |
+      |        | git push -u origin stale_feature                     |
     And I end up on the "main" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES            |
