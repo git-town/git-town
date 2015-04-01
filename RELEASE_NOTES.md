@@ -13,8 +13,8 @@
   * improved linux compatibility by `trying xdg-open` before `open`
 * improved error messages when run outside a git repository
 * improved setup wizard for initial configuration in a git repository
-* added [contribution guide](https://github.com/Originate/git-town/tree/master/CONTRIBUTING.md)
-* added [tutorial](https://github.com/Originate/git-town/tree/master/documentation/tutorial.md)
+* added [contribution guide](/CONTRIBUTING.md)
+* added [tutorial](/documentation/tutorial.md)
 
 
 ## 0.5.0 (2015-01-08)
