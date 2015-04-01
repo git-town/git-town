@@ -11,10 +11,10 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH  | COMMAND                        |
-      | feature | git fetch --prune              |
-      |         | git checkout main              |
-      | main    | git checkout feature           |
+      | BRANCH  | COMMAND              |
+      | feature | git fetch --prune    |
+      |         | git checkout main    |
+      | main    | git checkout feature |
     And I end up on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |
@@ -26,9 +26,9 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                              |
-      | feature | git checkout main                                    |
-      | main    | git checkout feature                                 |
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
     And I end up on the "feature" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES      |

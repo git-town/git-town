@@ -26,21 +26,21 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
       |                 | git branch -d stale_feature_2    |
     And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES              |
-      | local      | main|
-      | remote     | main|
-      | coworker   | main                  |
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
+      | coworker   | main     |
 
 
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH          | COMMAND                                             |
-      | main            | git branch stale_feature_2 <%= sha 'main commit' %> |
-      |                 | git push -u origin stale_feature_2                  |
-      |                 | git branch stale_feature_1 <%= sha 'main commit' %> |
-      |                 | git push -u origin stale_feature_1                  |
-      |                 | git checkout stale_feature_1                        |
+      | BRANCH | COMMAND                                             |
+      | main   | git branch stale_feature_2 <%= sha 'main commit' %> |
+      |        | git push -u origin stale_feature_2                  |
+      |        | git branch stale_feature_1 <%= sha 'main commit' %> |
+      |        | git push -u origin stale_feature_1                  |
+      |        | git checkout stale_feature_1                        |
     And I end up on the "stale_feature_1" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES                               |

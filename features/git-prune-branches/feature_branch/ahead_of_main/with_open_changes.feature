@@ -14,12 +14,12 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH  | COMMAND                        |
-      | feature | git fetch --prune              |
-      |         | git stash -u                   |
-      |         | git checkout main              |
-      | main    | git checkout feature           |
-      | feature | git stash pop                  |
+      | BRANCH  | COMMAND              |
+      | feature | git fetch --prune    |
+      |         | git stash -u         |
+      |         | git checkout main    |
+      | main    | git checkout feature |
+      | feature | git stash pop        |
     And I end up on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And the existing branches are
@@ -32,15 +32,15 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                              |
-      | feature | git stash -u                                         |
-      |         | git checkout main                                    |
-      | main    | git checkout feature                                 |
-      | feature | git stash pop                                        |
+      | BRANCH  | COMMAND              |
+      | feature | git stash -u         |
+      |         | git checkout main    |
+      | main    | git checkout feature |
+      | feature | git stash pop        |
     And I end up on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     Then the existing branches are
-      | REPOSITORY | BRANCHES                     |
-      | local      | main, feature|
-      | remote     | main, feature|
-      | coworker   | main                         |
+      | REPOSITORY | BRANCHES      |
+      | local      | main, feature |
+      | remote     | main, feature |
+      | coworker   | main          |
