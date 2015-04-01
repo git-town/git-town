@@ -4,7 +4,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 function branch_to_kill {
   if [ -z "$1" ]; then
-    echo "$initial_branch_name"
+    echo "$INITIAL_BRANCH_NAME"
   else
     echo "$1"
   fi
@@ -15,18 +15,20 @@ function preconditions {
   target_branch=$(branch_to_kill "$@")
 
   ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
-  fetch
-  if [ "$target_branch" != "$initial_branch_name" ]; then
+
+  if [ "$HAS_REMOTE" = true ]; then
+      fetch
+  fi
+
+  if [ "$target_branch" != "$INITIAL_BRANCH_NAME" ]; then
     ensure_has_branch "$target_branch"
   fi
 }
 
 
 function steps {
-  if [ "$target_branch" = "$initial_branch_name" ]; then
-    if [ "$initial_open_changes" = true ]; then
-      echo "commit_open_changes"
-    fi
+  if [ "$target_branch" = "$INITIAL_BRANCH_NAME" ]; then
+    echo_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
     echo "checkout_main_branch"
   fi
 

@@ -4,26 +4,28 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 function branches_to_sync {
   if [ "$sync_all" = true ]; then
-    echo "$main_branch_name"
+    echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
-  elif [ "$(is_feature_branch "$initial_branch_name")" = true ]; then
-    echo "$main_branch_name"
-    echo "$initial_branch_name"
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
+    echo "$MAIN_BRANCH_NAME"
+    echo "$INITIAL_BRANCH_NAME"
   else
-    echo "$initial_branch_name"
+    echo "$INITIAL_BRANCH_NAME"
   fi
 }
 
 
 function preconditions {
-  fetch
+  if [ "$HAS_REMOTE" = true ]; then
+    fetch
+  fi
 
   should_push_tags=false
   sync_all=false
 
   if [ "$1" = "--all" ]; then
     sync_all=true
-  elif [ "$(is_feature_branch "$initial_branch_name")" = false ]; then
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = false ]; then
     should_push_tags=true
   fi
 }
@@ -35,7 +37,7 @@ function skip_message_prefix {
 
 
 function skippable {
-  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$main_branch_name" ]; then
+  if [ "$(rebase_in_progress)" = true ] && [ "$(get_current_branch_name)" = "$MAIN_BRANCH_NAME" ]; then
     echo false
   else
     echo true
@@ -44,32 +46,35 @@ function skippable {
 
 
 function steps {
-  if [ "$initial_open_changes" = true ]; then
-    echo "stash_open_changes"
-  fi
+  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
   branches_to_sync | while read branch_name; do
-    echo "checkout $branch_name"
+    local is_feature="$(is_feature_branch "$branch_name")"
 
-    if [ "$(is_feature_branch "$branch_name")" = true ]; then
-      echo "merge_tracking_branch"
-      echo "merge $main_branch_name"
-    else
-      echo "rebase_tracking_branch"
+    # If there is a remote origin, then checkout and sync all branches because
+    # there may be changes to non-feature branches, otherwise only sync feature
+    # branches because non-feature branches will not need syncing
+    if [ "$HAS_REMOTE" = true ] || [ "$is_feature" = true ]; then
+      echo "checkout $branch_name"
+
+      if [ "$is_feature" = true ]; then
+        echo "merge_tracking_branch"
+        echo "merge $MAIN_BRANCH_NAME"
+      else
+        echo "rebase_tracking_branch"
+      fi
+
+      echo_if_true "push" "$HAS_REMOTE"
     fi
-
-    echo "push"
   done
 
-  if [ "$should_push_tags" = true ]; then
+  if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then
     echo "push_tags"
   fi
 
-  echo "checkout $initial_branch_name"
+  echo "checkout $INITIAL_BRANCH_NAME"
 
-  if [ "$initial_open_changes" = true ]; then
-    echo "restore_open_changes"
-  fi
+  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
 
 

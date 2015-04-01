@@ -12,7 +12,7 @@ function checkout {
 
 # Checks out the main branch (if not alread checked out)
 function checkout_main_branch {
-  checkout "$main_branch_name"
+  checkout "$MAIN_BRANCH_NAME"
 }
 
 

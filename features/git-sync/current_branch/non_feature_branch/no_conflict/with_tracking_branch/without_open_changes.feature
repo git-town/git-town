@@ -19,13 +19,13 @@ Feature: git sync: syncing the current non-feature branch (without open changes)
     Then it runs the Git commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      | qa     | git rebase origin/qa |
-      | qa     | git push             |
-      | qa     | git push --tags      |
+      |        | git rebase origin/qa |
+      |        | git push             |
+      |        | git push --tags      |
     And I am still on the "qa" branch
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
+      | main   | local and remote | main commit   | main_file   |
       | qa     | local and remote | remote commit | remote_file |
       |        |                  | local commit  | local_file  |
-      | main   | local and remote | main commit   | main_file   |

@@ -2,7 +2,7 @@
 
 
 function add_undo_steps {
-  prepend_to_file "$1" "$undo_steps_file"
+  prepend_to_file "$1" "$UNDO_STEPS_FILE"
 }
 
 

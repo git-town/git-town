@@ -3,8 +3,8 @@
 
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-export program="$(echo "$0" | grep -o "[^/]*$")"
-export git_command="${program/-/ }"
+export PROGRAM="$(echo "$0" | grep -o "[^/]*$")"
+export GIT_COMMAND="${PROGRAM/-/ }"
 
 source "$current_dir/git_helpers/author_helpers.sh"
 source "$current_dir/git_helpers/branch_helpers.sh"
@@ -36,6 +36,7 @@ source "$current_dir/environment.sh" "$@"
 source "$current_dir/configuration.sh" "$@"
 
 if [ "$(is_git_repository)" == true ]; then
-  export initial_branch_name=$(get_current_branch_name)
-  export initial_open_changes=$(has_open_changes)
+  export INITIAL_BRANCH_NAME=$(get_current_branch_name)
+  export INITIAL_OPEN_CHANGES=$(has_open_changes)
+  export HAS_REMOTE=$(has_remote_url)
 fi

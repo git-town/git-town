@@ -14,10 +14,10 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
     Then it runs the Git commands
       | BRANCH  | COMMAND                        |
       | feature | git fetch --prune              |
-      | feature | git checkout main              |
+      |         | git checkout main              |
       | main    | git push origin :stale_feature |
-      | main    | git branch -d stale_feature    |
-      | main    | git checkout feature           |
+      |         | git branch -d stale_feature    |
+      |         | git checkout feature           |
     And I end up on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |

@@ -19,15 +19,15 @@ Feature: git sync --all: syncs all non-feature branches with open changes
     Then it runs the Git commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
-      | main       | git stash -u                 |
-      | main       | git rebase origin/main       |
-      | main       | git checkout production      |
+      |            | git stash -u                 |
+      |            | git rebase origin/main       |
+      |            | git checkout production      |
       | production | git rebase origin/production |
-      | production | git push                     |
-      | production | git checkout qa              |
+      |            | git push                     |
+      |            | git checkout qa              |
       | qa         | git rebase origin/qa         |
-      | qa         | git push                     |
-      | qa         | git checkout main            |
+      |            | git push                     |
+      |            | git checkout main            |
       | main       | git stash pop                |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
@@ -36,6 +36,6 @@ Feature: git sync --all: syncs all non-feature branches with open changes
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME              |
       | main       | local and remote | main commit              | main_file              |
       | production | local and remote | production remote commit | production_remote_file |
-      |            | local and remote | production local commit  | production_local_file  |
+      |            |                  | production local commit  | production_local_file  |
       | qa         | local and remote | qa remote commit         | qa_remote_file         |
-      |            | local and remote | qa local commit          | qa_local_file          |
+      |            |                  | qa local commit          | qa_local_file          |

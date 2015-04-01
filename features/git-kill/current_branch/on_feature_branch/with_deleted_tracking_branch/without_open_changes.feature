@@ -18,7 +18,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
     Then it runs the Git commands
       | BRANCH           | COMMAND                        |
       | orphaned-feature | git fetch --prune              |
-      | orphaned-feature | git checkout main              |
+      |                  | git checkout main              |
       | main             | git branch -D orphaned-feature |
     And I end up on the "main" branch
     And the existing branches are
@@ -35,7 +35,7 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
     Then it runs the Git commands
       | BRANCH | COMMAND                                                  |
       | main   | git branch orphaned-feature <%= sha 'orphaned commit' %> |
-      | main   | git checkout orphaned-feature                            |
+      |        | git checkout orphaned-feature                            |
     And I end up on the "orphaned-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                               |

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+shopt -s extglob
+
 # Helper methods for writing to the terminal.
 
 
@@ -30,6 +32,17 @@ function echo_error_header {
 function echo_error {
   local str=$(echo_indented "$*")
   echo_red "$str"
+}
+
+
+# Prints the string if the condition is true
+function echo_if_true {
+  local string="$1"
+  local condition="$2"
+
+  if [ "$condition" = true ]; then
+    echo "$string"
+  fi
 }
 
 
@@ -147,11 +160,13 @@ function print_git_command {
 
 
 function prompt_yn {
+  echo -n " [Y/n] "
   read yn
-  case $yn in
-    [Yy] ) return 0;;
-    [Nn] ) return 1;;
-    *    ) echo "Please answer yes (y) or no (n)."; return 1;;
+  case "$yn" in
+    [Yy]) return 0;;
+    [Nn]) return 1;;
+    *([[:space:]])) return 0;;
+    *) echo "Please answer yes (y) or no (n)."; return 1;;
   esac
 }
 

@@ -9,6 +9,20 @@ def branch_name_for_location location, branch
 end
 
 
+# Returns the location of the branch with the given name
+#
+# 'foo'          --> 'local'
+# 'origin/foo'   --> 'remote'
+# 'upstream/foo' --> 'upstream'
+def branch_location branch_name
+  case
+  when branch_name.start_with?('origin/') then 'remote'
+  when branch_name.start_with?('upstream/') then 'upstream'
+  else 'local'
+  end
+end
+
+
 # Returns the branches for the given repository
 def branches_for_repository repository
   case repository
@@ -34,8 +48,8 @@ end
 
 
 # Returns the names of the existing feature branches
-def existing_branches
-  existing_local_branches + existing_remote_branches
+def existing_branches order: :alphabetically
+  existing_local_branches(order: order) + existing_remote_branches
 end
 
 
@@ -54,6 +68,16 @@ end
 def existing_remote_branches
   remote_branches = array_output_of 'git branch -r'
   remote_branches.reject { |b| b.include?('HEAD') }
+end
+
+
+# Returns the name of the given branch if it was local
+#
+# 'foo'          --> 'foo'
+# 'origin/foo'   --> 'foo'
+# 'upstream/foo' --> 'foo'
+def local_branch_name branch_name
+  branch_name.sub(/.+\//, '')
 end
 
 

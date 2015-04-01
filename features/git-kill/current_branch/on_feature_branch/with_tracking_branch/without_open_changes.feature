@@ -7,8 +7,8 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     Given I have feature branches named "feature" and "dead-feature"
     And the following commits exist in my repository
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |
     And I am on the "dead-feature" branch
     When I run `git kill`
 
@@ -17,9 +17,9 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     Then it runs the Git commands
       | BRANCH       | COMMAND                       |
       | dead-feature | git fetch --prune             |
-      | dead-feature | git checkout main             |
+      |              | git checkout main             |
       | main         | git push origin :dead-feature |
-      | main         | git branch -D dead-feature    |
+      |              | git branch -D dead-feature    |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |
@@ -35,8 +35,8 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
     Then it runs the Git commands
       | BRANCH | COMMAND                                              |
       | main   | git branch dead-feature <%= sha 'dead-end commit' %> |
-      | main   | git push -u origin dead-feature                      |
-      | main   | git checkout dead-feature                            |
+      |        | git push -u origin dead-feature                      |
+      |        | git checkout dead-feature                            |
     And I end up on the "dead-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                    |
@@ -44,5 +44,5 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
       | remote     | main, dead-feature, feature |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |

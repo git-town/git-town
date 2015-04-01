@@ -19,14 +19,14 @@ Feature: git sync: syncing the current feature branch without a tracking branch
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune          |
-      | feature | git stash -u               |
-      | feature | git checkout main          |
+      |         | git stash -u               |
+      |         | git checkout main          |
       | main    | git rebase origin/main     |
-      | main    | git push                   |
-      | main    | git checkout feature       |
+      |         | git push                   |
+      |         | git checkout feature       |
       | feature | git merge --no-edit main   |
-      | feature | git push -u origin feature |
-      | feature | git stash pop              |
+      |         | git push -u origin feature |
+      |         | git stash pop              |
     And I am still on the "feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
@@ -44,12 +44,12 @@ Feature: git sync: syncing the current feature branch without a tracking branch
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune          |
-      | feature | git checkout main          |
+      |         | git checkout main          |
       | main    | git rebase origin/main     |
-      | main    | git push                   |
-      | main    | git checkout feature       |
+      |         | git push                   |
+      |         | git checkout feature       |
       | feature | git merge --no-edit main   |
-      | feature | git push -u origin feature |
+      |         | git push -u origin feature |
     And I am still on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |

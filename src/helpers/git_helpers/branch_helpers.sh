@@ -101,13 +101,13 @@ function local_branches {
 
 # Returns the names of local branches without the main branch
 function local_branches_without_main {
-  local_branches | grep -v "^$main_branch_name\$"
+  local_branches | grep -v "^$MAIN_BRANCH_NAME\$"
 }
 
 
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
-  git branch --merged "$main_branch_name" | tr -d ' ' | sed 's/\*//g'
+  git branch --merged "$MAIN_BRANCH_NAME" | tr -d ' ' | sed 's/\*//g'
 }
 
 
@@ -131,7 +131,7 @@ function push_branch {
 
 # Returns the names of remote branches that have been merged into main
 function remote_merged_branches {
-  git branch -r --merged "$main_branch_name" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
+  git branch -r --merged "$MAIN_BRANCH_NAME" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
 }
 
 

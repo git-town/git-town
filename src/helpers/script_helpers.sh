@@ -4,35 +4,35 @@
 
 
 function abort_command {
-  local cmd=$(peek_line "$steps_file")
+  local cmd=$(peek_line "$STEPS_FILE")
   eval "abort_$cmd"
   undo_command
 }
 
 
 function continue_command {
-  local cmd=$(pop_line "$steps_file")
+  local cmd=$(pop_line "$STEPS_FILE")
   eval "continue_$cmd"
-  run_steps "$steps_file" undoable
+  run_steps "$STEPS_FILE" undoable
 }
 
 
 function skip_command {
-  local cmd=$(pop_line "$steps_file")
+  local cmd=$(pop_line "$STEPS_FILE")
   eval "abort_$cmd"
   undo_current_branch_steps
-  skip_current_branch_steps "$steps_file"
-  run_steps "$steps_file" undoable
+  skip_current_branch_steps "$STEPS_FILE"
+  run_steps "$STEPS_FILE" undoable
 }
 
 
 function undo_command {
-  run_steps "$undo_steps_file" cleanup
+  run_steps "$UNDO_STEPS_FILE" cleanup
 }
 
 
 function ensure_abortable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot abort"
     exit_with_error
   fi
@@ -40,7 +40,7 @@ function ensure_abortable {
 
 
 function ensure_continuable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot continue"
     exit_with_error
   fi
@@ -48,7 +48,7 @@ function ensure_continuable {
 
 
 function ensure_skippable {
-  if [ "$(has_file "$steps_file")" = false ]; then
+  if [ "$(has_file "$STEPS_FILE")" = false ]; then
     echo_red "Cannot skip"
     exit_with_error
   fi
@@ -56,7 +56,7 @@ function ensure_skippable {
 
 
 function ensure_undoable {
-  if [ "$(has_file "$undo_steps_file")" = false ]; then
+  if [ "$(has_file "$UNDO_STEPS_FILE")" = false ]; then
     echo_red "Nothing to undo"
     exit_with_error
   fi
@@ -64,12 +64,12 @@ function ensure_undoable {
 
 
 function exit_with_messages {
-  if [ "$(has_file "$steps_file")" = true ]; then
+  if [ "$(has_file "$STEPS_FILE")" = true ]; then
     echo
-    echo_red "To abort, run \"$git_command --abort\"."
-    echo_red "To continue after you have resolved the conflicts, run \"$git_command --continue\"."
+    echo_red "To abort, run \"$GIT_COMMAND --abort\"."
+    echo_red "To continue after you have resolved the conflicts, run \"$GIT_COMMAND --continue\"."
     if [ "$(skippable)" = true ]; then
-      echo_red "$(skip_message_prefix), run \"$git_command --skip\"."
+      echo_red "$(skip_message_prefix), run \"$GIT_COMMAND --skip\"."
     fi
     exit_with_error newline
   fi
@@ -84,11 +84,11 @@ function preconditions {
 
 
 function remove_step_files {
-  if [ "$(has_file "$steps_file")" = true ]; then
-    rm "$steps_file"
+  if [ "$(has_file "$STEPS_FILE")" = true ]; then
+    rm "$STEPS_FILE"
   fi
-  if [ "$(has_file "$undo_steps_file")" = true ]; then
-    rm "$undo_steps_file"
+  if [ "$(has_file "$UNDO_STEPS_FILE")" = true ]; then
+    rm "$UNDO_STEPS_FILE"
   fi
 }
 
@@ -110,14 +110,14 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    steps > "$steps_file"
-    run_steps "$steps_file" undoable
+    steps > "$STEPS_FILE"
+    run_steps "$STEPS_FILE" undoable
   fi
 }
 
 
 # possible values for option
-#   undoable - builds an undo_steps_file
+#   undoable - builds an UNDO_STEPS_FILE
 #   cleanup - calls remove_step_files after successfully running all steps
 function run_steps {
   local file="$1"
@@ -173,13 +173,13 @@ function skippable {
 
 # Undo any steps on the current branch
 function undo_current_branch_steps {
-  while [ "$(has_lines "$undo_steps_file")" = true ]; do
-    local step=$(peek_line "$undo_steps_file")
+  while [ "$(has_lines "$UNDO_STEPS_FILE")" = true ]; do
+    local step=$(peek_line "$UNDO_STEPS_FILE")
     if [[ "$step" =~ ^checkout ]]; then
       break
     else
       eval "$step"
-      remove_line "$undo_steps_file"
+      remove_line "$UNDO_STEPS_FILE"
     fi
   done
 }

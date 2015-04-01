@@ -20,11 +20,11 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
     Then it runs the Git commands
       | BRANCH                | COMMAND                             |
       | stale_feature_initial | git fetch --prune                   |
-      | stale_feature_initial | git stash -u                        |
-      | stale_feature_initial | git checkout main                   |
+      |                       | git stash -u                        |
+      |                       | git checkout main                   |
       | main                  | git push origin :stale_feature_main |
-      | main                  | git branch -d stale_feature_main    |
-      | main                  | git checkout stale_feature_initial  |
+      |                       | git branch -d stale_feature_main    |
+      |                       | git checkout stale_feature_initial  |
       | stale_feature_initial | git stash pop                       |
     And I end up on the "stale_feature_initial" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

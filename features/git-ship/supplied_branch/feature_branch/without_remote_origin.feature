@@ -18,13 +18,13 @@ Feature: git ship: shipping the supplied feature branch without a remote origin
     Then it runs the Git commands
       | BRANCH        | COMMAND                      |
       | other_feature | git stash -u                 |
-      | other_feature | git checkout feature         |
+      |               | git checkout feature         |
       | feature       | git merge --no-edit main     |
-      | feature       | git checkout main            |
+      |               | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
+      |               | git commit -m "feature done" |
+      |               | git branch -D feature        |
+      |               | git checkout other_feature   |
       | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
     And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
@@ -40,11 +40,11 @@ Feature: git ship: shipping the supplied feature branch without a remote origin
       | BRANCH        | COMMAND                      |
       | other_feature | git checkout feature         |
       | feature       | git merge --no-edit main     |
-      | feature       | git checkout main            |
+      |               | git checkout main            |
       | main          | git merge --squash feature   |
-      | main          | git commit -m "feature done" |
-      | main          | git branch -D feature        |
-      | main          | git checkout other_feature   |
+      |               | git commit -m "feature done" |
+      |               | git branch -D feature        |
+      |               | git checkout other_feature   |
     And I end up on the "other_feature" branch
     And there is no "feature" branch
     And I have the following commits

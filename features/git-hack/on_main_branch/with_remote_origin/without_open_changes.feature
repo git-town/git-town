@@ -15,8 +15,8 @@ Feature: git hack: starting a new feature from the main branch (without open cha
     Then it runs the Git commands
       | BRANCH | COMMAND                          |
       | main   | git fetch --prune                |
-      | main   | git rebase origin/main           |
-      | main   | git checkout -b new_feature main |
+      |        | git rebase origin/main           |
+      |        | git checkout -b new_feature main |
     And I end up on the "new_feature" branch
     And the branch "new_feature" has not been pushed to the repository
     And I have the following commits

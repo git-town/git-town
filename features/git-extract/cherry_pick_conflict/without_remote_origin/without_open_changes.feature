@@ -1,10 +1,11 @@
-Feature: git extract: resolving conflicts between main branch and extracted commits (without open changes)
+Feature: git extract: resolving conflicts between main branch and extracted commits (without open changes or remote repo)
 
-  (see ./with_open_changes.feature)
+  (see ../with_remote_origin/with_open_changes.feature)
 
 
   Background:
     Given I have a feature branch named "feature"
+    And my repo does not have a remote origin
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
       | main    | local    | main commit     | conflicting_file | main content     |
@@ -17,10 +18,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
   Scenario: result
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
-      | feature  | git fetch --prune                            |
       | feature  | git checkout main                            |
-      | main     | git rebase origin/main                       |
-      | main     | git push                                     |
       | main     | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
@@ -37,16 +35,12 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      | refactor | git checkout main       |
+      |          | git checkout main       |
       | main     | git branch -d refactor  |
-      | main     | git checkout feature    |
+      |          | git checkout feature    |
     And I end up on the "feature" branch
     And there is no "refactor" branch
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        |
-      | main    | local and remote | main commit     | conflicting_file |
-      | feature | local            | feature commit  | feature_file     |
-      |         |                  | refactor commit | conflicting_file |
+    And I am left with my original commits
     And my repo has no cherry-pick in progress
 
 
@@ -62,30 +56,26 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                     |
-      | refactor | git commit --no-edit        |
-      | refactor | git push -u origin refactor |
+      | BRANCH   | COMMAND              |
+      | refactor | git commit --no-edit |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
-      | main     | local and remote | main commit     | conflicting_file |
-      | feature  | local            | feature commit  | feature_file     |
-      |          |                  | refactor commit | conflicting_file |
-      | refactor | local and remote | main commit     | conflicting_file |
-      |          |                  | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
+      | main     | local    | main commit     | conflicting_file |
+      | feature  | local    | feature commit  | feature_file     |
+      |          |          | refactor commit | conflicting_file |
+      | refactor | local    | main commit     | conflicting_file |
+      |          |          | refactor commit | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git extract --continue`
-    Then it runs the Git commands
-      | BRANCH   | COMMAND                     |
-      | refactor | git push -u origin refactor |
-    And I end up on the "refactor" branch
+    Then I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE         | FILE NAME        |
-      | main     | local and remote | main commit     | conflicting_file |
-      | feature  | local            | feature commit  | feature_file     |
-      |          |                  | refactor commit | conflicting_file |
-      | refactor | local and remote | main commit     | conflicting_file |
-      |          |                  | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
+      | main     | local    | main commit     | conflicting_file |
+      | feature  | local    | feature commit  | feature_file     |
+      |          |          | refactor commit | conflicting_file |
+      | refactor | local    | main commit     | conflicting_file |
+      |          |          | refactor commit | conflicting_file |

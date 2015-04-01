@@ -19,11 +19,11 @@ Feature: git sync: restores deleted tracking branch
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune          |
-      | feature | git checkout main          |
+      |         | git checkout main          |
       | main    | git rebase origin/main     |
-      | main    | git checkout feature       |
+      |         | git checkout feature       |
       | feature | git merge --no-edit main   |
-      | feature | git push -u origin feature |
+      |         | git push -u origin feature |
     And I am still on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    |

@@ -19,11 +19,11 @@ Feature: git prune-branches: remove stale feature branches when run on a feature
     Then it runs the Git commands
       | BRANCH                | COMMAND                                |
       | stale_feature_initial | git fetch --prune                      |
-      | stale_feature_initial | git checkout main                      |
+      |                       | git checkout main                      |
       | main                  | git push origin :stale_feature_initial |
-      | main                  | git branch -d stale_feature_initial    |
-      | main                  | git push origin :stale_feature_main    |
-      | main                  | git branch -d stale_feature_main       |
+      |                       | git branch -d stale_feature_initial    |
+      |                       | git push origin :stale_feature_main    |
+      |                       | git branch -d stale_feature_main       |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |

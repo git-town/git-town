@@ -56,3 +56,20 @@ end
 Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
   expect(git_town_configuration).to be_empty
 end
+
+
+Then(/^I see the initial configuration prompt$/) do
+  step %(I see "Git Town hasn't been configured for this repository.")
+  step %(I see "Please run 'git town config --setup'.")
+  step %(I see "Would you like to do that now? [Y/n]")
+end
+
+
+Then(/^I (don't )?see the first line of the configuration wizard$/) do |negate|
+  configuration_wizard_first_line = 'Please specify the main dev branch'
+  if negate
+    step %(I don't see "#{configuration_wizard_first_line}")
+  else
+    step %(I see "#{configuration_wizard_first_line}")
+  end
+end

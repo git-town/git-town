@@ -16,18 +16,18 @@ Feature: git sync --all: syncs all feature branches with open changes
     Then it runs the Git commands
       | BRANCH   | COMMAND                             |
       | feature1 | git fetch --prune                   |
-      | feature1 | git stash -u                        |
-      | feature1 | git checkout main                   |
+      |          | git stash -u                        |
+      |          | git checkout main                   |
       | main     | git rebase origin/main              |
-      | main     | git checkout feature1               |
+      |          | git checkout feature1               |
       | feature1 | git merge --no-edit origin/feature1 |
-      | feature1 | git merge --no-edit main            |
-      | feature1 | git push                            |
-      | feature1 | git checkout feature2               |
+      |          | git merge --no-edit main            |
+      |          | git push                            |
+      |          | git checkout feature2               |
       | feature2 | git merge --no-edit origin/feature2 |
-      | feature2 | git merge --no-edit main            |
-      | feature2 | git push                            |
-      | feature2 | git checkout feature1               |
+      |          | git merge --no-edit main            |
+      |          | git push                            |
+      |          | git checkout feature1               |
       | feature1 | git stash pop                       |
     And I am still on the "feature1" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

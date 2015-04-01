@@ -7,8 +7,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Given I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     When I run `git sync`
 
 
@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git rebase origin/main |
+      |        | git rebase origin/main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -50,8 +50,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
-      | main   | git push --tags       |
+      |        | git push              |
+      |        | git push --tags       |
     And I am still on the "main" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND         |
       | main   | git push        |
-      | main   | git push --tags |
+      |        | git push --tags |
     And I am still on the "main" branch
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

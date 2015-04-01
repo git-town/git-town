@@ -21,7 +21,7 @@ Feature: git hack: starting a new feature from a feature branch (with open chang
     Then it runs the Git commands
       | BRANCH           | COMMAND                          |
       | existing_feature | git stash -u                     |
-      | existing_feature | git checkout -b new_feature main |
+      |                  | git checkout -b new_feature main |
       | new_feature      | git stash pop                    |
     And I end up on the "new_feature" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

@@ -18,7 +18,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     Then it runs the Git commands
       | BRANCH       | COMMAND                    |
       | dead-feature | git fetch --prune          |
-      | dead-feature | git checkout main          |
+      |              | git checkout main          |
       | main         | git branch -D dead-feature |
     And I end up on the "main" branch
     And the existing branches are
@@ -35,7 +35,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
     Then it runs the Git commands
       | BRANCH | COMMAND                                              |
       | main   | git branch dead-feature <%= sha 'dead-end commit' %> |
-      | main   | git checkout dead-feature                            |
+      |        | git checkout dead-feature                            |
     And I end up on the "dead-feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                    |
@@ -43,5 +43,5 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       | remote     | main, feature               |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local            | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |

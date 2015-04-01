@@ -9,8 +9,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Given I am on the "main" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
-      | main   | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-      |        | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
+      |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git sync`
 
@@ -20,8 +20,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      | main   | git stash -u           |
-      | main   | git rebase origin/main |
+      |        | git stash -u           |
+      |        | git rebase origin/main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -36,7 +36,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
-      | main   | git stash pop      |
+      |        | git stash pop      |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And there is no rebase in progress
@@ -58,9 +58,9 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
-      | main   | git push              |
-      | main   | git push --tags       |
-      | main   | git stash pop         |
+      |        | git push              |
+      |        | git push --tags       |
+      |        | git stash pop         |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
@@ -78,8 +78,8 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND         |
       | main   | git push        |
-      | main   | git push --tags |
-      | main   | git stash pop   |
+      |        | git push --tags |
+      |        | git stash pop   |
     And I am still on the "main" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits

@@ -17,8 +17,8 @@ Feature: git kill: killing the given feature branch (without open changes)
     Then it runs the Git commands
       | BRANCH  | COMMAND                       |
       | feature | git fetch --prune             |
-      | feature | git push origin :dead-feature |
-      | feature | git branch -D dead-feature    |
+      |         | git push origin :dead-feature |
+      |         | git branch -D dead-feature    |
     And I am still on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES      |
@@ -34,7 +34,7 @@ Feature: git kill: killing the given feature branch (without open changes)
     Then it runs the Git commands
       | BRANCH  | COMMAND                                              |
       | feature | git branch dead-feature <%= sha 'dead-end commit' %> |
-      | feature | git push -u origin dead-feature                      |
+      |         | git push -u origin dead-feature                      |
     And I am still on the "feature" branch
     And the existing branches are
       | REPOSITORY | BRANCHES                    |
@@ -42,5 +42,5 @@ Feature: git kill: killing the given feature branch (without open changes)
       | remote     | main, dead-feature, feature |
     And I have the following commits
       | BRANCH       | LOCATION         | MESSAGE         | FILE NAME        |
-      | feature      | local and remote | good commit     | good_file        |
       | dead-feature | local and remote | dead-end commit | unfortunate_file |
+      | feature      | local and remote | good commit     | good_file        |
