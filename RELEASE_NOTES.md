@@ -10,7 +10,7 @@
   * author with the most commits is automatically set as the author (when not the committer)
     ([#335](https://github.com/Originate/git-town/issues/335))
 * **git pr/repo**
-  * improved linux compatibility by `trying xdg-open` before `open`
+  * improved linux compatibility by trying `xdg-open` before `open`
 * improved error messages when run outside a git repository
 * improved setup wizard for initial configuration in a git repository
 * added [contribution guide](/CONTRIBUTING.md)
