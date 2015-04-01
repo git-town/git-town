@@ -27,6 +27,7 @@ function gittown_dev_version {
   fi
 }
 
+
 if [[ ! "$@" =~ --bypass-environment-checks ]]; then
   ensure_git_repository
 fi
