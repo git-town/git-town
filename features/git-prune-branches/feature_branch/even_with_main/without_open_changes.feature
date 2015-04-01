@@ -9,10 +9,9 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
     Given the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
       | main   | local and remote | main commit | main_file |
-    And I have a stale feature branch named "stale_feature_1" with its tip at "Initial commit"
-    And I have a stale feature branch named "stale_feature_2" with its tip at "Initial commit"
+    And I have a stale feature branch named "stale_feature_1" with its tip at "main commit"
+    And I have a stale feature branch named "stale_feature_2" with its tip at "main commit"
     And I am on the "stale_feature_1" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
     When I run `git prune-branches`
 
 
@@ -20,35 +19,31 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
     Then it runs the Git commands
       | BRANCH          | COMMAND                          |
       | stale_feature_1 | git fetch --prune                |
-      |                 | git stash -u                     |
       |                 | git checkout main                |
-      | main            | git push origin :stale_feature_2 |
+      | main            | git push origin :stale_feature_1 |
+      |                 | git branch -d stale_feature_1    |
+      |                 | git push origin :stale_feature_2 |
       |                 | git branch -d stale_feature_2    |
-      |                 | git checkout stale_feature_1     |
-      | stale_feature_1 | git stash pop                    |
-    And I end up on the "stale_feature_1" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES              |
-      | local      | main, stale_feature_1 |
-      | remote     | main, stale_feature_1 |
+      | local      | main|
+      | remote     | main|
       | coworker   | main                  |
 
 
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
     Then it runs the Git commands
-      | BRANCH          | COMMAND                                                |
-      | stale_feature_1 | git stash -u                                           |
-      |                 | git checkout main                                      |
-      | main            | git branch stale_feature_2 <%= sha 'Initial commit' %> |
-      |                 | git push -u origin stale_feature_2                     |
-      |                 | git checkout stale_feature_1                           |
-      | stale_feature_1 | git stash pop                                          |
+      | BRANCH          | COMMAND                                             |
+      | main            | git branch stale_feature_2 <%= sha 'main commit' %> |
+      |                 | git push -u origin stale_feature_2                  |
+      |                 | git branch stale_feature_1 <%= sha 'main commit' %> |
+      |                 | git push -u origin stale_feature_1                  |
+      |                 | git checkout stale_feature_1                        |
     And I end up on the "stale_feature_1" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES                               |
       | local      | main, stale_feature_1, stale_feature_2 |
       | remote     | main, stale_feature_1, stale_feature_2 |
       | coworker   | main                                   |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
