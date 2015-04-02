@@ -1,8 +1,6 @@
-Feature: git prune-branches: don't remove the current empty feature branch if there are open changes
+Feature: git prune-branches: removes the current empty feature branch if there are no open changes
 
-  As a developer pruning branches
-  I don't want my current empty branch deleted if I have open changes
-  So that I can prune my branches without losing current work.
+  (see ./with_open_changes.feature)
 
 
   Background:
