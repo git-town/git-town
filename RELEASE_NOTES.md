@@ -3,7 +3,7 @@
 ## 0.6.0 (2015-04-02)
 
 * support for working without a remote repository for **git extract**, **git hack**, **git kill**, **git ship**, and **git sync**
-  * implemented by our newest core committer @ricmatsui
+  * implemented by our newest core committer, @ricmatsui
 * **git pr** renamed to **git pull-request**
   * set up an alias with `git config --global alias.pr pull-request`
 * **git ship**
