@@ -18,11 +18,12 @@ function ensure_git_repository {
 
 
 function gittown_dev_version {
-  local base_dir=$( dirname "${BASH_SOURCE[0]}" )
-  local git_hash=$(git -C "$base_dir" rev-parse --short HEAD)
-  local git_date=$(git -C "$base_dir" --no-pager show -s --format=%cD HEAD | cut -d ' ' -f2-4)
+  local base_dir=$(dirname "${BASH_SOURCE[0]}")
 
   if ! git -C "$base_dir" remote -v > /dev/null 2>&1 | grep "https://github.com/Homebrew/homebrew.git (fetch)"; then
+    local git_hash=$(git -C "$base_dir" rev-parse --short HEAD)
+    local git_date=$(git -C "$base_dir" --no-pager show -s --format=%cD HEAD | cut -d ' ' -f2-4)
+
     echo " (${git_date}, ${git_hash})"
   fi
 }
