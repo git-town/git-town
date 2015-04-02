@@ -34,3 +34,12 @@ Feature: git extract: extracting multiple commits (without open changes)
       | refactor | local and remote | remote main commit | remote_main_file |
       |          |                  | refactor1 commit   | refactor1_file   |
       |          |                  | refactor2 commit   | refactor2_file   |
+    And now I have the following committed files
+      | BRANCH   | NAME             |
+      | main     | remote_main_file |
+      | feature  | feature_file     |
+      | feature  | refactor1_file   |
+      | feature  | refactor2_file   |
+      | refactor | refactor1_file   |
+      | refactor | refactor2_file   |
+      | refactor | remote_main_file |

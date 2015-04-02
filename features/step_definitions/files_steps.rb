@@ -10,6 +10,10 @@ end
 
 
 
+Then(/^I am left with my original files$/) do
+  expect(files_in_branches).to match_array @original_files
+end
+
 
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
   files_data.diff! files_in_branches

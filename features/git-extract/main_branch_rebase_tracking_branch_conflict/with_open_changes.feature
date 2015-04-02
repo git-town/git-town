@@ -80,6 +80,13 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | refactor | local and remote | conflicting remote commit | conflicting_file |
       |          |                  | conflicting local commit  | conflicting_file |
       |          |                  | refactor commit           | refactor_file    |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | resolved content |
+      | feature  | feature_file     |                  |
+      | feature  | refactor_file    |                  |
+      | refactor | conflicting_file | resolved content |
+      | refactor | refactor_file    |                  |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
@@ -103,3 +110,10 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | refactor | local and remote | conflicting remote commit | conflicting_file |
       |          |                  | conflicting local commit  | conflicting_file |
       |          |                  | refactor commit           | refactor_file    |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | resolved content |
+      | feature  | feature_file     |                  |
+      | feature  | refactor_file    |                  |
+      | refactor | conflicting_file | resolved content |
+      | refactor | refactor_file    |                  |

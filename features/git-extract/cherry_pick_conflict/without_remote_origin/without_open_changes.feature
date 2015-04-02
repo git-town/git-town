@@ -66,6 +66,12 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          |          | refactor commit | conflicting_file |
       | refactor | local    | main commit     | conflicting_file |
       |          |          | refactor commit | conflicting_file |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |
 
 
   Scenario: continuing after resolving the conflicts and committing
@@ -79,3 +85,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          |          | refactor commit | conflicting_file |
       | refactor | local    | main commit     | conflicting_file |
       |          |          | refactor commit | conflicting_file |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |

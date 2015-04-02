@@ -6,10 +6,10 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
-      | main    | local    | main commit     | conflicting_file | main content     |
-      | feature | local    | feature commit  | feature_file     |                  |
-      |         |          | refactor commit | conflicting_file | refactor content |
+      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        | FILE CONTENT     |
+      | main    | local and remote | main commit     | conflicting_file | main content     |
+      | feature | local            | feature commit  | feature_file     |                  |
+      |         |                  | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
     When I run `git extract refactor` with the last commit sha
 
@@ -20,7 +20,6 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | feature  | git fetch --prune                            |
       |          | git checkout main                            |
       | main     | git rebase origin/main                       |
-      |          | git push                                     |
       |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
@@ -42,11 +41,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          | git checkout feature    |
     And I end up on the "feature" branch
     And there is no "refactor" branch
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME        |
-      | main    | local and remote | main commit     | conflicting_file |
-      | feature | local            | feature commit  | feature_file     |
-      |         |                  | refactor commit | conflicting_file |
+    And I am left with my original commits
     And my repo has no cherry-pick in progress
 
 
@@ -73,6 +68,12 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          |                  | refactor commit | conflicting_file |
       | refactor | local and remote | main commit     | conflicting_file |
       |          |                  | refactor commit | conflicting_file |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |
 
 
   Scenario: continuing after resolving the conflicts and committing
@@ -89,3 +90,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          |                  | refactor commit | conflicting_file |
       | refactor | local and remote | main commit     | conflicting_file |
       |          |                  | refactor commit | conflicting_file |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |
