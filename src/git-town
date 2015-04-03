@@ -31,7 +31,12 @@ function show_help {
 
 
 function show_version {
-  echo "Git Town 0.5.0$(gittown_dev_version)"
+  local version="0.5.0"
+  if [ "$(is_git_town_installed_manually)" == true ]; then
+    version="$version $(git_town_revision)"
+  fi
+
+  echo "Git Town $version"
 }
 
 
