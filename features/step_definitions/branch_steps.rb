@@ -23,7 +23,7 @@ end
 
 
 Given(/^I have a stale feature branch named "([^"]+)" with its tip at "([^"]+)"$/) do |branch_name, commit_message|
-  create_branch branch_name, commit: commit_sha(commit_message)
+  create_branch branch_name, start_point: commit_sha(commit_message)
 end
 
 
