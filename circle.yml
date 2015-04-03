@@ -18,6 +18,11 @@ dependencies:
     - bin/circleci-install-shellcheck
 
 
+notify:
+  webhooks:
+    - url: https://xrayci.herokuapp.com/webhooks/builds
+
+
 test:
   override:
     - bundle exec rake
