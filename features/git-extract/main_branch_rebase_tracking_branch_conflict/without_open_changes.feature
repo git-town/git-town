@@ -60,14 +60,14 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |          | git push -u origin refactor                  |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main     | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      | feature  | local            | feature commit            | feature_file     |
-      |          |                  | refactor commit           | refactor_file    |
-      | refactor | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      |          |                  | refactor commit           | refactor_file    |
+      | BRANCH   | LOCATION         | MESSAGE                   |
+      | main     | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      | feature  | local            | feature commit            |
+      |          |                  | refactor commit           |
+      | refactor | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      |          |                  | refactor commit           |
     And now I have the following committed files
       | BRANCH   | NAME             | CONTENT          |
       | main     | conflicting_file | resolved content |
@@ -88,14 +88,14 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |          | git push -u origin refactor                  |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main     | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      | feature  | local            | feature commit            | feature_file     |
-      |          |                  | refactor commit           | refactor_file    |
-      | refactor | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      |          |                  | refactor commit           | refactor_file    |
+      | BRANCH   | LOCATION         | MESSAGE                   |
+      | main     | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      | feature  | local            | feature commit            |
+      |          |                  | refactor commit           |
+      | refactor | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      |          |                  | refactor commit           |
     And now I have the following committed files
       | BRANCH   | NAME             | CONTENT          |
       | main     | conflicting_file | resolved content |

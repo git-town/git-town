@@ -23,12 +23,12 @@ Feature: git extract: extracting a single commit (without open changes or remote
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I end up on the "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME     |
-      | main     | local    | main commit     | main_file     |
-      | feature  | local    | feature commit  | feature_file  |
-      |          |          | refactor commit | refactor_file |
-      | refactor | local    | main commit     | main_file     |
-      |          |          | refactor commit | refactor_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
     And now I have the following committed files
       | BRANCH   | NAME          |
       | main     | main_file     |

@@ -27,12 +27,12 @@ Feature: git extract: extracting a single commit (with open changes and without 
     And I end up on the "refactor" branch
     And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME     |
-      | main     | local    | main commit     | main_file     |
-      | feature  | local    | feature commit  | feature_file  |
-      |          |          | refactor commit | refactor_file |
-      | refactor | local    | main commit     | main_file     |
-      |          |          | refactor commit | refactor_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
     And now I have the following committed files
       | BRANCH   | NAME          |
       | main     | main_file     |

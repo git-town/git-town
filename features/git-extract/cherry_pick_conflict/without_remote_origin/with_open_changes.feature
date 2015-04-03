@@ -70,12 +70,12 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature  | local    | feature commit  | feature_file     |
-      |          |          | refactor commit | conflicting_file |
-      | refactor | local    | main commit     | conflicting_file |
-      |          |          | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
     And now I have the following committed files
       | BRANCH   | NAME             | CONTENT          |
       | main     | conflicting_file | main content     |
@@ -93,12 +93,12 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     And I end up on the "refactor" branch
     And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
     And now I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature  | local    | feature commit  | feature_file     |
-      |          |          | refactor commit | conflicting_file |
-      | refactor | local    | main commit     | conflicting_file |
-      |          |          | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
     And now I have the following committed files
       | BRANCH   | NAME             | CONTENT          |
       | main     | conflicting_file | main content     |
