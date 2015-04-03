@@ -22,6 +22,11 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
 end
 
 
+Given(/^I have a stale feature branch named "([^"]+)" with its tip at "([^"]+)"$/) do |branch_name, commit_message|
+  create_branch branch_name, start_point: commit_sha(commit_message)
+end
+
+
 Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
   create_branch branch_name
   configure_non_feature_branches branch_name

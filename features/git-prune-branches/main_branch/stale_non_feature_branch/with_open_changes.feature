@@ -23,3 +23,15 @@ Feature: git prune-branches: don't remove stale non-feature branches when called
       | local      | main, production |
       | remote     | main, production |
       | coworker   | main             |
+
+
+  Scenario: undoing the operation
+    When I run `git prune-branches --undo`
+    Then I get the error "Nothing to undo"
+    And it runs no Git commands
+    And I end up on the "main" branch
+    Then the existing branches are
+      | REPOSITORY | BRANCHES         |
+      | local      | main, production |
+      | remote     | main, production |
+    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"

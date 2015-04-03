@@ -57,7 +57,7 @@ function ensure_skippable {
 
 function ensure_undoable {
   if [ "$(has_file "$UNDO_STEPS_FILE")" = false ]; then
-    echo_red "Cannot undo"
+    echo_red "Nothing to undo"
     exit_with_error
   fi
 }

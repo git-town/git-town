@@ -73,6 +73,12 @@ def create_commits commits_array
 end
 
 
+# Returns the SHA for the commit with the given message
+def commit_sha commit_message
+  output_of "git log --grep='#{commit_message}' --format='%h' -1"
+end
+
+
 def default_commit_attributes
   {
     file_name: "default file name #{SecureRandom.urlsafe_base64}",
@@ -129,7 +135,11 @@ end
 
 # Returns the SHA of the commit with the given message
 def sha commit_message
-  output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  if commit_message == 'Initial commit'
+    output_of "git reflog --grep-reflog='commit (initial): #{commit_message.strip}' --format='%H'"
+  else
+    output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  end
 end
 
 

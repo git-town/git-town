@@ -21,3 +21,16 @@ Feature: git prune-branches: remove stale feature branches when run on the main 
       | local      | main     |
       | remote     | main     |
       | coworker   | main     |
+
+
+  Scenario: undoing the operation
+    When I run `git prune-branches --undo`
+    Then it runs the Git commands
+      | BRANCH | COMMAND                                              |
+      | main   | git branch stale_feature <%= sha 'Initial commit' %> |
+      |        | git push -u origin stale_feature                     |
+    And I end up on the "main" branch
+    Then the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, stale_feature |
+      | remote     | main, stale_feature |
