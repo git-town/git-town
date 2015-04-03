@@ -1,12 +1,11 @@
 # Finds Git tags, returns them as TagList instances
 class TagFinder
 
-  # Returns all tags (local + remote)
+  # Returns all tags (local + remote) as a TagList
   def self.all_tags
     TagList.new
       .add_many(location: 'local', tags: tags_in(:developer))
       .add_many(location: 'remote', tags: tags_in(:origin))
-      .to_table
   end
 
 
