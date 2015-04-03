@@ -75,7 +75,7 @@ end
 
 # Returns the SHA for the commit with the given message
 def commit_sha commit_message
-  output_of "git log main --oneline | grep '#{commit_message}' | cut -d ' ' -f 1"
+  output_of "git log --grep='#{commit_message}' --format='%h' -1"
 end
 
 
