@@ -8,7 +8,7 @@ end
 def create_remote_tag tag_name
   in_secondary_repository do
     create_local_tag tag_name
-    run "git push --tags"
+    run 'git push --tags'
   end
 end
 
