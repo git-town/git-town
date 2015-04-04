@@ -14,7 +14,6 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
     And I run `git ship feature -m "feature done"`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
@@ -32,7 +31,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And I end up on the "feature" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And my uncommitted file "uncommitted" is still stashed away
     And my repo has a merge in progress
 
 

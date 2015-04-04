@@ -30,3 +30,10 @@ Then(/^I (?:still|again) have an uncommitted file with name: "([^"]+)" and conte
   expect(uncommitted_files).to eql [file_name]
   expect(IO.read file_name).to eql content
 end
+
+
+Then(/^my uncommitted file "(.+?)" is still stashed away$/) do |file_name|
+  expect(uncommitted_files).to_not include file_name
+  expect(stash_size).to eql 1
+  @finishes_with_non_empty_stash = true
+end

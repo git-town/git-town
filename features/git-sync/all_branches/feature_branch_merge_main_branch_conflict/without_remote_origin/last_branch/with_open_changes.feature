@@ -13,7 +13,6 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     When I run `git sync --all`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH   | COMMAND                  |
@@ -29,7 +28,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       To skip the sync of the 'feature2' branch, run "git sync --skip".
       """
     And I end up on the "feature2" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And my uncommitted file "uncommitted" is still stashed away
     And my repo has a merge in progress
 
 
@@ -71,13 +70,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | conflicting_file | feature2 content |
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature2" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And my uncommitted file "uncommitted" is still stashed away
     And my repo still has a merge in progress
 
 
