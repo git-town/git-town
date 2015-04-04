@@ -16,11 +16,6 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 end
 
 
-Then(/^I don't have an uncommitted file with name: "(.+?)"$/) do |file_name|
-  expect(uncommitted_files).to_not include file_name
-end
-
-
 Then(/^I don't have any uncommitted files$/) do
   expect(uncommitted_files).to be_empty
 end
