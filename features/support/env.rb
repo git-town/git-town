@@ -25,12 +25,10 @@ def setup_environment
 end
 
 
-# rubocop:disable MethodLength
 def initialize_environment
   # Create origin repo and set "main" as default branch
   create_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
-    configure_git 'user'
   end
 
   clone_repository :origin, :developer
@@ -45,7 +43,6 @@ def initialize_environment
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 end
-# rubocop:enable MethodLength
 
 
 AfterConfiguration do
