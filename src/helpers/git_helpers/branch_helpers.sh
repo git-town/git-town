@@ -33,6 +33,12 @@ function delete_remote_branch {
 }
 
 
+# Deletes the remote branch with the given name
+function delete_remote_only_branch {
+  delete_remote_branch "$@"
+}
+
+
 # Exits if the repository has a branch with the given name
 function ensure_does_not_have_branch {
   local branch_name=$1
@@ -162,3 +168,10 @@ function undo_steps_for_delete_remote_branch {
   echo "push_branch $branch_to_delete"
 }
 
+
+function undo_steps_for_delete_remote_only_branch {
+  local branch_to_delete="$1"
+  local remote_sha="$(git log origin/"$branch_to_delete" | head -1 | cut -d ' ' -f 2)"
+  echo "create_branch $branch_to_delete $remote_sha"
+  echo "push_branch $branch_to_delete"
+}

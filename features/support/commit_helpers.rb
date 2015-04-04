@@ -72,6 +72,12 @@ def create_commits commits_array
 end
 
 
+# Returns the SHA for the commit with the given message
+def commit_sha commit_message
+  output_of "git log --grep='#{commit_message}' --format='%h' -1"
+end
+
+
 # Returns a commit_data structure consisting of
 # the given commit_data structure with default values added
 def add_default_commit_data commit_data
@@ -137,7 +143,11 @@ end
 
 # Returns the SHA of the commit with the given message
 def sha commit_message
-  output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  if commit_message == 'Initial commit'
+    output_of "git reflog --grep-reflog='commit (initial): #{commit_message.strip}' --format='%H'"
+  else
+    output_of "git reflog --grep-reflog='commit: #{commit_message.strip}' --format='%H'"
+  end
 end
 
 
