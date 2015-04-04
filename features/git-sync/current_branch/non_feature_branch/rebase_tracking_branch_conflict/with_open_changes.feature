@@ -30,7 +30,7 @@ Feature: git sync: resolving conflicts between the current non-feature branch an
       To skip the sync of the 'qa' branch, run "git sync --skip".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And my uncommitted file "uncommitted" is still stashed away
 
 
   Scenario: aborting
