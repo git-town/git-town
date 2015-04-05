@@ -27,7 +27,7 @@ end
 
 
 Then(/^I don't have my uncommitted file$/) do
-  expect(uncommitted_files).to_not include @uncommitted_file
+  expect(uncommitted_files).to_not include @uncommitted_file_name
 end
 
 
