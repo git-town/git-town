@@ -41,7 +41,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       |                  | git checkout existing_feature |
       | existing_feature | git stash pop                 |
     And I end up on the "existing_feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 

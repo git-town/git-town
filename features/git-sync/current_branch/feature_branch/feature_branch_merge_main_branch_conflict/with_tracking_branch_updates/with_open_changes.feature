@@ -45,7 +45,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | main    | git checkout feature                                     |
       | feature | git stash pop                                            |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -73,7 +73,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | main    | local and remote | conflicting main commit                                    | conflicting_file |
@@ -97,7 +97,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | git push      |
       |         | git stash pop |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | main    | local and remote | conflicting main commit                                    | conflicting_file |

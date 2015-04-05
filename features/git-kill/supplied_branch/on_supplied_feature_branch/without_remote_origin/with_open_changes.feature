@@ -43,7 +43,7 @@ Feature: git kill: killing the given feature branch when on it (with open change
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

@@ -44,7 +44,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          | git checkout feature    |
       | feature  | git stash pop           |
     And I end up on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no "refactor" branch
     And I am left with my original commits
     And my repo has no cherry-pick in progress
@@ -68,7 +68,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | refactor | git commit --no-edit |
       |          | git stash pop        |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
       | main     | local    | main commit     | conflicting_file |
@@ -85,7 +85,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | BRANCH   | COMMAND       |
       | refactor | git stash pop |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
       | main     | local    | main commit     | conflicting_file |

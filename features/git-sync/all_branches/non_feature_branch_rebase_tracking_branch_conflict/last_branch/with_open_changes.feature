@@ -44,7 +44,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | production | git checkout main       |
       | main       | git stash pop           |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -61,7 +61,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main  |
       | main   | git stash pop      |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -89,7 +89,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main     |
       | main   | git stash pop         |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -107,7 +107,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main |
       | main   | git stash pop     |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |

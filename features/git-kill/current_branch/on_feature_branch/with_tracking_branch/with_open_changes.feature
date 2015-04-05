@@ -45,7 +45,7 @@ Feature: git kill: killing the current feature branch with a tracking branch (wi
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
       |                 | git push -f origin current-feature                             |
     And I end up on the "current-feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
