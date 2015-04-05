@@ -9,7 +9,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       | feature2 | local            | feature2 local commit  | conflicting_file | feature2 local content  |
       |          | remote           | feature2 remote commit | conflicting_file | feature2 remote content |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 

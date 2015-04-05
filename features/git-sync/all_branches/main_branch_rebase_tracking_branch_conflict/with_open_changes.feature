@@ -8,7 +8,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 

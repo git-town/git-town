@@ -12,7 +12,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing_feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git hack new_feature`
 
 
@@ -64,7 +64,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       |             | git checkout -b new_feature main |
       | new_feature | git stash pop                    |
     And I end up on the "new_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
@@ -86,7 +86,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       |             | git checkout -b new_feature main |
       | new_feature | git stash pop                    |
     And I end up on the "new_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |

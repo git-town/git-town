@@ -10,7 +10,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |            | remote           | production remote commit | conflicting_file | production remote content |
       | qa         | local and remote | qa commit                | qa_file          | qa content                |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 

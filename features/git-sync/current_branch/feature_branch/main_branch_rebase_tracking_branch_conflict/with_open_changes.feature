@@ -12,7 +12,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 
@@ -41,7 +41,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |         | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -67,7 +67,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |         | git push                           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
       | main    | local and remote | conflicting remote commit | conflicting_file |
@@ -92,7 +92,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |         | git push                           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
       | main    | local and remote | conflicting remote commit | conflicting_file |

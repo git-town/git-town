@@ -8,7 +8,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
   Background:
     Given I have a feature branch named "feature" ahead of main
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git prune-branches`
 
 
@@ -21,7 +21,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I end up on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
@@ -38,7 +38,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I end up on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     Then the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

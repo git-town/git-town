@@ -13,7 +13,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       | other-feature   | local and remote | other feature commit   | other_feature_file |
       | current-feature | local            | current feature commit | unfortunate_file   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git kill`
 
 
@@ -43,7 +43,7 @@ Feature: git kill: killing the current feature branch without a tracking branch 
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

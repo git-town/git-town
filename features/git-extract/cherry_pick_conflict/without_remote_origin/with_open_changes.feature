@@ -12,7 +12,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | feature | local    | feature commit  | feature_file     |                  |
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
 
 

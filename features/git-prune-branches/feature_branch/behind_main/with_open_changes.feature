@@ -12,7 +12,7 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
     And I have a stale feature branch named "stale_feature_1" with its tip at "Initial commit"
     And I have a stale feature branch named "stale_feature_2" with its tip at "Initial commit"
     And I am on the "stale_feature_1" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git prune-branches`
 
 
@@ -27,7 +27,7 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
       |                 | git checkout stale_feature_1     |
       | stale_feature_1 | git stash pop                    |
     And I end up on the "stale_feature_1" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES              |
       | local      | main, stale_feature_1 |
@@ -51,4 +51,4 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
       | local      | main, stale_feature_1, stale_feature_2 |
       | remote     | main, stale_feature_1, stale_feature_2 |
       | coworker   | main                                   |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file

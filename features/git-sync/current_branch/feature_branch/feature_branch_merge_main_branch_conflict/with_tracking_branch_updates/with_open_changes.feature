@@ -8,7 +8,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 

@@ -10,7 +10,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other_feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     And I run `git ship feature -m "feature done"`
 
 
@@ -45,7 +45,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       | main          | git checkout other_feature |
       | other_feature | git stash pop              |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -68,7 +68,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       |               | git checkout other_feature   |
       | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
@@ -90,7 +90,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       |               | git checkout other_feature   |
       | other_feature | git stash pop                |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
