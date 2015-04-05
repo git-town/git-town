@@ -1,5 +1,10 @@
+Given(/^I have an uncommitted file$/) do
+  @uncommitted_file_name = create_uncommitted_file
+end
+
+
 Given(/^I have an uncommitted file with name: "(.+?)" and content: "(.+?)"$/) do |name, content|
-  IO.write name, content
+  create_uncommitted_file file_name: name, file_content: content
 end
 
 
@@ -11,8 +16,18 @@ end
 
 
 
+Then(/^I (?:still|again) have my uncommitted file$/) do
+  verify_uncommitted_file file_name: @uncommitted_file_name
+end
+
+
 Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
   files_data.diff! files_in_branches
+end
+
+
+Then(/^I don't have my uncommitted file$/) do
+  expect(uncommitted_files).to_not include @uncommitted_file
 end
 
 
@@ -26,7 +41,6 @@ Then(/^I don't have any uncommitted files$/) do
 end
 
 
-Then(/^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) do |file_name, content|
-  expect(uncommitted_files).to eql [file_name]
-  expect(IO.read file_name).to eql content
+Then(/^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) do |name, content|
+  verify_uncommitted_file file_name: name, file_content: content
 end
