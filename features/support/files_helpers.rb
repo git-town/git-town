@@ -32,7 +32,7 @@ end
 
 def default_uncommitted_file_attributes
   {
-    file_name: "default_uncommitted_file_name_#{SecureRandom.urlsafe_base64}",
+    file_name: "uncommitted_file",
     file_content: 'default uncommitted content'
   }
 end
