@@ -32,7 +32,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
       |               | git checkout other_feature         |
       | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And my workspace still has an uncommitted file with name: "feature_file" and content: "conflicting content"
     And there is no "feature" branch
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
