@@ -24,7 +24,7 @@ end
 
 
 def create_uncommitted_file options = {}
-  options.reverse_merge! default_uncommitted_file_attributes
+  options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
   IO.write options[:name], options[:content]
   options[:name]
 end
@@ -36,9 +36,8 @@ DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES = {
 }.freeze
 
 
-def verify_uncommitted_file name, options = {}
-  options[:name] = name
-  options.reverse_merge! default_uncommitted_file_attributes
+def verify_uncommitted_file options
+  options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
   expect(uncommitted_files).to include options[:name]
   expect(IO.read options[:name]).to eql options[:content]
 end
