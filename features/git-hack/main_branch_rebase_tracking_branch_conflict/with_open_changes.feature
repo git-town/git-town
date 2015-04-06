@@ -30,7 +30,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       To continue after you have resolved the conflicts, run "git hack --continue".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
 
 
   Scenario: aborting
@@ -50,7 +50,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
   Scenario: continuing without resolving the conflicts
     When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo still has a rebase in progress
 
 

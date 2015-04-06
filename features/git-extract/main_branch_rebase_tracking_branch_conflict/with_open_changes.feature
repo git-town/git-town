@@ -32,7 +32,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       To continue after you have resolved the conflicts, run "git extract --continue".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
 
 
   Scenario: aborting
@@ -54,7 +54,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a rebase in progress
 
 

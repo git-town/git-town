@@ -30,7 +30,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       To continue after you have resolved the conflicts, run "git extract --continue".
       """
     And I end up on the "refactor" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a cherry-pick in progress
 
 
@@ -56,7 +56,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a cherry-pick in progress
 
 

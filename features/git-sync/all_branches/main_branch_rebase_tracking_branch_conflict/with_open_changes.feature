@@ -24,7 +24,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".
       """
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a rebase in progress
 
 
@@ -48,7 +48,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo still has a rebase in progress
 
 

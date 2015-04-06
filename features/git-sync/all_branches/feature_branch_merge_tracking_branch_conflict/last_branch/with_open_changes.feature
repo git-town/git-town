@@ -33,7 +33,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
       To skip the sync of the 'feature2' branch, run "git sync --skip".
       """
     And I end up on the "feature2" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a merge in progress
 
 
@@ -82,7 +82,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature2" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo still has a merge in progress
 
 

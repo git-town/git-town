@@ -29,7 +29,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
 
 
   Scenario: aborting

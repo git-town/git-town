@@ -29,7 +29,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       To continue after you have resolved the conflicts, run "git sync --continue".
       To skip the sync of the 'production' branch, run "git sync --skip".
       """
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a rebase in progress
 
 
@@ -74,7 +74,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo still has a rebase in progress
 
 

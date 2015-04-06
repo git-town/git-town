@@ -32,7 +32,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And I end up on the "feature" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a merge in progress
 
 
