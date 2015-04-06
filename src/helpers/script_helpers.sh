@@ -44,6 +44,11 @@ function ensure_continuable {
     echo_red "Cannot continue"
     exit_with_error
   fi
+
+  if [ "$(has_lines "$STEPS_FILE")" = false ]; then
+    echo_red "The last command finished successfully and cannot be continued"
+    exit_with_error
+  fi
 }
 
 
