@@ -4,7 +4,7 @@ end
 
 
 Given(/^I have an uncommitted file with name: "(.+?)" and content: "(.+?)"$/) do |name, content|
-  create_uncommitted_file file_name: name, file_content: content
+  create_uncommitted_file name: name, content: content
 end
 
 
@@ -17,7 +17,7 @@ end
 
 
 Then(/^I (?:still|again) have my uncommitted file$/) do
-  verify_uncommitted_file file_name: @uncommitted_file_name
+  verify_uncommitted_file name: @uncommitted_file_name
 end
 
 
@@ -42,5 +42,5 @@ end
 
 
 Then(/^I (?:still|again) have an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) do |name, content|
-  verify_uncommitted_file file_name: name, file_content: content
+  verify_uncommitted_file name: name, content: content
 end
