@@ -41,6 +41,7 @@ Then(/^I don't have any uncommitted files$/) do
 end
 
 
-Then(/^my workspace (?:still|again) has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) do |name, content|
+Then(/^my workspace (?:still|again) has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) \
+    do |name, content|
   verify_uncommitted_file name: name, content: content
 end
