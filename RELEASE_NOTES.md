@@ -1,5 +1,23 @@
 # Git Town Release Notes
 
+## 0.6.0 (2015-04-02)
+
+* support for working without a remote repository for **git extract**, **git hack**, **git kill**, **git ship**, and **git sync**
+  * implemented by our newest core committer @ricmatsui
+* **git pr** renamed to **git pull-request**
+  * set up an alias with `git config --global alias.pr pull-request`
+* **git ship**
+  * now accepts all `git commit` options
+  * author with the most commits is automatically set as the author (when not the committer)
+    ([#335](https://github.com/Originate/git-town/issues/335))
+* **git pr/repo**
+  * improved linux compatibility by trying `xdg-open` before `open`
+* improved error messages when run outside a git repository
+* improved setup wizard for initial configuration in a git repository
+* added [contribution guide](/CONTRIBUTING.md)
+* added [tutorial](/documentation/tutorial.md)
+
+
 ## 0.5.0 (2015-01-08)
 
 * Manual installs need to update their `PATH` to point to the `src` folder within their clone of the repository
