@@ -21,7 +21,7 @@ Feature: git kill: killing the given feature branch (with open changes and witho
       | BRANCH          | COMMAND                     |
       | current-feature | git branch -D other-feature |
     And I am still on the "current-feature" branch
-    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace still has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
       | REPOSITORY | BRANCHES              |
       | local      | main, current-feature |
@@ -37,7 +37,7 @@ Feature: git kill: killing the given feature branch (with open changes and witho
       | BRANCH          | COMMAND                                                    |
       | current-feature | git branch other-feature <%= sha 'other feature commit' %> |
     And I am still on the "current-feature" branch
-    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace still has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

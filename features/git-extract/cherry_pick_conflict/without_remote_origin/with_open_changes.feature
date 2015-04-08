@@ -12,7 +12,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | feature | local    | feature commit  | feature_file     |                  |
       |         |          | refactor commit | conflicting_file | refactor content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
 
 
@@ -30,7 +30,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       To continue after you have resolved the conflicts, run "git extract --continue".
       """
     And I end up on the "refactor" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a cherry-pick in progress
 
 
@@ -44,7 +44,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       |          | git checkout feature    |
       | feature  | git stash pop           |
     And I end up on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no "refactor" branch
     And I am left with my original commits
     And my repo has no cherry-pick in progress
@@ -56,7 +56,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo has a cherry-pick in progress
 
 
@@ -68,7 +68,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | refactor | git commit --no-edit |
       |          | git stash pop        |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
       | main     | local    | main commit     | conflicting_file |
@@ -85,7 +85,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | BRANCH   | COMMAND       |
       | refactor | git stash pop |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
       | main     | local    | main commit     | conflicting_file |

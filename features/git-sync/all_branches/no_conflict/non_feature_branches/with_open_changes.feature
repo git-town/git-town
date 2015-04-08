@@ -11,7 +11,7 @@ Feature: git sync --all: syncs all non-feature branches with open changes
       | qa         | local    | qa local commit          | qa_local_file          |
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -30,7 +30,7 @@ Feature: git sync --all: syncs all non-feature branches with open changes
       |            | git checkout main            |
       | main       | git stash pop                |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And all branches are now synchronized
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME              |

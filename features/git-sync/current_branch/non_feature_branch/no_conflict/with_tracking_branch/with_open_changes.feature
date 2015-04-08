@@ -14,7 +14,7 @@ Feature: git sync: syncing the current non-feature branch (with open changes)
       | qa     | local            | local commit  | local_file  |
       |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 
@@ -28,7 +28,7 @@ Feature: git sync: syncing the current non-feature branch (with open changes)
       |        | git push --tags      |
       |        | git stash pop        |
     And I am still on the "qa" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And all branches are now synchronized
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

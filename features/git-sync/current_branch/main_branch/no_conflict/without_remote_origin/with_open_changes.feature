@@ -11,7 +11,7 @@ Feature: git sync: syncing the main branch (with open changes and without remote
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 
@@ -21,5 +21,5 @@ Feature: git sync: syncing the main branch (with open changes and without remote
       | main   | git stash -u  |
       |        | git stash pop |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And I am left with my original commits

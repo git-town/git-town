@@ -11,7 +11,7 @@ Feature: git hack: starting a new feature from the main branch (with open change
       | BRANCH | LOCATION | MESSAGE     | FILE NAME |
       | main   | local    | main_commit | main_file |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git hack new_feature`
 
 
@@ -22,7 +22,7 @@ Feature: git hack: starting a new feature from the main branch (with open change
       |             | git checkout -b new_feature main |
       | new_feature | git stash pop                    |
     And I end up on the "new_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And I have the following commits
       | BRANCH      | LOCATION | MESSAGE     | FILE NAME |
       | main        | local    | main_commit | main_file |

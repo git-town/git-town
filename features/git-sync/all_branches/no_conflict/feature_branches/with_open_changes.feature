@@ -8,7 +8,7 @@ Feature: git sync --all: syncs all feature branches with open changes
       | feature1 | local and remote | feature1 commit | feature1_file |
       | feature2 | local and remote | feature2 commit | feature2_file |
     And I am on the "feature1" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -30,7 +30,7 @@ Feature: git sync --all: syncs all feature branches with open changes
       |          | git checkout feature1               |
       | feature1 | git stash pop                       |
     And I am still on the "feature1" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And all branches are now synchronized
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                           | FILE NAME     |

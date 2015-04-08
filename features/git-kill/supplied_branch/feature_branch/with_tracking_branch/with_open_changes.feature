@@ -24,7 +24,7 @@ Feature: git kill: killing the given feature branch (with open changes)
       |              | git push origin :dead-feature |
       |              | git branch -D dead-feature    |
     And I am still on the "good-feature" branch
-    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace still has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
@@ -42,7 +42,7 @@ Feature: git kill: killing the given feature branch (with open changes)
       | good-feature | git branch dead-feature <%= sha 'dead-end commit' %> |
       |              | git push -u origin dead-feature                      |
     And I am still on the "good-feature" branch
-    And I still have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace still has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     And the existing branches are
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |

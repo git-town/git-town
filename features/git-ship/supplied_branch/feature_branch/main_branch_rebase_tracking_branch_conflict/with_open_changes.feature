@@ -11,7 +11,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     And I run `git ship feature -m "feature done"`
 
 
@@ -29,7 +29,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
 
 
   Scenario: aborting
@@ -40,7 +40,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |               | git checkout other_feature |
       | other_feature | git stash pop              |
     And I am still on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -64,7 +64,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |               | git checkout other_feature         |
       | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -91,7 +91,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |               | git checkout other_feature         |
       | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

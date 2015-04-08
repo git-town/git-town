@@ -15,12 +15,12 @@ Feature: git hack: requires a branch name (with open changes)
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git hack`
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "existing_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
 
 
   Scenario: without open changes
