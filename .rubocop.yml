@@ -14,6 +14,11 @@ Metrics/ParameterLists:
   Max: 6
 
 
+Style/DotPosition:
+  EnforcedStyle: leading
+  Enabled: true
+
+
 Style/EmptyLines:
   Enabled: false
 

@@ -9,7 +9,7 @@ Feature: git sync --all: does not sync remote only branches with open changes
       | my-feature | local and remote | my commit       | my_file       |
       | co-feature | remote           | coworker commit | coworker_file |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -26,7 +26,7 @@ Feature: git sync --all: does not sync remote only branches with open changes
       |            | git checkout main                     |
       | main       | git stash pop                         |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And all branches are now synchronized
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE                             | FILE NAME     |

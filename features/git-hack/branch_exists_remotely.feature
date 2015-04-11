@@ -9,14 +9,14 @@ Feature: git hack: errors when the branch exists remotely
 
 
   Scenario: with open chanhes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git hack existing_feature`
     Then it runs the Git commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I get the error "A branch named 'existing_feature' already exists"
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
 
 
   Scenario: without open changes

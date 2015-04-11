@@ -9,7 +9,7 @@ Feature: git prune-branches: don't remove used feature branches when called on t
     Given I have a feature branch named "my-feature" ahead of main
     And my coworker has a feature branch named "co-feature" ahead of main
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git prune-branches`
 
 
@@ -18,7 +18,7 @@ Feature: git prune-branches: don't remove used feature branches when called on t
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I end up on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                     |
       | local      | main, my-feature             |
@@ -36,4 +36,4 @@ Feature: git prune-branches: don't remove used feature branches when called on t
       | local      | main, my-feature             |
       | remote     | main, my-feature, co-feature |
       | coworker   | main, co-feature             |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file

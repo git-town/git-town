@@ -8,7 +8,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -23,7 +23,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       To abort, run "git sync --abort".
       To continue after you have resolved the conflicts, run "git sync --continue".
       """
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo has a rebase in progress
 
 
@@ -34,7 +34,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       | main   | git rebase --abort |
       |        | git stash pop      |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | local    | main local commit  | conflicting_file |
@@ -46,7 +46,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo still has a rebase in progress
 
 
@@ -64,7 +64,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       |         | git checkout main                  |
       | main    | git stash pop                      |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |
@@ -88,7 +88,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       |         | git checkout main                  |
       | main    | git stash pop                      |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |

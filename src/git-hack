@@ -24,9 +24,7 @@ function preconditions {
 
 
 function steps {
-  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
-    echo "stash_open_changes"
-  fi
+  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
   if [ "$(has_remote_url)" = true ]; then
     echo "checkout_main_branch"
@@ -36,9 +34,7 @@ function steps {
 
   echo "create_and_checkout_feature_branch '$target_branch_name'"
 
-  if [ "$INITIAL_OPEN_CHANGES" = true ]; then
-    echo "restore_open_changes"
-  fi
+  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
 
 

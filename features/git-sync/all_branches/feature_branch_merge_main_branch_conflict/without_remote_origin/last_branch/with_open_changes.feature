@@ -9,7 +9,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature1 | local    | feature1 commit | feature1_file    | feature1 content |
       | feature2 | local    | feature2 commit | conflicting_file | feature2 content |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -28,7 +28,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       To skip the sync of the 'feature2' branch, run "git sync --skip".
       """
     And I end up on the "feature2" branch
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo has a merge in progress
 
 
@@ -42,7 +42,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |          | git checkout main                             |
       | main     | git stash pop                                 |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I am left with my original commits
 
 
@@ -54,7 +54,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |          | git checkout main |
       | main     | git stash pop     |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
       | main     | local    | main commit                       | conflicting_file |
@@ -75,7 +75,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature2" branch
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo still has a merge in progress
 
 
@@ -88,7 +88,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |          | git checkout main    |
       | main     | git stash pop        |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
       | main     | local    | main commit                       | conflicting_file |
@@ -115,7 +115,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature2 | git checkout main |
       | main     | git stash pop     |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
       | main     | local    | main commit                       | conflicting_file |

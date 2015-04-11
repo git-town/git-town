@@ -23,6 +23,26 @@ def files_in_branches
 end
 
 
+def create_uncommitted_file options = {}
+  options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
+  IO.write options[:name], options[:content]
+  options[:name]
+end
+
+
+DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES = {
+  name: 'uncommitted_file',
+  content: 'default uncommitted content'
+}.freeze
+
+
+def verify_uncommitted_file options
+  options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
+  expect(uncommitted_files).to include options[:name]
+  expect(IO.read options[:name]).to eql options[:content]
+end
+
+
 def uncommitted_files
   array_output_of "git status --porcelain | awk '{print $2}'"
 end

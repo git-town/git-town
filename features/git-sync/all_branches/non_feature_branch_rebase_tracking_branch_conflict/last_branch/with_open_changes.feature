@@ -10,7 +10,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | qa         | local            | qa local commit   | conflicting_file | qa local content   |
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync --all`
 
 
@@ -30,7 +30,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       To continue after you have resolved the conflicts, run "git sync --continue".
       To skip the sync of the 'qa' branch, run "git sync --skip".
       """
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo has a rebase in progress
 
 
@@ -43,7 +43,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       | production | git checkout main       |
       | main       | git stash pop           |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -60,7 +60,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main  |
       | main   | git stash pop      |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -73,7 +73,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo still has a rebase in progress
 
 
@@ -87,7 +87,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main     |
       | main   | git stash pop         |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |
@@ -105,7 +105,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       |        | git checkout main |
       | main   | git stash pop     |
     And I end up on the "main" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
       | main       | local and remote | main commit       | main_file        |

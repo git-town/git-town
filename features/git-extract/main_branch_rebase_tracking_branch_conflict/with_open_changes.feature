@@ -14,7 +14,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       | feature | local    | feature commit            | feature_file     |                |
       |         |          | refactor commit           | refactor_file    |                |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
 
 
@@ -31,7 +31,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       To continue after you have resolved the conflicts, run "git extract --continue".
       """
     And my repo has a rebase in progress
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
 
 
   Scenario: aborting
@@ -42,7 +42,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |         | git checkout feature |
       | feature | git stash pop        |
     And I end up on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no "refactor" branch
     And I am left with my original commits
     And there is no rebase in progress
@@ -52,7 +52,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     When I run `git extract --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo has a rebase in progress
 
 
@@ -68,7 +68,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |          | git push -u origin refactor                  |
       |          | git stash pop                                |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
       | main     | local and remote | conflicting remote commit | conflicting_file |
@@ -91,7 +91,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
       |          | git push -u origin refactor                  |
       |          | git stash pop                                |
     And I end up on the "refactor" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And now I have the following commits
       | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
       | main     | local and remote | conflicting remote commit | conflicting_file |

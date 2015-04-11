@@ -7,7 +7,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 
@@ -29,7 +29,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       To skip the sync of the 'feature' branch, run "git sync --skip".
       """
     And I am still on the "feature" branch
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo has a merge in progress
 
 
@@ -42,7 +42,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And there is no merge in progress
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -55,7 +55,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
-    And my uncommitted file "uncommitted" is still stashed away
+    And my uncommitted file is still stashed away
     And my repo still has a merge in progress
 
 
@@ -68,7 +68,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
@@ -89,7 +89,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       | feature | git push      |
       |         | git stash pop |
     And I am still on the "feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |

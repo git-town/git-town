@@ -11,14 +11,14 @@ Feature: git extract: errors if there are not extractable commits
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git extract refactor`
     Then it runs the Git commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
     And I get the error "The branch 'feature' has no extractable commits."
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
 
 
   Scenario: without open changes
