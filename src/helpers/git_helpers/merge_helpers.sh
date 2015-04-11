@@ -34,7 +34,7 @@ function commit_squash_merge {
   shift
   local options=$(parameters_as_string "$@")
   local author=$(branch_author "$branch_name")
-  if [ "$author" != "$(local_author)" ]; then
+  if [ "$(is_local_author "$author")" != true ]; then
     options="--author=\"$author\" $options"
   fi
   run_git_command "git commit $options"

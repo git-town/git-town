@@ -25,7 +25,7 @@ def clone_repository parent_identifier, child_identifier, bare: false
 
   in_repository child_identifier do
     user = child_identifier.to_s.sub('_secondary', '')
-    configure_git user
+    configure_git user, secondary: child_identifier.to_s.include?('secondary')
   end
 end
 
