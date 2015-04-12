@@ -13,7 +13,7 @@ function branch_author {
 
 
 # Returns whether or not the given author ("user <email>") is the current git user
-function is_local_author {
+function is_current_user {
   local author=$1
   local author_user_name="$(echo "$author" | cut -d ' ' -f 1)"
   local local_user_name="$(git config user.name)"
