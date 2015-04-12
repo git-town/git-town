@@ -12,7 +12,7 @@ function branch_author {
 }
 
 
-# Returns whether or not the author ("user <email>") is the local author
+# Returns whether or not the given author ("user <email>") is the current git user
 function is_local_author {
   local author=$1
   local author_user_name="$(echo "$author" | cut -d ' ' -f 1)"
