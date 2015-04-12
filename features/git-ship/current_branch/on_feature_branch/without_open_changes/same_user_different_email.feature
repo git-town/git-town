@@ -6,7 +6,7 @@ Feature: git ship: shipping a feature branch where the main committer is the sam
 
 
   Background:
-    Given I has a feature branch named "feature"
+    Given I have a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
       | feature | remote   | feature commit | feature_file |
