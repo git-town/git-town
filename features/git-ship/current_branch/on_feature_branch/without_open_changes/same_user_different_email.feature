@@ -2,16 +2,14 @@ Feature: git ship: shipping a feature branch where the main committer is the sam
 
   As a developer shipping a feature branch under my secondary email
   I don't want the author field set
-  So that I don't
-  So that my coworker is given credit for their work
+  So that the log doesn't have unnecessary complications
 
 
   Background:
-    Given my coworker has a feature branch named "feature"
+    Given I has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    |
       | feature | remote   | feature commit | feature_file |
-    And I fetch updates
     And I am on the "feature" branch
     When I run `git ship -m 'feature done'`
 
