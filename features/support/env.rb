@@ -16,6 +16,11 @@ TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
+DEBUG = {
+  all: ENV['DEBUG'],                      # Prints debug info for all activities
+  commands_only: ENV['DEBUG_COMMANDS']    # Prints debug info only for the Git commands run
+}
+
 
 # load memoized environment by copying contents
 # of MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
@@ -70,6 +75,24 @@ end
 
 After '~@finishes-with-non-empty-stash' do
   expect(stash_size).to eql(0), 'Finished with non empty stash'
+end
+
+
+Before '@debug' do
+  DEBUG[:all] = true
+end
+
+After '@debug' do
+  DEBUG[:all] = ENV['DEBUG']
+end
+
+
+Before '@debug-commands' do
+  DEBUG[:commands_only] = true
+end
+
+After '@debug-commands' do
+  DEBUG[:commands_only] = ENV['DEBUG_COMMANDS']
 end
 
 
