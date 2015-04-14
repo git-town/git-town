@@ -26,6 +26,7 @@ source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 source "$current_dir/browser_helpers.sh"
 source "$current_dir/configuration_helpers.sh"
 source "$current_dir/file_helpers.sh"
+source "$current_dir/folder_helpers.sh"
 source "$current_dir/script_helpers.sh"
 source "$current_dir/string_helpers.sh"
 source "$current_dir/terminal_helpers.sh"
@@ -37,6 +38,8 @@ source "$current_dir/configuration.sh" "$@"
 
 if [ "$(is_git_repository)" == true ]; then
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
+  export INITIAL_DIRECTORY=$(pwd)
+  export IN_SUB_FOLDER=$(is_in_git_sub_directory)
   export INITIAL_OPEN_CHANGES=$(has_open_changes)
   export HAS_REMOTE=$(has_remote_url)
 fi

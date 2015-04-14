@@ -22,6 +22,16 @@ end
 
 
 
+Then(/^I am in the project root folder$/) do
+  expect(Dir.pwd).to eql git_root_folder
+end
+
+
+Then(/^I am in the "(.+?)" folder$/) do |folder_name|
+  expect(Dir.pwd.sub git_root_folder, '[project root]').to eql "[project root]/#{folder_name}"
+end
+
+
 Then(/^I still have my original Git autocompletion file$/) do
   expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
 end
