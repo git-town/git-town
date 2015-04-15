@@ -63,14 +63,15 @@ about problems.
 
 ## Debugging
 
-To see the output of the Git commands run in tests, you can either
-* set the `DEBUG_COMMANDS` environment variable while running your specs:
+To see the output of the Git commands run in tests, you can either set the
+`DEBUG_COMMANDS` environment variable while running your specs:
 
-  ```bash
-  $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
-  ```
+```bash
+$ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
+```
 
-* add a `@debug-commands` flag to the respective Cucumber spec
+Alternatively, you can also add a `@debug-commands` flag to the respective
+Cucumber spec:
 
   ```cucumber
   @debug-commands
