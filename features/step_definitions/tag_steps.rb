@@ -1,10 +1,12 @@
-Given(/^I add a local tag "(.+?)"$/) do |tag_name|
-  run "git tag -a #{tag_name} -m '#{tag_name}'"
+Given(/^I have the following tags$/) do |tags|
+  tags.hashes.each do |tag|
+    send "create_#{tag['LOCATION']}_tag", tag['NAME']
+  end
 end
 
 
 
 
-Then(/^tag "(.+?)" has been pushed to the remote$/) do |tag_name|
-  expect(unpushed_tags).to_not include tag_name
+Then(/^I now have the following tags$/) do |expected_tags|
+  expected_tags.diff! TagFinder.all_tags.to_table
 end
