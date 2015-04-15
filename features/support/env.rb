@@ -17,8 +17,12 @@ TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
 DEBUG = {
-  all: ENV['DEBUG'],                      # Prints debug info for all activities
-  commands_only: ENV['DEBUG_COMMANDS']    # Prints debug info only for the Git commands run
+
+  # Prints debug info for all activities
+  all: ENV['DEBUG'],
+
+  # Prints debug info only for the Git commands run
+  commands_only: ENV['DEBUG_COMMANDS']
 }
 
 
