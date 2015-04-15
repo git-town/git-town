@@ -37,6 +37,9 @@ source "$current_dir/environment.sh" "$@"
 source "$current_dir/configuration.sh" "$@"
 
 if [ "$(is_git_repository)" == true ]; then
+  temp_filename_suffix="$(git rev-parse --show-toplevel | tr '/' '_')"
+  export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
+  export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
   export INITIAL_DIRECTORY=$(pwd)
   export IN_SUB_FOLDER=$(is_in_git_sub_directory)
