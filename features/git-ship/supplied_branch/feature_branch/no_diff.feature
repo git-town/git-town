@@ -13,7 +13,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git ship empty-feature`
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
@@ -30,7 +30,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
       | other_feature | git stash pop                                |
     And I get the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "other_feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
 
 
   Scenario: without open changes

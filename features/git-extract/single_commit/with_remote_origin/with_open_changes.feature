@@ -11,7 +11,7 @@ Feature: git extract: extracting a single commit (with open changes)
       | feature | local    | feature commit     | feature_file     |
       |         |          | refactor commit    | refactor_file    |
     And I am on the "feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
 
 
@@ -27,7 +27,7 @@ Feature: git extract: extracting a single commit (with open changes)
       |          | git push -u origin refactor                  |
       |          | git stash pop                                |
     And I end up on the "refactor" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And I have the following commits
       | BRANCH   | LOCATION         | MESSAGE            |
       | main     | local and remote | remote main commit |

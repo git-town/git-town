@@ -12,7 +12,7 @@ Feature: git kill: killing the given feature branch when on it (with open change
       | current-feature | local and remote | current feature commit | current_feature_file |
       | other-feature   | local and remote | other feature commit   | other_feature_file   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git kill current-feature`
 
 
@@ -46,7 +46,7 @@ Feature: git kill: killing the given feature branch when on it (with open change
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
       |                 | git push -f origin current-feature                             |
     And I end up on the "current-feature" branch
-    And I again have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I again have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

@@ -31,7 +31,7 @@ function show_help {
 
 
 function show_version {
-  echo "Git Town 0.5.0"
+  echo "Git Town 0.6.0"
 }
 
 

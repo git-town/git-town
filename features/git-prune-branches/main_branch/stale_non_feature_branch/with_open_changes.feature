@@ -8,7 +8,7 @@ Feature: git prune-branches: don't remove stale non-feature branches when called
   Background:
     Given I have a non-feature branch "production" behind main
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git prune-branches`
 
 
@@ -17,7 +17,7 @@ Feature: git prune-branches: don't remove stale non-feature branches when called
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I end up on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES         |
       | local      | main, production |
@@ -34,4 +34,4 @@ Feature: git prune-branches: don't remove stale non-feature branches when called
       | REPOSITORY | BRANCHES         |
       | local      | main, production |
       | remote     | main, production |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file

@@ -9,12 +9,12 @@ Feature: git ship: errors when trying to ship the main branch
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git ship main`
     Then it runs no Git commands
     And I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
 
 
   Scenario: without open changes

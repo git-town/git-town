@@ -14,7 +14,7 @@ Feature: git sync: syncing the current feature branch without a tracking branch
 
 
   Scenario: with open changes
-    Given I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    Given I have an uncommitted file
     When I run `git sync`
     Then it runs the Git commands
       | BRANCH  | COMMAND                    |
@@ -28,7 +28,7 @@ Feature: git sync: syncing the current feature branch without a tracking branch
       |         | git push -u origin feature |
       |         | git stash pop              |
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |
       | main    | local and remote | remote main commit               | remote_main_file   |
