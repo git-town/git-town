@@ -67,7 +67,7 @@ To see the output of the Git commands run in tests, you can either
 * set the `DEBUG_COMMANDS` environment variable while running your specs:
 
   ```bash
-  DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
+  $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
   ```
 
 * add a `@debug-commands` flag to the respective Cucumber spec
