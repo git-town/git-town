@@ -47,3 +47,19 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       | other_feature   | local and remote | other feature commit                     | file2            |
       |                 |                  | main commit                              | main_file        |
       |                 |                  | Merge branch 'main' into other_feature   |                  |
+
+
+  Scenario: undo
+    When I run `git sync --undo` in the "new_folder" folder
+    Then it runs the Git commands
+      | BRANCH          | COMMAND                           |
+      | current_feature | cd <%= git_root_folder %>         |
+      |                 | git stash -u                      |
+      |                 | git checkout other_feature        |
+      | other_feature   | git checkout current_feature      |
+      | current_feature | git checkout main                 |
+      | main            | git checkout current_feature      |
+      | current_feature | git stash pop                     |
+      |                 | cd <%= git_folder "new_folder" %> |
+    And I am still on the "current_feature" branch
+    And I still have my uncommitted file
