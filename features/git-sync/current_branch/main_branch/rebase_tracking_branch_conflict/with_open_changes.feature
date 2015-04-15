@@ -11,7 +11,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git sync`
 
 
@@ -28,7 +28,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git sync --continue".
       """
     And my repo has a rebase in progress
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
 
 
   Scenario: aborting
@@ -38,7 +38,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       | main   | git rebase --abort |
       |        | git stash pop      |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -48,7 +48,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And I don't have an uncommitted file with name: "uncommitted"
+    And I don't have my uncommitted file
     And my repo still has a rebase in progress
 
 
@@ -62,7 +62,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |        | git push --tags       |
       |        | git stash pop         |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
@@ -81,7 +81,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       |        | git push --tags |
       |        | git stash pop   |
     And I am still on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And now I have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |

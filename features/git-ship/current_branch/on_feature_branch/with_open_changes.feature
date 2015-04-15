@@ -7,7 +7,7 @@ Feature: git ship: errors if there are open changes
 
   Background:
     Given I have a feature branch named "feature"
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     And I am on the "feature" branch
     When I run `git ship -m "feature done"`
 
@@ -16,5 +16,5 @@ Feature: git ship: errors if there are open changes
     Then it runs no Git commands
     And I get the error "You cannot ship with uncommitted changes."
     And I am still on the "feature" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And there are no commits

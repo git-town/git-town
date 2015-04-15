@@ -6,7 +6,7 @@ Feature: git prune-branches: remove stale local feature branches when run on the
   Background:
     Given I have a local feature branch named "stale_feature" behind main
     And I am on the "main" branch
-    And I have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I have an uncommitted file
     When I run `git prune-branches`
 
 
@@ -16,7 +16,7 @@ Feature: git prune-branches: remove stale local feature branches when run on the
       | main   | git fetch --prune           |
       |        | git branch -d stale_feature |
     And I end up on the "main" branch
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
@@ -33,4 +33,4 @@ Feature: git prune-branches: remove stale local feature branches when run on the
       | REPOSITORY | BRANCHES            |
       | local      | main, stale_feature |
       | remote     | main                |
-    And I still have an uncommitted file with name: "uncommitted" and content: "stuff"
+    And I still have my uncommitted file
