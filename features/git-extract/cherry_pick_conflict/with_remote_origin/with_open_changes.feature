@@ -100,4 +100,4 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | feature  | local            | feature commit  | feature_file     |
       |          |                  | refactor commit | conflicting_file |
       | refactor | local and remote | main commit     | conflicting_file |
-       |          |                  | refactor commit | conflicting_file |
+      |          |                  | refactor commit | conflicting_file |
