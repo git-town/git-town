@@ -7,6 +7,10 @@ Feature: git sync --all: syncs all feature branches without open changes
       | main     | remote           | main commit     | main_file     |
       | feature1 | local and remote | feature1 commit | feature1_file |
       | feature2 | local and remote | feature2 commit | feature2_file |
+    And I have the following tags
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
     And I am on the "feature1" branch
     When I run `git sync --all`
 
@@ -37,3 +41,7 @@ Feature: git sync --all: syncs all feature branches without open changes
       | feature2 | local and remote | feature2 commit                   | feature2_file |
       |          |                  | main commit                       | main_file     |
       |          |                  | Merge branch 'main' into feature2 |               |
+    And I now have the following tags
+      | NAME       | LOCATION         |
+      | local-tag  | local            |
+      | remote-tag | local and remote |
