@@ -64,16 +64,16 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
     Then it runs the Git commands
-      | BRANCH          | COMMAND                           |
-      | current_feature | git commit --no-edit              |
-      |                 | git push                          |
-      |                 | git checkout other_feature                                                                              |
-      | other_feature   | git merge --no-edit origin/other_feature                                                                |
-      |                 | git merge --no-edit main                                                                                |
-      |                 | git push                                                                                                |
-      |                 | git checkout current_feature                                                                            |
-      | current_feature | git stash pop                                                                                           |
-      |                 | cd <%= git_folder "new_folder" %> |
+      | BRANCH          | COMMAND                                  |
+      | current_feature | git commit --no-edit                     |
+      |                 | git push                                 |
+      |                 | git checkout other_feature               |
+      | other_feature   | git merge --no-edit origin/other_feature |
+      |                 | git merge --no-edit main                 |
+      |                 | git push                                 |
+      |                 | git checkout current_feature             |
+      | current_feature | git stash pop                            |
+      |                 | cd <%= git_folder "new_folder" %>        |
     And I am still on the "current_feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
