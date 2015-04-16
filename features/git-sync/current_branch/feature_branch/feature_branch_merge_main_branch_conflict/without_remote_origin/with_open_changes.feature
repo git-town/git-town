@@ -12,7 +12,6 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     When I run `git sync`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
@@ -25,7 +24,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
       To skip the sync of the 'feature' branch, run "git sync --skip".
       """
     And I am still on the "feature" branch
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
     And my repo has a merge in progress
 
 
@@ -41,13 +40,12 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     And I am left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
     And my repo still has a merge in progress
 
 

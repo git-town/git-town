@@ -16,7 +16,6 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                |
@@ -30,7 +29,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git sync --continue".
       """
     And my repo has a rebase in progress
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
@@ -46,12 +45,11 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     And I am left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then I get the error "You must resolve the conflicts before continuing the git sync"
     And my repo still has a rebase in progress
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
 
 
   Scenario: continuing after resolving the conflicts

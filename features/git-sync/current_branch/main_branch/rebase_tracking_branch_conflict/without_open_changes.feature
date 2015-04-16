@@ -12,7 +12,6 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH | COMMAND                |
@@ -36,7 +35,6 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     And I am left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
     Then it runs no Git commands

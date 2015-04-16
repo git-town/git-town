@@ -58,6 +58,7 @@ end
 
 Before do
   @error_expected = false
+  @non_empty_stash_expected = false
 end
 
 
@@ -65,11 +66,9 @@ After do
   if @last_run_result && !@error_expected
     expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
   end
-end
-
-
-After '~@finishes-with-non-empty-stash' do
-  expect(stash_size).to eql(0), 'Finished with non empty stash'
+  unless @non_empty_stash_expected
+    expect(stash_size).to eql(0), 'Finished with non empty stash'
+  end
 end
 
 
