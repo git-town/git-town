@@ -16,7 +16,7 @@ function undo_steps_for_change_directory {
 
 
 # Returns whether the current working directory
-# is the root directory of the current Git workspace.
+# is in a subdirectory of the current Git workspace.
 function is_in_git_sub_directory {
   if [ "$(pwd)" != "$(git_root)" ]; then
     echo true
