@@ -81,7 +81,7 @@ end
 # Returns a commit_data structure consisting of
 # the given commit_data structure with default values added
 def add_default_commit_data commit_data
-  file_name = "default file name #{SecureRandom.urlsafe_base64}"
+  file_name = "default_file_name_#{SecureRandom.urlsafe_base64}"
   commit_data.clone.reverse_merge(
     file_name: file_name,
     message: 'default commit message',
