@@ -28,7 +28,8 @@ end
 
 
 Then(/^I am in the "(.+?)" folder$/) do |folder_name|
-  expect(Dir.pwd.sub git_root_folder, '[project root]').to eql "[project root]/#{folder_name}"
+  relativeProjectPath = Pathname.new(Dir.pwd).relative_path_from Pathname.new(git_root_folder)
+  expect(relativeProjectPath).to.eql folder_name
 end
 
 
