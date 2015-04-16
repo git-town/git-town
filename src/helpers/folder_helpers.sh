@@ -6,7 +6,7 @@
 # Changes into the given directory
 function change_directory {
   local directory=$1
-  run_command "cd $directory"
+  run_git_command "cd $directory"
 }
 
 
