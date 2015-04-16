@@ -1,15 +1,21 @@
-Feature: git sync: syncing the main branch pushes tags to the remote
+Feature: git sync: syncing the main branch syncs the tags
 
-  As a developer syncing the main branch
-  I want my tags to be published
-  So that tags are shared with the team
+  As a developer using Git tags for release management
+  I want my tags to be published whenever I sync my main branch
+  So that I can do tagging work effectively on my local machine.
 
 
   Background:
-    Given I am on the "main" branch
-    And I add a local tag "v1.0"
+    Given I have the following tags
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
+    And I am on the "main" branch
     When I run `git sync`
 
 
   Scenario: result
-    Then tag "v1.0" has been pushed to the remote
+    Then I now have the following tags
+      | NAME       | LOCATION         |
+      | local-tag  | local and remote |
+      | remote-tag | local and remote |
