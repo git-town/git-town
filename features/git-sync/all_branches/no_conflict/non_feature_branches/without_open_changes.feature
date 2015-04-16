@@ -10,6 +10,10 @@ Feature: git sync --all: syncs all non-feature branches without open changes
       |            | remote   | production remote commit | production_remote_file |
       | qa         | local    | qa local commit          | qa_local_file          |
       |            | remote   | qa remote commit         | qa_remote_file         |
+    And I have the following tags
+      | NAME       | LOCATION |
+      | local-tag  | local    |
+      | remote-tag | remote   |
     And I am on the "main" branch
     When I run `git sync --all`
 
@@ -35,3 +39,7 @@ Feature: git sync --all: syncs all non-feature branches without open changes
       |            |                  | production local commit  | production_local_file  |
       | qa         | local and remote | qa remote commit         | qa_remote_file         |
       |            |                  | qa local commit          | qa_local_file          |
+    Then I now have the following tags
+      | NAME       | LOCATION         |
+      | local-tag  | local            |
+      | remote-tag | local and remote |
