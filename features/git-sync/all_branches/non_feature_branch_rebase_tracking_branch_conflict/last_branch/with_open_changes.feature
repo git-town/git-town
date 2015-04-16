@@ -30,7 +30,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
       To continue after you have resolved the conflicts, run "git sync --continue".
       To skip the sync of the 'qa' branch, run "git sync --skip".
       """
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
     And my repo has a rebase in progress
 
 
@@ -73,7 +73,7 @@ Feature: git sync --all: handling rebase conflicts between non-feature branch an
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 

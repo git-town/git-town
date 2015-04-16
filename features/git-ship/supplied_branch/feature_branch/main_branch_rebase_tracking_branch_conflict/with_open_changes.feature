@@ -28,7 +28,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And my repo has a rebase in progress
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
 
 
   Scenario: aborting

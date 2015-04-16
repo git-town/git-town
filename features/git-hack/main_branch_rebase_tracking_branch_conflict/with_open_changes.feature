@@ -29,7 +29,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       To continue after you have resolved the conflicts, run "git hack --continue".
       """
     And my repo has a rebase in progress
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
@@ -48,7 +48,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
   Scenario: continuing without resolving the conflicts
     When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 

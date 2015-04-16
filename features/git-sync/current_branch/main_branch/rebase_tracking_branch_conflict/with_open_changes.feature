@@ -27,7 +27,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
       To continue after you have resolved the conflicts, run "git sync --continue".
       """
     And my repo has a rebase in progress
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
@@ -46,7 +46,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     When I run `git sync --continue`
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 

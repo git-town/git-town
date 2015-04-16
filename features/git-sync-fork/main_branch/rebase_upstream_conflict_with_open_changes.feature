@@ -23,7 +23,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       To continue after you have resolved the conflicts, run "git sync-fork --continue".
       """
     And my repo has a rebase in progress
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
 
 
   Scenario: aborting

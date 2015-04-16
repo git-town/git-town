@@ -29,7 +29,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And I end up on the "feature" branch
-    And my uncommitted file is still stashed away
+    And my uncommitted file is stashed
     And my repo has a merge in progress
 
 

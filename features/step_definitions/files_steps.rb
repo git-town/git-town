@@ -37,7 +37,7 @@ Then(/^my workspace (?:still|again) has an uncommitted file with name: "([^"]+)"
 end
 
 
-Then(/^my uncommitted file is still stashed away$/) do
+Then(/^my uncommitted file is stashed$/) do
   expect(uncommitted_files).to_not include @uncommitted_file_name
   expect(stash_size).to eql 1
   @finishes_with_non_empty_stash = true
