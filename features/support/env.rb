@@ -99,6 +99,24 @@ After '@debug-commands' do
 end
 
 
+Before '@debug' do
+  DEBUG[:all] = true
+end
+
+After '@debug' do
+  DEBUG[:all] = ENV['DEBUG']
+end
+
+
+Before '@debug-commands' do
+  DEBUG[:commands_only] = true
+end
+
+After '@debug-commands' do
+  DEBUG[:commands_only] = ENV['DEBUG_COMMANDS']
+end
+
+
 Around '@modifies-fish-autocompletions' do |_scenario, block|
   completions_path = File.expand_path('~/.config/fish/completions')
   backup_path = File.expand_path('~/__config_fish_backup__')
