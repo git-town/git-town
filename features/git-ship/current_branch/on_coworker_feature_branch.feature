@@ -26,10 +26,10 @@ Feature: git ship: shipping a coworker's feature branch
       |         | git merge --no-edit main                                                |
       |         | git checkout main                                                       |
       | main    | git merge --squash feature                                              |
-      |         | git commit --author="coworker <coworker@example.com>" -m "feature done" |
+      |         | git commit --author="coworker <coworker@primary.com>" -m "feature done" |
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR               |
-      | main   | local and remote | feature done | coworker_file | coworker@example.com |
+      | main   | local and remote | feature done | coworker_file | coworker@primary.com |

@@ -12,9 +12,15 @@ function branch_author {
 }
 
 
-# Returns the default author for new commits in the repository
-function local_author {
-  local name="$(git config user.name)"
-  local email="$(git config user.email)"
-  echo "$name <$email>"
+# Returns whether or not the given author ("user <email>") is the current git user
+function is_current_user {
+  local author=$1
+  local author_user_name="$(echo "$author" | cut -d ' ' -f 1)"
+  local local_user_name="$(git config user.name)"
+
+  if [ "$local_user_name" = "$author_user_name" ]; then
+    echo true
+  else
+    echo false
+  fi
 }
