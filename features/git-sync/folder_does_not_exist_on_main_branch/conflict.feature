@@ -31,7 +31,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     And I am in the project root folder
     And I get the error "Automatic merge failed"
     And I am still on the "current_feature" branch
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
     And my repo has a merge in progress
 
 
@@ -56,7 +56,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     Then it runs no Git commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "current_feature" branch
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
     And my repo still has a merge in progress
 
 
