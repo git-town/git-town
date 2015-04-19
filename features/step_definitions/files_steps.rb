@@ -30,16 +30,6 @@ Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
 end
 
 
-Then(/^I don't have my uncommitted file$/) do
-  expect(uncommitted_files).to_not include @uncommitted_file_name
-end
-
-
-Then(/^I don't have an uncommitted file with name: "(.+?)"$/) do |file_name|
-  expect(uncommitted_files).to_not include file_name
-end
-
-
 Then(/^I don't have any uncommitted files$/) do
   expect(uncommitted_files).to be_empty
 end
@@ -48,4 +38,11 @@ end
 Then(/^my workspace (?:still|again) has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) \
     do |name, content|
   verify_uncommitted_file name: name, content: content
+end
+
+
+Then(/^my uncommitted file is stashed$/) do
+  expect(uncommitted_files).to_not include @uncommitted_file_name
+  expect(stash_size).to eql 1
+  @non_empty_stash_expected = true
 end

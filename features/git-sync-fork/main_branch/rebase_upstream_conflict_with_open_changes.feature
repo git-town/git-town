@@ -11,7 +11,6 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
     When I run `git sync-fork`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH | COMMAND                  |
@@ -24,7 +23,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
       To continue after you have resolved the conflicts, run "git sync-fork --continue".
       """
     And my repo has a rebase in progress
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
