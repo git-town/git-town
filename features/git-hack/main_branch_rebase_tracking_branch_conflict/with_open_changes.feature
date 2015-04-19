@@ -16,7 +16,6 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     When I run `git hack new_feature`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                |
@@ -30,7 +29,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       To continue after you have resolved the conflicts, run "git hack --continue".
       """
     And my repo has a rebase in progress
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
@@ -46,11 +45,10 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     And I am left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git hack --continue`
     Then I get the error "You must resolve the conflicts before continuing the git hack"
-    And I don't have my uncommitted file
+    And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 

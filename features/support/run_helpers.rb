@@ -61,12 +61,12 @@ def print_result result
 end
 
 
-def run command, debug: false, inputs: []
+def run command, inputs: []
   result = run_shell_command command, inputs
   is_git_town_command = git_town_command? command
   raise_error = (!is_git_town_command && result.error) || result_has_shell_error?(result)
 
-  print_result(result) if raise_error || should_print_command_output?(command, debug)
+  print_result(result) if raise_error || should_print_command_output?(command)
   fail 'Command not successful!' if raise_error
 
   @last_run_result = result if is_git_town_command
@@ -102,8 +102,8 @@ def shell_overrides
 end
 
 
-def should_print_command_output? command, debug
-  debug || ENV['DEBUG'] || (ENV['DEBUG_COMMANDS'] && git_town_command?(command))
+def should_print_command_output? command
+  DEBUG[:all] || (DEBUG[:commands_only] && git_town_command?(command))
 end
 
 
