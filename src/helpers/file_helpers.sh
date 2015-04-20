@@ -3,15 +3,6 @@
 # Helper methods for dealing with files and temp files.
 
 
-# Unique string that identifies the current directory
-temp_filename_suffix="$(pwd | tr '/' '_')"
-
-
-# Command lists
-export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
-export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
-
-
 function has_lines {
   local file="$1"
 

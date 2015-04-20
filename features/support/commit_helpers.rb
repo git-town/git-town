@@ -16,6 +16,9 @@ end
 def create_local_commit branch:, file_name:, file_content:, message:, push: false, pull: false
   run 'git fetch --prune' if pull
   on_branch(branch) do
+    if (folder_name = File.dirname file_name) != '.'
+      Dir.mkdir folder_name
+    end
     File.write file_name, file_content
     run "git add '#{file_name}'"
     run "git commit -m '#{message}'"
