@@ -82,7 +82,7 @@ end
 
 
 def run_shell_command command, inputs
-  result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
+  result = OpenStruct.new command: command
   command = "#{shell_overrides}; #{command} 2>&1"
   kill = inputs.pop if inputs.last == '^C' # command shouldn't error if user aborts it
 
