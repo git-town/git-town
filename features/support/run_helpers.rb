@@ -57,6 +57,7 @@ def print_result result
   puts ''
   puts %(#{result.location}$ #{result.command}
          #{result.out}).gsub(/^/, '@ ')
+  puts ''
 end
 
 
