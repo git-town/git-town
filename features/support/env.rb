@@ -19,10 +19,10 @@ FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fis
 DEBUG = {
 
   # Prints debug info for all activities
-  all: ENV['DEBUG'],
+  all: ENV['GIT_TOWN_DEBUG'],
 
   # Prints debug info only for the Git commands run
-  commands_only: ENV['DEBUG_COMMANDS']
+  commands_only: ENV['GIT_TOWN_DEBUG_COMMANDS']
 }
 
 
@@ -86,7 +86,7 @@ Before '@debug' do
 end
 
 After '@debug' do
-  DEBUG[:all] = ENV['DEBUG']
+  DEBUG[:all] = ENV['GIT_TOWN_DEBUG']
 end
 
 
@@ -95,7 +95,7 @@ Before '@debug-commands' do
 end
 
 After '@debug-commands' do
-  DEBUG[:commands_only] = ENV['DEBUG_COMMANDS']
+  DEBUG[:commands_only] = ENV['GIT_TOWN_DEBUG_COMMANDS']
 end
 
 
