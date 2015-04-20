@@ -38,11 +38,11 @@ source "$current_dir/configuration.sh" "$@"
 
 if [ "$(is_git_repository)" == true ]; then
   temp_filename_suffix="$(git_root | tr '/' '_')"
-  export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
-  export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
+  export HAS_REMOTE=$(has_remote_url)
+  export IN_SUB_FOLDER=$(is_in_git_sub_directory)
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
   export INITIAL_DIRECTORY=$(pwd)
-  export IN_SUB_FOLDER=$(is_in_git_sub_directory)
   export INITIAL_OPEN_CHANGES=$(has_open_changes)
-  export HAS_REMOTE=$(has_remote_url)
+  export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
+  export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
 fi
