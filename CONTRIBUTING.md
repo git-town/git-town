@@ -64,13 +64,13 @@ about problems.
 ## Debugging
 
 To see the output of the Git commands run in tests, you can set the
-`DEBUG_COMMANDS` environment variable while running your specs:
+`GIT_TOWN_DEBUG_COMMANDS` environment variable while running your specs:
 
 ```bash
-$ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
+$ GIT_TOWN_DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
 ```
 
-Alternatively, you can also add a `@debug-commands` flag to the respective
+Alternatively, you can also add a `@debug-commands` tag to the respective
 Cucumber spec:
 
   ```cucumber
@@ -79,7 +79,7 @@ Cucumber spec:
     Given ...
   ```
 
-For even more detailed output, you can use the `DEBUG` variable or tag
+For even more detailed output, you can use the `GIT_TOWN_DEBUG` variable or `@debug` tag
 in a similar fashion.
 If set, Git Town prints every shell command executed during the tests
 (includes setup, inspection of the Git status, and the Git commands),
