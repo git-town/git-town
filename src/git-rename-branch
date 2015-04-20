@@ -7,6 +7,12 @@ function preconditions {
   destination_branch_name=$2
   force_rename=$3
 
+  if [ "$(is_main_branch "$target_branch_name")" = true ]; then
+    echo_error_header
+    echo_error "The main branch cannot be renamed."
+    exit_with_error newline
+  fi
+
   if [ -z "$target_branch_name" ]; then
     echo_error_header
     echo_error "No branch name provided to rename."
@@ -47,10 +53,6 @@ function steps {
   fi
 
   echo "delete_local_branch '$target_branch_name' force"
-
-  if [ "$(is_main_branch "$target_branch_name")" = true ]; then
-    store_configuration main-branch-name "$destination_branch_name"
-  fi
 
   if [ "$(is_non_feature_branch "$target_branch_name")" = true ]; then
     local new_branches=$(remove_string "$NON_FEATURE_BRANCH_NAMES" ',' "$target_branch_name")
