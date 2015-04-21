@@ -60,12 +60,18 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | refactor | git commit --no-edit |
     And I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature  | local    | feature commit  | feature_file     |
-      |          |          | refactor commit | conflicting_file |
-      | refactor | local    | main commit     | conflicting_file |
-      |          |          | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |
 
 
   Scenario: continuing after resolving the conflicts and committing
@@ -73,9 +79,15 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     When I run `git commit --no-edit; git extract --continue`
     Then I end up on the "refactor" branch
     And now I have the following commits
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        |
-      | main     | local    | main commit     | conflicting_file |
-      | feature  | local    | feature commit  | feature_file     |
-      |          |          | refactor commit | conflicting_file |
-      | refactor | local    | main commit     | conflicting_file |
-      |          |          | refactor commit | conflicting_file |
+      | BRANCH   | LOCATION | MESSAGE         |
+      | main     | local    | main commit     |
+      | feature  | local    | feature commit  |
+      |          |          | refactor commit |
+      | refactor | local    | main commit     |
+      |          |          | refactor commit |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | main content     |
+      | feature  | conflicting_file | refactor content |
+      | feature  | feature_file     |                  |
+      | refactor | conflicting_file | resolved content |
