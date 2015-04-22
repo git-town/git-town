@@ -24,6 +24,7 @@ function should_delete_branch {
 
 function steps {
   local initial_branch_deleted=false
+  local initial_previous_branch_deleted=false
 
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ]; then
     echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
@@ -35,6 +36,10 @@ function steps {
       if [ "$INITIAL_BRANCH_NAME" = "$local_branch_name" ]; then
         initial_branch_deleted=true
       fi
+      if [ "$INITIAL_PREVIOUS_BRANCH_NAME" = "$local_branch_name" ]; then
+        initial_previous_branch_deleted=true
+      fi
+
       if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then
         echo "delete_remote_branch $local_branch_name"
       fi
@@ -48,8 +53,18 @@ function steps {
     fi
   done
 
+
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
+  fi
+
+  if [ "$initial_previous_branch_deleted" = true ]; then
+    echo "set_branch_as_previous_branch $MAIN_BRANCH_NAME"
+  else
+    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
+  fi
+
+  if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
     echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   fi
 }
