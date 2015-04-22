@@ -38,14 +38,14 @@ function steps {
 
   echo "delete_local_branch $target_branch force"
 
-  # deleting previous branch
+  # previous branch was deleted
   if [ "$target_branch" == "$INITIAL_PREVIOUS_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
     echo "set_branch_as_previous_branch $MAIN_BRANCH_NAME"
-  # deleting current branch
+  # current branch was deleted
   elif [ "$target_branch" == "$INITIAL_BRANCH_NAME" ]; then
     echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
-  # deleting some other branch
+  # some other branch was deleted
   else
     echo "checkout $INITIAL_BRANCH_NAME"
     echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
