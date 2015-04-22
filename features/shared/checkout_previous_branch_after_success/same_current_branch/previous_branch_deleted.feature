@@ -14,7 +14,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
   Scenario: checkout previous branch after a git-prune-branches that deletes the previous branch
     Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
-      | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
+      | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT    |
       | current  | local    | current_file  | current content |
     And I am on the "previous" branch
     And I switch to the "current" branch
