@@ -12,44 +12,31 @@ function branch_to_kill {
 
 
 function preconditions {
-  target_branch_name=$(branch_to_kill "$@")
+  target_branch=$(branch_to_kill "$@")
 
-  ensure_is_feature_branch "$target_branch_name" "You can only kill feature branches."
+  ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
 
   if [ "$HAS_REMOTE" = true ]; then
-    fetch
+      fetch
   fi
 
-  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    ensure_has_branch "$target_branch_name"
+  if [ "$target_branch" != "$INITIAL_BRANCH_NAME" ]; then
+    ensure_has_branch "$target_branch"
   fi
 }
 
 
 function steps {
-  if [ "$target_branch_name" = "$INITIAL_BRANCH_NAME" ]; then
+  if [ "$target_branch" = "$INITIAL_BRANCH_NAME" ]; then
     echo_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
     echo "checkout_main_branch"
   fi
 
-  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
-    echo "delete_remote_branch $target_branch_name"
+  if [ "$(has_tracking_branch "$target_branch")" = true ]; then
+    echo "delete_remote_branch $target_branch"
   fi
 
-  echo "delete_local_branch $target_branch_name force"
-
-  # previous branch was deleted
-  if [ "$target_branch_name" == "$INITIAL_PREVIOUS_BRANCH_NAME" ]; then
-    echo "checkout $INITIAL_BRANCH_NAME"
-    echo "set_branch_as_previous_branch $MAIN_BRANCH_NAME"
-  # current branch was deleted
-  elif [ "$target_branch_name" == "$INITIAL_BRANCH_NAME" ]; then
-    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
-  # some other branch was deleted
-  else
-    echo "checkout $INITIAL_BRANCH_NAME"
-    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
-  fi
+  echo "delete_local_branch $target_branch force"
 }
 
 

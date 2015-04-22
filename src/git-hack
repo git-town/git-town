@@ -33,7 +33,6 @@ function steps {
   fi
 
   echo "create_and_checkout_feature_branch '$target_branch_name'"
-  echo "set_branch_as_previous_branch $INITIAL_BRANCH_NAME"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }

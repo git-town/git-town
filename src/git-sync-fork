@@ -24,7 +24,6 @@ function steps {
   echo "rebase upstream/$MAIN_BRANCH_NAME"
   echo "push"
   echo "checkout $INITIAL_BRANCH_NAME"
-  echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
