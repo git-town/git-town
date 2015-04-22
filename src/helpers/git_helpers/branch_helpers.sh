@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 
+# Checkout a branch
+function checkout_branch {
+  local branch_name=$1
+  run_git_command "git checkout $branch_name"
+}
+
+
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1

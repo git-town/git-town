@@ -98,6 +98,13 @@ function remove_step_files {
 }
 
 
+function restore_initial_branch {
+  local current_branch="$(get_current_branch_name)"
+  checkout_branch "$INITIAL_BRANCH_NAME"
+  checkout_branch "$current_branch"
+}
+
+
 function run {
   if [ "$1" = "--abort" ]; then
     ensure_abortable
@@ -117,6 +124,7 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
+    restore_initial_branch
   fi
 }
 

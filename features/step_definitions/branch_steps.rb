@@ -6,6 +6,11 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
+Given(/^I switch to the "(.+?)" branch$/) do |branch_name|
+  step "I am on the #{branch_name} branch"
+end
+
+
 Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
@@ -49,6 +54,13 @@ Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
   in_repository :coworker do
     run "git push origin :#{branch_name}"
   end
+end
+
+
+
+
+When(/^I checkout the previous git branch$/) do
+  step "I run `git checkout -`"
 end
 
 
