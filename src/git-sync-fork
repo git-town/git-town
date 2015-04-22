@@ -16,6 +16,11 @@ function preconditions {
 }
 
 
+function set_previous_branch {
+  set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
+}
+
+
 function steps {
   echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
@@ -26,8 +31,6 @@ function steps {
   echo "checkout $INITIAL_BRANCH_NAME"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
-
-  echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
 }
 
 

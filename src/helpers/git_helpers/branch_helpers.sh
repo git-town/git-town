@@ -164,6 +164,24 @@ function remote_only_merged_branches {
 }
 
 
+function set_branch_as_previous_branch {
+  local desired_previous_branch=$1
+  local current_branch="$(get_current_branch_name)"
+  local open_changes="$(has_open_changes)"
+
+  if [ "$open_changes" = true ]; then
+    stash_open_changes_silently
+  fi
+
+  checkout_branch_silently "$desired_previous_branch"
+  checkout_branch_silently "$current_branch"
+
+  if [ "$open_changes" = true ]; then
+    restore_open_changes_silently
+  fi
+}
+
+
 function undo_steps_for_create_and_checkout_feature_branch {
   local branch=$(get_current_branch_name)
   local branch_to_create="$1"

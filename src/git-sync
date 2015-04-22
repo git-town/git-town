@@ -31,6 +31,11 @@ function preconditions {
 }
 
 
+function set_previous_branch {
+  set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
+}
+
+
 function skip_message_prefix {
   echo "To skip the sync of the '$(get_current_branch_name)' branch"
 }
@@ -77,8 +82,6 @@ function steps {
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   echo_if_true "change_directory $INITIAL_DIRECTORY" "$IN_SUB_FOLDER"
-
-  echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
 }
 
 

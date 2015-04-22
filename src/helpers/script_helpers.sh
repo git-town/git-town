@@ -117,6 +117,7 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
+    set_previous_branch
   fi
 }
 
@@ -153,21 +154,10 @@ function run_steps {
 }
 
 
-function set_branch_as_previous_branch {
-  local desired_previous_branch=$1
-  local current_branch="$(get_current_branch_name)"
-  local open_changes="$(has_open_changes)"
-
-  if [ "$open_changes" = true ]; then
-    stash_open_changes_silently
-  fi
-
-  checkout_branch_silently "$desired_previous_branch"
-  checkout_branch_silently "$current_branch"
-
-  if [ "$open_changes" = true ]; then
-    restore_open_changes_silently
-  fi
+# Sets the previous branch after the git town command completes
+# This should be overridden when necessary
+function set_previous_branch {
+  true
 }
 
 
