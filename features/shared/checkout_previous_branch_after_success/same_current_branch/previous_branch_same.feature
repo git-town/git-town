@@ -4,9 +4,8 @@
   I want to end up on the expected previous branch
   So that I can consistently and effectively use git's commands
 
-# done writing tests
 
-  Scenario: checkout previous branch after a git-kill that doesn't delete current or previous branch
+  Scenario: checkout previous branch after git-kill leaves current and previous branch intact
     Given I have feature branches named "previous", "current", and "victim"
     And I am on the "previous" branch
     And I switch to the "current" branch
@@ -15,7 +14,7 @@
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after a git-prune-branches that doesn't delete current or previous branch
+  Scenario: checkout previous branch after git-prune-branches leaves current and previous branch intact
     Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
@@ -28,7 +27,7 @@
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after a git-ship that doesn't delete current or previous branch
+  Scenario: checkout previous branch after git-ship leaves current and previous branch intact
     Given I have feature branches named "previous", "current", and "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
@@ -40,7 +39,7 @@
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after a git-sync that doesn't delete current or previous branch
+  Scenario: checkout previous branch after git-sync leaves current and previous branch intact
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I switch to the "current" branch
@@ -49,7 +48,7 @@
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after a git-sync-fork that doesn't delete current or previous branch
+  Scenario: checkout previous branch after git-sync-fork leaves current and previous branch intact
     Given my repo has an upstream repo
     And I have feature branches named "previous" and "current"
     And I am on the "previous" branch
@@ -57,4 +56,3 @@
     And I run `git sync-fork`
     When I checkout my previous git branch
     Then I end up on the "previous" branch
-

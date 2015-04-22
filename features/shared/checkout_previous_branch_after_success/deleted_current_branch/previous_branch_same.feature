@@ -1,9 +1,9 @@
 Feature: Allow checking out previous git branch to work correctly after running a Git Town commmand that deletes the current branch
 
-  (see ../same_branch_after_success.feature)
+  (see ../same_current_branch/previous_branch_same.feature)
 
 
-  Scenario: checkout previous branch after git-kill of current branch
+  Scenario: checkout previous branch after git-kill deletes current branch
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I switch to the "current" branch
@@ -12,7 +12,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after a git-prune-branches that deletes the current branch
+  Scenario: checkout previous branch after a git-prune-branches deletes current branch
     Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
@@ -24,7 +24,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
     Then I end up on the "previous" branch
 
 
-  Scenario: checkout previous branch after git-ship of current branch
+  Scenario: checkout previous branch after git-ship deletes current branch
     Given I have feature branches named "previous", "current"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |

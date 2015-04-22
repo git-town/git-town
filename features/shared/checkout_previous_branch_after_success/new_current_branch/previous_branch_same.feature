@@ -1,10 +1,9 @@
 Feature: Allow checking out previous git branch to work correctly after running a Git Town commmand that creates a new branch
 
-  (see ./same_branch_after_success.feature)
+  (see ../same_current_branch/previous_branch_same.feature)
 
-#done
 
-  Scenario: checkout previous branch after a git-extract
+  Scenario: checkout previous branch after git-extract
     Given I have feature branches named "previous" and "current"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
