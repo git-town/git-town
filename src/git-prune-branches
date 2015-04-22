@@ -54,13 +54,14 @@ function steps {
   done
 
 
-  if [ "$initial_branch_deleted" = false ]; then
-    if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ]; then
-      echo "checkout $INITIAL_BRANCH_NAME"
-    fi
-    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
-  else
+  if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
+    echo "checkout $INITIAL_BRANCH_NAME"
+  fi
+
+  if [ "$initial_previous_branch_deleted" = true ]; then
     echo "set_branch_as_previous_branch $MAIN_BRANCH_NAME"
+  else
+    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
   fi
 
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
