@@ -74,7 +74,7 @@ function steps {
   fi
 
   echo "checkout $INITIAL_BRANCH_NAME"
-  echo "restore_initial_previous_branch"
+  echo "set_initial_previous_branch_as_previous_branch"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   echo_if_true "change_directory $INITIAL_DIRECTORY" "$IN_SUB_FOLDER"
