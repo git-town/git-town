@@ -2,8 +2,9 @@ Feature: Allow checking out previous git branch to work correctly after running 
 
   (see ./same_branch_after_success.feature)
 
+#done
 
-  Scenario: checkout previous git branch after git-extract
+  Scenario: checkout previous branch after a git-extract
     Given I have feature branches named "previous" and "current"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
@@ -17,7 +18,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
     Then I end up on the "current" branch
 
 
-  Scenario: checkout previous git branch after git-hack
+  Scenario: checkout previous branch after git-hack
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I switch to the "current" branch
