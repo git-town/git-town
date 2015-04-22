@@ -19,7 +19,7 @@
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
       | previous | local    | previous_file | previous content |
-      | current  | local    | current_file  | current content |
+      | current  | local    | current_file  | current content  |
     And I am on the "previous" branch
     And I switch to the "current" branch
     And I run `git prune-branches`
