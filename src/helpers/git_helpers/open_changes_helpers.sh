@@ -40,9 +40,21 @@ function restore_open_changes {
 }
 
 
+# Unstashes changes silently (no console output)
+function restore_open_changes_silently {
+  run_command_silently "git stash pop"
+}
+
+
 # Stashes uncommitted changes
 function stash_open_changes {
   run_git_command "git stash -u"
+}
+
+
+# Stashes uncommitted changes silently (no console output)
+function stash_open_changes_silently {
+  run_command_silently "git stash -u"
 }
 
 
