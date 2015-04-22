@@ -32,6 +32,13 @@ function preconditions {
 
 
 function set_previous_branch {
+  if [ "$IN_SUB_FOLDER" = false ]; then
+    set_initial_previous_branch_as_previous_branch
+  fi
+}
+
+
+function set_initial_previous_branch_as_previous_branch {
   set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
 }
 
@@ -79,6 +86,10 @@ function steps {
   fi
 
   echo "checkout $INITIAL_BRANCH_NAME"
+
+  # if $IN_SUB_FOLDER=true, then previous branch modification needs to run before `change_directory $INITIAL_DIRECTORY`
+  # if $IN_SUB_FOLDER=false then `set_previous_branch` won't be called again from `run`
+  echo "set_initial_previous_branch_as_previous_branch"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   echo_if_true "change_directory $INITIAL_DIRECTORY" "$IN_SUB_FOLDER"
