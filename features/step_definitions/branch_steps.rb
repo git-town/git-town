@@ -7,7 +7,7 @@ end
 
 
 Given(/^I switch to the "(.+?)" branch$/) do |branch_name|
-  step "I am on the #{branch_name} branch"
+  step %(I am on the "#{branch_name}" branch)
 end
 
 
@@ -59,7 +59,7 @@ end
 
 
 
-When(/^I checkout the previous git branch$/) do
+When(/^I checkout my previous git branch$/) do
   step 'I run `git checkout -`'
 end
 

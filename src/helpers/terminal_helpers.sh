@@ -181,6 +181,13 @@ function run_command {
 }
 
 
+# Run a command silently (won't print to console)
+function run_command_silently {
+  local cmd="$*"
+  eval "$cmd" > /dev/null 2>&1
+}
+
+
 # Run a Git command
 #
 # Prints the command and the Git branch it is running on, as well as the output.

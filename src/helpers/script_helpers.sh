@@ -98,10 +98,10 @@ function remove_step_files {
 }
 
 
-function restore_initial_branch {
+function restore_initial_previous_branch {
   local current_branch="$(get_current_branch_name)"
-  checkout_branch "$INITIAL_BRANCH_NAME"
-  checkout_branch "$current_branch"
+  checkout_branch_silently "$INITIAL_PREVIOUS_BRANCH_NAME"
+  checkout_branch_silently "$current_branch"
 }
 
 
@@ -124,7 +124,6 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
-    restore_initial_branch
   fi
 }
 

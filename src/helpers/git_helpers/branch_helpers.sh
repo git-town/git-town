@@ -2,9 +2,9 @@
 
 
 # Checkout a branch
-function checkout_branch {
+function checkout_branch_silently {
   local branch_name=$1
-  run_git_command "git checkout $branch_name"
+  run_command_silently "git checkout $branch_name"
 }
 
 
@@ -86,6 +86,12 @@ function get_current_branch_name {
   else
     git rev-parse --abbrev-ref HEAD
   fi
+}
+
+
+# Returns the previously checkout branch name
+function get_previous_branch_name {
+  git rev-parse --abbrev-ref "@{-1}"
 }
 
 
