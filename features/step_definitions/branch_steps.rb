@@ -60,7 +60,7 @@ end
 
 
 When(/^I checkout the previous git branch$/) do
-  step "I run `git checkout -`"
+  step 'I run `git checkout -`'
 end
 
 

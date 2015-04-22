@@ -14,7 +14,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
     Then I end up on the "previous" branch
 
     Examples:
-      | COMMAND            |
-      | git hack new       |
-      | git sync           |
-      | git sync-fork      |
+      | COMMAND       |
+      | git hack new  |
+      | git sync      |
+      | git sync-fork |
