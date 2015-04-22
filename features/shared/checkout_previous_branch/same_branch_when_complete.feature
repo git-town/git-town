@@ -24,10 +24,11 @@ Feature: Allow checking out previous git branch to work correctly after running 
 
 
   Scenario: checkout out previous git branch after git-sync-fork
-    Given I have feature branches named "previous" and "current"
+    Given my repo has an upstream repo
+    And I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I switch to the "current" branch
-    And I run `git sync`
+    And I run `git sync-fork`
     When I checkout my previous git branch
     Then I end up on the "previous" branch
 
