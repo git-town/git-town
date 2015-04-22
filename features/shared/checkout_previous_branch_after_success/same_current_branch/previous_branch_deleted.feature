@@ -23,7 +23,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
     Then I end up on the "main" branch
 
 
-  Scenario: checkout previous branch after git-ship
+  Scenario: checkout previous branch after git-ship that deletes the previous branch
     Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME    | FILE CONTENT    |

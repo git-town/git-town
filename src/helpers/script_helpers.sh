@@ -153,16 +153,10 @@ function run_steps {
 }
 
 
-function set_initial_previous_branch_as_previous_branch  {
+function set_branch_as_previous_branch {
+  local desired_previous_branch=$1
   local current_branch="$(get_current_branch_name)"
-  checkout_branch_silently "$INITIAL_PREVIOUS_BRANCH_NAME"
-  checkout_branch_silently "$current_branch"
-}
-
-
-function set_initial_branch_as_previous_branch {
-  local current_branch="$(get_current_branch_name)"
-  checkout_branch_silently "$INITIAL_BRANCH_NAME"
+  checkout_branch_silently "$desired_previous_branch"
   checkout_branch_silently "$current_branch"
 }
 

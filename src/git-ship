@@ -53,10 +53,19 @@ function steps {
   fi
   echo "delete_local_branch $target_branch_name force"
 
-  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    echo "checkout $INITIAL_BRANCH_NAME"
-    echo "set_initial_previous_branch_as_previous_branch"
+  # deleting previous branch
+  if [ "$target_branch_name" == "$INITIAL_PREVIOUS_BRANCH_NAME" ]; then
     echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
+    echo "checkout $INITIAL_BRANCH_NAME"
+    echo "set_branch_as_previous_branch $MAIN_BRANCH_NAME"
+  # deleting current branch
+  elif [ "$target_branch_name" == "$INITIAL_BRANCH_NAME" ]; then
+    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
+  # deleting some other branch
+  else
+    echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
+    echo "checkout $INITIAL_BRANCH_NAME"
+    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH_NAME"
   fi
 }
 
