@@ -89,9 +89,12 @@ function get_current_branch_name {
 }
 
 
-# Returns the previously checkout branch name
+# Returns the previously checked out branch name
 function get_previous_branch_name {
-  git rev-parse --abbrev-ref "@{-1}"
+  git rev-parse --abbrev-ref "@{-1}" > /dev/null 2>&1
+  if (($? == 0)); then
+    git rev-parse --abbrev-ref "@{-1}"
+  fi
 }
 
 
