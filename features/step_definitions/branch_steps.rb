@@ -59,7 +59,7 @@ end
 
 
 
-When(/^I checkout my previous git branch$/) do
+When(/^I run `git checkout -` to checkout my previous Git branch$/) do
   step 'I run `git checkout -`'
 end
 
