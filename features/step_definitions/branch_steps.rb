@@ -6,7 +6,7 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I switch to the "(.+?)" branch$/) do |branch_name|
+Given(/^I checkout the "(.+?)" branch$/) do |branch_name|
   step %(I am on the "#{branch_name}" branch)
 end
 

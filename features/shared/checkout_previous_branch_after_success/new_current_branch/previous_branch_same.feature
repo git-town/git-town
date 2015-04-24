@@ -11,7 +11,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
       | current | local    | feature commit  | feature_file  |
       |         |          | refactor commit | refactor_file |
     And I am on the "previous" branch
-    And I switch to the "current" branch
+    And I checkout the "current" branch
     And I run `git extract refactor` with the last commit sha
     When I checkout my previous git branch
     Then I end up on the "current" branch
@@ -20,7 +20,7 @@ Feature: Allow checking out previous git branch to work correctly after running 
   Scenario: checkout previous branch after git-hack
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
-    And I switch to the "current" branch
+    And I checkout the "current" branch
     And I run `git hack new`
     When I checkout my previous git branch
     Then I end up on the "current" branch
