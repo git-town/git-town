@@ -26,20 +26,6 @@ function preconditions {
 }
 
 
-function set_previous_branch {
-  # deleting previous branch
-  if [ "$target_branch_name" == "$INITIAL_PREVIOUS_BRANCH_NAME" ]; then
-    set_branch_as_previous_branch "$MAIN_BRANCH_NAME"
-  # deleting current branch
-  elif [ "$target_branch_name" == "$INITIAL_BRANCH_NAME" ]; then
-    set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-  # deleting some other branch
-  else
-    set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-  fi
-}
-
-
 function steps {
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"

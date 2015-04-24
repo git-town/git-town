@@ -98,6 +98,30 @@ function remove_step_files {
 }
 
 
+function restore_proper_previous_branch {
+  # previous branch is unchanged
+  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+
+    # current branch is unchanged
+    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
+      set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is deleted
+    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+      set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is new
+    else
+      set_branch_as_previous_branch "$INITIAL_BRANCH_NAME"
+    fi
+
+  # previous branch is deleted
+  else
+    set_branch_as_previous_branch "$MAIN_BRANCH_NAME"
+  fi
+}
+
+
 function run {
   if [ "$1" = "--abort" ]; then
     ensure_abortable
@@ -117,7 +141,7 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
-    set_previous_branch
+    restore_proper_previous_branch
   fi
 }
 
@@ -151,13 +175,6 @@ function run_steps {
   fi
 
   echo # trailing newline (each git command prints a leading newline)
-}
-
-
-# Sets the previous branch after the git town command completes
-# This should be overridden when necessary
-function set_previous_branch {
-  true
 }
 
 

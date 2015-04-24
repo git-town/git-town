@@ -22,23 +22,8 @@ function should_delete_branch {
 }
 
 
-function set_previous_branch {
-  # previous branch was deleted
-  if [ "$prune_branches_initial_previous_branch_deleted" = true ]; then
-    set_branch_as_previous_branch "$MAIN_BRANCH_NAME"
-  # current branch was deleted
-  elif [ "$prune_branches_initial_branch_deleted" = true ]; then
-    set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-  # some other branch was deleted
-  else
-    set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-  fi
-}
-
-
 function steps {
-  prune_branches_initial_branch_deleted=false
-  prune_branches_initial_previous_branch_deleted=false
+  local initial_branch_deleted=false
 
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ]; then
     echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
@@ -48,10 +33,7 @@ function steps {
   for local_branch_name in $(local_merged_branches); do
     if [ "$(should_delete_branch "$local_branch_name")" = true ]; then
       if [ "$local_branch_name" = "$INITIAL_BRANCH_NAME" ]; then
-        prune_branches_initial_branch_deleted=true
-      fi
-      if [ "$local_branch_name" = "$INITIAL_PREVIOUS_BRANCH_NAME" ]; then
-        prune_branches_initial_previous_branch_deleted=true
+        initial_branch_deleted=true
       fi
 
       if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then
@@ -67,7 +49,7 @@ function steps {
     fi
   done
 
-  if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$prune_branches_initial_branch_deleted" = false ]; then
+  if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
     echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   fi
