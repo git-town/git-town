@@ -141,7 +141,15 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
-    restore_proper_previous_branch
+
+    # Apply global previous-branch restoration
+    # only if we're at the git root.
+    # Any branch restoration logic for the other
+    # case needs to be handled in a custom way by
+    # the command itself
+    if [ "$IN_SUB_FOLDER" = false ]; then
+      restore_proper_previous_branch
+    fi
   fi
 }
 
