@@ -1,4 +1,4 @@
-Feature: Set the main branch as the previous branch after running a Git Town commmand that deletes the initial previous branch
+Feature: Allow checking out the correct previous Git branch after running a Git Town commmand that deletes the previous and current branches
 
   (see ../same_current_branch/previous_branch_same.feature)
 
