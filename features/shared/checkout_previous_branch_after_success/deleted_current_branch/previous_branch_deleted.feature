@@ -8,5 +8,5 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And I am on the "previous" branch
     And I checkout the "current" branch
     And I run `git prune-branches`
-    When I checkout my previous git branch
+    When I run `git checkout -` to checkout my previous Git branch
     Then I end up on the "main" branch
