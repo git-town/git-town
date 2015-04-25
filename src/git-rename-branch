@@ -51,7 +51,7 @@ function steps {
   echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
   echo "create_and_checkout_branch '$destination_branch_name' '$target_branch_name'"
 
-  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then =
+  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
     echo "push"
     echo "delete_remote_branch $target_branch_name"
   fi
