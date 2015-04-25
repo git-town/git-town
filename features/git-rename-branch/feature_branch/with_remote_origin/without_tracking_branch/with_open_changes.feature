@@ -2,6 +2,7 @@ Feature: git rename-branch: renaming a feature branch without a tracking branch 
 
   (see ../with_tracking_branch/with_open_changes.feature)
 
+
   Background:
     Given I have a local feature branch named "current-feature"
     And the following commits exist in my repository

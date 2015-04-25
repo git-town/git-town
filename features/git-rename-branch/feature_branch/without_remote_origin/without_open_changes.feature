@@ -2,6 +2,7 @@ Feature: git rename-branch: renaming a feature branch without a remote repo (wit
 
   (see ../with_remote_origin/with_tracking_branch/with_open_changes.feature)
 
+
   Background:
     Given my repo does not have a remote origin
     And I have a local feature branch named "current-feature"
