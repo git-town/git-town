@@ -59,14 +59,6 @@ end
 
 
 
-When(/^I run `git checkout -` to checkout my previous Git branch$/) do
-  step 'I run `git checkout -`'
-end
-
-
-
-
-
 Then(/^I (?:end up|am still) on the "(.+?)" branch$/) do |branch_name|
   expect(current_branch_name).to eql branch_name
 end

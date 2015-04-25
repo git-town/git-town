@@ -7,8 +7,9 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I checkout the "current" branch
-    And I run `git kill`
-    When I run `git checkout -` to checkout my previous Git branch
+    When I run `git kill`
+    Then I end up on the "main" branch
+    When I run `git checkout -`
     Then I end up on the "previous" branch
 
 
@@ -19,8 +20,9 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
       | previous | local    | previous_file | previous content |
     And I am on the "previous" branch
     And I checkout the "current" branch
-    And I run `git prune-branches`
-    When I run `git checkout -` to checkout my previous Git branch
+    When I run `git prune-branches`
+    Then I end up on the "main" branch
+    When I run `git checkout -`
     Then I end up on the "previous" branch
 
 
@@ -31,6 +33,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
       | current | remote   | feature_file | feature content |
     And I am on the "previous" branch
     And I checkout the "current" branch
-    And I run `git ship -m "feature done"`
-    When I run `git checkout -` to checkout my previous Git branch
+    When I run `git ship -m "feature done"`
+    Then I end up on the "main" branch
+    When I run `git checkout -`
     Then I end up on the "previous" branch

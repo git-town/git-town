@@ -7,6 +7,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     Given I have feature branches named "previous" and "current"
     And I am on the "previous" branch
     And I checkout the "current" branch
-    And I run `git prune-branches`
-    When I run `git checkout -` to checkout my previous Git branch
+    When I run `git prune-branches`
+    Then I end up on the "main" branch
+    When I run `git checkout -`
     Then I end up on the "main" branch
