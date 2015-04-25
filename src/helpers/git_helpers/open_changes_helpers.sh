@@ -35,26 +35,18 @@ function has_open_changes {
 
 
 # Unstashes changes
+# and optionally suppress output
 function restore_open_changes {
-  run_git_command "git stash pop"
-}
-
-
-# Unstashes changes silently (no console output)
-function restore_open_changes_silently {
-  run_command_silently "git stash pop"
+  local silent=$1
+  run_git_command "git stash pop" "$silent"
 }
 
 
 # Stashes uncommitted changes
+# and optionally suppress output
 function stash_open_changes {
-  run_git_command "git stash -u"
-}
-
-
-# Stashes uncommitted changes silently (no console output)
-function stash_open_changes_silently {
-  run_command_silently "git stash -u"
+  local silent=$1
+  run_git_command "git stash -u" "$silent"
 }
 
 

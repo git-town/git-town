@@ -174,25 +174,32 @@ function prompt_yn {
 # Run a normal (non Git) command.
 #
 # Prints the command and the output
+# unless the optional 2nd arg is "silent"
 function run_command {
   local cmd="$1"
-  echo_header "$cmd"
-  eval "$cmd" 2>&1
-}
+  local silent="$2"
 
-
-# Run a command silently (won't print to console)
-function run_command_silently {
-  local cmd="$*"
-  eval "$cmd" > /dev/null 2>&1
+  if [ "$silent" = "silent" ]; then
+    eval "$cmd" > /dev/null 2>&1
+  else
+    echo_header "$cmd"
+    eval "$cmd" 2>&1
+  fi
 }
 
 
 # Run a Git command
 #
-# Prints the command and the Git branch it is running on, as well as the output.
+# Prints the command and the Git branch it is running on, as well as the output
+# unless the optional 2nd arg is "silent"
 function run_git_command {
   local cmd="$1"
-  print_git_command "$cmd"
-  eval "$cmd" 2>&1
+  local silent="$2"
+
+  if [ "$silent" = "silent" ]; then
+    eval "$cmd" > /dev/null 2>&1
+  else
+    print_git_command "$cmd"
+    eval "$cmd" 2>&1
+  fi
 }

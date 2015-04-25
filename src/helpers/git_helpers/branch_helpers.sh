@@ -2,9 +2,11 @@
 
 
 # Checkout a branch
-function checkout_branch_silently {
+function checkout_branch {
   local branch_name=$1
-  run_command_silently "git checkout $branch_name"
+  local silent=$2
+
+  run_git_command "git checkout $branch_name" "$silent"
 }
 
 
@@ -170,14 +172,14 @@ function set_branch_as_previous_branch {
   local open_changes="$(has_open_changes)"
 
   if [ "$open_changes" = true ]; then
-    stash_open_changes_silently
+    stash_open_changes "silent"
   fi
 
-  checkout_branch_silently "$desired_previous_branch"
-  checkout_branch_silently "$current_branch"
+  checkout_branch "$desired_previous_branch" "silent"
+  checkout_branch "$current_branch" "silent"
 
   if [ "$open_changes" = true ]; then
-    restore_open_changes_silently
+    restore_open_changes "silent"
   fi
 }
 
