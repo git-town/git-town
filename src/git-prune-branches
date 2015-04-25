@@ -35,7 +35,6 @@ function steps {
       if [ "$local_branch_name" = "$INITIAL_BRANCH_NAME" ]; then
         initial_branch_deleted=true
       fi
-
       if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then
         echo "delete_remote_branch $local_branch_name"
       fi

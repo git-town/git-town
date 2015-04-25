@@ -37,8 +37,6 @@ function steps {
   fi
 
   echo "delete_local_branch $target_branch_name force"
-
-
 }
 
 
