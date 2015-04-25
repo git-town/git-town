@@ -16,6 +16,9 @@ end
 def create_local_commit branch:, file_name:, file_content:, message:, push: false, pull: false
   run 'git fetch --prune' if pull
   on_branch(branch) do
+    if (folder_name = File.dirname file_name) != '.'
+      Dir.mkdir folder_name
+    end
     File.write file_name, file_content
     run "git add '#{file_name}'"
     run "git commit -m '#{message}'"
@@ -67,8 +70,7 @@ def create_commits commits_array
   commits_array = [commits_array] if commits_array.is_a? Hash
   normalize_commit_data commits_array
   commits_array.each do |commit_data|
-    commit_data.reverse_merge!(default_commit_attributes)
-    create_commit commit_data
+    create_commit add_default_commit_data(commit_data)
   end
 end
 
@@ -79,14 +81,23 @@ def commit_sha commit_message
 end
 
 
-def default_commit_attributes
-  {
-    file_name: "default file name #{SecureRandom.urlsafe_base64}",
-    file_content: 'default file content',
+# Returns a commit_data structure consisting of
+# the given commit_data structure with default values added
+def add_default_commit_data commit_data
+  file_name = "default_file_name_#{SecureRandom.urlsafe_base64}"
+  commit_data.clone.reverse_merge(
+    file_name: file_name,
     message: 'default commit message',
     location: 'local and remote',
-    branch: current_branch_name
-  }
+    branch: current_branch_name,
+    file_content: default_file_content_for(commit_data[:file_name] || file_name)
+  )
+end
+
+
+# Returns the file content that is used if no file content is provided by the user
+def default_file_content_for file_name
+  "#{file_name} content"
 end
 
 

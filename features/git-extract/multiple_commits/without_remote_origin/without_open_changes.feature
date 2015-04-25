@@ -24,11 +24,20 @@ Feature: git extract: extracting multiple commits (without open changes or remot
       | refactor | git cherry-pick <%= sha 'refactor1 commit' %> <%= sha 'refactor2 commit' %> |
     And  I end up on the "refactor" branch
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE          | FILE NAME      |
-      | main     | local    | main commit      | main_file      |
-      | feature  | local    | feature commit   | feature_file   |
-      |          |          | refactor1 commit | refactor1_file |
-      |          |          | refactor2 commit | refactor2_file |
-      | refactor | local    | main commit      | main_file      |
-      |          |          | refactor1 commit | refactor1_file |
-      |          |          | refactor2 commit | refactor2_file |
+      | BRANCH   | LOCATION | MESSAGE          |
+      | main     | local    | main commit      |
+      | feature  | local    | feature commit   |
+      |          |          | refactor1 commit |
+      |          |          | refactor2 commit |
+      | refactor | local    | main commit      |
+      |          |          | refactor1 commit |
+      |          |          | refactor2 commit |
+    And now I have the following committed files
+      | BRANCH   | NAME           |
+      | main     | main_file      |
+      | feature  | feature_file   |
+      | feature  | refactor1_file |
+      | feature  | refactor2_file |
+      | refactor | main_file      |
+      | refactor | refactor1_file |
+      | refactor | refactor2_file |

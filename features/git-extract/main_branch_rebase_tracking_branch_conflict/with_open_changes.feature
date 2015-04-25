@@ -70,14 +70,21 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     And I end up on the "refactor" branch
     And I again have my uncommitted file
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main     | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      | feature  | local            | feature commit            | feature_file     |
-      |          |                  | refactor commit           | refactor_file    |
-      | refactor | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      |          |                  | refactor commit           | refactor_file    |
+      | BRANCH   | LOCATION         | MESSAGE                   |
+      | main     | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      | feature  | local            | feature commit            |
+      |          |                  | refactor commit           |
+      | refactor | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      |          |                  | refactor commit           |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | resolved content |
+      | feature  | feature_file     |                  |
+      | feature  | refactor_file    |                  |
+      | refactor | conflicting_file | resolved content |
+      | refactor | refactor_file    |                  |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
@@ -93,11 +100,18 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
     And I end up on the "refactor" branch
     And I again have my uncommitted file
     And now I have the following commits
-      | BRANCH   | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main     | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      | feature  | local            | feature commit            | feature_file     |
-      |          |                  | refactor commit           | refactor_file    |
-      | refactor | local and remote | conflicting remote commit | conflicting_file |
-      |          |                  | conflicting local commit  | conflicting_file |
-      |          |                  | refactor commit           | refactor_file    |
+      | BRANCH   | LOCATION         | MESSAGE                   |
+      | main     | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      | feature  | local            | feature commit            |
+      |          |                  | refactor commit           |
+      | refactor | local and remote | conflicting remote commit |
+      |          |                  | conflicting local commit  |
+      |          |                  | refactor commit           |
+    And now I have the following committed files
+      | BRANCH   | NAME             | CONTENT          |
+      | main     | conflicting_file | resolved content |
+      | feature  | feature_file     |                  |
+      | feature  | refactor_file    |                  |
+      | refactor | conflicting_file | resolved content |
+      | refactor | refactor_file    |                  |
