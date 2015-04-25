@@ -81,6 +81,29 @@ function exit_with_messages {
 }
 
 
+function get_expected_previous_branch {
+  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+
+    # current branch is unchanged
+    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is deleted
+    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is new
+    else
+      echo "$INITIAL_BRANCH_NAME"
+    fi
+
+  # previous branch is deleted
+  else
+    echo "$MAIN_BRANCH_NAME"
+  fi
+}
+
+
 # Parses arguments, validates necessary state
 # This should be overriden by commands when necessary
 function preconditions {
@@ -99,26 +122,7 @@ function remove_step_files {
 
 
 function restore_proper_previous_branch {
-  # previous branch is unchanged
-  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
-
-    # current branch is unchanged
-    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
-      set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-
-    # current branch is deleted
-    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
-      set_branch_as_previous_branch "$INITIAL_PREVIOUS_BRANCH_NAME"
-
-    # current branch is new
-    else
-      set_branch_as_previous_branch "$INITIAL_BRANCH_NAME"
-    fi
-
-  # previous branch is deleted
-  else
-    set_branch_as_previous_branch "$MAIN_BRANCH_NAME"
-  fi
+  set_branch_as_previous_branch "$(get_expected_previous_branch)"
 }
 
 
