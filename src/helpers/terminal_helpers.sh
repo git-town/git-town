@@ -175,7 +175,7 @@ function prompt_yn {
 #
 # Prints the command and the output
 function run_command {
-  local cmd="$*"
+  local cmd="$1"
   echo_header "$cmd"
   eval "$cmd" 2>&1
 }
@@ -185,7 +185,7 @@ function run_command {
 #
 # Prints the command and the Git branch it is running on, as well as the output.
 function run_git_command {
-  local cmd="$*"
+  local cmd="$1"
   print_git_command "$cmd"
   eval "$cmd" 2>&1
 }
