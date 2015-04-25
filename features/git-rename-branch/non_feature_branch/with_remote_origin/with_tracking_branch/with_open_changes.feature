@@ -6,12 +6,13 @@ Feature: git rename-branch: renaming a non-feature branch with a tracking branch
 
 
   Background:
-    Given I have a branch named "production"
-    And my non-feature branches are configured as "production"
+    Given I have branches named "qa" and "production"
+    And my non-feature branches are configured as "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
       | production | local and remote | production commit |
+      | qa         | local and remote | qa commit         |
     And I am on the "production" branch
     And I have an uncommitted file
 
@@ -34,9 +35,10 @@ Feature: git rename-branch: renaming a non-feature branch with a tracking branch
       |                    | git branch -D production                      |
       |                    | git stash pop                                 |
     And I end up on the "renamed-production" branch
-    And my non-feature branches are now configured as "renamed-production"
+    And my non-feature branches are now configured as "qa" and "renamed-production"
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
+      | qa                 | local and remote | qa commit         |
       | renamed-production | local and remote | production commit |
