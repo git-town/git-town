@@ -9,7 +9,7 @@ Feature: git rename-branch: renaming a non-feature branch without a tracking bra
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
-      | production | local  | production commit |
+      | production | local            | production commit |
     And I am on the "production" branch
     And I have an uncommitted file
 
@@ -35,4 +35,4 @@ Feature: git rename-branch: renaming a non-feature branch without a tracking bra
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
-      | renamed-production | local  | production commit |
+      | renamed-production | local            | production commit |

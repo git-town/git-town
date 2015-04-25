@@ -7,8 +7,8 @@ Feature: git rename-branch: renaming a non-feature branch without a remote repo 
     Given my repo does not have a remote origin
     And I have a local branch named "production"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION | MESSAGE        |
-      | main            | local    | main commit    |
+      | BRANCH     | LOCATION | MESSAGE           |
+      | main       | local    | main commit       |
       | production | local    | production commit |
     And I am on the "production" branch
     When I run `git rename-branch production renamed-production`
@@ -16,11 +16,11 @@ Feature: git rename-branch: renaming a non-feature branch without a remote repo 
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH          | COMMAND                                         |
-      | production | git checkout -b renamed-production production |
-      | renamed-production | git branch -D production                   |
+      | BRANCH             | COMMAND                                       |
+      | production         | git checkout -b renamed-production production |
+      | renamed-production | git branch -D production                      |
     And I end up on the "renamed-production" branch
     And I have the following commits
-      | BRANCH          | LOCATION | MESSAGE        |
-      | main            | local    | main commit    |
+      | BRANCH             | LOCATION | MESSAGE           |
+      | main               | local    | main commit       |
       | renamed-production | local    | production commit |

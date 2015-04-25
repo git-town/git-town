@@ -9,7 +9,7 @@ Feature: git rename-branch: renaming a non-feature branch without a tracking bra
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
-      | production | local | production commit |
+      | production | local            | production commit |
     And I am on the "production" branch
 
 
@@ -26,10 +26,10 @@ Feature: git rename-branch: renaming a non-feature branch without a tracking bra
       | BRANCH             | COMMAND                                       |
       | production         | git fetch --prune                             |
       |                    | git checkout -b renamed-production production |
-      | renamed-production |git branch -D production                      |
+      | renamed-production | git branch -D production                      |
     And I end up on the "renamed-production" branch
     And my non-feature branches are now configured as "renamed-production"
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
-      | renamed-production | local  | production commit |
+      | renamed-production | local            | production commit |
