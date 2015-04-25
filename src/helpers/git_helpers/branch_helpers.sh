@@ -171,6 +171,10 @@ function set_branch_as_previous_branch {
   local current_branch="$(get_current_branch_name)"
   local open_changes="$(has_open_changes)"
 
+  if [ "$desired_previous_branch" = "$(get_previous_branch_name)" ]; then
+    return
+  fi
+
   if [ "$open_changes" = true ]; then
     stash_open_changes "silent"
   fi
