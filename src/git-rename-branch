@@ -24,12 +24,6 @@ function preconditions {
     exit_with_error newline
   fi
 
-  if [ -z "$destination_branch_name" ]; then
-    echo_error_header
-    echo_error "No branch name provided to rename to."
-    exit_with_error newline
-  fi
-
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     ensure_has_branch "$target_branch_name"
   fi
@@ -37,6 +31,12 @@ function preconditions {
   echo $force_rename
   if [ "$force_rename" = false ]; then
     ensure_is_feature_branch "$target_branch_name" "Run 'git rename-branch $target_branch_name $destination_branch_name -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+  fi
+
+  if [ -z "$destination_branch_name" ]; then
+    echo_error_header
+    echo_error "No branch name provided to rename to."
+    exit_with_error newline
   fi
 
   if [ "$HAS_REMOTE" = true ]; then
