@@ -13,7 +13,6 @@ dependencies:
   # Cache ShellCheck for subsequent builds
   cache_directories:
     - "~/.cabal"
-    - "~/.rvm"
     - "~/git-town/vendor/bundle"
 
   post:
