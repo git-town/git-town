@@ -166,7 +166,7 @@ function remote_only_merged_branches {
 }
 
 
-function set_branch_as_previous_branch {
+function set_previous_branch {
   local desired_previous_branch=$1
 
   # nothing to do, exit early

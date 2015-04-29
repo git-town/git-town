@@ -122,7 +122,7 @@ function remove_step_files {
 
 
 function restore_proper_previous_branch {
-  set_branch_as_previous_branch "$(get_expected_previous_branch)"
+  set_previous_branch "$(get_expected_previous_branch)"
 }
 
 

@@ -31,13 +31,6 @@ function preconditions {
 }
 
 
-function set_previous_branch {
-  if [ "$IN_SUB_FOLDER" = false ]; then
-    set_initial_previous_branch_as_previous_branch
-  fi
-}
-
-
 function skip_message_prefix {
   echo "To skip the sync of the '$(get_current_branch_name)' branch"
 }
@@ -85,7 +78,7 @@ function steps {
   # custom logic for restoring previous branch, not handled by
   # the global `restore_proper_previous_branch` function
   if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH")" = true ]; then
-    echo "set_branch_as_previous_branch $INITIAL_PREVIOUS_BRANCH"
+    echo "set_previous_branch $INITIAL_PREVIOUS_BRANCH"
   fi
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
