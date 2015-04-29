@@ -4,8 +4,6 @@
 set -e
 
 if [ ! -f ~/.cabal/bin/shellcheck ]; then
-  sudo apt-get install cabal-install
-  cabal update --verbose=0
   cabal install --verbose=0 shellcheck-0.3.6
 else
   echo "Using cached shellcheck"
