@@ -1,4 +1,4 @@
-Feature: git-pull-request: when origin is unsupported
+Feature: git-create-pull-request: when origin is unsupported
 
   As a developer trying to create a pull request in a repository on an unsupported hosting service
   I should get an error that my hosting service is not supported
@@ -8,7 +8,7 @@ Feature: git-pull-request: when origin is unsupported
   Background:
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
-    When I run `git pull-request`
+    When I run `git create-pull-request`
 
 
   Scenario: result

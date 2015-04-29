@@ -13,11 +13,11 @@ Feature: Git Town performs correctly depending on the environment
       | git town config               |
       | git town main-branch          |
       | git town non-feature-branches |
+      | git create-pull-request       |
       | git extract                   |
       | git hack                      |
       | git kill                      |
       | git prune-branches            |
-      | git pull-request              |
       | git repo                      |
       | git ship                      |
       | git sync                      |

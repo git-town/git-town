@@ -14,16 +14,16 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Then I see the initial configuration prompt
 
     Examples:
-    | COMMAND            |
-    | git extract        |
-    | git hack           |
-    | git kill           |
-    | git prune-branches |
-    | git pull-request   |
-    | git repo           |
-    | git ship           |
-    | git sync           |
-    | git sync-fork      |
+    | COMMAND                 |
+    | git create-pull-request |
+    | git extract             |
+    | git hack                |
+    | git kill                |
+    | git prune-branches      |
+    | git repo                |
+    | git ship                |
+    | git sync                |
+    | git sync-fork           |
 
 
   Scenario Outline: Starting the wizard by answering "y" to the configuration prompt's question whether to start it
@@ -31,16 +31,16 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Then I see the first line of the configuration wizard
 
     Examples:
-    | COMMAND            |
-    | git extract        |
-    | git hack           |
-    | git kill           |
-    | git prune-branches |
-    | git pull-request   |
-    | git repo           |
-    | git ship           |
-    | git sync           |
-    | git sync-fork      |
+    | COMMAND                 |
+    | git create-pull-request |
+    | git extract             |
+    | git hack                |
+    | git kill                |
+    | git prune-branches      |
+    | git repo                |
+    | git ship                |
+    | git sync                |
+    | git sync-fork           |
 
 
   Scenario Outline: Starting the wizard by choosing the default answer to the configuration prompt's question whether to start it
@@ -48,16 +48,16 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Then I see the first line of the configuration wizard
 
     Examples:
-    | COMMAND            |
-    | git extract        |
-    | git hack           |
-    | git kill           |
-    | git prune-branches |
-    | git pull-request   |
-    | git repo           |
-    | git ship           |
-    | git sync           |
-    | git sync-fork      |
+    | COMMAND                 |
+    | git create-pull-request |
+    | git extract             |
+    | git hack                |
+    | git kill                |
+    | git prune-branches      |
+    | git repo                |
+    | git ship                |
+    | git sync                |
+    | git sync-fork           |
 
 
   Scenario Outline: Not proceeding to the wizard by answering "n" to the configuration prompt's question whether to start it
@@ -65,13 +65,13 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Then I don't see the first line of the configuration wizard
 
     Examples:
-    | COMMAND            |
-    | git extract        |
-    | git hack           |
-    | git kill           |
-    | git prune-branches |
-    | git pull-request   |
-    | git repo           |
-    | git ship           |
-    | git sync           |
-    | git sync-fork      |
+    | COMMAND                 |
+    | git create-pull-request |
+    | git extract             |
+    | git hack                |
+    | git kill                |
+    | git prune-branches      |
+    | git repo                |
+    | git ship                |
+    | git sync                |
+    | git sync-fork           |

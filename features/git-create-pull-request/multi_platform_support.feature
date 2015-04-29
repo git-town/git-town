@@ -1,11 +1,11 @@
-Feature: git-pull-request: multi-platform support
+Feature: git-create-pull-request: multi-platform support
 
   Scenario Outline: supported tool installed
     Given I have a feature branch named "feature"
     And my remote origin is https://github.com/Originate/git-town.git
     And I have "<TOOL>" installed
     And I am on the "feature" branch
-    When I run `git pull-request`
+    When I run `git create-pull-request`
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
     Examples:
@@ -19,5 +19,5 @@ Feature: git-pull-request: multi-platform support
     And my remote origin is https://github.com/Originate/git-town.git
     And I have no command that opens browsers installed
     And I am on the "feature" branch
-    When I run `git pull-request`
+    When I run `git create-pull-request`
     Then I get the error "Opening a browser requires 'open' on Mac or 'xdg-open' on Linux."

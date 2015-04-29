@@ -4,7 +4,7 @@
 # for command in (ls (brew --repository)/Library/Homebrew/cmd | sed -e "s/\.rb//g")
 #   set commands $command $commands
 # end
-set git_town_commands extract hack kill prune-branches pull-request ship sync sync-fork town
+set git_town_commands create-pull-request extract hack kill prune-branches ship sync sync-fork town
 
 
 # Indicates through its error code whether the command line to auto-complete
@@ -27,15 +27,15 @@ end
 # These only get autocompleted if there is no Git Town command present in the
 # command line already.
 # This is done through __fish_complete_git_town_no_command
-complete --command git --arguments 'extract'        --description 'Copy selected commits from the current branch into their own branch' --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'hack'           --description 'Cut a new feature branch off the main branch'                        --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'kill'           --description 'Remove an obsolete feature branch'                                   --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'prune-branches' --description 'Delete merged branches'                                              --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'pull-request'   --description 'Create a new pull request'                                           --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'ship'           --description 'Deliver a completed feature branch'                                  --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'sync'           --description 'Update the current branch with all relevant changes'                 --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'sync-fork'      --description 'Pull upstream updates into a forked repository'                      --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'town'           --description 'Git Town management'                                                 --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'create-pull-request' --description 'Create a new pull request'                                           --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'extract'             --description 'Copy selected commits from the current branch into their own branch' --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'hack'                --description 'Cut a new feature branch off the main branch'                        --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'kill'                --description 'Remove an obsolete feature branch'                                   --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'prune-branches'      --description 'Delete merged branches'                                              --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'ship'                --description 'Deliver a completed feature branch'                                  --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'sync'                --description 'Update the current branch with all relevant changes'                 --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'sync-fork'           --description 'Pull upstream updates into a forked repository'                      --condition '__fish_complete_git_town_no_command' --no-files
+complete --command git --arguments 'town'                --description 'Git Town management'                                                 --condition '__fish_complete_git_town_no_command' --no-files
 
 
 # Define autocompletion of Git branch names.
