@@ -13,6 +13,7 @@ dependencies:
   # Cache ShellCheck for subsequent builds
   cache_directories:
     - "~/.cabal"
+    - "~/vendor/bundle"
 
   post:
     - bin/circleci-install-shellcheck
