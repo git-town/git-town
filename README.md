@@ -35,7 +35,7 @@ Git Town provides these additional Git commands:
 ## Installation
 
 Git Town is written in 100% [Bash](https://www.gnu.org/software/bash/bash.html),
-so it runs anywhere Git and Bash runs.
+so it runs anywhere Git and Bash run.
 
 <table>
   <tr>
