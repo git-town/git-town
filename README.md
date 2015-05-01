@@ -20,8 +20,8 @@ and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 Git Town provides these additional Git commands:
 
-
 __Development Workflow__
+
 * [git hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
 * [git sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
 * [git pull-request](/documentation/commands/git-pull-request.md) - creates a new pull request
@@ -30,6 +30,7 @@ __Development Workflow__
 
 
 __Repository Maintenance__
+
 * [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
 * [git kill](/documentation/commands/git-kill.md) - removes a feature branch
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
@@ -37,6 +38,7 @@ __Repository Maintenance__
 
 
 __Configuration and Help__
+
 * [git town](/documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
