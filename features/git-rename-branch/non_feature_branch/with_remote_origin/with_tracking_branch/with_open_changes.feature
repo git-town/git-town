@@ -20,7 +20,8 @@ Feature: git rename-branch: renaming a non-feature branch with a tracking branch
   Scenario: error when trying to rename
     When I run `git rename-branch production renamed-production`
     Then it runs no Git commands
-    And I get the error "The branch 'production' is not a feature branch. Run 'git rename-branch production renamed-production -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+    And I get the error "The branch 'production' is not a feature branch."
+    And I get the error "Run 'git rename-branch production renamed-production -f' to force the rename, then reconfigure git-town on any other clones of this repo."
 
 
   Scenario: forcing rename
