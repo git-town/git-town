@@ -1,12 +1,12 @@
 #### NAME
 
-git-create-pull-request - create a new pull request
+git-new-pull-request - create a new pull request
 
 
 #### SYNOPSIS
 
 ```
-git create-pull-request
+git new-pull-request
 ```
 
 

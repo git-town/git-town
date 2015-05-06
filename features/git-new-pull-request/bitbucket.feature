@@ -1,4 +1,4 @@
-Feature: git-create-pull-request when origin is on Bitbucket
+Feature: git-new-pull-request when origin is on Bitbucket
 
   As a developer having finished a feature in a repository hosted on Bitbucket
   I want to be able to quickly create a pull request
@@ -10,7 +10,7 @@ Feature: git-create-pull-request when origin is on Bitbucket
     And my remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
-    When I run `git create-pull-request`
+    When I run `git new-pull-request`
     Then I see a new Bitbucket pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:

@@ -42,7 +42,7 @@ end
 
 
 def git_town_command? command
-  %w(create-pull-request extract hack kill prune-branches repo ship sync-fork sync town).any? do |subcommand|
+  %w(new-pull-request extract hack kill prune-branches repo ship sync-fork sync town).any? do |subcommand|
     command.starts_with? "git #{subcommand}"
   end
 end

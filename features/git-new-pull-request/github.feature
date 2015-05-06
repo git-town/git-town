@@ -1,4 +1,4 @@
-Feature: git-create-pull-request when origin is on GitHub
+Feature: git-new-pull-request when origin is on GitHub
 
   As a developer having finished a feature in a repository hosted on GitHub
   I want to be able to easily create a pull request
@@ -10,7 +10,7 @@ Feature: git-create-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
-    When I run `git create-pull-request`
+    When I run `git new-pull-request`
     Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:
