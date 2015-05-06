@@ -20,10 +20,10 @@ and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 Git Town provides these additional Git commands:
 
-* [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
 * [git extract](/documentation/commands/git-extract.md) - copy selected commits from the current branch into their own branch
 * [git hack](/documentation/commands/git-hack.md) - cut a new feature branch off the main branch
 * [git kill](/documentation/commands/git-kill.md) - remove an obsolete feature branch
+* [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete merged branches
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
 * [git ship](/documentation/commands/git-ship.md) - deliver a completed feature branch
