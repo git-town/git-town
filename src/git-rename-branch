@@ -24,19 +24,23 @@ function preconditions {
     exit_with_error newline
   fi
 
-  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    ensure_has_branch "$target_branch_name"
-  fi
-
-  echo $force_rename
-  if [ "$force_rename" = false ]; then
-    ensure_is_feature_branch "$target_branch_name" "Run 'git rename-branch $target_branch_name $destination_branch_name -f' to force the rename, then reconfigure git-town on any other clones of this repo."
-  fi
-
   if [ -z "$destination_branch_name" ]; then
     echo_error_header
     echo_error "No branch name provided to rename to."
     exit_with_error newline
+  fi
+
+  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
+    ensure_has_branch "$target_branch_name"
+  fi
+
+  if [ "$force_rename" = false ]; then
+    ensure_is_feature_branch "$target_branch_name" "Run 'git rename-branch $target_branch_name $destination_branch_name -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+  fi
+
+  if [ "$target_branch_name" == "$destination_branch_name" ]; then
+    echo "Renaming branch to same name, nothing needed."
+    exit_with_status 0
   fi
 
   if [ "$HAS_REMOTE" = true ]; then
@@ -59,9 +63,8 @@ function steps {
   echo "delete_local_branch '$target_branch_name' force"
 
   if [ "$(is_non_feature_branch "$target_branch_name")" = true ]; then
-    local new_branches=$(remove_string "$NON_FEATURE_BRANCH_NAMES" ',' "$target_branch_name")
-    new_branches=$(insert_string "$new_branches" ',' "$destination_branch_name")
-    store_configuration non-feature-branch-names "$new_branches"
+    echo "remove_non_feature_branch $target_branch_name"
+    echo "add_non_feature_branch $destination_branch_name"
   fi
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
