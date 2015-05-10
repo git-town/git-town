@@ -2,7 +2,7 @@ Feature: git rename-branch: renaming a feature branch with a tracking branch (wi
 
   As a developer with a poorly named feature branch
   I want to be able to rename it safely in one easy step
-  So that I can stay organized and remain productive
+  So that I can keep my branches well organized and remain productive.
 
 
   Background:

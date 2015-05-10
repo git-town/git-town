@@ -1,12 +1,16 @@
 Feature: git rename-branch: errors when the destination branch exists locally
 
-  As a developer trying to rename a branch with the name of an existing branch
-  I should see an error telling me that a branch with that name already exists
-  So that my new feature branch is unique.
+  As a developer trying to rename a branch into an already existing branch
+  I want the command to abort with an error message
+  So that I don't lose work by accidentally overwriting existing branches
 
 
   Background:
-    Given I have a feature branches named "current-feature" and "existing-feature"
+    Given I have feature branches named "current-feature" and "existing-feature"
+    And the following commits exist in my repository
+      | BRANCH           | LOCATION         | MESSAGE                 |
+      | current-feature  | local and remote | current-feature commit  |
+      | existing-feature | local and remote | existing-feature commit |
     And I am on the "current-feature" branch
 
 
@@ -19,6 +23,7 @@ Feature: git rename-branch: errors when the destination branch exists locally
     And I get the error "A branch named 'existing-feature' already exists"
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
+    And I am left with my original commits
 
 
   Scenario: without open changes
@@ -28,3 +33,4 @@ Feature: git rename-branch: errors when the destination branch exists locally
       | current-feature | git fetch --prune |
     And I get the error "A branch named 'existing-feature' already exists"
     And I am still on the "current-feature" branch
+    And I am left with my original commits
