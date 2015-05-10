@@ -12,15 +12,23 @@ git rename-branch <branchname> <newbranchname> [-f]
 
 #### DESCRIPTION
 
-On a non-feature branch, requires the use of the `-f` option
-Syncs the repository if there is a remote repository
-Creates a branch with the new name based on the old name
-If there is a remote repository
-* pushes the new branch
-* deletes the old branch from the remote repository
-Deletes the old branch locally
-Reconfigures git-town locally if renaming a non-feature branch
+Renames the given branch on both the local machine and the remote if one is configured.
+Aborts if the new branch name already exists.
+This command is intended for feature branches. Renaming non-feature branches has to be confirmed with the `-f` option.
 
+* Creates a branch with the new name
+* Deletes the old branch
+
+When there is a remote repository
+* Syncs the repository
+
+When there is a tracking branch
+* Pushes the new branch to the remote repository
+* Deletes the old branch from the remote repository
+
+When run on a non-feature branch
+* Requires the use of the `-f` option
+* Reconfigures git-town locally for the non-feature branch
 
 
 #### OPTIONS
@@ -30,7 +38,7 @@ Reconfigures git-town locally if renaming a non-feature branch
     The name of the branch to rename.
 
 <newbranchname>
-    The new name of the branch being renamed.
+    The new name of the branch.
 
 -f
     Forces the renaming of a non-feature branch 
