@@ -1,6 +1,6 @@
-Feature: git rename-branch: errors if the target branch does not exist
+Feature: git rename-branch: errors if the feature branch does not exist
 
-  As a developer mistyping the branch name to rename
+  As a developer mistyping the feature branch name to rename
   I should get an error that the given branch does not exist
   So that I can rename the correct branch
 
@@ -13,8 +13,8 @@ Feature: git rename-branch: errors if the target branch does not exist
 
 
   Scenario: with open changes
-    When I run `git rename-branch non-existing-feature renamed-branch`
-    Given I have an uncommitted file
+    And I have an uncommitted file
+    When I run `git rename-branch non-existing-feature renamed-feature`
     Then I get the error "There is no branch named 'non-existing-feature'"
     And I end up on the "main" branch
     And I still have my uncommitted file
@@ -22,7 +22,7 @@ Feature: git rename-branch: errors if the target branch does not exist
 
 
   Scenario: without open changes
-    When I run `git rename-branch non-existing-feature renamed-branch`
+    When I run `git rename-branch non-existing-feature renamed-feature`
     Then I get the error "There is no branch named 'non-existing-feature'"
     And I end up on the "main" branch
     And I am left with my original commits

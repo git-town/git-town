@@ -45,6 +45,17 @@ function preconditions {
 
   if [ "$HAS_REMOTE" = true ]; then
     fetch
+
+    if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
+      local local_branch_sha=$(sha_of_branch "$target_branch_name")
+      local remote_branch_sha=$(sha_of_branch "origin/$target_branch_name")
+
+      if [ "$local_branch_sha" != "$remote_branch_sha" ]; then
+        echo_error_header
+        echo_error "The branch is not in sync with its tracking branch. Run 'git sync $target_branch_name' to sync the branch.'"
+        exit_with_error newline
+      fi
+    fi
   fi
 
   ensure_does_not_have_branch "$destination_branch_name"
