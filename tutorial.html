@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Git Town by Originate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+
+    <section class="page-header">
+      <a href="/"><img src="documentation/logo-horizontal-white.svg"></a>
+      <h2 class="project-tagline">High-level command-line interface for Git </h2>
+      <a href="big_picture.html" class="btn">About</a>
+      <a href="tutorial.html" class="btn">Tutorial</a>
+      <a href="faq.html" class="btn">FAQ</a>
+      <a href="https://github.com/Originate/git-town#installation" class="btn" target="_blank">Install</a>
+      <a href="https://github.com/Originate/git-town" class="btn" target="_blank">View on Github</a>
+      <a href="https://twitter.com/GitTown" class="btn" target="_blank">Follow on Twitter</a>
+      <!-- <a href="https://github.com/Originate/git&#45;town" class="btn"><img src="documentation/mark&#45;github.svg" width="30" height="30"></img>  </a> -->
+    </section>
+
+    <section class="main-content">
+      <h1>Tutorial</h1>
+
+      <p>Let's assume you are part of a development team with Bob and Carol.
+      Your repository is hosted on GitHub, and you follow <a href="https://guides.github.com/introduction/flow/index.html">GitHub Flow</a>.</p>
+
+      <h3> <a id="user-content-starting-a-new-feature" class="anchor" href="#starting-a-new-feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Starting a new feature</h3>
+
+      <p>You are in the middle of the sprint and have just finished a feature.
+      You take the next ticket from the backlog.
+      Let's say it is called "resetting passwords".
+      Since we are developing in feature branches, you now need to</p>
+
+      <ul>
+      <li>update your master branch to the latest version on GitHub</li>
+      <li>cut a new feature branch from the master branch</li>
+      </ul>
+
+      <p>Running <code>git hack reset-passwords</code> achieves all this in a single command.
+      This gives you the best possible start for building the new feature,
+      on top of the latest version of the code base.</p>
+
+      <h3>
+      <a id="user-content-synchronizing-the-branch" class="anchor" href="#synchronizing-the-branch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Synchronizing the branch</h3>
+
+      <p>After coding for a while you hear that Bob shipped a number of important bug fixes,
+      and that Carol shipped some UI design updates.
+      Both changes affect your work, so you want them in your feature branch before you continue.
+      On a high level, you need to</p>
+
+      <ul>
+      <li>pull updates for the <code>master</code> branch (to get Bob and Carol's changes)</li>
+      <li>merge the master branch into your <code>reset-passwords</code> branch</li>
+      <li>push your updated feature branch to the repo, so that others who work on it also get these updates</li>
+      </ul>
+
+      <p>You will need to move between branches to do this,
+      which means you also need to stash away any currently open changes in your repo temporarily.
+      Altogether this simple operation requires between 5 and 7 individual Git commands.
+      That's a lot of typing.
+      And this can (should) happen several times per day, for each of your feature branches!</p>
+
+      <p><code>git sync</code> runs this whole process with a single command and brings you back to exactly where you started.</p>
+
+      <p>With Bob's bug fixes and the new UI from Carol available in your branch,
+      any more modification you make go right on top of their work.</p>
+
+      <h3>
+      <a id="user-content-creating-a-pull-request" class="anchor" href="#creating-a-pull-request" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a pull request</h3>
+
+      <p>Once your feature is ready for review, it's time to open a pull request on GitHub.
+      You fire up a browser, go to GitHub, navigate to your repository and finally end up on a new pull request form.</p>
+
+      <p><code>git pull-request</code> lets you jump straight from the terminal to filling in the details of your pull request in your browser.
+      Your current branch is already selected,
+      so all you need to do is fill out the title and description,
+      tag the reviewers, and submit.</p>
+
+      <h3>
+      <a id="user-content-shipping-the-feature" class="anchor" href="#shipping-the-feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shipping the feature</h3>
+
+      <p>When your pull request gets the approval to be merged,
+      you want to ship it.
+      To do this safely, i.e. without breaking the master branch, you want to</p>
+
+      <ul>
+      <li>make sure there are no open changes (i.e. all changes are properly committed)</li>
+      <li>pull updates from your remote feature branch (to make sure you ship everything that is in that branch)</li>
+      <li>pull updates for the master branch (to make sure you ship on top of the latest version of master)</li>
+      <li>merge the <em>master</em> branch into the <em>password-reset</em> branch
+      (to make sure your branch doesn't create conflicts with <em>master</em>,
+      and to give you a chance to resolve any issues before merging into <em>master</em>)</li>
+      <li>squash-merge the <em>password-reset</em> branch into the <em>master</em> branch (this makes it look like a single, clean commit, without the convoluted merge history and the many intermediate commits on your branch)</li>
+      <li>push the updated <em>master</em> branch to the repository (so that your changes are available to Bob and Alice in return)</li>
+      <li>remove the <em>password-reset</em> branch from your local machine and the repository</li>
+      </ul>
+
+      <p>This requires from 7-9 individual Git commands.
+      Git Town provides a single, convenient command for this as well:
+      <code>git ship reset-passwords</code>.</p>
+
+      <p>After running this, your feature is now safely merged as a single additional commit on the <em>master</em> branch,
+      then the old feature branch is cleaned up everywhere,
+      and you and the repository are ready for the next feature.</p>
+      </article>
+
+          <footer class="site-footer">
+            <span class="site-footer-owner"><a href="https://github.com/Originate/git-town">Git Town</a> is maintained by <a href="http://www.originate.com">Originate</a></span>
+          </footer>
+
+        </section>
+      </body>
+      </html>
+

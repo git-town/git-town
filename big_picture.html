@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Git Town by Originate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+
+    <section class="page-header">
+      <a href="/"><img src="documentation/logo-horizontal-white.svg"></a>
+      <h2 class="project-tagline">High-level command-line interface for Git </h2>
+      <a href="big_picture.html" class="btn">About</a>
+      <a href="tutorial.html" class="btn">Tutorial</a>
+      <a href="faq.html" class="btn">FAQ</a>
+      <a href="https://github.com/Originate/git-town#installation" class="btn" target="_blank">Install</a>
+      <a href="https://github.com/Originate/git-town" class="btn" target="_blank">View on Github</a>
+      <a href="https://twitter.com/GitTown" class="btn" target="_blank">Follow on Twitter</a>
+      <!-- <a href="https://github.com/Originate/git&#45;town" class="btn"><img src="documentation/mark&#45;github.svg" width="30" height="30"></img>  </a> -->
+    </section>
+
+
+    <section class="main-content">
+      <h1>
+        <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        The Big Picture
+      </h1>
+
+      <h4>The problem: Software development doesn’t scale well</h4>
+
+      <p>Every software team runs into typical scalability issues:</p>
+
+      <ul>
+        <li>More team members means more frequent commits to the main development branch.
+        This means feature branches will fall behind the main branch more often,
+        which results in bigger, uglier merge conflicts when
+        finally getting the <a href="http://www.lgtm.in">LGTM</a> and merging these feature branches
+        into the main development branch.</li>
+        <li>These merge conflicts increase the
+        likelihood of breaking the main development branch, which brings
+        the productivity of the whole team down.</li>
+        <li>Old branches accumulate, making it harder to maintain an overview of
+        where current development is happening, and where unmerged changes are.</li>
+      </ul>
+
+
+      <p>These are only a few of the many headaches that diminish developer productivity and
+      happiness as a development team grows.
+      These issues are almost completely independent of the particular development workflow and how/where the code is hosted.</p>
+
+      <h2>The approach: Developer discipline</h2>
+
+      <p>Fortunately, most of these issues can be addressed with (a lot) more discipline:</p>
+
+      <ul>
+      <li>Always update your local repo before cutting a new feature branch.</li>
+      <li>Synchronize all your feature branches several times per day with
+      ongoing development from the rest of the team. This keeps merge conflicts small and easily
+      resolvable.</li>
+      <li>Before merging a finished feature branch into the main development branch,
+      update the main development branch and merge it into your feature
+      branch.
+      Doing so allows you to resolve and test any merge conflicts on the feature branch,
+      and keeps the main branch green.</li>
+      <li>Always remove all Git branches once you are done with them, from
+      both your local machine as well as the shared team repository.</li>
+      </ul>
+
+
+      <h2>The solution: A tool that goes the extra mile for you</h2>
+
+      <p>It is difficult to follow these practices consistently, because Git is an intentionally
+      generic and low-level tool,
+      designed to support many different ways of using it equally well.
+      Git is a really wonderful <em>foundation</em> for robust and flexible
+      source code management, but it does not provide direct high-level support for collaborative software development workflows.
+      Using this low-level tool for
+      high-level development workflows will therefore always be cumbersome and inefficient.
+      For example:</p>
+
+      <ul>
+      <li>creating a new, up-to-date feature branch in the middle of active
+      development requires
+      <a href="https://github.com/Originate/git-town/blob/d52802cd211f40e4966b598acc584c2abe326645/features/git-hack/on_feature_branch/with_remote_origin/with_open_changes.feature#L22-L27">up to 6 individual Git commands</a>.</li>
+      <li>updating a feature branch with the latest changes on the main
+      branch requires
+      <a href="https://github.com/Originate/git-town/blob/d52802cd211f40e4966b598acc584c2abe326645/features/git-sync/current_branch/feature_branch/no_conflict/with_tracking_branch.feature#L24-L33">up to 10 Git commands</a>,
+      even if there are no merge conflicts</li>
+      <li>properly merging a finished feature branch into the main development branch after
+      getting the LGTM in the middle of working on something else
+      requires up to
+      <a href="https://github.com/Originate/git-town/blob/d52802cd211f40e4966b598acc584c2abe326645/features/git-ship/supplied_branch/feature_branch/with_tracking_branch.feature#L19-L33">15 Git commands</a>.</li>
+      </ul>
+
+
+      <p>Keeping
+      <a href="http://blog.originate.com/blog/2015/02/13/refactoring-git-branches-part-ii">feature branches small and focused</a>
+      means more feature branches.
+      Running all these commands on each feature branch every day easily leads to each developer
+      having to run hundreds of Git commands each day!</p>
+
+      <p>While there are a number of tools like <a href="https://github.com/nvie/gitflow">Git Flow</a>
+      that focus on supporting a particular Git branching model,
+      there is currently no natural extension of the Git philosophy
+      towards generic, robust, high-level teamwork support.</p>
+
+      <p>We are pumped to release exactly that today:
+      <a href="https://github.com/Originate/git-town">Git Town</a>!
+      It provides a number of additional high-level Git commands.
+      Each command implements a typical step in most common team-based software development workflows.
+      Designed to be a natural extension to Git, Git Town feels like Git,
+      and supports many different ways of using it equally well.
+      The <a href="https://github.com/Originate/git-town/blob/master/documentation/tutorial.md">tutorial</a>
+      explains these commands and how to use them.</p>
+
+      <h2>The awesomeness: Made for everybody, as Open Source</h2>
+
+      <p>Git Town is made for beginners and experts alike.
+      If you are new to Git, and just want it to stay out of your way
+      and manage your code, let Git Town provide the expertise and do the legwork for you.
+      If, on the other hand, you are a Git ninja, and want to
+      use it in the most effective manner possible,
+      let Git Town automate
+      the repetitive parts of what you would type over and
+      over,
+      with no impact on your conventions and workflow.</p>
+
+      <p>Git Town is open source, runs everywhere Git runs (it’s written in Bash),
+      is <a href="https://github.com/Originate/git-town#configuration">configurable</a>,
+      robust, well <a href="https://github.com/Originate/git-town#documentation">documented</a>,
+      <a href="https://github.com/Originate/git-town/tree/master/features">well tested</a>,
+      has proven itself on everything from small open source projects to large enterprise code bases here at Originate,
+      and has an active and friendly developer community.</p>
+
+      <p>Please <a href="https://github.com/Originate/git-town#installation">try it out</a>, let us know how we can
+      <a href="https://github.com/Originate/git-town/issues">improve it</a>,
+      or help us build it by sending a pull request!</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Originate/git-town">Git Town</a> is maintained by <a href="http://www.originate.com">Originate</a></span>
+      </footer>
+
+    </section>
+  </body>
+</html>
