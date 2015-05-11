@@ -13,7 +13,7 @@ git rename-branch <branchname> <newbranchname> [-f]
 #### DESCRIPTION
 
 Renames the given branch on both the local machine and the remote if one is configured.
-Aborts if the new branch name already exists.
+Aborts if the new branch name already exists or the tracking branch is out of sync.
 This command is intended for feature branches. Renaming non-feature branches has to be confirmed with the `-f` option.
 
 * Creates a branch with the new name
