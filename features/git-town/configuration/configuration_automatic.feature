@@ -15,10 +15,10 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
     | COMMAND              |
-    | git new-pull-request |
     | git extract          |
     | git hack             |
     | git kill             |
+    | git new-pull-request |
     | git prune-branches   |
     | git repo             |
     | git ship             |
@@ -32,10 +32,10 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
     | COMMAND              |
-    | git new-pull-request |
     | git extract          |
     | git hack             |
     | git kill             |
+    | git new-pull-request |
     | git prune-branches   |
     | git repo             |
     | git ship             |
@@ -49,10 +49,10 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
     | COMMAND              |
-    | git new-pull-request |
     | git extract          |
     | git hack             |
     | git kill             |
+    | git new-pull-request |
     | git prune-branches   |
     | git repo             |
     | git ship             |
@@ -66,10 +66,10 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
     | COMMAND              |
-    | git new-pull-request |
     | git extract          |
     | git hack             |
     | git kill             |
+    | git new-pull-request |
     | git prune-branches   |
     | git repo             |
     | git ship             |
