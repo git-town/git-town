@@ -24,7 +24,7 @@ __Development Workflow__
 
 * [git hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
 * [git sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
-* [git pull-request](/documentation/commands/git-pull-request.md) - creates a new pull request
+* [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
 * [git ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
 
 
