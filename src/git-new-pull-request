@@ -2,25 +2,14 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-# Returns the source for a new Bitbucket pull request
-function bitbucket_source {
-  sha=$(git log --format="%H" -1 | cut -c-12)
-  echo "$repository:$sha:$branch" | sed 's/\//%2F/g' | sed 's/\:/%3A/g'
+function preconditions {
+  activate_driver_family 'code_hosting'
 }
 
 
-branch=$INITIAL_BRANCH_NAME
-domain=$(remote_domain)
-repository=$(remote_repository_name)
+function steps {
+  echo "create_pull_request $(remote_repository_name) $INITIAL_BRANCH_NAME"
+}
 
-if [ "$domain" == github.com ]; then
-  pr_path="compare/$branch?expand=1"
-elif [ "$domain" == bitbucket.org ]; then
-  pr_path="pull-request/new?source=$(bitbucket_source)"
-else
-  echo_error_header
-  echo_usage "Unsupported hosting service. Pull requests can only be created on Bitbucket and GitHub"
-  exit_with_error newline
-fi
 
-open_browser "https://$domain/$repository/$pr_path"
+run "$@"
