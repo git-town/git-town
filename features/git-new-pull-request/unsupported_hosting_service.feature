@@ -13,4 +13,4 @@ Feature: git-new-pull-request: when origin is unsupported
 
   Scenario: result
     Then I get the error "Unsupported hosting service"
-    And I get the error "Pull requests can only be created on Bitbucket and GitHub"
+    And I get the error "This command requires hosting on GitHub or Bitbucket"
