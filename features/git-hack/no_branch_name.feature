@@ -1,4 +1,4 @@
-Feature: git hack: requires a branch name (with open changes)
+Feature: git hack: requires a branch name
 
   As a developer forgetting to provide the name of the new branch to be created
   I should be reminded that I have to provide the branch name to this command
