@@ -26,15 +26,15 @@ __Development Workflow__
 * [git sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
 * [git pull-request](/documentation/commands/git-pull-request.md) - creates a new pull request
 * [git ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
-* [git extract](/documentation/commands/git-extract.md) - copies selected commits from the current branch into their own branch
 
 
 __Repository Maintenance__
 
-* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
+* [git extract](/documentation/commands/git-extract.md) - copies selected commits from the current branch into their own branch
 * [git kill](/documentation/commands/git-kill.md) - removes a feature branch
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
+* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
 __Configuration and Help__
