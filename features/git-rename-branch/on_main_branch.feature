@@ -1,4 +1,4 @@
-Feature: git rename-branch: errors with renaming the main branch
+Feature: git rename-branch: errors when renaming the main branch
 
   As a developer accidentally trying to rename the main branch
   I should see an error that this is not possible

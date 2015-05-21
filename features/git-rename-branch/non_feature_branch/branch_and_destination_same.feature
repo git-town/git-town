@@ -2,7 +2,7 @@ Feature: git rename-branch: does nothing if renaming a non-feature branch onto i
 
   As a developer renaming a non-feature branch onto itself
   I should get a message saying no action is needed
-  So that it works as expected 
+  So that I am aware that I just did a no-op.
 
 
   Background:
