@@ -6,6 +6,10 @@ Feature: git rename-branch: errors when the destination branch exists remotely
   Background:
     Given I have a feature branch named "current-feature" 
     And my coworker has a feature branch named "existing-feature"
+    And the following commits exist in my repository
+      | BRANCH           | LOCATION         | MESSAGE                 |
+      | current-feature  | local and remote | current-feature commit  |
+      | existing-feature | remote           | existing-feature commit |
     And I am on the "current-feature" branch
 
 
