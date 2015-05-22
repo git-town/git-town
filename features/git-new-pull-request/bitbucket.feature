@@ -5,7 +5,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
 
-  Scenario Outline: result
+  Scenario Outline: creating pull-requests
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
     And I have "open" installed
