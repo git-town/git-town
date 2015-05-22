@@ -13,7 +13,7 @@ Feature: git kill: errors when trying to kill the main branch
     And I am on the "main" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     Given I have an uncommitted file
     When I run `git kill`
     Then it runs no Git commands
@@ -28,16 +28,3 @@ Feature: git kill: errors when trying to kill the main branch
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |
 
-
-  Scenario: without open changes
-    When I run `git kill`
-    Then it runs no Git commands
-    And I get the error "You can only kill feature branches"
-    And I am still on the "main" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES      |
-      | local      | main, feature |
-      | remote     | main, feature |
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | feature | local and remote | good commit | good_file |
