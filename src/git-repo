@@ -2,13 +2,14 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-domain=$(remote_domain)
-repository=$(remote_repository_name)
+function preconditions {
+  activate_driver_family 'code_hosting'
+}
 
-if [ "$domain" != github.com ] && [ "$domain" != bitbucket.org ]; then
-  echo_error_header
-  echo_usage "Unsupported hosting service. Repositories can only be viewed on Bitbucket and GitHub"
-  exit_with_error newline
-fi
 
-open_browser "https://$domain/$repository"
+function steps {
+  echo "show_repo $(remote_repository_name)"
+}
+
+
+run "$@"
