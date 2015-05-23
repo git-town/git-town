@@ -2,7 +2,7 @@ Feature: git rename-branch: errors if renaming a non-feature branch that has unp
 
   As a developer renaming a non-feature branch that has unpushed changes
   I should get an error that the given branch is not in sync with its tracking branch
-  So that I don't lose work by accidentally overwriting existing branches.
+  So that I know branches must be in sync in order to be renamed.
 
 
   Background:
