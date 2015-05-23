@@ -1,4 +1,4 @@
-Feature: git rename-branch: renaming a feature branch without a tracking branch (with open changes)
+Feature: git rename-branch: renaming a feature branch without a tracking branch
 
   (see ../with_tracking_branch/with_open_changes.feature)
 

@@ -1,6 +1,8 @@
-Feature: git rename-branch: renaming a feature branch with a tracking branch (without open changes)
+Feature: git rename-branch: renaming a feature branch with a tracking branch
 
-  (see ./with_open_changes.feature)
+  As a developer with a poorly named feature branch
+  I want to be able to rename it safely in one easy step
+  So that the names of my branches match what they implement, and I can manage them effectively.
 
 
   Background:
@@ -10,6 +12,7 @@ Feature: git rename-branch: renaming a feature branch with a tracking branch (wi
       | main            | local and remote | main commit    |
       | current-feature | local and remote | feature commit |
     And I am on the "current-feature" branch
+    And I have an uncommitted file
     When I run `git rename-branch current-feature renamed-feature`
 
 
@@ -17,11 +20,14 @@ Feature: git rename-branch: renaming a feature branch with a tracking branch (wi
     Then it runs the Git commands
       | BRANCH          | COMMAND                                         |
       | current-feature | git fetch --prune                               |
+      |                 | git stash -u                                    |
       |                 | git checkout -b renamed-feature current-feature |
       | renamed-feature | git push -u origin renamed-feature              |
       |                 | git push origin :current-feature                |
       |                 | git branch -D current-feature                   |
+      |                 | git stash pop                                   |
     And I end up on the "renamed-feature" branch
+    And I still have my uncommitted file
     And I have the following commits
       | BRANCH          | LOCATION         | MESSAGE        |
       | main            | local and remote | main commit    |
