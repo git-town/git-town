@@ -25,6 +25,7 @@ Git Town provides these additional Git commands:
 * [git kill](/documentation/commands/git-kill.md) - remove an obsolete feature branch
 * [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete merged branches
+* [git rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
 * [git ship](/documentation/commands/git-ship.md) - deliver a completed feature branch
 * [git sync](/documentation/commands/git-sync.md) - update the current branch with all relevant changes
