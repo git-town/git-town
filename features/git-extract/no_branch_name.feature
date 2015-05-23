@@ -14,7 +14,7 @@ Feature: git extract: errors if no branch name is given
     And I am on the "feature" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     Given I have an uncommitted file
     When I run `git extract`
     Then it runs no Git commands
@@ -22,9 +22,3 @@ Feature: git extract: errors if no branch name is given
     And I am still on the "feature" branch
     And I still have my uncommitted file
 
-
-  Scenario: without open changes
-    When I run `git extract`
-    Then it runs no Git commands
-    And I get the error "No branch name provided"
-    And I am still on the "feature" branch
