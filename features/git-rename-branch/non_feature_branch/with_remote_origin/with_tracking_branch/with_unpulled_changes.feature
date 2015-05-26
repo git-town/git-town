@@ -16,19 +16,11 @@ Feature: git rename-branch: errors if renaming a non-feature branch that has unp
     And I am on the "production" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     And I have an uncommitted file
     When I run `git rename-branch production renamed-production -f`
     Then I get the error "The branch is not in sync with its tracking branch."
     And I get the error "Run 'git sync production' to sync the branch."
     And I end up on the "production" branch
     And I still have my uncommitted file
-    And I am left with my original commits
-
-
-  Scenario: without open changes
-    When I run `git rename-branch production renamed-production -f`
-    Then I get the error "The branch is not in sync with its tracking branch."
-    And I get the error "Run 'git sync production' to sync the branch."
-    And I end up on the "production" branch
     And I am left with my original commits
