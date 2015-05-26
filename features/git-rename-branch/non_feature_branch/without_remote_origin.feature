@@ -1,6 +1,6 @@
-Feature: git rename-branch: renaming a non-feature branch without a remote repo (with open changes)
+Feature: git rename-branch: renaming a non-feature branch without a remote repo
 
-  (see ../with_remote_origin/with_tracking_branch/with_open_changes.feature)
+  (see ../with_remote_origin/with_tracking_branch/in_sync.feature)
 
 
   Background:
