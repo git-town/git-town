@@ -30,8 +30,9 @@ if [ ! -f $BIN_PATH ]; then
   echo "No ShellCheck found"
   install_shellcheck
 else
-  if [ "$VERSION" != "currently_installed_shell_check_version" ]; then
-    echo "An older version of ShellCheck was found"
+  EXISTING_VERSION=$(currently_installed_shell_check_version)
+  if [ "$VERSION" != "$EXISTING_VERSION" ]; then
+    echo "An older version of ShellCheck ($EXISTING_VERSION) was found"
     rm -rf $BIN_PATH
     install_shellcheck
   else
