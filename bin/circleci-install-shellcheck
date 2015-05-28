@@ -3,9 +3,22 @@
 
 set -e
 
-if [ ! -f ~/.cabal/bin/shellcheck ]; then
+VERSION=0.3.7
+
+BIN_PATH=~/.cabal/bin/shellcheck
+
+install_shellcheck() {
   cabal update --verbose=0
-  cabal install --verbose=0 shellcheck-0.3.6
+  cabal install --verbose=0 shellcheck-$VERSION
+}
+
+if [ ! -f $BIN_PATH ]; then
+  install_shellcheck
 else
-  echo "Using cached shellcheck"
+  CURRENT=$($BIN_PATH -V | grep version: | cut -d: -f2 | awk '{print $1}')
+  if [ "$VERSION" != "$CURRENT" ]; then
+    install_shellcheck
+  else
+    echo "Using cached shellcheck"
+  fi
 fi

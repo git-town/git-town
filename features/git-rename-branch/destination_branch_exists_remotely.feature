@@ -4,7 +4,7 @@ Feature: git rename-branch: errors when the destination branch exists remotely
 
 
   Background:
-    Given I have a feature branch named "current-feature" 
+    Given I have a feature branch named "current-feature"
     And my coworker has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 |
@@ -13,7 +13,7 @@ Feature: git rename-branch: errors when the destination branch exists remotely
     And I am on the "current-feature" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     And I have an uncommitted file
     When I run `git rename-branch current-feature existing-feature`
     Then it runs the Git commands
@@ -22,14 +22,4 @@ Feature: git rename-branch: errors when the destination branch exists remotely
     And I get the error "A branch named 'existing-feature' already exists"
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
-    And I am left with my original commits
-
-
-  Scenario: without open changes
-    When I run `git rename-branch current-feature existing-feature`
-    Then it runs the Git commands
-      | BRANCH          | COMMAND           |
-      | current-feature | git fetch --prune |
-    And I get the error "A branch named 'existing-feature' already exists"
-    And I am still on the "current-feature" branch
     And I am left with my original commits
