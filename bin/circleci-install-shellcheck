@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-
+#
 # Installs ShellCheck on CircleCI if necessary.
+#
 
 
 # the version of shellcheck to be installed
