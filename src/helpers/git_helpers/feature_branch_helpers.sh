@@ -38,6 +38,18 @@ function is_feature_branch {
 }
 
 
+# Returns true if the current branch is the main branch
+function is_main_branch {
+  local branch_name=$1
+
+  if [ "$branch_name" == "$MAIN_BRANCH_NAME" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 # Returns true if the given branch is a non-feature branch
 function is_non_feature_branch {
   local branch_name=$1

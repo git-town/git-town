@@ -1,4 +1,4 @@
-Feature: git sync: syncing inside a folder that doesn't exist on the main branch (with open changes)
+Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
   (see ./no_conflict.feature)
 

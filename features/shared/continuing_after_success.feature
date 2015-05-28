@@ -40,6 +40,14 @@ Feature: Show clear error if trying to continue after executing a successful com
     Then I get the error "The last command finished successfully and cannot be continued"
 
 
+  Scenario: continuing after successful git-rename-branch
+    Given I have a feature branch named "feature"
+    And I am on the "main" branch
+    And I run `git rename-branch feature renamed-feature`
+    When I run `git rename-branch --continue`
+    Then I get the error "The last command finished successfully and cannot be continued"
+
+
   Scenario: continuing after successful git-ship
     Given I have a feature branch named "current-feature"
     And the following commit exists in my repository
