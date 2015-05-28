@@ -15,6 +15,7 @@ BIN_PATH=~/.cabal/bin/shellcheck
 
 # Installs the current version of ShellCheck
 function install_shellcheck {
+  echo "Installing ShellCheck $VERSION"
   cabal update --verbose=0
   cabal install --verbose=0 shellcheck-$VERSION
 }
