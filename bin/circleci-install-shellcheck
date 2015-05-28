@@ -1,22 +1,37 @@
 #!/usr/bin/env bash
-# Installs ShellCheck on CircleCI if necessary
-
 set -e
 
+
+# Installs ShellCheck on CircleCI if necessary,
+# removes older versions.
+
+
+# the current version of shellcheck
 VERSION=0.3.7
 
+# path to the cached ShellCheck binary
 BIN_PATH=~/.cabal/bin/shellcheck
 
-install_shellcheck() {
+
+# Installs the current version of ShellCheck
+function install_shellcheck {
   cabal update --verbose=0
   cabal install --verbose=0 shellcheck-$VERSION
 }
 
+
+function currently_installed_shell_check_version {
+  $BIN_PATH -V | grep version: | cut -d: -f2 | awk '{print $1}'
+}
+
+
 if [ ! -f $BIN_PATH ]; then
+  # No ShellCheck exists --> install it
   install_shellcheck
 else
-  CURRENT=$($BIN_PATH -V | grep version: | cut -d: -f2 | awk '{print $1}')
-  if [ "$VERSION" != "$CURRENT" ]; then
+  if [ "$VERSION" != "currently_installed_shell_check_version" ]; then
+    # An older version of ShellCheck is installed --> overwrite with the latest version
+    rm -rf $BIN_PATH
     install_shellcheck
   else
     echo "Using cached shellcheck"
