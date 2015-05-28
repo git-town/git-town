@@ -20,16 +20,26 @@ and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 Git Town provides these additional Git commands:
 
-* [git extract](/documentation/commands/git-extract.md) - copy selected commits from the current branch into their own branch
-* [git hack](/documentation/commands/git-hack.md) - cut a new feature branch off the main branch
-* [git kill](/documentation/commands/git-kill.md) - remove an obsolete feature branch
+__Development Workflow__
+
+* [git hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
+* [git sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
 * [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
-* [git prune-branches](/documentation/commands/git-prune-branches.md) - delete merged branches
+* [git ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
+
+
+__Repository Maintenance__
+
+* [git extract](/documentation/commands/git-extract.md) - copies selected commits from the current branch into their own branch
+* [git kill](/documentation/commands/git-kill.md) - removes a feature branch
+* [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
 * [git rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
-* [git ship](/documentation/commands/git-ship.md) - deliver a completed feature branch
-* [git sync](/documentation/commands/git-sync.md) - update the current branch with all relevant changes
 * [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
+
+
+__Configuration and Help__
+
 * [git town](/documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
 
 
