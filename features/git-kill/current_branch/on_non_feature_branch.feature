@@ -14,7 +14,7 @@ Feature: git kill: errors when trying to kill a non-feature branch
     And I am on the "qa" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     Given I have an uncommitted file
     When I run `git kill`
     Then it runs no Git commands
@@ -29,16 +29,3 @@ Feature: git kill: errors when trying to kill a non-feature branch
       | BRANCH | LOCATION         | MESSAGE   | FILE NAME |
       | qa     | local and remote | qa commit | qa_file   |
 
-
-  Scenario: without open changes
-    When I run `git kill`
-    Then it runs no Git commands
-    And I get the error "You can only kill feature branches"
-    And I am still on the "qa" branch
-    And the existing branches are
-      | REPOSITORY | BRANCHES |
-      | local      | main, qa |
-      | remote     | main, qa |
-    And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE   | FILE NAME |
-      | qa     | local and remote | qa commit | qa_file   |

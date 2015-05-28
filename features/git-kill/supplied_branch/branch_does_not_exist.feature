@@ -9,7 +9,7 @@ Feature: git kill: errors if supplied branch does not exist
     Given I am on the "main" branch
 
 
-  Scenario: with open changes
+  Scenario: result
     When I run `git kill non-existing-feature`
     Given I have an uncommitted file
     Then it runs the Git commands
@@ -19,11 +19,3 @@ Feature: git kill: errors if supplied branch does not exist
     And I end up on the "main" branch
     And I still have my uncommitted file
 
-
-  Scenario: without open changes
-    When I run `git kill non-existing-feature`
-    Then it runs the Git commands
-      | BRANCH | COMMAND           |
-      | main   | git fetch --prune |
-    And I get the error "There is no branch named 'non-existing-feature'"
-    And I end up on the "main" branch
