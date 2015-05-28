@@ -2,11 +2,10 @@
 set -e
 
 
-# Installs ShellCheck on CircleCI if necessary,
-# removes older versions.
+# Installs ShellCheck on CircleCI if necessary.
 
 
-# the current version of shellcheck
+# the version of shellcheck to be installed
 VERSION=0.3.7
 
 # path to the cached ShellCheck binary
@@ -36,6 +35,6 @@ else
     rm -rf $BIN_PATH
     install_shellcheck
   else
-    echo "Using cached shellcheck"
+    echo "Using cached ShellCheck $EXISTING_VERSION"
   fi
 fi
