@@ -27,11 +27,11 @@ function currently_installed_shell_check_version {
 
 
 if [ ! -f $BIN_PATH ]; then
-  # No ShellCheck exists --> install it
+  echo "No ShellCheck found"
   install_shellcheck
 else
   if [ "$VERSION" != "currently_installed_shell_check_version" ]; then
-    # An older version of ShellCheck is installed --> overwrite with the latest version
+    echo "An older version of ShellCheck was found"
     rm -rf $BIN_PATH
     install_shellcheck
   else
