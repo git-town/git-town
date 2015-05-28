@@ -1,4 +1,4 @@
-Feature: git hack: resolving conflicts between main branch and its tracking branch (with open changes)
+Feature: git hack: resolving conflicts between main branch and its tracking branch
 
   As a developer creating a new feature branch while there are conflicting updates on the local and remote main branch
   I want to be given the choice to resolve the conflicts or abort
