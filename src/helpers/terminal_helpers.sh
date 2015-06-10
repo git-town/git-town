@@ -8,7 +8,7 @@ shopt -s extglob
 # Prints a line in bold
 function echo_bold {
   output_style_bold
-  echo "$*"
+  echo "$@"
   output_style_reset
 }
 
@@ -16,22 +16,20 @@ function echo_bold {
 # Prints a header line into the terminal.
 function echo_header {
   echo
-  echo_bold "$*"
+  echo_bold "$@"
 }
 
 
 # Prints an error header into the terminal.
 function echo_error_header {
-  local str=$(echo_indented Error)
   echo
-  echo_red_bold "$str"
+  echo_red_bold "$(echo_indented 'Error')"
 }
 
 
 # Prints the provided error message
 function echo_error {
-  local str=$(echo_indented "$*")
-  echo_red "$str"
+  echo_red "$(echo_indented "$@")"
 }
 
 
@@ -48,14 +46,14 @@ function echo_if_true {
 
 # Prints the message indented
 function echo_indented {
-  echo "$*" | indent
+  echo "$@" | indent
 }
 
 
 # Prints an inline usage
 function echo_inline_bold {
   output_style_bold
-  printf "%s" "$*"
+  printf "%s" "$@"
   output_style_reset
 }
 
@@ -81,7 +79,7 @@ function echo_inline_usage_or {
 # Outputs the given text in red
 function echo_red {
   output_style_red
-  echo "$*"
+  echo "$@"
   output_style_reset
 }
 
@@ -90,14 +88,14 @@ function echo_red {
 function echo_red_bold {
   output_style_bold
   output_style_red
-  echo "$*"
+  echo "$@"
   output_style_reset
 }
 
 
 # Prints the provided usage message
 function echo_usage {
-  echo_indented "$*"
+  echo_indented "$@"
 }
 
 
