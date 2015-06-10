@@ -21,7 +21,7 @@ function install_shellcheck {
 }
 
 
-function currently_installed_shell_check_version {
+function currently_installed_shellcheck_version {
   $BIN_PATH -V | grep version: | cut -d: -f2 | awk '{print $1}'
 }
 
@@ -30,9 +30,9 @@ if [ ! -f $BIN_PATH ]; then
   echo "No ShellCheck found"
   install_shellcheck
 else
-  EXISTING_VERSION=$(currently_installed_shell_check_version)
+  EXISTING_VERSION=$(currently_installed_shellcheck_version)
   if [ "$VERSION" != "$EXISTING_VERSION" ]; then
-    echo "An older version of ShellCheck ($EXISTING_VERSION) was found"
+    echo "The latest version of ShellCheck is $VERSION, CircleCI has $EXISTING_VERSION. Upgrading..."
     rm -rf $BIN_PATH
     install_shellcheck
   else
