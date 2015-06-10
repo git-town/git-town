@@ -9,6 +9,7 @@ end
 Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
+    set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
   end
 end
 
@@ -22,6 +23,11 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
 end
 
 
+Given(/^I have a feature branch named "(.+?)" that is cut from (.+?)$/) do |branch_name, parent_branch_name|
+  create_branch branch_name, start_point: parent_branch_name
+end
+
+
 Given(/^I have a stale feature branch named "([^"]+)" with its tip at "([^"]+)"$/) do |branch_name, commit_message|
   create_branch branch_name, start_point: commit_sha(commit_message)
 end
@@ -31,6 +37,11 @@ Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
   create_branch branch_name
   configure_non_feature_branches branch_name
   create_commits branch: 'main'
+end
+
+
+Given(/^Git Town knows that "(.+?)" has the parent "(.+?)" and the parents "(.+?)"$/) do |branch, parent, parents|
+  set_parent_branch branch: branch, parent: parent, parents: parents
 end
 
 

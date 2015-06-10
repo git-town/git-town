@@ -21,7 +21,7 @@ When(/^I run `([^`]+)` with the last( two)? commit shas?$/) do |command, two|
 end
 
 
-When(/^I run `(.+?)` and enter "(.+?)"$/) do |command, input|
+When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, input|
   inputs = Kappamaki.from_sentence(input)
   @result = run command, inputs: inputs
 end
