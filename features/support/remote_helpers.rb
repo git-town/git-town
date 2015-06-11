@@ -12,13 +12,13 @@ end
 
 
 # Returns the remote URL for a new pull request for the given domain and branch
-def pull_request_url domain, branch_name, repo
+def pull_request_url domain, branch, parent_branch, repo
   case domain
   when 'Bitbucket'
     sha = recent_commit_shas(1).join('')[0, 12]
     "https://bitbucket.org/#{repo}/pull-request/new?source=#{CGI.escape repo}%3A#{sha}%3A#{branch_name}"
   when 'GitHub'
-    "https://github.com/#{repo}/compare/#{branch_name}?expand=1"
+    "https://github.com/#{repo}/compare/#{parent_branch}...#{branch}?expand=1"
   else
     fail "Unknown domain: #{domain}"
   end

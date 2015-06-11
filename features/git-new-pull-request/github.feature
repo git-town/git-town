@@ -39,5 +39,3 @@ Feature: git-new-pull-request when origin is on GitHub
     And I am on the "child-feature" branch
     When I run `git new-pull-request`
     Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
-
-
