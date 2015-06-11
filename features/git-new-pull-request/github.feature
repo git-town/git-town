@@ -5,10 +5,12 @@ Feature: git-new-pull-request when origin is on GitHub
   So that I have more time for coding the next feature instead of wasting it with process boilerplate.
 
 
+  Background:
+    Given I have "open" installed
+
   Scenario Outline: creating pull-requests
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
-    And I have "open" installed
     And I am on the "feature" branch
     When I run `git new-pull-request`
     Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
@@ -35,7 +37,6 @@ Feature: git-new-pull-request when origin is on GitHub
     And Git Town knows that "parent-feature" has the parent "main" and the parents "main"
     And Git Town knows that "child-feature" has the parent "parent-feature" and the parents "main,parent-feature"
     And my remote origin is git@github.com:Originate/git-town.git
-    And I have "open" installed
     And I am on the "child-feature" branch
     When I run `git new-pull-request`
     Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
@@ -45,7 +46,6 @@ Feature: git-new-pull-request when origin is on GitHub
     Given I have a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
     And my remote origin is git@github.com:Originate/git-town.git
-    And I have "open" installed
     And I am on the "feature" branch
     When I run `git new-pull-request` and enter "main"
     Then I see a new GitHub pull request for the "feature" branch against the "main" branch in the "Originate/git-town" repo in my browser
@@ -54,7 +54,6 @@ Feature: git-new-pull-request when origin is on GitHub
     Given I have a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
     And my remote origin is git@github.com:Originate/git-town.git
-    And I have "open" installed
     And I am on the "feature" branch
     When I run `git new-pull-request` and enter ""
     Then I see a new GitHub pull request for the "feature" branch against the "main" branch in the "Originate/git-town" repo in my browser
