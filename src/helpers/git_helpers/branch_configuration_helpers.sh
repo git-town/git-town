@@ -38,6 +38,42 @@ function delete_parents_entry {
 }
 
 
+# Makes sure that we know all the parent branches
+# Asks the user if necessary
+# Aborts the script if not all branches become known.
+function ensure_knows_parent_branches {
+  local current_branch=$1
+
+  if [ "$(knows_all_parent_branches "$current_branch")" = false ]; then
+    # Here we don't have the parent branches list --> make sure we know all parents, then recompile it from all parents
+    local parent
+
+    while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
+      if [ "$(knows_parent_branch "$current_branch")" = true ]; then
+        parent=$(parent_branch "$current_branch")
+        echo "automatically determined parent as '$parent'"
+      else
+        # here we don't know the parent of the current branch -> ask the user
+        echo
+        echo -n "Please enter the parent branch for $(echo_n_cyan_bold "$current_branch") ($(echo_n_dim "$MAIN_BRANCH_NAME")): "
+        read parent
+        if [ -z "$parent" ]; then
+          parent=$MAIN_BRANCH_NAME
+        fi
+        if [ "$(has_branch "$parent")" == "false" ]; then
+          echo_error_header
+          echo_error "branch '$parent' doesn't exist"
+          exit_with_error newline
+        fi
+        store_parent_branch "$current_branch" "$parent"
+      fi
+      current_branch=$parent
+    done
+    compile_parent_branches "$1"
+  fi
+}
+
+
 # Returns whether we know the parent branch for the given branch
 function knows_parent_branch {
   local branch_name=$1
