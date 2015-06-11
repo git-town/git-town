@@ -27,3 +27,17 @@ Feature: git-new-pull-request when origin is on GitHub
       | https://github.com/Originate/originate.github.com     | Originate/originate.github.com |
       | git@github.com:Originate/originate.github.com.git     | Originate/originate.github.com |
       | git@github.com:Originate/originate.github.com         | Originate/originate.github.com |
+
+
+  Scenario: nested feature branch with known parent
+    Given I have a feature branch named "parent-feature"
+    And I have a feature branch named "child-feature" that is cut from parent-feature
+    And Git Town knows that "parent-feature" has the parent "main" and the parents "main"
+    And Git Town knows that "child-feature" has the parent "parent-feature" and the parents "main,parent-feature"
+    And my remote origin is git@github.com:Originate/git-town.git
+    And I have "open" installed
+    And I am on the "child-feature" branch
+    When I run `git new-pull-request`
+    Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
+
+
