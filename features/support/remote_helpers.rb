@@ -12,7 +12,7 @@ end
 
 
 # Returns the remote URL for a new pull request for the given domain and branch
-def pull_request_url domain, branch, parent_branch, repo
+def pull_request_url domain:, branch:, parent_branch:, repo:
   case domain
   when 'Bitbucket'
     sha = recent_commit_shas(1).join('')[0, 12]
