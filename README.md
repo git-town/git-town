@@ -18,6 +18,8 @@ and the [tutorial](documentation/tutorial.md) to get an idea for how it works.
 
 ## Commands
 
+[![Join the chat at https://gitter.im/Originate/git-town](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Originate/git-town?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Git Town provides these additional Git commands:
 
 __Development Workflow__
