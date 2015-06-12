@@ -1,6 +1,7 @@
 ![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
 [![Build Status](https://circleci.com/gh/Originate/git-town/tree/master.svg?style=shield)](https://circleci.com/gh/Originate/git-town/tree/master)
+[![Join the chat at https://gitter.im/Originate/git-town](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Originate/git-town?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.
