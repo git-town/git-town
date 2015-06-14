@@ -8,7 +8,7 @@ Feature: Creating nested feature branches
   Scenario: Creating a child branch of the current feature branch
     Given I have a feature branch named "parent-feature"
     And Git Town knows that "parent-feature" has the parent "main" and the parents "main"
-    Given the following commit exists in my repository
+    Given the following commits exist in my repository
       | BRANCH         | LOCATION | MESSAGE        | FILE NAME    |
       | main           | remote   | main_commit    | main_file    |
       | parent-feature | local    | feature_commit | feature_file |
