@@ -45,11 +45,6 @@ Given(/^I remove the "([^"]*)" branch from my machine$/) do |branch_name|
 end
 
 
-Given(/^Git Town knows that "(.+?)" has the parent "(.+?)" and the parents "(.+?)"$/) do |branch, parent, parents|
-  set_parent_branch branch: branch, parent: parent, parents: parents
-end
-
-
 Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   in_repository :coworker do
     create_branch branch_name

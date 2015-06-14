@@ -109,9 +109,9 @@ def delete_local_branch branch_name
 end
 
 
-def set_parent_branch branch:, parent:, parents:
+def set_parent_branch branch:, parent:, parents: nil
   run "git config git-town.branches.parent.#{normalize_branch_name branch} #{parent}"
-  run "git config git-town.branches.parents.#{normalize_branch_name branch} #{parents}"
+  run "git config git-town.branches.parents.#{normalize_branch_name branch} #{parents}" if parents
 end
 
 

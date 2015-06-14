@@ -38,7 +38,7 @@ Feature: Forking off a remote branch
       | parent-feature | local and remote | parent_feature_commit                   | parent_feature_file |
       |                |                  | main_commit                             | main_file           |
       |                |                  | Merge branch 'main' into parent-feature |                     |
-    And Git Town is aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
       | parent-feature | main           |

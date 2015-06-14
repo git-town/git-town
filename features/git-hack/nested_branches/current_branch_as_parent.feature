@@ -7,7 +7,9 @@ Feature: Creating nested feature branches
 
   Background:
     Given I have a feature branch named "parent-feature"
-    And Git Town knows that "parent-feature" has the parent "main" and the parents "main"
+    And Git Town is aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | parent-feature | main           |
     Given the following commits exist in my repository
       | BRANCH         | LOCATION | MESSAGE        | FILE NAME    |
       | main           | remote   | main_commit    | main_file    |
@@ -42,7 +44,7 @@ Feature: Creating nested feature branches
       | parent-feature | local and remote | feature_commit                          | feature_file |
       |                |                  | main_commit                             | main_file    |
       |                |                  | Merge branch 'main' into parent-feature |              |
-    And Git Town is aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
       | parent-feature | main           |
@@ -74,7 +76,7 @@ Feature: Creating nested feature branches
       | parent-feature | local and remote | feature_commit                          | feature_file |
       |                |                  | main_commit                             | main_file    |
       |                |                  | Merge branch 'main' into parent-feature |              |
-    And Git Town is aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
       | parent-feature | main           |
