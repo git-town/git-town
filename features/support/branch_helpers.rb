@@ -105,7 +105,7 @@ end
 
 # Removes the given branch from the local repository
 def delete_local_branch branch_name
-  run "git br -D #{branch_name}"
+  run "git branch -D #{branch_name}"
 end
 
 
