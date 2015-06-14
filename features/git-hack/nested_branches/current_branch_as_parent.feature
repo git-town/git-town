@@ -39,4 +39,3 @@ Feature: Creating nested feature branches
       | feature       | local and remote | feature_commit                   | feature_file |
       |               |                  | main_commit                      | main_file    |
       |               |                  | Merge branch 'main' into feature |              |
-

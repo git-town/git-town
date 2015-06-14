@@ -1,8 +1,8 @@
 Feature: Trying to create a feature branch with a non-existing parent
 
-  As a developer waiting for permission to ship a feature branch that contains changes needed for the next feature
-  I want to be able to start working on the next feature while having access to the changes currently under review
-  So that I am not slowed down by reviews and can keep working on my backlog as planned.
+  As a developer trying to fork off a non-existing branch
+  I want to get a reminder about my mistake
+  So that I can try again with the correct parent branch name.
 
 
   Scenario: Creating a child branch of the current feature branch
