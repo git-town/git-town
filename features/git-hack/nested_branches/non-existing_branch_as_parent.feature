@@ -5,7 +5,7 @@ Feature: Trying to create a feature branch with a non-existing parent
   So that I can try again with the correct parent branch name.
 
 
-  Scenario: Creating a child branch of the current feature branch
+  Scenario: Creating a child branch off the current feature branch
     Given I have a feature branch named "feature"
     And Git Town knows that "feature" has the parent "main" and the parents "main"
     And the following commit exists in my repository
