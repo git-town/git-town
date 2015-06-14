@@ -17,6 +17,8 @@ function preconditions {
 
   if [ -z "$parent_branch_name" ]; then
     parent_branch_name=$MAIN_BRANCH_NAME
+  elif [ "$parent_branch_name" == '.' ]; then
+    parent_branch_name=$INITIAL_BRANCH_NAME
   fi
   ensure_has_target_branch
   ensure_does_have_branch "$parent_branch_name"
