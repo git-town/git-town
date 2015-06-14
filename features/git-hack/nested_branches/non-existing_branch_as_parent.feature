@@ -22,3 +22,6 @@ Feature: Trying to create a feature branch with a non-existing parent
     And I end up on the "main" branch
     And I still have my uncommitted file
     And I am left with my original commits
+    And Git Town is aware of this branch hierarchy
+      | BRANCH  | PARENT |
+      | feature | main   |

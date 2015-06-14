@@ -14,6 +14,7 @@ function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
   run_git_command "git checkout -b $new_branch_name $parent_branch_name"
+  store_parent_branch "$new_branch_name" "$parent_branch_name"
 }
 
 

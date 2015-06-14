@@ -42,6 +42,10 @@ Feature: Creating nested feature branches
       | parent-feature | local and remote | feature_commit                          | feature_file |
       |                |                  | main_commit                             | main_file    |
       |                |                  | Merge branch 'main' into parent-feature |              |
+    And Git Town is aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |
 
 
   Scenario: Providing '.' as the parent name
@@ -70,3 +74,7 @@ Feature: Creating nested feature branches
       | parent-feature | local and remote | feature_commit                          | feature_file |
       |                |                  | main_commit                             | main_file    |
       |                |                  | Merge branch 'main' into parent-feature |              |
+    And Git Town is aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |
