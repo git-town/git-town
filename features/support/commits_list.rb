@@ -22,7 +22,6 @@ class CommitList
   # Adds the given commit to this CommitList instance
   #
   # rubocop:disable MethodLength
-  # rubocop:disable AbcSize
   def add sha:, message:, branch_name:, author:
     local_branch_name = local_branch_name branch_name
     @commits[local_branch_name] ||= {}
@@ -39,7 +38,6 @@ class CommitList
     end
   end
   # rubocop:enable MethodLength
-  # rubocop:enable AbcSize
 
 
   # Returns whether this CommitList instance has found any commits so far
