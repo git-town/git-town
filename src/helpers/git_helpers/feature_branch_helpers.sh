@@ -3,7 +3,9 @@
 
 # Creates and checkouts a new branch off the main branch with the given name
 function create_and_checkout_feature_branch {
-  create_and_checkout_branch "$1" "$MAIN_BRANCH_NAME"
+  local branch_name=$1
+  local parent_branch_name=$2
+  create_and_checkout_branch "$branch_name" "$parent_branch_name"
 }
 
 
