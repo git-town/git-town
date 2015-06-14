@@ -7,7 +7,7 @@ Feature: Forking off a remote branch
 
   Scenario: Creating a child branch of a remote branch
     Given I have a feature branch named "parent-feature"
-    Given the following commit exists in my repository
+    And the following commit exists in my repository
       | BRANCH         | LOCATION | MESSAGE               | FILE NAME           |
       | main           | remote   | main_commit           | main_file           |
       | parent-feature | remote   | parent_feature_commit | parent_feature_file |
