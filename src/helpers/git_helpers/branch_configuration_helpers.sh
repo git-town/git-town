@@ -5,6 +5,13 @@
 # are cut from which ones
 
 
+# Returns the names of all branches that have this branch as their immediate parent
+function child_branches {
+  local current_branch=$1
+  git config --get-regexp "^git-town\.branches\.parent\." | grep "$current_branch$" | sed 's/git-town\.branches\.parent\.//' | sed "s/ $current_branch$//"
+}
+
+
 # Calculates the "parents" property for the given branch
 # out of the existing "parent" properties
 function compile_parent_branches {
@@ -28,6 +35,13 @@ function compile_parent_branches {
 
   # save the result into the configuration
   git config git-town.branches.parents."$(normalized_branch_name "$1")" "$all_parent_branches"
+}
+
+
+# Removes the "parent" entry from the configuration
+function delete_parent_entry {
+  local branch_name=$1
+  git config --unset "git-town.branches.parent.$branch_name"
 }
 
 
