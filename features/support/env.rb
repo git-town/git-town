@@ -73,7 +73,10 @@ end
 
 After do
   if @last_run_result && !@error_expected
-    expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
+    if @last_run_result.error
+      puts unformatted_last_run_output
+      expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
+    end
   end
   unless @non_empty_stash_expected
     expect(stash_size).to eql(0), 'Finished with non empty stash'
