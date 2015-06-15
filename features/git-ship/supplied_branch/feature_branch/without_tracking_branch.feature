@@ -17,9 +17,9 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other_feature | git stash -u                       |
+      |               | git fetch --prune                  |
       |               | git checkout main                  |
-      | main          | git fetch --prune                  |
-      |               | git rebase origin/main             |
+      | main          | git rebase origin/main             |
       |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
       |               | git merge --no-edit main           |

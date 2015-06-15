@@ -32,10 +32,8 @@ function steps {
   fi
 
   if [ "$HAS_REMOTE" = true ]; then
-    echo "checkout_main_branch"
     echo "fetch"
-    echo "rebase_tracking_branch"
-    echo "push"
+    sync_branch_steps "$MAIN_BRANCH_NAME"
   fi
 
   echo "checkout $target_branch_name"
