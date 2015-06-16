@@ -1,8 +1,8 @@
 Feature: git ship: shipping a parent branch
 
-  As a user shipping a feature branch that has other branches forked off it
-  I want that the branch hierarchy information is updated
-  So that my workspace stays in a consistent state after the shipping.
+  As a user shipping a feature branch that is a parent branch to other feature branches
+  I want that the child branches are direct descendents of main after shipping
+  So that my workspace stays in a consistent state at all times.
 
 
   Background:

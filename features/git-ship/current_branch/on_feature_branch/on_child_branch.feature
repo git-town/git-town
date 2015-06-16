@@ -1,6 +1,6 @@
 Feature: git ship: shipping a child branch
 
-  As a user shipping a feature branch that is forked off another unshipped feature branch
+  As a user shipping a feature branch that is a child branch of another unshipped feature branch
   I want to see a warning that this branch has unshipped parents
   So that I don't accidentally also ship the parent branch.
 
