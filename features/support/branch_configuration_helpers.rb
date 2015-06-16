@@ -6,3 +6,9 @@ def configured_branch_hierarchy_information
   end
   result
 end
+
+
+# Stores the currently configured branch hierarchy metadata for later
+def store_branch_hierarchy_metadata
+  @branch_hierarchy_metadata = configured_branch_hierarchy_information
+end

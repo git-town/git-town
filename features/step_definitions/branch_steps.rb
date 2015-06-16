@@ -6,11 +6,24 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
-  Kappamaki.from_sentence(branch_names).each do |branch_name|
-    create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
-  end
+Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"$/) do |local, branch_name|
+  create_branch branch_name, remote: !local
+  set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
+end
+
+
+Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
+  create_branch branch_1_name, remote: !local
+  create_branch branch_2_name, remote: !local
+  set_parent_branch branch: branch_1_name, parent: 'main', parents: 'main'
+  set_parent_branch branch: branch_2_name, parent: 'main', parents: 'main'
+end
+
+
+Given(/^I have a feature branch named "([^"]*)" as a child of "([^"]*)"$/) do |branch_name, parent_name|
+  create_branch branch_name, remote: true
+  set_parent_branch branch: branch_name, parent: parent_name
+  store_branch_hierarchy_metadata
 end
 
 
