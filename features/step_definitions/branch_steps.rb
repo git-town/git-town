@@ -20,7 +20,7 @@ Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) d
 end
 
 
-Given(/^I have a feature branch named "([^"]*)" as a child of "([^"]*)"$/) do |branch_name, parent_name|
+Given(/^I have a feature branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
   create_branch branch_name, remote: true, start_point: parent_name
   set_parent_branch branch: branch_name, parent: parent_name
   store_branch_hierarchy_metadata
@@ -48,7 +48,7 @@ Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
 end
 
 
-Given(/^I remove the "([^"]*)" branch from my machine$/) do |branch_name|
+Given(/^I remove the "([^"]+)" branch from my machine$/) do |branch_name|
   delete_local_branch branch_name
 end
 
