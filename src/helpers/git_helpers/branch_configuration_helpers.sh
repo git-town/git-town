@@ -137,6 +137,6 @@ function parent_branches {
 function store_parent_branch {
   local branch=$1
   local parent_branch=$2
-  git config git-town.branches.parent."$branch" "$parent_branch"
+  git config "git-town.branches.parent.$(normalized_branch_name "$branch")" "$parent_branch"
 }
 
