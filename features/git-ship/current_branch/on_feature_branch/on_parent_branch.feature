@@ -5,19 +5,22 @@ Feature: git ship: shipping a parent branch
   So that my workspace stays in a consistent state after the shipping.
 
 
-  Scenario: shipping a parent branch
+  Background:
     Given I have a feature branch named "parent-feature"
     And I have a feature branch named "child-feature"
     And Git Town is aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | parent-feature | main           |
       | child-feature  | parent-feature |
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
     And I am on the "parent-feature" branch
     When I run `git ship -m "parent feature done"`
+
+
+  Scenario: result
     Then it runs the Git commands
       | BRANCH         | COMMAND                                   |
       | parent-feature | git fetch --prune                         |
