@@ -15,8 +15,10 @@ end
 def pull_request_url domain:, branch:, parent_branch:, repo:
   case domain
   when 'Bitbucket'
-    sha = recent_commit_shas(1).join('')[0, 12]
-    "https://bitbucket.org/#{repo}/pull-request/new?source=#{CGI.escape repo}%3A#{sha}%3A#{branch}"
+    sha = recent_commit_shas(1).join('')[0, 12] # TODO: update to have the branch as an argument
+    source = CGI.escape "#{repo}:#{sha}:#{branch}"
+    dest = CGI.escape "#{repo}::#{parent_branch}"
+    "https://bitbucket.org/#{repo}/pull-request/new?source=#{source}&dest=#{dest}"
   when 'GitHub'
     "https://github.com/#{repo}/compare/#{parent_branch}...#{branch}?expand=1"
   else
