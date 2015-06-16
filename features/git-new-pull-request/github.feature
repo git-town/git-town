@@ -33,11 +33,7 @@ Feature: git-new-pull-request when origin is on GitHub
 
   Scenario: nested feature branch with known parent
     Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" that is cut from parent-feature
-    And Git Town is aware of this branch hierarchy
-      | BRANCH         | PARENT         |
-      | parent-feature | main           |
-      | child-feature  | parent-feature |
+    And I have a feature branch named "child-feature" as a child of "parent-feature"
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
     When I run `git new-pull-request`

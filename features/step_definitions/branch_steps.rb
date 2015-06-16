@@ -21,7 +21,7 @@ end
 
 
 Given(/^I have a feature branch named "([^"]*)" as a child of "([^"]*)"$/) do |branch_name, parent_name|
-  create_branch branch_name, remote: true
+  create_branch branch_name, remote: true, start_point: parent_name
   set_parent_branch branch: branch_name, parent: parent_name
   store_branch_hierarchy_metadata
 end
@@ -33,11 +33,6 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
     create_commits branch: commit_to_branch
   end
-end
-
-
-Given(/^I have a feature branch named "(.+?)" that is cut from (.+?)$/) do |branch_name, parent_branch_name|
-  create_branch branch_name, start_point: parent_branch_name
 end
 
 
