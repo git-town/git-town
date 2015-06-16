@@ -44,7 +44,7 @@ function delete_parent_entry {
 
   local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
   if [ "$(knows_parent_branch "$normalized_branch")" == "true" ]; then
-    git config --unset "git-town.branches.parent.$branch_name"
+    git config --unset "git-town.branches.parent.$normalized_branch"
   fi
 }
 
@@ -55,7 +55,7 @@ function delete_parents_entry {
 
   local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
   if [ "$(knows_all_parent_branches "$normalized_branch")" == "true" ]; then
-    git config --unset "git-town.branches.parents.$(normalized_branch_name "$branch_name")"
+    git config --unset "git-town.branches.parents.$normalized_branch"
   fi
 }
 
