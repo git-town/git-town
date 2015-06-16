@@ -7,7 +7,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branche
 
   Scenario: entering the branch names
     Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" that is cut from parent-feature
+    And I have a feature branch named "child-feature" as a child of "parent-feature"
     And Git Town has no branch hierarchy information for "parent-feature" and "child-feature"
     And the following commits exist in my repository
       | BRANCH         | LOCATION | MESSAGE                      | FILE NAME                  |

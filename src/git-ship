@@ -5,7 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 function ensure_has_no_unshipped_parents {
   local branch_name=$1
 
-  local parent_branch_name;parent_branch_name=$(parent_branch "$branch_name")
+  local parent_branch_name ; parent_branch_name=$(parent_branch "$branch_name")
   if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
     echo_error_header
     echo_error "Shipping this branch would ship '$parent_branch_name' as well."
