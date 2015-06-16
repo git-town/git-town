@@ -41,14 +41,22 @@ function compile_parent_branches {
 # Removes the "parent" entry from the configuration
 function delete_parent_entry {
   local branch_name=$1
-  git config --unset "git-town.branches.parent.$branch_name"
+
+  local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
+  if [ "$(knows_parent_branch "$normalized_branch")" == "true" ]; then
+    git config --unset "git-town.branches.parent.$branch_name"
+  fi
 }
 
 
 # Removes the "parents" entry from the configuration
 function delete_parents_entry {
   local branch_name=$1
-  git config --unset git-town.branches.parents."$branch_name"
+
+  local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
+  if [ "$(knows_all_parent_branches "$normalized_branch")" == "true" ]; then
+    git config --unset "git-town.branches.parents.$(normalized_branch_name "$branch_name")"
+  fi
 }
 
 
