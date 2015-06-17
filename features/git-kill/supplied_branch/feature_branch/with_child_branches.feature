@@ -30,7 +30,7 @@ Feature: git kill: killing the given branch with child branches
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
     And I have the following commits
-      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          |
+      | BRANCH    | LOCATION         | MESSAGE          | FILE NAME      |
       | feature-1 | local and remote | feature 1 commit | feature_1_file |
       | feature-3 | local and remote | feature 3 commit | feature_3_file |
     And Git Town is now aware of this branch hierarchy
