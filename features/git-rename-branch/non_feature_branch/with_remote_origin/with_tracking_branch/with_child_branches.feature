@@ -19,12 +19,12 @@ Feature: git rename-branch: renaming a feature branch with child branches
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH                 | COMMAND                                       |
-      | production             | git fetch --prune                             |
-      |                        | git checkout -b renamed-production production |
-      | renamed-production     | git push -u origin renamed-production         |
-      |                        | git push origin :production                   |
-      |                        | git branch -D production                      |
+      | BRANCH             | COMMAND                                       |
+      | production         | git fetch --prune                             |
+      |                    | git checkout -b renamed-production production |
+      | renamed-production | git push -u origin renamed-production         |
+      |                    | git push origin :production                   |
+      |                    | git branch -D production                      |
     And I end up on the "renamed-production" branch
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
