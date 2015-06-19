@@ -11,11 +11,11 @@ Feature: git rename-branch: does nothing if renaming a feature branch onto itsel
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current-feature commit |
     And I am on the "current-feature" branch
+    And I have an uncommitted file
+    When I run `git rename-branch current-feature current-feature`
 
 
   Scenario: result
-    When I run `git rename-branch current-feature current-feature`
-    Given I have an uncommitted file
     Then I see "Renaming branch to same name, nothing needed."
     And I end up on the "current-feature" branch
     And I still have my uncommitted file
