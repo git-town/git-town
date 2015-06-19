@@ -12,11 +12,11 @@ Feature: git rename-branch: does nothing if renaming a non-feature branch onto i
       | BRANCH     | LOCATION         | MESSAGE           |
       | production | local and remote | production commit |
     And I am on the "production" branch
+    And I have an uncommitted file
+    When I run `git rename-branch production production -f`
 
 
   Scenario: result
-    When I run `git rename-branch production production -f`
-    Given I have an uncommitted file
     Then I see "Renaming branch to same name, nothing needed."
     And I end up on the "production" branch
     And I still have my uncommitted file
