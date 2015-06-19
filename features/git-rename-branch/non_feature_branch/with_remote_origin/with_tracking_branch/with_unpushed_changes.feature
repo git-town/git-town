@@ -14,11 +14,11 @@ Feature: git rename-branch: errors if renaming a non-feature branch that has unp
       | production | local and remote | production commit        |
       |            | local            | remote production commit |
     And I am on the "production" branch
+    And I have an uncommitted file
+    When I run `git rename-branch production renamed-production -f`
 
 
   Scenario: result
-    And I have an uncommitted file
-    When I run `git rename-branch production renamed-production -f`
     Then I get the error "The branch is not in sync with its tracking branch."
     And I get the error "Run 'git sync production' to sync the branch."
     And I end up on the "production" branch
