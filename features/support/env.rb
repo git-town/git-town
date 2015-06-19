@@ -73,6 +73,7 @@ end
 
 After do
   if @last_run_result && !@error_expected
+    puts unformatted_last_run_output if @last_run_result.error
     expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
   end
   unless @non_empty_stash_expected
