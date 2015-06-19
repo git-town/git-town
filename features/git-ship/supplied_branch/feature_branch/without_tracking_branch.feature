@@ -37,27 +37,3 @@ Feature: git ship: shipping the supplied feature branch without a tracking branc
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
-
-
-  Scenario: without open changes
-    When I run `git ship feature -m "feature done"`
-    Then it runs the Git commands
-      | BRANCH        | COMMAND                            |
-      | other_feature | git checkout main                  |
-      | main          | git fetch --prune                  |
-      |               | git rebase origin/main             |
-      |               | git checkout feature               |
-      | feature       | git merge --no-edit origin/feature |
-      |               | git merge --no-edit main           |
-      |               | git checkout main                  |
-      | main          | git merge --squash feature         |
-      |               | git commit -m "feature done"       |
-      |               | git push                           |
-      |               | git push origin :feature           |
-      |               | git branch -D feature              |
-      |               | git checkout other_feature         |
-    And I end up on the "other_feature" branch
-    And there is no "feature" branch
-    And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
-      | main   | local and remote | feature done | feature_file |
