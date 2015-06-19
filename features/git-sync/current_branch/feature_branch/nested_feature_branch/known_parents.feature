@@ -8,8 +8,10 @@ Feature: git sync: syncing a nested feature branch (with known parent branches)
   Scenario:
     Given I have a feature branch named "parent-feature"
     And I have a feature branch named "child-feature" that is cut from parent-feature
-    And Git Town knows that "parent-feature" has the parent "main" and the parents "main"
-    And Git Town knows that "child-feature" has the parent "parent-feature" and the parents "main,parent-feature"
+    And Git Town is aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | parent-feature | main           |
+      | child-feature  | parent-feature |
     And the following commits exist in my repository
       | BRANCH         | LOCATION | MESSAGE                      | FILE NAME                  |
       | main           | local    | local main commit            | local_main_file            |

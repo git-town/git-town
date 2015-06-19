@@ -40,8 +40,8 @@ Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
 end
 
 
-Given(/^Git Town knows that "(.+?)" has the parent "(.+?)" and the parents "(.+?)"$/) do |branch, parent, parents|
-  set_parent_branch branch: branch, parent: parent, parents: parents
+Given(/^I remove the "([^"]*)" branch from my machine$/) do |branch_name|
+  delete_local_branch branch_name
 end
 
 

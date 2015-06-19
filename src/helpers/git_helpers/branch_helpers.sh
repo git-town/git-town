@@ -14,6 +14,7 @@ function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
   run_git_command "git checkout -b $new_branch_name $parent_branch_name"
+  store_parent_branch "$new_branch_name" "$parent_branch_name"
 }
 
 
@@ -39,6 +40,17 @@ function delete_remote_only_branch {
 }
 
 
+# Exits if the repository does not have a branch with the given name
+function ensure_does_have_branch {
+  local branch_name=$1
+  if [ "$(has_branch "$branch_name")" = false ]; then
+    echo_error_header
+    echo_error "A branch named '$branch_name' does not exist"
+    exit_with_error newline
+  fi
+}
+
+
 # Exits if the repository has a branch with the given name
 function ensure_does_not_have_branch {
   local branch_name=$1
@@ -48,7 +60,6 @@ function ensure_does_not_have_branch {
     exit_with_error newline
   fi
 }
-
 
 
 # Exits if the repository does not have a branch with the given name

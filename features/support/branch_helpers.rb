@@ -103,9 +103,15 @@ def on_branch branch_name
 end
 
 
-def set_parent_branch branch:, parent:, parents:
+# Removes the given branch from the local repository
+def delete_local_branch branch_name
+  run "git branch -D #{branch_name}"
+end
+
+
+def set_parent_branch branch:, parent:, parents: nil
   run "git config git-town.branches.parent.#{normalize_branch_name branch} #{parent}"
-  run "git config git-town.branches.parents.#{normalize_branch_name branch} #{parents}"
+  run "git config git-town.branches.parents.#{normalize_branch_name branch} #{parents}" if parents
 end
 
 

@@ -58,7 +58,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branche
       |                |                  | remote main commit                                                       | remote_main_file           |
       |                |                  | local main commit                                                        | local_main_file            |
       |                |                  | Merge branch 'main' into parent-feature                                  |                            |
-    And Git Town is aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
       | parent-feature | main           |
