@@ -40,11 +40,15 @@ function steps {
       fi
       echo "delete_local_branch $local_branch_name"
     fi
+    echo "delete_parent_entry $local_branch_name"
+    echo "delete_parents_entry $local_branch_name"
   done
 
   for remote_branch_name in $(remote_only_merged_branches); do
     if [ "$(should_delete_branch "$remote_branch_name")" = true ]; then
       echo "delete_remote_only_branch $remote_branch_name"
+      echo "delete_parent_entry $remote_branch_name"
+      echo "delete_parents_entry $remote_branch_name"
     fi
   done
 
