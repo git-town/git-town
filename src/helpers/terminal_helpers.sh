@@ -13,6 +13,21 @@ function echo_bold {
 }
 
 
+function echo_n_cyan_bold {
+  output_style_cyan
+  output_style_bold
+  echo -n "$@"
+  output_style_reset
+}
+
+
+function echo_n_dim {
+  output_style_dim
+  echo -n "$@"
+  output_style_reset
+}
+
+
 # Prints a header line into the terminal.
 function echo_header {
   echo
@@ -92,6 +107,13 @@ function echo_red_bold {
   output_style_reset
 }
 
+function echo_n_red_bold {
+  output_style_red
+  output_style_bold
+  echo -n "$@"
+  output_style_reset
+}
+
 
 # Prints the provided usage message
 function echo_usage {
@@ -137,6 +159,16 @@ function indent {
 
 function output_style_bold {
   tput bold
+}
+
+
+function output_style_cyan {
+  tput setaf 6
+}
+
+
+function output_style_dim {
+  tput dim
 }
 
 
