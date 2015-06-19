@@ -155,3 +155,19 @@ function store_parent_branch {
   git config "git-town.branches.parent.$(normalized_branch_name "$branch")" "$parent_branch"
 }
 
+
+function undo_steps_for_delete_parent_entry {
+  local branch_name=$1
+
+  if [ "$(knows_parent_branch "$branch_name")" == "true" ]; then
+    echo "store_parent_branch $branch_name $(parent_branch "$branch_name")"
+  fi
+}
+
+
+function undo_steps_for_store_parent_branch {
+  local branch=$1
+
+  local old_parent_branch ; old_parent_branch=$(parent_branch "$branch")
+  echo "store_parent_branch $branch $old_parent_branch"
+}
