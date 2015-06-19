@@ -10,11 +10,11 @@ Feature: git rename-branch: errors if the feature branch does not exist
       | BRANCH | LOCATION         | MESSAGE     |
       | main   | local and remote | main commit |
     And I am on the "main" branch
+    And I have an uncommitted file
+    When I run `git rename-branch non-existing-feature renamed-feature`
 
 
   Scenario: result
-    And I have an uncommitted file
-    When I run `git rename-branch non-existing-feature renamed-feature`
     Then I get the error "There is no branch named 'non-existing-feature'"
     And I end up on the "main" branch
     And I still have my uncommitted file

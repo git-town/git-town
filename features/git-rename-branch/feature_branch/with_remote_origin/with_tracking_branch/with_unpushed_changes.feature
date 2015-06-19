@@ -13,11 +13,11 @@ Feature: git rename-branch: errors if renaming a feature branch that has unpushe
       | current-feature | local and remote | feature commit       |
       |                 | local            | local feature commit |
     And I am on the "current-feature" branch
+    And I have an uncommitted file
+    When I run `git rename-branch current-feature renamed-feature`
 
 
   Scenario: result
-    And I have an uncommitted file
-    When I run `git rename-branch current-feature renamed-feature`
     Then I get the error "The branch is not in sync with its tracking branch."
     And I get the error "Run 'git sync current-feature' to sync the branch."
     And I end up on the "current-feature" branch
