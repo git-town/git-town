@@ -81,7 +81,6 @@ function ensure_knows_parent_branches {
     while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
       if [ "$(knows_parent_branch "$current_branch")" = true ]; then
         parent=$(parent_branch "$current_branch")
-        echo "automatically determined parent as '$parent'"
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
