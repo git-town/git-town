@@ -12,9 +12,10 @@ Feature: git prune-branches: remove pruned branches from the branch hierarchy
     And I have a stale feature branch named "feature-1-stale" with its tip at "Initial commit"
     And I have a feature branch named "feature-2-active" ahead of main
     And Git Town is aware of this branch hierarchy
-      | BRANCH           | PARENT          |
-      | feature-1-stale  | main            |
-      | feature-2-active | feature-1-stale |
+      | BRANCH                 | PARENT          |
+      | feature-1-stale        | main            |
+      | feature-2-active       | feature-1-stale |
+      | feature-3-non-existent | feature-1-stale |
     And I am on the "main" branch
     When I run `git prune-branches`
 
@@ -47,6 +48,7 @@ Feature: git prune-branches: remove pruned branches from the branch hierarchy
       | local      | main, feature-1-stale, feature-2-active |
       | remote     | main, feature-1-stale, feature-2-active |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH           | PARENT          |
-      | feature-1-stale  | main            |
-      | feature-2-active | feature-1-stale |
+      | BRANCH                 | PARENT          |
+      | feature-1-stale        | main            |
+      | feature-2-active       | feature-1-stale |
+      | feature-3-non-existent | feature-1-stale |

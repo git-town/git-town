@@ -5,6 +5,14 @@
 # are cut from which ones
 
 
+# Returns the names of all branches that are registered in the hierarchy metadata,
+# as an iterable list
+function all_registered_branches {
+  git config --get-regexp "git-town\.branches\.parent" | cut -d ' ' -f 1 | sed 's/^git-town.branches.parent[s\.]*//' | sort | uniq
+}
+
+
+
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
   local current_branch=$1
@@ -140,7 +148,7 @@ function parent_branch {
 }
 
 
-# Returns the names of all parent branches,
+# Returns the names of all parent branches of the given branch,
 # as a string list, in hierarchical order,
 function parent_branches {
   local branch_name=$1
