@@ -5,6 +5,13 @@
 # are cut from which ones
 
 
+# Returns the names of all branches that have this branch as their immediate parent
+function child_branches {
+  local current_branch=$1
+  git config --get-regexp "^git-town\.branches\.parent\." | grep "$current_branch$" | sed 's/git-town\.branches\.parent\.//' | sed "s/ $current_branch$//"
+}
+
+
 # Calculates the "parents" property for the given branch
 # out of the existing "parent" properties
 function compile_parent_branches {
@@ -31,10 +38,25 @@ function compile_parent_branches {
 }
 
 
+# Removes the "parent" entry from the configuration
+function delete_parent_entry {
+  local branch_name=$1
+
+  local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
+  if [ "$(knows_parent_branch "$normalized_branch")" == "true" ]; then
+    git config --unset "git-town.branches.parent.$normalized_branch"
+  fi
+}
+
+
 # Removes the "parents" entry from the configuration
 function delete_parents_entry {
   local branch_name=$1
-  git config --unset git-town.branches.parents."$branch_name"
+
+  local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
+  if [ "$(knows_all_parent_branches "$normalized_branch")" == "true" ]; then
+    git config --unset "git-town.branches.parents.$normalized_branch"
+  fi
 }
 
 
@@ -104,10 +126,17 @@ function normalized_branch_name {
 }
 
 
+# Returns the name of the branch from the branch hierarchy
+# that is the direct ancestor of main
+function oldest_parent_branch {
+  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | cut -d ',' -f 2
+}
+
+
 # Returns the names of all parent branches, in hierarchical order
 function parent_branch {
   local branch_name=$1
-  git config --get git-town.branches.parent."$(normalized_branch_name "$branch_name")"
+  git config --get "git-town.branches.parent.$(normalized_branch_name "$branch_name")"
 }
 
 
@@ -115,7 +144,7 @@ function parent_branch {
 # as a string list, in hierarchical order,
 function parent_branches {
   local branch_name=$1
-  git config --get git-town.branches.parents."$(normalized_branch_name "$branch_name")" | tr ',' '\n'
+  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | tr ',' '\n'
 }
 
 

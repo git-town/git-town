@@ -7,9 +7,6 @@ Feature: Trying to create a feature branch with a non-existing parent
 
   Scenario: Creating a child branch off the current feature branch
     Given I have a feature branch named "feature"
-    And Git Town is aware of this branch hierarchy
-      | BRANCH  | PARENT |
-      | feature | main   |
     And the following commit exists in my repository
       | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
       | main   | local and remote | main_commit | main_file |

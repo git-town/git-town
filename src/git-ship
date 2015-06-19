@@ -2,6 +2,19 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
+function ensure_has_no_unshipped_parents {
+  local branch_name=$1
+
+  local parent_branch_name ; parent_branch_name=$(parent_branch "$branch_name")
+  if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
+    echo_error_header
+    echo_error "Shipping this branch would ship '$parent_branch_name' as well."
+    echo_error "Please ship '$(oldest_parent_branch "$branch_name")' first."
+    exit_with_error newline
+  fi
+}
+
+
 function error_empty_commit {
   discard_open_changes
   undo_command
@@ -10,6 +23,7 @@ function error_empty_commit {
   echo_error "Aborting ship due to empty commit message"
   exit_with_error newline
 }
+
 
 function preconditions {
   if [ "$#" -gt 0 ] && [[ ! "$1" =~ ^- ]]; then
@@ -22,6 +36,8 @@ function preconditions {
   fi
 
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
+  ensure_knows_parent_branches "$target_branch_name"
+  ensure_has_no_unshipped_parents "$target_branch_name"
   commit_options=$(parameters_as_string "$@")
 }
 
@@ -50,6 +66,14 @@ function steps {
     echo "delete_remote_branch $target_branch_name"
   fi
   echo "delete_local_branch $target_branch_name force"
+
+  # update branch hierarchy information
+  echo delete_parents_entry "$target_branch_name"
+  echo delete_parent_entry "$target_branch_name"
+  child_branches "$target_branch_name" | while read branch_name; do
+    echo delete_parents_entry "$branch_name"
+    echo store_parent_branch "$branch_name" "$MAIN_BRANCH_NAME"
+  done
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"

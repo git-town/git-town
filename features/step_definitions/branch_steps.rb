@@ -6,11 +6,24 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have(?: a)?( local)?(?: feature)? branch(?:es)? named "(.+?)"$/) do |local, branch_names|
-  Kappamaki.from_sentence(branch_names).each do |branch_name|
-    create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
-  end
+Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"$/) do |local, branch_name|
+  create_branch branch_name, remote: !local
+  set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
+end
+
+
+Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
+  create_branch branch_1_name, remote: !local
+  create_branch branch_2_name, remote: !local
+  set_parent_branch branch: branch_1_name, parent: 'main', parents: 'main'
+  set_parent_branch branch: branch_2_name, parent: 'main', parents: 'main'
+end
+
+
+Given(/^I have a feature branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
+  create_branch branch_name, remote: true, start_point: parent_name
+  set_parent_branch branch: branch_name, parent: parent_name
+  store_branch_hierarchy_metadata
 end
 
 
@@ -20,11 +33,6 @@ Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/)
     commit_to_branch = relation == 'behind' ? 'main' : branch_name
     create_commits branch: commit_to_branch
   end
-end
-
-
-Given(/^I have a feature branch named "(.+?)" that is cut from (.+?)$/) do |branch_name, parent_branch_name|
-  create_branch branch_name, start_point: parent_branch_name
 end
 
 
@@ -40,7 +48,7 @@ Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
 end
 
 
-Given(/^I remove the "([^"]*)" branch from my machine$/) do |branch_name|
+Given(/^I remove the "([^"]+)" branch from my machine$/) do |branch_name|
   delete_local_branch branch_name
 end
 
