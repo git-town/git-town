@@ -12,11 +12,11 @@ Feature: git rename-branch: errors when the destination branch exists locally
       | current-feature  | local and remote | current-feature commit  |
       | existing-feature | local and remote | existing-feature commit |
     And I am on the "current-feature" branch
+    And I have an uncommitted file
+    When I run `git rename-branch current-feature existing-feature`
 
 
   Scenario: result
-    And I have an uncommitted file
-    When I run `git rename-branch current-feature existing-feature`
     Then it runs the Git commands
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
