@@ -84,7 +84,7 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo -n "Please enter the parent branch for $(echo_n_cyan_bold "$current_branch") ($(echo_n_dim "$MAIN_BRANCH_NAME")): "
+        echo -n "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch") ($(echo_inline_dim "$MAIN_BRANCH_NAME")): "
         read parent
         if [ -z "$parent" ]; then
           parent=$MAIN_BRANCH_NAME
