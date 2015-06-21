@@ -33,13 +33,13 @@ function compile_parent_branches {
   local parent
   while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
     parent=$(parent_branch "$current_branch")
-    all_parent_branches="$parent,$all_parent_branches"
+    all_parent_branches="$parent $all_parent_branches"
     current_branch=$parent
   done
 
   # truncate the trailing comma
   # shellcheck disable=SC2001
-  all_parent_branches=$(echo "$all_parent_branches" | sed 's/,$//')
+  all_parent_branches=$(echo "$all_parent_branches" | sed 's/ $//')
 
   # save the result into the configuration
   git config git-town.branches.parents."$(normalized_branch_name "$1")" "$all_parent_branches"
@@ -84,7 +84,7 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo -n "Please enter the parent branch for $(echo_n_cyan_bold "$current_branch") ($(echo_n_dim "$MAIN_BRANCH_NAME")): "
+        echo -n "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch") ($(echo_inline_dim "$MAIN_BRANCH_NAME")): "
         read parent
         if [ -z "$parent" ]; then
           parent=$MAIN_BRANCH_NAME
@@ -136,7 +136,7 @@ function normalized_branch_name {
 # Returns the name of the branch from the branch hierarchy
 # that is the direct ancestor of main
 function oldest_parent_branch {
-  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | cut -d ',' -f 2
+  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | cut -d ' ' -f 2
 }
 
 
@@ -151,7 +151,7 @@ function parent_branch {
 # as a string list, in hierarchical order,
 function parent_branches {
   local branch_name=$1
-  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | tr ',' '\n'
+  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | tr ' ' '\n'
 }
 
 
