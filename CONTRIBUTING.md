@@ -176,7 +176,7 @@ and `feature2` is cut from `feature1`, making it a child branch of `feature1`.
 
 This "ancestry line" of branches is preserved at all times,
 and impacts a lot of Git Town's commands.
-For example, child branches cannot be shipped before their parents.
+For example, branches cannot be shipped before their ancestor branches.
 When syncing, Git Town syncs the parent branch first,
 then merges the parent branch into its children branches.
 When creating a pull request for `feature2`,
@@ -192,8 +192,8 @@ git-town.branches.parent.feature2=feature1
 ```
 
 Git Town also caches the full ancestral line of each feature branch, top-down,
-in a key called __git-town.branches.parents__:
-* `git-town.branches.parents.feature2=master feature1`
+in a key called __git-town.branches.ancestors__:
+* `git-town.branches.ancestors.feature2=master feature1`
   lists that in order to sync `feature2`, we need to first update `master`,
   then merge master into `feature1`, then `feature1` into `feature2`.
 
