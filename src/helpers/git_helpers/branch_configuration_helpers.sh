@@ -8,7 +8,7 @@
 # Returns the names of all branches that are registered in the hierarchy metadata,
 # as an iterable list
 function all_registered_branches {
-  git config --get-regexp "git-town\.branches\.parent" | cut -d ' ' -f 1 | sed 's/^git-town.branches.parent[s\.]*//' | sort | uniq
+  git config --get-regexp "git-town\.branches\.parent" | cut -d ' ' -f 1 | sed 's/^git-town.branches.parent\.//' | sort | uniq
 }
 
 
@@ -20,13 +20,13 @@ function child_branches {
 }
 
 
-# Calculates the "parents" property for the given branch
+# Calculates the "ancestors" property for the given branch
 # out of the existing "parent" properties
 function compile_parent_branches {
   local current_branch=$1
 
   # delete the existing entry
-  delete_parents_entry "$current_branch"
+  delete_ancestors_entry "$current_branch"
 
   # re-create it from scratch
   local all_parent_branches=''
@@ -42,7 +42,7 @@ function compile_parent_branches {
   all_parent_branches=$(echo "$all_parent_branches" | sed 's/ $//')
 
   # save the result into the configuration
-  git config git-town.branches.parents."$(normalized_branch_name "$1")" "$all_parent_branches"
+  git config git-town.branches.ancestors."$(normalized_branch_name "$1")" "$all_parent_branches"
 }
 
 
@@ -57,13 +57,13 @@ function delete_parent_entry {
 }
 
 
-# Removes the "parents" entry from the configuration
-function delete_parents_entry {
+# Removes the "ancestors" entry from the configuration
+function delete_ancestors_entry {
   local branch_name=$1
 
   local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
   if [ "$(knows_all_parent_branches "$normalized_branch")" == "true" ]; then
-    git config --unset "git-town.branches.parents.$normalized_branch"
+    git config --unset "git-town.branches.ancestors.$normalized_branch"
   fi
 }
 
@@ -75,7 +75,7 @@ function ensure_knows_parent_branches {
   local current_branch=$1
 
   if [ "$(knows_all_parent_branches "$current_branch")" = false ]; then
-    # Here we don't have the parent branches list --> make sure we know all parents, then recompile it from all parents
+    # Here we don't have the parent branches list --> make sure we know all ancestors, then recompile it from all ancestors
     local parent
 
     while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
@@ -117,7 +117,7 @@ function knows_parent_branch {
 # Returns whether we know the parent branches for the given branch
 function knows_all_parent_branches {
   local branch_name=$1
-  if [ -z "$(git config --get git-town.branches.parents."$branch_name")" ]; then
+  if [ -z "$(git config --get git-town.branches.ancestors."$branch_name")" ]; then
     echo false
   else
     echo true
@@ -136,7 +136,7 @@ function normalized_branch_name {
 # Returns the name of the branch from the branch hierarchy
 # that is the direct ancestor of main
 function oldest_parent_branch {
-  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | cut -d ' ' -f 2
+  git config --get "git-town.branches.ancestors.$(normalized_branch_name "$branch_name")" | cut -d ' ' -f 2
 }
 
 
@@ -151,7 +151,7 @@ function parent_branch {
 # as a string list, in hierarchical order,
 function parent_branches {
   local branch_name=$1
-  git config --get "git-town.branches.parents.$(normalized_branch_name "$branch_name")" | tr ' ' '\n'
+  git config --get "git-town.branches.ancestors.$(normalized_branch_name "$branch_name")" | tr ' ' '\n'
 }
 
 
