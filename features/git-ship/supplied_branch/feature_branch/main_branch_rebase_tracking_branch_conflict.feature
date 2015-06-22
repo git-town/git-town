@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts between the main branch and its tracking branch (without open changes)
+Feature: git ship: resolving conflicts between the main branch and its tracking branch (with open changes)
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/main_branch_rebase_tracking_branch_conflict.feature)
 
@@ -11,30 +11,35 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other_feature" branch
+    And I have an uncommitted file
     And I run `git ship feature -m "feature done"`
 
 
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                |
-      | other_feature | git checkout main      |
-      | main          | git fetch --prune      |
-      |               | git rebase origin/main |
+      | other_feature | git stash -u           |
+      |               | git fetch --prune      |
+      |               | git checkout main      |
+      | main          | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".
       To continue after you have resolved the conflicts, run "git ship --continue".
       """
     And my repo has a rebase in progress
+    And my uncommitted file is stashed
 
 
   Scenario: aborting
     When I run `git ship --abort`
     Then it runs the Git commands
-      | BRANCH | COMMAND                    |
-      | main   | git rebase --abort         |
-      |        | git checkout other_feature |
+      | BRANCH        | COMMAND                    |
+      | main          | git rebase --abort         |
+      |               | git checkout other_feature |
+      | other_feature | git stash pop              |
     And I am still on the "other_feature" branch
+    And I still have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -43,20 +48,22 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                            |
-      | main    | git rebase --continue              |
-      |         | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
-      |         | git checkout other_feature         |
+      | BRANCH        | COMMAND                            |
+      | main          | git rebase --continue              |
+      |               | git push                           |
+      |               | git checkout feature               |
+      | feature       | git merge --no-edit origin/feature |
+      |               | git merge --no-edit main           |
+      |               | git checkout main                  |
+      | main          | git merge --squash feature         |
+      |               | git commit -m "feature done"       |
+      |               | git push                           |
+      |               | git push origin :feature           |
+      |               | git branch -D feature              |
+      |               | git checkout other_feature         |
+      | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -69,19 +76,21 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git ship --continue`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                            |
-      | main    | git push                           |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
-      |         | git checkout main                  |
-      | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
-      |         | git push                           |
-      |         | git push origin :feature           |
-      |         | git branch -D feature              |
-      |         | git checkout other_feature         |
+      | BRANCH        | COMMAND                            |
+      | main          | git push                           |
+      |               | git checkout feature               |
+      | feature       | git merge --no-edit origin/feature |
+      |               | git merge --no-edit main           |
+      |               | git checkout main                  |
+      | main          | git merge --squash feature         |
+      |               | git commit -m "feature done"       |
+      |               | git push                           |
+      |               | git push origin :feature           |
+      |               | git branch -D feature              |
+      |               | git checkout other_feature         |
+      | other_feature | git stash pop                      |
     And I end up on the "other_feature" branch
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

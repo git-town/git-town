@@ -18,9 +18,9 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | empty-feature | git checkout main                            |
-      | main          | git fetch --prune                            |
-      |               | git rebase origin/main                       |
+      | empty-feature | git fetch --prune                            |
+      |               | git checkout main                            |
+      | main          | git rebase origin/main                       |
       |               | git checkout empty-feature                   |
       | empty-feature | git merge --no-edit origin/empty-feature     |
       |               | git merge --no-edit main                     |
