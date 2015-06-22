@@ -83,11 +83,11 @@ function steps {
 
   # update branch hierarchy information
   child_branches "$target_branch_name" | while read branch_name; do
-    echo delete_parents_entry "$branch_name"
+    echo delete_ancestors_entry "$branch_name"
     echo store_parent_branch "$branch_name" "$destination_branch_name"
   done
   echo delete_parent_entry "$target_branch_name"
-  echo delete_parents_entry "$target_branch_name"
+  echo delete_ancestors_entry "$target_branch_name"
   echo store_parent_branch "$destination_branch_name" "$parent_branch_name"
 }
 
