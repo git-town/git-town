@@ -8,15 +8,15 @@ end
 
 Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"$/) do |local, branch_name|
   create_branch branch_name, remote: !local
-  set_parent_branch branch: branch_name, parent: 'main', parents: 'main'
+  set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
 end
 
 
 Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
   create_branch branch_1_name, remote: !local
   create_branch branch_2_name, remote: !local
-  set_parent_branch branch: branch_1_name, parent: 'main', parents: 'main'
-  set_parent_branch branch: branch_2_name, parent: 'main', parents: 'main'
+  set_parent_branch branch: branch_1_name, parent: 'main', ancestors: 'main'
+  set_parent_branch branch: branch_2_name, parent: 'main', ancestors: 'main'
 end
 
 
