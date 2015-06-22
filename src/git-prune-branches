@@ -32,7 +32,7 @@ function steps {
 
   for local_branch_name in $(local_merged_branches); do
     if [ "$(should_delete_branch "$local_branch_name")" = true ]; then
-      if [ "$INITIAL_BRANCH_NAME" = "$local_branch_name" ]; then
+      if [ "$local_branch_name" = "$INITIAL_BRANCH_NAME" ]; then
         initial_branch_deleted=true
       fi
       if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then

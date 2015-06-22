@@ -12,31 +12,31 @@ function branch_to_kill {
 
 
 function preconditions {
-  target_branch=$(branch_to_kill "$@")
+  target_branch_name=$(branch_to_kill "$@")
 
-  ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
+  ensure_is_feature_branch "$target_branch_name" "You can only kill feature branches."
 
   if [ "$HAS_REMOTE" = true ]; then
       fetch
   fi
 
-  if [ "$target_branch" != "$INITIAL_BRANCH_NAME" ]; then
-    ensure_has_branch "$target_branch"
+  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
+    ensure_has_branch "$target_branch_name"
   fi
 }
 
 
 function steps {
-  if [ "$target_branch" = "$INITIAL_BRANCH_NAME" ]; then
+  if [ "$target_branch_name" = "$INITIAL_BRANCH_NAME" ]; then
     echo_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
     echo "checkout_main_branch"
   fi
 
-  if [ "$(has_tracking_branch "$target_branch")" = true ]; then
-    echo "delete_remote_branch $target_branch"
+  if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
+    echo "delete_remote_branch $target_branch_name"
   fi
 
-  echo "delete_local_branch $target_branch force"
+  echo "delete_local_branch $target_branch_name force"
 }
 
 

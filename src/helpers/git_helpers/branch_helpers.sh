@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
 
+# Checkout a branch
+function checkout_branch {
+  local branch_name=$1
+  local silent=$2
+
+  run_git_command "git checkout $branch_name" "$silent"
+}
+
+
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1
@@ -82,6 +91,15 @@ function get_current_branch_name {
 }
 
 
+# Returns the previously checked out branch name
+function get_previous_branch_name {
+  git rev-parse --abbrev-ref "@{-1}" > /dev/null 2>&1
+  if (($? == 0)); then
+    git rev-parse --abbrev-ref "@{-1}"
+  fi
+}
+
+
 # Returns true if the repository has a branch with the given name
 function has_branch {
   local branch_name=$1
@@ -145,6 +163,30 @@ function remote_only_merged_branches {
   comm -13 <(sort "$local_temp") <(sort "$remote_temp")
   rm "$local_temp"
   rm "$remote_temp"
+}
+
+
+function set_previous_branch {
+  local desired_previous_branch=$1
+
+  # nothing to do, exit early
+  if [ "$desired_previous_branch" = "$(get_previous_branch_name)" ]; then
+    return
+  fi
+
+  local current_branch="$(get_current_branch_name)"
+  local open_changes="$(has_open_changes)"
+
+  if [ "$open_changes" = true ]; then
+    stash_open_changes "silent"
+  fi
+
+  checkout_branch "$desired_previous_branch" "silent"
+  checkout_branch "$current_branch" "silent"
+
+  if [ "$open_changes" = true ]; then
+    restore_open_changes "silent"
+  fi
 }
 
 

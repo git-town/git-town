@@ -81,6 +81,29 @@ function exit_with_messages {
 }
 
 
+function get_expected_previous_branch {
+  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+
+    # current branch is unchanged
+    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is deleted
+    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is new
+    else
+      echo "$INITIAL_BRANCH_NAME"
+    fi
+
+  # previous branch is deleted
+  else
+    echo "$MAIN_BRANCH_NAME"
+  fi
+}
+
+
 # Parses arguments, validates necessary state
 # This should be overriden by commands when necessary
 function preconditions {
@@ -95,6 +118,11 @@ function remove_step_files {
   if [ "$(has_file "$UNDO_STEPS_FILE")" = true ]; then
     rm "$UNDO_STEPS_FILE"
   fi
+}
+
+
+function restore_proper_previous_branch {
+  set_previous_branch "$(get_expected_previous_branch)"
 }
 
 
@@ -117,6 +145,15 @@ function run {
     preconditions "$@"
     steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
+
+    # Apply global previous-branch restoration
+    # only if we're at the git root.
+    # Any branch restoration logic for the other
+    # case needs to be handled in a custom way by
+    # the command itself
+    if [ "$IN_SUB_FOLDER" = false ]; then
+      restore_proper_previous_branch
+    fi
   fi
 }
 

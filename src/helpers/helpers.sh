@@ -44,6 +44,7 @@ if [ "$(is_git_repository)" == true ]; then
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
   export INITIAL_DIRECTORY=$(pwd)
   export INITIAL_OPEN_CHANGES=$(has_open_changes)
+  export INITIAL_PREVIOUS_BRANCH_NAME=$(get_previous_branch_name)
   export STEPS_FILE="/tmp/${PROGRAM}_${temp_filename_suffix}"
   export UNDO_STEPS_FILE="/tmp/${PROGRAM}_undo_${temp_filename_suffix}"
 fi
