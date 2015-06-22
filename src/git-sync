@@ -2,14 +2,17 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
+# Echoes the names of all branches that should be synced in the current session
 function branches_to_sync {
   if [ "$sync_all" = true ]; then
     echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
-    echo "$MAIN_BRANCH_NAME"
+    # syncing a feature branch here
+    parent_branches "$INITIAL_BRANCH_NAME"
     echo "$INITIAL_BRANCH_NAME"
   else
+    # syncing a non-feature branch
     echo "$INITIAL_BRANCH_NAME"
   fi
 }
@@ -26,7 +29,11 @@ function preconditions {
   if [ "$1" = "--all" ]; then
     sync_all=true
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+    # syncing a non-feature branch
     should_push_tags=true
+  else
+    # syncing a feature branch
+    ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
   fi
 }
 
@@ -50,23 +57,7 @@ function steps {
   echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
   branches_to_sync | while read branch_name; do
-    local is_feature="$(is_feature_branch "$branch_name")"
-
-    # If there is a remote origin, then checkout and sync all branches because
-    # there may be changes to non-feature branches, otherwise only sync feature
-    # branches because non-feature branches will not need syncing
-    if [ "$HAS_REMOTE" = true ] || [ "$is_feature" = true ]; then
-      echo "checkout $branch_name"
-
-      if [ "$is_feature" = true ]; then
-        echo "merge_tracking_branch"
-        echo "merge $MAIN_BRANCH_NAME"
-      else
-        echo "rebase_tracking_branch"
-      fi
-
-      echo_if_true "push" "$HAS_REMOTE"
-    fi
+    sync_branch_steps "$branch_name"
   done
 
   if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then

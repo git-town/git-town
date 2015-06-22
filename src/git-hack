@@ -15,6 +15,14 @@ function preconditions {
   target_branch_name=$1
   ensure_has_target_branch
 
+  parent_branch_name=$2
+  if [ -z "$parent_branch_name" ]; then
+    parent_branch_name=$MAIN_BRANCH_NAME
+  elif [ "$parent_branch_name" == '.' ]; then
+    parent_branch_name=$INITIAL_BRANCH_NAME
+  fi
+  ensure_does_have_branch "$parent_branch_name"
+
   if [ "$(has_remote_url)" = true ]; then
     fetch
   fi
@@ -26,13 +34,13 @@ function preconditions {
 function steps {
   echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
-  if [ "$(has_remote_url)" = true ]; then
-    echo "checkout_main_branch"
-    echo "rebase_tracking_branch"
-    echo "push"
-  fi
+  # sync the parent branch
+  parent_branches "$parent_branch_name" | while read branch_name; do
+    sync_branch_steps "$branch_name"
+  done
+  sync_branch_steps "$parent_branch_name"
 
-  echo "create_and_checkout_feature_branch '$target_branch_name'"
+  echo "create_and_checkout_feature_branch $target_branch_name $parent_branch_name"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
