@@ -18,9 +18,9 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
       | other_feature | git stash -u                                 |
+      |               | git fetch --prune                            |
       |               | git checkout main                            |
-      | main          | git fetch --prune                            |
-      |               | git rebase origin/main                       |
+      | main          | git rebase origin/main                       |
       |               | git checkout feature                         |
       | feature       | git merge --no-edit origin/feature           |
       |               | git merge --no-edit main                     |
@@ -43,9 +43,9 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other_feature | git checkout main                            |
-      | main          | git fetch --prune                            |
-      |               | git rebase origin/main                       |
+      | other_feature | git fetch --prune                            |
+      |               | git checkout main                            |
+      | main          | git rebase origin/main                       |
       |               | git checkout feature                         |
       | feature       | git merge --no-edit origin/feature           |
       |               | git merge --no-edit main                     |

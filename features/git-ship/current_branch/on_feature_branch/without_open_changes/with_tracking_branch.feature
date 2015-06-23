@@ -17,9 +17,9 @@ Feature: git ship: shipping the current feature branch with a tracking branch
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | feature | git checkout main                  |
-      | main    | git fetch --prune                  |
-      |         | git rebase origin/main             |
+      | feature | git fetch --prune                  |
+      |         | git checkout main                  |
+      | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
