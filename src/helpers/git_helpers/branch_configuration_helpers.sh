@@ -22,7 +22,7 @@ function child_branches {
 
 # Calculates the "ancestors" property for the given branch
 # out of the existing "parent" properties
-function compile_parent_branches {
+function compile_ancestor_branches {
   local current_branch=$1
 
   # delete the existing entry
@@ -98,7 +98,7 @@ function ensure_knows_parent_branches {
       fi
       current_branch=$parent
     done
-    compile_parent_branches "$1"
+    compile_ancestor_branches "$1"
   fi
 }
 

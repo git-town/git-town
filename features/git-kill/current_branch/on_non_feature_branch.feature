@@ -6,7 +6,7 @@ Feature: git kill: errors when trying to kill a non-feature branch
 
 
   Background:
-    Given I have branches named "qa"
+    Given I have a branch named "qa"
     And my non-feature branches are configured as "qa"
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE   | FILE NAME |
