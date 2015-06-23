@@ -178,3 +178,15 @@ function undo_steps_for_store_parent_branch {
   local old_parent_branch ; old_parent_branch=$(parent_branch "$branch")
   echo "store_parent_branch $branch $old_parent_branch"
 }
+
+
+# Updates the child branches of the given branch to point to the other given branch
+function update_child_branches {
+  local branch=$1
+  local new_parent=$2
+
+  child_branches "$branch" | while read branch_name; do
+    echo delete_ancestors_entry "$branch_name"
+    echo store_parent_branch "$branch_name" "$new_parent"
+  done
+}
