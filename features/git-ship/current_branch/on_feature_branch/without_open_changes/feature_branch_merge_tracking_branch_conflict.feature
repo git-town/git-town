@@ -18,9 +18,9 @@ Feature: git ship: resolving conflicts between the current feature branch and it
   Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
-      | feature | git checkout main                  |
-      | main    | git fetch --prune                  |
-      |         | git rebase origin/main             |
+      | feature | git fetch --prune                  |
+      |         | git checkout main                  |
+      | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
     And I get the error
