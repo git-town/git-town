@@ -129,19 +129,19 @@ function run_steps {
   local option="$2"
 
   while [ "$(has_lines "$file")" = true ]; do
-    local step=$(peek_line "$file")
+    local step ; step=$(peek_line "$file")
     if [ "$option" = undoable ]; then
-      local undo_steps=$(undo_steps_for "$step")
+      local undo_steps ; undo_steps=$(undo_steps_for "$step")
     fi
     eval "$step"
 
-    if [ $? != 0 ]; then
-      exit_with_messages
-    else
+    if [ $? == 0 ]; then
       if [ "$option" = undoable ]; then
         add_undo_steps "$undo_steps"
       fi
       remove_line "$file"
+    else
+      exit_with_messages
     fi
   done
 
