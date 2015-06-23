@@ -21,7 +21,7 @@ function preconditions {
   elif [ "$parent_branch_name" == '.' ]; then
     parent_branch_name=$INITIAL_BRANCH_NAME
   fi
-  ensure_does_have_branch "$parent_branch_name"
+  ensure_has_branch "$parent_branch_name"
 
   if [ "$(has_remote_url)" = true ]; then
     fetch
