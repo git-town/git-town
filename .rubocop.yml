@@ -7,7 +7,7 @@ Metrics/CyclomaticComplexity:
 
 
 Metrics/LineLength:
-  Max: 120
+  Enabled: false
 
 
 Metrics/ParameterLists:
