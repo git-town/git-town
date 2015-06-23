@@ -135,7 +135,7 @@ function normalized_branch_name {
 
 # Returns the name of the branch from the branch hierarchy
 # that is the direct ancestor of main
-function oldest_parent_branch {
+function oldest_ancestor_branch {
   git config --get "git-town.branches.ancestors.$(normalized_branch_name "$branch_name")" | cut -d ' ' -f 2
 }
 
