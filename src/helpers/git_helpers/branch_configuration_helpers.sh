@@ -62,7 +62,7 @@ function delete_ancestors_entry {
   local branch_name=$1
 
   local normalized_branch ; normalized_branch=$(normalized_branch_name "$branch_name")
-  if [ "$(knows_all_parent_branches "$normalized_branch")" == "true" ]; then
+  if [ "$(knows_all_ancestor_branches "$normalized_branch")" == "true" ]; then
     git config --unset "git-town.branches.ancestors.$normalized_branch"
   fi
 }
@@ -74,7 +74,7 @@ function delete_ancestors_entry {
 function ensure_knows_parent_branches {
   local current_branch=$1
 
-  if [ "$(knows_all_parent_branches "$current_branch")" = false ]; then
+  if [ "$(knows_all_ancestor_branches "$current_branch")" = false ]; then
     # Here we don't have the parent branches list --> make sure we know all ancestors, then recompile it from all ancestors
     local parent
 
@@ -115,7 +115,7 @@ function knows_parent_branch {
 
 
 # Returns whether we know the parent branches for the given branch
-function knows_all_parent_branches {
+function knows_all_ancestor_branches {
   local branch_name=$1
   if [ -z "$(git config --get git-town.branches.ancestors."$branch_name")" ]; then
     echo false
