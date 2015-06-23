@@ -40,17 +40,6 @@ function delete_remote_only_branch {
 }
 
 
-# Exits if the repository does not have a branch with the given name
-function ensure_does_have_branch {
-  local branch_name=$1
-  if [ "$(has_branch "$branch_name")" = false ]; then
-    echo_error_header
-    echo_error "A branch named '$branch_name' does not exist"
-    exit_with_error newline
-  fi
-}
-
-
 # Exits if the repository has a branch with the given name
 function ensure_does_not_have_branch {
   local branch_name=$1
