@@ -70,10 +70,7 @@ function steps {
   # update branch hierarchy information
   echo delete_ancestors_entry "$target_branch_name"
   echo delete_parent_entry "$target_branch_name"
-  child_branches "$target_branch_name" | while read branch_name; do
-    echo delete_ancestors_entry "$branch_name"
-    echo store_parent_branch "$branch_name" "$MAIN_BRANCH_NAME"
-  done
+  update_child_branches "$target_branch_name" "$MAIN_BRANCH_NAME"
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
