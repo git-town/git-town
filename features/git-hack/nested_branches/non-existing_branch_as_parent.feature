@@ -15,7 +15,7 @@ Feature: Trying to create a feature branch with a non-existing parent
     When I run `git hack feature zonk`
     Then I get the error
       """
-      A branch named 'zonk' does not exist
+      There is no branch named 'zonk'
       """
     And it runs no Git commands
     And I end up on the "main" branch
