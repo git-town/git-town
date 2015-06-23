@@ -15,8 +15,8 @@ function all_registered_branches {
 
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
-  local current_branch=$1
-  git config --get-regexp "^git-town\.branches\.parent\." | grep "$current_branch$" | sed 's/git-town\.branches\.parent\.//' | sed "s/ $current_branch$//"
+  local branch_name=$1
+  git config --get-regexp "^git-town\.branches\.parent\." | grep "$branch_name$" | sed 's/git-town\.branches\.parent\.//' | sed "s/ $branch_name$//"
 }
 
 
