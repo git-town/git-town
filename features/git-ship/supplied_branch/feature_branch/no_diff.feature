@@ -18,9 +18,9 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
       | other_feature | git stash -u                                 |
+      |               | git fetch --prune                            |
       |               | git checkout main                            |
-      | main          | git fetch --prune                            |
-      |               | git rebase origin/main                       |
+      | main          | git rebase origin/main                       |
       |               | git checkout empty-feature                   |
       | empty-feature | git merge --no-edit origin/empty-feature     |
       |               | git merge --no-edit main                     |
@@ -37,9 +37,9 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
     When I run `git ship empty-feature`
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other_feature | git checkout main                            |
-      | main          | git fetch --prune                            |
-      |               | git rebase origin/main                       |
+      | other_feature | git fetch --prune                            |
+      |               | git checkout main                            |
+      | main          | git rebase origin/main                       |
       |               | git checkout empty-feature                   |
       | empty-feature | git merge --no-edit origin/empty-feature     |
       |               | git merge --no-edit main                     |
