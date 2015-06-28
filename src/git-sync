@@ -7,13 +7,14 @@ function branches_to_sync {
   if [ "$sync_all" = true ]; then
     echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
-  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
-    # syncing a feature branch here
+  elif [ "$syncing_feature_branch" = true ]; then
     parent_branches "$INITIAL_BRANCH_NAME"
     echo "$INITIAL_BRANCH_NAME"
-  else
-    # syncing a non-feature branch
+  elif [ "$syncing_non_feature_branch" = true ]; then
     echo "$INITIAL_BRANCH_NAME"
+  else
+    echo_error_header "Unknown internal state, please report this bug"
+    exit_with_error
   fi
 }
 
@@ -25,15 +26,17 @@ function preconditions {
 
   should_push_tags=false
   sync_all=false
+  syncing_feature_branch=false
+  syncing_non_feature_branch=false
 
   if [ "$1" = "--all" ]; then
     sync_all=true
-  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = false ]; then
-    # syncing a non-feature branch
-    should_push_tags=true
-  else
-    # syncing a feature branch
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
+    syncing_feature_branch=true
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
+  else
+    syncing_non_feature_branch=true
+    should_push_tags=true
   fi
 }
 
