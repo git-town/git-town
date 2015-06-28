@@ -42,7 +42,6 @@ function steps {
   # update branch hierarchy information
   update_child_branches "$target_branch" "$parent_branch_name"
   echo delete_parent_entry "$target_branch"
-  echo delete_ancestors_entry "$target_branch"
 }
 
 
