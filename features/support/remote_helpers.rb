@@ -28,9 +28,8 @@ end
 
 # Returns the remote URL for a new pull request for the given domain and branch
 def pull_request_url domain:, branch:, parent_branch:, repo:
-  send "#{domain.downcase}_pull_request_url", branch: branch,
-                                              parent_branch: parent_branch,
-                                              repo: repo
+  send "#{domain.downcase}_pull_request_url",
+       branch: branch, parent_branch: parent_branch, repo: repo
 end
 
 
