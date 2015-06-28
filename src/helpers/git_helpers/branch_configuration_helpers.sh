@@ -29,20 +29,20 @@ function compile_ancestor_branches {
   delete_ancestors_entry "$current_branch"
 
   # re-create it from scratch
-  local all_parent_branches=''
+  local ancestor_branches=''
   local parent
   while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
     parent=$(parent_branch "$current_branch")
-    all_parent_branches="$parent $all_parent_branches"
+    ancestor_branches="$parent $ancestor_branches"
     current_branch=$parent
   done
 
   # truncate the trailing comma
   # shellcheck disable=SC2001
-  all_parent_branches=$(echo "$all_parent_branches" | sed 's/ $//')
+  ancestor_branches=$(echo "$ancestor_branches" | sed 's/ $//')
 
   # save the result into the configuration
-  git config git-town.branches.ancestors."$(normalized_branch_name "$1")" "$all_parent_branches"
+  git config git-town.branches.ancestors."$(normalized_branch_name "$1")" "$ancestor_branches"
 }
 
 
