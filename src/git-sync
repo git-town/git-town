@@ -4,16 +4,17 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 # Echoes the names of all branches that should be synced in the current session
 function branches_to_sync {
-  if [ "$sync_all" = true ]; then
+  if [ "$sync_target" = "all branches" ]; then
     echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
-  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
-    # syncing a feature branch here
+  elif [ "$sync_target" = "feature branch" ]; then
     parent_branches "$INITIAL_BRANCH_NAME"
     echo "$INITIAL_BRANCH_NAME"
-  else
-    # syncing a non-feature branch
+  elif [ "$sync_target" = "non-feature branch" ]; then
     echo "$INITIAL_BRANCH_NAME"
+  else
+    echo_error_header "Unknown sync target"
+    exit_with_error
   fi
 }
 
@@ -24,16 +25,16 @@ function preconditions {
   fi
 
   should_push_tags=false
-  sync_all=false
+  sync_target=""
 
   if [ "$1" = "--all" ]; then
-    sync_all=true
-  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = false ]; then
-    # syncing a non-feature branch
-    should_push_tags=true
-  else
-    # syncing a feature branch
+    sync_target="all branches"
+  elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
+    sync_target="feature branch"
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
+  else
+    sync_target="non-feature branch"
+    should_push_tags=true
   fi
 }
 
