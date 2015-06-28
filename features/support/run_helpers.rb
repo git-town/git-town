@@ -64,8 +64,9 @@ end
 def run command, inputs: [], ignore_errors: false
   result = run_shell_command command, inputs
   is_git_town_command = git_town_command? command
-  raise_error = ((!is_git_town_command && result.error) || result_has_shell_error?(result)) && !ignore_errors
-
+  raise_error = should_raise_error? is_git_town_command: is_git_town_command,
+                                    result: result,
+                                    ignore_errors: ignore_errors
   print_result(result) if raise_error || should_print_command_output?(command)
   fail 'Command not successful!' if raise_error
 
@@ -104,6 +105,12 @@ end
 
 def should_print_command_output? command
   DEBUG[:all] || (DEBUG[:commands_only] && git_town_command?(command))
+end
+
+
+# Returns whether a test should raise an error in the given situation
+def should_raise_error? is_git_town_command:, result:, ignore_errors:
+  ((!is_git_town_command && result.error) || result_has_shell_error?(result)) && !ignore_errors
 end
 
 
