@@ -12,7 +12,7 @@ function bitbucket_source {
 
 
 # Returns the parent for a new Bitbucket pull request
-function bitbucket_parent {
+function bitbucket_destination {
   local repository=$1
   local branch=$2
 
@@ -26,8 +26,8 @@ function create_pull_request {
   local parent_branch=$3
 
   src=$(bitbucket_source "$repository" "$branch")
-  parent=$(bitbucket_parent "$repository" "$parent_branch")
-  open_browser "https://bitbucket.org/$repository/pull-request/new?source=$src\&dest=$parent"
+  dest=$(bitbucket_destination "$repository" "$parent_branch")
+  open_browser "https://bitbucket.org/$repository/pull-request/new?source=$src\&dest=$dest"
 }
 
 

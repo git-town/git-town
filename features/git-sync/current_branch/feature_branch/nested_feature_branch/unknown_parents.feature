@@ -100,4 +100,3 @@ Feature: git sync: syncing a nested feature branch (without known parent branche
       |         |                  | remote main commit                                         | remote_main_file    |
       |         |                  | local main commit                                          | local_main_file     |
       |         |                  | Merge branch 'main' into feature                           |                     |
-
