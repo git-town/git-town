@@ -46,7 +46,7 @@ function compile_ancestor_branches {
 }
 
 
-# Removes the "parent" entry from the configuration
+# Removes the "parent" entry for the given branch from the configuration
 function delete_parent_entry {
   local branch_name=$1
 
@@ -54,6 +54,8 @@ function delete_parent_entry {
   if [ "$(knows_parent_branch "$normalized_branch")" == "true" ]; then
     git config --unset "git-town.branches.parent.$normalized_branch"
   fi
+
+  delete_ancestors_entry "$branch_name"
 }
 
 
