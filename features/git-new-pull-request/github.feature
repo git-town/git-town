@@ -8,6 +8,7 @@ Feature: git-new-pull-request when origin is on GitHub
   Background:
     Given I have "open" installed
 
+
   Scenario Outline: creating pull-requests
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
@@ -47,6 +48,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And I am on the "feature" branch
     When I run `git new-pull-request` and enter "main"
     Then I see a new GitHub pull request for the "feature" branch against the "main" branch in the "Originate/git-town" repo in my browser
+
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
     Given I have a feature branch named "feature"
