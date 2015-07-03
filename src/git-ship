@@ -69,8 +69,9 @@ function steps {
   echo "delete_local_branch $target_branch_name force"
 
   # update branch hierarchy information
-  echo delete_parent_entry "$target_branch_name"
-  update_child_branches "$target_branch_name" "$MAIN_BRANCH_NAME"
+  echo "delete_parent_entry $target_branch_name"
+  echo_update_child_branches "$target_branch_name" "$MAIN_BRANCH_NAME"
+  echo "delete_all_ancestor_entries"
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
