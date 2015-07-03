@@ -105,6 +105,18 @@ function ensure_knows_parent_branches {
 }
 
 
+# Returns whether the given branch has child branches
+function has_child_branches {
+  local branch_name=$1
+
+  if [ "$(child_branches "$branch_name")" == "" ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
 # Returns whether we know the parent branch for the given branch
 function knows_parent_branch {
   local branch_name=$1
