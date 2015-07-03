@@ -46,6 +46,12 @@ function compile_ancestor_branches {
 }
 
 
+# Removes all ancestor cache entries
+function delete_all_ancestor_entries {
+  git config --remove-section git-town.branches.ancestors
+}
+
+
 # Removes the "parent" entry for the given branch from the configuration
 function delete_parent_entry {
   local branch_name=$1
@@ -67,6 +73,18 @@ function delete_ancestors_entry {
   if [ "$(knows_all_ancestor_branches "$normalized_branch")" == "true" ]; then
     git config --unset "git-town.branches.ancestors.$normalized_branch"
   fi
+}
+
+
+# Updates the child branches of the given branch to point to the other given branch
+function echo_update_child_branches {
+  local branch=$1
+  local new_parent=$2
+
+  child_branches "$branch" | while read branch_name; do
+    echo delete_ancestors_entry "$branch_name"
+    echo store_parent_branch "$branch_name" "$new_parent"
+  done
 }
 
 
@@ -191,16 +209,4 @@ function undo_steps_for_store_parent_branch {
 
   local old_parent_branch ; old_parent_branch=$(parent_branch "$branch")
   echo "store_parent_branch $branch $old_parent_branch"
-}
-
-
-# Updates the child branches of the given branch to point to the other given branch
-function update_child_branches {
-  local branch=$1
-  local new_parent=$2
-
-  child_branches "$branch" | while read branch_name; do
-    echo delete_ancestors_entry "$branch_name"
-    echo store_parent_branch "$branch_name" "$new_parent"
-  done
 }
