@@ -76,6 +76,18 @@ function delete_ancestors_entry {
 }
 
 
+# Updates the child branches of the given branch to point to the other given branch
+function echo_update_child_branches {
+  local branch=$1
+  local new_parent=$2
+
+  child_branches "$branch" | while read branch_name; do
+    echo delete_ancestors_entry "$branch_name"
+    echo store_parent_branch "$branch_name" "$new_parent"
+  done
+}
+
+
 # Makes sure that we know all the parent branches
 # Asks the user if necessary
 # Aborts the script if not all branches become known.
@@ -197,16 +209,4 @@ function undo_steps_for_store_parent_branch {
 
   local old_parent_branch ; old_parent_branch=$(parent_branch "$branch")
   echo "store_parent_branch $branch $old_parent_branch"
-}
-
-
-# Updates the child branches of the given branch to point to the other given branch
-function update_child_branches {
-  local branch=$1
-  local new_parent=$2
-
-  child_branches "$branch" | while read branch_name; do
-    echo delete_ancestors_entry "$branch_name"
-    echo store_parent_branch "$branch_name" "$new_parent"
-  done
 }
