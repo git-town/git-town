@@ -82,7 +82,7 @@ function steps {
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 
   # update branch hierarchy information
-  update_child_branches "$target_branch_name" "$destination_branch_name"
+  echo_update_child_branches "$target_branch_name" "$destination_branch_name"
   echo delete_parent_entry "$target_branch_name"
   echo store_parent_branch "$destination_branch_name" "$parent_branch_name"
   echo "delete_all_ancestor_entries"
