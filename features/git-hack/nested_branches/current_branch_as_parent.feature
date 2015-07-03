@@ -55,8 +55,8 @@ Feature: Creating nested feature branches
     And I still have my uncommitted file
     And I am left with my original commits
     And Git Town is now aware of this branch hierarchy
-      | BRANCH         | PARENT         |
-      | parent-feature | main           |
+      | BRANCH         | PARENT |
+      | parent-feature | main   |
 
 
   Scenario: Providing '.' as the parent name
@@ -76,9 +76,9 @@ Feature: Creating nested feature branches
     And I still have my uncommitted file
     And the branch "child_feature" has not been pushed to the repository
     And I have the following commits
-      | BRANCH         | LOCATION         | MESSAGE                                 | FILE NAME    |
-      | child-feature  | local            | feature_commit                          | feature_file |
-      | parent-feature | local and remote | feature_commit                          | feature_file |
+      | BRANCH         | LOCATION         | MESSAGE        | FILE NAME    |
+      | child-feature  | local            | feature_commit | feature_file |
+      | parent-feature | local and remote | feature_commit | feature_file |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
@@ -100,5 +100,5 @@ Feature: Creating nested feature branches
     And I still have my uncommitted file
     And I am left with my original commits
     And Git Town is now aware of this branch hierarchy
-      | BRANCH         | PARENT         |
-      | parent-feature | main           |
+      | BRANCH         | PARENT |
+      | parent-feature | main   |
