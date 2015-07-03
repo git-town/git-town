@@ -29,13 +29,13 @@ Feature: git ship: shipping a parent branch
       | main           | git merge --squash parent-feature         |
       |                | git commit -m "parent feature done"       |
       |                | git push                                  |
-      |                | git push origin :parent-feature           |
       |                | git branch -D parent-feature              |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME           | FILE CONTENT           |
-      | main          | local and remote | parent feature done  | parent_feature_file | parent feature content |
-      | child-feature | local and remote | child feature commit | child_feature_file  | child feature content  |
+      | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
+      | main           | local and remote | parent feature done   | parent_feature_file | parent feature content |
+      | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
+      | parent-feature | remote           | parent feature commit | parent_feature_file | parent feature content |
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
