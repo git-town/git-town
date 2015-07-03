@@ -46,6 +46,12 @@ function compile_ancestor_branches {
 }
 
 
+# Removes all ancestor cache entries
+function delete_all_ancestor_entries {
+  git config --remove-section git-town.branches.ancestors
+}
+
+
 # Removes the "parent" entry for the given branch from the configuration
 function delete_parent_entry {
   local branch_name=$1
