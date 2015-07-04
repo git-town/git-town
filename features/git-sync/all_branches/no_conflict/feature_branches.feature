@@ -1,12 +1,12 @@
 Feature: git sync --all: syncs all feature branches
 
   Background:
-    Given I have feature branches named "feature-1" and "feature2"
+    Given I have feature branches named "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME     |
       | main      | remote           | main commit      | main_file     |
       | feature-1 | local and remote | feature-1 commit | feature1_file |
-      | feature2  | local and remote | feature2 commit  | feature2_file |
+      | feature-2 | local and remote | feature-2 commit | feature2_file |
     And I am on the "feature-1" branch
     And I have an uncommitted file
     When I run `git sync --all`
@@ -23,8 +23,8 @@ Feature: git sync --all: syncs all feature branches
       | feature-1 | git merge --no-edit origin/feature-1 |
       |           | git merge --no-edit main             |
       |           | git push                             |
-      |           | git checkout feature2                |
-      | feature2  | git merge --no-edit origin/feature2  |
+      |           | git checkout feature-2               |
+      | feature-2 | git merge --no-edit origin/feature-2 |
       |           | git merge --no-edit main             |
       |           | git push                             |
       |           | git checkout feature-1               |
@@ -38,6 +38,6 @@ Feature: git sync --all: syncs all feature branches
       | feature-1 | local and remote | feature-1 commit                   | feature1_file |
       |           |                  | main commit                        | main_file     |
       |           |                  | Merge branch 'main' into feature-1 |               |
-      | feature2  | local and remote | feature2 commit                    | feature2_file |
+      | feature-2 | local and remote | feature-2 commit                   | feature2_file |
       |           |                  | main commit                        | main_file     |
-      |           |                  | Merge branch 'main' into feature2  |               |
+      |           |                  | Merge branch 'main' into feature-2 |               |
