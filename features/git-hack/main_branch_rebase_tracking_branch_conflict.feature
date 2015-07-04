@@ -6,20 +6,20 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
 
   Background:
-    Given I have a feature branch named "existing_feature"
+    Given I have a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
-    And I am on the "existing_feature" branch
+    And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `git hack new_feature`
+    When I run `git hack new-feature`
 
 
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                |
-      | existing_feature | git fetch --prune      |
+      | existing-feature | git fetch --prune      |
       |                  | git stash -u           |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
@@ -37,9 +37,9 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     Then it runs the Git commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |
-      |                  | git checkout existing_feature |
-      | existing_feature | git stash pop                 |
-    And I end up on the "existing_feature" branch
+      |                  | git checkout existing-feature |
+      | existing-feature | git stash pop                 |
+    And I end up on the "existing-feature" branch
     And I again have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
@@ -59,20 +59,20 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | BRANCH      | COMMAND                          |
       | main        | git rebase --continue            |
       |             | git push                         |
-      |             | git checkout -b new_feature main |
-      | new_feature | git stash pop                    |
-    And I end up on the "new_feature" branch
+      |             | git checkout -b new-feature main |
+      | new-feature | git stash pop                    |
+    And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-      | new_feature | local            | conflicting remote commit | conflicting_file |
+      | new-feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
-      | new_feature | conflicting_file | resolved content |
+      | new-feature | conflicting_file | resolved content |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
@@ -81,17 +81,17 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     Then it runs the Git commands
       | BRANCH      | COMMAND                          |
       | main        | git push                         |
-      |             | git checkout -b new_feature main |
-      | new_feature | git stash pop                    |
-    And I end up on the "new_feature" branch
+      |             | git checkout -b new-feature main |
+      | new-feature | git stash pop                    |
+    And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-      | new_feature | local            | conflicting remote commit | conflicting_file |
+      | new-feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
-      | new_feature | conflicting_file | resolved content |
+      | new-feature | conflicting_file | resolved content |

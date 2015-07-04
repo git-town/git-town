@@ -11,7 +11,7 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
       | main   | remote   | main_commit | main_file |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git hack new_feature`
+    When I run `git hack new-feature`
 
 
   Scenario: result
@@ -20,12 +20,12 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
       | main        | git fetch --prune                |
       |             | git stash -u                     |
       |             | git rebase origin/main           |
-      |             | git checkout -b new_feature main |
-      | new_feature | git stash pop                    |
-    And I end up on the "new_feature" branch
+      |             | git checkout -b new-feature main |
+      | new-feature | git stash pop                    |
+    And I end up on the "new-feature" branch
     And I still have my uncommitted file
-    And the branch "new_feature" has not been pushed to the repository
+    And the branch "new-feature" has not been pushed to the repository
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE     | FILE NAME |
       | main        | local and remote | main_commit | main_file |
-      | new_feature | local            | main_commit | main_file |
+      | new-feature | local            | main_commit | main_file |

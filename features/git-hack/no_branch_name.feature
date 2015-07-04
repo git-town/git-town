@@ -6,12 +6,12 @@ Feature: git hack: requires a branch name
 
 
   Background:
-    Given I have a feature branch named "existing_feature"
+    Given I have a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
       | main             | remote   | main commit             | main_file    |
-      | existing_feature | local    | existing feature commit | feature_file |
-    And I am on the "existing_feature" branch
+      | existing-feature | local    | existing feature commit | feature_file |
+    And I am on the "existing-feature" branch
 
 
   Scenario: with open changes
@@ -19,7 +19,7 @@ Feature: git hack: requires a branch name
     When I run `git hack`
     Then it runs no Git commands
     And I get the error "No branch name provided"
-    And I am still on the "existing_feature" branch
+    And I am still on the "existing-feature" branch
     And I still have my uncommitted file
 
 
@@ -27,4 +27,4 @@ Feature: git hack: requires a branch name
     When I run `git hack`
     Then it runs no Git commands
     And I get the error "No branch name provided"
-    And I am still on the "existing_feature" branch
+    And I am still on the "existing-feature" branch
