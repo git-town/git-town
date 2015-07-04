@@ -87,4 +87,4 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature-file     |
+      |        |                  | feature done              | feature_file     |

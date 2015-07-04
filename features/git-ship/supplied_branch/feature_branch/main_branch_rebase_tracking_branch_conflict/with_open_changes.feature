@@ -38,7 +38,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | main          | git rebase --abort         |
       |               | git checkout other-feature |
       | other-feature | git stash pop              |
-    And I am still on the "other_feature" branch
+    And I am still on the "other-feature" branch
     And I still have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
@@ -96,4 +96,4 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature-file     |
+      |        |                  | feature done              | feature_file     |
