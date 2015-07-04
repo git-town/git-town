@@ -8,7 +8,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature commit | feature_file | feature content |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature -m "feature done"`
 
@@ -16,7 +16,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | other_feature | git stash -u                       |
+      | other-feature | git stash -u                       |
       |               | git fetch --prune                  |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |

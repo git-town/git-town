@@ -9,7 +9,7 @@ Feature: git ship: shipping the supplied feature branch without a remote origin
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature -m "feature done"`
 

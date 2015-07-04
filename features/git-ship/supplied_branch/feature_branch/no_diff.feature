@@ -9,7 +9,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
     And I have an uncommitted file
     When I run `git ship empty-feature`
 
@@ -17,7 +17,7 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other_feature | git stash -u                                 |
+      | other-feature | git stash -u                                 |
       |               | git fetch --prune                            |
       |               | git checkout main                            |
       | main          | git rebase origin/main                       |
