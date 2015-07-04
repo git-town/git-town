@@ -10,11 +10,11 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       | main    | local and remote | main commit    | main_file    | main content    |
       | feature | local            | feature commit | feature_file | feature content |
     And I am on the "other_feature" branch
-
-
-  Scenario: with open changes
-    Given I have an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature` and enter an empty commit message
+
+
+  Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
       | other_feature | git stash -u                                 |

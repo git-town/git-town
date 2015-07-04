@@ -1,4 +1,4 @@
-Feature: git extract: resolving conflicts between main branch and its tracking branch (with open changes)
+Feature: git extract: resolving conflicts between main branch and its tracking branch
 
   As a developer extracting a commit when the main branch has conflicting local and remote updates
   I want to be given the choice to resolve the conflicts or abort

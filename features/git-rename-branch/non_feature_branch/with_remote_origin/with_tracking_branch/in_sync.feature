@@ -1,4 +1,4 @@
-Feature: git rename-branch: renaming a non-feature branch with a tracking branch (with open changes)
+Feature: git rename-branch: renaming a non-feature branch with a tracking branch
 
   As a developer with a poorly named non-feature branch
   I want to be able to rename it safely in one easy step

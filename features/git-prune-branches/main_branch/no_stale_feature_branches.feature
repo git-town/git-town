@@ -1,4 +1,4 @@
-Feature: git prune-branches: don't remove used feature branches when called on the main branch (with open changes)
+Feature: git prune-branches: don't remove used feature branches when called on the main branch
 
   As a developer pruning branches
   I want my feature branches with commits to not be deleted
