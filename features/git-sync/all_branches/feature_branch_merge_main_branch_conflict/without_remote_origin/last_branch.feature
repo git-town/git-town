@@ -2,12 +2,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
 
   Background:
     Given my repo does not have a remote origin
-    And I have local feature branches named "feature1" and "feature2"
+    And I have local feature branches named "feature-1" and "feature2"
     And the following commits exist in my repository
-      | BRANCH   | LOCATION | MESSAGE         | FILE NAME        | FILE CONTENT     |
-      | main     | local    | main commit     | conflicting_file | main content     |
-      | feature1 | local    | feature1 commit | feature1_file    | feature1 content |
-      | feature2 | local    | feature2 commit | conflicting_file | feature2 content |
+      | BRANCH    | LOCATION | MESSAGE          | FILE NAME        | FILE CONTENT      |
+      | main      | local    | main commit      | conflicting_file | main content      |
+      | feature-1 | local    | feature-1 commit | feature1_file    | feature-1 content |
+      | feature2  | local    | feature2 commit  | conflicting_file | feature2 content  |
     And I am on the "main" branch
     And I have an uncommitted file
     When I run `git sync --all`
@@ -15,12 +15,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
 
   Scenario: result
     Then it runs the Git commands
-      | BRANCH   | COMMAND                  |
-      | main     | git stash -u             |
-      |          | git checkout feature1    |
-      | feature1 | git merge --no-edit main |
-      |          | git checkout feature2    |
-      | feature2 | git merge --no-edit main |
+      | BRANCH    | COMMAND                  |
+      | main      | git stash -u             |
+      |           | git checkout feature-1   |
+      | feature-1 | git merge --no-edit main |
+      |           | git checkout feature2    |
+      | feature2  | git merge --no-edit main |
     And I get the error
       """
       To abort, run "git sync --abort".
@@ -35,12 +35,12 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
   Scenario: aborting
     When I run `git sync --abort`
     Then it runs the Git commands
-      | BRANCH   | COMMAND                                       |
-      | feature2 | git merge --abort                             |
-      |          | git checkout feature1                         |
-      | feature1 | git reset --hard <%= sha 'feature1 commit' %> |
-      |          | git checkout main                             |
-      | main     | git stash pop                                 |
+      | BRANCH    | COMMAND                                        |
+      | feature2  | git merge --abort                              |
+      |           | git checkout feature-1                         |
+      | feature-1 | git reset --hard <%= sha 'feature-1 commit' %> |
+      |           | git checkout main                              |
+      | main      | git stash pop                                  |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I am left with my original commits
@@ -56,18 +56,18 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
-      | main     | local    | main commit                       | conflicting_file |
-      | feature1 | local    | feature1 commit                   | feature1_file    |
-      |          |          | main commit                       | conflicting_file |
-      |          |          | Merge branch 'main' into feature1 |                  |
-      | feature2 | local    | feature2 commit                   | conflicting_file |
+      | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
+      | main      | local    | main commit                        | conflicting_file |
+      | feature-1 | local    | feature-1 commit                   | feature1_file    |
+      |           |          | main commit                        | conflicting_file |
+      |           |          | Merge branch 'main' into feature-1 |                  |
+      | feature2  | local    | feature2 commit                    | conflicting_file |
     And now I have the following committed files
-      | BRANCH   | NAME             | CONTENT          |
-      | main     | conflicting_file | main content     |
-      | feature1 | conflicting_file | main content     |
-      | feature1 | feature1_file    | feature1 content |
-      | feature2 | conflicting_file | feature2 content |
+      | BRANCH    | NAME             | CONTENT           |
+      | main      | conflicting_file | main content      |
+      | feature-1 | conflicting_file | main content      |
+      | feature-1 | feature1_file    | feature-1 content |
+      | feature2  | conflicting_file | feature2 content  |
 
 
   Scenario: continuing without resolving the conflicts
@@ -90,20 +90,20 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
-      | main     | local    | main commit                       | conflicting_file |
-      | feature1 | local    | feature1 commit                   | feature1_file    |
-      |          |          | main commit                       | conflicting_file |
-      |          |          | Merge branch 'main' into feature1 |                  |
-      | feature2 | local    | feature2 commit                   | conflicting_file |
-      |          |          | main commit                       | conflicting_file |
-      |          |          | Merge branch 'main' into feature2 |                  |
+      | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
+      | main      | local    | main commit                        | conflicting_file |
+      | feature-1 | local    | feature-1 commit                   | feature1_file    |
+      |           |          | main commit                        | conflicting_file |
+      |           |          | Merge branch 'main' into feature-1 |                  |
+      | feature2  | local    | feature2 commit                    | conflicting_file |
+      |           |          | main commit                        | conflicting_file |
+      |           |          | Merge branch 'main' into feature2  |                  |
     And now I have the following committed files
-      | BRANCH   | NAME             | CONTENT          |
-      | main     | conflicting_file | main content     |
-      | feature1 | conflicting_file | main content     |
-      | feature1 | feature1_file    | feature1 content |
-      | feature2 | conflicting_file | resolved content |
+      | BRANCH    | NAME             | CONTENT           |
+      | main      | conflicting_file | main content      |
+      | feature-1 | conflicting_file | main content      |
+      | feature-1 | feature1_file    | feature-1 content |
+      | feature2  | conflicting_file | resolved content  |
 
 
 
@@ -117,17 +117,17 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
-      | BRANCH   | LOCATION | MESSAGE                           | FILE NAME        |
-      | main     | local    | main commit                       | conflicting_file |
-      | feature1 | local    | feature1 commit                   | feature1_file    |
-      |          |          | main commit                       | conflicting_file |
-      |          |          | Merge branch 'main' into feature1 |                  |
-      | feature2 | local    | feature2 commit                   | conflicting_file |
-      |          |          | main commit                       | conflicting_file |
-      |          |          | Merge branch 'main' into feature2 |                  |
+      | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
+      | main      | local    | main commit                        | conflicting_file |
+      | feature-1 | local    | feature-1 commit                   | feature1_file    |
+      |           |          | main commit                        | conflicting_file |
+      |           |          | Merge branch 'main' into feature-1 |                  |
+      | feature2  | local    | feature2 commit                    | conflicting_file |
+      |           |          | main commit                        | conflicting_file |
+      |           |          | Merge branch 'main' into feature2  |                  |
     And now I have the following committed files
-      | BRANCH   | NAME             | CONTENT          |
-      | main     | conflicting_file | main content     |
-      | feature1 | conflicting_file | main content     |
-      | feature1 | feature1_file    | feature1 content |
-      | feature2 | conflicting_file | resolved content |
+      | BRANCH    | NAME             | CONTENT           |
+      | main      | conflicting_file | main content      |
+      | feature-1 | conflicting_file | main content      |
+      | feature-1 | feature1_file    | feature-1 content |
+      | feature2  | conflicting_file | resolved content  |
