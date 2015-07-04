@@ -12,7 +12,6 @@ function all_registered_branches {
 }
 
 
-
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
   local branch_name=$1
@@ -104,10 +103,22 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo -n "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch") ($(echo_inline_dim "$MAIN_BRANCH_NAME")): "
+        echo "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch")"
+        echo
+        local branches ; branches=$(git branch | cut -c 3-)
+        i=1
+        for j in $branches; do
+          echo "$i. $j"
+          branch[i]=$j
+          i=$(( i + 1 ))
+        done
+
+        echo "Enter branch number or name"
         read parent
         if [ -z "$parent" ]; then
           parent=$MAIN_BRANCH_NAME
+        else
+          parent=${branch[$parent]}
         fi
         if [ "$(has_branch "$parent")" == "false" ]; then
           echo_error_header
