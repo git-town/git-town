@@ -4,7 +4,7 @@ Feature: git prune-branches: remove stale local feature branches when run on the
 
 
   Background:
-    Given I have a local feature branch named "stale_feature" behind main
+    Given I have a local feature branch named "stale-feature" behind main
     And I am on the "main" branch
     And I have an uncommitted file
     When I run `git prune-branches`
@@ -14,7 +14,7 @@ Feature: git prune-branches: remove stale local feature branches when run on the
     Then it runs the Git commands
       | BRANCH | COMMAND                     |
       | main   | git fetch --prune           |
-      |        | git branch -d stale_feature |
+      |        | git branch -d stale-feature |
     And I end up on the "main" branch
     And I still have my uncommitted file
     And the existing branches are
@@ -27,10 +27,10 @@ Feature: git prune-branches: remove stale local feature branches when run on the
     When I run `git prune-branches --undo`
     Then it runs the Git commands
       | BRANCH | COMMAND                                              |
-      | main   | git branch stale_feature <%= sha 'Initial commit' %> |
+      | main   | git branch stale-feature <%= sha 'Initial commit' %> |
     And I end up on the "main" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES            |
-      | local      | main, stale_feature |
+      | local      | main, stale-feature |
       | remote     | main                |
     And I still have my uncommitted file
