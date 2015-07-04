@@ -4,12 +4,12 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
 
 
   Background:
-    Given I have feature branches named "feature" and "other_feature"
+    Given I have feature branches named "feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | main    | local and remote | main commit    | main_file    | main content    |
       | feature | local            | feature commit | feature_file | feature content |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
 
 
   Scenario: with open changes
@@ -17,7 +17,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other_feature | git stash -u                                 |
+      | other-feature | git stash -u                                 |
       |               | git checkout main                            |
       | main          | git fetch --prune                            |
       |               | git rebase origin/main                       |
@@ -31,10 +31,10 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       |               | git checkout feature                         |
       | feature       | git reset --hard <%= sha 'feature commit' %> |
       |               | git checkout main                            |
-      | main          | git checkout other_feature                   |
-      | other_feature | git stash pop                                |
+      | main          | git checkout other-feature                   |
+      | other-feature | git stash pop                                |
     And I get the error "Aborting ship due to empty commit message"
-    And I am still on the "other_feature" branch
+    And I am still on the "other-feature" branch
     And my workspace still has an uncommitted file with name: "feature_file" and content: "conflicting content"
     And I am left with my original commits
 
@@ -43,7 +43,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
     When I run `git ship feature` and enter an empty commit message
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other_feature | git checkout main                            |
+      | other-feature | git checkout main                            |
       | main          | git fetch --prune                            |
       |               | git rebase origin/main                       |
       |               | git checkout feature                         |
@@ -56,7 +56,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       |               | git checkout feature                         |
       | feature       | git reset --hard <%= sha 'feature commit' %> |
       |               | git checkout main                            |
-      | main          | git checkout other_feature                   |
+      | main          | git checkout other-feature                   |
     And I get the error "Aborting ship due to empty commit message"
-    And I am still on the "other_feature" branch
+    And I am still on the "other-feature" branch
     And I am left with my original commits

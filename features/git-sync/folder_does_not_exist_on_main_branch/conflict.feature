@@ -4,13 +4,13 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
 
   Background:
-    Given I have feature branches named "current_feature" and "other_feature"
+    Given I have feature branches named "current_feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main            | local and remote | conflicting main commit    | conflicting_file | main content    |
       | current_feature | local            | conflicting feature commit | conflicting_file | feature content |
       |                 |                  | folder commit              | new_folder/file1 |                 |
-      | other_feature   | local and remote | other feature commit       | file2            |                 |
+      | other-feature   | local and remote | other feature commit       | file2            |                 |
     And I am on the "current_feature" branch
     And I have an uncommitted file
     When I run `git sync --all` in the "new_folder" folder
@@ -67,8 +67,8 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       | BRANCH          | COMMAND                                  |
       | current_feature | git commit --no-edit                     |
       |                 | git push                                 |
-      |                 | git checkout other_feature               |
-      | other_feature   | git merge --no-edit origin/other_feature |
+      |                 | git checkout other-feature               |
+      | other-feature   | git merge --no-edit origin/other-feature |
       |                 | git merge --no-edit main                 |
       |                 | git push                                 |
       |                 | git checkout current_feature             |
@@ -84,13 +84,13 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       |                 |                  | folder commit                            | new_folder/file1 |
       |                 |                  | conflicting main commit                  | conflicting_file |
       |                 |                  | Merge branch 'main' into current_feature |                  |
-      | other_feature   | local and remote | other feature commit                     | file2            |
+      | other-feature   | local and remote | other feature commit                     | file2            |
       |                 |                  | conflicting main commit                  | conflicting_file |
-      |                 |                  | Merge branch 'main' into other_feature   |                  |
+      |                 |                  | Merge branch 'main' into other-feature   |                  |
     And I still have the following committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current_feature | conflicting_file | resolved content |
       | current_feature | new_folder/file1 |                  |
-      | other_feature   | conflicting_file | main content     |
-      | other_feature   | file2            |                  |
+      | other-feature   | conflicting_file | main content     |
+      | other-feature   | file2            |                  |

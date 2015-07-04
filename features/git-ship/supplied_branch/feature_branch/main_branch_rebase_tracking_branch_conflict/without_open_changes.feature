@@ -4,20 +4,20 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
 
 
   Background:
-    Given I have feature branches named "feature" and "other_feature"
+    Given I have feature branches named "feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
     And I run `git ship feature -m "feature done"`
 
 
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                |
-      | other_feature | git checkout main      |
+      | other-feature | git checkout main      |
       | main          | git fetch --prune      |
       |               | git rebase origin/main |
     And I get the error
@@ -33,8 +33,8 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
     Then it runs the Git commands
       | BRANCH | COMMAND                    |
       | main   | git rebase --abort         |
-      |        | git checkout other_feature |
-    And I am still on the "other_feature" branch
+      |        | git checkout other-feature |
+    And I am still on the "other-feature" branch
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -55,8 +55,8 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-      |         | git checkout other_feature         |
-    And I end up on the "other_feature" branch
+      |         | git checkout other-feature         |
+    And I end up on the "other-feature" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -80,11 +80,11 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-      |         | git checkout other_feature         |
-    And I end up on the "other_feature" branch
+      |         | git checkout other-feature         |
+    And I end up on the "other-feature" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      |        |                  | feature done              | feature-file     |
