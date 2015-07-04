@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts between the supplied feature branch and the main branch (with open changes)
+Feature: git ship: resolving conflicts between the supplied feature branch and the main branch
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_main_branch_conflict.feature)
 
@@ -18,9 +18,9 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
       | other-feature | git stash -u                       |
+      |               | git fetch --prune                  |
       |               | git checkout main                  |
-      | main          | git fetch --prune                  |
-      |               | git rebase origin/main             |
+      | main          | git rebase origin/main             |
       |               | git push                           |
       |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |

@@ -12,19 +12,12 @@ Feature: git hack: requires a branch name
       | main             | remote   | main commit             | main_file    |
       | existing-feature | local    | existing feature commit | feature_file |
     And I am on the "existing-feature" branch
-
-
-  Scenario: with open changes
-    Given I have an uncommitted file
+    And I have an uncommitted file
     When I run `git hack`
+
+
+  Scenario: result
     Then it runs no Git commands
     And I get the error "No branch name provided"
     And I am still on the "existing-feature" branch
     And I still have my uncommitted file
-
-
-  Scenario: without open changes
-    When I run `git hack`
-    Then it runs no Git commands
-    And I get the error "No branch name provided"
-    And I am still on the "existing-feature" branch

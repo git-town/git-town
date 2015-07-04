@@ -6,7 +6,7 @@ git-hack - cut a new feature branch off the main branch
 #### SYNOPSIS
 
 ```
-git hack <branchname>
+git hack <branchname> [parent branch name]
 git hack (--abort | --continue)
 ```
 
@@ -23,6 +23,10 @@ Brings over all uncommitted changes.
 ```
 <branchname>
     The name of the branch to create.
+
+[parent branch name]
+    If provided, cuts the new branch off the given existing feature branch.
+    Providing '.' here uses the current branch as the parent branch.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.

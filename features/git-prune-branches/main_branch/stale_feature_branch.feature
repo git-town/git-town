@@ -1,4 +1,4 @@
-Feature: git prune-branches: remove stale feature branches when run on the main branch (with open changes)
+Feature: git prune-branches: remove stale feature branches when run on the main branch
 
   (see ../../feature_branch/behind_main/without_open_changes.feature)
 

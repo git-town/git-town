@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts between the main branch and its tracking branch (with open changes)
+Feature: git ship: resolving conflicts between the main branch and its tracking branch
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/main_branch_rebase_tracking_branch_conflict.feature)
 
@@ -18,10 +18,10 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                |
-      | other-feature | git stash -u           |
+      | other_feature | git stash -u           |
+      |               | git fetch --prune      |
       |               | git checkout main      |
-      | main          | git fetch --prune      |
-      |               | git rebase origin/main |
+      | main          | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".

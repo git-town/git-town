@@ -1,4 +1,4 @@
-Feature: git kill: killing the current feature branch without a tracking branch (with open changes)
+Feature: git kill: killing the current feature branch without a tracking branch
 
   As a developer currently working on a local feature branch that leads nowhere
   I want to be able to remove the current branch including all open changes

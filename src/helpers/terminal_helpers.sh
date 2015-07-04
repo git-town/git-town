@@ -13,13 +13,6 @@ function echo_bold {
 }
 
 
-# Prints a header line into the terminal.
-function echo_header {
-  echo
-  echo_bold "$@"
-}
-
-
 # Prints an error header into the terminal.
 function echo_error_header {
   echo
@@ -58,6 +51,21 @@ function echo_inline_bold {
 }
 
 
+function echo_inline_cyan_bold {
+  output_style_cyan
+  output_style_bold
+  echo -n "$@"
+  output_style_reset
+}
+
+
+function echo_inline_dim {
+  output_style_dim
+  echo -n "$@"
+  output_style_reset
+}
+
+
 # Prints an inline error
 function echo_inline_error {
   echo_red "error: $*"
@@ -76,6 +84,13 @@ function echo_inline_usage_or {
 }
 
 
+# Prints a header line into the terminal.
+function echo_header {
+  echo
+  echo_bold "$@"
+}
+
+
 # Outputs the given text in red
 function echo_red {
   output_style_red
@@ -89,6 +104,14 @@ function echo_red_bold {
   output_style_bold
   output_style_red
   echo "$@"
+  output_style_reset
+}
+
+
+function echo_inline_red_bold {
+  output_style_red
+  output_style_bold
+  echo -n "$@"
   output_style_reset
 }
 
@@ -137,6 +160,16 @@ function indent {
 
 function output_style_bold {
   tput bold
+}
+
+
+function output_style_cyan {
+  tput setaf 6
+}
+
+
+function output_style_dim {
+  tput dim
 }
 
 

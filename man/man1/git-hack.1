@@ -4,7 +4,7 @@
 git hack \- cut a new feature branch off the main branch
 
 .SH "SYNOPSIS"
-\fIgit hack\fR <branchname>
+\fIgit hack\fR <branchname> [parent branch name]
 .br
 \fIgit hack\fR (--abort | --continue)
 
@@ -16,6 +16,11 @@ Brings over all uncommitted changes.
 .SH "OPTIONS"
 .IP "<branchname>" 4
 The name of the branch to create.
+
+.IP "[parent branch name]" 4
+If provided, cuts the new branch off the given existing feature branch.
+.br
+Providing '.' here uses the current branch as the parent branch.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.
