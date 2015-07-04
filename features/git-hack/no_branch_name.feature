@@ -12,7 +12,7 @@ Feature: git hack: requires a branch name
       | main             | remote   | main commit             | main_file    |
       | existing_feature | local    | existing feature commit | feature_file |
     And I am on the "existing_feature" branch
-    Given I have an uncommitted file
+    And I have an uncommitted file
     When I run `git hack`
 
 

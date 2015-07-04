@@ -1,4 +1,4 @@
-Feature: git prune-branches: remove stale coworker branches when run on the main branch (without open changes)
+Feature: git prune-branches: remove stale coworker branches when run on the main branch
 
   As a developer pruning branches
   I want my coworker's merged branches to be deleted from the remote repository
