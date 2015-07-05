@@ -17,7 +17,8 @@ function ancestor_branches {
   local branch_name=$1
 
   ancestors=$(git config "git-town.branches.ancestors.$branch_name")
-  echo ${$ancestors/ /, /}
+  # echo ${$ancestors/ /, /}
+  echo ancestors
 }
 
 
