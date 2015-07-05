@@ -15,7 +15,7 @@ Feature: git ship: shipping a child branch
 
 
   Scenario: result
-    Then I get the error "Shipping this branch would ship 'parent-feature' as well."
+    Then I get the error "Shipping this branch would ship "parent-feature" as well."
     And I get the error "Please ship 'parent-feature' first."
     And it runs no Git commands
     And I end up on the "parent-feature" branch
