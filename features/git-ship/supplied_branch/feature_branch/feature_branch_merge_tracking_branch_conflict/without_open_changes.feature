@@ -16,9 +16,9 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | other_feature | git checkout main                  |
-      | main          | git fetch --prune                  |
-      |               | git rebase origin/main             |
+      | other_feature | git fetch --prune                  |
+      |               | git checkout main                  |
+      | main          | git rebase origin/main             |
       |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
     And I get the error
