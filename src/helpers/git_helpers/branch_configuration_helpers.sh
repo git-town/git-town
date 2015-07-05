@@ -120,9 +120,9 @@ function ensure_knows_parent_branches {
 
         print_branch 1 "$MAIN_BRANCH_NAME"
         i=2
-        for j in $branches; do
-          if [ "$j" != "$current_branch" -a "$j" != "$MAIN_BRANCH_NAME" ]; then
-            print_branch $i "$j"
+        for branch in $branches; do
+          if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+            print_branch $i "$branch"
             i=$(( i + 1 ))
           fi
         done
