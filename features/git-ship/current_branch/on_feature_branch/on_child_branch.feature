@@ -31,5 +31,5 @@ Feature: git ship: shipping a child branch
     When I run `git ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no Git commands
-    And I am still on the "feature" branch
+    And I am still on the "feature-3" branch
     And I am left with my original commits
