@@ -23,7 +23,7 @@ function has_extractable_commits {
 }
 
 
-function revert {
+function revert_commit {
   local commit=$1
   run_git_command "git revert $commit"
 }
