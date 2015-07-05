@@ -17,9 +17,9 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                |
-      | other_feature | git checkout main      |
-      | main          | git fetch --prune      |
-      |               | git rebase origin/main |
+      | other_feature | git fetch --prune      |
+      |               | git checkout main      |
+      | main          | git rebase origin/main |
     And I get the error
       """
       To abort, run "git ship --abort".
