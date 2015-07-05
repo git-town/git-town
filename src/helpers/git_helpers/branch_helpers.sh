@@ -14,6 +14,7 @@ function create_and_checkout_branch {
   local new_branch_name=$1
   local parent_branch_name=$2
   run_git_command "git checkout -b $new_branch_name $parent_branch_name"
+  store_parent_branch "$new_branch_name" "$parent_branch_name"
 }
 
 
@@ -48,7 +49,6 @@ function ensure_does_not_have_branch {
     exit_with_error newline
   fi
 }
-
 
 
 # Exits if the repository does not have a branch with the given name
@@ -149,10 +149,13 @@ function remote_only_merged_branches {
 
 
 function undo_steps_for_create_and_checkout_feature_branch {
-  local branch=$(get_current_branch_name)
+  local current_branch=$(get_current_branch_name)
   local branch_to_create="$1"
-  echo "checkout $branch"
+
+  echo "checkout $current_branch"
   echo "delete_local_branch $branch_to_create"
+  echo "delete_parent_entry $branch_to_create"
+  echo "delete_ancestors_entry $branch_to_create"
 }
 
 
