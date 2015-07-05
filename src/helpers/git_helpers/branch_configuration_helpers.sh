@@ -115,7 +115,7 @@ function ensure_knows_parent_branches {
           printf "%3s: " "$number"
           output_style_reset
           echo "$branch_name"
-          branch[number]="$branch"
+          branch_numbers[number]="$branch_name"
         }
 
         print_branch 1 "$MAIN_BRANCH_NAME"
@@ -133,7 +133,7 @@ function ensure_knows_parent_branches {
         re='^[0-9]+$'
         if [[ $parent =~ $re ]] ; then
           # user entered a number here
-          parent=${branch[$parent]}
+          parent=${branch_numbers[$parent]}
         elif [ -z "$parent" ]; then
           # user entered nothing
           parent=$MAIN_BRANCH_NAME
