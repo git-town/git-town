@@ -105,20 +105,24 @@ function ensure_knows_parent_branches {
         echo
         echo "I don't know the parent branch of $(echo_inline_cyan_bold "$current_branch")"
         echo
-        local branches ; branches=$(git branch | cut -c 3-)
-        output_style_bold
-        printf "%3s: " 1
-        output_style_reset
-        echo "$MAIN_BRANCH_NAME"
-        branch[1]="$MAIN_BRANCH_NAME"
+        local branches=$(git branch | cut -c 3-)
+
+        function print_branch {
+        local number=$1
+          local branch_name=$2
+
+          output_style_bold
+          printf "%3s: " "$number"
+          output_style_reset
+          echo "$branch_name"
+          branch[number]="$branch"
+        }
+
+        print_branch 1 "$MAIN_BRANCH_NAME"
         i=2
         for j in $branches; do
           if [ "$j" != "$current_branch" -a "$j" != "$MAIN_BRANCH_NAME" ]; then
-            output_style_bold
-            printf "%3s: " $i
-            output_style_reset
-            echo "$j"
-            branch[i]=$j
+            print_branch $i "$j"
             i=$(( i + 1 ))
           fi
         done
