@@ -105,7 +105,7 @@ function ensure_knows_parent_branches {
         echo
         echo "I don't know the parent branch of $(echo_inline_cyan_bold "$current_branch")"
         echo
-        local branches=$(git branch | cut -c 3-)
+        local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
 
         function print_branch {
         local number=$1
