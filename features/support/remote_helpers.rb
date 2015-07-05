@@ -11,17 +11,25 @@ def base_url domain
 end
 
 
+# Returns the URL for making pull requests on Bitbucket
+def bitbucket_pull_request_url branch:, parent_branch:, repo:
+  sha = recent_commit_shas(1).join('')[0, 12] # TODO: update to have the branch as an argument
+  source = CGI.escape "#{repo}:#{sha}:#{branch}"
+  dest = CGI.escape "#{repo}::#{parent_branch}"
+  "https://bitbucket.org/#{repo}/pull-request/new?source=#{source}&dest=#{dest}"
+end
+
+
+# Returns the URL for making pull requests on GitHub
+def github_pull_request_url branch:, parent_branch:, repo:
+  "https://github.com/#{repo}/compare/#{parent_branch}...#{branch}?expand=1"
+end
+
+
 # Returns the remote URL for a new pull request for the given domain and branch
-def pull_request_url domain, branch_name, repo
-  case domain
-  when 'Bitbucket'
-    sha = recent_commit_shas(1).join('')[0, 12]
-    "https://bitbucket.org/#{repo}/pull-request/new?source=#{CGI.escape repo}%3A#{sha}%3A#{branch_name}"
-  when 'GitHub'
-    "https://github.com/#{repo}/compare/#{branch_name}?expand=1"
-  else
-    fail "Unknown domain: #{domain}"
-  end
+def pull_request_url domain:, branch:, parent_branch:, repo:
+  send "#{domain.downcase}_pull_request_url",
+       branch: branch, parent_branch: parent_branch, repo: repo
 end
 
 
