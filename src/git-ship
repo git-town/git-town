@@ -8,7 +8,7 @@ function ensure_has_no_unshipped_ancestors {
   local parent_branch_name ; parent_branch_name=$(parent_branch "$branch_name")
   if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
     echo_error_header
-    echo_error "Shipping this branch would ship '$parent_branch_name' as well."
+    echo_error "Shipping this branch would ship '$(ancestor_branches "$parent_branch_name")' as well."
     echo_error "Please ship '$(oldest_ancestor_branch "$branch_name")' first."
     exit_with_error newline
   fi

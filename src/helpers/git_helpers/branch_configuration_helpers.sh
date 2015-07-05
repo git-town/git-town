@@ -12,6 +12,15 @@ function all_registered_branches {
 }
 
 
+# Returns the names of all ancestor branches of the given branch
+function ancestor_branches {
+  local branch_name=$1
+
+  ancestors=$(git config "git-town.branches.ancestors.$branch_name")
+  echo ${$ancestors/ /, /}
+}
+
+
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
   local branch_name=$1
