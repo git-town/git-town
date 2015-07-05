@@ -103,8 +103,6 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo "I don't know the parent branch of $(echo_inline_cyan_bold "$current_branch")"
-        echo
         local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
 
         function print_branch {
@@ -128,7 +126,7 @@ function ensure_knows_parent_branches {
         done
 
         echo
-        echo -n "Please enter the parent branch name or number (or nothing for $(echo_inline_bold "$MAIN_BRANCH_NAME")): "
+        echo -n "Please enter the parent branch name or number for $(echo_inline_cyan_bold "$current_branch") ($MAIN_BRANCH_NAME): "
         read parent
         re='^[0-9]+$'
         if [[ $parent =~ $re ]] ; then
@@ -144,6 +142,7 @@ function ensure_knows_parent_branches {
           exit_with_error newline
         fi
         store_parent_branch "$current_branch" "$parent"
+        echo
       fi
       current_branch=$parent
     done
