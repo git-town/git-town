@@ -1,4 +1,4 @@
-Feature: git ship: resolving conflicts between the supplied feature branch and its tracking branch (with open changes)
+Feature: git ship: resolving conflicts between the supplied feature branch and its tracking branch
 
   (see ../../../current_branch/on_feature_branch/without_open_changes/feature_branch_merge_tracking_branch_conflict.feature)
 

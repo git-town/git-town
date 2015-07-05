@@ -1,4 +1,4 @@
-Feature: git-sync-fork on a feature branch with open changes
+Feature: git-sync-fork on a feature branch
 
   Background:
     Given I have a feature branch named "feature"

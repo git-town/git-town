@@ -1,4 +1,4 @@
-Feature: git extract: resolving conflicts between main branch and extracted commits (with open changes)
+Feature: git extract: resolving conflicts between main branch and extracted commits
 
   As a developer extracting a commit that conflicts with the main branch
   I want to be given the choice to resolve the conflicts or abort

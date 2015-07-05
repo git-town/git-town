@@ -7,19 +7,12 @@ Feature: git ship: errors when trying to ship a branch that doesn't exist
 
   Background:
     Given I am on the "main" branch
-
-
-  Scenario: with open changes
-    Given I have an uncommitted file
+    And I have an uncommitted file
     When I run `git ship non-existing-branch`
+
+
+  Scenario: result
     Then it runs no Git commands
     And I get the error "There is no branch named 'non-existing-branch'"
     And I end up on the "main" branch
     And I still have my uncommitted file
-
-
-  Scenario: without open changes
-    When I run `git ship non-existing-branch`
-    Then it runs no Git commands
-    And I get the error "There is no branch named 'non-existing-branch'"
-    And I end up on the "main" branch

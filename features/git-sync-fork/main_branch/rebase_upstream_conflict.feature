@@ -1,4 +1,4 @@
-Feature: git-sync-fork: handling rebase conflicts between main branch and its remote with open changes
+Feature: git-sync-fork: handling rebase conflicts between main branch and its remote
 
   Background:
     Given my repo has an upstream repo
