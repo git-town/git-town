@@ -17,7 +17,8 @@ function ancestor_branches {
   local branch_name=$1
 
   ancestors=$(git config "git-town.branches.ancestors.$branch_name")
-  escaped=${ancestors/ /, /}
+  replace=", "
+  escaped=${ancestors/ /$replace/}
   echo "$escaped"
 }
 
