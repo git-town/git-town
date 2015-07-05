@@ -103,17 +103,21 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch")"
+        echo "I don't know the parent branch of $(echo_inline_cyan_bold "$current_branch")"
         echo
         local branches ; branches=$(git branch | cut -c 3-)
         i=1
         for j in $branches; do
-          echo "$i. $j"
+          output_style_bold
+          printf "%3s: " $i
+          output_style_reset
+          echo "$j"
           branch[i]=$j
           i=$(( i + 1 ))
         done
 
-        echo "Enter branch number or name"
+        echo
+        echo -n "Please enter the parent branch name or number (or nothing for $(echo_inline_bold "$MAIN_BRANCH_NAME")): "
         read parent
         if [ -z "$parent" ]; then
           parent=$MAIN_BRANCH_NAME
