@@ -18,3 +18,12 @@ Feature: git ship: errors if there are open changes
     And I am still on the "feature" branch
     And I still have my uncommitted file
     And there are no commits
+
+
+  Scenario: undo
+    When I run `git ship --undo`
+    Then I get the error "Nothing to undo"
+    And it runs no Git commands
+    And I am still on the "feature" branch
+    And I am left with my original commits
+    And I still have my uncommitted file
