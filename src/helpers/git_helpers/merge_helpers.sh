@@ -42,6 +42,20 @@ function commit_squash_merge {
 }
 
 
+function revert {
+  local commit=$1
+  run_git_command "git revert $commit"
+}
+
+
 function undo_steps_for_merge {
   echo "reset_to_sha $(current_sha) hard"
+}
+
+
+function post_undo_steps_for_commit_squash_merge {
+  local current_branch_name=$(get_current_branch_name)
+  echo "checkout $current_branch_name"
+  echo "revert $(git log -n 1 --format="%H")"
+  echo "push_branch $current_branch_name"
 }
