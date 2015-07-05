@@ -13,6 +13,7 @@ function branch_to_kill {
 
 function preconditions {
   target_branch=$(branch_to_kill "$@")
+  parent_branch_name=$(parent_branch "$target_branch")
 
   ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
 
@@ -29,7 +30,7 @@ function preconditions {
 function steps {
   if [ "$target_branch" = "$INITIAL_BRANCH_NAME" ]; then
     echo_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
-    echo "checkout_main_branch"
+    echo "checkout $parent_branch_name"
   fi
 
   if [ "$(has_tracking_branch "$target_branch")" = true ]; then
@@ -37,6 +38,11 @@ function steps {
   fi
 
   echo "delete_local_branch $target_branch force"
+
+  # update branch hierarchy information
+  echo_update_child_branches "$target_branch" "$parent_branch_name"
+  echo "delete_parent_entry $target_branch"
+  echo "delete_all_ancestor_entries"
 }
 
 
