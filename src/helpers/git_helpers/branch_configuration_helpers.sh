@@ -16,10 +16,8 @@ function all_registered_branches {
 function ancestor_branches {
   local branch_name=$1
 
-  ancestors=$(git config "git-town.branches.ancestors.$branch_name")
-  replace=", "
-  escaped=${ancestors/ /$replace/}
-  echo "$escaped"
+  names=$(git config "git-town.branches.ancestors.$branch_name" | sed 's/ /\", \"/g')
+  echo "\"$names\""
 }
 
 
