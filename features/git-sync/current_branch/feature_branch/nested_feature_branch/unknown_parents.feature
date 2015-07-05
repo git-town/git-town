@@ -75,7 +75,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branche
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `git sync` and enter ""
+    When I run `git sync` and press ENTER
     Then it runs the Git commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
