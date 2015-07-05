@@ -21,3 +21,9 @@ function has_extractable_commits {
     echo true
   fi
 }
+
+
+function revert {
+  local commit=$1
+  run_git_command "git revert $commit"
+}

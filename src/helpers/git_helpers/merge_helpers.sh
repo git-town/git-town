@@ -42,12 +42,6 @@ function commit_squash_merge {
 }
 
 
-function revert {
-  local commit=$1
-  run_git_command "git revert $commit"
-}
-
-
 function undo_steps_for_merge {
   echo "reset_to_sha $(current_sha) hard"
 }
