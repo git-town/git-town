@@ -106,7 +106,7 @@ function ensure_knows_parent_branches {
         local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
 
         function print_branch {
-        local number=$1
+          local number=$1
           local branch_name=$2
 
           output_style_bold
