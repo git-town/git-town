@@ -1,4 +1,4 @@
-Feature: git kill: killing the current feature branch with a deleted tracking branch (with open changes)
+Feature: git kill: killing the current feature branch with a deleted tracking branch
 
   As a user killing the current feature branch whose remote branch has been deleted
   I want the command to succeed anyways

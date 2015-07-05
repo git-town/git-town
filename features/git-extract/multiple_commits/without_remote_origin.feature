@@ -1,4 +1,4 @@
-Feature: git extract: extracting multiple commits (with open changes and without remote repo)
+Feature: git extract: extracting multiple commits (without remote repo)
 
   (see ../with_remote_origin/with_open_changes.feature)
 

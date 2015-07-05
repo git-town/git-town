@@ -11,11 +11,11 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
       | main    | local    | local main commit    | local_main_file    | main content    |
       | feature | local    | local feature commit | local_feature_file | feature content |
     And I am on the "feature" branch
-
-
-  Scenario: with open changes
-    Given I have an uncommitted file
+    And I have an uncommitted file
     When I run `git sync`
+
+
+  Scenario: result
     Then it runs the Git commands
       | BRANCH  | COMMAND                  |
       | feature | git stash -u             |
@@ -23,25 +23,6 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
       |         | git stash pop            |
     And I am still on the "feature" branch
     And I still have my uncommitted file
-    And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |
-      | main    | local    | local main commit                | local_main_file    |
-      | feature | local    | local feature commit             | local_feature_file |
-      |         |          | local main commit                | local_main_file    |
-      |         |          | Merge branch 'main' into feature |                    |
-    And now I have the following committed files
-      | BRANCH  | NAME               | CONTENT         |
-      | main    | local_main_file    | main content    |
-      | feature | local_feature_file | feature content |
-      | feature | local_main_file    | main content    |
-
-
-  Scenario: without open changes
-    When I run `git sync`
-    Then it runs the Git commands
-      | BRANCH  | COMMAND                  |
-      | feature | git merge --no-edit main |
-    And I am still on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |
       | main    | local    | local main commit                | local_main_file    |

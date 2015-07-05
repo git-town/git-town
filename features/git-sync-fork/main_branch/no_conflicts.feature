@@ -1,4 +1,4 @@
-Feature: git-sync-fork on the main branch with open changes
+Feature: git-sync-fork on the main branch
 
   Background:
     Given my repo has an upstream repo

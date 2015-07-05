@@ -1,4 +1,4 @@
-Feature: git extract: extracting a single commit (with open changes)
+Feature: git extract: extracting a single commit
 
   (see ../../multiple_commits/with_remote_origin/with_open_changes.feature)
 

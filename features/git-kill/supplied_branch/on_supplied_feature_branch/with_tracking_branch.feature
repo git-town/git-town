@@ -1,4 +1,4 @@
-Feature: git kill: killing the given feature branch when on it (with open changes)
+Feature: git kill: killing the given feature branch when on it
 
   As a developer currently on a feature branch that leads nowhere
   I want to be able to kill it by name
