@@ -115,6 +115,15 @@ function ensure_knows_parent_branches {
           echo "$branch_name"
         }
 
+        echo
+        echo "Feature branches can be branched directly off "
+        echo "$MAIN_BRANCH_NAME or from other feature branches."
+        echo
+        echo "The former allows to develop and ship features completely"
+        echo "independently of each other, the latter to work on new things"
+        echo "that require other changes currently under review."
+        echo
+
         local branch_numbers
         print_branch 1 "$MAIN_BRANCH_NAME"
         branch_numbers[1]=$MAIN_BRANCH_NAME
@@ -127,13 +136,6 @@ function ensure_knows_parent_branches {
           fi
         done
 
-        echo
-        echo "Feature branches can be branched directly off "
-        echo "$MAIN_BRANCH_NAME or from other feature branches."
-        echo
-        echo "The former allows to develop and ship features completely"
-        echo "independently of each other, the latter to work on new things"
-        echo "that require other changes currently under review."
         echo
         echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
         read parent
