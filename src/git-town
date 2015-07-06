@@ -48,7 +48,7 @@ elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
   shift
   show_or_update_main_branch "$@"
-elif [ "$1" == "non-feature-branches" ]; then
+elif [ "$1" == "perennial-branches" ]; then
   ensure_git_repository
   shift
   show_or_update_non_feature_branches "$@"
@@ -65,7 +65,7 @@ elif [ -n "$1" ]; then
   echo_inline_usage_or "git town help"
   echo_inline_usage_or "git town install-fish-autocompletion"
   echo_inline_usage_or "git town main-branch [<branchname>]"
-  echo_inline_usage_or "git town non-feature-branches [(--add | --remove) <branchname>]"
+  echo_inline_usage_or "git town perennial-branches [(--add | --remove) <branchname>]"
   echo_inline_usage_or "git town version"
   exit_with_error newline
 fi

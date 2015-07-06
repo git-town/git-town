@@ -1,41 +1,41 @@
-Feature: add a branch to the non-feature branches configuration
+Feature: add a branch to the perennial branches configuration
 
-  As a user or tool configuring Git Town's non-feature branches
-  I want an easy way to add a branch to my set of non-feature branches
+  As a user or tool configuring Git Town's perennial branches
+  I want an easy way to add a branch to my set of perennial branches
   So that I can configure Git Town safely, and the tool does exactly what I want.
 
 
   Background:
     Given I have branches named "staging" and "qa"
-    And my non-feature branches are configured as "qa"
+    And my perennial branches are configured as "qa"
 
 
   Scenario: adding an existing branch
-    When I run `git town non-feature-branches --add staging`
+    When I run `git town perennial --add staging`
     Then I see no output
-    And my non-feature branches are now configured as "qa" and "staging"
+    And my perennial branches are now configured as "qa" and "staging"
 
 
-  Scenario: adding a branch that is already a non-feature branch
-    When I run `git town non-feature-branches --add qa`
-    Then I get the error "'qa' is already a non-feature branch"
+  Scenario: adding a branch that is already a perennial branch
+    When I run `git town perennial-branches --add qa`
+    Then I get the error "'qa' is already a perennial branch"
 
 
   Scenario: adding a branch that is already set as the main branch
     Given I have configured the main branch name as "staging"
-    When I run `git town non-feature-branches --add staging`
+    When I run `git town perennial-branches --add staging`
     Then I get the error "'staging' is already set as the main branch"
 
 
   Scenario: adding a branch that does not exist
-    When I run `git town non-feature-branches --add branch-does-not-exist`
+    When I run `git town perennial-branches --add branch-does-not-exist`
     Then I get the error "no branch named 'branch-does-not-exist'"
 
 
   Scenario: not providing a branch name
-    When I run `git town non-feature-branches --add`
+    When I run `git town perennial-branches --add`
     Then I get the error
       """
       error: missing branch name
-      usage: git town non-feature-branches (--add | --remove) <branchname>
+      usage: git town perennial-branches (--add | --remove) <branchname>
       """

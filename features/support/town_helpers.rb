@@ -1,5 +1,5 @@
 def configure_non_feature_branches configuration
-  set_configuration 'non-feature-branch-names', configuration
+  set_configuration 'perennial-branch-names', configuration
 end
 
 
@@ -9,7 +9,7 @@ end
 
 
 def delete_non_feature_branches_configuration
-  run 'git config --unset git-town.non-feature-branch-names'
+  run 'git config --unset git-town.perennial-branch-names'
 end
 
 
@@ -25,7 +25,7 @@ end
 
 
 def non_feature_branch_configuration
-  output_of 'git config --get git-town.non-feature-branch-names || true'
+  output_of 'git config --get git-town.perennial-branch-names || true'
 end
 
 

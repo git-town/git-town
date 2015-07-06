@@ -12,7 +12,7 @@ Feature: Git Town performs correctly depending on the environment
       | COMMAND                       |
       | git town config               |
       | git town main-branch          |
-      | git town non-feature-branches |
+      | git town perennial-branches |
       | git extract                   |
       | git hack                      |
       | git kill                      |

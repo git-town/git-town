@@ -55,7 +55,7 @@ function is_main_branch {
 }
 
 
-# Returns true if the given branch is a non-feature branch
+# Returns true if the given branch is a perennial branch
 function is_non_feature_branch {
   local branch_name=$1
 

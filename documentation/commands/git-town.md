@@ -11,7 +11,7 @@ git town config [--reset | --setup]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branchname>]
-git town non-feature-branches [(--add | --remove) <branchname>]
+git town perennial-branches [(--add | --remove) <branchname>]
 git town version
 ```
 
@@ -39,16 +39,16 @@ git town version
 > git town main-branch master
 > ```
 
-* *non-feature-branches*
-> Displays the names of all non-feature branches.
+* *perennial-branches*
+> Displays the names of all perennial branches.
 >
-> With the `--add` or `--remove` option, you may update your non-feature branches.
+> With the `--add` or `--remove` option, you may update your perennial branches.
 > ```bash
-> # Register the "qa" branch as a non-feature branch
-> git town non-feature-branches --add qa
+> # Register the "qa" branch as a perennial branch
+> git town perennial-branches --add qa
 >
-> # Remove "qa" branch from the list of non-feature branches
-> git town non-feature-branches --remove qa
+> # Remove "qa" branch from the list of perennial branches
+> git town perennial-branches --remove qa
 > ```
 
 * *install-fish-autocompletion*

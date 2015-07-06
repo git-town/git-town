@@ -1,6 +1,6 @@
-Feature: git sync: syncing the current non-feature branch (without remote repo)
+Feature: git sync: syncing the current perennial branch (without remote repo)
 
-  As a developer syncing a non-feature branch and without a remote repository
+  As a developer syncing a perennial branch and without a remote repository
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
@@ -8,7 +8,7 @@ Feature: git sync: syncing the current non-feature branch (without remote repo)
   Background:
     Given my repo does not have a remote origin
     And I have local branches named "qa" and "production"
-    And my non-feature branches are configured as "qa" and "production"
+    And my perennial branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |

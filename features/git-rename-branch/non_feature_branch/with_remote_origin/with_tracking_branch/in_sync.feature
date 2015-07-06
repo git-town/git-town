@@ -1,13 +1,13 @@
-Feature: git rename-branch: renaming a non-feature branch with a tracking branch
+Feature: git rename-branch: renaming a perennial branch with a tracking branch
 
-  As a developer with a poorly named non-feature branch
+  As a developer with a poorly named perennial branch
   I want to be able to rename it safely in one easy step
   So that the names of my branches match what they implement, and I can manage them effectively.
 
 
   Background:
     Given I have branches named "qa" and "production"
-    And my non-feature branches are configured as "qa" and "production"
+    And my perennial branches are configured as "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
@@ -36,7 +36,7 @@ Feature: git rename-branch: renaming a non-feature branch with a tracking branch
       |                    | git branch -D production                      |
       |                    | git stash pop                                 |
     And I end up on the "renamed-production" branch
-    And my non-feature branches are now configured as "qa" and "renamed-production"
+    And my perennial branches are now configured as "qa" and "renamed-production"
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE           |

@@ -20,9 +20,9 @@ Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name
 end
 
 
-Given(/^my non-feature branches are configured as (.*)$/) do |data|
+Given(/^my perennial branches are configured as (.*)$/) do |data|
   non_feature_branches = Kappamaki.from_sentence(data).join(', ')
-  set_configuration 'non-feature-branch-names', non_feature_branches
+  set_configuration 'perennial-branch-names', non_feature_branches
 end
 
 
@@ -42,7 +42,7 @@ Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name
 end
 
 
-Then(/^my non-feature branches are now configured as (.*)$/) do |data|
+Then(/^my perennial branches are now configured as (.*)$/) do |data|
   non_feature_branches = Kappamaki.from_sentence(data)
   expect(non_feature_branch_configuration.split(',')).to match_array non_feature_branches
 end

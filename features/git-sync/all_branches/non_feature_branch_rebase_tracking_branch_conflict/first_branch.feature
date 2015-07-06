@@ -1,8 +1,8 @@
-Feature: git sync --all: handling rebase conflicts between non-feature branch and its tracking branch
+Feature: git sync --all: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
     Given I have branches named "production" and "qa"
-    And my non-feature branches are configured as "production" and "qa"
+    And my perennial branches are configured as "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        | FILE CONTENT              |
       | main       | remote           | main commit              | main_file        | main content              |
