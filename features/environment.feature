@@ -9,16 +9,16 @@ Feature: Git Town performs correctly depending on the environment
       """
 
     Examples:
-      | COMMAND                       |
-      | git town config               |
-      | git town main-branch          |
+      | COMMAND                     |
+      | git town config             |
+      | git town main-branch        |
       | git town perennial-branches |
-      | git extract                   |
-      | git hack                      |
-      | git kill                      |
-      | git new-pull-request          |
-      | git prune-branches            |
-      | git repo                      |
-      | git ship                      |
-      | git sync                      |
-      | git sync-fork                 |
+      | git extract                 |
+      | git hack                    |
+      | git kill                    |
+      | git new-pull-request        |
+      | git prune-branches          |
+      | git repo                    |
+      | git ship                    |
+      | git sync                    |
+      | git sync-fork               |
