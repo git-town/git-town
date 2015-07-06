@@ -4,12 +4,12 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
 
 
   Background:
-    Given I have feature branches named "feature" and "other_feature"
+    Given I have feature branches named "feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
-    And I am on the "other_feature" branch
+    And I am on the "other-feature" branch
     And I have an uncommitted file
     And I run `git ship feature -m "feature done"`
 
@@ -17,7 +17,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                            |
-      | other_feature | git stash -u                       |
+      | other-feature | git stash -u                       |
       |               | git fetch --prune                  |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
@@ -39,9 +39,9 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
       | BRANCH        | COMMAND                    |
       | feature       | git merge --abort          |
       |               | git checkout main          |
-      | main          | git checkout other_feature |
-      | other_feature | git stash pop              |
-    And I end up on the "other_feature" branch
+      | main          | git checkout other-feature |
+      | other-feature | git stash pop              |
+    And I end up on the "other-feature" branch
     And I still have my uncommitted file
     And there is no merge in progress
     And I am left with my original commits
@@ -60,9 +60,9 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
       |               | git push                     |
       |               | git push origin :feature     |
       |               | git branch -D feature        |
-      |               | git checkout other_feature   |
-      | other_feature | git stash pop                |
-    And I end up on the "other_feature" branch
+      |               | git checkout other-feature   |
+      | other-feature | git stash pop                |
+    And I end up on the "other-feature" branch
     And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
@@ -82,9 +82,9 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
       |               | git push                     |
       |               | git push origin :feature     |
       |               | git branch -D feature        |
-      |               | git checkout other_feature   |
-      | other_feature | git stash pop                |
-    And I end up on the "other_feature" branch
+      |               | git checkout other-feature   |
+      | other-feature | git stash pop                |
+    And I end up on the "other-feature" branch
     And I still have my uncommitted file
     And there is no "feature" branch
     And I still have the following commits

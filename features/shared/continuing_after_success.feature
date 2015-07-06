@@ -19,7 +19,7 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-hack
-    Given I run `git hack new_feature`
+    Given I run `git hack new-feature`
     When I run `git hack --continue`
     Then I get the error "The last command finished successfully and cannot be continued"
 
@@ -33,7 +33,7 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-prune-branches
-    Given I have a feature branch named "stale_feature" behind main
+    Given I have a feature branch named "stale-feature" behind main
     And I am on the "main" branch
     And I run `git prune-branches`
     When I run `git prune-branches --continue`
