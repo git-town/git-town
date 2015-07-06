@@ -143,6 +143,11 @@ function ensure_knows_parent_branches {
         if [[ $parent =~ $re ]] ; then
           # user entered a number here
           parent=${branch_numbers[$parent]}
+          if [ -z "$parent" ]; then
+            echo_error_header
+            echo_error "Invalid branch number"
+            exit_with_error newline
+          fi
         elif [ -z "$parent" ]; then
           # user entered nothing
           parent=$MAIN_BRANCH_NAME
