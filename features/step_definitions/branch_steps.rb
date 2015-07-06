@@ -41,7 +41,7 @@ Given(/^I have a stale feature branch named "([^"]+)" with its tip at "([^"]+)"$
 end
 
 
-Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
+Given(/^I have a perennial branch "(.+?)" behind main$/) do |branch_name|
   create_branch branch_name
   configure_perennial_branches branch_name
   create_commits branch: 'main'

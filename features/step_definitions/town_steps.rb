@@ -3,7 +3,7 @@ Given(/^I don't have a main branch name configured$/) do
 end
 
 
-Given(/^my non\-feature branches are not configured$/) do
+Given(/^my perennial branches are not configured$/) do
   delete_perennial_branches_configuration
 end
 
@@ -48,7 +48,7 @@ Then(/^my perennial branches are now configured as (.*)$/) do |data|
 end
 
 
-Then(/^my non\-feature branches are still not configured$/) do
+Then(/^my perennial branches are still not configured$/) do
   expect(perennial_branch_configuration.split(',')).to be_empty
 end
 
