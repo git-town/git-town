@@ -113,13 +113,15 @@ function ensure_knows_parent_branches {
           printf "%3s: " "$number"
           output_style_reset
           echo "$branch_name"
-          branch_numbers[number]="$branch_name"
         }
 
+        local branch_numbers
         print_branch 1 "$MAIN_BRANCH_NAME"
+        branch_numbers[1]=$MAIN_BRANCH_NAME
         i=2
         for branch in $branches; do
           if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+            branch_numbers[i]=$branch
             print_branch $i "$branch"
             i=$(( i + 1 ))
           fi
