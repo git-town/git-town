@@ -6,27 +6,27 @@ Feature: git hack: starting a new feature from a feature branch (without remote 
 
 
   Background:
-    Given I have a feature branch named "existing_feature"
+    Given I have a feature branch named "existing-feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
       | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
       | main             | local    | main commit             | main_file    |
-      | existing_feature | local    | existing feature commit | feature_file |
-    And I am on the "existing_feature" branch
+      | existing-feature | local    | existing feature commit | feature_file |
+    And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `git hack new_feature`
+    When I run `git hack new-feature`
 
 
   Scenario: result
     Then it runs the Git commands
       | BRANCH           | COMMAND                          |
-      | existing_feature | git stash -u                     |
-      |                  | git checkout -b new_feature main |
-      | new_feature      | git stash pop                    |
-    And I end up on the "new_feature" branch
+      | existing-feature | git stash -u                     |
+      |                  | git checkout -b new-feature main |
+      | new-feature      | git stash pop                    |
+    And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
       | main             | local    | main commit             | main_file    |
-      | existing_feature | local    | existing feature commit | feature_file |
-      | new_feature      | local    | main commit             | main_file    |
+      | existing-feature | local    | existing feature commit | feature_file |
+      | new-feature      | local    | main commit             | main_file    |
