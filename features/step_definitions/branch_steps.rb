@@ -43,7 +43,7 @@ end
 
 Given(/^I have a non\-feature branch "(.+?)" behind main$/) do |branch_name|
   create_branch branch_name
-  configure_non_feature_branches branch_name
+  configure_perennial_branches branch_name
   create_commits branch: 'main'
 end
 

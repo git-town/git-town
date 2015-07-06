@@ -33,8 +33,8 @@ When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
 end
 
 
-When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature branch names "(.+)")?/) do |cmd, main, non_feature|
-  @result = run cmd, inputs: [main, non_feature].compact
+When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and non\-feature branch names "(.+)")?/) do |cmd, main, perennial|
+  @result = run cmd, inputs: [main, perennial].compact
 end
 
 

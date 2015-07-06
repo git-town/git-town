@@ -1,6 +1,6 @@
 Feature: git ship: errors when trying to ship a perennial branch
 
-  (see ../current_branch/on_non_feature_branch.feature)
+  (see ../current_branch/on_perennial_branch.feature)
 
 
   Background:

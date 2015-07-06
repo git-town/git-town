@@ -51,7 +51,7 @@ elif [ "$1" == "main-branch" ]; then
 elif [ "$1" == "perennial-branches" ]; then
   ensure_git_repository
   shift
-  show_or_update_non_feature_branches "$@"
+  show_or_update_perennial_branches "$@"
 elif [ "$1" == "version" ]; then
   show_version
 elif [ "$1" == "install-fish-autocompletion" ]; then
