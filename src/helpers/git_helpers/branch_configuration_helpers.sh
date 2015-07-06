@@ -128,7 +128,14 @@ function ensure_knows_parent_branches {
         done
 
         echo
-        echo -n "Please enter the parent branch name or number for $(echo_inline_cyan_bold "$current_branch") ($MAIN_BRANCH_NAME): "
+        echo "Feature branches can be branched directly off "
+        echo "$MAIN_BRANCH_NAME or from other feature branches."
+        echo
+        echo "The former allows to develop and ship features completely"
+        echo "independently of each other, the latter to work on new things"
+        echo "that require other changes currently under review."
+        echo
+        echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
         read parent
         re='^[0-9]+$'
         if [[ $parent =~ $re ]] ; then
