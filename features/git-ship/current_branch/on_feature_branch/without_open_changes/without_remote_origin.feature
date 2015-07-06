@@ -33,10 +33,10 @@ Feature: git ship: shipping the current feature branch without a remote origin
   Scenario: undo
     When I run `git ship --undo`
     Then it runs the Git commands
-      | BRANCH  | COMMAND                                        |
-      | main    | git branch feature <%= sha 'feature commit' %> |
-      |         | git revert <%= sha 'feature done' %>           |
-      |         | git checkout feature                           |
+      | BRANCH | COMMAND                                        |
+      | main   | git branch feature <%= sha 'feature commit' %> |
+      |        | git revert <%= sha 'feature done' %>           |
+      |        | git checkout feature                           |
     And I end up on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME    |
