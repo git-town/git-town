@@ -101,7 +101,7 @@
 * **git sync:** pushes tags to the remote when running on the main branch
   ([#68](https://github.com/Originate/git-town/issues/68),
    [71b607](https://github.com/Originate/git-town/commit/71b607988c00e6dfc8f2598e9b964cc2ed4cfc39))
-* **perennial branches:** cannot be shipped and do not merge main when syncing
+* **non-feature branches:** cannot be shipped and do not merge main when syncing
   ([#45](https://github.com/Originate/git-town/issues/45),
    [31dce1](https://github.com/Originate/git-town/commit/31dce1dfaf11e1e17f17e141a26cb38360ab731a))
 * **git ship:**
