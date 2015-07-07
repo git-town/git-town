@@ -122,25 +122,41 @@ function ensure_knows_parent_branches {
           printf "%3s: " "$number"
           output_style_reset
           echo "$branch_name"
-          branch_numbers[number]="$branch_name"
         }
 
+        echo
+        echo "Feature branches can be branched directly off "
+        echo "$MAIN_BRANCH_NAME or from other feature branches."
+        echo
+        echo "The former allows to develop and ship features completely"
+        echo "independently of each other, the latter to work on new things"
+        echo "that require other changes currently under review."
+        echo
+
+        local branch_numbers
         print_branch 1 "$MAIN_BRANCH_NAME"
+        branch_numbers[1]=$MAIN_BRANCH_NAME
         i=2
         for branch in $branches; do
           if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+            branch_numbers[i]=$branch
             print_branch $i "$branch"
             i=$(( i + 1 ))
           fi
         done
 
         echo
-        echo -n "Please enter the parent branch name or number for $(echo_inline_cyan_bold "$current_branch") ($MAIN_BRANCH_NAME): "
+        echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
         read parent
         re='^[0-9]+$'
         if [[ $parent =~ $re ]] ; then
           # user entered a number here
           parent=${branch_numbers[$parent]}
+          if [ -z "$parent" ]; then
+            echo_error_header
+            echo_error "Invalid branch number"
+            exit_with_error newline
+          fi
         elif [ -z "$parent" ]; then
           # user entered nothing
           parent=$MAIN_BRANCH_NAME
