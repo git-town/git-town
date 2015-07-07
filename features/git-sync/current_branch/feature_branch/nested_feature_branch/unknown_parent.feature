@@ -97,6 +97,17 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
       |           |                  | Merge branch 'feature-1' into feature-2 |                |
 
 
+  Scenario: entering a wrong number
+    When I run `git sync` and enter "5"
+    Then I get the error "Invalid branch number"
+    And it runs the Git commands
+      | BRANCH    | COMMAND           |
+      | feature-2 | git fetch --prune |
+    And I am still on the "feature-2" branch
+    And I still have my uncommitted file
+    And I am left with my original commits
+
+
   Scenario: entering the name of the master branch
     When I run `git sync` and enter "main"
     Then it runs the Git commands
@@ -151,3 +162,14 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
       |           |                  | main commit                             | main_file      |
       |           |                  | Merge branch 'main' into feature-1      |                |
       |           |                  | Merge branch 'feature-1' into feature-2 |                |
+
+
+  Scenario: entering a wrong name
+    When I run `git sync` and enter "zonk"
+    Then I get the error "branch 'zonk' doesn't exist"
+    And it runs the Git commands
+      | BRANCH    | COMMAND           |
+      | feature-2 | git fetch --prune |
+    And I am still on the "feature-2" branch
+    And I still have my uncommitted file
+    And I am left with my original commits
