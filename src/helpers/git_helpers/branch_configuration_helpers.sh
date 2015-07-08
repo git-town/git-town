@@ -145,27 +145,30 @@ function ensure_knows_parent_branches {
           fi
         done
 
-        echo
-        echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
-        read parent
-        re='^[0-9]+$'
-        if [[ $parent =~ $re ]] ; then
-          # user entered a number here
-          parent=${branch_numbers[$parent]}
-          if [ -z "$parent" ]; then
-            echo_error_header
-            echo_error "Invalid branch number"
-            exit_with_error newline
+        local has_branch=false
+        while [ $has_branch == false ]; do
+          echo
+          echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
+          read parent
+          re='^[0-9]+$'
+          if [[ $parent =~ $re ]] ; then
+            # user entered a number here
+            parent=${branch_numbers[$parent]}
+            if [ -z "$parent" ]; then
+              echo_error_header
+              echo_error "Invalid branch number"
+            fi
+          elif [ -z "$parent" ]; then
+            # user entered nothing
+            parent=$MAIN_BRANCH_NAME
           fi
-        elif [ -z "$parent" ]; then
-          # user entered nothing
-          parent=$MAIN_BRANCH_NAME
-        fi
-        if [ "$(has_branch "$parent")" == "false" ]; then
-          echo_error_header
-          echo_error "branch '$parent' doesn't exist"
-          exit_with_error newline
-        fi
+          if [ "$(has_branch "$parent")" == "false" ]; then
+            echo_error_header
+            echo_error "branch '$parent' doesn't exist"
+          else
+            has_branch=true
+          fi
+        done
         store_parent_branch "$current_branch" "$parent"
         echo
       fi
