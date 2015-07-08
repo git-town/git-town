@@ -157,16 +157,20 @@ function ensure_knows_parent_branches {
             if [ -z "$parent" ]; then
               echo_error_header
               echo_error "Invalid branch number"
+            else
+              has_branch=true
             fi
           elif [ -z "$parent" ]; then
             # user entered nothing
             parent=$MAIN_BRANCH_NAME
-          fi
-          if [ "$(has_branch "$parent")" == "false" ]; then
-            echo_error_header
-            echo_error "branch '$parent' doesn't exist"
-          else
             has_branch=true
+          else
+            if [ "$(has_branch "$parent")" == "false" ]; then
+              echo_error_header
+              echo_error "branch '$parent' doesn't exist"
+            else
+              has_branch=true
+            fi
           fi
         done
         store_parent_branch "$current_branch" "$parent"
