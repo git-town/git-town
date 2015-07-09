@@ -119,9 +119,8 @@ function ensure_knows_parent_branches {
         echo "Feature branches can be branched directly off "
         echo "$MAIN_BRANCH_NAME or from other feature branches."
         echo
-        echo "The former allows to develop and ship features completely"
-        echo "independently of each other, the latter to work on new things"
-        echo "that require other changes currently under review."
+        echo "The former allows to develop and ship features completely independent of each other."
+        echo "The latter allows to build on top of currently unshipped features."
         echo
 
         local branch_numbers
