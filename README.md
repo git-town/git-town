@@ -46,84 +46,8 @@ __Configuration and Help__
 
 ## Installation
 
-Git Town is written in 100% [Bash](https://www.gnu.org/software/bash/bash.html),
-so it runs anywhere Git and Bash run.
-
-<table>
-  <tr>
-    <th width="300px">
-      Using <a href="http://brew.sh">Homebrew</a>
-    </th>
-    <th width="400px">
-      Manually
-    </th>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <b>Install</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew tap Originate/gittown</code><br>
-      <code>brew install git-town</code>
-    </td>
-    <td>
-      <ul>
-        <li>clone the repo to your machine (into DIR)</li>
-        <li>add DIR/src to your <code>$PATH</code></li>
-        <li>add DIR/man to your <code>$MANPATH</code></li>
-        <li>
-          install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
-          (used by <a href="/documentation/commands/git-extract.md">git extract</a>)
-        </li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <b>Update</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew update</code><br>
-      <code>brew upgrade git-town</code>
-    </td>
-    <td>
-      <ul>
-        <li>run <code>git pull</code> in DIR</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <b>Uninstall</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew uninstall git-town</code><br>
-      <code>brew untap Originate/gittown</code>
-    </td>
-    <td>
-      <ul>
-        <li>remove DIR</li>
-        <li>remove DIR/src from your <code>$PATH</code></li>
-        <li>remove DIR/man from your <code>$MANPATH</code></li>
-      </ul>
-    </td>
-  </tr>
-</table>
-
-
-#### Optional tools that make Git Town better
-
-* __Autocompletion for [Fish shell](http://fishshell.com)__
-
-    ```
-    $ git town install-fish-autocompletion
-    ```
+Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
+Check out our [installation instructions](documentation/installation.md) for more details.
 
 
 ## Configuration
