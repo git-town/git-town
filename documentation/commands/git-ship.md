@@ -13,14 +13,18 @@ git ship (--abort | --continue)
 
 #### DESCRIPTION
 
-Squash merges the current branch, or `<branchname>` if given, into the main branch, leading to linear history on the main branch.
+Squash merges the current branch, or `<branchname>` if given,
+into the main branch, leading to linear history on the main branch.
 
-* sync the main branch if there is a remote repository
-* pull remote updates for `<branchname>` if there is a remote repository
+* syncs the main branch
+* pulls remote updates for `<branchname>`
 * merges the main branch into `<branchname>`
 * squash-merges `<branchname>` into the main branch
-* pushes the main branch to the remote repository if there is a remote repository
+* pushes the main branch to the remote repository
 * deletes `<branchname>` from the local and remote repositories
+
+Only shipping of direct children of the main branch is allowed.
+To ship a nested child branch, all ancestor branches have to be shipped or killed.
 
 
 #### OPTIONS

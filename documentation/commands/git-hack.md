@@ -1,6 +1,6 @@
 #### NAME
 
-git-hack - cut a new feature branch off the main branch
+git-hack - create a new feature branch
 
 
 #### SYNOPSIS
@@ -13,9 +13,9 @@ git hack (--abort | --continue)
 
 #### DESCRIPTION
 
-Syncs the main branch if there is a remote repository.
-Creates a new feature branch with the given name.
-Brings over all uncommitted changes.
+Syncs the main branch,
+forks a new feature branch off the given parent branch,
+and brings over all uncommitted changes to the new feature branch.
 
 
 #### OPTIONS

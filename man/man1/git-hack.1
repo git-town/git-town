@@ -1,7 +1,7 @@
 .TH "GIT-HACK" "1" "04/02/2015" "Git Town 0\&.6\&.0" "Git Town Manual"
 
 .SH "NAME"
-git hack \- cut a new feature branch off the main branch
+git hack \- create a new feature branch
 
 .SH "SYNOPSIS"
 \fIgit hack\fR <branchname> [parent branch name]
@@ -9,9 +9,11 @@ git hack \- cut a new feature branch off the main branch
 \fIgit hack\fR (--abort | --continue)
 
 .SH "DESCRIPTION"
-Sync the main branch and create a new feature branch with the given name.
+Syncs the main branch,
 .br
-Brings over all uncommitted changes.
+forks a new feature branch off the given parent branch,
+.br
+and brings over all uncommitted changes.
 
 .SH "OPTIONS"
 .IP "<branchname>" 4
