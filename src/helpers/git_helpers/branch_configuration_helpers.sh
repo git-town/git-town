@@ -12,7 +12,6 @@ function all_registered_branches {
 }
 
 
-
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
   local branch_name=$1
@@ -104,9 +103,52 @@ function ensure_knows_parent_branches {
       else
         # here we don't know the parent of the current branch -> ask the user
         echo
-        echo -n "Please enter the parent branch for $(echo_inline_cyan_bold "$current_branch") ($(echo_inline_dim "$MAIN_BRANCH_NAME")): "
+        local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
+
+        function print_branch {
+          local number=$1
+          local branch_name=$2
+
+          output_style_bold
+          printf "%3s: " "$number"
+          output_style_reset
+          echo "$branch_name"
+        }
+
+        echo
+        echo "Feature branches can be branched directly off "
+        echo "$MAIN_BRANCH_NAME or from other feature branches."
+        echo
+        echo "The former allows to develop and ship features completely independent of each other."
+        echo "The latter allows to build on top of currently unshipped features."
+        echo
+
+        local branch_numbers
+        print_branch 1 "$MAIN_BRANCH_NAME"
+        branch_numbers[1]=$MAIN_BRANCH_NAME
+        i=2
+        for branch in $branches; do
+          if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+            branch_numbers[i]=$branch
+            print_branch $i "$branch"
+            i=$(( i + 1 ))
+          fi
+        done
+
+        echo
+        echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
         read parent
-        if [ -z "$parent" ]; then
+        re='^[0-9]+$'
+        if [[ $parent =~ $re ]] ; then
+          # user entered a number here
+          parent=${branch_numbers[$parent]}
+          if [ -z "$parent" ]; then
+            echo_error_header
+            echo_error "Invalid branch number"
+            exit_with_error newline
+          fi
+        elif [ -z "$parent" ]; then
+          # user entered nothing
           parent=$MAIN_BRANCH_NAME
         fi
         if [ "$(has_branch "$parent")" == "false" ]; then
@@ -115,6 +157,7 @@ function ensure_knows_parent_branches {
           exit_with_error newline
         fi
         store_parent_branch "$current_branch" "$parent"
+        echo
       fi
       current_branch=$parent
     done
