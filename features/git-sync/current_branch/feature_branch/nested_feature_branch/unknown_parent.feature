@@ -18,7 +18,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
 
   Scenario: choosing the default branch name
-    When I run `git sync` and enter ""
+    When I run `git sync` and press ENTER
     Then it runs the Git commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
