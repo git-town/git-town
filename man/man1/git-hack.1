@@ -9,11 +9,11 @@ git hack \- create a new feature branch
 \fIgit hack\fR (--abort | --continue)
 
 .SH "DESCRIPTION"
-Syncs the main branch,
+Syncs the given parent branch,
 .br
-forks a new feature branch off the given parent branch,
+forks a new feature branch off it,
 .br
-and brings over all uncommitted changes.
+and brings over all uncommitted changes to the new feature branch.
 
 .SH "OPTIONS"
 .IP "<branchname>" 4
@@ -23,6 +23,8 @@ The name of the branch to create.
 If provided, cuts the new branch off the given existing feature branch.
 .br
 Providing '.' here uses the current branch as the parent branch.
+.br
+If omitted, uses the main branch as the parent.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.

@@ -13,8 +13,8 @@ git hack (--abort | --continue)
 
 #### DESCRIPTION
 
-Syncs the main branch,
-forks a new feature branch off the given parent branch,
+Syncs the given parent branch,
+forks a new feature branch off it,
 and brings over all uncommitted changes to the new feature branch.
 
 
@@ -27,6 +27,7 @@ and brings over all uncommitted changes to the new feature branch.
 [parent branch name]
     If provided, cuts the new branch off the given existing feature branch.
     Providing '.' here uses the current branch as the parent branch.
+    If omitted, uses the main branch as the parent.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
