@@ -6,7 +6,7 @@ git-hack - create a new feature branch
 #### SYNOPSIS
 
 ```
-git hack <branchname> [parent branch name]
+git hack <branchname> [<parent branch name>]
 git hack (--abort | --continue)
 ```
 
