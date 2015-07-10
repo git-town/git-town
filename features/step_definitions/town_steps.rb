@@ -21,14 +21,14 @@ end
 
 
 Given(/^my non-feature branches are configured as (.*)$/) do |data|
-  set_configuration 'non-feature-branch-names',
-                    Kappamaki.from_sentence(data).join(', ')
+  branch_names = Kappamaki.from_sentence data
+  set_configuration 'non-feature-branch-names', branch_names.join(', ')
 end
 
 
 Given(/^my perennial branches are configured as (.*)$/) do |data|
-  set_configuration 'perennial-branch-names',
-                    Kappamaki.from_sentence(data).join(', ')
+  branch_names = Kappamaki.from_sentence data
+  set_configuration 'perennial-branch-names', branch_names.join(', ')
 end
 
 
