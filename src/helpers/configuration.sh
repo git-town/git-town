@@ -12,7 +12,7 @@ fi
 
 # Migrate old configuration (Git Town v0.6 and lower)
 non_feature_branch_names=$(git config --get-all git-town.non-feature-branch-names)
-if [ ! -z "$non_feature_branch_names" ]; then
+if [ -n "$non_feature_branch_names" ]; then
   git config --add git-town.perennial-branch-names "$non_feature_branch_names"
   git config --unset git-town.non-feature-branch-names
 fi
