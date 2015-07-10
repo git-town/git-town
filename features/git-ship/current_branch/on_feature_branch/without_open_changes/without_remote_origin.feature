@@ -43,5 +43,3 @@ Feature: git ship: shipping the current feature branch without a remote origin
       | main    | local    | feature done          | feature_file |
       |         |          | Revert "feature done" | feature_file |
       | feature | local    | feature commit        | feature_file |
-
-

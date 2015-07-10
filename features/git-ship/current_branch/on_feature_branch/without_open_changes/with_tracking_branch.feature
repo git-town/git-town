@@ -53,4 +53,3 @@ Feature: git ship: shipping the current feature branch with a tracking branch
       | main    | local and remote | feature done          | feature_file |
       |         |                  | Revert "feature done" | feature_file |
       | feature | local and remote | feature commit        | feature_file |
-
