@@ -13,7 +13,7 @@ git ship (--abort | --continue)
 
 #### DESCRIPTION
 
-Squash merges the current branch, or `<branchname>` if given,
+Squash-merges the current branch, or `<branchname>` if given,
 into the main branch, leading to linear history on the main branch.
 
 * syncs the main branch
@@ -35,7 +35,7 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
     If not provided, uses the current branch.
 
 <commit-options>
-    Options to pass to 'git commit' when commiting the squash merge.
+    Options to pass to 'git commit' when commiting the squash-merge.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
