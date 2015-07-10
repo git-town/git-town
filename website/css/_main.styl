@@ -1,0 +1,79 @@
+@require '_includes/*'
+
+h1.pagetitle
+  max-width: 960px
+  margin: 20px auto
+  display: block
+  font-weight: 300
+  font-size: 1.2em
+
+main
+  max-width: 960px
+  margin 20px auto 0 auto
+  background: #fff
+  padding: 40px
+  border: 1px solid darken($body-bg, 5)
+
+h1
+  font-size: 14px
+  text-transform: uppercase
+  margin: 0 0 30px 0
+  letter-spacing: 3px
+  font-weight: bold
+  color: $accent
+  text-align: left
+
+table
+  width: 100%
+  margin: 20px 0
+  border: 1px solid $body-bg
+
+tr
+  &:last-child
+    border-bottom: 0px solid transparent
+
+  &.subhead td
+    background: WhiteSmoke
+    border-bottom: 1px solid $body-bg
+    font-size: 0.8em
+    text-transform: uppercase
+    letter-spacing: 2px
+
+th, td
+  padding: 10px
+
+th
+  text-transform: uppercase
+  font-size: 0.8em
+  letter-spacing: 0.2em
+  background-color: #666
+  color: #fff
+  text-align: center
+
+  a
+    color: #f7f7f7
+
+td
+  vertical-align: top
+  text-align: left
+
+ul
+  list-style-type: square
+  margin-top: 0
+
+li
+  margin: 0.5em 0
+
+p
+  line-height: 1.8
+  margin: 0 0 2em 0
+
+a
+  color: #666
+
+
+code
+  background-color: lighten($body-bg, 3)
+  padding: 0 5px
+  border-radius: 3px
+  box-shadow: 0 0 0 2px lighten($body-bg, 3)

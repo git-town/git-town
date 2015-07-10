@@ -1,0 +1,15 @@
+doctype
+html
+  head
+    != partial("_partials/meta")
+    link(rel="stylesheet", href="css/application.css")
+    link(href='http://fonts.googleapis.com/css?family=Oleo+Script|Open+Sans:400,300,700', rel='stylesheet', type='text/css')
+    link(rel="stylesheet", href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css")
+
+  body(class="#{ current.source  }")
+    != partial("_partials/header")
+    h1.pagetitle= page_titles[current.source]
+    main
+      != yield
+
+    script(src="js/application.js")

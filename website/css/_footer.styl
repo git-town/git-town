@@ -1,0 +1,23 @@
+$footerHeight = 100px
+
+// header hack to put footer on bottom of viewport or main, whichever is longer
+html
+  position: absolute
+  height: 100%
+  width: 100%
+  
+body
+  position: relative
+  padding-bottom: $footerHeight
+  min-height: 100%
+
+footer
+  height: $footerHeight
+  width: 100%
+  position: absolute
+  bottom: 0
+  
+// aesthetics
+footer
+  background-color: #fff
+  border-top: 1px solid #b3b3b3
