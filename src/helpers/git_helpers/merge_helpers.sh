@@ -45,3 +45,13 @@ function commit_squash_merge {
 function undo_steps_for_merge {
   echo "reset_to_sha $(current_sha) hard"
 }
+
+
+function post_undo_steps_for_commit_squash_merge {
+  local current_branch_name=$(get_current_branch_name)
+  echo "checkout $current_branch_name"
+  echo "revert_commit $(git log -n 1 --format="%H")"
+  if [ "$HAS_REMOTE" == true ]; then
+    echo "push_branch $current_branch_name"
+  fi
+}
