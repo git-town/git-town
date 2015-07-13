@@ -1,13 +1,13 @@
-Feature: git sync: resolving conflicts between the current non-feature branch and its tracking branch
+Feature: git sync: resolving conflicts between the current perennial branch and its tracking branch
 
-  As a developer syncing a non-feature branch that conflicts with its tracking branch
+  As a developer syncing a perennial branch that conflicts with its tracking branch
   I want to be given the choice to resolve the conflicts or abort
   So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
     Given I have branches named "qa" and "production"
-    And my non-feature branches are configured as "qa" and "production"
+    And my perennial branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
