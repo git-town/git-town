@@ -138,10 +138,10 @@ function run_steps {
     if [ $? == 0 ]; then
       if [ "$option" = undoable ]; then
         local post_undo_steps=$(post_undo_steps_for "$step")
-        if ! [ -z "$undo_steps" ]; then
+        if [ -n "$undo_steps" ]; then
           add_undo_steps "$undo_steps"
         fi
-        if ! [ -z "$post_undo_steps" ]; then
+        if [ -n "$post_undo_steps" ]; then
           add_undo_steps "$post_undo_steps"
         fi
       fi
