@@ -8,8 +8,8 @@ Feature: git ship: shipping the current feature branch with a tracking branch
   Background:
     Given I have a feature branch named "feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
-      | feature | remote   | feature_file | feature content |
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
+      | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
     When I run `git ship -m "feature done"`
 
@@ -34,3 +34,22 @@ Feature: git ship: shipping the current feature branch with a tracking branch
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
+
+
+  Scenario: undo
+    When I run `git ship --undo`
+    Then it runs the Git commands
+      | BRANCH  | COMMAND                                        |
+      | main    | git branch feature <%= sha 'feature commit' %> |
+      |         | git push -u origin feature                     |
+      |         | git revert <%= sha 'feature done' %>           |
+      |         | git push origin main                           |
+      |         | git checkout feature                           |
+      | feature | git checkout main                              |
+      | main    | git checkout feature                           |
+    And I end up on the "feature" branch
+    And I have the following commits
+      | BRANCH  | LOCATION         | MESSAGE               | FILE NAME    |
+      | main    | local and remote | feature done          | feature_file |
+      |         |                  | Revert "feature done" | feature_file |
+      | feature | local and remote | feature commit        | feature_file |

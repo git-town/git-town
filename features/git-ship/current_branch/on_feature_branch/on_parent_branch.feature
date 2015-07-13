@@ -39,3 +39,26 @@ Feature: git ship: shipping a parent branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT |
       | child-feature | main   |
+
+
+  Scenario: undo
+    When I run `git ship --undo`
+    Then it runs the Git commands
+      | BRANCH         | COMMAND                                                      |
+      | main           | git branch parent-feature <%= sha 'parent feature commit' %> |
+      |                | git revert <%= sha 'parent feature done' %>                  |
+      |                | git push origin main                                         |
+      |                | git checkout parent-feature                                  |
+      | parent-feature | git checkout main                                            |
+      | main           | git checkout parent-feature                                  |
+    And I end up on the "parent-feature" branch
+    And I have the following commits
+      | BRANCH         | LOCATION         | MESSAGE                      | FILE NAME           |
+      | main           | local and remote | parent feature done          | parent_feature_file |
+      |                |                  | Revert "parent feature done" | parent_feature_file |
+      | child-feature  | local and remote | child feature commit         | child_feature_file  |
+      | parent-feature | local and remote | parent feature commit        | parent_feature_file |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |
