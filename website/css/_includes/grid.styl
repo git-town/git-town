@@ -1,0 +1,73 @@
+@require 'mixins'
+@require 'variables'
+
+// App-specific Config
+$total_cols = 12
+$gutter_width = 2%       // space between each col
+
+// Computed Vars
+$one_col_width = (100% - (($total_cols - 1) * $gutter_width)) / $total_cols
+
+// Supporting Mixin
+span($num)
+  // the total width of the gutters contained in this span
+  // eg a span8 will have 7 gutters
+  $tot_gutter_width = ($num - 1) * $gutter_width
+
+  $col_width = ($one_col_width * $num) + unit($tot_gutter_width,"")
+  width: $col_width
+  margin-left: $gutter_width
+
+// Output
+.l-container
+  margin-left: auto
+  margin-right: auto
+
+.l-row
+  cf()
+
+.l-col
+  float: left
+  box-sizing: border-box
+  background-clip: padding-box
+  margin-left: $gutter_width
+  for $i in (1)..($total_cols - 1)
+    &.span{$i}
+      span($i)
+
+  &.span{$total_cols}
+    margin-left: 0
+    width: 100%
+
+  &:first-child 
+    margin-left: 0
+
+  &.center
+    float: none
+    margin: 0 auto
+
+
+
+
+// RESPONSIVE
+
+// extra small < 768px
+@media (max-width: $break-sml)
+  .l-container
+    width: auto
+    padding: 0 20px
+
+// small       > 768 and < 990
+@media (min-width: ($break-sml + 1px)) and (max-width: $break-med)
+  .l-container
+    width: $container-sml
+
+// medium       > 990 and < 1200
+@media (min-width: ($break-med + 1px)) and (max-width: $break-lrg)
+  .l-container
+    width: $container-med
+
+// desktop      1200+
+@media (min-width: ($break-lrg + 1))
+  .l-container
+    width: $container-lrg

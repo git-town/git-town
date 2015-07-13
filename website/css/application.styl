@@ -1,0 +1,29 @@
+@require '_includes/*'
+
+*
+  box-sizing: border-box
+
+body
+  font-family: "Open Sans"
+  background: $body-bg
+  margin: 0
+  padding: 0
+  padding-top: $header-height
+
+.button
+  padding: 14px 20px
+  font-size: 12px
+  text-transform:  uppercase
+  letter-spacing: 3px
+  display: inline-block
+  text-decoration: none
+  background-color: $accent
+
+  &:hover
+    background-color: lighten($accent, 10)
+
+@require _header
+@require _footer
+@require _home
+@require _terminal
+@require _main

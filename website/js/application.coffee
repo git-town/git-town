@@ -1,0 +1,1 @@
+# application coffeescript goes here
