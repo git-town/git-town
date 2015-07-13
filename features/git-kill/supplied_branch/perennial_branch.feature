@@ -1,11 +1,11 @@
-Feature: git kill: errors when trying to kill a non-feature branch
+Feature: git kill: errors when trying to kill a perennial branch
 
-  (see ../current_branch/on_non_feature_branch.feature)
+  (see ../current_branch/on_perennial_branch.feature)
 
 
   Background:
     Given I have branches named "feature" and "qa"
-    And my non-feature branches are configured as "qa"
+    And my perennial branches are configured as "qa"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
       | feature | local and remote | good commit | good_file |

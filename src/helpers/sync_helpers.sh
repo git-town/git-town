@@ -9,8 +9,8 @@ function sync_branch_steps {
   local is_feature ; is_feature="$(is_feature_branch "$branch")"
 
   # If there is a remote origin, then checkout and sync all branches because
-  # there may be changes to non-feature branches, otherwise only sync feature
-  # branches because non-feature branches will not need syncing
+  # there may be changes to perennial branches, otherwise only sync feature
+  # branches because perennial branches will not need syncing
   if [ "$HAS_REMOTE" = true ] || [ "$is_feature" = true ]; then
     echo "checkout $branch"
 

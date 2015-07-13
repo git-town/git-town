@@ -3,8 +3,8 @@ Given(/^I don't have a main branch name configured$/) do
 end
 
 
-Given(/^my non\-feature branches are not configured$/) do
-  delete_non_feature_branches_configuration
+Given(/^my perennial branches are not configured$/) do
+  delete_perennial_branches_configuration
 end
 
 
@@ -20,15 +20,15 @@ Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name
 end
 
 
-Given(/^my non-feature branches are configured as (.*)$/) do |data|
-  non_feature_branches = Kappamaki.from_sentence(data).join(', ')
-  set_configuration 'non-feature-branch-names', non_feature_branches
+Given(/^my perennial branches are configured as (.*)$/) do |data|
+  perennial_branches = Kappamaki.from_sentence(data).join(', ')
+  set_configuration 'perennial-branch-names', perennial_branches
 end
 
 
 Given(/I haven't configured Git Town yet/) do
   delete_main_branch_configuration
-  delete_non_feature_branches_configuration
+  delete_perennial_branches_configuration
 end
 
 
@@ -42,14 +42,14 @@ Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name
 end
 
 
-Then(/^my non-feature branches are now configured as (.*)$/) do |data|
-  non_feature_branches = Kappamaki.from_sentence(data)
-  expect(non_feature_branch_configuration.split(',')).to match_array non_feature_branches
+Then(/^my perennial branches are now configured as (.*)$/) do |data|
+  perennial_branches = Kappamaki.from_sentence(data)
+  expect(perennial_branch_configuration.split(',')).to match_array perennial_branches
 end
 
 
-Then(/^my non\-feature branches are still not configured$/) do
-  expect(non_feature_branch_configuration.split(',')).to be_empty
+Then(/^my perennial branches are still not configured$/) do
+  expect(perennial_branch_configuration.split(',')).to be_empty
 end
 
 

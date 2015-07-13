@@ -6,5 +6,5 @@ def configure_git user
 
   # Git Town Configuration
   run 'git config git-town.main-branch-name main'
-  run 'git config git-town.non-feature-branch-names ""'
+  run 'git config git-town.perennial-branch-names ""'
 end

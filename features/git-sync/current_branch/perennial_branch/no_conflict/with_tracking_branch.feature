@@ -1,13 +1,13 @@
-Feature: git sync: syncing the current non-feature branch
+Feature: git sync: syncing the current perennial branch
 
-  As a developer syncing a non-feature branch
+  As a developer syncing a perennial branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
   So that our collaboration remains effective.
 
 
   Background:
     Given I have branches named "qa" and "production"
-    And my non-feature branches are configured as "qa" and "production"
+    And my perennial branches are configured as "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

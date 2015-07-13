@@ -20,7 +20,7 @@ When run on a feature branch
 * merges the main branch into the current branch
 * pushes the current branch
 
-When run on the main branch or a non-feature branch
+When run on the main branch or a perennial branch
 * pulls and pushes updates for the current branch
 * pushes tags
 
