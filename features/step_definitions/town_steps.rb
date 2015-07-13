@@ -38,6 +38,8 @@ Given(/I haven't configured Git Town yet/) do
 end
 
 
+
+
 Then(/^I don't have an old configuration file anymore$/) do
   expect(File.exist? '.main_branch_name').to be_falsy
 end
