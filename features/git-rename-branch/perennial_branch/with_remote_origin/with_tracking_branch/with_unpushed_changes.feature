@@ -1,13 +1,13 @@
-Feature: git rename-branch: errors if renaming a non-feature branch that has unpushed changes
+Feature: git rename-branch: errors if renaming a perennial branch that has unpushed changes
 
-  As a developer renaming a non-feature branch that has unpushed changes
+  As a developer renaming a perennial branch that has unpushed changes
   I should get an error that the given branch is not in sync with its tracking branch
   So that I know branches must be in sync in order to be renamed.
 
 
   Background:
     Given I have a branch named "production"
-    And my non-feature branches are configured as "production"
+    And my perennial branches are configured as "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE                  |
       | main       | local and remote | main commit              |
