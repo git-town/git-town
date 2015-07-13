@@ -2,11 +2,6 @@
 
 # Helper methods for dealing with configuration.
 
-function echo_perennial_branch_usage {
-  echo_inline_usage 'git town perennial-branches (--add | --remove) <branchname>'
-}
-
-
 # Add a new perennial branch if possible
 function add_perennial_branch {
   local branch_name=$1
@@ -45,6 +40,11 @@ function add_or_remove_perennial_branches {
     echo_perennial_branch_usage
     exit_with_error
   fi
+}
+
+
+function echo_perennial_branch_usage {
+  echo_inline_usage 'git town perennial-branches (--add | --remove) <branchname>'
 }
 
 
