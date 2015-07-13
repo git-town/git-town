@@ -1,13 +1,13 @@
-Feature: git rename-branch: does nothing if renaming a non-feature branch onto itself
+Feature: git rename-branch: does nothing if renaming a perennial branch onto itself
 
-  As a developer renaming a non-feature branch onto itself
+  As a developer renaming a perennial branch onto itself
   I should get a message saying no action is needed
   So that I am aware that I just did a no-op.
 
 
   Background:
     Given I have a feature branch named "production"
-    And my non-feature branches are configured as "production"
+    And my perennial branches are configured as "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | production | local and remote | production commit |

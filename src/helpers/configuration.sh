@@ -12,7 +12,7 @@ fi
 
 
 export MAIN_BRANCH_NAME=$(get_configuration main-branch-name)
-export NON_FEATURE_BRANCH_NAMES=$(get_configuration non-feature-branch-names)
+export PERENNIAL_BRANCH_NAMES=$(get_configuration perennial-branch-names)
 
 
 # Bypass the configuration if requested by caller (e.g. git-town)

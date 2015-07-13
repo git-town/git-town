@@ -1,8 +1,8 @@
-Feature: git sync --all: syncs all non-feature branches
+Feature: git sync --all: syncs all perennial branches
 
   Background:
     Given I have branches named "production" and "qa"
-    And my non-feature branches are configured as "production" and "qa"
+    And my perennial branches are configured as "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |

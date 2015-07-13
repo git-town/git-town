@@ -1,12 +1,12 @@
-Feature: git prune-branches: don't remove stale non-feature branches when called from the main branch
+Feature: git prune-branches: don't remove stale perennial branches when called from the main branch
 
   As a developer pruning branches
-  I want non-feature branches to not be deleted
+  I want perennial branches to not be deleted
   So that I can keep my repository clean without messing up my deployment infrastructure.
 
 
   Background:
-    Given I have a non-feature branch "production" behind main
+    Given I have a perennial branch "production" behind main
     And I am on the "main" branch
     And I have an uncommitted file
     When I run `git prune-branches`

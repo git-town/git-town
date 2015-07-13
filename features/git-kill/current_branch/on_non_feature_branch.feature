@@ -1,13 +1,13 @@
-Feature: git kill: errors when trying to kill a non-feature branch
+Feature: git kill: errors when trying to kill a perennial branch
 
-  As a developer accidentally trying to kill a non-feature branch
-  I should see an error that I cannot delete non-feature branches
+  As a developer accidentally trying to kill a perennial branch
+  I should see an error that I cannot delete perennial branches
   So that my release infrastructure remains intact and my project stays shippable.
 
 
   Background:
     Given I have a branch named "qa"
-    And my non-feature branches are configured as "qa"
+    And my perennial branches are configured as "qa"
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE   | FILE NAME |
       | qa     | local and remote | qa commit | qa_file   |
