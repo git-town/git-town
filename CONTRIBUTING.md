@@ -126,6 +126,17 @@ For discussion around this architecture see
 where it was proposed.
 
 
+### Undoing
+
+Each command generates the steps to undo itself.
+Git Town provides two hooks for that, which are used by implementing a method that matches:
+* `undo_steps_for_[command name]`: executed before the command runs
+* `post_undo_steps_for_[command_name]`: executed after the command runs
+
+Git Town stores the cumulated undo commands in an undo file.
+Running `git <command> --undo` runs the commands from the respective undo file.
+
+
 ### Drivers
 
 _Drivers_ implement third-party specific functionality in a standardized way.

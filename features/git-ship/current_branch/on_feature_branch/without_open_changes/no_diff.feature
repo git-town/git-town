@@ -29,3 +29,16 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
       | main          | git checkout empty-feature                   |
     And I get the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "empty-feature" branch
+
+
+  Scenario: undo
+    When I run `git ship --undo`
+    Then I get the error "Nothing to undo"
+    And it runs no Git commands
+    And I am still on the "empty-feature" branch
+    And I have the following commits
+      | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |
+      | main          | local and remote | main commit    | common_file |
+      | empty-feature | local            | feature commit | common_file |
+
+
