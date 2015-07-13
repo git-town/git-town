@@ -74,9 +74,9 @@ function steps {
 
   echo "delete_local_branch '$target_branch_name' force"
 
-  if [ "$(is_non_feature_branch "$target_branch_name")" = true ]; then
-    echo "remove_non_feature_branch $target_branch_name"
-    echo "add_non_feature_branch $destination_branch_name"
+  if [ "$(is_perennial_branch "$target_branch_name")" = true ]; then
+    echo "remove_perennial_branch $target_branch_name"
+    echo "add_perennial_branch $destination_branch_name"
   fi
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"

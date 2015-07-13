@@ -7,36 +7,36 @@ Feature: listing the configuration
 
   Scenario: everything is configured
     Given I have configured the main branch name as "main"
-    And my non-feature branches are configured as "qa" and "staging"
+    And my perennial branches are configured as "qa" and "staging"
     When I run `git town config`
     Then I see
       """
       Main branch: main
-      Non-feature branches:
+      perennial branches:
       qa
       staging
       """
 
 
-  Scenario: the main branch is configured but the non-feature branches are not
+  Scenario: the main branch is configured but the perennial branches are not
     Given I have configured the main branch name as "main"
-    And my non-feature branches are not configured
+    And my perennial branches are not configured
     When I run `git town config`
     Then I see
       """
       Main branch: main
-      Non-feature branches: [none]
+      perennial branches: [none]
       """
 
 
-  Scenario: the main branch is not configured but the non-feature branches are
+  Scenario: the main branch is not configured but the perennial branches are
     Given I don't have a main branch name configured
-    And my non-feature branches are configured as "qa" and "staging"
+    And my perennial branches are configured as "qa" and "staging"
     When I run `git town config`
     Then I see
       """
       Main branch: [none]
-      Non-feature branches:
+      perennial branches:
       qa
       staging
       """
@@ -48,5 +48,5 @@ Feature: listing the configuration
     Then I see
       """
       Main branch: [none]
-      Non-feature branches: [none]
+      perennial branches: [none]
       """

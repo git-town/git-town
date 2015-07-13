@@ -16,7 +16,7 @@ git kill --undo
 Deletes the current branch, or `<branchname>` if given,
 from the local and remote repositories.
 
-Does not delete non-feature branches nor the main branch.
+Does not delete perennial branches nor the main branch.
 
 
 

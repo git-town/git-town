@@ -10,7 +10,7 @@ function branches_to_sync {
   elif [ "$sync_target" = "feature branch" ]; then
     parent_branches "$INITIAL_BRANCH_NAME"
     echo "$INITIAL_BRANCH_NAME"
-  elif [ "$sync_target" = "non-feature branch" ]; then
+  elif [ "$sync_target" = "perennial branch" ]; then
     echo "$INITIAL_BRANCH_NAME"
   else
     echo_error_header "Unknown sync target"
@@ -33,7 +33,7 @@ function preconditions {
     sync_target="feature branch"
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
   else
-    sync_target="non-feature branch"
+    sync_target="perennial branch"
     should_push_tags=true
   fi
 }
