@@ -35,3 +35,12 @@ Feature: git ship: aborting the ship of the current feature branch by entering a
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
+
+
+  Scenario: undo
+    When I run `git ship --undo`
+    Then I get the error "Nothing to undo"
+    And I am still on the "feature" branch
+    And I still have the following commits
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
+      | feature | local    | feature commit | feature_file | feature content |
