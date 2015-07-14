@@ -134,7 +134,7 @@ Git Town provides two hooks for that, which are used by implementing a method th
 * `post_undo_steps_for_[command_name]`: executed after the command runs
 
 Git Town stores the cumulated undo commands in an undo file.
-When running `git <command> --undo`, Git Town runs the commands from the undo file.
+Running `git <command> --undo` runs the commands from the respective undo file.
 
 
 ### Drivers

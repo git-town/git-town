@@ -1,0 +1,20 @@
+cf()
+  *zoom: 1
+  &:before, &:after
+    content: " "
+    display: table
+  &:after
+    clear: both
+    
+random(min,max)
+  return floor(math(0, 'random')*(max - min + 1) + min)
+
+bg-gradient(start, stop)
+  background: start /* Old browsers */
+  background: -moz-linear-gradient(top,  start 0%, stop 100%) /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,start), color-stop(100%,stop)) /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  start 0%,stop 100%) /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  start 0%,stop 100%) /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  start 0%,stop 100%) /* IE10+ */
+  background: linear-gradient(to bottom,  start 0%,stop 100%) /* W3C */
+  // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='{start}', endColorstr='{stop}',GradientType=0) /* IE6-9 */

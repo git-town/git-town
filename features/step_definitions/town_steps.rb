@@ -20,9 +20,15 @@ Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name
 end
 
 
+Given(/^my non-feature branches are configured as (.*)$/) do |data|
+  branch_names = Kappamaki.from_sentence data
+  set_configuration 'non-feature-branch-names', branch_names.join(', ')
+end
+
+
 Given(/^my perennial branches are configured as (.*)$/) do |data|
-  perennial_branches = Kappamaki.from_sentence(data).join(', ')
-  set_configuration 'perennial-branch-names', perennial_branches
+  branch_names = Kappamaki.from_sentence data
+  set_configuration 'perennial-branch-names', branch_names.join(', ')
 end
 
 
@@ -32,8 +38,15 @@ Given(/I haven't configured Git Town yet/) do
 end
 
 
+
+
 Then(/^I don't have an old configuration file anymore$/) do
   expect(File.exist? '.main_branch_name').to be_falsy
+end
+
+
+Then(/^I have no non\-feature branch configuration$/) do
+  expect(non_feature_branch_configuration).to eql ''
 end
 
 
@@ -44,7 +57,7 @@ end
 
 Then(/^my perennial branches are now configured as (.*)$/) do |data|
   perennial_branches = Kappamaki.from_sentence(data)
-  expect(perennial_branch_configuration.split(',')).to match_array perennial_branches
+  expect(perennial_branch_configuration.split(',').map(&:strip)).to match_array perennial_branches
 end
 
 
