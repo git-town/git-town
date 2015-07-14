@@ -1,0 +1,176 @@
+$hero-width = 960px
+$section-padding = 60px
+
+body.index
+  section
+    cf()
+    padding: $section-padding 0
+
+    h2
+      font-size: 14px
+      text-transform: uppercase
+      margin: 10px 0 20px
+      letter-spacing: 3px
+      font-weight: bold
+      color: $accent
+      text-align: center
+
+  section.hero
+    padding: 120px 0
+    background-image: url('../img/hero.jpg')
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center center
+
+    .container
+      cf()
+      max-width: $hero-width
+      margin: 0 auto
+
+    .left
+      float: left
+      width: $hero-width - 550px
+      padding-right: 20px
+      color: #fff
+
+      img
+        width: 90%
+
+      h2
+        text-align: left
+        margin-top: 20px
+        color: #fff
+
+      p
+        margin-top: 0
+        line-height: 1.7
+
+      i
+        margin-left: 0.5em
+
+      .check-it
+        text-align: right
+        text-transform: uppercase
+        color: $accent
+        margin-top: 40px
+        padding-right: 40px
+
+    .welcome
+      text-align: center
+      margin-bottom: 40px
+
+      img
+        width: 500px
+
+
+    .terminal
+      float: right
+
+  section.tagline
+    background-color: #fff
+    text-align: center
+    color: $black
+    padding: ($section-padding + 20px) 0
+
+    h2
+      color: $accent
+
+    p
+      display: block
+      max-width: 640px
+      margin: 0 auto
+      line-height: 1.8
+      margin-bottom: 10px
+
+
+  section.commands
+    padding: 80px 0 160px 0
+    background-color: $accent
+    color: #fff
+    box-shadow: inset 0 -260px 0 0 $body-bg
+    text-align: center
+
+    h2
+      text-align: center
+      color: #fff
+      text-transform: uppercase
+      line-height: 1
+
+    p
+      margin: 0
+      padding-bottom: 40px
+      font-weight: light
+
+    .commands
+      cf()
+      height: 230px
+      width: 960px
+      margin: 0 auto
+      background-color: #fff
+      color: $black
+
+      .command
+        box-sizing: border-box
+        width: 25%
+        float: left
+        height: 100%
+        border-left: 1px solid darken(#fff, 5)
+
+        &:first-child
+          border-left: 0
+
+      h3
+        color: #000
+        text-align: left
+        text-indent: 20px
+        font-family: monospace
+        padding-top: 20px
+
+      p
+        padding: 20px
+        text-align: left
+
+    a.view-more
+      color: #fff
+      margin: 40px 0 20px 0
+
+  section.faq
+    padding-right: 15%
+    padding-left: 15%
+    background-color: #fff
+
+    h2
+      margin-bottom: 40px
+
+    h3
+      position: relative
+
+      &:before
+        content: "?"
+        position: absolute
+        font-size: 14px
+        right: 101%
+        top: 1px
+        color: #bbb
+        border-radius: 100%
+        width: 20px
+        height: 20px
+        line-height: 20px
+        border: 3px solid #bbb
+        text-align: center
+    p
+      margin-bottom: 40px
+
+    .buttons
+      text-align: center
+
+    a.learn-more
+      color: #fff
+      margin: 0 auto
+
+  section.town
+    text-align: center
+
+    img
+      width: 670px
+

@@ -1,0 +1,30 @@
+$osx-color = #dedede
+
+.terminal
+  border-top: 25px solid $osx-color
+  border-left: 4px solid $osx-color
+  border-right: 4px solid $osx-color
+  border-bottom: 4px solid $osx-color
+  background-color: black
+  min-width: 550px
+  min-height: 300px
+  float: left
+  border-radius: 5px
+  color: #fff
+  unicode-bidi: embed
+  font-family: monospace
+  white-space: pre
+  padding: 8px
+  position: relative
+  box-shadow: 0 0 5px 1px rgba(0,0,0,0.3)
+
+  &:before
+    content: '...'
+    position: absolute
+    top: -62px
+    font-size: 60px
+    left: -1px
+    font-weight: bold
+    font-family: Times, 'Times New Roman', serif
+    color: darken($osx-color, 10)
+

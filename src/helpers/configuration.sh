@@ -10,6 +10,12 @@ if [[ -f ".main_branch_name" ]]; then
   rm .main_branch_name
 fi
 
+# Migrate old configuration (Git Town v0.6 and lower)
+non_feature_branch_names=$(git config --get-all git-town.non-feature-branch-names)
+if [ -n "$non_feature_branch_names" ]; then
+  git config --add git-town.perennial-branch-names "$non_feature_branch_names"
+  git config --unset git-town.non-feature-branch-names
+fi
 
 export MAIN_BRANCH_NAME=$(get_configuration main-branch-name)
 export PERENNIAL_BRANCH_NAMES=$(get_configuration perennial-branch-names)

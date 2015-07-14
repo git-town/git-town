@@ -24,6 +24,11 @@ def main_branch_configuration
 end
 
 
+def non_feature_branch_configuration
+  output_of 'git config --get git-town.non-feature-branch-names || true'
+end
+
+
 def perennial_branch_configuration
   output_of 'git config --get git-town.perennial-branch-names || true'
 end

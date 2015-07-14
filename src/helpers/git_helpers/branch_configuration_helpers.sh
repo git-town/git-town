@@ -102,48 +102,53 @@ function echo_update_child_branches {
 function ensure_knows_parent_branches {
   local current_branch=$1
 
-  if [ "$(knows_all_ancestor_branches "$current_branch")" = false ]; then
-    # Here we don't have the parent branches list --> make sure we know all ancestors, then recompile it from all ancestors
-    local parent
+  if [ "$(knows_all_ancestor_branches "$current_branch")" = true ]; then
+    return
+  fi
 
-    while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
-      if [ "$(knows_parent_branch "$current_branch")" = true ]; then
-        parent=$(parent_branch "$current_branch")
-      else
-        # here we don't know the parent of the current branch -> ask the user
-        echo
-        local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
+  # Here we don't have the ancestors list --> make sure we know all ancestors, then recompile it from all ancestors
+  local parent
 
-        function print_branch {
-          local number=$1
-          local branch_name=$2
+  while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
+    if [ "$(knows_parent_branch "$current_branch")" = true ]; then
+      parent=$(parent_branch "$current_branch")
+    else
+      # here we don't know the parent of the current branch -> ask the user
+      echo
+      local branches=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)')
 
-          output_style_bold
-          printf "%3s: " "$number"
-          output_style_reset
-          echo "$branch_name"
-        }
+      function print_branch {
+        local number=$1
+        local branch_name=$2
 
-        echo
-        echo "Feature branches can be branched directly off "
-        echo "$MAIN_BRANCH_NAME or from other feature branches."
-        echo
-        echo "The former allows to develop and ship features completely independent of each other."
-        echo "The latter allows to build on top of currently unshipped features."
-        echo
+        output_style_bold
+        printf "%3s: " "$number"
+        output_style_reset
+        echo "$branch_name"
+      }
 
-        local branch_numbers
-        print_branch 1 "$MAIN_BRANCH_NAME"
-        branch_numbers[1]=$MAIN_BRANCH_NAME
-        i=2
-        for branch in $branches; do
-          if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
-            branch_numbers[i]=$branch
-            print_branch $i "$branch"
-            i=$(( i + 1 ))
-          fi
-        done
+      echo
+      echo "Feature branches can be branched directly off "
+      echo "$MAIN_BRANCH_NAME or from other feature branches."
+      echo
+      echo "The former allows to develop and ship features completely independent of each other."
+      echo "The latter allows to build on top of currently unshipped features."
+      echo
 
+      local branch_numbers
+      print_branch 1 "$MAIN_BRANCH_NAME"
+      branch_numbers[1]=$MAIN_BRANCH_NAME
+      i=2
+      for branch in $branches; do
+        if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+          branch_numbers[i]=$branch
+          print_branch $i "$branch"
+          i=$(( i + 1 ))
+        fi
+      done
+
+      local has_branch=false
+      while [ $has_branch == false ]; do
         echo
         echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$current_branch") by name or number (default: $MAIN_BRANCH_NAME): "
         read parent
@@ -154,24 +159,28 @@ function ensure_knows_parent_branches {
           if [ -z "$parent" ]; then
             echo_error_header
             echo_error "Invalid branch number"
-            exit_with_error newline
+          else
+            has_branch=true
           fi
         elif [ -z "$parent" ]; then
           # user entered nothing
           parent=$MAIN_BRANCH_NAME
+          has_branch=true
+        else
+          if [ "$(has_branch "$parent")" == "false" ]; then
+            echo_error_header
+            echo_error "branch '$parent' doesn't exist"
+          else
+            has_branch=true
+          fi
         fi
-        if [ "$(has_branch "$parent")" == "false" ]; then
-          echo_error_header
-          echo_error "branch '$parent' doesn't exist"
-          exit_with_error newline
-        fi
-        store_parent_branch "$current_branch" "$parent"
-        echo
-      fi
-      current_branch=$parent
-    done
-    compile_ancestor_branches "$1"
-  fi
+      done
+      store_parent_branch "$current_branch" "$parent"
+      echo
+    fi
+    current_branch=$parent
+  done
+  compile_ancestor_branches "$1"
 }
 
 
