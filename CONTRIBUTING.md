@@ -263,7 +263,7 @@ Every Git Town command
 
 ## Web Site Development
 
-Before you start, please make sure you have the [requirements](#requirements)
+Before you start, please make sure you have the [requirements](#for-website-development)
 for the website installed.
 
 __view the website locally__
