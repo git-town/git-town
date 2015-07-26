@@ -1,4 +1,4 @@
-Git is an intentionally generic and low-level tool.
+Git is an intentionally generic tool.
 It is designed to support many different ways of using it equally well.
 It is a really wonderful *foundation* for flexible and robust source code management.
 
@@ -6,7 +6,7 @@ It is a really wonderful *foundation* for flexible and robust source code manage
 ### Problem
 
 Most teams develop code in [feature branches](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
-that are cut from and merged into a main branch (typically "development" or "master").
+that are cut from and merged into a _main branch_ (typically "development" or "master").
 They use a central repository like [GitHub](http://github.com/), [Bitbucket](https://bitbucket.org/), or their own Git server.
 
 Using Git directly for such high-level development workflows is possible, but it can be cumbersome and repetitive.
