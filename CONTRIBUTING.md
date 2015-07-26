@@ -265,6 +265,6 @@ Every Git Town command
 
 __view the website locally__
 * `cd website`
-* `harp server
-* `http://localhost:9000`
+* `harp server`
+* go to http://localhost:9000
 
