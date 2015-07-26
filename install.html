@@ -1,0 +1,72 @@
+<!DOCTYPE html><html><head><title>Install GitTown | Git Town</title><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content="Git Town."/><meta name="keywords" content="git, gittown, town"/><meta property="og:title" content="Git Town"/><meta property="og:type" content=""/><meta property="og:image" content=""/><meta property="og:description" content="Git Town."/><meta property="twitter:title"/><meta property="twitter:description" content="Git Town."/><link rel="stylesheet" href="css/application.css"><link href="http://fonts.googleapis.com/css?family=Oleo+Script|Open+Sans:400,300,700" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></head><body class="install"><header><a href="/" class="logo"><img src="img/git-town-horizontal.svg" alt="Gittown"/></a><a href="https://github.com/Originate/git-town" class="github ion-social-github">View On GitHub</a><nav><ul><li><a href="index.html">Home</a></li><li><a href="install.html">Install</a></li><li><a href="the-big-picture.html">The Big Picture</a></li><li><a href="tutorial.html">Tutorial</a></li></ul></nav></header><h1 class="pagetitle">Install GitTown</h1><main><p>Git Town runs anywhere Git and <a href="https://www.gnu.org/software/bash/bash.html">Bash</a> run.</p>
+<table>
+  <tr>
+    <th width="300px">
+      Using <a href="http://brew.sh">Homebrew</a>
+    </th>
+    <th width="400px">
+      Manually
+    </th>
+  </tr>
+  <tr class="subhead">
+    <td colspan="2">
+      <b>Install</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>brew tap Originate/gittown</code><br>
+      <code>brew install git-town</code>
+    </td>
+    <td>
+      <ul>
+        <li>clone the repo to your machine (into DIR)</li>
+        <li>add DIR/src to your <code>$PATH</code></li>
+        <li>add DIR/man to your <code>$MANPATH</code></li>
+        <li>
+          install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
+          (used by <a href="/documentation/commands/git-extract.md">git extract</a>)
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr class="subhead">
+    <td colspan="2">
+      <b>Update</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>brew update</code><br>
+      <code>brew upgrade git-town</code>
+    </td>
+    <td>
+      <ul>
+        <li>run <code>git pull</code> in DIR</li>
+      </ul>
+    </td>
+  </tr>
+  <tr class="subhead">
+    <td colspan="2">
+      <b>Uninstall</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>brew uninstall git-town</code><br>
+      <code>brew untap Originate/gittown</code>
+    </td>
+    <td>
+      <ul>
+        <li>remove DIR</li>
+        <li>remove DIR/src from your <code>$PATH</code></li>
+        <li>remove DIR/man from your <code>$MANPATH</code></li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+
+<h4>Install autocompletion</h4><ul>
+<li>for <a href="http://fishshell.com">Fish shell</a>: <code>git town install-fish-autocompletion</code></li>
+</ul></main></body></html>

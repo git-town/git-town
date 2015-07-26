@@ -1,0 +1,46 @@
+<!DOCTYPE html><html><head><title>The Big Picture | Git Town</title><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content="Git Town."/><meta name="keywords" content="git, gittown, town"/><meta property="og:title" content="Git Town"/><meta property="og:type" content=""/><meta property="og:image" content=""/><meta property="og:description" content="Git Town."/><meta property="twitter:title"/><meta property="twitter:description" content="Git Town."/><link rel="stylesheet" href="css/application.css"><link href="http://fonts.googleapis.com/css?family=Oleo+Script|Open+Sans:400,300,700" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></head><body class="the-big-picture"><header><a href="/" class="logo"><img src="img/git-town-horizontal.svg" alt="Gittown"/></a><a href="https://github.com/Originate/git-town" class="github ion-social-github">View On GitHub</a><nav><ul><li><a href="index.html">Home</a></li><li><a href="install.html">Install</a></li><li><a href="the-big-picture.html">The Big Picture</a></li><li><a href="tutorial.html">Tutorial</a></li></ul></nav></header><h1 class="pagetitle">The Big Picture</h1><main><p>Git is an intentionally generic tool.
+It is designed to support many different ways of using it equally well.
+It is a really wonderful <em>foundation</em> for flexible and robust source code management.</p>
+<h3>Problem</h3><p>Most teams develop code in <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow">feature branches</a>
+that are cut from and merged into a <em>main branch</em> (typically &quot;development&quot; or &quot;master&quot;).
+They use a central repository like <a href="http://github.com/">GitHub</a>, <a href="https://bitbucket.org/">Bitbucket</a>, or their own Git server.</p>
+<p>Using Git directly for such high-level development workflows is possible, but it can be cumbersome and repetitive.</p>
+<ul>
+<li>Creating a new feature branch in the middle of active development requires up to 6 individual Git commands.</li>
+<li>Updating a feature branch with the latest changes from the main branch takes up to 7.</li>
+<li>Even merging a finished feature into the main branch can require 5 commands.</li>
+</ul>
+<p>As busy developers, we don&#39;t have the time and energy to type and run these commands all the time.
+Omitting certain steps from these workflows on larger development teams leads to problems like</p>
+<ul>
+<li>frequently outdated feature branches that conflict with the main branch</li>
+<li>lengthy, and therefore hard to review, pull requests containing several independent changes that should be in their own branches</li>
+<li>broken main branches after merging in conflicting features</li>
+<li>a convoluted Git history that is hard to read</li>
+<li>many other headaches that diminish productivity and happiness as the development team grows</li>
+</ul>
+<h3>Solution</h3><p>The underlying problem with all these issues is that an intentionally low-level and generic source
+code management tool (Git) is used directly for specific high-level development workflows.
+This will always be inefficient.</p>
+<p><em>Git Town</em> solves these issue by adding <a href="/README.md#commands">high-level workflow commands</a> to Git.
+These commands make it super easy to create, merge, synchronize, and clean up feature branches.
+They are robust, safe, and <a href="https://github.com/Originate/git-town/tree/master/features">well-tested</a>.</p>
+<h3>Advantages</h3><p>Git Town increases team productivity and fun by helping achieve</p>
+<ul>
+<li>smaller and more focused feature branches that are easier and faster to review</li>
+<li>less frequent and severe merge conflicts, thanks to regular feature branch synchronization</li>
+<li>a more stable main branch, thanks to resolving issues before merging feature branches</li>
+<li>a more manageable repository, thanks to automatic removal of stale branches</li>
+<li>less time spent using Git and more time spent coding, thanks to<ul>
+<li>minimizing network requests: each command performs just a single fetch and skips unnecessary pushes</li>
+<li>executing several Git commands as a batch, rather than manually typing and executing commands sequentially</li>
+</ul>
+</li>
+</ul>
+<p>Git Town empowers the user to reach these goals in a natural and intuitive way.
+Git is not modified or interfered with in any way, as Git Town simply an extension of Git.</p>
+<p>Git Town reduces the Git learning curve for beginners. By doing the complicated stuff under the hood, it allows
+them to use Git like experts. However, because Git Town is automating basic Git commands, it&#39;s also completely transparent.
+Users can see exactly what commands are being issued as part of Git Town&#39;s higher-level commands.</p>
+<p>It also allows experts use Git more efficiently by automating what they would have manually typed and mentally
+processed tens or even hundreds of times a day!</p></main></body></html>
