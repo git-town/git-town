@@ -3,10 +3,12 @@
 .SH "NAME"
 git sync \- update the current branch with all relevant changes
 
+
 .SH "SYNOPSIS"
 \fIgit sync\fR [--all]
 .br
 \fIgit sync\fR (--abort | --continue | --skip)
+
 
 .SH "DESCRIPTION"
 Synchronizes the current branch with the rest of the world.
@@ -14,11 +16,11 @@ Synchronizes the current branch with the rest of the world.
 .PP
 When run on a feature branch
 .br
-* syncs the main branch
+* syncs all ancestor branches
 .br
 * pulls updates for the current branch
 .br
-* merges the main branch into the current branch
+* merges the parent branch into the current branch
 .br
 * pushes the current branch
 
@@ -28,6 +30,7 @@ When run on the main branch or a perennial branch
 * pulls and pushes updates for the current branch
 .br
 * pushes tags
+
 
 .SH "OPTIONS"
 .IP "--all" 4

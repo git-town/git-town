@@ -3,24 +3,33 @@
 .SH "NAME"
 git ship \- deliver a completed feature branch
 
+
 .SH "SYNOPSIS"
 \fIgit ship\fR [<branchname>] [<commit-options>]
 .br
 \fIgit ship\fR (--abort | --continue)
 
+
 .SH "DESCRIPTION"
 Squash merges the current branch, or <branchname> if given,
 into the main branch, leading to linear history on the main branch.
 .PP
-* sync the main branch
+* syncs the main branch
 .br
-* pull remote updates for <branchname>
+* pulls remote updates for <branchname>
 .br
 * merges the main branch into <branchname>
+.br
+* squash-merges <branchname> into the main branch
 .br
 * pushes the main branch to the remote repository
 .br
 * deletes <branchname> from the local and remote repositories
+
+Only shipping of direct children of the main branch is allowed.
+.br
+To ship a nested child branch, all ancestor branches have to be shipped or killed.
+
 
 .SH "OPTIONS"
 .IP "<branchname>" 4

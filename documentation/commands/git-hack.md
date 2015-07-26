@@ -1,21 +1,21 @@
 #### NAME
 
-git-hack - cut a new feature branch off the main branch
+git-hack - create a new feature branch
 
 
 #### SYNOPSIS
 
 ```
-git hack <branchname> [parent branch name]
+git hack <branchname> [<parent branch name>]
 git hack (--abort | --continue)
 ```
 
 
 #### DESCRIPTION
 
-Syncs the main branch if there is a remote repository.
-Creates a new feature branch with the given name.
-Brings over all uncommitted changes.
+Syncs the given parent branch,
+forks a new feature branch with the given name off it,
+and brings over all uncommitted changes to the new feature branch.
 
 
 #### OPTIONS
@@ -27,6 +27,7 @@ Brings over all uncommitted changes.
 [parent branch name]
     If provided, cuts the new branch off the given existing feature branch.
     Providing '.' here uses the current branch as the parent branch.
+    If omitted, uses the main branch as the parent.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
