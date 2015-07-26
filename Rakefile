@@ -1,3 +1,6 @@
+require 'active_support/all'
+
+
 desc 'Run linters and feature tests'
 task default: %w(lint test)
 
@@ -34,6 +37,29 @@ end
 
 # Feature tests
 desc 'Run feature tests'
-task :test do
+task 'test' do
   sh 'bin/cuke'
+end
+
+def run command
+  sh command
+  puts
+end
+
+desc 'Deploys a new version of the website'
+task 'deploy' do
+  run 'git checkout gh-pages'
+  run 'git pull'
+  run 'git checkout master'
+  run 'harp compile website/ _www'
+  run 'git checkout gh-pages'
+  run 'cp -r _www/* .'
+  run 'rm -rf _www'
+  run 'git add -A'
+  print 'Description of this change: '
+  desc = STDIN.gets.strip
+  return if desc.blank?
+  run "git commit -m '#{desc}'"
+  run 'git push'
+  run 'git checkout master'
 end
