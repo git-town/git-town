@@ -21,7 +21,7 @@ This guide will help you get started and outline some things you should know whe
 * [ShellCheck](https://github.com/koalaman/shellcheck)
   * for linting the Bash code
 
-__For website development__
+##### For website development
 * [Node.js](https://nodejs.org)
   * on OS X best installed via [HomeBrew](http://brew.sh)
 * [Harp](http://harpjs.com)
