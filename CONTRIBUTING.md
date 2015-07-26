@@ -271,3 +271,7 @@ __view the website locally__
 * `harp server`
 * go to [localhost:9000](http://localhost:9000)
 
+__deploy the website__
+* make sure your changes to be deployed are all in `master`
+* `rake deploy`
+
