@@ -274,4 +274,3 @@ __view the website locally__
 __deploy the website__
 * make sure your changes to be deployed are all in `master`
 * `rake deploy`
-
