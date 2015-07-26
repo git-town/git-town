@@ -128,8 +128,9 @@ where it was proposed.
 
 ### Undoing
 
-Each command generates the steps to undo itself.
-Git Town provides two hooks for that, which are used by implementing a method that matches:
+Git Town asks each command to provide the steps to undo itself before and/or
+after it is run.
+It does that by calling methods that match
 * `undo_steps_for_[command name]`: executed before the command runs
 * `post_undo_steps_for_[command_name]`: executed after the command runs
 
