@@ -210,6 +210,39 @@ in a key called __git-town.branches.ancestors__:
   then merge master into `feature1`, then `feature1` into `feature2`.
 
 
+## Configuration
+
+Git Town stores the following configuration in the Git metadata repository:
+
+<table>
+  <tr>
+    <th width="355">configuration entry</th>
+    <th>description</th>
+  </tr>
+  <tr>
+    <td><b><code>git-town.main-branch-name</code></b></td>
+    <td>the name of the branch that acts as the main development branch</td>
+  </tr>
+  <tr>
+    <td><b><code>git-town.perennial-branch-names</code></b></td>
+    <td>the names of all perennial branches, separated by space</td>
+  </tr>
+  <tr>
+    <td><b><code>git-town.branches.parent.&lt;branch name&gt;</code></b></td>
+    <td>the name of the parent branch for the given branch</td>
+  </tr>
+  <tr>
+    <td><b><code>git-town.branches.ancestors.&lt;branch name&gt;</code></b></td>
+    <td>
+      An internal cache of every branch in the ancestry chain,
+      all the way to the main branch name,
+      separated by space.
+      Older branches come first.
+    </td>
+  </tr>
+</table>
+
+
 ## Documentation
 
 Every Git Town command
