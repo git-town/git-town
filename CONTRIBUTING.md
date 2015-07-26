@@ -261,7 +261,10 @@ Every Git Town command
 * is listed on the [README](./README.md)
 
 
-## Web Site
+## Web Site Development
+
+Before you start, please make sure you have the [requirements](#requirements)
+for the website installed.
 
 __view the website locally__
 * `cd website`
