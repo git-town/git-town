@@ -12,13 +12,14 @@ This guide will help you get started and outline some things you should know whe
 
 ## Requirements
 
-* Ruby 2.2
-  (install [directly](https://www.ruby-lang.org/en/documentation/installation),
-  or via a ruby manager like [rvm](https://rvm.io/)
-  or [rbenv](https://github.com/sstephenson/rbenv))
-  * language the tests are written in
+* [Ruby 2.2](https://www.ruby-lang.org/en/documentation/installation)
+  * to run the tests
+  * install best via
+  [rbenv](https://github.com/sstephenson/rbenv)
+  or
+  [rvm](https://rvm.io/)
 * [ShellCheck](https://github.com/koalaman/shellcheck)
-  * used in the linting process to find common errors in the Bash code
+  * for linting the Bash code
 
 
 ## Setup
@@ -45,15 +46,17 @@ rake test    # runs the feature tests
 cucumber <filename>[:<lineno>]
 cucumber -n '<scenario/feature name>'
 
-# running several features in parallel
+# running tests in parallel
 bin/cuke [cucumber parameters]
+# set the environment variable PARALLEL_TEST_PROCESSORS to override the
+# auto-detected number of processors
 
 # auto-fixing formatting issues
-rake format  # Run formatters (fixes some lint errors)
+rake format
 ```
 
 The `rake [parameters]` commands above can also be run as `bundle exec rake [parameters]`
-if you encounter issues.
+if you encounter Ruby versioning issues.
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
 automatically tests all commits and pull requests,
