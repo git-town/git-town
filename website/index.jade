@@ -13,35 +13,57 @@ html
       .container
         .left
           img(src="img/git-town-horizontal-w.svg")
-          h2 What is it?
-          p Gittown is an open-source Git plugin that makes using Git on the command line even more productive and convenient! It provides additional high-level Git commands that perform typical steps in collaborative software development workflows.
+          h2 High-level command-line interface for Git
+          p
+            | Git Town is an open-source Git plugin
+            | that provides high-level Git commands
+            | to make feature-branch based development
+            | more efficient and safe.
 
         iframe.intro-video(src="https://drive.google.com/a/originate.com/file/d/0BxFxxboeZOPlcjRiVjV5b0c4Qmc/preview" width="550" height="300" frameborder="0")
 
     section.tagline
-      h2 A better way to Git
-      p Git Town adds high-level workflow commands to Git. These commands make it super easy to create, merge, synchronize, and clean up feature branches. They are robust, safe, and well-tested.
+      h2 Why an extra layer above vanilla Git?
+      p
+        | Git is an intentionally generic and basic tool.
+        | It supports many different ways of using it equally well.
+        | It is a wonderful <b>foundation</b> for source code management.
+
+      p
+        | Using it properly as a developer is cumbersome and repetitive, though.
+        | As an example, safely merging a finished feature branch
+        | requires up to 15 individual Git commands.
+        | See our screencast above for details.
+
+
     section.commands
       h2
         span.powerful Powerful commands
-      p A small sampling of some of the commands that Git Town provides.
+      p
+        | Git Town adds a number of high-level Git commands that automate
+        | typical operations in the software development workflow.
+
       .commands
-        .command
-          h3 $ git hack
-          p Cuts a new up-to-date feature branch off the main branch.
-        .command
-          h3 $ git sync
-          p Updates your current branch with all ongoing changes.
-        .command
-          h3 $ git pull-request
-          p Create a new pull request on GitHub or BitBucket for your current branch.
-        .command
-          h3 $ git ship
-          p Delivers your completed feature branch and removes it.
-        a.button.view-more(href="https://github.com/Originate/git-town#commands") View More Commands
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-hack.md" target="_blank")
+          .command
+            h3 $ git hack
+            p Cuts a new up-to-date feature branch off the main branch.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-sync.md" target="_blank")
+          .command
+            h3 $ git sync
+            p Updates your current branch with all ongoing changes.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-new-pull-request.md" target="_blank")
+          .command
+            h3 $ git new-pull-request
+            p Create a new pull request on GitHub or BitBucket for your current branch.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-ship.md" target="_blank")
+          .command
+            h3 $ git ship
+            p Delivers your completed feature branch and removes it.
+        a.button.view-more(href="https://github.com/Originate/git-town#commands") View all commands
 
     section.faq
-      h2 FAQ About Git Town
+      h2 FAQ
       h3 Does this force me into any conventions for my branches or commits?
       p Not at all. Git Town doesn’t require or enforce any particular naming convention or branch setup, and works with a wide variety of Git branching models and workflows.
 
@@ -58,7 +80,7 @@ html
       p Yes, we try to be good citizens. If you run into any issues with your setup, please let us know!
 
       .buttons
-        a.button.learn-more(href="/") Learn more
+        a.button.learn-more(href="/install.html") Install
 
     section.town
       img(src="/img/git-town-town.svg")
