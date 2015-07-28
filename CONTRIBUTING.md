@@ -261,7 +261,7 @@ Every Git Town command
 * is listed on the [README](./README.md)
 
 
-## [Website](www.git-town.com) Development
+## [Website](http://www.git-town.com) Development
 
 Before you start, please make sure you have the [requirements](#for-website-development)
 for the website installed.
