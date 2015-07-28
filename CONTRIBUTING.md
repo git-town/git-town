@@ -23,7 +23,7 @@ This guide will help you get started and outline some things you should know whe
 
 ##### For website development
 * [Node.js](https://nodejs.org)
-  * on OS X best installed via [HomeBrew](http://brew.sh)
+  * on OS X best installed via [Homebrew](http://brew.sh)
 * [Harp](http://harpjs.com)
   * `npm install -g harp`
 
@@ -261,7 +261,7 @@ Every Git Town command
 * is listed on the [README](./README.md)
 
 
-## Web Site Development
+## [Website](www.git-town.com) Development
 
 Before you start, please make sure you have the [requirements](#for-website-development)
 for the website installed.
