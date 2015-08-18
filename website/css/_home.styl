@@ -7,7 +7,6 @@ body.index
     padding: $section-padding 0
 
     h2
-      font-size: 14px
       text-transform: uppercase
       margin: 10px 0 20px
       letter-spacing: 3px
@@ -40,6 +39,7 @@ body.index
         text-align: left
         margin-top: 20px
         color: #fff
+        font-size: 22px
 
       p
         margin-top: 0
@@ -83,7 +83,16 @@ body.index
       max-width: 640px
       margin: 0 auto
       line-height: 1.8
-      margin-bottom: 10px
+      margin-bottom: 20px
+
+      a
+        text-decoration: none
+
+    .buttons
+      margin-top: 27px
+
+    a.learn-more
+      margin-left: 20px
 
 
   section.commands
@@ -119,6 +128,9 @@ body.index
         height: 100%
         border-left: 1px solid darken(#fff, 5)
 
+        :hover
+          background-color: #ddd
+
         &:first-child
           border-left: 0
 
@@ -146,6 +158,8 @@ body.index
       margin-bottom: 40px
 
     h3
+      margin-top: 40px
+      font-size: 18px
       position: relative
 
       &:before
@@ -162,7 +176,7 @@ body.index
         border: 3px solid #bbb
         text-align: center
     p
-      margin-bottom: 40px
+      margin-bottom: 10px
 
     .buttons
       text-align: center

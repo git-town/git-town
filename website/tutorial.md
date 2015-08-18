@@ -67,10 +67,10 @@ To do this safely, i.e. without breaking the master branch, you want to
 * push the updated _master_ branch to the repository (so that your changes are available to Bob and Alice in return)
 * remove the _password-reset_ branch from your local machine and the repository
 
-This requires from 7-9 individual Git commands.
+This requires between 10-15 individual Git commands.
 Git Town provides a single, convenient command for this as well:
 `git ship reset-passwords`.
 
 After running this, your feature is now safely merged as a single additional commit on the _master_ branch,
-then the old feature branch is cleaned up everywhere,
+the old feature branch is cleaned up everywhere,
 and you and the repository are ready for the next feature.

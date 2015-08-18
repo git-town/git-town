@@ -12,57 +12,114 @@ html
     section.hero
       .container
         .left
-          img(src="img/git-town-horizontal-w.svg")
-          h2 What is it?
-          p Gittown is an open-source Git plugin that makes using Git on the command line even more productive and convenient! It provides additional high-level Git commands that perform typical steps in collaborative software development workflows.
+          h2.
+            High-level <br>
+            command line interface
+            for Git
+          p.
+            Git Town is an open-source Git plugin.<br>
+            It adds Git commands
+            that make collaborative software development
+            more efficient and safe.
 
-        iframe.intro-video(src="https://drive.google.com/a/originate.com/file/d/0BxFxxboeZOPlcjRiVjV5b0c4Qmc/preview" width="550" height="300" frameborder="0")
+          .buttons
+            a.button.learn-more(href="/install.html") Install
+
+
+        iframe.intro-video(src="https://drive.google.com/a/originate.com/file/d/0BxFxxboeZOPlWjFkM1BPek9MUFE/preview" width="550" height="300" frameborder="0")
 
     section.tagline
-      h2 A better way to Git
-      p Git Town adds high-level workflow commands to Git. These commands make it super easy to create, merge, synchronize, and clean up feature branches. They are robust, safe, and well-tested.
+      h2 A workflow layer on top of vanilla Git
+      p.
+        Git is a great <i>foundation</i> for source code management. <br>
+        It provides all required pieces of functionality, <br>
+        and supports many different ways of using it equally well. <br>
+
+      p.
+        It is intentionally generic and basic, though. <br>
+        Using it properly as a developer is cumbersome and repetitive. <br>
+        For example, correctly merging a finished feature branch
+        requires <br>
+        up to <a href="https://github.com/Originate/git-town/blob/217f31e633d400d3eefed94f86b35a10838f1ebe/features/git-ship/supplied_branch/feature_branch/with_tracking_branch.feature#L19-L33">
+        <b>15</b></a> individual Git commands!
+
+      p.
+        Git Town adds a layer of high-level commands to Git. <br>
+        They perform typical development workflow operations <br>
+        like creating or shipping feature branches, <br>
+        similar to how an expert Git user would do it.
+
+      p All while being as generic and unopinionated as Git.
+
+      .buttons
+        a.button.view-more(href="https://drive.google.com/a/originate.com/file/d/0BxFxxboeZOPlWjFkM1BPek9MUFE/view" target="_blank") View screencast
+        a.button.learn-more(href="/tutorial.html") view tutorial
+
+
     section.commands
       h2
         span.powerful Powerful commands
-      p A small sampling of some of the commands that Git Town provides.
+      p.
+        Git Town adds a number of high-level Git commands that automate
+        typical operations in the software development workflow.
+
       .commands
-        .command
-          h3 $ git hack
-          p Cuts a new up-to-date feature branch off the main branch.
-        .command
-          h3 $ git sync
-          p Updates your current branch with all ongoing changes.
-        .command
-          h3 $ git pull-request
-          p Create a new pull request on GitHub or BitBucket for your current branch.
-        .command
-          h3 $ git ship
-          p Delivers your completed feature branch and removes it.
-        a.button.view-more(href="https://github.com/Originate/git-town#commands") View More Commands
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-hack.md" target="_blank")
+          .command
+            h3 $ git hack
+            p Cuts a new up-to-date feature branch off the main branch.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-sync.md" target="_blank")
+          .command
+            h3 $ git sync
+            p Updates your current branch with all ongoing changes.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-new-pull-request.md" target="_blank")
+          .command
+            h3 $ git new-pull-request
+            p Create a new pull request on GitHub or BitBucket for your current branch.
+        a(href="https://github.com/Originate/git-town/blob/master/documentation/commands/git-ship.md" target="_blank")
+          .command
+            h3 $ git ship
+            p Delivers your completed feature branch and removes it.
+        a.button.view-more(href="https://github.com/Originate/git-town#commands") View all commands
 
     section.faq
-      h2 FAQ About Git Town
+      h2 FAQ
       h3 Does this force me into any conventions for my branches or commits?
-      p Not at all. Git Town doesn’t require or enforce any particular naming convention or branch setup, and works with a wide variety of Git branching models and workflows.
-
-      h3 How is this different from Git Flow?
-      p Git Flow is a Git extension that provides specific and opinionated support for the powerful Git branching model with the same name. It doesn’t care too much about how you keep your work in sync with the rest of the team.
-
-      h3 Git Town doesn’t care much about which branching model you use. It makes you and your team more productive and keeps your Git repo clean.
-      p It is possible (and encouraged) to use the two tools together.
+      p.
+        Not at all.
+        Git Town doesn’t require or enforce any particular naming convention or branch setup.
+        It works with a wide variety of Git branching models and workflows.
 
       h3 Which Git branching models are supported by Git Town?
-      p Git Town is so generic that it supports all the branching models that we are aware of, for example GitHub Flow, GitLab Flow, Git Flow, and even working straight off the master branch.
+      p
+        | Git Town is so generic that it supports all the branching models that we are aware of,
+        | amongst others
+        | <a href="http://scottchacon.com/2011/08/31/github-flow.html" target="_blank">GitHub Flow</a>,
+        | <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow" target="_blank">Git Flow</a>,
+        | <a href="https://about.gitlab.com/2014/09/29/gitlab-flow" target="_blank">GitLab Flow</a>,
+        | or even committing straight into the master branch!
+
+      h3 How is this different from Git Flow?
+      p.
+        Git Flow is a Git extension that provides specific and opinionated support
+        for the powerful Git branching model with the same name.
+        It doesn’t care too much about how you keep your work in sync with the rest of the team.
+
+      p.
+        Git Town doesn’t care which branching model you use.
+        It focusses on keeping your team synchronized and your code repository clean.
+
+      p.
+        It is possible (and encouraged) to use the two tools together.
 
       h3 Is it compatible with my other Git tools?
-      p Yes, we try to be good citizens. If you run into any issues with your setup, please let us know!
+      p
+        | Yes, we try to be good citizens.
+        | If you run into any issues with your setup, please
+        | <a href="https://github.com/Originate/git-town/issues/new" target="_blank">let&nbsp;us&nbsp;know</a>!
 
       .buttons
-        a.button.learn-more(href="/") Learn more
+        a.button.learn-more(href="/install.html") Install
 
     section.town
-      img(src="/img/git-town-town.svg")
-
-
-    script(src="js/application.js")
-
+      img(src="img/git-town-town.svg")
