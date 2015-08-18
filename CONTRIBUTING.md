@@ -21,6 +21,12 @@ This guide will help you get started and outline some things you should know whe
 * [ShellCheck](https://github.com/koalaman/shellcheck)
   * for linting the Bash code
 
+##### For website development
+* [Node.js](https://nodejs.org)
+  * on OS X best installed via [Homebrew](http://brew.sh)
+* [Harp](http://harpjs.com)
+  * `npm install -g harp`
+
 
 ## Setup
 
@@ -253,3 +259,18 @@ Every Git Town command
 * has a [Markdown page](./documentation/commands) that is identical to the man page
 * is listed on the [git-town man page](./man/man1/git-town.1)
 * is listed on the [README](./README.md)
+
+
+## [Website](http://www.git-town.com) Development
+
+Before you start, please make sure you have the [requirements](#for-website-development)
+for the website installed.
+
+__view the website locally__
+* `cd website`
+* `harp server`
+* go to [localhost:9000](http://localhost:9000)
+
+__deploy the website__
+* make sure your changes to be deployed are all in `master`
+* `rake deploy`
