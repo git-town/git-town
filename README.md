@@ -13,7 +13,7 @@ the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.
 
-See [http://www.git-town.com](git-town.com) for documentation.
+See <http://www.git-town.com> for documentation.
 
 
 ## Commands
