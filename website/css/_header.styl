@@ -17,9 +17,9 @@ header
     padding-left: 10px
 
     img
-      width: 215px
+      width: 180px
       position: absolute
-      top: -1px
+      top: 2px
 
   a.github
     height: $header-nav-height
@@ -69,3 +69,8 @@ header
             color: #fff
             background-color: $accent
             text-decoration: none
+
+@media screen and (max-width: $break-sml)
+  header
+    a.github
+      display: none
