@@ -1,5 +1,17 @@
 # Git Town Release Notes
 
+## 0.7.0 (2015-08-24)
+
+* fix `git ship --undo` (#550)
+* rename `non-feature-branches` to `perennial-branches` (#344)
+  * configuration is automatically updated to support this
+* support for nested feature branches (#529)
+* added `git rename-branch` (#474)
+* rename `git pull-request` to `git new-pull-request` (#413, #507)
+* add sha and date to output of `git town version` for manual installs
+* show error when trying to continue after a successful command (#364)
+
+
 ## 0.6.0 (2015-04-02)
 
 * support for working without a remote repository for **git extract**, **git hack**, **git kill**, **git ship**, and **git sync**
