@@ -53,8 +53,8 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     When I run `git sync --undo` in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                           |
-      | <none> | cd <%= git_root_folder %>         |
-      |  current-feature               | git stash -u                      |
+      | <none>          | cd <%= git_root_folder %>         |
+      | current-feature | git stash -u                      |
       |                 | git checkout other-feature        |
       | other-feature   | git checkout current-feature      |
       | current-feature | git checkout main                 |
