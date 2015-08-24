@@ -3,14 +3,14 @@
 
 # Abort a merge
 function abort_merge {
-  run_git_command "git merge --abort"
+  run_command "git merge --abort"
 }
 
 
 # Continues merge if one is in progress
 function continue_merge {
   if [ "$(has_open_changes)" == true ]; then
-    run_git_command "git commit --no-edit"
+    run_command "git commit --no-edit"
   fi
 }
 
@@ -18,14 +18,14 @@ function continue_merge {
 # Merges the given branch into the current branch
 function merge {
   local branch_name=$1
-  run_git_command "git merge --no-edit $branch_name"
+  run_command "git merge --no-edit $branch_name"
 }
 
 
 # Squash merges the given branch into the current branch
 function squash_merge {
   local branch_name=$1
-  run_git_command "git merge --squash $branch_name"
+  run_command "git merge --squash $branch_name"
 }
 
 
@@ -37,7 +37,7 @@ function commit_squash_merge {
   if [ "$author" != "$(local_author)" ]; then
     options="--author=\"$author\" $options"
   fi
-  run_git_command "git commit $options"
+  run_command "git commit $options"
   if [ $? != 0 ]; then error_empty_commit; fi
 }
 
