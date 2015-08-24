@@ -10,6 +10,7 @@ COMMAND_REGEX = /
   ([[:graph:]][[:print:]]+?) # the command - no leading whitespace
   \s*                        # any extra whitespace
   \n                         # newline at the end
+  \e\(B\e\[m                 # Resetting the text format
 /x
 
 
