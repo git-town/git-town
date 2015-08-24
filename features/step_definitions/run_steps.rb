@@ -68,26 +68,19 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it runs no (?:Git|shell) commands$/) do
+Then(/^it runs no commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 
 
-Then(/^it runs the Git commands$/) do |expected_commands|
+Then(/^it runs the commands$/) do |expected_commands|
   # We need ERB here to fill in commit SHAs in Git commands
   expected_commands.map_column! 'COMMAND' do |command|
     ERB.new(command).result
   end
 
-  expected_commands.diff! commands_of_last_run.table
-end
-
-
-Then(/^it runs the following shell commands/) do |expected_commands|
-  expected_commands.map_column! 'COMMAND' do |command|
-    ERB.new(command).result
-  end
-  expected_commands.diff! commands_of_last_run_outside_git.unshift(expected_commands.headers)
+  actual_commands = commands_of_last_run(with_branch: expected_commands.column_names.count == 2).table
+  expected_commands.diff! actual_commands
 end
 
 

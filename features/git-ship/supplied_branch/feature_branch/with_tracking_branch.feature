@@ -14,7 +14,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git stash -u                       |
       |               | git fetch --prune                  |

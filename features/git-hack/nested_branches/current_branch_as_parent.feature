@@ -16,7 +16,7 @@ Feature: Creating nested feature branches
 
   Scenario: Providing the name of the current branch
     When I run `git hack child-feature parent-feature`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | parent-feature | git fetch --prune                            |
       |                | git stash -u                                 |
@@ -43,7 +43,7 @@ Feature: Creating nested feature branches
   Scenario: Undo
     Given I run `git hack child-feature parent-feature`
     When I run `git hack --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                     |
       | child-feature  | git stash -u                |
       |                | git checkout parent-feature |
@@ -61,7 +61,7 @@ Feature: Creating nested feature branches
 
   Scenario: Providing '.' as the parent name
     When I run `git hack child-feature .`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | parent-feature | git fetch --prune                            |
       |                | git stash -u                                 |
@@ -88,7 +88,7 @@ Feature: Creating nested feature branches
   Scenario: Undo
     Given I run `git hack child-feature .`
     When I run `git hack --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                     |
       | child-feature  | git stash -u                |
       |                | git checkout parent-feature |

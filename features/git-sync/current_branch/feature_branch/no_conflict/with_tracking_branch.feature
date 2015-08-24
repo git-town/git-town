@@ -19,7 +19,7 @@ Feature: git sync: syncing the current feature branch with a tracking branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git stash -u                       |

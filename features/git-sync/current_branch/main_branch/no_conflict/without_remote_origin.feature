@@ -16,7 +16,7 @@ Feature: git sync: syncing the main branch (without remote repo)
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND       |
       | main   | git stash -u  |
       |        | git stash pop |

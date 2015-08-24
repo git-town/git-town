@@ -18,7 +18,7 @@ Feature: git extract: extracting multiple commits (without remote repo)
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                                                                     |
       | feature  | git stash -u                                                                |
       |          | git checkout main                                                           |

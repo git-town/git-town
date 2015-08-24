@@ -18,7 +18,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       |        | git stash -u         |
@@ -35,7 +35,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
@@ -47,7 +47,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
 
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
@@ -56,7 +56,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
       |        | git push              |
@@ -76,7 +76,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |

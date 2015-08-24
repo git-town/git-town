@@ -19,7 +19,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
   Scenario: choosing the default branch name
     When I run `git sync` and press ENTER
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -43,7 +43,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
   Scenario: entering the number of the master branch
     When I run `git sync` and enter "1"
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -67,7 +67,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
   Scenario: entering the number of another branch
     When I run `git sync` and enter "2"
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -100,7 +100,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
   Scenario: entering a wrong number
     When I run `git sync` and enter "5" and "1"
     Then I see "Invalid branch number"
-    And it runs the Git commands
+    And it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -124,7 +124,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
   Scenario: entering the name of the master branch
     When I run `git sync` and enter "main"
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -148,7 +148,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
 
   Scenario: entering the name of another branch
     When I run `git sync` and enter "feature-1"
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |
@@ -181,7 +181,7 @@ Feature: git sync: syncing a nested feature branch (without known parent branch)
   Scenario: entering a wrong name
     When I run `git sync` and enter "zonk" and "main"
     Then I see "branch 'zonk' doesn't exist"
-    And it runs the Git commands
+    And it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-2 | git fetch --prune                    |
       |           | git stash -u                         |

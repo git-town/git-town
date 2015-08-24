@@ -15,7 +15,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git stash -u                       |
       |               | git fetch --prune                  |
@@ -35,7 +35,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                    |
       | feature       | git merge --abort          |
       |               | git checkout main          |
@@ -50,7 +50,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
       |               | git merge --no-edit main     |
@@ -73,7 +73,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and i
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git ship --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git merge --no-edit main     |
       |               | git checkout main            |

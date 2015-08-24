@@ -13,7 +13,7 @@ Feature: git extract: errors if there are not extractable commits
   Scenario: result
     Given I have an uncommitted file
     When I run `git extract refactor`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
     And I get the error "The branch 'feature' has no extractable commits."
