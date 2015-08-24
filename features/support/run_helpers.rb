@@ -17,12 +17,11 @@ def commands_of_last_run with_branch: true
   options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
   result = Mortadella.new options
   @last_run_result.out.split("\n").each do |line|
-    if match = line.match(COMMAND_REGEX)
-      row = []
-      row << (match[1] || '<none>') if with_branch
-      row << match[2]
-      result << row
-    end
+    match = line.match COMMAND_REGEX
+    next unless match
+    row = [match[2]]
+    row.unshift(match[1] || '<none>') if with_branch
+    result << row
   end
   result
 end
