@@ -27,7 +27,7 @@ Feature: git ship: shipping the supplied feature branch without a remote origin
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
-    And I still have my uncommited file
+    And I still have my uncommitted file
     And there is no "feature" branch
     And I have the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |

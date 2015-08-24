@@ -24,7 +24,7 @@ Feature: git kill: killing the given feature branch
       |              | git push origin :dead-feature |
       |              | git branch -D dead-feature    |
     And I am still on the "good-feature" branch
-    And I still have my uncommited file
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
@@ -42,7 +42,7 @@ Feature: git kill: killing the given feature branch
       | good-feature | git branch dead-feature <%= sha 'dead-end commit' %> |
       |              | git push -u origin dead-feature                      |
     And I am still on the "good-feature" branch
-    And I still have my uncommited file
+    And I still have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
