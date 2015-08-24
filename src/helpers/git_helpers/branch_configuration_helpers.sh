@@ -140,7 +140,7 @@ function ensure_knows_parent_branches {
       branch_numbers[1]=$MAIN_BRANCH_NAME
       i=2
       for branch in $branches; do
-        if [ "$branch" != "$current_branch" -a "$branch" != "$MAIN_BRANCH_NAME" ]; then
+        if [ "$branch" != "$current_branch" ] && [ "$branch" != "$MAIN_BRANCH_NAME" ]; then
           branch_numbers[i]=$branch
           print_branch $i "$branch"
           i=$(( i + 1 ))
