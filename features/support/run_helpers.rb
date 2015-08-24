@@ -7,7 +7,7 @@ COMMAND_REGEX = /
   \n               # newline at the beginning
   \e\[1m           # bold text
   (?:\[(.*?)\]\s)? # branch name in square brackets
-  ([^\e]*?)        # the command
+  ([[:print:]]*)   # the command
   \s*              # any extra whitespace
   \n               # newline at the end
 /x
