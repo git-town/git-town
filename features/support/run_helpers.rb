@@ -3,20 +3,24 @@ def array_output_of command, ignore_errors: false
 end
 
 
+COMMAND_REGEX = /
+  \n               # newline at the beginning
+  \e\[1m           # bold text
+  (?:\[(.*?)\]\s)? # branch name in square brackets
+  ([^\e]*?)        # the command
+  \s*              # any extra whitespace
+  \n               # newline at the end
+/x
+
+
 # Returns an array of the commands that were run in the last invocation of "run"
 def commands_of_last_run with_branch: true
-  command_regex = /
-    \n               # newline at the beginning
-    \e\[1m           # bold text
-    (?:\[(.*?)\]\s)? # branch name in square brackets
-    ([^\e]*?)        # the command
-    \s*              # any extra whitespace
-    \n               # newline at the end
-  /x
-  options = with_branch ? {headers: %w(BRANCH COMMAND), dry: 'BRANCH'} : {headers: %w(COMMAND)}
+  options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
   result = Mortadella.new options
-  @last_run_result.out.scan(command_regex).each do |branch, command|
-    row = with_branch ? [(branch or '<none>'), command] : [command]
+  @last_run_result.out.scan(COMMAND_REGEX).each do |branch, command|
+    row = []
+    row << (branch || '<none>') if with_branch
+    row << command
     result << row
   end
   result
