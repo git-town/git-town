@@ -4,7 +4,7 @@ class Hash
   # Converts all keys to symbols
   def symbolize_keys_deep!
     keys.each do |key|
-      symbol_key = key.to_s.gsub(' ', '_').to_sym
+      symbol_key = key.to_s.tr(' ', '_').to_sym
       self[symbol_key] = (value = delete key)
       value.symbolize_keys_deep! if value.is_a? Hash
     end

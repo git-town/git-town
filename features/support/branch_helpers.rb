@@ -83,7 +83,7 @@ end
 
 # Returns the given branch name in a format that is compatible with Git config
 def normalize_branch_name branch_name
-  branch_name.gsub '_', '-'
+  branch_name.tr '_', '-'
 end
 
 
