@@ -1,4 +1,4 @@
-Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")$/) do |name, content|
+Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$/) do |name, content|
   @uncommitted_file_name = name || 'uncommitted_file'
   @uncommitted_file_content = content || 'uncommitted content'
   create_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
