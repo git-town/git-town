@@ -8,7 +8,7 @@ COMMAND_REGEX = /
   \e\[1m                     # bold text
   (?:\[(.+?)\]\s)?           # branch name in square brackets
   ([[:graph:]][[:print:]]+?) # the command - no leading whitespace
-  \s*                        # any extra whitespace
+  \s*?                       # any extra whitespace
   \n                         # newline at the end
   \e\(B\e\[m                 # Resetting the text format
 /x
