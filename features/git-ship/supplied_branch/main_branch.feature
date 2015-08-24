@@ -11,7 +11,9 @@ Feature: git ship: errors when trying to ship the main branch
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH  | COMMAND           |
+      | feature | git fetch --prune |
     And I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "feature" branch
     And I still have my uncommitted file

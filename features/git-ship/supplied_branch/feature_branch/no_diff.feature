@@ -17,8 +17,8 @@ Feature: git ship: errors when trying to ship the supplied feature branch that h
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                                      |
-      | other-feature | git stash -u                                 |
-      |               | git fetch --prune                            |
+      | other-feature | git fetch --prune                            |
+      |               | git stash -u                                 |
       |               | git checkout main                            |
       | main          | git rebase origin/main                       |
       |               | git checkout empty-feature                   |

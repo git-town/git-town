@@ -1,13 +1,15 @@
-Feature: git ship: shipping the supplied feature branch without a tracking branch
+Feature: git ship: shipping the supplied feature branch with a tracking branch
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/with_tracking_branch.feature)
-
+  As a developer having finished a feature on another machine
+  I want to be able to ship it without explicity fetching
+  So that I can quickly move on to the next feature and remain productive.
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
-    And the following commit exists in my repository
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+    Given I have a feature branch named "other-feature"
+    And I have a feature branch named "feature" on another machine
+    And the following commit exists in my repository on another machine
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
+      | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git ship feature -m "feature done"`
