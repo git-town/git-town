@@ -4,13 +4,11 @@ end
 
 
 COMMAND_REGEX = /
-  \n                         # newline at the beginning
+  ^
   \e\[1m                     # bold text
   (?:\[(.+?)\]\s)?           # branch name in square brackets
   ([[:graph:]][[:print:]]+?) # the command - no leading whitespace
-  \s*?                       # any extra whitespace
-  \n                         # newline at the end
-  \e\(B\e\[m                 # Resetting the text format
+  $
 /x
 
 
@@ -18,11 +16,13 @@ COMMAND_REGEX = /
 def commands_of_last_run with_branch: true
   options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
   result = Mortadella.new options
-  @last_run_result.out.scan(COMMAND_REGEX).each do |branch, command|
-    row = []
-    row << (branch || '<none>') if with_branch
-    row << command
-    result << row
+  @last_run_result.out.split("\n").each do |line|
+    if match = line.match(COMMAND_REGEX)
+      row = []
+      row << (match[1] || '<none>') if with_branch
+      row << match[2]
+      result << row
+    end
   end
   result
 end
