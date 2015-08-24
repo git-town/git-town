@@ -35,5 +35,5 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       | other-feature | git stash pop                                |
     And I get the error "Aborting ship due to empty commit message"
     And I am still on the "other-feature" branch
-    And my workspace still has an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And I still have my uncommitted file
     And I am left with my original commits

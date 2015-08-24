@@ -1,10 +1,7 @@
-Given(/^I have an uncommitted file$/) do
-  @uncommitted_file_name = create_uncommitted_file
-end
-
-
-Given(/^I have an uncommitted file with name: "(.+?)" and content: "(.+?)"$/) do |name, content|
-  create_uncommitted_file name: name, content: content
+Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")$/) do |name, content|
+  @uncommitted_file_name = name || 'uncommitted_file'
+  @@uncommitted_file_content = content || 'uncommitted content'
+  create_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
 end
 
 
@@ -21,7 +18,7 @@ end
 
 
 Then(/^I (?:still|again) have my uncommitted file$/) do
-  verify_uncommitted_file name: @uncommitted_file_name
+  verify_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
 end
 
 
@@ -32,12 +29,6 @@ end
 
 Then(/^I don't have any uncommitted files$/) do
   expect(uncommitted_files).to be_empty
-end
-
-
-Then(/^my workspace (?:still|again) has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$/) \
-    do |name, content|
-  verify_uncommitted_file name: name, content: content
 end
 
 
