@@ -26,12 +26,10 @@ function error_empty_commit {
 
 
 function preconditions {
-  local fetched=false
   if [ "$#" -gt 0 ] && [[ ! "$1" =~ ^- ]]; then
     target_branch_name=$1
     if [ "$HAS_REMOTE" = true ]; then
       fetch
-      fetched=true
     fi
     ensure_has_branch "$target_branch_name"
     shift
@@ -43,9 +41,6 @@ function preconditions {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
   ensure_knows_parent_branches "$target_branch_name"
   ensure_has_no_unshipped_ancestors "$target_branch_name"
-  if [ "$HAS_REMOTE" = true ] && [ "$fetched" = false ]; then
-    fetch
-  fi
   commit_options=$(parameters_as_string "$@")
 }
 
@@ -56,6 +51,7 @@ function steps {
   fi
 
   if [ "$HAS_REMOTE" = true ]; then
+    echo "fetch"
     sync_branch_steps "$MAIN_BRANCH_NAME"
   fi
 
