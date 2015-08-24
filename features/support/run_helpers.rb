@@ -118,6 +118,6 @@ end
 def unformatted_last_run_output
   @last_run_result.out
     .gsub(/\e[^m]*m/, '')   # remove color codes
-    .gsub("\x0F", '')       # remove artifacts created by CircleCI
+    .delete("\x0F")         # remove artifacts created by CircleCI
     .gsub(/\\u\d*F/, '')    # remove artifacts created by CircleCI
 end
