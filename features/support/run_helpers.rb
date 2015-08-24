@@ -4,12 +4,12 @@ end
 
 
 COMMAND_REGEX = /
-  \n               # newline at the beginning
-  \e\[1m           # bold text
-  (?:\[(.*?)\]\s)? # branch name in square brackets
-  ([[:print:]]*)   # the command
-  \s*              # any extra whitespace
-  \n               # newline at the end
+  \n                        # newline at the beginning
+  \e\[1m                    # bold text
+  (?:\[(.*?)\]\s)?          # branch name in square brackets
+  ([[:graph:]][[:print:]]*) # the command - no leading whitespace
+  \s*                       # any extra whitespace
+  \n                        # newline at the end
 /x
 
 
