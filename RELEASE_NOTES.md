@@ -15,7 +15,7 @@
   ([#413](https://github.com/Originate/git-town/issues/413), [#507](https://github.com/Originate/git-town/issues/507))
 * add sha and date to output of `git town version` for manual installs
 * show error when trying to continue after a successful command
-  ([#364](https://github.com/Originate/git-town/issues/364),
+  ([#364](https://github.com/Originate/git-town/issues/364))
 
 ## 0.6.0 (2015-04-02)
 
