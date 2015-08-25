@@ -12,7 +12,9 @@ Feature: git ship: errors when trying to ship a branch that doesn't exist
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs the Git commands
+      | BRANCH | COMMAND           |
+      | main   | git fetch --prune |
     And I get the error "There is no branch named 'non-existing-branch'"
     And I end up on the "main" branch
     And I still have my uncommitted file

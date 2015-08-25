@@ -6,9 +6,13 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"$/) do |local, branch_name|
-  create_branch branch_name, remote: !local
-  set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"( on another machine)?$/) do |local, branch_name, remote|
+  user = 'developer'
+  user += '_secondary' if remote
+  in_repository user do
+    create_branch branch_name, remote: !local
+    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+  end
 end
 
 

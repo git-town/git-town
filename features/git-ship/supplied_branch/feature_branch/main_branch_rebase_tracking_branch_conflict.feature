@@ -18,8 +18,8 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
   Scenario: result
     Then it runs the Git commands
       | BRANCH        | COMMAND                |
-      | other-feature | git stash -u           |
-      |               | git fetch --prune      |
+      | other-feature | git fetch --prune      |
+      |               | git stash -u           |
       |               | git checkout main      |
       | main          | git rebase origin/main |
     And I get the error
