@@ -17,7 +17,7 @@ function has_lines {
 function has_file {
   local file="$1"
 
-  if [ -n "$file" -a -f "$file" ]; then
+  if [ -n "$file" ] && [ -f "$file" ]; then
     echo true
   else
     echo false
