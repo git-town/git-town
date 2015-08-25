@@ -4,11 +4,33 @@ header
 
   a.github.ion-social-github(href="https://github.com/Originate/git-town") View On GitHub
   nav
-    ul
+    #hamburger.ion-navicon-round
+    ul#menu
       li
         a(href='index.html') Home
       li
         a(href='install.html') Install
       li
         a(href='tutorial.html') Tutorial
+      li.github
+        a.github.ion-social-github(href="https://github.com/Originate/git-town") View On GitHub
 
+  script.
+    var toggle = document.getElementById('hamburger');
+    var menu = document.getElementById('menu');
+
+    toggle.onclick = function(){
+      if (menu.classList) {
+        menu.classList.toggle('open');
+      } else {
+        var classes = menu.className.split(' ');
+        var existingIndex = classes.indexOf('open');
+
+        if (existingIndex >= 0)
+          classes.splice(existingIndex, 1);
+        else
+          classes.push('open');
+
+        menu.className = classes.join(' ');
+      }
+    }

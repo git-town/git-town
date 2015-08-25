@@ -65,8 +65,8 @@ function steps {
 
   echo_if_true "push" "$HAS_REMOTE"
 
-  if [ "$(has_tracking_branch "$target_branch_name")" = true -a \
-       "$(has_child_branches "$target_branch_name")" == false ]; then
+  if [ "$(has_tracking_branch "$target_branch_name")" = true ] &&
+     [ "$(has_child_branches "$target_branch_name")" = false ]; then
     echo "delete_remote_branch $target_branch_name"
   fi
   echo "delete_local_branch $target_branch_name force"
