@@ -9,11 +9,11 @@
   * configuration is automatically updated to support this
 * support for nested feature branches
   ([#529](https://github.com/Originate/git-town/issues/529))
-* added `git rename-branch`
+* add `git rename-branch`
   ([#474](https://github.com/Originate/git-town/issues/474))
 * rename `git pull-request` to `git new-pull-request`
   ([#413](https://github.com/Originate/git-town/issues/413), [#507](https://github.com/Originate/git-town/issues/507))
-* add sha and date to output of `git town version` for manual installs
+* add SHA and date to output of `git town version` for manual installs
 * show error when trying to continue after a successful command
   ([#364](https://github.com/Originate/git-town/issues/364))
 
