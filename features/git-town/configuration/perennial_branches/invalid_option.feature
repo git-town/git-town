@@ -10,5 +10,5 @@ Feature: passing an invalid option to the perennial branch configuration
     Then I get the error
       """
       error: unsupported option '--invalid-option'
-      usage: git town perennial-branches (--add | --remove) <branchname>
+      usage: git town perennial-branches (--add | --remove) <branch_name>
       """

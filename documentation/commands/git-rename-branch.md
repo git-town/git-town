@@ -6,7 +6,7 @@ git-rename-branch - rename a branch both locally and remotely
 #### SYNOPSIS
 
 ```
-git rename-branch <branchname> <newbranchname> [-f]
+git rename-branch <old_branch_name> <new_branch_name> [-f]
 ```
 
 
@@ -34,10 +34,10 @@ When run on a perennial branch
 #### OPTIONS
 
 ```
-<branchname>
+<old_branch_name>
     The name of the branch to rename.
 
-<newbranchname>
+<new_branch_name>
     The new name of the branch.
 
 -f

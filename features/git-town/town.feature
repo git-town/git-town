@@ -9,7 +9,7 @@ Feature: Show correct git town usage
          or: git town config [--reset | --setup]
          or: git town help
          or: git town install-fish-autocompletion
-         or: git town main-branch [<branchname>]
-         or: git town perennial-branches [(--add | --remove) <branchname>]
+         or: git town main-branch [<branch_name>]
+         or: git town perennial-branches [(--add | --remove) <branch_name>]
          or: git town version
       """
