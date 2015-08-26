@@ -55,11 +55,12 @@ Feature: Entering a parent branch name when prompted
 
 
   Scenario: entering the name of another branch
-    When I run `git sync` and enter "feature-1"
+    When I run `git sync` and enter "feature-1" and "main"
     Then I see "Please specify the parent branch of feature-2"
     And I see "Please specify the parent branch of feature-1"
     Then Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
+      | feature-1 | main      |
       | feature-2 | feature-1 |
 
 
