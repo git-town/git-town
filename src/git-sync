@@ -36,6 +36,8 @@ function preconditions {
     sync_target="perennial branch"
     should_push_tags=true
   fi
+
+  git config -l
 }
 
 

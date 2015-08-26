@@ -30,16 +30,16 @@ function child_branches {
 # Calculates the "ancestors" property for the given branch
 # out of the existing "parent" properties
 function compile_ancestor_branches {
-  local current_branch=$1
+  local branch_name=$1
 
   # delete the existing entry
-  delete_ancestors_entry "$current_branch"
+  delete_ancestors_entry "$branch_name"
 
   # re-create it from scratch
   local ancestors=''
-  local parent
+  local current_branch="$branch_name"
   while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
-    parent=$(parent_branch "$current_branch")
+    local parent=$(parent_branch "$current_branch")
     ancestors="$parent $ancestors"
     current_branch=$parent
   done
@@ -49,7 +49,7 @@ function compile_ancestor_branches {
   ancestors=$(echo "$ancestors" | sed 's/ $//')
 
   # save the result into the configuration
-  git config "git-town-branch.$current_branch.ancestors" "$ancestors"
+  git config "git-town-branch.$branch_name.ancestors" "$ancestors"
 }
 
 
