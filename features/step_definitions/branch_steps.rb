@@ -16,6 +16,11 @@ Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"( on another machin
 end
 
 
+Given(/^I have a( local)?(?: feature)? branch named "([^"]+)" with no parent$/) do |local, branch_name|
+  create_branch branch_name, remote: !local
+end
+
+
 Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
   create_branch branch_1_name, remote: !local
   create_branch branch_2_name, remote: !local
