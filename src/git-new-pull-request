@@ -3,4 +3,5 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
 activate_driver_family 'code_hosting'
+ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
 create_pull_request "$(remote_repository_name)" "$INITIAL_BRANCH_NAME" "$(parent_branch "$INITIAL_BRANCH_NAME")"
