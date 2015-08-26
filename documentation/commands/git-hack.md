@@ -6,7 +6,7 @@ git-hack - create a new feature branch
 #### SYNOPSIS
 
 ```
-git hack <branchname> [<parent branch name>]
+git hack <branch_name> [<parent_branch_name>]
 git hack (--abort | --continue)
 ```
 
@@ -21,10 +21,10 @@ and brings over all uncommitted changes to the new feature branch.
 #### OPTIONS
 
 ```
-<branchname>
+<branch_name>
     The name of the branch to create.
 
-[parent branch name]
+<parent_branch_name>
     If provided, cuts the new branch off the given existing feature branch.
     Providing '.' here uses the current branch as the parent branch.
     If omitted, uses the main branch as the parent.

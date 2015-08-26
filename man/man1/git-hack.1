@@ -5,7 +5,7 @@ git hack \- create a new feature branch
 
 
 .SH "SYNOPSIS"
-\fIgit hack\fR <branchname> [<parent branch name>]
+\fIgit hack\fR <branch_name> [<parent_branch_name>]
 .br
 \fIgit hack\fR (--abort | --continue)
 
@@ -19,10 +19,10 @@ and brings over all uncommitted changes to the new feature branch.
 
 
 .SH "OPTIONS"
-.IP "<branchname>" 4
+.IP "<branch_name>" 4
 The name of the branch to create.
 
-.IP "[parent branch name]" 4
+.IP "<parent_branch_name>" 4
 If provided, cuts the new branch off the given existing feature branch.
 .br
 Providing '.' here uses the current branch as the parent branch.
