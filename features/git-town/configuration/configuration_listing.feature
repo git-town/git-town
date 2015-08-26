@@ -12,7 +12,7 @@ Feature: listing the configuration
     Then I see
       """
       Main branch: main
-      perennial branches:
+      Perennial branches:
       qa
       staging
       """
@@ -25,7 +25,7 @@ Feature: listing the configuration
     Then I see
       """
       Main branch: main
-      perennial branches: [none]
+      Perennial branches: [none]
       """
 
 
@@ -36,7 +36,7 @@ Feature: listing the configuration
     Then I see
       """
       Main branch: [none]
-      perennial branches:
+      Perennial branches:
       qa
       staging
       """
@@ -48,5 +48,5 @@ Feature: listing the configuration
     Then I see
       """
       Main branch: [none]
-      perennial branches: [none]
+      Perennial branches: [none]
       """
