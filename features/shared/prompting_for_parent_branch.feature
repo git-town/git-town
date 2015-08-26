@@ -14,7 +14,8 @@ Feature: Prompt for parent branch when unknown
       | REPOSITORY | BRANCHES |
       | local      | main     |
 
-  Scenario: prompting for parent branch when running git sync
+
+  Scenario: prompting for parent branch when running git sync --all
     Given I have a feature branch named "feature" with no parent
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE        |
