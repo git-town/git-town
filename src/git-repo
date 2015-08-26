@@ -2,14 +2,6 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-function preconditions {
-  activate_driver_family 'code_hosting'
-}
+activate_driver_family 'code_hosting'
+show_repo "$(remote_repository_name)"
 
-
-function steps {
-  echo "show_repo $(remote_repository_name)"
-}
-
-
-run "$@"
