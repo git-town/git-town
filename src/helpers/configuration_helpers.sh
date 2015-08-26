@@ -169,7 +169,7 @@ function run_config_operation {
 function show_config {
   echo_inline_bold "Main branch: "
   show_main_branch
-  echo_inline_bold "perennial branches:"
+  echo_inline_bold "Perennial branches:"
   if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
     echo
     split_string "$PERENNIAL_BRANCH_NAMES" ","
