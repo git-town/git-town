@@ -15,7 +15,6 @@ function preconditions {
   target_branch=$(branch_to_kill "$@")
   ensure_is_feature_branch "$target_branch" "You can only kill feature branches."
 
-  ensure_knows_parent_branches "$target_branch"
   parent_branch_name=$(parent_branch "$target_branch")
 
   if [ "$HAS_REMOTE" = true ]; then

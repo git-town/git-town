@@ -236,6 +236,7 @@ function oldest_ancestor_branch {
 # Returns the names of all parent branches, in hierarchical order
 function parent_branch {
   local branch_name=$1
+  ensure_knows_parent_branches $branch_name
   git config --get "git-town.branches.parent.$(normalized_branch_name "$branch_name")"
 }
 
@@ -244,6 +245,7 @@ function parent_branch {
 # as a string list, in hierarchical order,
 function parent_branches {
   local branch_name=$1
+  ensure_knows_parent_branches $branch_name
   git config --get "git-town.branches.ancestors.$(normalized_branch_name "$branch_name")" | tr ' ' '\n'
 }
 

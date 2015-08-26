@@ -31,7 +31,6 @@ function preconditions {
     sync_target="all branches"
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
     sync_target="feature branch"
-    ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
   else
     sync_target="perennial branch"
     should_push_tags=true

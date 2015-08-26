@@ -39,7 +39,6 @@ function preconditions {
   fi
 
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
-  ensure_knows_parent_branches "$target_branch_name"
   ensure_has_no_unshipped_ancestors "$target_branch_name"
   commit_options=$(parameters_as_string "$@")
 }
