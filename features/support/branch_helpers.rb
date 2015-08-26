@@ -81,12 +81,6 @@ def local_branch_name branch_name
 end
 
 
-# Returns the given branch name in a format that is compatible with Git config
-def normalize_branch_name branch_name
-  branch_name.tr '_', '-'
-end
-
-
 def number_of_branches_out_of_sync
   integer_output_of 'git branch -vv | grep -o "\[.*\]" | tr -d "[]" | awk "{ print \$2 }" | grep . | wc -l'
 end
@@ -110,8 +104,8 @@ end
 
 
 def set_parent_branch branch:, parent:, ancestors: nil
-  run "git config git-town.branches.parent.#{normalize_branch_name branch} #{parent}"
-  run "git config git-town.branches.ancestors.#{normalize_branch_name branch} #{ancestors}" if ancestors
+  run "git config git-town-branch.#{branch}.parent #{parent}"
+  run "git config git-town-branch.#{branch}.ancestors #{ancestors}" if ancestors
 end
 
 
