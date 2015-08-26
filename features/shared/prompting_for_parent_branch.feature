@@ -18,14 +18,14 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git sync
     Given I have a feature branch named "feature" with no parent
     And the following commits exist in my repository
-      | BRANCH | LOCATION         | MESSAGE     |
-      | main   | local and remote | main commit |
+      | BRANCH  | LOCATION         | MESSAGE        |
+      | main    | local and remote | main commit    |
       | feature | local and remote | feature commit |
     And I am on the "feature" branch
     When I run `git sync` and press ENTER
     Then I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          |
       | main    | local and remote | main commit                      |
-      | feature | local and remote | feature commit                 |
+      | feature | local and remote | feature commit                   |
       |         |                  | main commit                      |
       |         |                  | Merge branch 'main' into feature |

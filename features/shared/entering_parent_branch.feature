@@ -14,7 +14,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: choosing the default branch name
     When I run `git sync` and press ENTER
     Then I see "Please specify the parent branch of feature-2"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
@@ -22,7 +22,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering the number of the master branch
     When I run `git sync` and enter "1"
     Then I see "Please specify the parent branch of feature-2"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
@@ -49,7 +49,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering the name of the master branch
     When I run `git sync` and enter "main"
     Then I see "Please specify the parent branch of feature-2"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
