@@ -12,7 +12,6 @@
   ([#604](https://github.com/Originate/git-town/issues/604))
 * support branch names with forward slashes (along with any valid branch name)
   ([#608](https://github.com/Originate/git-town/issues/608))
-* fix casing of `git town config` output
 
 ## 0.7.0 (2015-08-24)
 
