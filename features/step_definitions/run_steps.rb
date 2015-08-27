@@ -32,6 +32,11 @@ When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
   step "I run `#{command}` and enter \"dGZZ\""
 end
 
+When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
+  # In vim "ZZ" saves and exits
+  step "I run `#{command}` and enter \"ZZ\""
+end
+
 
 When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and perennial branch names "(.+)")?/) do |cmd, main, perennial|
   @result = run cmd, inputs: [main, perennial].compact

@@ -26,6 +26,7 @@ function merge {
 function squash_merge {
   local branch_name=$1
   run_git_command "git merge --squash $branch_name"
+  sed -i -e 's/^/# /g' .git/SQUASH_MSG
 }
 
 
