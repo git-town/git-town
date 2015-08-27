@@ -214,14 +214,6 @@ function knows_all_ancestor_branches {
 }
 
 
-# Returns the name of the branch from the branch hierarchy
-# that is the direct ancestor of main
-function oldest_ancestor_branch {
-  local branch_name=$1
-  ancestor_branches "$branch_name" | cut -d ' ' -f 2
-}
-
-
 # Returns the names of all parent branches, in hierarchical order
 function parent_branch {
   local branch_name=$1

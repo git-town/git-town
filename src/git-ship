@@ -7,10 +7,13 @@ function ensure_has_no_unshipped_ancestors {
 
   local parent_branch_name ; parent_branch_name=$(parent_branch "$branch_name")
   if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
+    local ancestors_without_main="$(ancestor_branches "$branch_name" | cut -d ' ' -f 2-)"
+    local ancestor_list="\"$(echo "$ancestors_without_main" | sed 's/ /\", \"/g')\""
+    local oldest_ancestor="$(echo "$ancestors_without_main" | cut -d ' ' -f 1)"
+
     echo_error_header
-    local ancestor_list="\"$(ancestor_branches "$branch_name" | cut -d ' ' -f 2- |  sed 's/ /\", \"/g')\""
     echo_error "Shipping this branch would ship $ancestor_list as well."
-    echo_error "Please ship '$(oldest_ancestor_branch "$branch_name")' first."
+    echo_error "Please ship \"$oldest_ancestor\" first."
     exit_with_error newline
   fi
 }
