@@ -29,6 +29,11 @@ function preconditions {
 
   if [ "$1" = "--all" ]; then
     sync_target="all branches"
+    local_branches_without_main | while read branch_name; do
+      if [ "$(is_feature_branch "$branch_name")" = true ]; then
+        ensure_knows_parent_branches "$branch_name"
+      fi
+    done
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
     sync_target="feature branch"
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
