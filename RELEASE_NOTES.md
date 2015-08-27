@@ -6,13 +6,13 @@
   ([#593](https://github.com/Originate/git-town/issues/593))
 * remove empty line printed in new-pull-request/repo
   ([#602](https://github.com/Originate/git-town/issues/602))
-* fix casing of `git town config` output
 * git kill: prompt for unknown parent branch
   ([#603](https://github.com/Originate/git-town/issues/603))
 * git sync --all: prompt for unknown parent branch
   ([#604](https://github.com/Originate/git-town/issues/604))
 * support branch names with forward slashes (along with any valid branch name)
   ([#608](https://github.com/Originate/git-town/issues/608))
+* fix casing of `git town config` output
 
 ## 0.7.0 (2015-08-24)
 
