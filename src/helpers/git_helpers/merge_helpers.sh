@@ -26,7 +26,6 @@ function merge {
 function squash_merge {
   local branch_name=$1
   run_git_command "git merge --squash $branch_name"
-  sed -i -e 's/^/# /g' .git/SQUASH_MSG
 }
 
 
@@ -38,6 +37,7 @@ function commit_squash_merge {
   if [ "$author" != "$(local_author)" ]; then
     options="--author=\"$author\" $options"
   fi
+  sed -i -e 's/^/# /g' .git/SQUASH_MSG
   run_git_command "git commit $options"
   if [ $? != 0 ]; then error_empty_commit; fi
 }
