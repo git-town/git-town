@@ -8,7 +8,7 @@
 # Returns the names of all branches that are registered in the hierarchy metadata,
 # as an iterable list
 function all_registered_branches {
-  git config --get-regexp "^git-town-branch.*parent$" | cut -d ' ' -f 1 | sed 's/^git-town-branch\.(.*)\.parent$/\1/' | sort | uniq
+  git config --get-regexp "^git-town-branch\..*\.parent$" | cut -d ' ' -f 1 | sed 's/^git-town-branch\.\(.*\)\.parent$/\1/' | sort | uniq
 }
 
 
@@ -23,7 +23,7 @@ function ancestor_branches {
 # Returns the names of all branches that have this branch as their immediate parent
 function child_branches {
   local branch_name=$1
-  git config --get-regexp "^git-town-branch.*parent$" | grep "$branch_name$" | cut -d ' ' -f 1 | sed 's/^git-town-branch\.(.*)\.parent$/\1/'
+  git config --get-regexp "^git-town-branch\..*\.parent$" | grep "$branch_name$" | cut -d ' ' -f 1 | sed 's/^git-town-branch\.\(.*\)\.parent$/\1/'
 }
 
 
