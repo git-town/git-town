@@ -1,5 +1,18 @@
 # Git Town Release Notes
 
+## 0.7.1 (2015-08-27)
+
+* `git ship`: add ability to ship remote only branch
+  ([#593](https://github.com/Originate/git-town/issues/593))
+* `git new-pull-request`/`git repo`: remove empty line output
+  ([#602](https://github.com/Originate/git-town/issues/602))
+* `git kill`: prompt for unknown parent branch
+  ([#603](https://github.com/Originate/git-town/issues/603))
+* `git sync --all`: prompt for unknown parent branch
+  ([#604](https://github.com/Originate/git-town/issues/604))
+* support branch names with forward slashes (along with any valid branch name)
+  ([#608](https://github.com/Originate/git-town/issues/608))
+
 ## 0.7.0 (2015-08-24)
 
 * fix `git ship --undo`
