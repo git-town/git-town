@@ -33,6 +33,7 @@ function append_to_list {
 function remove_from_list {
   local list=$1
   shift
+
   while [ "$1" != "" ]; do
     local element_to_remove=$1
     list=$(echo "$list" | grep -v "\b$element_to_remove\b")
@@ -51,6 +52,7 @@ function remove_from_list {
 function sort_list {
   local list=$1
   shift
+
   echo "$list" | sort "$@"
 }
 
@@ -59,7 +61,22 @@ function sort_list {
 #
 # Example: nr_of_elements=$(list_length "$my_list")
 function list_length {
-  echo "$numbers" | wc -l | tr -d ' '
+  local list=$1
+
+  echo "$list" | wc -l | tr -d ' '
+}
+
+
+# Returns whether the given list contains the given element.
+function list_contains {
+  local list=$1
+  local element=$2
+
+  if [ "$(echo "$list" | grep -c "\b$element\b")" == "1" ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 
@@ -105,10 +122,10 @@ function last_n_elements_of_list {
 # and returns the result as a new list.
 #
 # Example:
-#   abbr=$(iterate_list "$my_list" "cut -c 1-2 | tr '[:lower:]' '[:upper:]'")
+#   abbr=$(map_list "$my_list" "cut -c 1-2 | tr '[:lower:]' '[:upper:]'")
 #   returns a list that contains the elements of $my_list,
 #   truncated to the first 2 characters and uppercased.
-function iterate_list {
+function map_list {
   local list=$1
   shift
   eval "echo '$list' | xargs -L 1 echo | $*"
@@ -149,13 +166,18 @@ section PROCESSING
 upper_cut=$(echo "$numbers" | xargs -L 1 echo | cut -c 1-2 | tr '[:lower:]' '[:upper:]')
 echo "$upper_cut"
 echo
-upper_cut=$(iterate_list "$numbers" "cut -c 1-2 | tr '[:lower:]' '[:upper:]'")
+upper_cut=$(map_list "$numbers" "cut -c 1-2 | tr '[:lower:]' '[:upper:]'")
 echo "$upper_cut"
 
 
 section COUNTING
 count=$(list_length "$numbers")
 echo "$count people in the house!"
+
+
+section CONTAINS
+echo "List contains two: $(list_contains "$numbers" two)"
+echo "List contains zonk: $(list_contains "$numbers" zonk)"
 
 section SLICING
 first_two=$(first_n_elements_of_list "$numbers" 2)
