@@ -38,8 +38,10 @@ When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and perennial branch 
 end
 
 
-When(/^I run `(.+?)` and press ENTER$/) do |command|
-  step "I run `#{command}` and enter \"\""
+When(/^I run `(.+?)` and press ENTER( twice)?$/) do |command, twice|
+  inputs = ["\n"]
+  inputs += inputs if twice
+  @result = run command, inputs: inputs
 end
 
 
