@@ -1,5 +1,11 @@
 # Git Town Release Notes
 
+## 0.7.2 (2015-08-28)
+
+* `git sync --all`: fix parent branch prompt
+* `git ship`: comment out default commit message
+  ([#382](https://github.com/Originate/git-town/issues/382))
+
 ## 0.7.1 (2015-08-27)
 
 * `git ship`: add ability to ship remote only branch
