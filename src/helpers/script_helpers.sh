@@ -138,7 +138,6 @@ function run {
     remove_step_files
     preconditions "$@"
     command_steps > "$STEPS_FILE"
-    cat "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
   fi
 }
