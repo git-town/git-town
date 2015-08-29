@@ -26,7 +26,7 @@ function echo_error {
 }
 
 
-# Prints the first agument if all following areguments are true
+# Prints the first argument if all following arguments are true
 function echo_if_true {
   local string="$1"
   shift
