@@ -29,9 +29,16 @@ function echo_error {
 # Prints the string if the condition is true
 function echo_if_true {
   local string="$1"
-  local condition="$2"
+  shift
 
-  if [ "$condition" = true ]; then
+  local shouldEcho=true
+  for condition in "$@"; do
+    if [ "$condition" = false ]; then
+      shouldEcho=false
+    fi
+  done
+
+  if [ "$shouldEcho" = true ]; then
     echo "$string"
   fi
 }

@@ -10,6 +10,35 @@ function abort_command {
 }
 
 
+function command_stash_open_changes {
+  local fn="should_stash_open_changes"
+  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
+    eval "$fn"
+  else
+    echo false
+  fi
+}
+
+
+function command_run_in_git_root {
+  local fn="should_run_in_git_root"
+  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
+    eval "$fn"
+  else
+    echo false
+  fi
+}
+
+
+function command_steps {
+  echo_if_true "change_directory $(git_root)" "$(command_run_in_git_root)" "$IN_SUB_FOLDER"
+  echo_if_true "stash_open_changes" "$(command_stash_open_changes)" "$INITIAL_OPEN_CHANGES"
+  steps
+  echo_if_true "restore_open_changes" "$(command_stash_changes)" "$INITIAL_OPEN_CHANGES"
+  echo_if_true "change_directory $INITIAL_DIRECTORY" "$(command_stash_open_changes)" "$IN_SUB_FOLDER"
+}
+
+
 function continue_command {
   local cmd=$(pop_line "$STEPS_FILE")
   eval "continue_$cmd"
@@ -115,7 +144,7 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    steps > "$STEPS_FILE"
+    command_steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
   fi
 }

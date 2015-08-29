@@ -48,11 +48,16 @@ function preconditions {
 }
 
 
-function steps {
+function should_stash_open_changes {
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
+    echo true
+  else
+    echo false
   fi
+}
 
+
+function steps {
   if [ "$HAS_REMOTE" = true ]; then
     echo "fetch"
     sync_branch_steps "$MAIN_BRANCH_NAME"
@@ -81,7 +86,6 @@ function steps {
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
-    echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   fi
 }
 

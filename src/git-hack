@@ -31,9 +31,12 @@ function preconditions {
 }
 
 
-function steps {
-  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
+function should_stash_open_changes {
+  echo true
+}
 
+
+function steps {
   # sync the parent branch
   for branch_name in $(ancestor_branches "$parent_branch_name"); do
     sync_branch_steps "$branch_name"
@@ -41,8 +44,6 @@ function steps {
   sync_branch_steps "$parent_branch_name"
 
   echo "create_and_checkout_feature_branch $target_branch_name $parent_branch_name"
-
-  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
 
 
