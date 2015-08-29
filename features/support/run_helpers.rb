@@ -6,7 +6,7 @@ end
 COMMAND_REGEX = /
   ^
   \e\[1m                     # bold text
-  (?:\[(.+?)\] )?            # branch name in square brackets followed by a space
+  (?:\[(.+?)\]\s)?           # branch name in square brackets
   ([[:graph:]][[:print:]]+?) # the command - no leading whitespace
   \s*                        # trailing whitespace
   $
