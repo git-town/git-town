@@ -48,8 +48,8 @@ Feature: git ship: shipping a coworker's feature branch
 
     Examples:
       | NUMBER |
-      | 0 |
-      | 3 |
+      | 0      |
+      | 3      |
 
 
   Scenario: enter invalid custom author

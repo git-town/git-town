@@ -4,7 +4,7 @@
 # Prompts the user for the squash commit author. Sets the variable squash_commit_author
 function get_squash_commit_author {
   local branch_name=$1
-  local authors="$(branch_authors $branch_name)"
+  local authors="$(branch_authors "$branch_name")"
   local number_of_authors="$(echo "$authors" | wc -l | tr -d ' ')"
   if [ "$number_of_authors" = 1 ]; then
     squash_commit_author="$(remove_author_commits "$(echo "$authors" | head -1)")"
