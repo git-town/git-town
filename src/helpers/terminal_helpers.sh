@@ -26,14 +26,14 @@ function echo_error {
 }
 
 
-# Prints the string if the condition is true
+# Prints the first agument if all following areguments are true
 function echo_if_true {
   local string="$1"
   shift
 
   local shouldEcho=true
   for condition in "$@"; do
-    if [ "$condition" = false ]; then
+    if [ "$condition" != true ]; then
       shouldEcho=false
     fi
   done
