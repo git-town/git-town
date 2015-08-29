@@ -1,5 +1,41 @@
 # Git Town Release Notes
 
+## 0.7.2 (2015-08-28)
+
+* `git sync --all`: fix parent branch prompt
+* `git ship`: comment out default commit message
+  ([#382](https://github.com/Originate/git-town/issues/382))
+
+## 0.7.1 (2015-08-27)
+
+* `git ship`: add ability to ship remote only branch
+  ([#593](https://github.com/Originate/git-town/issues/593))
+* `git new-pull-request`/`git repo`: remove empty line output
+  ([#602](https://github.com/Originate/git-town/issues/602))
+* `git kill`: prompt for unknown parent branch
+  ([#603](https://github.com/Originate/git-town/issues/603))
+* `git sync --all`: prompt for unknown parent branch
+  ([#604](https://github.com/Originate/git-town/issues/604))
+* support branch names with forward slashes (along with any valid branch name)
+  ([#608](https://github.com/Originate/git-town/issues/608))
+
+## 0.7.0 (2015-08-24)
+
+* fix `git ship --undo`
+  ([#550](https://github.com/Originate/git-town/issues/550))
+* rename `non-feature-branches` to `perennial-branches`
+  ([#344](https://github.com/Originate/git-town/issues/344))
+  * configuration is automatically updated to support this
+* support for nested feature branches
+  ([#529](https://github.com/Originate/git-town/issues/529))
+* add `git rename-branch`
+  ([#474](https://github.com/Originate/git-town/issues/474))
+* rename `git pull-request` to `git new-pull-request`
+  ([#413](https://github.com/Originate/git-town/issues/413), [#507](https://github.com/Originate/git-town/issues/507))
+* add SHA and date to output of `git town version` for manual installs
+* show error when trying to continue after a successful command
+  ([#364](https://github.com/Originate/git-town/issues/364))
+
 ## 0.6.0 (2015-04-02)
 
 * support for working without a remote repository for **git extract**, **git hack**, **git kill**, **git ship**, and **git sync**

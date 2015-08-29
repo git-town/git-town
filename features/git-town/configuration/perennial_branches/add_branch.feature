@@ -37,5 +37,5 @@ Feature: add a branch to the perennial branches configuration
     Then I get the error
       """
       error: missing branch name
-      usage: git town perennial-branches (--add | --remove) <branchname>
+      usage: git town perennial-branches (--add | --remove) <branch_name>
       """

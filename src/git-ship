@@ -5,11 +5,15 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 function ensure_has_no_unshipped_ancestors {
   local branch_name=$1
 
-  local parent_branch_name ; parent_branch_name=$(parent_branch "$branch_name")
-  if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
+  ensure_knows_parent_branches "$branch_name"
+  if [ "$(parent_branch "$branch_name")" != "$MAIN_BRANCH_NAME" ]; then
+    local ancestors_without_main="$(ancestor_branches "$branch_name" | cut -d ' ' -f 2-)"
+    local ancestors_list="\"${ancestors_without_main// /", "}\""
+    local oldest_ancestor="$(echo "$ancestors_without_main" | cut -d ' ' -f 1)"
+
     echo_error_header
-    echo_error "Shipping this branch would ship $(ancestor_branches "$branch_name") as well."
-    echo_error "Please ship '$(oldest_ancestor_branch "$branch_name")' first."
+    echo_error "Shipping this branch would ship $ancestors_list as well."
+    echo_error "Please ship \"$oldest_ancestor\" first."
     exit_with_error newline
   fi
 }
@@ -28,6 +32,9 @@ function error_empty_commit {
 function preconditions {
   if [ "$#" -gt 0 ] && [[ ! "$1" =~ ^- ]]; then
     target_branch_name=$1
+    if [ "$HAS_REMOTE" = true ]; then
+      fetch
+    fi
     ensure_has_branch "$target_branch_name"
     shift
   else
@@ -36,7 +43,6 @@ function preconditions {
   fi
 
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
-  ensure_knows_parent_branches "$target_branch_name"
   ensure_has_no_unshipped_ancestors "$target_branch_name"
   commit_options=$(parameters_as_string "$@")
 }
@@ -62,8 +68,8 @@ function steps {
 
   echo_if_true "push" "$HAS_REMOTE"
 
-  if [ "$(has_tracking_branch "$target_branch_name")" = true -a \
-       "$(has_child_branches "$target_branch_name")" == false ]; then
+  if [ "$(has_tracking_branch "$target_branch_name")" = true ] &&
+     [ "$(has_child_branches "$target_branch_name")" = false ]; then
     echo "delete_remote_branch $target_branch_name"
   fi
   echo "delete_local_branch $target_branch_name force"

@@ -8,7 +8,7 @@ header
   display: block
   height: $header-height
   background-color: #fff
-  border: 1px solid darken($body-bg, 5)
+  border-bottom: 1px solid darken($body-bg, 5)
 
   a.logo
     float: left
@@ -17,9 +17,9 @@ header
     padding-left: 10px
 
     img
-      width: 215px
+      width: 180px
       position: absolute
-      top: -1px
+      top: 2px
 
   a.github
     height: $header-nav-height
@@ -39,6 +39,16 @@ header
     text-align: center
     height: 100%
     min-width: $header-height
+
+    #hamburger
+      display: none
+      font-size: 1.5em
+      float: right
+      height: $header-height
+      width: $header-height
+      text-align: center
+      line-height: $header-height
+      cursor: pointer
 
     ul
       padding: 0
@@ -69,3 +79,37 @@ header
             color: #fff
             background-color: $accent
             text-decoration: none
+
+        &.github
+          display: none
+
+@media screen and (max-width: $break-sml)
+  header
+    a.github
+        display: none
+    nav
+      #hamburger
+        display: block
+
+      ul#menu
+        position: fixed
+        width: 100%
+        left: 0
+        top: $header-height
+        display: none
+
+
+        &.open
+          display: block
+
+        li
+          background: #fff
+          width: 100%
+          display: block
+
+          &.github
+            display: block
+
+            a
+              display: block
+              float: none

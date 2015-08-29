@@ -39,7 +39,7 @@ span($num)
     margin-left: 0
     width: 100%
 
-  &:first-child 
+  &:first-child
     margin-left: 0
 
   &.center
@@ -53,21 +53,21 @@ span($num)
 
 // extra small < 768px
 @media (max-width: $break-sml)
-  .l-container
+  .container
     width: auto
     padding: 0 20px
 
 // small       > 768 and < 990
 @media (min-width: ($break-sml + 1px)) and (max-width: $break-med)
-  .l-container
+  .container
     width: $container-sml
 
 // medium       > 990 and < 1200
 @media (min-width: ($break-med + 1px)) and (max-width: $break-lrg)
-  .l-container
+  .container
     width: $container-med
 
 // desktop      1200+
 @media (min-width: ($break-lrg + 1))
-  .l-container
+  .container
     width: $container-lrg

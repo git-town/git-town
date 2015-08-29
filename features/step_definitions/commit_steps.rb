@@ -1,5 +1,6 @@
-Given(/^the following commits? exists? in (my|my coworker's) repository$/) do |who, commits_table|
-  user = (who == 'my') ? :developer : :coworker
+Given(/^the following commits? exists? in (my|my coworker's) repository( on another machine)?$/) do |who, remote, commits_table|
+  user = (who == 'my') ? 'developer' : 'coworker'
+  user += '_secondary' if remote
   commits_table.map_headers!(&:downcase)
   @initial_commits_table = commits_table.clone
   in_repository user do

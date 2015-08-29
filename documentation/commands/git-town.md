@@ -10,8 +10,8 @@ git town
 git town config [--reset | --setup]
 git town help
 git town install-fish-autocompletion
-git town main-branch [<branchname>]
-git town perennial-branches [(--add | --remove) <branchname>]
+git town main-branch [<branch_name>]
+git town perennial-branches [(--add | --remove) <branch_name>]
 git town version
 ```
 
@@ -33,7 +33,7 @@ git town version
 * *main-branch*
 > Displays the name of the main development branch.
 >
-> With an optional branch name `<branchname>`, specify a branch to assign as the main branch.
+> With an optional branch name `<branch_name>`, specify a branch to assign as the main branch.
 > ```bash
 > # Set "master" as the main branch
 > git town main-branch master

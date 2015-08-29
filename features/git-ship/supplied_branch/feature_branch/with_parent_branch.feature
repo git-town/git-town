@@ -17,9 +17,11 @@ Feature: git ship: shipping a child branch
 
 
   Scenario: result
-    Then I get the error "Shipping this branch would ship "feature-1", "feature-2" as well."
-    And I get the error "Please ship 'feature-1' first."
-    And it runs no commands
+    Then it runs the commands
+      | BRANCH    | COMMAND           |
+      | feature-1 | git fetch --prune |
+    And I get the error "Shipping this branch would ship "feature-1", "feature-2" as well."
+    And I get the error "Please ship "feature-1" first."
     And I end up on the "feature-1" branch
     And I am left with my original commits
     And my branch hierarchy metadata is unchanged

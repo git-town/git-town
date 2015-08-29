@@ -205,16 +205,16 @@ Git Town only displays the changes between `feature2` and `feature1`,
 not the diff against `master`.
 
 Git Town stores the information about this branch hierarchy in the Git configuration for the repo.
-Two types of keys are used for this. The first one is __git-town.branches.parent__.
+Two types of keys are used for this. The first one is `git-town.<branch_name>.parent`.
 It lists which branch is the immediate parent branch of the given branch.
 ```
-git-town.branches.parent.feature1=master
-git-town.branches.parent.feature2=feature1
+git-town-branch.feature1.parent=master
+git-town-branch.feature2.parent=feature1
 ```
 
 Git Town also caches the full ancestral line of each feature branch, top-down,
-in a key called __git-town.branches.ancestors__:
-* `git-town.branches.ancestors.feature2=master feature1`
+in a key called `git-town-branch.<branch_name>.ancestors`:
+* `git-town-branch.feature2.ancestors=master feature1`
   lists that in order to sync `feature2`, we need to first update `master`,
   then merge master into `feature1`, then `feature1` into `feature2`.
 
@@ -237,11 +237,11 @@ Git Town stores the following configuration in the Git metadata repository:
     <td>the names of all perennial branches, separated by space</td>
   </tr>
   <tr>
-    <td><b><code>git-town.branches.parent.&lt;branch name&gt;</code></b></td>
+    <td><b><code>git-town-branch.&lt;branch_name&gt;.parent</code></b></td>
     <td>the name of the parent branch for the given branch</td>
   </tr>
   <tr>
-    <td><b><code>git-town.branches.ancestors.&lt;branch name&gt;</code></b></td>
+    <td><b><code>git-town-branch.&lt;branch_name&gt;.ancestors</code></b></td>
     <td>
       An internal cache of every branch in the ancestry chain,
       all the way to the main branch name,

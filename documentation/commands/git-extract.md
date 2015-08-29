@@ -6,7 +6,7 @@ git-extract - copy selected commits from the current branch into their own branc
 #### SYNOPSIS
 
 ```
-git extract <branchname> [<commit>...]
+git extract <branch_name> [<commit>...]
 git extract (--abort | --continue)
 ```
 
@@ -23,7 +23,7 @@ If no commits are provided, prompts the user to select from a list of commits un
 #### OPTIONS
 
 ```
-<branchname>
+<branch_name>
     The name of the branch to create.
 
 <commit>

@@ -37,6 +37,7 @@ function commit_squash_merge {
   if [ "$author" != "$(local_author)" ]; then
     options="--author=\"$author\" $options"
   fi
+  sed -i -e 's/^/# /g' .git/SQUASH_MSG
   run_command "git commit $options"
   if [ $? != 0 ]; then error_empty_commit; fi
 }

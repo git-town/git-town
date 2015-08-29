@@ -8,7 +8,7 @@ function branches_to_sync {
     echo "$MAIN_BRANCH_NAME"
     local_branches_without_main
   elif [ "$sync_target" = "feature branch" ]; then
-    parent_branches "$INITIAL_BRANCH_NAME"
+    ancestor_branches "$INITIAL_BRANCH_NAME" | tr ' ' '\n'
     echo "$INITIAL_BRANCH_NAME"
   elif [ "$sync_target" = "perennial branch" ]; then
     echo "$INITIAL_BRANCH_NAME"
@@ -29,6 +29,12 @@ function preconditions {
 
   if [ "$1" = "--all" ]; then
     sync_target="all branches"
+    local branches="$(local_branches_without_main | tr '\n' ' ')"
+    for branch_name in $branches; do
+      if [ "$(is_feature_branch "$branch_name")" = true ]; then
+        ensure_knows_parent_branches "$branch_name"
+      fi
+    done
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
     sync_target="feature branch"
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"

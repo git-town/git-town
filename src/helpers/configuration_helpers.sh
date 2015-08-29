@@ -44,7 +44,7 @@ function add_or_remove_perennial_branches {
 
 
 function echo_perennial_branch_usage {
-  echo_inline_usage 'git town perennial-branches (--add | --remove) <branchname>'
+  echo_inline_usage 'git town perennial-branches (--add | --remove) <branch_name>'
 }
 
 
@@ -169,7 +169,7 @@ function run_config_operation {
 function show_config {
   echo_inline_bold "Main branch: "
   show_main_branch
-  echo_inline_bold "perennial branches:"
+  echo_inline_bold "Perennial branches:"
   if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
     echo
     split_string "$PERENNIAL_BRANCH_NAMES" ","

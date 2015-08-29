@@ -31,7 +31,7 @@ function show_help {
 
 
 function show_version {
-  local version="0.6.0"
+  local version="0.7.2"
   if [ "$(is_git_town_installed_manually)" == true ]; then
     version="$version $(git_town_revision)"
   fi
@@ -64,8 +64,8 @@ elif [ -n "$1" ]; then
   echo_inline_usage_or "git town config [--reset | --setup]"
   echo_inline_usage_or "git town help"
   echo_inline_usage_or "git town install-fish-autocompletion"
-  echo_inline_usage_or "git town main-branch [<branchname>]"
-  echo_inline_usage_or "git town perennial-branches [(--add | --remove) <branchname>]"
+  echo_inline_usage_or "git town main-branch [<branch_name>]"
+  echo_inline_usage_or "git town perennial-branches [(--add | --remove) <branch_name>]"
   echo_inline_usage_or "git town version"
   exit_with_error newline
 fi
