@@ -82,9 +82,8 @@ function ensure_undoable {
 
 function eval_or_false {
   local fn=$1
-  local arguments=$2
   if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
-    eval "$fn $arguments"
+    eval "$fn"
   else
     echo false
   fi
@@ -139,6 +138,7 @@ function run {
     remove_step_files
     preconditions "$@"
     command_steps > "$STEPS_FILE"
+    cat "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
   fi
 }
