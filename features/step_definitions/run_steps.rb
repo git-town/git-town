@@ -103,8 +103,13 @@ Then(/^I see no output$/) do
 end
 
 
+Then(/^I don't see$/) do |string|
+  expect(unformatted_last_run_output).not_to include(string)
+end
+
+
 Then(/^I don't see "(.*)"$/) do |string|
-  expect(@last_run_result.out).not_to include(string)
+  step "I don't see", string
 end
 
 
