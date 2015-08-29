@@ -15,7 +15,7 @@ Feature: git ship: trying the ship of the current feature branch without editing
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
