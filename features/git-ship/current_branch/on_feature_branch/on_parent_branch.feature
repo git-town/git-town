@@ -47,7 +47,7 @@ Feature: git ship: shipping a parent branch
       | BRANCH         | COMMAND                                                      |
       | main           | git branch parent-feature <%= sha 'parent feature commit' %> |
       |                | git revert <%= sha 'parent feature done' %>                  |
-      |                | git push                                       |
+      |                | git push                                                     |
       |                | git checkout parent-feature                                  |
       | parent-feature | git checkout main                                            |
       | main           | git checkout parent-feature                                  |

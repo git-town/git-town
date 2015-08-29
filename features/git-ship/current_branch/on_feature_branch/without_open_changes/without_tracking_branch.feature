@@ -38,7 +38,7 @@ Feature: git ship: shipping the current feature branch without a tracking branch
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git revert <%= sha 'feature done' %>           |
-      |         | git push                            |
+      |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
