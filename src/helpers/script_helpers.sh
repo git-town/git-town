@@ -10,32 +10,15 @@ function abort_command {
 }
 
 
-function command_stash_open_changes {
-  local fn="should_stash_open_changes"
-  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
-    eval "$fn"
-  else
-    echo false
-  fi
-}
-
-
-function command_run_in_git_root {
-  local fn="should_run_in_git_root"
-  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
-    eval "$fn"
-  else
-    echo false
-  fi
-}
-
-
 function command_steps {
-  echo_if_true "change_directory $(git_root)" "$(command_run_in_git_root)" "$IN_SUB_FOLDER"
-  echo_if_true "stash_open_changes" "$(command_stash_open_changes)" "$INITIAL_OPEN_CHANGES"
+  local command_run_in_git_root="$(eval_or_false should_run_in_git_root)"
+  local command_stash_open_changes="$(eval_or_false should_stash_open_changes)"
+
+  echo_if_true "change_directory $(git_root)" "$command_run_in_git_root" "$IN_SUB_FOLDER"
+  echo_if_true "stash_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
   steps
-  echo_if_true "restore_open_changes" "$(command_stash_changes)" "$INITIAL_OPEN_CHANGES"
-  echo_if_true "change_directory $INITIAL_DIRECTORY" "$(command_stash_open_changes)" "$IN_SUB_FOLDER"
+  echo_if_true "restore_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
+  echo_if_true "change_directory $INITIAL_DIRECTORY" "$command_run_in_git_root" "$IN_SUB_FOLDER"
 }
 
 
@@ -93,6 +76,17 @@ function ensure_undoable {
   if [ "$(has_file "$UNDO_STEPS_FILE")" = false ]; then
     echo_red "Nothing to undo"
     exit_with_error
+  fi
+}
+
+
+function eval_or_false {
+  local fn=$1
+  local arguments=$2
+  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
+    eval "$fn $arguments"
+  else
+    echo false
   fi
 }
 
