@@ -150,11 +150,9 @@ def sha commit_message
   cmd += ' (initial)' if commit_message == 'Initial commit'
   cmd += ": #{commit_message.strip}' --format='%H'"
   result = ''
-  ['developer', 'developer_secondary'].each do |user|
+  %w(developer developer_secondary).each do |user|
     next unless result.empty?
-    in_repository user do
-      result = output_of cmd
-    end
+    in_repository(user) { result = output_of cmd }
   end
   result
 end

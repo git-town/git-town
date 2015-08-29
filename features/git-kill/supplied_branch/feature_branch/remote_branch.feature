@@ -1,4 +1,4 @@
-Feature: git kill: shipping the supplied feature branch with a tracking branch
+Feature: git kill: killing a remote only branch
 
   Background:
     Given I have a feature branch named "feature" on another machine
