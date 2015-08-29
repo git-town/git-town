@@ -23,7 +23,7 @@ function error_empty_commit {
   discard_open_changes
   undo_command
 
-  echo_error "Ship aborted because commit exited with error"
+  echo_red_bold "Ship aborted because commit exited with error"
   exit_with_error newline
 }
 

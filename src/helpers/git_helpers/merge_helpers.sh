@@ -29,12 +29,12 @@ function squash_merge {
 }
 
 
-squash_commit_author=''
 function commit_squash_merge {
   local branch_name=$1
   shift
   local options=$(parameters_as_string "$@")
   if ! [[ options == *"--author"* ]]; then
+    squash_commit_author=''
     get_squash_commit_author "$branch_name"
     if [ "$squash_commit_author" != "$(local_author)" ]; then
       options="--author=\"$squash_commit_author\" $options"

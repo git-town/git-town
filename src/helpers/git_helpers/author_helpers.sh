@@ -4,7 +4,7 @@
 # Prompts the user for the squash commit author. Sets the variable squash_commit_author
 function get_squash_commit_author {
   local branch_name=$1
-  local authors_with_commits="$(branch_authors "$branch_name")"
+  local authors_with_commits="$(branch_authors_with_commits "$branch_name")"
   local authors="$(echo "$authors_with_commits" | sed 's/^ *//' | cut -d ' ' -f 2-)"
   local number_of_authors="$(echo "$authors" | wc -l | tr -d ' ')"
   if [ "$number_of_authors" = 1 ]; then
@@ -48,7 +48,7 @@ function get_squash_commit_author {
 
 
 # Returns the authors of the branch in the form "<commitCount> %an <%ae>"
-function branch_authors {
+function branch_authors_with_commits {
   local branch_name=$1
   git shortlog -s -n -e "$MAIN_BRANCH_NAME..$branch_name" | tr '\t' '  '
 }
