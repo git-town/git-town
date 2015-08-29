@@ -20,8 +20,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                                      |
       | feature  | git stash -u                                 |
-      |          | git checkout main                            |
-      | main     | git checkout -b refactor main                |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
     And I get the error
       """
@@ -38,10 +37,9 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
     Then it runs the Git commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
-      |          | git checkout main       |
-      | main     | git branch -d refactor  |
       |          | git checkout feature    |
-      | feature  | git stash pop           |
+      | feature  | git branch -d refactor  |
+      |          | git stash pop           |
     And I end up on the "feature" branch
     And I again have my uncommitted file
     And there is no "refactor" branch
