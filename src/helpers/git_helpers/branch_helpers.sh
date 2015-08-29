@@ -128,7 +128,7 @@ function push_branch {
   local branch_name=$1
   local force=$2
   if [ "$(has_tracking_branch "$branch_name")" = true ]; then
-    if [ "$(branch_need_push "$branch_name")" = true ]; then
+    if [ "$(branch_needs_push "$branch_name")" = true ]; then
       if [ -n "$force" ]; then
         run_git_command "git push -f origin $branch_name"
       else
