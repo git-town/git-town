@@ -68,4 +68,3 @@ function remove_author_commits {
   local author=$1
   echo "$author" | sed -E 's/ \([0-9]* commits?\)$//'
 }
-
