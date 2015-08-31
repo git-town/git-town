@@ -19,7 +19,7 @@ class CommitListBuilder
 
   # Adds all commits in the given branch to this CommitsFinder instance
   def add_commits_in_branch branch_name
-    array_output_of("git log #{branch_name} --format='%h|%s|%ae' --topo-order --reverse").each do |commit|
+    array_output_of("git log #{branch_name} --format='%h|%s|%an <%ae>' --topo-order --reverse").each do |commit|
       sha, message, author = commit.split('|')
       next if message == 'Initial commit'
       @commit_list.add sha: sha, message: message, branch_name: branch_name, author: author
