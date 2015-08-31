@@ -39,7 +39,7 @@ Feature: git ship: shipping a coworker's feature branch
       | enter "other <other@example.com>"" | other <other@example.com>         |
 
 
-  Scenario Outline: enter invalid number
+  Scenario Outline: enter invalid number then valid number
     When I run `git ship -m 'feature done'` and enter "<NUMBER>" and "1"
     Then I see "error: invalid number"
     And I have the following commits
@@ -58,13 +58,8 @@ Feature: git ship: shipping a coworker's feature branch
     And I am left with my original commits
 
 
-  Scenario: supplying an author suppresses the prompt
+  Scenario: supplying the author via command line arguments
     When I run `git ship -m 'feature done' --author='other <other@example.com>'`
-    Then I don't see
-      """
-      Multiple people commited to the 'feature' branch.
-      Please choose an author for the squash commit.
-      """
-    And I have the following commits
+    Then I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR                    |
       | main   | local and remote | feature done | other <other@example.com> |
