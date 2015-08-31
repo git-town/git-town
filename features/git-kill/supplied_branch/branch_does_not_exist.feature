@@ -12,7 +12,7 @@ Feature: git kill: errors if supplied branch does not exist
   Scenario: result
     When I run `git kill non-existing-feature`
     Given I have an uncommitted file
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I get the error "There is no branch named 'non-existing-feature'"

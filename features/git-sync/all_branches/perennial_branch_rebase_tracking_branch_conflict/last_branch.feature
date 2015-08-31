@@ -15,7 +15,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
       |            | git stash -u                 |
@@ -36,7 +36,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH     | COMMAND                 |
       | qa         | git rebase --abort      |
       |            | git checkout production |
@@ -54,7 +54,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
   Scenario: skipping
     When I run `git sync --skip`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git checkout main  |
@@ -71,7 +71,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
@@ -80,7 +80,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
       |        | git push              |
@@ -99,7 +99,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     And I run `git rebase --continue; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | qa     | git push          |
       |        | git checkout main |

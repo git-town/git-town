@@ -16,7 +16,7 @@ Feature: git hack: starting a new feature from the main branch (without remote r
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git stash -u                     |
       |             | git checkout -b new-feature main |

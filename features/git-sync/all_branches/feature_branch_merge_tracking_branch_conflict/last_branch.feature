@@ -14,7 +14,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | main      | git fetch --prune                    |
       |           | git stash -u                         |
@@ -38,7 +38,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                |
       | feature-2 | git merge --abort      |
       |           | git checkout feature-1 |
@@ -58,7 +58,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
 
   Scenario: skipping
     When I run `git sync --skip`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git merge --abort |
       |           | git checkout main |
@@ -77,7 +77,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
 
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature-2" branch
     And my uncommitted file is stashed
@@ -87,7 +87,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git commit --no-edit     |
       |           | git merge --no-edit main |
@@ -112,7 +112,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and its
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git merge --no-edit main |
       |           | git push                 |

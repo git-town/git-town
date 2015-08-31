@@ -15,7 +15,7 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git fetch --prune                |
       |             | git stash -u                     |

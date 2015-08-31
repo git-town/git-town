@@ -18,17 +18,17 @@ function push {
   local current_branch_name=$(get_current_branch_name)
   if [ "$(has_tracking_branch "$current_branch_name")" == true ]; then
     if [ "$(needs_push "$current_branch_name")" == true ]; then
-      run_git_command "git push"
+      run_command "git push"
     fi
   else
-    run_git_command "git push -u origin $current_branch_name"
+    run_command "git push -u origin $current_branch_name"
   fi
 }
 
 
 # Pushes tags to the remote
 function push_tags {
-  run_git_command "git push --tags"
+  run_command "git push --tags"
 }
 
 

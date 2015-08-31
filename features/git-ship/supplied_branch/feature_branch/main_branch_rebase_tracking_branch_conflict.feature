@@ -16,7 +16,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                |
       | other-feature | git fetch --prune      |
       |               | git stash -u           |
@@ -33,7 +33,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
 
   Scenario: aborting
     When I run `git ship --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                    |
       | main          | git rebase --abort         |
       |               | git checkout other-feature |
@@ -47,7 +47,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git ship --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | main          | git rebase --continue              |
       |               | git push                           |
@@ -75,7 +75,7 @@ Feature: git ship: resolving conflicts between the main branch and its tracking 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git ship --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | main          | git push                           |
       |               | git checkout feature               |

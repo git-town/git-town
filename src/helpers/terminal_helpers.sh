@@ -190,13 +190,6 @@ function output_style_reset {
 }
 
 
-# Prints a command
-function print_git_command {
-  local branch_name=$(get_current_branch_name)
-  echo_header "[$branch_name] $*"
-}
-
-
 function prompt_yn {
   echo -n " [Y/n] "
   read yn
@@ -209,21 +202,16 @@ function prompt_yn {
 }
 
 
-# Run a normal (non Git) command.
+# Run a command.
 #
-# Prints the command and the output
+# Prints the command (prepends branch for git commands) and the output
 function run_command {
   local cmd="$1"
-  echo_header "$cmd"
-  eval "$cmd" 2>&1
-}
-
-
-# Run a Git command
-#
-# Prints the command and the Git branch it is running on, as well as the output.
-function run_git_command {
-  local cmd="$1"
-  print_git_command "$cmd"
+  local header="$cmd"
+  if [[ "$cmd" =~ ^git ]]; then
+    local branch_name=$(get_current_branch_name)
+    header="[$branch_name] $cmd"
+  fi
+  echo_header "$header"
   eval "$cmd" 2>&1
 }

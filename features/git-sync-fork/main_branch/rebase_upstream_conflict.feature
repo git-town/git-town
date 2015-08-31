@@ -12,7 +12,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git stash -u             |
       |        | git fetch upstream       |
@@ -28,7 +28,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
 
   Scenario: aborting
     When I run `git sync-fork --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
@@ -41,7 +41,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync-fork --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
       |        | git push              |
@@ -60,7 +60,7 @@ Feature: git-sync-fork: handling rebase conflicts between main branch and its re
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git sync-fork --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND       |
       | main   | git push      |
       |        | git stash pop |
