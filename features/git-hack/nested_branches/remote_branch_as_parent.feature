@@ -18,7 +18,7 @@ Feature: Forking off a remote branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | main           | git fetch --prune                            |
       |                | git stash -u                                 |
@@ -49,7 +49,7 @@ Feature: Forking off a remote branch
 
   Scenario: undo
     When I run `git hack --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                     |
       | child-feature  | git stash -u                |
       |                | git checkout parent-feature |

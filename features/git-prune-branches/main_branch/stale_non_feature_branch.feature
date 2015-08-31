@@ -13,7 +13,7 @@ Feature: git prune-branches: don't remove stale perennial branches when called f
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I end up on the "main" branch
@@ -28,7 +28,7 @@ Feature: git prune-branches: don't remove stale perennial branches when called f
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
     Then I get the error "Nothing to undo"
-    And it runs no Git commands
+    And it runs no commands
     And I end up on the "main" branch
     Then the existing branches are
       | REPOSITORY | BRANCHES         |

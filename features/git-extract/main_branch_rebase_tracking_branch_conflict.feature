@@ -19,7 +19,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
       |         | git stash -u           |
@@ -36,7 +36,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
   Scenario: aborting
     When I run `git extract --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
       |         | git checkout feature |
@@ -50,7 +50,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
 
   Scenario: continuing without resolving the conflicts
     When I run `git extract --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And my uncommitted file is stashed
     And my repo has a rebase in progress
@@ -59,7 +59,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                                      |
       | main     | git rebase --continue                        |
       |          | git push                                     |
@@ -90,7 +90,7 @@ Feature: git extract: resolving conflicts between main branch and its tracking b
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git extract --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                                      |
       | main     | git push                                     |
       |          | git checkout -b refactor main                |

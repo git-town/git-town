@@ -3,14 +3,14 @@
 
 # Commits all open changes into the current branch
 function commit_open_changes {
-  run_git_command "git add -A"
-  run_git_command "git commit -m 'WIP on $(get_current_branch_name)'"
+  run_command "git add -A"
+  run_command "git commit -m 'WIP on $(get_current_branch_name)'"
 }
 
 
 # Discard open changes
 function discard_open_changes {
-  run_git_command 'git reset --hard'
+  run_command 'git reset --hard'
 }
 
 
@@ -36,13 +36,13 @@ function has_open_changes {
 
 # Unstashes changes
 function restore_open_changes {
-  run_git_command "git stash pop"
+  run_command "git stash pop"
 }
 
 
 # Stashes uncommitted changes
 function stash_open_changes {
-  run_git_command "git stash -u"
+  run_command "git stash -u"
 }
 
 

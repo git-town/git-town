@@ -16,7 +16,7 @@ Feature: git ship: shipping a coworker's feature branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                                                                 |
       | feature | git fetch --prune                                                       |
       |         | git checkout main                                                       |

@@ -15,7 +15,7 @@ Feature: git ship: aborting the ship of the current feature branch by entering a
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
