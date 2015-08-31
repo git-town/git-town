@@ -17,7 +17,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH           | COMMAND                |
       | existing-feature | git fetch --prune      |
       |                  | git stash -u           |
@@ -34,7 +34,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
 
   Scenario: aborting
     When I run `git hack --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |
       |                  | git checkout existing-feature |
@@ -55,7 +55,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git hack --continue `
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git rebase --continue            |
       |             | git push                         |
@@ -78,7 +78,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git hack --continue `
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git push                         |
       |             | git checkout -b new-feature main |

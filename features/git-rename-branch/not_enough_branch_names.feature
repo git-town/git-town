@@ -15,7 +15,7 @@ Feature: git rename-branch: requires two branch names
 
   Scenario: no branch names given
     When I run `git rename-branch`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "No branch name provided"
     And I am still on the "current-feature" branch
     And I am left with my original commits
@@ -23,7 +23,7 @@ Feature: git rename-branch: requires two branch names
 
   Scenario: one branch name given
     When I run `git rename-branch current-feature`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "No branch name provided"
     And I am still on the "current-feature" branch
     And I am left with my original commits

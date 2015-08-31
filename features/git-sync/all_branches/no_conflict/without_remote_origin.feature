@@ -14,7 +14,7 @@ Feature: git sync --all: syncs all feature branches (without remote repo)
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git stash -u             |
       |           | git merge --no-edit main |

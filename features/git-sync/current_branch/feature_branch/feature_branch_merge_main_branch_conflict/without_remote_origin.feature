@@ -13,7 +13,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git stash -u             |
       |         | git merge --no-edit main |
@@ -30,7 +30,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
@@ -42,7 +42,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
 
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -52,7 +52,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git stash pop        |
@@ -73,7 +73,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
     And I am still on the "feature" branch

@@ -13,7 +13,7 @@ Feature: git extract: errors when the branch exists locally
   Scenario: result
     Given I have an uncommitted file
     When I run `git extract existing-feature`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
     And I get the error "A branch named 'existing-feature' already exists"

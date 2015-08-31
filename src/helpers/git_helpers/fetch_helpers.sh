@@ -8,7 +8,7 @@
 # by tracking this through the global variable $repo_fetched.
 function fetch {
   if [ "$repo_fetched" == false ]; then
-    run_git_command "git fetch --prune"
+    run_command "git fetch --prune"
     repo_fetched=true
   fi
 }
@@ -17,5 +17,5 @@ repo_fetched=false
 
 # Fetches changes from the upstream repository
 function fetch_upstream {
-  run_git_command "git fetch upstream"
+  run_command "git fetch upstream"
 }
