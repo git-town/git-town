@@ -10,7 +10,7 @@ Feature: git kill: killing a remote only branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune        |
       |        | git push origin :feature |
@@ -22,7 +22,7 @@ Feature: git kill: killing a remote only branch
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                                                        |
       | main   | git push origin <%= sha 'feature commit' %>:refs/heads/feature |
     And the existing branches are
