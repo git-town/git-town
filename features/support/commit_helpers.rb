@@ -13,15 +13,14 @@ end
 # Creates a new commit with the given properties.
 #
 # Parameter is a Cucumber table line
-def create_local_commit branch:, file_name:, file_content:, message:, push: false, pull: false
-  run 'git fetch --prune' if pull
+def create_local_commit author: nil, branch:, file_name:, file_content:, message:, push: false
   on_branch(branch) do
     if (folder_name = File.dirname file_name) != '.'
       Dir.mkdir folder_name
     end
     File.write file_name, file_content
     run "git add '#{file_name}'"
-    run "git commit -m '#{message}'"
+    run "git commit -m '#{message}' #{"--author='#{author}'" if author}"
     run 'git push' if push
   end
 end
@@ -29,7 +28,8 @@ end
 
 def create_remote_commit commit_data
   in_secondary_repository do
-    create_local_commit commit_data.merge(pull: true, push: true)
+    run 'git fetch --prune'
+    create_local_commit commit_data.merge(push: true)
   end
 end
 
