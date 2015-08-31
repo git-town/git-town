@@ -16,7 +16,7 @@ Feature: git kill: killing the current feature branch with a tracking branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git fetch --prune                      |
       |                 | git add -A                             |
@@ -37,7 +37,7 @@ Feature: git kill: killing the current feature branch with a tracking branch
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git push -u origin current-feature                             |

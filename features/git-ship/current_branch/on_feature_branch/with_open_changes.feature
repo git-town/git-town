@@ -13,7 +13,7 @@ Feature: git ship: errors if there are open changes
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You cannot ship with uncommitted changes."
     And I am still on the "feature" branch
     And I still have my uncommitted file
@@ -23,6 +23,6 @@ Feature: git ship: errors if there are open changes
   Scenario: undo
     When I run `git ship --undo`
     Then I get the error "Nothing to undo"
-    And it runs no Git commands
+    And it runs no commands
     And I am still on the "feature" branch
     And I still have my uncommitted file

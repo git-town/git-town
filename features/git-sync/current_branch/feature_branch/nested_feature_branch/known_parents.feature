@@ -19,7 +19,7 @@ Feature: git sync: syncing a nested feature branch (with known parent branches)
     And I am on the "child-feature" branch
     And I have an uncommitted file
     When I run `git sync`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune                         |
       |                | git stash -u                              |

@@ -13,7 +13,7 @@ Feature: git prune-branches: remove stale coworker branches when run on the main
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                        |
       | main   | git fetch --prune              |
       |        | git push origin :stale-feature |
@@ -28,7 +28,7 @@ Feature: git prune-branches: remove stale coworker branches when run on the main
 
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                                                              |
       | main   | git push origin <%= sha 'Initial commit' %>:refs/heads/stale-feature |
     And I end up on the "main" branch

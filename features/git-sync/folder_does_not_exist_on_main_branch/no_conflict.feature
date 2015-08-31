@@ -18,11 +18,11 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
-      |                 | cd <%= git_root_folder %>                  |
-      |                 | git stash -u                               |
+      | <none>          | cd <%= git_root_folder %>                  |
+      | current-feature | git stash -u                               |
       |                 | git checkout main                          |
       | main            | git rebase origin/main                     |
       |                 | git checkout current-feature               |
@@ -35,7 +35,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       |                 | git push                                   |
       |                 | git checkout current-feature               |
       | current-feature | git stash pop                              |
-      |                 | cd <%= git_folder "new_folder" %>          |
+      | <none>          | cd <%= git_folder "new_folder" %>          |
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
     And now I have the following commits
@@ -51,15 +51,15 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
   Scenario: undo
     When I run `git sync --undo` in the "new_folder" folder
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                           |
-      | current-feature | cd <%= git_root_folder %>         |
-      |                 | git stash -u                      |
+      | <none>          | cd <%= git_root_folder %>         |
+      | current-feature | git stash -u                      |
       |                 | git checkout other-feature        |
       | other-feature   | git checkout current-feature      |
       | current-feature | git checkout main                 |
       | main            | git checkout current-feature      |
       | current-feature | git stash pop                     |
-      |                 | cd <%= git_folder "new_folder" %> |
+      | <none>          | cd <%= git_folder "new_folder" %> |
     And I am still on the "current-feature" branch
     And I still have my uncommitted file

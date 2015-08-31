@@ -16,7 +16,7 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                                      |
       | empty-feature | git fetch --prune                            |
       |               | git checkout main                            |
@@ -34,7 +34,7 @@ Feature: git ship: errors when trying to ship the current feature branch that ha
   Scenario: undo
     When I run `git ship --undo`
     Then I get the error "Nothing to undo"
-    And it runs no Git commands
+    And it runs no commands
     And I am still on the "empty-feature" branch
     And I have the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |

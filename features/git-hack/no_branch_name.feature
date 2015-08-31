@@ -17,7 +17,7 @@ Feature: git hack: requires a branch name
 
 
   Scenario: result
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "No branch name provided"
     And I am still on the "existing-feature" branch
     And I still have my uncommitted file

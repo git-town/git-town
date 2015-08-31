@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
       |         | git stash -u           |
@@ -34,7 +34,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
       |         | git checkout feature |
@@ -55,7 +55,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
       |         | git push                           |
@@ -81,7 +81,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
       |         | git checkout feature               |

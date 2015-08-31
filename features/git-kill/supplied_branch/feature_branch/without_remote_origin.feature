@@ -17,7 +17,7 @@ Feature: git kill: killing the given feature branch (without remote repo)
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                     |
       | current-feature | git branch -D other-feature |
     And I am still on the "current-feature" branch
@@ -33,7 +33,7 @@ Feature: git kill: killing the given feature branch (without remote repo)
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                                    |
       | current-feature | git branch other-feature <%= sha 'other feature commit' %> |
     And I am still on the "current-feature" branch
