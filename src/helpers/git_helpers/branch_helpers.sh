@@ -93,6 +93,17 @@ function has_branch {
 }
 
 
+# Returns true if the repository has a local branch with the given name
+function has_local_branch {
+  local branch_name=$1
+  if [ "$(local_branches | grep -c "^$branch_name\$")" = 0 ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
+
 # Returns the names of local branches
 function local_branches {
   git branch | tr -d ' ' | sed 's/\*//g'
@@ -175,6 +186,5 @@ function undo_steps_for_delete_remote_branch {
 function undo_steps_for_delete_remote_only_branch {
   local branch_to_delete="$1"
   local remote_sha="$(git log origin/"$branch_to_delete" | head -1 | cut -d ' ' -f 2)"
-  echo "create_branch $branch_to_delete $remote_sha"
-  echo "push_branch $branch_to_delete"
+  echo "run_command 'git push origin $remote_sha:refs/heads/$branch_to_delete'"
 }
