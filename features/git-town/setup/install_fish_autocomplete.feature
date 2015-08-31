@@ -9,7 +9,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: without existing fish autocompletion folder
     Given I have no fish autocompletion folder
     When I run `git town install-fish-autocompletion`
-    Then it runs the following shell commands to install the Fish shell autocompletion
+    Then it runs the commands
       | COMMAND                                                                                   |
       | mkdir -p ~/.config/fish/completions                                                       |
       | ln -s <%= GIT_TOWN_DIRECTORY %>/autocomplete/git.fish ~/.config/fish/completions/git.fish |
@@ -18,7 +18,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: with empty fish autocompletion folder
     Given I have an empty fish autocompletion folder
     When I run `git town install-fish-autocompletion`
-    Then it runs the following shell commands to install the Fish shell autocompletion
+    Then it runs the commands
       | COMMAND                                                                                   |
       | ln -s <%= GIT_TOWN_DIRECTORY %>/autocomplete/git.fish ~/.config/fish/completions/git.fish |
 
@@ -26,7 +26,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: with an existing Git autocompletion file
     Given I have an existing Git autocompletion file
     When I run `git town install-fish-autocompletion`
-    Then it runs no shell commands
+    Then it runs no commands
     And I get the error "Git autocompletion for Fish shell already exists"
     And I get the error "Operation aborted"
     And I still have my original Git autocompletion file
@@ -35,7 +35,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: with existing Git autocompletion symlink
     Given I already have the Git autocompletion symlink
     When I run `git town install-fish-autocompletion`
-    Then it runs no shell commands
+    Then it runs no commands
     And I get the error "Git autocompletion for Fish shell already exists"
     And I get the error "Operation aborted"
     And I still have my original Git autocompletion symlink

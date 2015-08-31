@@ -17,7 +17,7 @@ Feature: git rename-branch: renaming a feature branch with child branches
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH                 | COMMAND                                               |
       | parent-feature         | git fetch --prune                                     |
       |                        | git checkout -b renamed-parent-feature parent-feature |

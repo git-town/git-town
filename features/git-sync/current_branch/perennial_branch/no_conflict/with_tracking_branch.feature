@@ -19,7 +19,7 @@ Feature: git sync: syncing the current perennial branch
 
 
   Scenario: no conflict
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       |        | git stash -u         |

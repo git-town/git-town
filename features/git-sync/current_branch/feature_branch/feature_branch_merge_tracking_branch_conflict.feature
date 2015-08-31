@@ -17,7 +17,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git stash -u                       |
@@ -38,7 +38,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
       |         | git checkout main    |
@@ -61,7 +61,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git commit --no-edit     |
       |         | git merge --no-edit main |
@@ -82,7 +82,7 @@ Feature: git sync: resolving conflicts between the current feature branch and it
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |
       |         | git push                 |

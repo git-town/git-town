@@ -18,11 +18,11 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
-      |                 | cd <%= git_root_folder %>                  |
-      |                 | git stash -u                               |
+      | <none>          | cd <%= git_root_folder %>                  |
+      | current-feature | git stash -u                               |
       |                 | git checkout main                          |
       | main            | git rebase origin/main                     |
       |                 | git checkout current-feature               |
@@ -37,13 +37,13 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
   Scenario: aborting
     When I run `git sync --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
       |                 | git checkout main                 |
       | main            | git checkout current-feature      |
       | current-feature | git stash pop                     |
-      |                 | cd <%= git_folder "new_folder" %> |
+      | <none>          | cd <%= git_folder "new_folder" %> |
     And I am still on the "current-feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
@@ -53,7 +53,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git sync --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
@@ -63,7 +63,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |
       |                 | git push                                 |
@@ -73,7 +73,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       |                 | git push                                 |
       |                 | git checkout current-feature             |
       | current-feature | git stash pop                            |
-      |                 | cd <%= git_folder "new_folder" %>        |
+      | <none>          | cd <%= git_folder "new_folder" %>        |
     And I am still on the "current-feature" branch
     And I again have my uncommitted file
     And there is no merge in progress

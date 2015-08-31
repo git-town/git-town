@@ -17,7 +17,7 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                          |
       | stale-feature-1 | git fetch --prune                |
       |                 | git stash -u                     |
@@ -37,7 +37,7 @@ Feature: git prune-branches: don't remove the current empty feature branch if th
 
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                                |
       | stale-feature-1 | git stash -u                                           |
       |                 | git checkout main                                      |

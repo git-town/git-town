@@ -11,13 +11,13 @@ Feature: git rename-branch: errors when renaming the main branch
 
   Scenario: error when trying to rename
     When I run `git rename-branch main renamed-main`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "The main branch cannot be renamed."
     And I am still on the "main" branch
 
 
   Scenario: error when trying to force rename
     When I run `git rename-branch main renamed-main -f`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "The main branch cannot be renamed."
     And I am still on the "main" branch
