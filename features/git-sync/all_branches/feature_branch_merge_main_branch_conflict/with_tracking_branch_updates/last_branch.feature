@@ -111,7 +111,6 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       |           |                  | Merge branch 'main' into feature-2                             |                      |
 
 
-
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git sync --continue`
