@@ -6,7 +6,6 @@
 function abort_command {
   local cmd=$(peek_line "$STEPS_FILE")
   eval "abort_$cmd"
-  cat "$UNDO_STEPS_FILE"
   undo_command
 }
 

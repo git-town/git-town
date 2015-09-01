@@ -57,7 +57,9 @@ function preconditions {
 function steps {
   echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
 
-  sync_branch_steps "$MAIN_BRANCH_NAME"
+  echo "checkout_main_branch"
+  echo "rebase_tracking_branch"
+  echo_if_true "push_branch $MAIN_BRANCH_NAME" "$HAS_REMOTE"
   echo "create_and_checkout_feature_branch '$target_branch_name'"
   echo "cherry_pick '$SHAs'"
   echo_if_true "push_branch $target_branch_name" "$HAS_REMOTE"
