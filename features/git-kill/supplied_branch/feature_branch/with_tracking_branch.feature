@@ -18,7 +18,7 @@ Feature: git kill: killing the given feature branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH       | COMMAND                       |
       | good-feature | git fetch --prune             |
       |              | git push origin :dead-feature |
@@ -37,7 +37,7 @@ Feature: git kill: killing the given feature branch
 
   Scenario: undoing the kill
     When I run `git kill --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH       | COMMAND                                              |
       | good-feature | git branch dead-feature <%= sha 'dead-end commit' %> |
       |              | git push -u origin dead-feature                      |

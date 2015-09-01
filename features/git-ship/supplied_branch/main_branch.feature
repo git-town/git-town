@@ -11,7 +11,7 @@ Feature: git ship: errors when trying to ship the main branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
     And I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."

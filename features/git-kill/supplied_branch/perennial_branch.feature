@@ -16,7 +16,7 @@ Feature: git kill: errors when trying to kill a perennial branch
   Scenario: result
     Given I have an uncommitted file
     When I run `git kill qa`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You can only kill feature branches"
     And I am still on the "feature" branch
     And I still have my uncommitted file

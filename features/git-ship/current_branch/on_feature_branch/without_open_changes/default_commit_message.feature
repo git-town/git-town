@@ -15,7 +15,7 @@ Feature: git ship: trying the ship of the current feature branch without editing
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
@@ -30,7 +30,7 @@ Feature: git ship: trying the ship of the current feature branch without editing
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And I get the error "Aborting ship due to empty commit message"
+    And I get the error "Ship aborted because commit exited with error"
     And I am still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

@@ -16,7 +16,7 @@ Feature: git sync: syncing the main branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       |        | git stash -u           |

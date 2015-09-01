@@ -13,7 +13,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git fetch --prune    |
       |         | git stash -u         |
@@ -31,7 +31,7 @@ Feature: git prune-branches: keep used feature branches when run on a feature br
 
   Scenario: undoing the operation
     When I run `git prune-branches --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git stash -u         |
       |         | git checkout main    |

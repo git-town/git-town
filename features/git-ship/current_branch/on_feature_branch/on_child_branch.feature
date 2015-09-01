@@ -21,7 +21,7 @@ Feature: git ship: shipping a child branch
   Scenario: result
     Then I get the error "Shipping this branch would ship "feature-1", "feature-2" as well."
     And I get the error "Please ship "feature-1" first."
-    And it runs no Git commands
+    And it runs no commands
     And I end up on the "feature-3" branch
     And I am left with my original commits
     And my branch hierarchy metadata is unchanged
@@ -30,6 +30,6 @@ Feature: git ship: shipping a child branch
   Scenario: undo
     When I run `git ship --undo`
     Then I get the error "Nothing to undo"
-    And it runs no Git commands
+    And it runs no commands
     And I am still on the "feature-3" branch
     And I am left with my original commits

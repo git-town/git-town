@@ -17,10 +17,11 @@ Feature: git extract: extracting a single commit (without remote origin)
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                                      |
       | feature  | git stash -u                                 |
-      |          | git checkout -b refactor main                |
+      |          | git checkout main                            |
+      | main     | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
       |          | git stash pop                                |
     And I end up on the "refactor" branch

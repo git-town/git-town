@@ -3,35 +3,27 @@ def array_output_of command, ignore_errors: false
 end
 
 
-# Returns an array of the commands that were run in the last invocation of "run"
-def commands_of_last_run_outside_git
-  command_regex = /
-    \[1m          # bold text
-    (.+?)         # the command
-    \s*           # any extra whitespace
-    \n            # newline at the end
-  /x
-  @last_run_result.out.scan command_regex
-end
-
-
-# This regex parses Git commands out of console output.
-# It is used in commands_of_last_run
-GIT_COMMAND_REGEX = /
-  \[1m          # bold text
-  \[(.*?)\]     # branch name in square brackets
-  \s            # space between branch name and Git command
-  (.+?)         # the Git command
-  \s*           # any extra whitespace
-  \n            # newline at the end
+COMMAND_REGEX = /
+  ^
+  \e\[1m                     # bold text
+  (?:\[(.+?)\]\s)?           # branch name in square brackets
+  ([[:graph:]][[:print:]]+?) # the command - no leading whitespace
+  \s*                        # trailing whitespace
+  $
 /x
 
 
-# Returns a Mortadella instance containing the Git commands run
-# in the last invocation of "run".
-def commands_of_last_run
-  result = Mortadella.new headers: %w(BRANCH COMMAND), dry: 'BRANCH'
-  @last_run_result.out.scan(GIT_COMMAND_REGEX).each { |command| result << command }
+# Returns an array of the commands that were run in the last invocation of "run"
+def commands_of_last_run with_branch: true
+  options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
+  result = Mortadella.new options
+  @last_run_result.out.split("\n").each do |line|
+    match = line.match COMMAND_REGEX
+    next unless match
+    row = [match[2]]
+    row.unshift(match[1] || '<none>') if with_branch
+    result << row
+  end
   result
 end
 

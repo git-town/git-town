@@ -13,7 +13,7 @@ Feature: git ship: shipping the current feature branch without a tracking branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git fetch --prune            |
       |         | git checkout main            |
@@ -34,7 +34,7 @@ Feature: git ship: shipping the current feature branch without a tracking branch
 
   Scenario: undo
     When I run `git ship --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git revert <%= sha 'feature done' %>           |

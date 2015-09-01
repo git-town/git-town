@@ -24,7 +24,7 @@ function error_empty_commit {
   undo_command
 
   echo_error_header
-  echo_error "Aborting ship due to empty commit message"
+  echo_error "Ship aborted because commit exited with error"
   exit_with_error newline
 }
 
