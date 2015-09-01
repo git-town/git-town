@@ -14,11 +14,11 @@ function command_steps {
   local command_run_in_git_root="$(eval_or_false should_run_in_git_root)"
   local command_stash_open_changes="$(eval_or_false should_stash_open_changes)"
 
-  echo_if_true "change_directory $(git_root)" "$command_run_in_git_root" "$IN_SUB_FOLDER"
-  echo_if_true "stash_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
+  echo_if_all_true "change_directory $(git_root)" "$command_run_in_git_root" "$IN_SUB_FOLDER"
+  echo_if_all_true "stash_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
   steps
-  echo_if_true "restore_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
-  echo_if_true "change_directory $INITIAL_DIRECTORY" "$command_run_in_git_root" "$IN_SUB_FOLDER"
+  echo_if_all_true "restore_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
+  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$command_run_in_git_root" "$IN_SUB_FOLDER"
 }
 
 
