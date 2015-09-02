@@ -43,7 +43,7 @@ Feature: git ship: shipping the current feature branch with a tracking branch
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git push -u origin feature                     |
       |         | git revert <%= sha 'feature done' %>           |
-      |         | git push origin main                           |
+      |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
