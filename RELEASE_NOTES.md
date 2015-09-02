@@ -1,5 +1,12 @@
 # Git Town Release Notes
 
+## 0.7.3 (2015-09-02)
+
+* `git kill`: remote only branch
+  ([#380](https://github.com/Originate/git-town/issues/380))
+* `git ship`: prompt when there are multiple authors
+  ([#486](https://github.com/Originate/git-town/issues/486))
+
 ## 0.7.2 (2015-08-28)
 
 * `git sync --all`: fix parent branch prompt
