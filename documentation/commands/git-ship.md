@@ -19,8 +19,7 @@ into the main branch, leading to linear history on the main branch.
 * syncs the main branch
 * pulls remote updates for `<branch_name>`
 * merges the main branch into `<branch_name>`
-* squash-merges `<branch_name>` into the main branch
-* opens an editor for the user to enter the commit message for the squash merge
+* squash-merges `<branch_name>` into the main branch with commit message specified by the user
 * pushes the main branch to the remote repository
 * deletes `<branch_name>` from the local and remote repositories
 
