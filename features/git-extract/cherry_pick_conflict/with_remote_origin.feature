@@ -86,7 +86,6 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
       | refactor | conflicting_file | resolved content |
 
 
-
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git extract --continue`

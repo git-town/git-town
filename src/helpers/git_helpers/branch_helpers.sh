@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 
 
+# Returns whether the given branch is in sync with its tracking branch
+function branch_needs_push {
+  local branch_name=$1
+  local tracking_branch_name="origin/$branch_name"
+  if [ "$(git rev-list --left-right "$branch_name...$tracking_branch_name" | wc -l | tr -d ' ')" != 0 ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1
@@ -127,11 +139,15 @@ function push_branch {
   local branch_name=$1
   local force=$2
   if [ "$(has_tracking_branch "$branch_name")" = true ]; then
-    if [ "$(needs_push "$branch_name")" = true ]; then
+    if [ "$(branch_needs_push "$branch_name")" = true ]; then
       if [ -n "$force" ]; then
         run_command "git push -f origin $branch_name"
       else
-        run_command "git push origin $branch_name"
+        if [ "$(get_current_branch_name)" = "$branch_name" ]; then
+          run_command "git push"
+        else
+          run_command "git push origin $branch_name"
+        fi
       fi
     fi
   else
@@ -187,4 +203,9 @@ function undo_steps_for_delete_remote_only_branch {
   local branch_to_delete="$1"
   local remote_sha="$(git log origin/"$branch_to_delete" | head -1 | cut -d ' ' -f 2)"
   echo "run_command 'git push origin $remote_sha:refs/heads/$branch_to_delete'"
+}
+
+
+function undo_steps_for_push_branch {
+  echo "skip_current_branch_steps $UNDO_STEPS_FILE"
 }

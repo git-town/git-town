@@ -62,10 +62,10 @@ function should_stash_open_changes {
 function steps {
   echo "checkout_main_branch"
   echo "rebase_tracking_branch"
-  echo_if_true "push" "$HAS_REMOTE"
+  echo_if_true "push_branch $MAIN_BRANCH_NAME" "$HAS_REMOTE"
   echo "create_and_checkout_feature_branch '$target_branch_name'"
   echo "cherry_pick '$SHAs'"
-  echo_if_true "push" "$HAS_REMOTE"
+  echo_if_true "push_branch $target_branch_name" "$HAS_REMOTE"
 }
 
 
