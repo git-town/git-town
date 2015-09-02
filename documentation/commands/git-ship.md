@@ -14,7 +14,7 @@ git ship (--abort | --continue)
 #### DESCRIPTION
 
 Squash-merges the current branch, or `<branch_name>` if given,
-into the main branch, leading to linear history on the main branch.
+into the main branch, resulting in linear history on the main branch.
 
 * syncs the main branch
 * pulls remote updates for `<branch_name>`
