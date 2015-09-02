@@ -1,0 +1,7 @@
+consistent_empty_lines:
+  enabled: true
+  between_description_and_element: 2
+  between_elements: 2
+  between_feature_and_description: 1
+  between_feature_and_element: 1
+  between_scenario_outline_and_examples: 1

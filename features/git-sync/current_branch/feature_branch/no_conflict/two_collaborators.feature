@@ -15,6 +15,7 @@ Feature: git sync: collaborative feature branch syncing
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
       | feature | local    | coworker commit | coworker_file |
 
+
   Scenario: result
     And I am on the "feature" branch
     When I run `git sync`

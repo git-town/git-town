@@ -4,6 +4,7 @@ Feature: git kill: killing the current feature branch with a tracking branch
   I want to be able to cleanly delete the current branch including all open changes
   So that my workspace doesn't contain irrelevant branches and my productivity remains high.
 
+
   Background:
     Given I have feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
