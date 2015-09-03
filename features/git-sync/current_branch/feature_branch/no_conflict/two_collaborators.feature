@@ -15,10 +15,11 @@ Feature: git sync: collaborative feature branch syncing
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
       | feature | local    | coworker commit | coworker_file |
 
+
   Scenario: result
     And I am on the "feature" branch
     When I run `git sync`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
@@ -33,7 +34,7 @@ Feature: git sync: collaborative feature branch syncing
 
     Given my coworker is on the "feature" branch
     When my coworker runs `git sync`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
@@ -50,7 +51,7 @@ Feature: git sync: collaborative feature branch syncing
 
     Given I am on the "feature" branch
     When I run `git sync`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |

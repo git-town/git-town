@@ -14,7 +14,7 @@ Feature: git sync --all: does not sync remote only branches
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH     | COMMAND                               |
       | main       | git fetch --prune                     |
       |            | git stash -u                          |

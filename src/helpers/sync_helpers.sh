@@ -21,6 +21,6 @@ function sync_branch_steps {
       echo "rebase_tracking_branch"
     fi
 
-    echo_if_true "push" "$HAS_REMOTE"
+    echo_if_true "push_branch $branch" "$HAS_REMOTE"
   fi
 }

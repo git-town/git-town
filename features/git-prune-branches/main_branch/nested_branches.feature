@@ -21,7 +21,7 @@ Feature: git prune-branches: remove pruned branches from the branch hierarchy
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                          |
       | main   | git fetch --prune                |
       |        | git push origin :feature-1-stale |
@@ -38,7 +38,7 @@ Feature: git prune-branches: remove pruned branches from the branch hierarchy
 
   Scenario: undoing the prune
     When I run `git prune-branches --undo`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                                                |
       | main   | git branch feature-1-stale <%= sha 'Initial commit' %> |
       |        | git push -u origin feature-1-stale                     |

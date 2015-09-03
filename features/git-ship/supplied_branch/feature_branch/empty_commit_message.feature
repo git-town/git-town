@@ -15,7 +15,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                                      |
       | other-feature | git fetch --prune                            |
       |               | git stash -u                                 |
@@ -33,7 +33,7 @@ Feature: git ship: aborting the ship of the supplied feature branch by entering 
       |               | git checkout main                            |
       | main          | git checkout other-feature                   |
       | other-feature | git stash pop                                |
-    And I get the error "Aborting ship due to empty commit message"
+    And I get the error "Ship aborted because commit exited with error"
     And I am still on the "other-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits

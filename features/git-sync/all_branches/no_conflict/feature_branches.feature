@@ -13,7 +13,7 @@ Feature: git sync --all: syncs all feature branches
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git fetch --prune                    |
       |           | git stash -u                         |

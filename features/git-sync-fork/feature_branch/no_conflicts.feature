@@ -12,7 +12,7 @@ Feature: git-sync-fork on a feature branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git stash -u             |
       |         | git checkout main        |

@@ -24,7 +24,7 @@ function error_empty_commit {
   undo_command
 
   echo_error_header
-  echo_error "Aborting ship due to empty commit message"
+  echo_error "Ship aborted because commit exited with error"
   exit_with_error newline
 }
 
@@ -66,7 +66,7 @@ function steps {
   echo "squash_merge $target_branch_name"
   echo "commit_squash_merge $target_branch_name $commit_options"
 
-  echo_if_true "push" "$HAS_REMOTE"
+  echo_if_true "push_branch $MAIN_BRANCH_NAME" "$HAS_REMOTE"
 
   if [ "$(has_tracking_branch "$target_branch_name")" = true ] &&
      [ "$(has_child_branches "$target_branch_name")" = false ]; then

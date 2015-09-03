@@ -22,6 +22,7 @@ Feature: remove a branch from the perennial branches configuration
       error: 'feature' is not a perennial branch
       """
 
+
   Scenario: not providing a branch name
     When I run `git town perennial-branches --remove`
     Then I get the error

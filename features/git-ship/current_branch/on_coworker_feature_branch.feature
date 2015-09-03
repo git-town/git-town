@@ -16,7 +16,7 @@ Feature: git ship: shipping a coworker's feature branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH  | COMMAND                                                                 |
       | feature | git fetch --prune                                                       |
       |         | git checkout main                                                       |
@@ -31,5 +31,5 @@ Feature: git ship: shipping a coworker's feature branch
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
     And I have the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR               |
-      | main   | local and remote | feature done | coworker_file | coworker@example.com |
+      | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR                          |
+      | main   | local and remote | feature done | coworker_file | coworker <coworker@example.com> |

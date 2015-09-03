@@ -17,7 +17,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                                      |
       | feature  | git stash -u                                 |
       |          | git checkout main                            |
@@ -35,7 +35,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
   Scenario: aborting
     When I run `git extract --abort`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND                 |
       | refactor | git cherry-pick --abort |
       |          | git checkout main       |
@@ -51,7 +51,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
 
   Scenario: continuing without resolving the conflicts
     When I run `git extract --continue`
-    Then it runs no Git commands
+    Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git extract"
     And I am still on the "refactor" branch
     And my uncommitted file is stashed
@@ -61,7 +61,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git extract --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND              |
       | refactor | git commit --no-edit |
       |          | git stash pop        |
@@ -85,7 +85,7 @@ Feature: git extract: resolving conflicts between main branch and extracted comm
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git extract --continue`
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH   | COMMAND       |
       | refactor | git stash pop |
     And I end up on the "refactor" branch

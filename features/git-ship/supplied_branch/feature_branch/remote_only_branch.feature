@@ -4,6 +4,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
   I want to be able to ship it without explicity fetching
   So that I can quickly move on to the next feature and remain productive.
 
+
   Background:
     Given I have a feature branch named "other-feature"
     And I have a feature branch named "feature" on another machine
@@ -16,7 +17,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
       |               | git stash -u                       |

@@ -32,14 +32,21 @@ When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
   step "I run `#{command}` and enter \"dGZZ\""
 end
 
+When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
+  # In vim "ZZ" saves and exits
+  step "I run `#{command}` and enter \"ZZ\""
+end
+
 
 When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and perennial branch names "(.+)")?/) do |cmd, main, perennial|
   @result = run cmd, inputs: [main, perennial].compact
 end
 
 
-When(/^I run `(.+?)` and press ENTER$/) do |command|
-  step "I run `#{command}` and enter \"\""
+When(/^I run `(.+?)` and press ENTER( twice)?$/) do |command, twice|
+  inputs = ["\n"]
+  inputs += inputs if twice
+  @result = run command, inputs: inputs
 end
 
 
@@ -68,26 +75,19 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it runs no (?:Git|shell) commands$/) do
+Then(/^it runs no commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 
 
-Then(/^it runs the Git commands$/) do |expected_commands|
+Then(/^it runs the commands$/) do |expected_commands|
   # We need ERB here to fill in commit SHAs in Git commands
   expected_commands.map_column! 'COMMAND' do |command|
     ERB.new(command).result
   end
 
-  expected_commands.diff! commands_of_last_run.table
-end
-
-
-Then(/^it runs the following shell commands/) do |expected_commands|
-  expected_commands.map_column! 'COMMAND' do |command|
-    ERB.new(command).result
-  end
-  expected_commands.diff! commands_of_last_run_outside_git.unshift(expected_commands.headers)
+  actual_commands = commands_of_last_run(with_branch: expected_commands.column_names.count == 2).table
+  expected_commands.diff! actual_commands
 end
 
 
@@ -97,7 +97,7 @@ end
 
 
 Then(/^I don't see "(.*)"$/) do |string|
-  expect(@last_run_result.out).not_to include(string)
+  expect(unformatted_last_run_output).not_to include(string)
 end
 
 

@@ -11,7 +11,7 @@ Feature: git-sync-fork on the main branch
 
 
   Scenario: result
-    Then it runs the Git commands
+    Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git stash -u             |
       |        | git fetch upstream       |
