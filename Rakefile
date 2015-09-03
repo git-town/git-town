@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'rubocop/rake_task'
 
 
 desc 'Run linters and feature tests'
@@ -7,7 +8,7 @@ task default: %w(lint test)
 
 # Formatters
 desc 'Run formatters'
-task format: %w(format:cucumber)
+task format: %w(rubocop:auto_correct format:cucumber)
 
 desc 'Run cucumber formatter'
 task 'format:cucumber' do
@@ -24,12 +25,10 @@ task 'lint:bash' do
   sh 'bin/lint'
 end
 
-desc 'Run ruby linter'
-task 'lint:ruby' do
-  sh 'bundle exec rubocop'
-end
+desc 'Run Ruby linter'
+task 'lint:ruby' => [:rubocop]
 
-desc 'Run cucumber linter'
+desc 'Run Cucumber linter'
 task 'lint:cucumber' do
   sh 'bundle exec cucumber_lint'
 end
@@ -63,3 +62,6 @@ task 'deploy' do
   run 'git push'
   run 'git checkout master'
 end
+
+
+RuboCop::RakeTask.new
