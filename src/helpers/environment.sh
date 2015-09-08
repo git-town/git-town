@@ -29,10 +29,10 @@ function git_town_revision {
 function is_git_town_installed_manually {
   local base_dir=$(dirname "${BASH_SOURCE[0]}")
 
-  if [ "$(git -C "$base_dir" remote -v | grep -c "https://github.com/Homebrew/homebrew.git (fetch)")" == 0 ]; then
-    echo true
-  else
+  if [ "$(git -C "$base_dir" remote -v | grep -c "Originate/git-town")" == 0 ]; then
     echo false
+  else
+    echo true
   fi
 }
 
