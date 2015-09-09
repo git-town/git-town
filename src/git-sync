@@ -29,6 +29,7 @@ function preconditions {
 
   if [ "$1" = "--all" ]; then
     sync_target="all branches"
+    should_push_tags=true
     local branches="$(local_branches_without_main | tr '\n' ' ')"
     for branch_name in $branches; do
       if [ "$(is_feature_branch "$branch_name")" = true ]; then
