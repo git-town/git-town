@@ -68,11 +68,11 @@ function steps {
     sync_branch_steps "$branch_name"
   done
 
+  echo "checkout $INITIAL_BRANCH_NAME"
+
   if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then
     echo "push_tags"
   fi
-
-  echo "checkout $INITIAL_BRANCH_NAME"
 
   echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   echo_if_true "change_directory $INITIAL_DIRECTORY" "$IN_SUB_FOLDER"
