@@ -77,16 +77,6 @@ function ensure_undoable {
 }
 
 
-function eval_or_false {
-  local fn=$1
-  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
-    eval "$fn"
-  else
-    echo false
-  fi
-}
-
-
 function exit_with_messages {
   if [ "$(has_file "$STEPS_FILE")" = true ]; then
     echo
