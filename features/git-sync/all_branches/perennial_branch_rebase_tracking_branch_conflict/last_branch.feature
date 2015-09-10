@@ -58,7 +58,8 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git checkout main  |
-      | main   | git stash pop      |
+      | main   | git push --tags    |
+      |        | git stash pop      |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
@@ -85,7 +86,8 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
       | qa     | git rebase --continue |
       |        | git push              |
       |        | git checkout main     |
-      | main   | git stash pop         |
+      | main   | git push --tags       |
+      |        | git stash pop         |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
@@ -103,7 +105,8 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
       | BRANCH | COMMAND           |
       | qa     | git push          |
       |        | git checkout main |
-      | main   | git stash pop     |
+      | main   | git push --tags   |
+      |        | git stash pop     |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits

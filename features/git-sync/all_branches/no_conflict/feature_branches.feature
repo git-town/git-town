@@ -28,7 +28,8 @@ Feature: git sync --all: syncs all feature branches
       |           | git merge --no-edit main             |
       |           | git push                             |
       |           | git checkout feature-1               |
-      | feature-1 | git stash pop                        |
+      | feature-1 | git push --tags                      |
+      |           | git stash pop                        |
     And I am still on the "feature-1" branch
     And I still have my uncommitted file
     And all branches are now synchronized
