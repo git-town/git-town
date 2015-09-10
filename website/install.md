@@ -79,4 +79,4 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 * Subscribe to our
   <a href="https://github.com/Originate/git-town/releases.atom)
   to never miss a new release!">release RSS feed <i class="ion-social-rss accent-color"></i></a>
-  If you prefer email notifications, please try https://sibbell.com.
+  If you prefer email notifications, please try [sibbell.com](https://sibbell.com).
