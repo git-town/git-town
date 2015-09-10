@@ -25,4 +25,7 @@ notify:
 
 test:
   override:
-    - bundle exec rake
+    - bundle exec rake lint:bash
+    - bundle exec rake lint:ruby
+    - bundle exec rake lint:cucumber
+    - bundle exec rake test
