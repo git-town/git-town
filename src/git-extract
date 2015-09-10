@@ -51,11 +51,8 @@ function preconditions {
   shift
   get_shas "$*"
   ensure_has_shas
-}
 
-
-function should_stash_open_changes {
-  echo true
+  export SHOULD_STASH_OPEN_CHANGES=true
 }
 
 

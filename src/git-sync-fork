@@ -13,11 +13,7 @@ function ensure_has_upstream {
 
 function preconditions {
   ensure_has_upstream
-}
-
-
-function should_stash_open_changes {
-  echo true
+  export SHOULD_STASH_OPEN_CHANGES=true
 }
 
 

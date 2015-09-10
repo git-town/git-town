@@ -28,11 +28,8 @@ function preconditions {
   fi
 
   ensure_does_not_have_branch "$target_branch_name"
-}
 
-
-function should_stash_open_changes {
-  echo true
+  export SHOULD_STASH_OPEN_CHANGES=true
 }
 
 

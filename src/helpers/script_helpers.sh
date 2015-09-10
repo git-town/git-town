@@ -11,14 +11,11 @@ function abort_command {
 
 
 function command_steps {
-  local command_run_in_git_root="$(eval_or_false should_run_in_git_root)"
-  local command_stash_open_changes="$(eval_or_false should_stash_open_changes)"
-
-  echo_if_all_true "change_directory $(git_root)" "$command_run_in_git_root" "$IN_SUB_FOLDER"
-  echo_if_all_true "stash_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
+  echo_if_all_true "change_directory $(git_root)" "$SHOULD_RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+  echo_if_all_true "stash_open_changes" "$SHOULD_STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
   steps
-  echo_if_all_true "restore_open_changes" "$command_stash_open_changes" "$INITIAL_OPEN_CHANGES"
-  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$command_run_in_git_root" "$IN_SUB_FOLDER"
+  echo_if_all_true "restore_open_changes" "$SHOULD_STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
+  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$SHOULD_RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
 }
 
 

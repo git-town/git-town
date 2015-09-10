@@ -42,16 +42,9 @@ function preconditions {
     sync_target="perennial branch"
     should_push_tags=true
   fi
-}
 
-
-function should_run_in_git_root {
-  echo true
-}
-
-
-function should_stash_open_changes {
-  echo true
+  export SHOULD_RUN_IN_GIT_ROOT=true
+  export SHOULD_STASH_OPEN_CHANGES=true
 }
 
 

@@ -45,14 +45,9 @@ function preconditions {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
   ensure_has_no_unshipped_ancestors "$target_branch_name"
   commit_options=$(parameters_as_string "$@")
-}
 
-
-function should_stash_open_changes {
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    echo true
-  else
-    echo false
+    export SHOULD_STASH_OPEN_CHANGES=true
   fi
 }
 
