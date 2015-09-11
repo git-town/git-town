@@ -19,5 +19,4 @@ Feature: Trying to create a feature branch with a non-existing parent
     And it runs no commands
     And I end up on the "main" branch
     And I still have my uncommitted file
-    And I am left with my original commits
     And Git Town is not aware of any branch hierarchy

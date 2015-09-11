@@ -43,12 +43,9 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | main      | git stash pop                                        |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
-      | BRANCH    | LOCATION         | MESSAGE                 | FILE NAME            |
-      | main      | local and remote | main commit             | conflicting_file     |
-      | feature-1 | local            | feature-1 local commit  | conflicting_file     |
-      |           | remote           | feature-1 remote commit | feature1_remote_file |
-      | feature-2 | local and remote | feature-2 commit        | feature2_file        |
+    And the following commit have been added to my repository
+      | BRANCH    | LOCATION  | MESSAGE                 | FILE NAME            |
+      | main      | remote    | main commit             | conflicting_file     |
 
 
   Scenario: skipping
