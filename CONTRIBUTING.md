@@ -27,7 +27,7 @@ This guide will help you get started and outline some things you should know whe
 * See [here](./documentation/development/testing.md) for how to run the tests
 
 
-## Command Documentation
+## Command documentation
 
 Every Git Town command
 * has a [man page](./man/man1)
@@ -38,12 +38,12 @@ Every Git Town command
 
 ## Achitecture documents
 
-* [steps list](./documentation/development/steps_list.md) - the architecture behind most of the git town commands
-* [branch hierarchy](./documentation/development/branch_hierarchy.md) - support for nested feature branches
+* [branch hierarchy](./documentation/development/branch_hierarchy.md) - how Git Town sees branches
 * [drivers](./documentation/development/drivers.md) - third-party specific functionality
+* [steps list](./documentation/development/steps_list.md) - the architecture behind most of the Git Town commands
 
 
-## Website Development
+## Website development
 
 * See [here](./documentation/development/website.md)
 
