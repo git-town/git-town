@@ -72,3 +72,11 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 #### Install autocompletion
 
 * for [Fish shell](http://fishshell.com): `git town install-fish-autocompletion`
+
+
+#### Notifications about new releases
+
+* Subscribe to our
+  <a href="https://github.com/Originate/git-town/releases.atom">
+  release feed <i class="ion-social-rss accent-color"></i></a> to never miss a new release!
+  If you prefer email notifications, please try [sibbell.com](https://sibbell.com).
