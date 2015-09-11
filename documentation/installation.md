@@ -19,7 +19,6 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
   </tr>
   <tr>
     <td>
-      <code>brew tap Originate/gittown</code><br>
       <code>brew install git-town</code>
     </td>
     <td>
@@ -58,7 +57,6 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
   <tr>
     <td>
       <code>brew uninstall git-town</code><br>
-      <code>brew untap Originate/gittown</code>
     </td>
     <td>
       <ul>
