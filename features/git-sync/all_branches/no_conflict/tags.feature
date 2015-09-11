@@ -1,4 +1,4 @@
-Feature: git sync: syncing the main branch syncs the tags
+Feature: git sync: syncing all branches syncs the tags
 
   As a developer using Git tags for release management
   I want my tags to be published whenever I sync all my branches

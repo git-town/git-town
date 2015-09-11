@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-* `git sync --all`: push tags
+* `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
 
 ## 0.7.3 (2015-09-02)
