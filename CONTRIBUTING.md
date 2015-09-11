@@ -10,21 +10,13 @@ We appreciate contributions of any size.
 This guide will help you get started and outline some things you should know when developing Git Town.
 
 
-## Requirements
-
-* [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation)
-  * to run the tests
-  * install best via [rbenv](https://github.com/sstephenson/rbenv)
-* [ShellCheck](https://github.com/koalaman/shellcheck)
-  * for linting the Bash code
-
-
 ## Setup
 
-* install the [requirements](#requirements)
 * fork and clone the repository to your machine
+* install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
+  * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
+* install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
 * run `bundle` to install ruby gems
-* optionally run `rake` to make sure all tests pass on your machine
 
 
 ## Testing
