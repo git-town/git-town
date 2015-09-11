@@ -6,13 +6,13 @@ Git Town divides all branches into three categories:
 * feature branches
 
 
-# Main branch
+## Main branch
 
 The main development branch from which all feature branches are cut from and merged in.
 This is stored in the git config under `git-town.main-branch-name`
 
 
-# Perennial branches
+## Perennial branches
 
 These are branches that are serve some special purpose, such as deployment.
 The branches cannot be killed or shipped,
@@ -20,7 +20,7 @@ and only rebase with their own tracking branch when synced.
 These are stored in the git config under `git-town.perennial-branch-names` as a comma seperated list.
 
 
-# Nested Feature Branches
+## Nested Feature Branches
 
 Since code reviews can take a while,
 many developers work on several features in parallel.
