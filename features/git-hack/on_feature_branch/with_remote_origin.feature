@@ -8,9 +8,9 @@ Feature: git hack: starting a new feature from a feature branch (with remote rep
   Background:
     Given I have a feature branch named "existing-feature"
     And the following commits exist in my repository
-      | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
-      | main             | remote   | main commit             | main_file    |
-      | existing-feature | local    | existing feature commit | feature_file |
+      | BRANCH           | LOCATION | MESSAGE                 |
+      | main             | remote   | main commit             |
+      | existing-feature | local    | existing feature commit |
     And I am on the "existing-feature" branch
     And I have an uncommitted file
     When I run `git hack new-feature`
@@ -28,7 +28,7 @@ Feature: git hack: starting a new feature from a feature branch (with remote rep
     And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME    |
-      | main             | local and remote | main commit             | main_file    |
-      | existing-feature | local            | existing feature commit | feature_file |
-      | new-feature      | local            | main commit             | main_file    |
+      | BRANCH           | LOCATION         | MESSAGE                 |
+      | main             | local and remote | main commit             |
+      | existing-feature | local            | existing feature commit |
+      | new-feature      | local            | main commit             |

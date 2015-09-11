@@ -6,10 +6,7 @@ Feature: Trying to create a feature branch with a non-existing parent
 
 
   Background:
-    And the following commit exists in my repository
-      | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
-      | main   | local and remote | main_commit | main_file |
-    And I am on the "main" branch
+    Given I am on the "main" branch
     And I have an uncommitted file
     When I run `git hack feature zonk`
 

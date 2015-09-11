@@ -8,9 +8,9 @@ Feature: Forking off a remote branch
   Background:
     Given I have a feature branch named "parent-feature"
     And the following commits exist in my repository
-      | BRANCH         | LOCATION | MESSAGE               | FILE NAME           |
-      | main           | remote   | main_commit           | main_file           |
-      | parent-feature | remote   | parent_feature_commit | parent_feature_file |
+      | BRANCH         | LOCATION | MESSAGE               |
+      | main           | remote   | main_commit           |
+      | parent-feature | remote   | parent_feature_commit |
     And I am on the "main" branch
     And I remove the "parent-feature" branch from my machine
     And I have an uncommitted file
@@ -33,14 +33,14 @@ Feature: Forking off a remote branch
     And I still have my uncommitted file
     And the branch "child_feature" has not been pushed to the repository
     And I have the following commits
-      | BRANCH         | LOCATION         | MESSAGE                                 | FILE NAME           |
-      | main           | local and remote | main_commit                             | main_file           |
-      | child-feature  | local            | parent_feature_commit                   | parent_feature_file |
-      |                |                  | main_commit                             | main_file           |
-      |                |                  | Merge branch 'main' into parent-feature |                     |
-      | parent-feature | local and remote | parent_feature_commit                   | parent_feature_file |
-      |                |                  | main_commit                             | main_file           |
-      |                |                  | Merge branch 'main' into parent-feature |                     |
+      | BRANCH         | LOCATION         | MESSAGE                                 |
+      | main           | local and remote | main_commit                             |
+      | child-feature  | local            | parent_feature_commit                   |
+      |                |                  | main_commit                             |
+      |                |                  | Merge branch 'main' into parent-feature |
+      | parent-feature | local and remote | parent_feature_commit                   |
+      |                |                  | main_commit                             |
+      |                |                  | Merge branch 'main' into parent-feature |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
       | child-feature  | parent-feature |
@@ -59,11 +59,11 @@ Feature: Forking off a remote branch
     And I end up on the "main" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH         | LOCATION         | MESSAGE                                 | FILE NAME           |
-      | main           | local and remote | main_commit                             | main_file           |
-      | parent-feature | local and remote | parent_feature_commit                   | parent_feature_file |
-      |                |                  | main_commit                             | main_file           |
-      |                |                  | Merge branch 'main' into parent-feature |                     |
+      | BRANCH         | LOCATION         | MESSAGE                                 |
+      | main           | local and remote | main_commit                             |
+      | parent-feature | local and remote | parent_feature_commit                   |
+      |                |                  | main_commit                             |
+      |                |                  | Merge branch 'main' into parent-feature |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT |
       | parent-feature | main   |
