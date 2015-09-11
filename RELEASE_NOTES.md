@@ -4,6 +4,8 @@
 
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
+* `git town version`: Homebrew installs no longer print date and SHA
+  ([#631](https://github.com/Originate/git-town/issues/631))
 
 ## 0.7.3 (2015-09-02)
 
