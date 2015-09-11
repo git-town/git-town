@@ -43,8 +43,8 @@ function preconditions {
     should_push_tags=true
   fi
 
-  export SHOULD_RUN_IN_GIT_ROOT=true
-  export SHOULD_STASH_OPEN_CHANGES=true
+  export RUN_IN_GIT_ROOT=true
+  export STASH_OPEN_CHANGES=true
 }
 
 

@@ -52,7 +52,7 @@ function preconditions {
   get_shas "$*"
   ensure_has_shas
 
-  export SHOULD_STASH_OPEN_CHANGES=true
+  export STASH_OPEN_CHANGES=true
 }
 
 

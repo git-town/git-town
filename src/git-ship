@@ -47,7 +47,7 @@ function preconditions {
   commit_options=$(parameters_as_string "$@")
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    export SHOULD_STASH_OPEN_CHANGES=true
+    export STASH_OPEN_CHANGES=true
   fi
 }
 

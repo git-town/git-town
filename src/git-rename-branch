@@ -61,7 +61,7 @@ function preconditions {
   ensure_does_not_have_branch "$destination_branch_name"
   parent_branch_name=$(parent_branch "$target_branch_name")
 
-  export SHOULD_STASH_OPEN_CHANGES=true
+  export STASH_OPEN_CHANGES=true
 }
 
 
