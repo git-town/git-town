@@ -8,9 +8,8 @@ Git Town divides all branches into three categories:
 
 # Main branch
 
-Git Town is based on each repository having a single development branch from which
-all feature branches are cut from and merged in. This is stored in the git config
-under `git-town.main-branch-name`
+The main development branch from which all feature branches are cut from and merged in.
+This is stored in the git config under `git-town.main-branch-name`
 
 
 # Perennial branches
@@ -58,9 +57,8 @@ When creating a pull request for `feature2`,
 Git Town only displays the changes between `feature2` and `feature1`,
 not the diff against `master`.
 
-Git Town stores the immediate parent of each branch in the git config as `git-town.<branch_name>.parent`.
-and the full ancestral line of each feature branch, top-down,
-as a space seperated list in the under `git-town-branch.<branch_name>.ancestors`
+Git Town stores the immediate parent of each feature branch in the git config under `git-town.<branch_name>.parent`.
+and the full ancestral line, top-down, as a space seperated list under `git-town-branch.<branch_name>.ancestors`
 
 For this example it would store
 ```
