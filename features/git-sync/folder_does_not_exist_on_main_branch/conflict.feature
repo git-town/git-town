@@ -72,7 +72,8 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       |                 | git merge --no-edit main                 |
       |                 | git push                                 |
       |                 | git checkout current-feature             |
-      | current-feature | git stash pop                            |
+      | current-feature | git push --tags                          |
+      |                 | git stash pop                            |
       | <none>          | cd <%= git_folder "new_folder" %>        |
     And I am still on the "current-feature" branch
     And I again have my uncommitted file

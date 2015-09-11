@@ -65,7 +65,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature-2 | git merge --abort                                    |
       |           | git reset --hard <%= sha 'feature-2 local commit' %> |
       |           | git checkout main                                    |
-      | main      | git stash pop                                        |
+      | main      | git push --tags                                      |
+      |           | git stash pop                                        |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
@@ -95,7 +96,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | feature-2 | git commit --no-edit |
       |           | git push             |
       |           | git checkout main    |
-      | main      | git stash pop        |
+      | main      | git push --tags      |
+      |           | git stash pop        |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
@@ -118,7 +120,8 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
       | BRANCH    | COMMAND           |
       | feature-2 | git push          |
       |           | git checkout main |
-      | main      | git stash pop     |
+      | main      | git push --tags   |
+      |           | git stash pop     |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
