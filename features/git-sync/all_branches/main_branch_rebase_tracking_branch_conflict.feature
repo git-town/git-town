@@ -62,7 +62,8 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git checkout main                  |
-      | main    | git stash pop                      |
+      | main    | git push --tags                    |
+      |         | git stash pop                      |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits
@@ -86,7 +87,8 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git checkout main                  |
-      | main    | git stash pop                      |
+      | main    | git push --tags                    |
+      |         | git stash pop                      |
     And I end up on the "main" branch
     And I again have my uncommitted file
     And I have the following commits

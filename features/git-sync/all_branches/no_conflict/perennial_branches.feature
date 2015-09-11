@@ -28,7 +28,8 @@ Feature: git sync --all: syncs all perennial branches
       | qa         | git rebase origin/qa         |
       |            | git push                     |
       |            | git checkout main            |
-      | main       | git stash pop                |
+      | main       | git push --tags              |
+      |            | git stash pop                |
     And I am still on the "main" branch
     And I still have my uncommitted file
     And all branches are now synchronized
