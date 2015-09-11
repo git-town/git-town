@@ -13,7 +13,7 @@ This is done by calling the methods
 * `post_undo_steps_for_[step]`: executed after the command runs
 
 
-### Abort / Continue
+## Abort / Continue
 
 If a Git command fails (typically due to a merge conflict), then the program halts
 and asks the user what they would like to do. In most cases they can either abort or continue.
@@ -27,7 +27,7 @@ and we resume executing steps.
 which skips all commands until the next checkout and then resumes executing steps.
 
 
-### Undo
+## Undo
 
 If a command finished successfully, then it can be undone.
 This will simply execute all the undo steps.
