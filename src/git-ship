@@ -45,14 +45,14 @@ function preconditions {
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
   ensure_has_no_unshipped_ancestors "$target_branch_name"
   commit_options=$(parameters_as_string "$@")
+
+  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
+    export STASH_OPEN_CHANGES=true
+  fi
 }
 
 
 function steps {
-  if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
-  fi
-
   if [ "$HAS_REMOTE" = true ]; then
     echo "fetch"
     sync_branch_steps "$MAIN_BRANCH_NAME"
@@ -81,7 +81,6 @@ function steps {
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     echo "checkout $INITIAL_BRANCH_NAME"
-    echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   fi
 }
 

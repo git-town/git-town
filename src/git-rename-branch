@@ -60,11 +60,12 @@ function preconditions {
 
   ensure_does_not_have_branch "$destination_branch_name"
   parent_branch_name=$(parent_branch "$target_branch_name")
+
+  export STASH_OPEN_CHANGES=true
 }
 
 
 function steps {
-  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
   echo "create_and_checkout_branch '$destination_branch_name' '$target_branch_name'"
 
   if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
@@ -78,8 +79,6 @@ function steps {
     echo "remove_perennial_branch $target_branch_name"
     echo "add_perennial_branch $destination_branch_name"
   fi
-
-  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 
   # update branch hierarchy information
   echo_update_child_branches "$target_branch_name" "$destination_branch_name"
