@@ -50,6 +50,7 @@ task 'deploy' do
   run 'git checkout gh-pages'
   run 'git pull'
   run 'git checkout master'
+  run 'git pull --rebase'
   run 'harp compile website/ _www'
   run 'git checkout gh-pages'
   run 'cp -r _www/* .'
