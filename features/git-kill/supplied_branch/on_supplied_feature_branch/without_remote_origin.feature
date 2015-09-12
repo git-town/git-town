@@ -45,4 +45,3 @@ Feature: git kill: killing the given feature branch when on it (without remote r
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
     And I am left with my original commits
-
