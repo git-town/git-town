@@ -135,7 +135,7 @@ function setup_configuration_main_branch {
 function setup_configuration_perennial_branches {
   echo "Git Town supports perennial branches like 'release' or 'production'."
   echo "These branches cannot be shipped and will not merge '$MAIN_BRANCH_NAME' when syncing."
-  echo "Please enter your perennial branches as a comma separated list or a blank line to skip."
+  echo "Please enter your perennial branches as a space separated list or a blank line to skip."
   echo "Example: 'qa, production'"
   read perennial_input
 
