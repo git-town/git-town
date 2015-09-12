@@ -80,25 +80,8 @@ function delete_ancestors_entry {
 }
 
 
-# Updates the child branches of the given branch to point to the other given branch
-function echo_update_child_branches {
-  local branch=$1
-  local new_parent=$2
-
-  child_branches "$branch" | while read branch_name; do
-    echo delete_ancestors_entry "$branch_name"
-    echo store_parent_branch "$branch_name" "$new_parent"
-  done
-}
-
-
-function get_numbered_branch {
-  local number=$1
-  local_branches_with_main_first | sed -n "${number}p"
-}
-
-
-function print_numbered_branches {
+# Prints branches prefixed by a number and a color
+function echo_numbered_branches {
   local branches="$(local_branches_with_main_first | tr '\n' ' ')"
   local branch
   local number=1
@@ -112,12 +95,42 @@ function print_numbered_branches {
 }
 
 
+# Prints the header
+function echo_parent_branch_header {
+  echo
+  echo "Feature branches can be branched directly off "
+  echo "$MAIN_BRANCH_NAME or from other feature branches."
+  echo
+  echo "The former allows to develop and ship features completely independent of each other."
+  echo "The latter allows to build on top of currently unshipped features."
+  echo
+  echo_numbered_branches
+  echo
+}
+
+
+# Updates the child branches of the given branch to point to the other given branch
+function echo_update_child_branches {
+  local branch=$1
+  local new_parent=$2
+
+  child_branches "$branch" | while read branch_name; do
+    echo delete_ancestors_entry "$branch_name"
+    echo store_parent_branch "$branch_name" "$new_parent"
+  done
+}
+
+
 # Makes sure that we know all the parent branches
 # Asks the user if necessary
-# Aborts the script if not all branches become known.
+#
+# branches - space seperated list of branches
 function ensure_knows_parent_branches {
   local branches=$1
   local branch
+  local parent
+  local user_input
+  local numerical_regex='^[0-9]+$'
   local header_shown=false
 
   for branch in $branches; do
@@ -126,28 +139,19 @@ function ensure_knows_parent_branches {
     fi
 
     while [ "$branch" != "$MAIN_BRANCH_NAME" ]; do
-      local parent
+      parent=""
       if [ "$(knows_parent_branch "$branch")" = true ]; then
         parent=$(parent_branch "$branch")
       else
         if [ "$header_shown" = false ]; then
-          echo
-          echo "Feature branches can be branched directly off "
-          echo "$MAIN_BRANCH_NAME or from other feature branches."
-          echo
-          echo "The former allows to develop and ship features completely independent of each other."
-          echo "The latter allows to build on top of currently unshipped features."
-          echo
-          print_numbered_branches
-          echo
+          echo_parent_branch_header
           header_shown=true
         fi
 
         while [ -z "$parent" ]; do
           echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$branch") by name or number (default: $MAIN_BRANCH_NAME): "
           read user_input
-          re='^[0-9]+$'
-          if [[ $user_input =~ $re ]] ; then
+          if [[ $user_input =~ $numerical_regex ]] ; then
             # user entered a number here
             parent="$(get_numbered_branch "$user_input")"
             if [ -z "$parent" ]; then
@@ -167,12 +171,22 @@ function ensure_knows_parent_branches {
           fi
         done
         store_parent_branch "$branch" "$parent"
-        echo
       fi
       branch=$parent
     done
     compile_ancestor_branches "$branch"
   done
+
+  if [ "$header_shown" = true ]; then
+    echo
+  fi
+}
+
+
+# Returns the branch name for the number shown in print_numbered_branches
+function get_numbered_branch {
+  local number=$1
+  local_branches_with_main_first | sed -n "${number}p"
 }
 
 
