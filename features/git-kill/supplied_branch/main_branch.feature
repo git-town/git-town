@@ -6,9 +6,9 @@ Feature: git kill: errors when trying to kill the main branch
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | feature | local and remote | good commit | good_file |
-      | main    | local and remote | main commit | main_file |
+      | BRANCH  | LOCATION         | MESSAGE     |
+      | main    | local and remote | main commit |
+      | feature | local and remote | good commit |
     And I am on the "feature" branch
 
 
@@ -23,8 +23,4 @@ Feature: git kill: errors when trying to kill the main branch
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | remote     | main, feature |
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | main    | local and remote | main commit | main_file |
-      | feature | local and remote | good commit | good_file |
-
+    And I am left with my original commits

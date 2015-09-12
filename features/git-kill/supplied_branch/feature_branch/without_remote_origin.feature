@@ -7,10 +7,10 @@ Feature: git kill: killing the given feature branch (without remote repo)
     Given my repo does not have a remote origin
     And I have local feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
-      | main            | local    | main commit            | conflicting_file     | main content            |
-      | current-feature | local    | current feature commit | current_feature_file | current feature content |
-      | other-feature   | local    | other feature commit   | other_feature_file   | other feature content   |
+      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
+      | main            | local    | main commit            | conflicting_file     |
+      | current-feature | local    | current feature commit | current_feature_file |
+      | other-feature   | local    | other feature commit   | other_feature_file   |
     And I am on the "current-feature" branch
     And I have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     When I run `git kill other-feature`
@@ -26,9 +26,9 @@ Feature: git kill: killing the given feature branch (without remote repo)
       | REPOSITORY | BRANCHES              |
       | local      | main, current-feature |
     And now I have the following commits
-      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
-      | main            | local    | main commit            | conflicting_file     | main content            |
-      | current-feature | local    | current feature commit | current_feature_file | current feature content |
+      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
+      | main            | local    | main commit            | conflicting_file     |
+      | current-feature | local    | current feature commit | current_feature_file |
 
 
   Scenario: undoing the kill
@@ -41,8 +41,4 @@ Feature: git kill: killing the given feature branch (without remote repo)
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-    And now I have the following commits
-      | BRANCH          | LOCATION | MESSAGE                | FILE NAME            | FILE CONTENT            |
-      | main            | local    | main commit            | conflicting_file     | main content            |
-      | current-feature | local    | current feature commit | current_feature_file | current feature content |
-      | other-feature   | local    | other feature commit   | other_feature_file   | other feature content   |
+    And I am left with my original commits

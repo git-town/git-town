@@ -8,9 +8,9 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
   Background:
     Given I have feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE                | FILE NAME            |
-      | current-feature | local and remote | current feature commit | current_feature_file |
-      | other-feature   | local and remote | other feature commit   | other_feature_file   |
+      | BRANCH          | LOCATION         | MESSAGE                |
+      | current-feature | local and remote | current feature commit |
+      | other-feature   | local and remote | other feature commit   |
     And the "current-feature" branch gets deleted on the remote
     And I am on the "current-feature" branch
     And I have an uncommitted file
@@ -32,8 +32,8 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And I have the following commits
-      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          |
-      | other-feature | local and remote | other feature commit | other_feature_file |
+      | BRANCH        | LOCATION         | MESSAGE              |
+      | other-feature | local and remote | other feature commit |
 
 
   Scenario: undoing the kill
@@ -50,6 +50,6 @@ Feature: git kill: killing the current feature branch with a deleted tracking br
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
     And I have the following commits
-      | BRANCH          | LOCATION         | MESSAGE                | FILE NAME            |
-      | current-feature | local            | current feature commit | current_feature_file |
-      | other-feature   | local and remote | other feature commit   | other_feature_file   |
+      | BRANCH          | LOCATION         | MESSAGE                |
+      | current-feature | local            | current feature commit |
+      | other-feature   | local and remote | other feature commit   |

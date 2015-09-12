@@ -8,10 +8,10 @@ Feature: git kill: killing the given feature branch
   Background:
     Given I have feature branches named "good-feature" and "dead-feature"
     And the following commits exist in my repository
-      | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        | FILE CONTENT |
-      | main         | local and remote | conflicting with uncommitted changes | conflicting_file | main content |
-      | good-feature | local and remote | good commit                          | good_file        |              |
-      | dead-feature | local and remote | dead-end commit                      | unfortunate_file |              |
+      | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        |
+      | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
+      | dead-feature | local and remote | dead-end commit                      | unfortunate_file |
+      | good-feature | local and remote | good commit                          | good_file        |
     And I am on the "good-feature" branch
     And I have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     When I run `git kill dead-feature`
@@ -47,8 +47,4 @@ Feature: git kill: killing the given feature branch
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
-    And I have the following commits
-      | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        |
-      | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
-      | dead-feature | local and remote | dead-end commit                      | unfortunate_file |
-      | good-feature | local and remote | good commit                          | good_file        |
+    And I am left with my original commits

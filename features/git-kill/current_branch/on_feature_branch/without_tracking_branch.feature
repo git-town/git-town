@@ -9,9 +9,9 @@ Feature: git kill: killing the current feature branch without a tracking branch
     Given I have a feature branch named "other-feature"
     And I have a local feature branch named "current-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE                | FILE NAME          |
-      | other-feature   | local and remote | other feature commit   | other_feature_file |
-      | current-feature | local            | current feature commit | unfortunate_file   |
+      | BRANCH          | LOCATION         | MESSAGE                |
+      | current-feature | local            | current feature commit |
+      | other-feature   | local and remote | other feature commit   |
     And I am on the "current-feature" branch
     And I have an uncommitted file
     When I run `git kill`
@@ -31,8 +31,8 @@ Feature: git kill: killing the current feature branch without a tracking branch
       | local      | main, other-feature |
       | remote     | main, other-feature |
     And I have the following commits
-      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          |
-      | other-feature | local and remote | other feature commit | other_feature_file |
+      | BRANCH        | LOCATION         | MESSAGE              |
+      | other-feature | local and remote | other feature commit |
 
 
   Scenario: Undoing a kill of a local feature branch
@@ -48,7 +48,4 @@ Feature: git kill: killing the current feature branch without a tracking branch
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And I have the following commits
-      | BRANCH          | LOCATION         | MESSAGE                | FILE NAME          |
-      | current-feature | local            | current feature commit | unfortunate_file   |
-      | other-feature   | local and remote | other feature commit   | other_feature_file |
+    And I am left with my original commits
