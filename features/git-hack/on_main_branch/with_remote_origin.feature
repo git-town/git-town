@@ -7,8 +7,8 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
 
   Background:
     Given the following commit exists in my repository
-      | BRANCH | LOCATION | MESSAGE     | FILE NAME |
-      | main   | remote   | main_commit | main_file |
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | remote   | main_commit |
     And I am on the "main" branch
     And I have an uncommitted file
     When I run `git hack new-feature`
@@ -26,6 +26,6 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
     And I still have my uncommitted file
     And the branch "new-feature" has not been pushed to the repository
     And I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE     | FILE NAME |
-      | main        | local and remote | main_commit | main_file |
-      | new-feature | local            | main_commit | main_file |
+      | BRANCH      | LOCATION         | MESSAGE     |
+      | main        | local and remote | main_commit |
+      | new-feature | local            | main_commit |
