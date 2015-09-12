@@ -121,6 +121,12 @@ function local_branches {
   git branch | tr -d ' ' | sed 's/\*//g'
 }
 
+# Returns the names of local branches
+function local_branches_with_main_first {
+  echo "$MAIN_BRANCH_NAME"
+  local_branches_without_main
+}
+
 
 # Returns the names of local branches without the main branch
 function local_branches_without_main {

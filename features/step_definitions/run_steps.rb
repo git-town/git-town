@@ -111,6 +111,11 @@ Then(/^I see "(.*)"$/) do |string|
 end
 
 
+Then(/^I only see the branch list once$/) do
+  expect(unformatted_last_run_output.scan('1: main').count).to eql 1
+end
+
+
 Then(/^I see the "(.+?)" man page$/) do |manpage|
   expect(@last_run_result.out).to eql "man called with: #{manpage}\n"
 end
