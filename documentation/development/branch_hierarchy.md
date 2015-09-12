@@ -14,8 +14,8 @@ This is stored in the git config under `git-town.main-branch-name`
 
 ## Perennial branches
 
-These are branches that are serve some special purpose, such as deployment.
-The branches cannot be killed or shipped,
+These are branches that serve some special purpose, such as deployment.
+Perennial branches cannot be killed or shipped,
 and only rebase with their own tracking branch when synced.
 These are stored in the git config under `git-town.perennial-branch-names` as a comma seperated list.
 
