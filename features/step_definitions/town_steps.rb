@@ -57,12 +57,12 @@ end
 
 Then(/^my perennial branches are now configured as (.*)$/) do |data|
   perennial_branches = Kappamaki.from_sentence(data)
-  expect(perennial_branch_configuration.split(',').map(&:strip)).to match_array perennial_branches
+  expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array perennial_branches
 end
 
 
 Then(/^my perennial branches are still not configured$/) do
-  expect(perennial_branch_configuration.split(',')).to be_empty
+  expect(perennial_branch_configuration.split(' ')).to be_empty
 end
 
 
