@@ -80,7 +80,7 @@ function delete_ancestors_entry {
 }
 
 
-# Prints branches prefixed by a number and a color
+# Prints branches prefixed by a number and a colon
 function echo_numbered_branches {
   local branches="$(local_branches_with_main_first | tr '\n' ' ')"
   local branch
@@ -95,7 +95,7 @@ function echo_numbered_branches {
 }
 
 
-# Prints the header
+# Prints the header for the prompt when asking for parent branches
 function echo_parent_branch_header {
   echo
   echo "Feature branches can be branched directly off "
@@ -128,28 +128,30 @@ function echo_update_child_branches {
 function ensure_knows_parent_branches {
   local branches=$1
   local branch
+  local child
   local parent
   local user_input
   local numerical_regex='^[0-9]+$'
   local header_shown=false
 
   for branch in $branches; do
-    if [ "$(knows_all_ancestor_branches "$branch")" = true ]; then
+    child=$branch
+    if [ "$(knows_all_ancestor_branches "$child")" = true ]; then
       continue
     fi
 
-    while [ "$branch" != "$MAIN_BRANCH_NAME" ]; do
-      parent=""
-      if [ "$(knows_parent_branch "$branch")" = true ]; then
-        parent=$(parent_branch "$branch")
+    while [ "$child" != "$MAIN_BRANCH_NAME" ]; do
+      if [ "$(knows_parent_branch "$child")" = true ]; then
+        parent=$(parent_branch "$child")
       else
         if [ "$header_shown" = false ]; then
           echo_parent_branch_header
           header_shown=true
         fi
 
+        parent=""
         while [ -z "$parent" ]; do
-          echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$branch") by name or number (default: $MAIN_BRANCH_NAME): "
+          echo -n "Please specify the parent branch of $(echo_inline_cyan_bold "$child") by name or number (default: $MAIN_BRANCH_NAME): "
           read user_input
           if [[ $user_input =~ $numerical_regex ]] ; then
             # user entered a number here
@@ -170,9 +172,9 @@ function ensure_knows_parent_branches {
             fi
           fi
         done
-        store_parent_branch "$branch" "$parent"
+        store_parent_branch "$child" "$parent"
       fi
-      branch=$parent
+      child=$parent
     done
     compile_ancestor_branches "$branch"
   done
