@@ -8,11 +8,11 @@ Feature: git extract: extracting multiple commits
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
-      | main    | remote   | remote main commit | remote_main_file |
-      | feature | local    | feature commit     | feature_file     |
-      |         |          | refactor1 commit   | refactor1_file   |
-      |         |          | refactor2 commit   | refactor2_file   |
+      | BRANCH  | LOCATION | MESSAGE            |
+      | main    | remote   | remote main commit |
+      | feature | local    | feature commit     |
+      |         |          | refactor1 commit   |
+      |         |          | refactor2 commit   |
     And I am on the "feature" branch
     And I have an uncommitted file
     When I run `git extract refactor` with the last two commit shas
@@ -40,12 +40,3 @@ Feature: git extract: extracting multiple commits
       | refactor | local and remote | remote main commit |
       |          |                  | refactor1 commit   |
       |          |                  | refactor2 commit   |
-    And now I have the following committed files
-      | BRANCH   | NAME             |
-      | main     | remote_main_file |
-      | feature  | feature_file     |
-      | feature  | refactor1_file   |
-      | feature  | refactor2_file   |
-      | refactor | refactor1_file   |
-      | refactor | refactor2_file   |
-      | refactor | remote_main_file |
