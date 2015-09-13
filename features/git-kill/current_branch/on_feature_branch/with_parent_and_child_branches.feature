@@ -10,10 +10,10 @@ Feature: git kill: killing the current feature branch with child branches
     And I have a feature branch named "feature-2" as a child of "feature-1"
     And I have a feature branch named "feature-3" as a child of "feature-2"
     And the following commits exist in my repository
-      | BRANCH    | LOCATION         | MESSAGE          | FILE NAME      |
-      | feature-1 | local and remote | feature 1 commit | feature_1_file |
-      | feature-2 | local and remote | feature 2 commit | feature_2_file |
-      | feature-3 | local and remote | feature 3 commit | feature_3_file |
+      | BRANCH    | LOCATION         | MESSAGE          |
+      | feature-1 | local and remote | feature 1 commit |
+      | feature-2 | local and remote | feature 2 commit |
+      | feature-3 | local and remote | feature 3 commit |
     And I am on the "feature-2" branch
     And I have an uncommitted file
     When I run `git kill`
@@ -35,9 +35,9 @@ Feature: git kill: killing the current feature branch with child branches
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
     And I have the following commits
-      | BRANCH    | LOCATION         | MESSAGE          | FILE NAME      |
-      | feature-1 | local and remote | feature 1 commit | feature_1_file |
-      | feature-3 | local and remote | feature 3 commit | feature_3_file |
+      | BRANCH    | LOCATION         | MESSAGE          |
+      | feature-1 | local and remote | feature 1 commit |
+      | feature-3 | local and remote | feature 3 commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
