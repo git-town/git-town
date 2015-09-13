@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+* **BREAKING CHANGE**: update internal storage of perennial branches
+  * if you have configured multiple perennial branches they will need to be reset
+    * run `git config --unset git-town.perennial-branch-names`
+    * you will be prompted to re-enter them the next time you use a Git Town command
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
 * `git town version`: Homebrew installs no longer print date and SHA
