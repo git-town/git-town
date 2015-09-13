@@ -123,16 +123,15 @@ function echo_update_child_branches {
 
 # Makes sure that we know all the parent branches
 # Asks the user if necessary
-#
-# branches - space seperated list of branches
 function ensure_knows_parent_branches {
-  local branches=$1
+  local branches=$1 # space seperated list of branches
+
   local branch
   local child
+  local header_shown=false
+  local numerical_regex='^[0-9]+$'
   local parent
   local user_input
-  local numerical_regex='^[0-9]+$'
-  local header_shown=false
 
   for branch in $branches; do
     child=$branch
