@@ -7,9 +7,9 @@ Feature: git kill: errors when trying to kill a perennial branch
     Given I have branches named "feature" and "qa"
     And my perennial branches are configured as "qa"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | feature | local and remote | good commit | good_file |
-      | qa      | local and remote | qa commit   | qa_file   |
+      | BRANCH  | LOCATION         | MESSAGE     |
+      | feature | local and remote | good commit |
+      | qa      | local and remote | qa commit   |
     And I am on the "feature" branch
 
 
@@ -24,7 +24,4 @@ Feature: git kill: errors when trying to kill a perennial branch
       | REPOSITORY | BRANCHES          |
       | local      | main, qa, feature |
       | remote     | main, qa, feature |
-    And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE     | FILE NAME |
-      | feature | local and remote | good commit | good_file |
-      | qa      | local and remote | qa commit   | qa_file   |
+    And I am left with my original commits
