@@ -59,7 +59,7 @@ function is_main_branch {
 function is_perennial_branch {
   local branch_name=$1
 
-  if echo "$PERENNIAL_BRANCH_NAMES" | tr ',' '\n' | grep -q "^ *$branch_name *$"; then
+  if echo "$PERENNIAL_BRANCH_NAMES" | tr ' ' '\n' | grep -q "^ *$branch_name *$"; then
     echo true
   else
     echo false
