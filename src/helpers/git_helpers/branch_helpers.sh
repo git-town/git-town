@@ -34,8 +34,8 @@ function create_and_checkout_branch {
 function delete_local_branch {
   local branch_name=$1
   local op="d"
-  if [ "$2" == "force" ] || [ "$(delete_local_branch_needs_force "$branch_name")" = true ];
-    then op="D";
+  if [ "$2" == "force" ] || [ "$(delete_local_branch_needs_force "$branch_name")" = true ]; then
+    op="D";
   fi
   run_command "git branch -$op $branch_name"
 }
