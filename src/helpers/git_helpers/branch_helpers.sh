@@ -34,7 +34,9 @@ function create_and_checkout_branch {
 function delete_local_branch {
   local branch_name=$1
   local op="d"
-  if [ "$2" == "force" ]; then op="D"; fi
+  if [ "$2" == "force" ] || [ "$(delete_local_branch_needs_force "$branch_name")" = true ]; then
+    op="D"
+  fi
   run_command "git branch -$op $branch_name"
 }
 
@@ -131,6 +133,17 @@ function local_branches_without_main {
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$MAIN_BRANCH_NAME" | tr -d ' ' | sed 's/\*//g'
+}
+
+
+# Returns whether or not the force flag is needed to delete the given branch
+function delete_local_branch_needs_force {
+  local branch_name=$1
+  if [ -n "$(git log "..$branch_name")" ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 
