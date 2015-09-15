@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# Exluded rules
+#
 # https://github.com/koalaman/shellcheck/wiki/SC1090
 #   We aready run shellcheck on all our source files
+#
 # https://github.com/koalaman/shellcheck/wiki/SC2155
 #   Bloats the code
-exclude="SC1090,SC2155"
 
-find src -name 'git-*' -print0 | xargs -0 shellcheck --exclude="$exclude"
-find src -name '*.sh' -print0 | xargs -0 shellcheck --exclude="$exclude"
-find bin -type f -print0 | xargs -0 shellcheck --exclude="$exclude"
+find bin src -type f -print0 | xargs -0 shellcheck --exclude="SC1090,SC2155"
