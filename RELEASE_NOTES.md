@@ -7,6 +7,7 @@
     * run `git town config --reset`
     * you will be prompted to re-enter your configuration the next time you use a Git Town command
 * improve configuration prompt
+* remove `git town config --setup`
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
 * `git town version`: Homebrew installs no longer print date and SHA
