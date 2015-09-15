@@ -56,7 +56,7 @@ end
 
 
 Then(/^my perennial branches are now configured as (.*)$/) do |data|
-  perennial_branches = Kappamaki.from_sentence(data)
+  perennial_branches = data == 'none' ? '' : Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array perennial_branches
 end
 
@@ -70,11 +70,8 @@ Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
   expect(git_town_configuration).to be_empty
 end
 
-
 Then(/^I see the initial configuration prompt$/) do
-  step %(I see "Git Town hasn't been configured for this repository.")
-  step %(I see "Please run 'git town config --setup'.")
-  step %(I see "Would you like to do that now? [Y/n]")
+  step %(I see "Git Town needs to be configured")
 end
 
 

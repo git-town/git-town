@@ -43,6 +43,16 @@ function add_or_remove_perennial_branches {
 }
 
 
+# Returns whether or not the perennial branches are configured
+function are_perennial_branches_configured {
+  if get_configuration 'perennial-branch-names'; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 function echo_perennial_branch_usage {
   echo_inline_usage 'git town perennial-branches (--add | --remove) <branch_name>'
 }
@@ -69,9 +79,9 @@ function get_configuration {
 }
 
 
-# Returns whether or not Git Town is configured
-function is_git_town_configured {
-  if [ -n "$MAIN_BRANCH_NAME" ] && get_configuration 'perennial-branch-names'; then
+# Returns whether of not the main branch is configured
+function is_main_branch_configured {
+  if [ -n "$MAIN_BRANCH_NAME" ]; then
     echo true
   else
     echo false
@@ -105,60 +115,15 @@ function remove_perennial_branch {
 }
 
 
-# Begin the git town setup wizard
-function setup_configuration {
-  setup_configuration_main_branch
-  echo
-  setup_configuration_perennial_branches
-  echo "Done with configuration:"
-  show_config | indent
-}
-
-
-# Ask and store main-branch-name
-function setup_configuration_main_branch {
-  echo "Please specify the main dev branch (typically 'master' or 'development'):"
-  read main_branch_input
-  if [[ -z "$main_branch_input" ]]; then
-    echo_error_header
-    echo_error "You have not provided the name for the main branch."
-    echo_error "Aborting Git Town configuration."
-    exit_with_error newline
-  fi
-
-  ensure_has_branch "$main_branch_input" || exit_with_error
-  store_configuration main-branch-name "$main_branch_input"
-}
-
-
-# Ask and store perennial-branch-names
-function setup_configuration_perennial_branches {
-  echo "Git Town supports perennial branches like 'release' or 'production'."
-  echo "These branches cannot be shipped and will not merge '$MAIN_BRANCH_NAME' when syncing."
-  echo "Please enter your perennial branches as a space separated list or a blank line to skip."
-  echo "Example: 'qa, production'"
-  read perennial_input
-
-  if [[ -n "$perennial_input" ]]; then
-    ensure_has_branches "$perennial_input" || exit_with_error
-    ensure_valid_perennial_branches "$perennial_input" || exit_with_error
-  fi
-
-  store_configuration perennial-branch-names "$perennial_input"
-}
-
-
-# Perform `git town config` operation ("reset", "setup", "show")
+# Perform `git town config` operation
 function run_config_operation {
   local operation=$1
 
   if [ -n "$operation" ]; then
-    if [ "$operation" == "--setup" ]; then
-      setup_configuration
-    elif [ "$operation" == "--reset" ]; then
+    if [ "$operation" == "--reset" ]; then
       remove_all_configuration
     else
-      echo "usage: git town config [--reset | --setup]"
+      echo "usage: git town config [--reset]"
     fi
   else
     show_config

@@ -126,7 +126,9 @@ function local_branches {
 
 # Returns the names of local branches
 function local_branches_with_main_first {
-  echo "$MAIN_BRANCH_NAME"
+  if [ -n "$MAIN_BRANCH_NAME" ]; then
+    echo "$MAIN_BRANCH_NAME"
+  fi
   local_branches_without_main
 }
 

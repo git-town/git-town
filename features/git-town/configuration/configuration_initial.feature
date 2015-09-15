@@ -9,30 +9,50 @@ Feature: Initial configuration
     Given I haven't configured Git Town yet
 
 
+  Scenario: user enters valid main branch and perennial branches
+    Given I have branches named "qa" and "production"
+    When I run `git hack feature` and enter "main", "qa", "production" and ""
+    Then the main branch name is now configured as "main"
+    And my perennial branches are now configured as "qa" and "production"
+
+
+  Scenario: user enters empty main branch
+    When I run `git hack feature` and enter "", "main" and ""
+    Then I see "no input received"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
+
+
+  Scenario: user enters invalid main branch number
+    When I run `git hack feature` and enter "2", "main" and ""
+    Then I see "Invalid branch number"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
+
+
   Scenario: user enters non-existent main branch
-    When I run `git town config --setup` and enter main branch name "nonexistent"
-    Then I get the error "There is no branch named 'nonexistent'"
-    And Git Town is still not configured for this repository
+    When I run `git hack feature` and enter "non-existent", "main" and ""
+    Then I see "branch 'non-existent' doesn't exist"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
 
 
-  Scenario: user enters a valid main branch and non-existent perennial branch
-    Given I have a branch named "master"
-    When I run `git town config --setup` and enter main branch name "master" and perennial branch names "nonexistent"
-    Then I get the error "There is no branch named 'nonexistent'"
-    And the main branch name is now configured as "master"
-    And my perennial branches are still not configured
+  Scenario: user enters main branch as perennial branch
+    When I run `git hack feature` and enter "main", "main" and ""
+    Then I see "'main' is already set as the main branch"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
 
 
-  Scenario: user enters valid main branch and valid perennial branches
-    Given I have branches named "dev" and "qa"
-    When I run `git town config --setup` and enter main branch name "dev" and perennial branch names "qa"
-    Then the main branch name is now configured as "dev"
-    And my perennial branches are now configured as "qa"
+  Scenario: user enters invalid perennial branch number
+    When I run `git hack feature` and enter "main", "2" and ""
+    Then I see "Invalid branch number"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
 
 
-  Scenario: user enters the existing main branch as feature branches
-    Given I have branches named "dev" and "qa"
-    When I run `git town config --setup` and enter main branch name "dev" and perennial branch names "dev"
-    Then I get the error "'dev' is already set as the main branch"
-    And the main branch name is now configured as "dev"
-    And my perennial branches are still not configured
+  Scenario: user enters non-existent perennial branch
+    When I run `git hack feature` and enter "main", "non-existent" and ""
+    Then I see "branch 'non-existent' doesn't exist"
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none

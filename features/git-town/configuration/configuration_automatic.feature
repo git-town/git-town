@@ -10,68 +10,20 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
 
   Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
-    When I run `<COMMAND>` and enter "^C"
+    When I run `<COMMAND>` and enter "main" and ""
     Then I see the initial configuration prompt
+    And the main branch name is now configured as "main"
+    And my perennial branches are configured as none
+    And it may error
 
     Examples:
-    | COMMAND              |
-    | git extract          |
-    | git hack             |
-    | git kill             |
-    | git new-pull-request |
-    | git prune-branches   |
-    | git repo             |
-    | git ship             |
-    | git sync             |
-    | git sync-fork        |
-
-
-  Scenario Outline: Starting the wizard by answering "y" to the configuration prompt's question whether to start it
-    When I run `<COMMAND>` and enter "y" and "^C"
-    Then I see the first line of the configuration wizard
-
-    Examples:
-    | COMMAND              |
-    | git extract          |
-    | git hack             |
-    | git kill             |
-    | git new-pull-request |
-    | git prune-branches   |
-    | git repo             |
-    | git ship             |
-    | git sync             |
-    | git sync-fork        |
-
-
-  Scenario Outline: Starting the wizard by choosing the default answer to the configuration prompt's question whether to start it
-    When I run `<COMMAND>` and enter "" and "^C"
-    Then I see the first line of the configuration wizard
-
-    Examples:
-    | COMMAND              |
-    | git extract          |
-    | git hack             |
-    | git kill             |
-    | git new-pull-request |
-    | git prune-branches   |
-    | git repo             |
-    | git ship             |
-    | git sync             |
-    | git sync-fork        |
-
-
-  Scenario Outline: Not proceeding to the wizard by answering "n" to the configuration prompt's question whether to start it
-    When I run `<COMMAND>` and enter "n" and "^C"
-    Then I don't see the first line of the configuration wizard
-
-    Examples:
-    | COMMAND              |
-    | git extract          |
-    | git hack             |
-    | git kill             |
-    | git new-pull-request |
-    | git prune-branches   |
-    | git repo             |
-    | git ship             |
-    | git sync             |
-    | git sync-fork        |
+      | COMMAND              |
+      | git extract          |
+      | git hack             |
+      | git kill             |
+      | git new-pull-request |
+      | git prune-branches   |
+      | git repo             |
+      | git ship             |
+      | git sync             |
+      | git sync-fork        |

@@ -26,6 +26,7 @@ source "$current_dir/git_helpers/tracking_branch_helpers.sh"
 
 source "$current_dir/browser_helpers.sh"
 source "$current_dir/configuration_helpers.sh"
+source "$current_dir/configuration_prompt_helpers.sh" "$@"
 source "$current_dir/driver_helpers.sh"
 source "$current_dir/file_helpers.sh"
 source "$current_dir/folder_helpers.sh"

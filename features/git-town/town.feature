@@ -6,7 +6,7 @@ Feature: Show correct git town usage
       """
       error: unsupported subcommand 'invalidcommand'
       usage: git town
-         or: git town config [--reset | --setup]
+         or: git town config [--reset]
          or: git town help
          or: git town install-fish-autocompletion
          or: git town main-branch [<branch_name>]
