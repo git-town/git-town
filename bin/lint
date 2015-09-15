@@ -9,4 +9,4 @@ set -e
 # https://github.com/koalaman/shellcheck/wiki/SC2155
 #   Bloats the code
 
-find bin src -type f -print0 | xargs -0 shellcheck --exclude="SC1090,SC2155"
+find bin src -type f ! -name 'README.md' -print0 | xargs -0 shellcheck --exclude="SC1090,SC2155"
