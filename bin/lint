@@ -8,5 +8,10 @@ set -e
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2155
 #   Bloats the code
+#
+# https://github.com/koalaman/shellcheck/wiki/SC2162
+#   read -r option not available on Mac OSX 10.10
 
-find bin src -type f ! -name 'README.md' -print0 | xargs -0 shellcheck --exclude="SC1090,SC2155"
+exclude="SC1090,SC2155,SC2162"
+
+find bin src -type f ! -name 'README.md' -print0 | xargs -0 shellcheck --exclude="$exclude"
