@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# Exluded rules
+# Exluded rules (see https://github.com/koalaman/shellcheck/wiki/)
 #
-# https://github.com/koalaman/shellcheck/wiki/SC1090
-#   We aready run shellcheck on all our source files
-#
-# https://github.com/koalaman/shellcheck/wiki/SC2155
-#   Bloats the code
-#
-# https://github.com/koalaman/shellcheck/wiki/SC2162
-#   read -r option not available on Mac OSX 10.10
+# SC1090: we aready run shellcheck on all our source files
+# SC2155: would bloat the code base
+# SC2162: read -r option not available on Mac OSX 10.10
 
 exclude="SC1090,SC2155,SC2162"
 
