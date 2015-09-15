@@ -7,7 +7,7 @@ set -e
 
 
 # the version of shellcheck to be installed
-VERSION=0.3.7
+VERSION=0.4.1
 
 # path to the cached ShellCheck binary
 BIN_PATH=~/.cabal/bin/shellcheck
