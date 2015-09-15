@@ -124,6 +124,13 @@ function local_branches {
 }
 
 
+# Returns the names of local branches
+function local_branches_with_main_first {
+  echo "$MAIN_BRANCH_NAME"
+  local_branches_without_main
+}
+
+
 # Returns the names of local branches without the main branch
 function local_branches_without_main {
   local_branches | grep -v "^$MAIN_BRANCH_NAME\$"
