@@ -9,12 +9,12 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Given I haven't configured Git Town yet
 
 
+  @ignore-run-error
   Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
     When I run `<COMMAND>` and enter "main" and ""
     Then I see the initial configuration prompt
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
-    And it may error
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with no perennial branches
 
     Examples:
       | COMMAND              |

@@ -36,7 +36,7 @@ Feature: git rename-branch: renaming a perennial branch with a tracking branch
       |                    | git branch -D production                      |
       |                    | git stash pop                                 |
     And I end up on the "renamed-production" branch
-    And my perennial branches are now configured as "qa" and "renamed-production"
+    And my repo is configured with perennial branches as "qa" and "renamed-production"
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE           |

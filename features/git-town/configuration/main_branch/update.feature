@@ -9,7 +9,7 @@ Feature: set the main branch configuration
     Given I don't have a main branch name configured
     When I run `git town main-branch main`
     Then I see no output
-    And the main branch name is now configured as "main"
+    And my repo is configured with the main branch as "main"
 
 
   Scenario: main branch is configured
@@ -17,7 +17,7 @@ Feature: set the main branch configuration
     And I have configured the main branch name as "main-old"
     When I run `git town main-branch main-new`
     Then I see no output
-    And the main branch name is now configured as "main-new"
+    And my repo is configured with the main branch as "main-new"
 
 
   Scenario: invalid branch name

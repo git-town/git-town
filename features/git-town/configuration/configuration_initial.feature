@@ -6,53 +6,59 @@ Feature: Initial configuration
 
 
   Background:
-    Given I haven't configured Git Town yet
+    Given I have branches named "production" and "qa"
+    And I haven't configured Git Town yet
 
 
-  Scenario: user enters valid main branch and perennial branches
-    Given I have branches named "qa" and "production"
-    When I run `git hack feature` and enter "main", "qa", "production" and ""
-    Then the main branch name is now configured as "main"
-    And my perennial branches are now configured as "qa" and "production"
+  Scenario: succeeds on valid main branch and perennial branch names
+    When I run `git hack feature` and enter "main", "production", "qa" and ""
+    Then my repo is configured with the main branch as "main"
+    And my repo is configured with perennial branches as "production" and "qa"
 
 
-  Scenario: user enters empty main branch
+  Scenario: succeeds on valid main branch and perennial branch numbers
+    When I run `git hack feature` and enter "1", "2", "3" and ""
+    Then my repo is configured with the main branch as "main"
+    And my repo is configured with perennial branches as "production" and "qa"
+
+
+  Scenario: shows error and reprompts on empty main branch
     When I run `git hack feature` and enter "", "main" and ""
     Then I see "no input received"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with no perennial branches
 
 
-  Scenario: user enters invalid main branch number
-    When I run `git hack feature` and enter "2", "main" and ""
+  Scenario: shows error and reprompts on invalid main branch number
+    When I run `git hack feature` and enter "4", "main" and ""
     Then I see "Invalid branch number"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with no perennial branches
 
 
-  Scenario: user enters non-existent main branch
+  Scenario: shows error and reprompts on non-existent main branch
     When I run `git hack feature` and enter "non-existent", "main" and ""
     Then I see "branch 'non-existent' doesn't exist"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with no perennial branches
 
 
-  Scenario: user enters main branch as perennial branch
-    When I run `git hack feature` and enter "main", "main" and ""
+  Scenario: shows error and reprompts on main branch as perennial branch
+    When I run `git hack feature` and enter "main", "main", "qa" and ""
     Then I see "'main' is already set as the main branch"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with perennial branches as "qa"
 
 
-  Scenario: user enters invalid perennial branch number
-    When I run `git hack feature` and enter "main", "2" and ""
+  Scenario: shows error and reprompts on invalid perennial branch number
+    When I run `git hack feature` and enter "main", "4", "3" and ""
     Then I see "Invalid branch number"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with perennial branches as "qa"
 
 
-  Scenario: user enters non-existent perennial branch
-    When I run `git hack feature` and enter "main", "non-existent" and ""
+  Scenario: shows error and reprompts on non-existent perennial branch
+    When I run `git hack feature` and enter "main", "non-existent", "qa", and ""
     Then I see "branch 'non-existent' doesn't exist"
-    And the main branch name is now configured as "main"
-    And my perennial branches are configured as none
+    And my repo is configured with the main branch as "main"
+    And my repo is configured with perennial branches as "qa"
