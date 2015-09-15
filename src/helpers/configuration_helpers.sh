@@ -58,20 +58,6 @@ function echo_perennial_branch_usage {
 }
 
 
-# Ensure that perennial branches don't contain main branch
-function ensure_valid_perennial_branches {
-  local branches=$1
-
-  split_string "$branches" ' ' | while read branch; do
-    if [[ "$branch" == "$MAIN_BRANCH_NAME" ]]; then
-      echo_error_header
-      echo_error "'$branch' is already set as the main branch"
-      exit_with_error
-    fi
-  done
-}
-
-
 # Returns git-town configuration
 function get_configuration {
   local config_setting_name=$1

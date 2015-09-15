@@ -76,16 +76,6 @@ function ensure_has_branch {
 }
 
 
-# Exits if any of the branches do not exist
-function ensure_has_branches {
-  local branches=$1
-
-  split_string "$branches" ' ' | while read branch; do
-    ensure_has_branch "$branch"
-  done
-}
-
-
 # Returns the current branch name
 function get_current_branch_name {
   if [ "$(rebase_in_progress)" = true ]; then
