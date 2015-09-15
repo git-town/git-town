@@ -41,8 +41,7 @@ Feature: Prompt for parent branch when unknown
       | feature-2 | local and remote | feature-2 commit |
     And I am on the "main" branch
     When I run `git sync --all` and press ENTER twice
-    Then I only see the branch list once
-    And I have the following commits
+    Then I have the following commits
       | BRANCH    | LOCATION         | MESSAGE                            |
       | main      | local and remote | main commit                        |
       | feature-1 | local and remote | feature-1 commit                   |
