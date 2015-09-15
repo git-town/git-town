@@ -35,7 +35,7 @@ function ensure_on_feature_branch {
 # Returns true if the current branch is a feature branch
 function is_feature_branch {
   local branch_name=$1
-  if [ "$branch_name" == "$MAIN_BRANCH_NAME" -o "$(is_perennial_branch "$branch_name")" == true ]; then
+  if [ "$branch_name" == "$MAIN_BRANCH_NAME" ] || [ "$(is_perennial_branch "$branch_name")" == true ]; then
     echo false
   else
     echo true
