@@ -106,10 +106,12 @@ function run_config_operation {
   local operation=$1
 
   if [ -n "$operation" ]; then
-    if [ "$operation" == "--reset" ]; then
+    if [ "$operation" == "--setup" ]; then
+      ensure_knows_configuration
+    elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
     else
-      echo "usage: git town config [--reset]"
+      echo "usage: git town config [--reset | --setup]"
     fi
   else
     show_config
