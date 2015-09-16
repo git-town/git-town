@@ -157,7 +157,7 @@ function ensure_knows_parent_branches {
             parent="$(get_numbered_branch "$user_input")"
             if [ -z "$parent" ]; then
               echo_error_header
-              echo_error "Invalid branch number"
+              echo_error "invalid branch number"
             fi
           elif [ -z "$user_input" ]; then
             # user entered nothing

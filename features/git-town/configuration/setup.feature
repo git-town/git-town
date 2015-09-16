@@ -31,7 +31,7 @@ Feature: Initial configuration
 
   Scenario: shows error and re-prompts on invalid main branch number
     When I run `git town config --setup` and enter "4", "main" and ""
-    Then I see "Invalid branch number"
+    Then I see "invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -52,7 +52,7 @@ Feature: Initial configuration
 
   Scenario: shows error and re-prompts on invalid perennial branch number
     When I run `git town config --setup` and enter "main", "4", "3" and ""
-    Then I see "Invalid branch number"
+    Then I see "invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "qa"
 

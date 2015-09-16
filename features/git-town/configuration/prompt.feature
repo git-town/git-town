@@ -1,7 +1,7 @@
 Feature: Automatically running the configuration wizard if Git Town is unconfigured
 
-  As a user having forgotten to configure Git Town yet
-  I want to get a friendly reminder with the opportunity to configure it right now when I use it the first time
+  As a user having forgotten to configure Git Town
+  I want to be prompted to configure it when I use it the first time
   So that I use a properly configured tool at all times.
 
 

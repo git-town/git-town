@@ -31,7 +31,7 @@ function ensure_knows_configuration {
         main_branch_input="$(get_numbered_branch "$user_input")"
         if [ -z "$main_branch_input" ]; then
           echo_error_header
-          echo_error "Invalid branch number"
+          echo_error "invalid branch number"
         fi
       elif [ -z "$user_input" ]; then
         echo_error_header
@@ -58,14 +58,14 @@ function ensure_knows_configuration {
     local perennial_branches_input=''
 
     while true; do
-      echo -n "Please specify any perennial branches by name or number (blank line to finish): "
+      echo -n "Please specify a perennial branch by name or number (blank line to finish): "
       read user_input
       local branch
       if [[ $user_input =~ $numerical_regex ]] ; then
         branch="$(get_numbered_branch "$user_input")"
         if [ -z "$branch" ]; then
           echo_error_header
-          echo_error "Invalid branch number"
+          echo_error "invalid branch number"
         fi
       elif [ -z "$user_input" ]; then
         break
