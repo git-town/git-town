@@ -51,8 +51,12 @@ Check out our [installation instructions](documentation/installation.md) for mor
 
 ## Configuration
 
-Git Town is configured on a per-repository basis.
-Upon first use in a repository, it will ask for all required configuration.
+Git Town is configured on a per-repository basis. It requires two pieces of information.
+
+* the main development branch
+* the [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
+
+Upon first use in a repository, you will be prompted for this information.
 Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
 
 

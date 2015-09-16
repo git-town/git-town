@@ -201,18 +201,6 @@ function output_style_reset {
 }
 
 
-function prompt_yn {
-  echo -n " [Y/n] "
-  read yn
-  case "$yn" in
-    [Yy]) return 0;;
-    [Nn]) return 1;;
-    *([[:space:]])) return 0;;
-    *) echo "Please answer yes (y) or no (n)."; return 1;;
-  esac
-}
-
-
 # Run a command.
 #
 # Prints the command (prepends branch for git commands) and the output
