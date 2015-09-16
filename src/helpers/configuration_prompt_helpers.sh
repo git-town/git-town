@@ -10,7 +10,7 @@ function echo_configuration_header {
 }
 
 
-# Makes sure Git Town is full configured
+# Makes sure Git Town is configured
 function ensure_knows_configuration {
   local header_shown=false
   local numerical_regex='^[0-9]+$'
