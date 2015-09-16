@@ -65,7 +65,7 @@ function get_configuration {
 }
 
 
-# Returns whether of not the main branch is configured
+# Returns whether or not the main branch is configured
 function is_main_branch_configured {
   if [ -n "$MAIN_BRANCH_NAME" ]; then
     echo true
