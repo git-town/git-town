@@ -6,7 +6,8 @@
   * if you have configured multiple perennial branches, you will need to reset your configuration
     * `git town config --reset`
     * `git town config --setup` or you will be prompted the next time you run a Git Town command
-* improve configuration prompt
+* configuration prompt: allow user to select branch by number, ability to recover from bad input
+* parent branch prompt: only show description and branch list once per command
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
 * `git town version`: Homebrew installs no longer print date and SHA
