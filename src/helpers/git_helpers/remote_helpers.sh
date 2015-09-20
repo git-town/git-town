@@ -3,9 +3,9 @@
 
 # Returns the url for the remote
 function remote_url {
-  result=$(git config --get git-town.testing.remote-url)
-  if [ ! -z "$result" ]; then
-    echo "$result"
+  mock_remote=$(git config --get git-town.testing.remote-url)
+  if [ ! -z "$mock_remote" ]; then
+    echo "$mock_remote"
   else
     git remote -v | grep "origin.*fetch" | awk '{print $2}'
   fi
