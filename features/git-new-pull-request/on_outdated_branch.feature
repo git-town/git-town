@@ -1,4 +1,3 @@
-@debug-commands
 Feature: Syncing before creating the pull request
 
   As a developer
