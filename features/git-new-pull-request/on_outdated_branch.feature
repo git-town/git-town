@@ -16,6 +16,7 @@ Feature: Syncing before creating the pull request
     And I have "open" installed
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
+    And I have an uncommitted file
     When I run `git new-pull-request`
 
 
@@ -23,6 +24,7 @@ Feature: Syncing before creating the pull request
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
+      |         | git stash -u                       |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git push                           |
@@ -30,8 +32,10 @@ Feature: Syncing before creating the pull request
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
+      |         | git stash pop                      |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
+    And I still have my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | remote main commit                                         | remote_main_file    |
