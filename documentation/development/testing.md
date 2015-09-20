@@ -63,4 +63,4 @@ This causes `git push` operations to go to GitHub during testing,
 which is undesirable.
 To circumvent this problem, Git Town allows to mock the Git remote
 by setting the Git configuration value
-`git-town.test-remote-url` to the respective value.
+`git-town.testing.remote-url` to the respective value.
