@@ -1,7 +1,7 @@
 Feature: Syncing before creating the pull request
 
   As a developer
-  I want that GT syncs my feature branch before creating a pull request for it
+  I want my feature branch by synced before creating a pull request for it
   So that my reviewers see the most up-to-date version of my code and their review is accurate.
 
 
