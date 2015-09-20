@@ -46,7 +46,7 @@ __Configuration and Help__
 ## Installation
 
 Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
-Check out our [installation instructions](documentation/installation.md) for more details.
+Check out our [installation instructions](http://www.git-town.com/install.html) for more details.
 
 
 ## Configuration
