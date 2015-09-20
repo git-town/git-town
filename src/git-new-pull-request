@@ -24,7 +24,6 @@ function steps {
   branches_to_sync | while read branch_name; do
     sync_branch_steps "$branch_name"
   done
-  echo "checkout $INITIAL_BRANCH_NAME"
   echo "create_pull_request $(remote_repository_name) $INITIAL_BRANCH_NAME $(parent_branch "$INITIAL_BRANCH_NAME")"
 }
 
