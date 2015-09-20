@@ -53,3 +53,14 @@ in a similar fashion.
 If set, Git Town prints every shell command executed during the tests
 (includes setup, inspection of the Git status, and the Git commands),
 and the respective console output.
+
+
+## Mocking
+
+Certain tests require the Git remote to be set to a real value
+on GitHub or Bitbucket.
+This causes `git push` operations to go to GitHub during testing,
+which is undesirable.
+To circumvent this problem, Git Town allows to mock the Git remote
+by setting the Git configuration value
+`git-town.test-remote-url` to the respective value.
