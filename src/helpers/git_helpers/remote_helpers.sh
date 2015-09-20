@@ -3,7 +3,12 @@
 
 # Returns the url for the remote
 function remote_url {
-  git remote -v | grep "origin.*fetch" | awk '{print $2}'
+  result=$(git config --get git-town.test-remote-url)
+  if [ ! -z "$result" ]; then
+    echo "$result"
+  else
+    git remote -v | grep "origin.*fetch" | awk '{print $2}'
+  fi
 }
 
 
