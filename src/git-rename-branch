@@ -69,7 +69,7 @@ function steps {
   echo "create_and_checkout_branch '$destination_branch_name' '$target_branch_name'"
 
   if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
-    echo "push_branch $destination_branch_name"
+    echo "create_tracking_branch $destination_branch_name"
     echo "delete_remote_branch $target_branch_name"
   fi
 
