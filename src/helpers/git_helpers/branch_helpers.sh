@@ -34,7 +34,9 @@ function create_and_checkout_branch {
 function delete_local_branch {
   local branch_name=$1
   local op="d"
-  if [ "$2" == "force" ]; then op="D"; fi
+  if [ "$2" == "force" ] || [ "$(delete_local_branch_needs_force "$branch_name")" = true ]; then
+    op="D"
+  fi
   run_command "git branch -$op $branch_name"
 }
 
@@ -71,16 +73,6 @@ function ensure_has_branch {
     echo_error "There is no branch named '$branch_name'"
     exit_with_error newline
   fi
-}
-
-
-# Exits if any of the branches do not exist
-function ensure_has_branches {
-  local branches=$1
-
-  split_string "$branches" ',' | while read branch; do
-    ensure_has_branch "$branch"
-  done
 }
 
 
@@ -122,6 +114,15 @@ function local_branches {
 }
 
 
+# Returns the names of local branches
+function local_branches_with_main_first {
+  if [ -n "$MAIN_BRANCH_NAME" ]; then
+    echo "$MAIN_BRANCH_NAME"
+  fi
+  local_branches_without_main
+}
+
+
 # Returns the names of local branches without the main branch
 function local_branches_without_main {
   local_branches | grep -v "^$MAIN_BRANCH_NAME\$"
@@ -131,6 +132,17 @@ function local_branches_without_main {
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$MAIN_BRANCH_NAME" | tr -d ' ' | sed 's/\*//g'
+}
+
+
+# Returns whether or not the force flag is needed to delete the given branch
+function delete_local_branch_needs_force {
+  local branch_name=$1
+  if [ -n "$(git log "..$branch_name")" ]; then
+    echo true
+  else
+    echo false
+  fi
 }
 
 

@@ -7,10 +7,6 @@ Feature: git hack: requires a branch name
 
   Background:
     Given I have a feature branch named "existing-feature"
-    And the following commits exist in my repository
-      | BRANCH           | LOCATION | MESSAGE                 | FILE NAME    |
-      | main             | remote   | main commit             | main_file    |
-      | existing-feature | local    | existing feature commit | feature_file |
     And I am on the "existing-feature" branch
     And I have an uncommitted file
     When I run `git hack`

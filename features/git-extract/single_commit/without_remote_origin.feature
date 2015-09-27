@@ -7,10 +7,10 @@ Feature: git extract: extracting a single commit (without remote origin)
     Given I have a feature branch named "feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
-      | main    | local    | main commit     | main_file     |
-      | feature | local    | feature commit  | feature_file  |
-      |         |          | refactor commit | refactor_file |
+      | BRANCH  | LOCATION | MESSAGE         |
+      | main    | local    | main commit     |
+      | feature | local    | feature commit  |
+      |         |          | refactor commit |
     And I am on the "feature" branch
     And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
@@ -20,8 +20,7 @@ Feature: git extract: extracting a single commit (without remote origin)
     Then it runs the commands
       | BRANCH   | COMMAND                                      |
       | feature  | git stash -u                                 |
-      |          | git checkout main                            |
-      | main     | git checkout -b refactor main                |
+      |          | git checkout -b refactor main                |
       | refactor | git cherry-pick <%= sha 'refactor commit' %> |
       |          | git stash pop                                |
     And I end up on the "refactor" branch
@@ -33,10 +32,3 @@ Feature: git extract: extracting a single commit (without remote origin)
       |          |          | refactor commit |
       | refactor | local    | main commit     |
       |          |          | refactor commit |
-    And now I have the following committed files
-      | BRANCH   | NAME          |
-      | main     | main_file     |
-      | feature  | feature_file  |
-      | feature  | refactor_file |
-      | refactor | main_file     |
-      | refactor | refactor_file |

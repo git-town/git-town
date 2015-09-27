@@ -5,8 +5,7 @@ source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 # Echoes the names of all branches that should be synced in the current session
 function branches_to_sync {
   if [ "$sync_target" = "all branches" ]; then
-    echo "$MAIN_BRANCH_NAME"
-    local_branches_without_main
+    local_branches_with_main_first
   elif [ "$sync_target" = "feature branch" ]; then
     ancestor_branches "$INITIAL_BRANCH_NAME" | tr ' ' '\n'
     echo "$INITIAL_BRANCH_NAME"
@@ -29,12 +28,9 @@ function preconditions {
 
   if [ "$1" = "--all" ]; then
     sync_target="all branches"
+    should_push_tags=true
     local branches="$(local_branches_without_main | tr '\n' ' ')"
-    for branch_name in $branches; do
-      if [ "$(is_feature_branch "$branch_name")" = true ]; then
-        ensure_knows_parent_branches "$branch_name"
-      fi
-    done
+    ensure_knows_parent_branches "$branches"
   elif [ "$(is_feature_branch "$INITIAL_BRANCH_NAME")" = true ]; then
     sync_target="feature branch"
     ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
@@ -42,6 +38,9 @@ function preconditions {
     sync_target="perennial branch"
     should_push_tags=true
   fi
+
+  export RUN_IN_GIT_ROOT=true
+  export STASH_OPEN_CHANGES=true
 }
 
 
@@ -60,21 +59,15 @@ function skippable {
 
 
 function steps {
-  echo_if_true "change_directory $(git_root)" "$IN_SUB_FOLDER"
-  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
-
   branches_to_sync | while read branch_name; do
     sync_branch_steps "$branch_name"
   done
 
+  echo "checkout $INITIAL_BRANCH_NAME"
+
   if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then
     echo "push_tags"
   fi
-
-  echo "checkout $INITIAL_BRANCH_NAME"
-
-  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
-  echo_if_true "change_directory $INITIAL_DIRECTORY" "$IN_SUB_FOLDER"
 }
 
 

@@ -24,7 +24,8 @@ Feature: git sync --all: does not sync remote only branches
       |            | git merge --no-edit main              |
       |            | git push                              |
       |            | git checkout main                     |
-      | main       | git stash pop                         |
+      | main       | git push --tags                       |
+      |            | git stash pop                         |
     And I am still on the "main" branch
     And I still have my uncommitted file
     And all branches are now synchronized

@@ -40,7 +40,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering a wrong number
     When I run `git sync` and enter "5" and "1"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "Invalid branch number"
+    And I see "invalid branch number"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |

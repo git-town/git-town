@@ -9,4 +9,4 @@ Feature: Converting old to new configuration
     Given my non-feature branches are configured as "foo" and "bar"
     When I run `git town`
     Then I have no non-feature branch configuration
-    And my perennial branches are now configured as "foo" and "bar"
+    And my repo is configured with perennial branches as "foo" and "bar"

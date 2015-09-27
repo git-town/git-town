@@ -10,30 +10,13 @@ We appreciate contributions of any size.
 This guide will help you get started and outline some things you should know when developing Git Town.
 
 
-## Requirements
-
-* [Ruby 2.2](https://www.ruby-lang.org/en/documentation/installation)
-  * to run the tests
-  * install best via
-  [rbenv](https://github.com/sstephenson/rbenv)
-  or
-  [rvm](https://rvm.io/)
-* [ShellCheck](https://github.com/koalaman/shellcheck)
-  * for linting the Bash code
-
-##### For website development
-* [Node.js](https://nodejs.org)
-  * on OS X best installed via [Homebrew](http://brew.sh)
-* [Harp](http://harpjs.com)
-  * `npm install -g harp`
-
-
 ## Setup
 
-* install the [requirements](#requirements)
 * fork and clone the repository to your machine
+* install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
+  * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
+* install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
 * run `bundle` to install ruby gems
-* optionally run `rake` to make sure all tests pass on your machine
 
 
 ## Testing
@@ -41,58 +24,28 @@ This guide will help you get started and outline some things you should know whe
 * tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
-
-```bash
-# running the different test types
-rake         # runs all tests
-rake lint    # runs the linters
-rake test    # runs the feature tests
-
-# running individual scenarios/features
-cucumber <filename>[:<lineno>]
-cucumber -n '<scenario/feature name>'
-
-# running tests in parallel
-bin/cuke [cucumber parameters]
-# set the environment variable PARALLEL_TEST_PROCESSORS to override the
-# auto-detected number of processors
-
-# auto-fixing formatting issues
-rake format
-```
-
-The `rake [parameters]` commands above can also be run as `bundle exec rake [parameters]`
-if you encounter Ruby versioning issues.
-
-Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
-automatically tests all commits and pull requests,
-and notifies you via email and through status badges in pull requests
-about problems.
+* See [here](./documentation/development/testing.md) for how to run the tests
 
 
-## Debugging
+## Command documentation
 
-To see the output of the Git commands run in tests, you can set the
-`DEBUG_COMMANDS` environment variable while running your specs:
+Every Git Town command
+* has a [man page](./man/man1)
+* has a [Markdown page](./documentation/commands) that is identical to the man page
+* is listed on the [git-town man page](./man/man1/git-town.1)
+* is listed on the [README](./README.md)
 
-```bash
-$ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
-```
 
-Alternatively, you can also add a `@debug-commands` flag to the respective
-Cucumber spec:
+## Achitecture documents
 
-  ```cucumber
-  @debug-commands
-  Scenario: foo bar baz
-    Given ...
-  ```
+* [branch hierarchy](./documentation/development/branch_hierarchy.md) - how Git Town sees branches
+* [drivers](./documentation/development/drivers.md) - third-party specific functionality
+* [steps list](./documentation/development/steps_list.md) - the architecture behind most of the Git Town commands
 
-For even more detailed output, you can use the `DEBUG` variable or tag
-in a similar fashion.
-If set, Git Town prints every shell command executed during the tests
-(includes setup, inspection of the Git status, and the Git commands),
-and the respective console output.
+
+## Website development
+
+* See [here](./documentation/development/website.md)
 
 
 ## Pull Requests
@@ -118,159 +71,3 @@ keeps the final foo simpler when shipping that branch later.
 
 Implements #123
 ```
-
-
-## Architecture
-
-_The following refers to all commands except `git-town`._
-
-Each Git Town command begins by inspecting the current state of the Git repository
-(which branch you are on, whether you have open changes).
-If there are no errors, it generates a list of steps to run.
-Each step is a bash function that wraps an individual Git command.
-This list is then executed one by one.
-
-For discussion around this architecture see
-[#199](https://github.com/Originate/git-town/issues/199),
-where it was proposed.
-
-
-### Undoing
-
-Git Town asks each command to provide the steps to undo itself before and/or
-after it is run.
-It does that by calling methods that match
-* `undo_steps_for_[command name]`: executed before the command runs
-* `post_undo_steps_for_[command_name]`: executed after the command runs
-
-Git Town stores the cumulated undo commands in an undo file.
-Running `git <command> --undo` runs the commands from the respective undo file.
-
-
-### Drivers
-
-_Drivers_ implement third-party specific functionality in a standardized way.
-For example, the [GitHub driver](./src/drivers/code_hosting/github.sh)
-implements GitHub-related operations like creating a pull request there.
-
-There is also an analogous
-[Bitbucket driver](./src/drivers/code_hosting/bitbucket.sh)
-that does the same things on Bitbucket.
-Both drivers are part of the [code hosting](./src/drivers/code_hosting) _driver family_.
-
-The functions that a driver needs to implement are described in the
-documentation for the respective driver family.
-
-In order to use a driver, a script simply needs to activate the respective
-driver family.
-The driver family's activation script then automatically determines
-the appropriate driver for the current environment and runs it.
-
-
-### Branch Hierarchy Architecture
-
-Since code reviews can take a while,
-many developers work on several features in parallel.
-These features often depend on each other.
-To support this common use case, Git Town provides an hierarchical branching model
-that is more opinionated than the very generic branching of vanilla Git.
-In Git Town's world, feature branches can be "children" of other feature branches.
-
-As an example, lets assume a repo with the following setup:
-
-```
--o--o-- master
-  \
-   o--o--o-- feature1
-       \
-        o-- feature2
-```
-
-In this example, feature 1 (which was cut straight from the master branch) is currently under review.
-While waiting for the LGTM there, the developer has started to work on the next feature.
-This work (let's call it "feature 2") needs some of the changes that are introduced by feature 1.
-Since feature 1 hasn't shipped yet, we can't cut feature 2 straight off master,
-but must cut it off feature 1, so that feature 2 sees the changes made by feature 1.
-
-This means the feature branch `feature1` is cut directly from `master`,
-and `feature2` is cut from `feature1`, making it a child branch of `feature1`.
-
-This "ancestry line" of branches is preserved at all times,
-and impacts a lot of Git Town's commands.
-For example, branches cannot be shipped before their ancestor branches.
-When syncing, Git Town syncs the parent branch first,
-then merges the parent branch into its children branches.
-When creating a pull request for `feature2`,
-Git Town only displays the changes between `feature2` and `feature1`,
-not the diff against `master`.
-
-Git Town stores the information about this branch hierarchy in the Git configuration for the repo.
-Two types of keys are used for this. The first one is `git-town.<branch_name>.parent`.
-It lists which branch is the immediate parent branch of the given branch.
-```
-git-town-branch.feature1.parent=master
-git-town-branch.feature2.parent=feature1
-```
-
-Git Town also caches the full ancestral line of each feature branch, top-down,
-in a key called `git-town-branch.<branch_name>.ancestors`:
-* `git-town-branch.feature2.ancestors=master feature1`
-  lists that in order to sync `feature2`, we need to first update `master`,
-  then merge master into `feature1`, then `feature1` into `feature2`.
-
-
-## Configuration
-
-Git Town stores the following configuration in the Git metadata repository:
-
-<table>
-  <tr>
-    <th width="355">configuration entry</th>
-    <th>description</th>
-  </tr>
-  <tr>
-    <td><b><code>git-town.main-branch-name</code></b></td>
-    <td>the name of the branch that acts as the main development branch</td>
-  </tr>
-  <tr>
-    <td><b><code>git-town.perennial-branch-names</code></b></td>
-    <td>the names of all perennial branches, separated by space</td>
-  </tr>
-  <tr>
-    <td><b><code>git-town-branch.&lt;branch_name&gt;.parent</code></b></td>
-    <td>the name of the parent branch for the given branch</td>
-  </tr>
-  <tr>
-    <td><b><code>git-town-branch.&lt;branch_name&gt;.ancestors</code></b></td>
-    <td>
-      An internal cache of every branch in the ancestry chain,
-      all the way to the main branch name,
-      separated by space.
-      Older branches come first.
-    </td>
-  </tr>
-</table>
-
-
-## Documentation
-
-Every Git Town command
-* has a [man page](./man/man1)
-* has a [Markdown page](./documentation/commands) that is identical to the man page
-* is listed on the [git-town man page](./man/man1/git-town.1)
-* is listed on the [README](./README.md)
-
-
-## [Website](http://www.git-town.com) Development
-
-Before you start, please make sure you have the [requirements](#for-website-development)
-for the website installed.
-
-__view the website locally__
-* `cd website`
-* `harp server`
-* go to [localhost:9000](http://localhost:9000)
-
-__deploy the website__
-* make sure your changes to be deployed are all in `master`
-* `rake deploy`

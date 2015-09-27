@@ -6,10 +6,7 @@ Feature: Trying to create a feature branch with a non-existing parent
 
 
   Background:
-    And the following commit exists in my repository
-      | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
-      | main   | local and remote | main_commit | main_file |
-    And I am on the "main" branch
+    Given I am on the "main" branch
     And I have an uncommitted file
     When I run `git hack feature zonk`
 
@@ -22,5 +19,4 @@ Feature: Trying to create a feature branch with a non-existing parent
     And it runs no commands
     And I end up on the "main" branch
     And I still have my uncommitted file
-    And I am left with my original commits
     And Git Town is not aware of any branch hierarchy

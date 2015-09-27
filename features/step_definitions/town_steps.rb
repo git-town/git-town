@@ -22,13 +22,13 @@ end
 
 Given(/^my non-feature branches are configured as (.*)$/) do |data|
   branch_names = Kappamaki.from_sentence data
-  set_configuration 'non-feature-branch-names', branch_names.join(', ')
+  set_configuration 'non-feature-branch-names', branch_names.join(' ')
 end
 
 
 Given(/^my perennial branches are configured as (.*)$/) do |data|
   branch_names = Kappamaki.from_sentence data
-  set_configuration 'perennial-branch-names', branch_names.join(', ')
+  set_configuration 'perennial-branch-names', branch_names.join(' ')
 end
 
 
@@ -50,19 +50,19 @@ Then(/^I have no non\-feature branch configuration$/) do
 end
 
 
-Then(/^the main branch name is now configured as "(.+?)"$/) do |main_branch_name|
-  expect(main_branch_configuration).to eql main_branch_name
+Then(/^my repo is configured with perennial branches as "(.*)"$/) do |data|
+  branch_names = Kappamaki.from_sentence(data)
+  expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names
 end
 
 
-Then(/^my perennial branches are now configured as (.*)$/) do |data|
-  perennial_branches = Kappamaki.from_sentence(data)
-  expect(perennial_branch_configuration.split(',').map(&:strip)).to match_array perennial_branches
+Then(/^my repo is configured with no perennial branches$/) do
+  expect(perennial_branch_configuration).to be_empty
 end
 
 
-Then(/^my perennial branches are still not configured$/) do
-  expect(perennial_branch_configuration.split(',')).to be_empty
+Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_name|
+  expect(main_branch_configuration).to eql branch_name
 end
 
 
@@ -72,9 +72,7 @@ end
 
 
 Then(/^I see the initial configuration prompt$/) do
-  step %(I see "Git Town hasn't been configured for this repository.")
-  step %(I see "Please run 'git town config --setup'.")
-  step %(I see "Would you like to do that now? [Y/n]")
+  step %(I see "Git Town needs to be configured")
 end
 
 

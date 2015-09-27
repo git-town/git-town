@@ -26,6 +26,24 @@ function echo_error {
 }
 
 
+# Prints the first argument if all following arguments are true
+function echo_if_all_true {
+  local string="$1"
+  shift
+
+  local shouldEcho=true
+  for condition in "$@"; do
+    if [ "$condition" != true ]; then
+      shouldEcho=false
+    fi
+  done
+
+  if [ "$shouldEcho" = true ]; then
+    echo "$string"
+  fi
+}
+
+
 # Prints the string if the condition is true
 function echo_if_true {
   local string="$1"
@@ -180,18 +198,6 @@ function output_style_red {
 
 function output_style_reset {
   tput sgr0
-}
-
-
-function prompt_yn {
-  echo -n " [Y/n] "
-  read yn
-  case "$yn" in
-    [Yy]) return 0;;
-    [Nn]) return 1;;
-    *([[:space:]])) return 0;;
-    *) echo "Please answer yes (y) or no (n)."; return 1;;
-  esac
 }
 
 

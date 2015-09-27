@@ -13,19 +13,16 @@ function ensure_has_upstream {
 
 function preconditions {
   ensure_has_upstream
+  export STASH_OPEN_CHANGES=true
 }
 
 
 function steps {
-  echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
-
   echo "checkout_main_branch"
   echo "fetch_upstream"
   echo "rebase upstream/$MAIN_BRANCH_NAME"
   echo "push_branch $MAIN_BRANCH_NAME"
   echo "checkout $INITIAL_BRANCH_NAME"
-
-  echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
 }
 
 

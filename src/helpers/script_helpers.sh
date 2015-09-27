@@ -10,6 +10,15 @@ function abort_command {
 }
 
 
+function command_steps {
+  echo_if_all_true "change_directory $(git_root)" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+  echo_if_all_true "stash_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
+  steps
+  echo_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
+  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+}
+
+
 function continue_command {
   local cmd=$(pop_line "$STEPS_FILE")
   eval "continue_$cmd"
@@ -115,7 +124,7 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    steps > "$STEPS_FILE"
+    command_steps > "$STEPS_FILE"
     run_steps "$STEPS_FILE" undoable
   fi
 }

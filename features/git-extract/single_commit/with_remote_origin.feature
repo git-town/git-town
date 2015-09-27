@@ -6,10 +6,10 @@ Feature: git extract: extracting a single commit
   Background:
     Given I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
-      | main    | remote   | remote main commit | remote_main_file |
-      | feature | local    | feature commit     | feature_file     |
-      |         |          | refactor commit    | refactor_file    |
+      | BRANCH  | LOCATION | MESSAGE            |
+      | main    | remote   | remote main commit |
+      | feature | local    | feature commit     |
+      |         |          | refactor commit    |
     And I am on the "feature" branch
     And I have an uncommitted file
     When I run `git extract refactor` with the last commit sha
@@ -35,10 +35,3 @@ Feature: git extract: extracting a single commit
       |          |                  | refactor commit    |
       | refactor | local and remote | remote main commit |
       |          |                  | refactor commit    |
-    And now I have the following committed files
-      | BRANCH   | NAME             |
-      | main     | remote_main_file |
-      | feature  | feature_file     |
-      | feature  | refactor_file    |
-      | refactor | refactor_file    |
-      | refactor | remote_main_file |
