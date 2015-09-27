@@ -190,11 +190,12 @@ function remote_only_merged_branches {
 }
 
 
-function undo_steps_for_create_and_checkout_feature_branch {
-  local current_branch=$(get_current_branch_name)
+function undo_steps_for_create_and_checkout_branch {
   local branch_to_create="$1"
 
+  local current_branch=$(get_current_branch_name)
   echo "checkout $current_branch"
+
   echo "delete_local_branch $branch_to_create"
   echo "delete_parent_entry $branch_to_create"
   echo "delete_ancestors_entry $branch_to_create"

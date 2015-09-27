@@ -43,3 +43,25 @@ Feature: git rename-branch: renaming a perennial branch with a tracking branch
       | main               | local and remote | main commit       |
       | qa                 | local and remote | qa commit         |
       | renamed-production | local and remote | production commit |
+
+
+  Scenario: undo
+    Given I run `git rename-branch production renamed-production -f`
+    When I run `git rename-branch --undo`
+    Then it runs the commands
+        | BRANCH             | COMMAND                                              |
+        | renamed-production | git stash -u                                         |
+        |                    | git branch production <%= sha 'production commit' %> |
+        |                    | git push -u origin production                        |
+        |                    | git push origin :renamed-production                  |
+        |                    | git checkout production                              |
+        | production         | git branch -d renamed-production                     |
+        |                    | git stash pop                                        |
+    And I end up on the "production" branch
+    And my repo is configured with perennial branches as "qa" and "production"
+    And I still have my uncommitted file
+    And I have the following commits
+      | BRANCH     | LOCATION         | MESSAGE           |
+      | main       | local and remote | main commit       |
+      | production | local and remote | production commit |
+      | qa         | local and remote | qa commit         |
