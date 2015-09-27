@@ -46,7 +46,7 @@ Feature: git rename-branch: renaming a feature branch with child branches
       | parent-feature         | git branch -d renamed-parent-feature                         |
     And I end up on the "parent-feature" branch
     And I have the following commits
-      | BRANCH                 | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
+      | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
     And Git Town is now aware of this branch hierarchy
