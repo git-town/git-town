@@ -13,9 +13,10 @@ git hack (--abort | --continue)
 
 #### DESCRIPTION
 
-Syncs the given parent branch,
+Syncs the given parent branch (default: main branch),
 forks a new feature branch with the given name off it,
-and brings over all uncommitted changes to the new feature branch.
+brings over all uncommitted changes to the new feature branch,
+and pushes everything to the remote repository.
 
 
 #### OPTIONS
