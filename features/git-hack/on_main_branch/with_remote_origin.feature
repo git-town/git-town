@@ -21,11 +21,11 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
       |             | git stash -u                     |
       |             | git rebase origin/main           |
       |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | new-feature | git push -u origin new-feature   |
+      |             | git stash pop                    |
     And I end up on the "new-feature" branch
     And I still have my uncommitted file
-    And the branch "new-feature" has not been pushed to the repository
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main_commit |
-      | new-feature | local            | main_commit |
+      | new-feature | local and remote | main_commit |
