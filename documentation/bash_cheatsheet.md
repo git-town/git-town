@@ -34,10 +34,12 @@ Use the cross-platform version of shebang:
   name="Git Town"
   ```
 * declaring local variables
+
   ```bash
   local name="Git Town"
   ```
 * declaring constants:
+
   ```bash
   NAME="Git Town"
   ```
@@ -45,14 +47,24 @@ Use the cross-platform version of shebang:
 
 ## Functions
 
-```bash
-function add_user {
-  local bar=$1
-  echo "$bar"
-}
-```
+* defining functions
 
-* name all arguments given to functions by assigning them to local variables
+  ```bash
+  function add_user {
+    local bar=$1
+    echo "$bar"
+  }
+  ```
+
+  Notice how the first parameter is given a name
+  by assigning it
+  to the local variable `bar`.
+
+* calling functions
+
+  ```bash
+  add_user "git town"
+  ```
 
 
 ## Arrays
