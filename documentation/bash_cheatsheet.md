@@ -2,28 +2,44 @@
 
 Git Town is written in Bash.
 Bash is a surprisingly powerful, versatile, and elaborate scripting system
-where every command-line application becomes a keyword in your programming language!
+where every command-line application becomes a keyword in your programming language.
 
 With the right amount of structure,
 Bash programs can be as easily written and read
 as programs in many other languages.
 
+Bash is the
+[9th most popular language on GitHub](http://githut.info),
+and actively used in most open-source repositories.
+
 Learning Bash not only allows you to contribute to Git Town,
 it will make your life easier by giving you the ability to
-create a plethora of useful little helpers for your command-line fu,
+create a plethora of useful little command-line helpers,
 the UNIX way!
 
 
 ## Shebang
 
-Use the cross-platform version of shebang: `#!/usr/bin/env bash`
+Use the cross-platform version of shebang:
+```bash
+#!/usr/bin/env bash
+```
 
 
 ## Variables
 
-* declaring variables: `name="Git Town"`
-* declaring local variables: `local name="Git Town"`
-* declaring constants: `NAME="Git Town"`
+* declaring variables
+  ```bash
+  name="Git Town"
+  ```
+* declaring local variables
+  ```bash
+  local name="Git Town"
+  ```
+* declaring constants:
+  ```bash
+  NAME="Git Town"
+  ```
 
 
 ## Functions
