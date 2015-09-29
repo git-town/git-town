@@ -29,6 +29,7 @@ Use the cross-platform version of shebang:
 ## Variables
 
 * declaring variables
+
   ```bash
   name="Git Town"
   ```
