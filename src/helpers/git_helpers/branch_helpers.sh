@@ -13,6 +13,13 @@ function branch_needs_push {
 }
 
 
+# Checkout a branch
+function checkout_branch {
+  local branch_name=$1
+  run_command "git checkout $branch_name"
+}
+
+
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1
@@ -72,6 +79,30 @@ function ensure_has_branch {
     echo_error_header
     echo_error "There is no branch named '$branch_name'"
     exit_with_error newline
+  fi
+}
+
+
+# Returns the branch that a user would expect when running `git checkout -`
+function expected_previous_branch {
+  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+
+    # current branch is unchanged
+    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is deleted
+    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+
+    # current branch is new
+    else
+      echo "$INITIAL_BRANCH_NAME"
+    fi
+
+  # previous branch is deleted
+  else
+    echo "$MAIN_BRANCH_NAME"
   fi
 }
 
@@ -146,6 +177,15 @@ function delete_local_branch_needs_force {
 }
 
 
+# Returns the previously checked out branch name
+function previous_branch_name {
+  git rev-parse --abbrev-ref "@{-1}" > /dev/null 2>&1
+  if (($? == 0)); then
+    git rev-parse --abbrev-ref "@{-1}"
+  fi
+}
+
+
 # Pushes the branch with the given name to origin
 function push_branch {
   local branch_name=$1
@@ -184,6 +224,21 @@ function remote_only_merged_branches {
   comm -13 <(sort "$local_temp") <(sort "$remote_temp")
   rm "$local_temp"
   rm "$remote_temp"
+}
+
+
+function set_previous_branch {
+  local desired_previous_branch=$1
+
+  # nothing to do, exit early
+  if [ "$desired_previous_branch" = "$(previous_branch_name)" ]; then
+    return
+  fi
+
+  local current_branch="$(get_current_branch_name)"
+
+  checkout_branch "$desired_previous_branch"
+  checkout_branch "$current_branch"
 }
 
 

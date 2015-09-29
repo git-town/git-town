@@ -21,11 +21,11 @@ Given(/^I have a( local)?(?: feature)? branch named "([^"]+)" with no parent$/) 
 end
 
 
-Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
-  create_branch branch_1_name, remote: !local
-  create_branch branch_2_name, remote: !local
-  set_parent_branch branch: branch_1_name, parent: 'main', ancestors: 'main'
-  set_parent_branch branch: branch_2_name, parent: 'main', ancestors: 'main'
+Given(/^I have( local)?(?: feature)? branches named "(.+?)"$/) do |local, branch_names|
+  Kappamaki.from_sentence(branch_names).each do |branch_name|
+    create_branch branch_name, remote: !local
+    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+  end
 end
 
 
@@ -77,6 +77,11 @@ Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
   in_repository :coworker do
     run "git push origin :#{branch_name}"
   end
+end
+
+
+Given(/^I checkout the "(.+?)" branch$/) do |branch_name|
+  step %(I am on the "#{branch_name}" branch)
 end
 
 
