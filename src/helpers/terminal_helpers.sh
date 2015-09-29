@@ -214,3 +214,10 @@ function run_command {
   echo_header "$header"
   eval "$cmd" 2>&1
 }
+
+
+# Run a command without printing any output
+function run_command_silently {
+  local cmd="$1"
+  (run_command "$cmd") > /dev/null 2>&1
+}

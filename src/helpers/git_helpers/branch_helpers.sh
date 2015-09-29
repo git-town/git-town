@@ -14,9 +14,9 @@ function branch_needs_push {
 
 
 # Checkout a branch
-function checkout_branch {
+function checkout_branch_silently {
   local branch_name=$1
-  run_command "git checkout $branch_name"
+  run_command_silently "git checkout $branch_name"
 }
 
 
@@ -85,19 +85,24 @@ function ensure_has_branch {
 
 # Returns the branch that a user would expect when running `git checkout -`
 function expected_previous_branch {
-  if [ "$(has_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+  # previous branch still exists
+  if [ "$(has_local_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
 
     # current branch is unchanged
     if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
       echo "$INITIAL_PREVIOUS_BRANCH_NAME"
 
     # current branch is deleted
-    elif [ "$(has_branch "$INITIAL_BRANCH_NAME")" = false ]; then
+    elif [ "$(has_local_branch "$INITIAL_BRANCH_NAME")" = false ]; then
       echo "$INITIAL_PREVIOUS_BRANCH_NAME"
 
     # current branch is new
     else
-      echo "$INITIAL_BRANCH_NAME"
+      if [ "$(has_local_branch "$INITIAL_BRANCH_NAME")" = true ]; then
+        echo "$INITIAL_BRANCH_NAME"
+      else
+        echo "$MAIN_BRANCH_NAME"
+      fi
     fi
 
   # previous branch is deleted
@@ -237,8 +242,8 @@ function set_previous_branch {
 
   local current_branch="$(get_current_branch_name)"
 
-  checkout_branch "$desired_previous_branch"
-  checkout_branch "$current_branch"
+  checkout_branch_silently "$desired_previous_branch"
+  checkout_branch_silently "$current_branch"
 }
 
 
