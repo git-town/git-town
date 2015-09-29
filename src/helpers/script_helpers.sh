@@ -124,7 +124,6 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    echo '' > "$STEPS_FILE"
     command_steps
     run_steps "$STEPS_FILE" undoable
   fi
