@@ -57,6 +57,13 @@ Use the cross-platform version of shebang:
     # code
   fi
   ```
+
+* negation
+
+  ```bash
+  if [ ! condition ]; then
+    # runs if the condition is not true
+  ```
 * checking booleans
 
   ```bash
@@ -67,13 +74,20 @@ Use the cross-platform version of shebang:
 * checking strings
 
   ```bash
-  if [ $name = "git town" ]; then
+  if [ $mood = "happy" ]; then
   ```
 * checking for empty strings
 
   ```bash
   if [ -z $input ]; then
   ```
+
+* checking whether a file exists
+
+  ```bash
+  if [ -e $filename ]; then
+  ```
+
 
 ## Functions
 
