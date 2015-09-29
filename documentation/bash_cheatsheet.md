@@ -79,15 +79,11 @@ Use the cross-platform version of shebang:
   ```bash
   people+=(Lucy)
   ```
-* replacing elements
+* concatenating two arrays
 
   ```bash
-  people[1]="Mortimer"
-  ```
-* counting the elements
-
-  ```bash
-  count=${#people[*]}
+  other_people=(Lucy)
+  other_people+=("${people[@]}")
   ```
 * looping over the elements
 
@@ -95,10 +91,8 @@ Use the cross-platform version of shebang:
   for person in "${people[@]}"; do
     echo "$person"
   done
-  ```
 
-  looping with index
-  ```bash
+  # looping with index
   for index in ${!people[*]}; do
     printf "%4d: %s\n" $index ${people[$index]}
   done
@@ -112,11 +106,38 @@ Use the cross-platform version of shebang:
     echo false
   }
   ```
+* counting the elements
+
+  ```bash
+  count=${#people[*]}
+  ```
 * cloning
 
   ```bash
   other_people=("${people[@]}")
   ```
+* converting a newline separated list into an array
+
+  ```bash
+  function get_people {
+    echo Curly
+    echo Larry
+    echo Moe
+  }
+
+  IFS=$'\n'
+  people=($(get_people))
+  ```
+* replacing an element
+
+  ```bash
+  people[1]="Mortimer"
+  ```
+* returning arrays from methods
+
+  Methods can only return exit codes,
+  no data structures.
+  Use global variables to pass around arrays.
 
 
 ## Lists
