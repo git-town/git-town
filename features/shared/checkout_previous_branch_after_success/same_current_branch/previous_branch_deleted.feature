@@ -1,4 +1,4 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town commmand that leaves the current branch intact and deletes the previous branch
+Feature: Allow checking out the correct previous Git branch after running a Git Town command that leaves the current branch intact and deletes the previous branch
 
   (see ./previous_branch_same.feature)
 

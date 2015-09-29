@@ -1,4 +1,4 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town commmand that leaves the current and previous branches intact
+Feature: Allow checking out the correct previous Git branch after running a Git Town command that leaves the current and previous branches intact
 
   As a developer running `git checkout -` after running a Git Town command
   I want to end up on the expected previous branch
