@@ -74,30 +74,26 @@ Use the cross-platform version of shebang:
   ```bash
   people=(Curly Larry Moe)
   ```
+* adding elements to an array
 
+  ```bash
+  people+=(Lucy)
+  ```
 * replacing elements
 
   ```bash
   people[1]="Mortimer"
   ```
-
 * counting the elements
 
   ```bash
   count=${#people[*]}
   ```
-
-* cloning
-
-  ```bash
-  other_people=("${people[@]}")
-  ```
-
 * looping over the elements
 
   ```bash
   for person in "${people[@]}"; do
-    echo $person
+    echo "$person"
   done
   ```
 
@@ -107,7 +103,6 @@ Use the cross-platform version of shebang:
     printf "%4d: %s\n" $index ${people[$index]}
   done
   ```
-
 * checking the existence of an array element
 
   ```bash
@@ -117,12 +112,12 @@ Use the cross-platform version of shebang:
     echo false
   }
   ```
-
-* adding elements to an array
+* cloning
 
   ```bash
-  people+=(Lucy)
+  other_people=("${people[@]}")
   ```
+
 
 ## Lists
 
