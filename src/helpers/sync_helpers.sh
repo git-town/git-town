@@ -12,20 +12,20 @@ function sync_branch_steps {
   # there may be changes to perennial branches, otherwise only sync feature
   # branches because perennial branches will not need syncing
   if [ "$HAS_REMOTE" = true ] || [ "$is_feature" = true ]; then
-    echo "checkout $branch"
+    step "checkout $branch"
 
     if [ "$is_feature" = true ]; then
-      echo "merge_tracking_branch"
-      echo "merge $(parent_branch "$branch")"
+      step "merge_tracking_branch"
+      step "merge $(parent_branch "$branch")"
     else
-      echo "rebase_tracking_branch"
+      step "rebase_tracking_branch"
     fi
 
     if [ "$HAS_REMOTE" = true ]; then
       if [ "$(has_tracking_branch "$branch")" == true ]; then
-        echo "push_branch $branch"
+        step "push_branch $branch"
       else
-        echo "create_tracking_branch $branch"
+        step "create_tracking_branch $branch"
       fi
     fi
   fi

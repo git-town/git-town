@@ -54,33 +54,33 @@ function preconditions {
 
 function steps {
   if [ "$HAS_REMOTE" = true ]; then
-    echo "fetch"
+    step "fetch"
     sync_branch_steps "$MAIN_BRANCH_NAME"
   fi
 
-  echo "checkout $target_branch_name"
-  echo "merge_tracking_branch"
-  echo "merge $MAIN_BRANCH_NAME"
-  echo "ensure_has_shippable_changes"
-  echo "checkout_main_branch"
-  echo "squash_merge $target_branch_name"
-  echo "commit_squash_merge $target_branch_name $commit_options"
+  step "checkout $target_branch_name"
+  step "merge_tracking_branch"
+  step "merge $MAIN_BRANCH_NAME"
+  step "ensure_has_shippable_changes"
+  step "checkout_main_branch"
+  step "squash_merge $target_branch_name"
+  step "commit_squash_merge $target_branch_name $commit_options"
 
-  echo_if_true "push_branch $MAIN_BRANCH_NAME" "$HAS_REMOTE"
+  step_if_true "push_branch $MAIN_BRANCH_NAME" "$HAS_REMOTE"
 
   if [ "$(has_tracking_branch "$target_branch_name")" = true ] &&
      [ "$(has_child_branches "$target_branch_name")" = false ]; then
-    echo "delete_remote_branch $target_branch_name"
+    step "delete_remote_branch $target_branch_name"
   fi
-  echo "delete_local_branch $target_branch_name force"
+  step "delete_local_branch $target_branch_name force"
 
   # update branch hierarchy information
-  echo "delete_parent_entry $target_branch_name"
-  echo_update_child_branches "$target_branch_name" "$MAIN_BRANCH_NAME"
-  echo "delete_all_ancestor_entries"
+  step "delete_parent_entry $target_branch_name"
+  steps_to_update_child_branches "$target_branch_name" "$MAIN_BRANCH_NAME"
+  step "delete_all_ancestor_entries"
 
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
-    echo "checkout $INITIAL_BRANCH_NAME"
+    step "checkout $INITIAL_BRANCH_NAME"
   fi
 }
 

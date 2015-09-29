@@ -63,10 +63,10 @@ function steps {
     sync_branch_steps "$branch_name"
   done
 
-  echo "checkout $INITIAL_BRANCH_NAME"
+  step "checkout $INITIAL_BRANCH_NAME"
 
   if [ "$HAS_REMOTE" = true ] && [ "$should_push_tags" = true ]; then
-    echo "push_tags"
+    step "push_tags"
   fi
 }
 

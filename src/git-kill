@@ -33,22 +33,22 @@ function preconditions {
 function steps {
   if [ "$(has_local_branch "$target_branch")" = true ]; then
     if [ "$target_branch" = "$INITIAL_BRANCH_NAME" ]; then
-      echo_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
-      echo "checkout $parent_branch_name"
+      step_if_true "commit_open_changes" "$INITIAL_OPEN_CHANGES"
+      step "checkout $parent_branch_name"
     fi
 
     if [ "$(has_tracking_branch "$target_branch")" = true ]; then
-      echo "delete_remote_branch $target_branch"
+      step "delete_remote_branch $target_branch"
     fi
 
-    echo "delete_local_branch $target_branch force"
+    step "delete_local_branch $target_branch force"
 
     # update branch hierarchy information
-    echo_update_child_branches "$target_branch" "$parent_branch_name"
-    echo "delete_parent_entry $target_branch"
-    echo "delete_all_ancestor_entries"
+    steps_to_update_child_branches "$target_branch" "$parent_branch_name"
+    step "delete_parent_entry $target_branch"
+    step "delete_all_ancestor_entries"
   else
-    echo "delete_remote_only_branch $target_branch"
+    step "delete_remote_only_branch $target_branch"
   fi
 }
 

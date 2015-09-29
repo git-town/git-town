@@ -18,11 +18,11 @@ function preconditions {
 
 
 function steps {
-  echo "checkout_main_branch"
-  echo "fetch_upstream"
-  echo "rebase upstream/$MAIN_BRANCH_NAME"
-  echo "push_branch $MAIN_BRANCH_NAME"
-  echo "checkout $INITIAL_BRANCH_NAME"
+  step "checkout_main_branch"
+  step "fetch_upstream"
+  step "rebase upstream/$MAIN_BRANCH_NAME"
+  step "push_branch $MAIN_BRANCH_NAME"
+  step "checkout $INITIAL_BRANCH_NAME"
 }
 
 

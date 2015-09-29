@@ -11,11 +11,11 @@ function abort_command {
 
 
 function command_steps {
-  echo_if_all_true "change_directory $(git_root)" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
-  echo_if_all_true "stash_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
+  step_if_all_true "change_directory $(git_root)" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+  step_if_all_true "stash_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
   steps
-  echo_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
-  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+  step_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
+  step_if_all_true "change_directory $INITIAL_DIRECTORY" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
 }
 
 
@@ -124,7 +124,8 @@ function run {
   else
     remove_step_files
     preconditions "$@"
-    command_steps > "$STEPS_FILE"
+    echo '' > "$STEPS_FILE"
+    command_steps
     run_steps "$STEPS_FILE" undoable
   fi
 }
@@ -188,6 +189,41 @@ function skip_current_branch_steps {
 # This should be overriden in commands when necessary
 function skippable {
   echo false
+}
+
+
+# Adds a step to the current command
+function step {
+  echo "$@" >> "$STEPS_FILE"
+}
+
+
+# Adds the given step if the given condition is true
+function step_if_true {
+  local command="$1"
+  local condition="$2"
+
+  if [ "$condition" = true ]; then
+    step "$command"
+  fi
+}
+
+
+# Adds the given step if all the given conditions are true
+function step_if_all_true {
+  local command="$1"
+  shift
+
+  local runStep=true
+  for condition in "$@"; do
+    if [ "$condition" != true ]; then
+      runStep=false
+    fi
+  done
+
+  if [ "$runStep" = true ]; then
+    step "$command"
+  fi
 }
 
 

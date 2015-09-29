@@ -26,35 +26,6 @@ function echo_error {
 }
 
 
-# Prints the first argument if all following arguments are true
-function echo_if_all_true {
-  local string="$1"
-  shift
-
-  local shouldEcho=true
-  for condition in "$@"; do
-    if [ "$condition" != true ]; then
-      shouldEcho=false
-    fi
-  done
-
-  if [ "$shouldEcho" = true ]; then
-    echo "$string"
-  fi
-}
-
-
-# Prints the string if the condition is true
-function echo_if_true {
-  local string="$1"
-  local condition="$2"
-
-  if [ "$condition" = true ]; then
-    echo "$string"
-  fi
-}
-
-
 # Prints the message indented
 function echo_indented {
   echo "$@" | indent

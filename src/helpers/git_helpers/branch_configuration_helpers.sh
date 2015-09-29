@@ -110,13 +110,13 @@ function echo_parent_branch_header {
 
 
 # Updates the child branches of the given branch to point to the other given branch
-function echo_update_child_branches {
+function steps_to_update_child_branches {
   local branch=$1
   local new_parent=$2
 
   child_branches "$branch" | while read branch_name; do
-    echo delete_ancestors_entry "$branch_name"
-    echo store_parent_branch "$branch_name" "$new_parent"
+    step "delete_ancestors_entry $branch_name"
+    step "store_parent_branch $branch_name $new_parent"
   done
 }
 

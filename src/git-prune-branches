@@ -26,8 +26,8 @@ function steps {
   local initial_branch_deleted=false
 
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ]; then
-    echo_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
-    echo "checkout_main_branch"
+    step_if_true "stash_open_changes" "$INITIAL_OPEN_CHANGES"
+    step "checkout_main_branch"
   fi
 
   for local_branch_name in $(local_merged_branches); do
@@ -36,29 +36,29 @@ function steps {
         initial_branch_deleted=true
       fi
       if [ "$(has_tracking_branch "$local_branch_name")" = true ]; then
-        echo "delete_remote_branch $local_branch_name"
+        step "delete_remote_branch $local_branch_name"
       fi
-      echo "delete_local_branch $local_branch_name"
+      step "delete_local_branch $local_branch_name"
     fi
-    echo_if_true "delete_parent_entry $local_branch_name" "$(knows_parent_branch "$local_branch_name")"
+    step_if_true "delete_parent_entry $local_branch_name" "$(knows_parent_branch "$local_branch_name")"
   done
 
   for remote_branch_name in $(remote_only_merged_branches); do
     if [ "$(should_delete_branch "$remote_branch_name")" = true ]; then
-      echo "delete_remote_only_branch $remote_branch_name"
-      echo_if_true "delete_parent_entry $remote_branch_name" "$(knows_parent_branch "$remote_branch_name")"
+      step "delete_remote_only_branch $remote_branch_name"
+      step_if_true "delete_parent_entry $remote_branch_name" "$(knows_parent_branch "$remote_branch_name")"
     fi
   done
 
   if [ "$INITIAL_BRANCH_NAME" != "$MAIN_BRANCH_NAME" ] && [ "$initial_branch_deleted" = false ]; then
-    echo "checkout $INITIAL_BRANCH_NAME"
-    echo_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
+    step "checkout $INITIAL_BRANCH_NAME"
+    step_if_true "restore_open_changes" "$INITIAL_OPEN_CHANGES"
   fi
 
   # Remove non-existing branches from the branch hierarchy
   for branch_name in $(all_registered_branches); do
     if [ "$(has_branch "$branch_name")" == "false" ]; then
-      echo "delete_parent_entry $branch_name"
+      step "delete_parent_entry $branch_name"
     fi
   done
 }
