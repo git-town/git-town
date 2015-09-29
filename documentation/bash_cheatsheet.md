@@ -44,6 +44,36 @@ Use the cross-platform version of shebang:
   NAME="Git Town"
   ```
 
+## If clauses
+
+* structure
+
+  ```bash
+  if [condition]; then
+    # code
+  elif [condition]; then
+    # code
+  else
+    # code
+  fi
+  ```
+* checking booleans
+
+  ```bash
+  if [ $success = true ]; then
+    # :)
+  fi
+  ```
+* checking strings
+
+  ```bash
+  if [ $name = "git town" ]; then
+  ```
+* checking for empty strings
+
+  ```bash
+  if [ -z $input ]; then
+  ```
 
 ## Functions
 
