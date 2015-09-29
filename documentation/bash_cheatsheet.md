@@ -116,18 +116,6 @@ Use the cross-platform version of shebang:
   ```bash
   other_people=("${people[@]}")
   ```
-* converting a newline separated list into an array
-
-  ```bash
-  function get_people {
-    echo Curly
-    echo Larry
-    echo Moe
-  }
-
-  IFS=$'\n'
-  people=($(get_people))
-  ```
 * replacing an element
 
   ```bash
@@ -140,33 +128,60 @@ Use the cross-platform version of shebang:
   Use global variables to pass around arrays.
 
 
-## Lists
+## String Lists
 
 Lists are the universal exchange format between unix programs.
 They are normal strings containing items separated by a newline character.
 Unlike Bash arrays, lists allow to use the full power of the unix toolset for massaging them.
 
-```bash
-people=$'curly\nlarry\nmoe'
-echo "$people"
+* defining
 
-echo FILTERING
-filtered=$(echo "$people" | grep -v curly)
-echo "$filtered"
+  ```bash
+  people=$'curly\nlarry\nmoe'
+  ```
+* filtering
 
-echo SORTING
-sorted=$(echo "$people" | sort -r)
-echo "$sorted"
+  ```bash
+  filtered=$(echo "$people" | grep -v curly)
+  ```
+* sorting
 
-echo APPENDING
-team=$(echo "$people" ; echo 'Judy')
-echo "$team"
+  ```bash
+  sorted=$(echo "$people" | sort -r)
+  ```
+* echo appending
 
-echo PROCESSING
-upper=$(echo "$people" | tr '[:lower:]' '[:upper:]')
-echo "$upper"
+  ```bash
+  team=$(echo "$people" ; echo 'Judy')
+  ```
+* processing
 
-echo COUNTING
-count=$(echo "$people" | wc -l | tr -d ' ')
-echo "$count people in the house!"
-```
+  ```bash
+  upper=$(echo "$people" | tr '[:lower:]' '[:upper:]')
+  ```
+* counting
+
+  ```bash
+  count=$(echo "$people" | wc -l | tr -d ' ')
+  ```
+
+
+## Converting
+* converting a string list into an array
+
+  ```bash
+  function get_people_as_list {
+    echo Curly
+    echo Larry
+    echo Moe
+  }
+
+  IFS=$'\n'
+  people_array=($(get_people_as_list))
+  ```
+
+* converting an array into a string list
+
+  ```bash
+  people_list=$( IFS=$'\n'; echo "${people_array[*]}" )
+  ```
