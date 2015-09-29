@@ -17,6 +17,14 @@ it will make your life easier by giving you the ability to
 create a plethora of useful little command-line helpers,
 the UNIX way!
 
+* [Shebang](#shebang)
+* [Variables](#variables)
+* [If clauses](#if-clauses)
+* [Functions](#functions)
+* [Arrays](#arrays)
+* [String Lists](#string-lists)
+* [Converting](#converting)
+
 
 ## Shebang
 
