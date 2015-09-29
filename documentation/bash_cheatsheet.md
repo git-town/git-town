@@ -51,8 +51,8 @@ Use the cross-platform version of shebang:
 
   ```bash
   function add_user {
-    local bar=$1
-    echo "$bar"
+    local name=$1
+    echo "adding user $name"
   }
   ```
 
@@ -77,13 +77,18 @@ Use the cross-platform version of shebang:
 * adding elements to an array
 
   ```bash
-  people+=(Lucy)
+  people+=(Mortimer)
   ```
 * concatenating two arrays
 
   ```bash
   other_people=(Lucy)
   other_people+=("${people[@]}")
+  ```
+* cloning an array
+
+  ```bash
+  other_people=("${people[@]}")
   ```
 * looping over the elements
 
@@ -97,6 +102,16 @@ Use the cross-platform version of shebang:
     printf "%4d: %s\n" $index ${people[$index]}
   done
   ```
+* counting the elements
+
+  ```bash
+  count=${#people[*]}
+  ```
+* replacing an element
+
+  ```bash
+  people[1]="Mortimer"
+  ```
 * checking the existence of an array element
 
   ```bash
@@ -105,21 +120,6 @@ Use the cross-platform version of shebang:
     for e in "${@:2}"; do [[ "$e" == "$1" ]] && echo true && return; done
     echo false
   }
-  ```
-* counting the elements
-
-  ```bash
-  count=${#people[*]}
-  ```
-* cloning
-
-  ```bash
-  other_people=("${people[@]}")
-  ```
-* replacing an element
-
-  ```bash
-  people[1]="Mortimer"
   ```
 * returning arrays from methods
 
@@ -139,7 +139,12 @@ Unlike Bash arrays, lists allow to use the full power of the unix toolset for ma
   ```bash
   people=$'curly\nlarry\nmoe'
   ```
-* filtering
+* appending
+
+  ```bash
+  team=$(echo "$people" ; echo 'Judy')
+  ```
+* filtering / removing elements
 
   ```bash
   filtered=$(echo "$people" | grep -v curly)
@@ -148,11 +153,6 @@ Unlike Bash arrays, lists allow to use the full power of the unix toolset for ma
 
   ```bash
   sorted=$(echo "$people" | sort -r)
-  ```
-* echo appending
-
-  ```bash
-  team=$(echo "$people" ; echo 'Judy')
   ```
 * processing
 
@@ -170,14 +170,8 @@ Unlike Bash arrays, lists allow to use the full power of the unix toolset for ma
 * converting a string list into an array
 
   ```bash
-  function get_people_as_list {
-    echo Curly
-    echo Larry
-    echo Moe
-  }
-
   IFS=$'\n'
-  people_array=($(get_people_as_list))
+  people_array=($people)
   ```
 
 * converting an array into a string list
