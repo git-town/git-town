@@ -91,6 +91,7 @@ end
 Then(/^my previous Git branch is (?:now|still) "(.+?)"/) do |previous_branch|
   run 'git checkout -'
   expect(current_branch_name).to eql previous_branch
+  run 'git checkout -'
 end
 
 
