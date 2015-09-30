@@ -10,19 +10,15 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
       | main    | local    | main commit     | main_file     |
       | current | local    | feature commit  | feature_file  |
       |         |          | refactor commit | refactor_file |
-    And I am on the "previous" branch
-    And I checkout the "current" branch
+    And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git extract refactor` with the last commit sha
     Then I end up on the "refactor" branch
-    When I run `git checkout -`
-    Then I end up on the "current" branch
+    And my previous Git branch is now "current"
 
 
   Scenario: checkout previous branch after git-hack
     Given I have branches named "previous" and "current"
-    And I am on the "previous" branch
-    And I checkout the "current" branch
+    And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git hack new`
     Then I end up on the "new" branch
-    When I run `git checkout -`
-    Then I end up on the "current" branch
+    And my previous Git branch is now "current"

@@ -80,12 +80,16 @@ Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
 end
 
 
-Given(/^I checkout the "(.+?)" branch$/) do |branch_name|
-  step %(I am on the "#{branch_name}" branch)
+Given(/^I am on the "(.+?)" branch with "(.+?)" as the previous Git branch/) do |current_branch, previous_branch|
+  step %(I am on the "#{previous_branch}" branch)
+  step %(I am on the "#{current_branch}" branch)
 end
 
 
-
+Given(/^my previous Git branch is now "(.+?)"/) do |previous_branch|
+  run 'git checkout -'
+  expect(current_branch_name).to eql previous_branch
+end
 
 
 Then(/^I (?:end up|am still) on the "(.+?)" branch$/) do |branch_name|

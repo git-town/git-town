@@ -47,6 +47,12 @@ def current_branch_name
 end
 
 
+# Removes the given branch from the local repository
+def delete_local_branch branch_name
+  run "git branch -D #{branch_name}"
+end
+
+
 # Returns the names of the existing feature branches
 def existing_branches order: :alphabetically
   existing_local_branches(order: order) + existing_remote_branches
@@ -94,12 +100,6 @@ def on_branch branch_name
   result = yield
   run "git checkout #{original_branch}"
   result
-end
-
-
-# Removes the given branch from the local repository
-def delete_local_branch branch_name
-  run "git branch -D #{branch_name}"
 end
 
 
