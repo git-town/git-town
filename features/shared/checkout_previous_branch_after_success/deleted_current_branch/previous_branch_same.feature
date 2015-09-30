@@ -8,7 +8,7 @@ Feature: when the current branch is deleted during a Git Town command, the initi
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill`
     Then I end up on the "main" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-prune-branches
@@ -19,7 +19,7 @@ Feature: when the current branch is deleted during a Git Town command, the initi
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git prune-branches`
     Then I end up on the "main" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-ship
@@ -30,4 +30,4 @@ Feature: when the current branch is deleted during a Git Town command, the initi
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git ship -m "feature done"`
     Then I end up on the "main" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"

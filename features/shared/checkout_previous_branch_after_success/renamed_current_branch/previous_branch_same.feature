@@ -8,4 +8,4 @@ Feature: when the current branch is renamed during a Git Town command, the previ
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git rename-branch current current-new`
     Then I end up on the "current-new" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"

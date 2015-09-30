@@ -10,7 +10,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill victim`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-new-pull-request
@@ -20,7 +20,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git new-pull-request`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-prune-branches
@@ -32,7 +32,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git prune-branches`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-repo
@@ -42,7 +42,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git repo`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-ship
@@ -53,7 +53,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git ship feature -m "feature done"`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-sync
@@ -61,7 +61,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"
 
 
   Scenario: git-sync-fork
@@ -70,4 +70,4 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync-fork`
     Then I am still on the "current" branch
-    And my previous Git branch is now "previous"
+    And my previous Git branch is still "previous"

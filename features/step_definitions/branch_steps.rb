@@ -86,7 +86,9 @@ Given(/^I am on the "(.+?)" branch with "(.+?)" as the previous Git branch/) do 
 end
 
 
-Given(/^my previous Git branch is now "(.+?)"/) do |previous_branch|
+
+
+Then(/^my previous Git branch is (?:now|still) "(.+?)"/) do |previous_branch|
   run 'git checkout -'
   expect(current_branch_name).to eql previous_branch
 end
