@@ -9,7 +9,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     Given I have branches named "previous", "current", and "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill victim`
-    Then I end up on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "previous"
 
 
@@ -21,7 +21,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
       | current  | local    | current_file  | current content  |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git prune-branches`
-    Then I end up on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "previous"
 
 
@@ -32,7 +32,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
       | feature | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git ship feature -m "feature done"`
-    Then I end up on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "previous"
 
 
@@ -40,7 +40,7 @@ Feature: Git Town commands that don't change the current and previous branch pre
     Given I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync`
-    Then I end up on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "previous"
 
 
@@ -49,5 +49,5 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync-fork`
-    Then I end up on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "previous"
