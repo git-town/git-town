@@ -93,7 +93,7 @@ end
 def shell_overrides
   "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH;"\
   "export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME};"\
-  "export GT_ENV=test"
+  'export GT_ENV=test'
 end
 
 
