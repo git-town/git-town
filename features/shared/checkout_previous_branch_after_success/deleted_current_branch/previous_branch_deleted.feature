@@ -1,9 +1,9 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town command that deletes the previous and current branches
+Feature: when the previous and current branches are deleted during a Git Town command, the main branch becomes the new previous branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 
 
-  Scenario: checkout previous branch after git-prune-branches deletes previous and current branches
+  Scenario: git-prune-branches
     Given I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git prune-branches`

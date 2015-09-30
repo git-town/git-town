@@ -1,9 +1,9 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town command that creates a new current branch intact and leaves the previous branch intact
+Feature: when a new branch is created during a Git Town command, the current branch becomes the new previous branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 
 
-  Scenario: checkout previous branch after git-extract
+  Scenario: git-extract
     Given I have branches named "previous" and "current"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
@@ -16,7 +16,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "current"
 
 
-  Scenario: checkout previous branch after git-hack
+  Scenario: git-hack
     Given I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git hack new`

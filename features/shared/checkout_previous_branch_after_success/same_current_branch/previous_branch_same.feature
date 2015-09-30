@@ -1,11 +1,11 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town command that leaves the current and previous branches intact
+Feature: Git Town commands that don't change the current and previous branch preserve Git history
 
   As a developer running `git checkout -` after running a Git Town command
   I want to end up on the expected previous branch
-  So that I can consistently and effectively use Git's commands
+  So that Git Town does not interfere with my productive use of the Git command history
 
 
-  Scenario: checkout previous branch after git-kill leaves current and previous branches intact
+  Scenario: git-kill
     Given I have branches named "previous", "current", and "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill victim`
@@ -13,7 +13,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "previous"
 
 
-  Scenario: checkout previous branch after git-prune-branches leaves current and previous branches intact
+  Scenario: git-prune-branches
     Given I have branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
@@ -25,7 +25,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "previous"
 
 
-  Scenario: checkout previous branch after git-ship leaves current and previous branches intact
+  Scenario: git-ship
     Given I have branches named "previous", "current", and "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
@@ -36,7 +36,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "previous"
 
 
-  Scenario: checkout previous branch after git-sync leaves current and previous branches intact
+  Scenario: git-sync
     Given I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync`
@@ -44,7 +44,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "previous"
 
 
-  Scenario: checkout previous branch after git-sync-fork leaves current and previous branches intact
+  Scenario: git-sync-fork
     Given my repo has an upstream repo
     And I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch

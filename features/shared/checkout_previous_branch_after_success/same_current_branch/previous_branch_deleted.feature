@@ -1,9 +1,9 @@
-Feature: Allow checking out the correct previous Git branch after running a Git Town command that leaves the current branch intact and deletes the previous branch
+Feature: when the previous branch is deleted during a Git Town command, the main branch becomes the new previous branch
 
   (see ./previous_branch_same.feature)
 
 
-  Scenario: checkout previous branch after git-kill leaves current branch intact and deletes the previous branch
+  Scenario: git-kill
     Given I have branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill previous`
@@ -11,7 +11,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "main"
 
 
-  Scenario: checkout previous branch after git-prune-branches leaves current branch intact and deletes the previous branch
+  Scenario: git-prune-branches
     Given I have branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
@@ -22,7 +22,7 @@ Feature: Allow checking out the correct previous Git branch after running a Git 
     And my previous Git branch is now "main"
 
 
-  Scenario: checkout previous branch after git-ship leaves current branch intact and deletes the previous branch
+  Scenario: git-ship
     Given I have branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME    | FILE CONTENT    |
