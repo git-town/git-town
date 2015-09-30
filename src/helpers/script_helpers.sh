@@ -14,8 +14,8 @@ function command_steps {
   echo_if_all_true "change_directory $(git_root)" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
   echo_if_all_true "stash_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
   steps
-  echo_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
   echo_if_all_true "set_previous_branch \$(expected_previous_branch)"
+  echo_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
   echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
 }
 
