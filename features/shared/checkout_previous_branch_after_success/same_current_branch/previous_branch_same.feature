@@ -13,6 +13,16 @@ Feature: Git Town commands that don't change the current and previous branch pre
     And my previous Git branch is now "previous"
 
 
+  Scenario: git-new-pull-request
+    Given I have feature branches named "previous" and "current"
+    And I have "open" installed
+    And my remote origin is "https://github.com/Originate/git-town.git"
+    And I am on the "current" branch with "previous" as the previous Git branch
+    When I run `git new-pull-request`
+    Then I am still on the "current" branch
+    And my previous Git branch is now "previous"
+
+
   Scenario: git-prune-branches
     Given I have branches named "previous" and "current"
     And the following commit exists in my repository
@@ -21,6 +31,16 @@ Feature: Git Town commands that don't change the current and previous branch pre
       | current  | local    | current_file  | current content  |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git prune-branches`
+    Then I am still on the "current" branch
+    And my previous Git branch is now "previous"
+
+
+  Scenario: git-repo
+    Given I have feature branches named "previous" and "current"
+    And I have "open" installed
+    And my remote origin is "https://github.com/Originate/git-town.git"
+    And I am on the "current" branch with "previous" as the previous Git branch
+    When I run `git repo`
     Then I am still on the "current" branch
     And my previous Git branch is now "previous"
 
