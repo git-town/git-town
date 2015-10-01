@@ -123,9 +123,9 @@ function show_branch_tree {
   local branch=$1
   local indentation=$2
 
-  if [ "$indentation" -gt 0 ]; then
-    printf '  %0.s' "$(seq 1 $indentation)"
-  fi
+  for (( i=0; i < "$indentation"; i++)); do
+    printf '  '
+  done
   echo "$branch"
   local child_indentation=$(( indentation + 1 ))
   for child in $(child_branches "$branch"); do
