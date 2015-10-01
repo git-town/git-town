@@ -1,4 +1,4 @@
-Feature: when the previous and current branches are deleted during a Git Town command, the main branch becomes the new previous branch
+Feature: deleting the current and previous branches makes the main branch the new previous branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 

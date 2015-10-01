@@ -1,4 +1,4 @@
-Feature: when the current branch is deleted during a Git Town command, the initial previous branch remains the previous branch
+Feature: Git checkout history is preserved when deleting the current branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 

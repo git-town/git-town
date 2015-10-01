@@ -1,4 +1,4 @@
-Feature: when the previous branch is renamed during a Git Town command, the main branch becomes the new previous branch
+Feature: renaming the previous branch makes the main branch the new previous branch
 
   (see ./previous_branch_same.feature)
 

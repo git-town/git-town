@@ -1,4 +1,4 @@
-Feature: when a new branch is created during a Git Town command, the current branch becomes the new previous branch
+Feature: creating a new branch makes the current branch the new previous branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 

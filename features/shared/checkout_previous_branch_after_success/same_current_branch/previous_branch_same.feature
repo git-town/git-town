@@ -1,8 +1,8 @@
-Feature: Git Town commands that don't change the current and previous branch preserve Git history
+Feature: Git checkout history is preserved when the current and previous branch don't change
 
   As a developer running `git checkout -` after running a Git Town command
   I want to end up on the expected previous branch
-  So that Git Town does not interfere with my productive use of the Git command history
+  So that Git Town supports my productive use of the Git checkout history
 
 
   Scenario: git-kill

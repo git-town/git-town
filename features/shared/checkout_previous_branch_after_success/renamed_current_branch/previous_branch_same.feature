@@ -1,4 +1,4 @@
-Feature: when the current branch is renamed during a Git Town command, the previous branch history is preserved
+Feature: Git checkout history is preserved when renaming the current branch
 
   (see ../same_current_branch/previous_branch_same.feature)
 
