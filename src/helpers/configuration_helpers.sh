@@ -120,18 +120,18 @@ function run_config_operation {
 
 
 function show_branch_ancestry {
-  if [ $(has_tool 'tree') = true ]; then
+  if [ "$(has_tool 'tree')" = true ]; then
     ensure_knows_parent_branches "$(all_registered_branches)"
 
     local tempdir="$(mktemp -d)"
     for branch_name in $(all_registered_branches); do
-      ancestry_path=$(ancestor_branches $branch_name | tr ' ' '/')
-      mkdir -p "$tempdir/$ancestry_path"
+      ancestry_path=$(ancestor_branches "$branch_name" | tr ' ' '/')
+      mkdir -p "$tempdir/$ancestry_path/$branch_name"
     done
 
     echo_inline_bold "Branch ancestry: "
     echo
-    (cd $tempdir; tree -d -n --noreport .)
+    ( cd "$tempdir"; tree -d -n --noreport . )
   fi
 }
 
