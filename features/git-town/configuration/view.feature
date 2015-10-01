@@ -69,5 +69,3 @@ Feature: listing the configuration
       Main branch: [none]
       Perennial branches: [none]
       """
-
-
