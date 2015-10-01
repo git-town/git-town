@@ -219,5 +219,5 @@ function run_command {
 # Run a command without printing any output
 function run_command_silently {
   local cmd="$1"
-  (run_command "$cmd") > /dev/null 2>&1
+  run_command "$cmd" > /dev/null 2>&1
 }
