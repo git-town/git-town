@@ -131,7 +131,7 @@ function show_branch_ancestry {
 
     echo_inline_bold "Branch ancestry: "
     echo
-    ( cd "$tempdir"; tree -d -n --noreport . )
+    ( cd "$tempdir" || exit; tree -d -n --noreport . )
   fi
 }
 
