@@ -213,14 +213,14 @@ function step_if_all_true {
   local command="$1"
   shift
 
-  local runStep=true
+  local allTrue=true
   for condition in "$@"; do
     if [ "$condition" != true ]; then
-      runStep=false
+      allTrue=false
     fi
   done
 
-  if [ "$runStep" = true ]; then
+  if [ "$allTrue" = true ]; then
     step "$command"
   fi
 }
