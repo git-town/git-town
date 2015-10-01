@@ -184,10 +184,7 @@ function delete_local_branch_needs_force {
 
 # Returns the previously checked out branch name
 function previous_branch_name {
-  git rev-parse --abbrev-ref "@{-1}" > /dev/null 2>&1
-  if (($? == 0)); then
-    git rev-parse --abbrev-ref "@{-1}"
-  fi
+  git rev-parse --verify --quiet --abbrev-ref "@{-1}"
 }
 
 
