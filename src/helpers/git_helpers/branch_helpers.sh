@@ -85,21 +85,24 @@ function ensure_has_branch {
 
 # Returns the branch that a user would expect when running `git checkout -`
 function expected_previous_branch {
+  local initial_previous_branch=$1
+  local initial_branch=$2
+
   # previous branch still exists
-  if [ "$(has_local_branch "$INITIAL_PREVIOUS_BRANCH_NAME")" = true ]; then
+  if [ "$(has_local_branch "$initial_previous_branch")" = true ]; then
 
     # current branch is unchanged
-    if [ "$(get_current_branch_name)" = "$INITIAL_BRANCH_NAME" ]; then
-      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+    if [ "$(get_current_branch_name)" = "$initial_branch" ]; then
+      echo "$initial_previous_branch"
 
     # current branch is deleted
-    elif [ "$(has_local_branch "$INITIAL_BRANCH_NAME")" = false ]; then
-      echo "$INITIAL_PREVIOUS_BRANCH_NAME"
+    elif [ "$(has_local_branch "$initial_branch")" = false ]; then
+      echo "$initial_previous_branch"
 
     # current branch is new
     else
-      if [ "$(has_local_branch "$INITIAL_BRANCH_NAME")" = true ]; then
-        echo "$INITIAL_BRANCH_NAME"
+      if [ "$(has_local_branch "$initial_branch")" = true ]; then
+        echo "$initial_branch"
       else
         echo "$MAIN_BRANCH_NAME"
       fi
