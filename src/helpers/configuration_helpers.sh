@@ -124,7 +124,7 @@ function show_branch_tree {
   local indentation=$2
 
   if [ "$indentation" -gt 0 ]; then
-    printf '  %0.s' $(seq 1 $indentation)
+    printf '  %0.s' "$(seq 1 $indentation)"
   fi
   echo "$branch"
   local child_indentation=$(( indentation + 1 ))

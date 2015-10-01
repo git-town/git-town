@@ -17,6 +17,7 @@ Feature: listing the configuration
       staging
       """
 
+
   Scenario: everything is configured and there are nested branches
     Given I have configured the main branch name as "main"
     And my perennial branches are configured as "qa" and "staging"
