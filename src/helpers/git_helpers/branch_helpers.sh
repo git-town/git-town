@@ -184,6 +184,7 @@ function delete_local_branch_needs_force {
 
 # Returns the previously checked out branch name
 function previous_branch_name {
+  # --verify and --quiet needed to suppress errors when previous branch is unresolvable
   git rev-parse --verify --quiet --abbrev-ref "@{-1}"
 }
 
