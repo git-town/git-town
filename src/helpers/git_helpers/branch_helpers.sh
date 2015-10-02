@@ -185,6 +185,14 @@ function delete_local_branch_needs_force {
 }
 
 
+function preserve_checkout_history {
+  local initial_previous_branch_name=$1
+  local initial_branch_name=$2
+  local desired_previous_branch=$(expected_previous_branch "$initial_previous_branch_name" "$initial_branch_name")
+  set_previous_branch "$desired_previous_branch"
+}
+
+
 # Returns the previously checked out branch name
 function previous_branch_name {
   # --verify and --quiet needed to suppress errors when previous branch is unresolvable
