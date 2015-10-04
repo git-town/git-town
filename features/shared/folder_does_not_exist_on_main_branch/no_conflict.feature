@@ -1,6 +1,6 @@
-Feature: git sync: syncing inside a folder that doesn't exist on the main branch
+Feature: Using Git Town inside a folder that doesn't exist on the main branch
 
-  As a developer syncing inside a committed folder that doesn't exist on the main branch
+  As a developer using Git Town inside a committed folder that doesn't exist on the main branch
   I want the command to finish properly
   So that my repo is left in a consistent state and I don't lose any data
 
@@ -14,10 +14,10 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local and remote | other feature commit | file2            |
     And I am on the "current-feature" branch
     And I have an uncommitted file
+
+
+  Scenario: git-sync
     When I run `git sync --all` in the "new_folder" folder
-
-
-  Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
@@ -50,7 +50,8 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       |                 |                  | Merge branch 'main' into other-feature   |                  |
 
 
-  Scenario: undo
+  Scenario: git-sync --undo
+    When I run `git sync --all` in the "new_folder" folder
     When I run `git sync --undo` in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                           |
