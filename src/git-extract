@@ -52,6 +52,7 @@ function preconditions {
   get_shas "$*"
   ensure_has_shas
 
+  export RUN_IN_GIT_ROOT=true
   export STASH_OPEN_CHANGES=true
 }
 
