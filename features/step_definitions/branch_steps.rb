@@ -81,8 +81,8 @@ end
 
 
 Given(/^I am on the "(.+?)" branch with "(.+?)" as the previous Git branch/) do |current_branch, previous_branch|
-  step %(I am on the "#{previous_branch}" branch)
-  step %(I am on the "#{current_branch}" branch)
+  run "git checkout #{previous_branch}"
+  run "git checkout #{current_branch}"
 end
 
 
