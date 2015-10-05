@@ -2,6 +2,30 @@
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
 
 
-activate_driver_family 'code_hosting'
-ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
-create_pull_request "$(remote_repository_name)" "$INITIAL_BRANCH_NAME" "$(parent_branch "$INITIAL_BRANCH_NAME")"
+# Echoes the names of all branches that should be synced in the current session
+function branches_to_sync {
+  ancestor_branches "$INITIAL_BRANCH_NAME" | tr ' ' '\n'
+  echo "$INITIAL_BRANCH_NAME"
+}
+
+
+function preconditions {
+  activate_driver_family 'code_hosting'
+  if [ "$HAS_REMOTE" = true ]; then
+    fetch
+  fi
+  ensure_knows_parent_branches "$INITIAL_BRANCH_NAME"
+  export RUN_IN_GIT_ROOT=true
+  export STASH_OPEN_CHANGES=true
+}
+
+
+function steps {
+  branches_to_sync | while read branch_name; do
+    sync_branch_steps "$branch_name"
+  done
+  echo "create_pull_request $(remote_repository_name) $INITIAL_BRANCH_NAME $(parent_branch "$INITIAL_BRANCH_NAME")"
+}
+
+
+run "$@"
