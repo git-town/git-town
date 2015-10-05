@@ -37,7 +37,7 @@ Feature: Using Git Town inside a folder that doesn't exist on the main branch
 
   Scenario: git-sync --abort
     When I run `git sync --all` in the "new_folder" folder
-    When I run `git sync --abort`
+    And I run `git sync --abort`
     Then it runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
@@ -54,7 +54,7 @@ Feature: Using Git Town inside a folder that doesn't exist on the main branch
   @finishes-with-non-empty-stash
   Scenario: git-sync: continuing without resolving the conflicts
     When I run `git sync --all` in the "new_folder" folder
-    When I run `git sync --continue`
+    And I run `git sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "current-feature" branch
