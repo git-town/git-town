@@ -140,11 +140,7 @@ function show_config {
   echo
 
   echo_bold_underline "Perennial branches:"
-  if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
-    split_string "$PERENNIAL_BRANCH_NAMES" " " | indent
-  else
-    echo_indented '[none]'
-  fi
+  echo_indented "$(show_perennial_branches)"
   echo
 
   if [ -n "$MAIN_BRANCH_NAME" ]; then
@@ -166,6 +162,8 @@ function show_main_branch {
 function show_perennial_branches {
   if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
     split_string "$PERENNIAL_BRANCH_NAMES" " "
+  else
+    echo '[none]'
   fi
 }
 
