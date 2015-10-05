@@ -19,4 +19,3 @@ The pull request only shows the changes made against the immediate parent branch
 
 Supported only for repositories hosted on [GitHub](http://github.com/) and
 [Bitbucket](https://bitbucket.org/).
-
