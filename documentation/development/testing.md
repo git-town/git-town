@@ -64,3 +64,5 @@ which is undesirable.
 To circumvent this problem, Git Town allows to mock the Git remote
 by setting the Git configuration value
 `git-town.testing.remote-url` to the respective value.
+To keep this behavior clean and secure,
+this also requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
