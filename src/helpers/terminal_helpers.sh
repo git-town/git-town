@@ -13,6 +13,15 @@ function echo_bold {
 }
 
 
+function echo_bold_underline {
+  output_style_underline
+  output_style_bold
+  printf "%s" "$@"
+  output_style_reset
+  echo
+}
+
+
 # Prints an error header into the terminal.
 function echo_error_header {
   echo
@@ -198,6 +207,11 @@ function output_style_red {
 
 function output_style_reset {
   tput sgr0
+}
+
+
+function output_style_underline {
+  tput smul
 }
 
 
