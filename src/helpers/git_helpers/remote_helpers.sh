@@ -5,7 +5,7 @@
 function remote_url {
   if [ "$GIT_TOWN_ENV" = "test" ]; then
     mock_remote=$(git config --get git-town.testing.remote-url)
-    if [ ! -z "$mock_remote" ]; then
+    if [ -n "$mock_remote" ]; then
       echo "$mock_remote"
       return
     fi
