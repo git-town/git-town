@@ -119,6 +119,21 @@ function run_config_operation {
 }
 
 
+function show_branch_tree {
+  local branch=$1
+  local indentation=$2
+
+  for (( i=0; i < "$indentation"; i++)); do
+    printf '  '
+  done
+  echo "$branch"
+  local child_indentation=$(( indentation + 1 ))
+  for child in $(child_branches "$branch"); do
+    show_branch_tree "$child" "$child_indentation"
+  done
+}
+
+
 function show_config {
   echo_inline_bold "Main branch: "
   show_main_branch
@@ -128,6 +143,11 @@ function show_config {
     split_string "$PERENNIAL_BRANCH_NAMES" " "
   else
     echo ' [none]'
+  fi
+
+  if [ -n "$MAIN_BRANCH_NAME" ]; then
+    echo_bold "Branch Ancestry:"
+    show_branch_tree "$MAIN_BRANCH_NAME" 0
   fi
 }
 
