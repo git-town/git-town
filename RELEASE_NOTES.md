@@ -12,6 +12,8 @@
   ([#464](https://github.com/Originate/git-town/issues/464))
 * `git town version`: Homebrew installs no longer print date and SHA
   ([#631](https://github.com/Originate/git-town/issues/631))
+* `git town config`: shows branch ancestry
+  ([#651](https://github.com/Originate/git-town/issues/651))
 
 ## 0.7.3 (2015-09-02)
 
