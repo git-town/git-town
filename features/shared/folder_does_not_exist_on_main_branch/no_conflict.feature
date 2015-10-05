@@ -19,10 +19,10 @@ Feature: Using Git Town inside a folder that doesn't exist on the main branch
     When I run `git ship -m 'feature done'` in the "new_folder" folder
     Then I am on the "main" branch
     And now I have the following commits
-      | BRANCH          | LOCATION         | MESSAGE              | FILE NAME        |
-      | main            | local and remote | main commit          | main_file        |
-      |                 |                  | feature done         | new_folder/file1 |
-      | other-feature   | local and remote | other feature commit | file2            |
+      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME        |
+      | main          | local and remote | main commit          | main_file        |
+      |               |                  | feature done         | new_folder/file1 |
+      | other-feature | local and remote | other feature commit | file2            |
 
 
   Scenario: git-sync
