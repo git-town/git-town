@@ -13,6 +13,13 @@ function branch_needs_push {
 }
 
 
+# Checkout a branch
+function checkout_branch_silently {
+  local branch_name=$1
+  run_command_silently "git checkout $branch_name"
+}
+
+
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1
@@ -72,6 +79,38 @@ function ensure_has_branch {
     echo_error_header
     echo_error "There is no branch named '$branch_name'"
     exit_with_error newline
+  fi
+}
+
+
+# Returns the branch that a user would expect when running `git checkout -`
+function expected_previous_branch {
+  local initial_previous_branch=$1
+  local initial_branch=$2
+
+  # previous branch still exists
+  if [ "$(has_local_branch "$initial_previous_branch")" = true ]; then
+
+    # current branch is unchanged
+    if [ "$(get_current_branch_name)" = "$initial_branch" ]; then
+      echo "$initial_previous_branch"
+
+    # current branch is deleted
+    elif [ "$(has_local_branch "$initial_branch")" = false ]; then
+      echo "$initial_previous_branch"
+
+    # current branch is new
+    else
+      if [ "$(has_local_branch "$initial_branch")" = true ]; then
+        echo "$initial_branch"
+      else
+        echo "$MAIN_BRANCH_NAME"
+      fi
+    fi
+
+  # previous branch is deleted
+  else
+    echo "$MAIN_BRANCH_NAME"
   fi
 }
 
@@ -146,6 +185,21 @@ function delete_local_branch_needs_force {
 }
 
 
+function preserve_checkout_history {
+  local initial_previous_branch_name=$1
+  local initial_branch_name=$2
+  local desired_previous_branch=$(expected_previous_branch "$initial_previous_branch_name" "$initial_branch_name")
+  set_previous_branch "$desired_previous_branch"
+}
+
+
+# Returns the previously checked out branch name
+function previous_branch_name {
+  # --verify and --quiet needed to suppress errors when previous branch is unresolvable
+  git rev-parse --verify --quiet --abbrev-ref "@{-1}"
+}
+
+
 # Pushes the branch with the given name to origin
 function push_branch {
   local branch_name=$1
@@ -184,6 +238,21 @@ function remote_only_merged_branches {
   comm -13 <(sort "$local_temp") <(sort "$remote_temp")
   rm "$local_temp"
   rm "$remote_temp"
+}
+
+
+function set_previous_branch {
+  local desired_previous_branch=$1
+
+  # nothing to do, exit early
+  if [ "$desired_previous_branch" = "$(previous_branch_name)" ]; then
+    return
+  fi
+
+  local current_branch="$(get_current_branch_name)"
+
+  checkout_branch_silently "$desired_previous_branch"
+  checkout_branch_silently "$current_branch"
 }
 
 
