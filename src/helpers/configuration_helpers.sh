@@ -135,19 +135,21 @@ function show_branch_tree {
 
 
 function show_config {
-  echo_inline_bold "Main branch: "
-  show_main_branch
-  echo_inline_bold "Perennial branches:"
+  echo_bold_underline "Main branch:"
+  echo_indented "$(show_main_branch)"
+  echo
+
+  echo_bold_underline "Perennial branches:"
   if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
-    echo
-    split_string "$PERENNIAL_BRANCH_NAMES" " "
+    split_string "$PERENNIAL_BRANCH_NAMES" " " | indent
   else
-    echo ' [none]'
+    echo_indented '[none]'
   fi
+  echo
 
   if [ -n "$MAIN_BRANCH_NAME" ]; then
-    echo_bold "Branch Ancestry:"
-    show_branch_tree "$MAIN_BRANCH_NAME" 0
+    echo_bold_underline "Branch Ancestry:"
+    show_branch_tree "$MAIN_BRANCH_NAME" 0 | indent
   fi
 }
 
