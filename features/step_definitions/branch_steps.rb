@@ -21,11 +21,11 @@ Given(/^I have a( local)?(?: feature)? branch named "([^"]+)" with no parent$/) 
 end
 
 
-Given(/^I have( local)?(?: feature)? branches named "([^"]+)" and "([^"]+)"$/) do |local, branch_1_name, branch_2_name|
-  create_branch branch_1_name, remote: !local
-  create_branch branch_2_name, remote: !local
-  set_parent_branch branch: branch_1_name, parent: 'main', ancestors: 'main'
-  set_parent_branch branch: branch_2_name, parent: 'main', ancestors: 'main'
+Given(/^I have( local)?(?: feature)? branches named "(.+?)"$/) do |local, branch_names|
+  Kappamaki.from_sentence(branch_names).each do |branch_name|
+    create_branch branch_name, remote: !local
+    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+  end
 end
 
 
@@ -80,7 +80,19 @@ Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
 end
 
 
+Given(/^I am on the "(.+?)" branch with "(.+?)" as the previous Git branch/) do |current_branch, previous_branch|
+  run "git checkout #{previous_branch}"
+  run "git checkout #{current_branch}"
+end
 
+
+
+
+Then(/^my previous Git branch is (?:now|still) "(.+?)"/) do |previous_branch|
+  run 'git checkout -'
+  expect(current_branch_name).to eql previous_branch
+  run 'git checkout -'
+end
 
 
 Then(/^I (?:end up|am still) on the "(.+?)" branch$/) do |branch_name|

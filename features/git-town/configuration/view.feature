@@ -18,6 +18,26 @@ Feature: listing the configuration
       """
 
 
+  Scenario: everything is configured and there are nested branches
+    Given I have configured the main branch name as "main"
+    And my perennial branches are configured as "qa" and "staging"
+    And I have feature branches named "parent-feature" and "stand-alone-feature"
+    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    When I run `git town config`
+    Then I see
+      """
+      Main branch: main
+      Perennial branches:
+      qa
+      staging
+      Branch Ancestry:
+      main
+        parent-feature
+          child-feature
+        stand-alone-feature
+      """
+
+
   Scenario: the main branch is configured but the perennial branches are not
     Given I have configured the main branch name as "main"
     And my perennial branches are not configured
