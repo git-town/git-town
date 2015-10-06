@@ -2,7 +2,8 @@
 
 Git Town is written in Bash.
 Bash is a surprisingly powerful, versatile, and elaborate scripting system
-where every command-line application becomes a keyword in your programming language.
+where every command-line application
+becomes a keyword in your programming language.
 
 With the right amount of structure,
 Bash programs can be as easily written and read
@@ -10,7 +11,7 @@ as programs in many other languages.
 
 Bash is the
 [9th most popular language on GitHub](http://githut.info),
-and actively used in most open-source repositories.
+and is actively used in most open-source repositories.
 
 Learning Bash not only allows you to contribute to Git Town,
 it will make your life easier by giving you the ability to
@@ -18,7 +19,6 @@ create a plethora of useful little command-line helpers,
 the UNIX way!
 
 * [Shebang](#shebang)
-* [Variables](#variables)
 * [If clauses](#if-clauses)
 * [Functions](#functions)
 * [Arrays](#arrays)
@@ -28,38 +28,21 @@ the UNIX way!
 
 ## Shebang
 
-Use the cross-platform version of shebang:
+Use the cross-platform version of
+[shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29):
 ```bash
 #!/usr/bin/env bash
 ```
 
-
-## Variables
-
-* declaring variables
-
-  ```bash
-  name="Git Town"
-  ```
-* declaring local variables
-
-  ```bash
-  local name="Git Town"
-  ```
-* declaring constants:
-
-  ```bash
-  NAME="Git Town"
-  ```
 
 ## If clauses
 
 * structure
 
   ```bash
-  if [condition]; then
+  if [ condition ]; then
     # code
-  elif [condition]; then
+  elif [ condition ]; then
     # code
   else
     # code
@@ -76,7 +59,7 @@ Use the cross-platform version of shebang:
 
   ```bash
   if [ $success = true ]; then
-    # :)
+    # runs if $success is true
   fi
   ```
 * checking strings
@@ -108,9 +91,8 @@ Use the cross-platform version of shebang:
   }
   ```
 
-  Notice how the first parameter is given a name
-  by assigning it
-  to the local variable `bar`.
+  Parameter are named by assigning them
+  to a local variable at the beginning of a function.
 
 * calling functions
 
@@ -151,7 +133,7 @@ Use the cross-platform version of shebang:
 
   # looping with index
   for index in ${!people[*]}; do
-    printf "%4d: %s\n" $index ${people[$index]}
+    printf "%d: %s\n" $index ${people[$index]}
   done
   ```
 * counting the elements
@@ -173,16 +155,16 @@ Use the cross-platform version of shebang:
     echo false
   }
   ```
-* returning arrays from methods
+* returning arrays from functions
 
-  Methods can only return exit codes,
+  Functions can only return exit codes,
   no data structures.
   Use global variables to pass around arrays.
 
 
 ## String Lists
 
-Lists are the universal exchange format between unix programs.
+Lists are the universal exchange format between UNIX programs.
 They are normal strings containing items separated by a newline character.
 Unlike Bash arrays, lists allow to use the full power of the unix toolset for massaging them.
 
