@@ -11,5 +11,5 @@ end
 
 
 Given(/^my remote origin is (.+?)$/) do |origin|
-  run "git remote set-url origin #{origin}"
+  run "git config git-town.testing.remote-url #{origin}"
 end
