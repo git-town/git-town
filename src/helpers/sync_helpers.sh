@@ -21,6 +21,12 @@ function sync_branch_steps {
       echo "rebase_tracking_branch"
     fi
 
-    echo_if_true "push_branch $branch" "$HAS_REMOTE"
+    if [ "$HAS_REMOTE" = true ]; then
+      if [ "$(has_tracking_branch "$branch")" == true ]; then
+        echo "push_branch $branch"
+      else
+        echo "create_tracking_branch $branch"
+      fi
+    fi
   fi
 }

@@ -218,3 +218,15 @@ function store_configuration {
     fi
   fi
 }
+
+
+function undo_steps_for_add_perennial_branch {
+  local branch_name=$1
+  echo "remove_perennial_branch $branch_name"
+}
+
+
+function undo_steps_for_remove_perennial_branch {
+  local branch_name=$1
+  echo "add_perennial_branch $branch_name"
+}

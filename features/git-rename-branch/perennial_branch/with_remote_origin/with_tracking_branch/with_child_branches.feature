@@ -26,6 +26,7 @@ Feature: git rename-branch: renaming a feature branch with child branches
       |                    | git push origin :production                   |
       |                    | git branch -D production                      |
     And I end up on the "renamed-production" branch
+    And my repo is configured with perennial branches as "renamed-production"
     And I have the following commits
       | BRANCH             | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
       | child-feature      | local and remote | child feature commit | child_feature_file | child feature content |
@@ -35,3 +36,23 @@ Feature: git rename-branch: renaming a feature branch with child branches
       | child-feature      | renamed-production |
       | renamed-production | main               |
 
+
+  Scenario: undo
+    When I run `git rename-branch --undo`
+    Then it runs the commands
+      | BRANCH             | COMMAND                                              |
+      | renamed-production | git branch production <%= sha 'production commit' %> |
+      |                    | git push -u origin production                        |
+      |                    | git push origin :renamed-production                  |
+      |                    | git checkout production                              |
+      | production         | git branch -d renamed-production                     |
+    And I end up on the "production" branch
+    And my repo is configured with perennial branches as "production"
+    And I have the following commits
+      | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
+      | child-feature | local and remote | child feature commit | child_feature_file | child feature content |
+      | production    | local and remote | production commit    | production_file    | production content    |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH        | PARENT     |
+      | child-feature | production |
+      | production    | main       |

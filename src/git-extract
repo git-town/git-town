@@ -60,7 +60,7 @@ function steps {
   sync_branch_steps "$MAIN_BRANCH_NAME"
   echo "create_and_checkout_feature_branch '$target_branch_name'"
   echo "cherry_pick '$SHAs'"
-  echo_if_true "push_branch $target_branch_name" "$HAS_REMOTE"
+  echo_if_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE"
 }
 
 
