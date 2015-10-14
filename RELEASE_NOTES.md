@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.8.0 (2015-10-14)
+
 #### BREAKING CHANGES
 * removed `git extract`
 * update internal storage of perennial branches
@@ -14,14 +16,18 @@
 * parent branch prompt: only show description and branch list once per command
 * preserve checkout history so that `git checkout -` works as expected alongside Git Town commands
   ([#65](https://github.com/Originate/git-town/issues/65))
+* `git hack`: pushes the new branch to the remote repository
+  ([#664](https://github.com/Originate/git-town/issues/664))
 * `git new-pull-request`: syncs the branch before creating the pull request
   ([#367](https://github.com/Originate/git-town/issues/367))
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
-* `git town version`: Homebrew installs no longer print date and SHA
-  ([#631](https://github.com/Originate/git-town/issues/631))
 * `git town config`: shows branch ancestry
   ([#651](https://github.com/Originate/git-town/issues/651))
+
+#### Bug Fixes
+* `git town version`: Homebrew installs no longer print date and SHA
+  ([#631](https://github.com/Originate/git-town/issues/631))
 
 ## 0.7.3 (2015-09-02)
 
