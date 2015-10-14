@@ -31,11 +31,6 @@ When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
 end
 
 
-When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and perennial branch names "(.+)")?/) do |cmd, main, perennial|
-  @result = run cmd, inputs: [main, perennial].compact
-end
-
-
 When(/^I run `(.+?)` and press ENTER( twice)?$/) do |command, twice|
   inputs = ["\n"]
   inputs += inputs if twice

@@ -27,12 +27,6 @@ Then(/^I am in the project root folder$/) do
 end
 
 
-Then(/^I am in the "(.+?)" folder$/) do |folder_name|
-  relative_path = Pathname.new(Dir.pwd).relative_path_from Pathname.new(git_root_folder)
-  expect(relative_path).to.eql folder_name
-end
-
-
 Then(/^I still have my original Git autocompletion file$/) do
   expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
 end
