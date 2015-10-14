@@ -24,11 +24,12 @@ Feature: git hack: starting a new feature from a feature branch (with remote rep
       |                  | git checkout main                |
       | main             | git rebase origin/main           |
       |                  | git checkout -b new-feature main |
-      | new-feature      | git stash pop                    |
+      | new-feature      | git push -u origin new-feature   |
+      |                  | git stash pop                    |
     And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | main             | local and remote | main commit             |
       | existing-feature | local            | existing feature commit |
-      | new-feature      | local            | main commit             |
+      | new-feature      | local and remote | main commit             |

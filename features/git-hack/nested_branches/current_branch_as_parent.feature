@@ -26,13 +26,13 @@ Feature: Creating nested feature branches
       | parent-feature | git merge --no-edit origin/parent-feature    |
       |                | git merge --no-edit main                     |
       |                | git checkout -b child-feature parent-feature |
-      | child-feature  | git stash pop                                |
+      | child-feature  | git push -u origin child-feature             |
+      |                | git stash pop                                |
     And I end up on the "child-feature" branch
     And I still have my uncommitted file
-    And the branch "child_feature" has not been pushed to the repository
     And I have the following commits
       | BRANCH         | LOCATION         | MESSAGE        |
-      | child-feature  | local            | feature_commit |
+      | child-feature  | local and remote | feature_commit |
       | parent-feature | local and remote | feature_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
@@ -44,13 +44,14 @@ Feature: Creating nested feature branches
     Given I run `git hack child-feature parent-feature`
     When I run `git hack --undo`
     Then it runs the commands
-      | BRANCH         | COMMAND                     |
-      | child-feature  | git stash -u                |
-      |                | git checkout parent-feature |
-      | parent-feature | git branch -d child-feature |
-      |                | git checkout main           |
-      | main           | git checkout parent-feature |
-      | parent-feature | git stash pop               |
+      | BRANCH         | COMMAND                        |
+      | child-feature  | git stash -u                   |
+      |                | git push origin :child-feature |
+      |                | git checkout parent-feature    |
+      | parent-feature | git branch -d child-feature    |
+      |                | git checkout main              |
+      | main           | git checkout parent-feature    |
+      | parent-feature | git stash pop                  |
     And I end up on the "parent-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits
@@ -71,13 +72,13 @@ Feature: Creating nested feature branches
       | parent-feature | git merge --no-edit origin/parent-feature    |
       |                | git merge --no-edit main                     |
       |                | git checkout -b child-feature parent-feature |
-      | child-feature  | git stash pop                                |
+      | child-feature  | git push -u origin child-feature             |
+      |                | git stash pop                                |
     And I end up on the "child-feature" branch
     And I still have my uncommitted file
-    And the branch "child_feature" has not been pushed to the repository
     And I have the following commits
       | BRANCH         | LOCATION         | MESSAGE        |
-      | child-feature  | local            | feature_commit |
+      | child-feature  | local and remote | feature_commit |
       | parent-feature | local and remote | feature_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT         |
@@ -89,13 +90,14 @@ Feature: Creating nested feature branches
     Given I run `git hack child-feature .`
     When I run `git hack --undo`
     Then it runs the commands
-      | BRANCH         | COMMAND                     |
-      | child-feature  | git stash -u                |
-      |                | git checkout parent-feature |
-      | parent-feature | git branch -d child-feature |
-      |                | git checkout main           |
-      | main           | git checkout parent-feature |
-      | parent-feature | git stash pop               |
+      | BRANCH         | COMMAND                        |
+      | child-feature  | git stash -u                   |
+      |                | git push origin :child-feature |
+      |                | git checkout parent-feature    |
+      | parent-feature | git branch -d child-feature    |
+      |                | git checkout main              |
+      | main           | git checkout parent-feature    |
+      | parent-feature | git stash pop                  |
     And I end up on the "parent-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits
