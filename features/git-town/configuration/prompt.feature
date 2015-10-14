@@ -18,7 +18,6 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
       | COMMAND              |
-      | git extract          |
       | git hack             |
       | git kill             |
       | git new-pull-request |

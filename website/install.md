@@ -24,10 +24,6 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
         <li>clone the repo to your machine (into DIR)</li>
         <li>add DIR/src to your <code>$PATH</code></li>
         <li>add DIR/man to your <code>$MANPATH</code></li>
-        <li>
-          install <a href="http://en.wikipedia.org/wiki/Dialog_(software)">Dialog</a>
-          (used by <a href="/documentation/commands/git-extract.md">git extract</a>)
-        </li>
       </ul>
     </td>
   </tr>
