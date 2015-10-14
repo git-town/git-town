@@ -13,6 +13,15 @@ function echo_bold {
 }
 
 
+function echo_bold_underline {
+  output_style_underline
+  output_style_bold
+  printf "%s" "$@"
+  output_style_reset
+  echo
+}
+
+
 # Prints an error header into the terminal.
 function echo_error_header {
   echo
@@ -201,6 +210,11 @@ function output_style_reset {
 }
 
 
+function output_style_underline {
+  tput smul
+}
+
+
 # Run a command.
 #
 # Prints the command (prepends branch for git commands) and the output
@@ -213,4 +227,11 @@ function run_command {
   fi
   echo_header "$header"
   eval "$cmd" 2>&1
+}
+
+
+# Run a command without printing any output
+function run_command_silently {
+  local cmd="$1"
+  run_command "$cmd" > /dev/null 2>&1
 }
