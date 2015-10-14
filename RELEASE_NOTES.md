@@ -2,16 +2,20 @@
 
 ## Unreleased
 
-* **BREAKING CHANGE**: update internal storage of perennial branches
+#### BREAKING CHANGES
+* removed `git extract`
+* update internal storage of perennial branches
   * if you have configured multiple perennial branches, you will need to reset your configuration
     * `git town config --reset`
     * `git town config --setup` or you will be prompted the next time you run a Git Town command
+
+#### New Features
+* configuration prompt: allow user to select branch by number, ability to recover from bad input
+* parent branch prompt: only show description and branch list once per command
 * preserve checkout history so that `git checkout -` works as expected alongside Git Town commands
   ([#65](https://github.com/Originate/git-town/issues/65))
 * `git new-pull-request`: syncs the branch before creating the pull request
   ([#367](https://github.com/Originate/git-town/issues/367))
-* configuration prompt: allow user to select branch by number, ability to recover from bad input
-* parent branch prompt: only show description and branch list once per command
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
 * `git town version`: Homebrew installs no longer print date and SHA

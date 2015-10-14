@@ -5,19 +5,6 @@ Feature: Show clear error if trying to continue after executing a successful com
   So that I don't experience any cryptic errors.
 
 
-  Scenario: continuing after successful git-extract
-    Given I have a feature branch named "feature"
-    And the following commits exist in my repository
-      | BRANCH  | MESSAGE            |
-      | main    | remote main commit |
-      | feature | feature commit     |
-      |         | refactor commit    |
-    And I am on the "feature" branch
-    And I run `git extract refactor` with the last commit sha
-    When I run `git extract --continue`
-    Then I get the error "The last command finished successfully and cannot be continued"
-
-
   Scenario: continuing after successful git-hack
     Given I run `git hack new-feature`
     When I run `git hack --continue`

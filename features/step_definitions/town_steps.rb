@@ -74,13 +74,3 @@ end
 Then(/^I see the initial configuration prompt$/) do
   step %(I see "Git Town needs to be configured")
 end
-
-
-Then(/^I (don't )?see the first line of the configuration wizard$/) do |negate|
-  configuration_wizard_first_line = 'Please specify the main dev branch'
-  if negate
-    step %(I don't see "#{configuration_wizard_first_line}")
-  else
-    step %(I see "#{configuration_wizard_first_line}")
-  end
-end

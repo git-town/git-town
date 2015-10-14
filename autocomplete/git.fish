@@ -4,7 +4,7 @@
 # for command in (ls (brew --repository)/Library/Homebrew/cmd | sed -e "s/\.rb//g")
 #   set commands $command $commands
 # end
-set git_town_commands extract hack kill new-pull-request prune-branches rename-branch ship sync sync-fork town
+set git_town_commands hack kill new-pull-request prune-branches rename-branch ship sync sync-fork town
 
 
 # Indicates through its error code whether the command line to auto-complete
@@ -27,7 +27,6 @@ end
 # These only get autocompleted if there is no Git Town command present in the
 # command line already.
 # This is done through __fish_complete_git_town_no_command
-complete --command git --arguments 'extract'          --description 'Copy selected commits from the current branch into their own branch' --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'hack'             --description 'Cut a new feature branch off the main branch'                        --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'kill'             --description 'Remove an obsolete feature branch'                                   --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'new-pull-request' --description 'Create a new pull request'                                           --condition '__fish_complete_git_town_no_command' --no-files
