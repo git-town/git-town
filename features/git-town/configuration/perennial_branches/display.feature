@@ -8,7 +8,7 @@ Feature: display the perennial branches configuration
   Scenario: perennial branches are not configured
     Given my perennial branches are not configured
     When I run `git town perennial-branches`
-    Then I see no output
+    Then I see "[none]"
 
 
   Scenario: perennial branches are configured

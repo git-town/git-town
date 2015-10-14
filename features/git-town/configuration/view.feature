@@ -11,10 +11,35 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch: main
+      Main branch:
+        main
+
       Perennial branches:
-      qa
-      staging
+        qa
+        staging
+      """
+
+
+  Scenario: everything is configured and there are nested branches
+    Given I have configured the main branch name as "main"
+    And my perennial branches are configured as "qa" and "staging"
+    And I have feature branches named "parent-feature" and "stand-alone-feature"
+    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    When I run `git town config`
+    Then I see
+      """
+      Main branch:
+        main
+
+      Perennial branches:
+        qa
+        staging
+
+      Branch Ancestry:
+        main
+          parent-feature
+            child-feature
+          stand-alone-feature
       """
 
 
@@ -24,8 +49,11 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch: main
-      Perennial branches: [none]
+      Main branch:
+        main
+
+      Perennial branches:
+        [none]
       """
 
 
@@ -35,10 +63,12 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch: [none]
+      Main branch:
+        [none]
+
       Perennial branches:
-      qa
-      staging
+        qa
+        staging
       """
 
 
@@ -47,6 +77,9 @@ Feature: listing the configuration
     When I run `git town config`
     Then I see
       """
-      Main branch: [none]
-      Perennial branches: [none]
+      Main branch:
+        [none]
+
+      Perennial branches:
+        [none]
       """
