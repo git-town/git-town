@@ -28,14 +28,15 @@ Feature: Forking off a remote branch
       |                | git merge --no-edit main                     |
       |                | git push                                     |
       |                | git checkout -b child-feature parent-feature |
-      | child-feature  | git stash pop                                |
+      | child-feature  | git push -u origin child-feature             |
+      |                | git stash pop                                |
     And I end up on the "child-feature" branch
     And I still have my uncommitted file
     And the branch "child_feature" has not been pushed to the repository
     And I have the following commits
       | BRANCH         | LOCATION         | MESSAGE                                 |
       | main           | local and remote | main_commit                             |
-      | child-feature  | local            | parent_feature_commit                   |
+      | child-feature  | local and remote | parent_feature_commit                   |
       |                |                  | main_commit                             |
       |                |                  | Merge branch 'main' into parent-feature |
       | parent-feature | local and remote | parent_feature_commit                   |
@@ -50,12 +51,13 @@ Feature: Forking off a remote branch
   Scenario: undo
     When I run `git hack --undo`
     Then it runs the commands
-      | BRANCH         | COMMAND                     |
-      | child-feature  | git stash -u                |
-      |                | git checkout parent-feature |
-      | parent-feature | git branch -d child-feature |
-      |                | git checkout main           |
-      | main           | git stash pop               |
+      | BRANCH         | COMMAND                        |
+      | child-feature  | git stash -u                   |
+      |                | git push origin :child-feature |
+      |                | git checkout parent-feature    |
+      | parent-feature | git branch -d child-feature    |
+      |                | git checkout main              |
+      | main           | git stash pop                  |
     And I end up on the "main" branch
     And I still have my uncommitted file
     And I have the following commits
