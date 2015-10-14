@@ -20,4 +20,3 @@ Feature: Git Town performs correctly depending on the environment
       | git repo                    |
       | git ship                    |
       | git sync                    |
-      | git sync-fork               |

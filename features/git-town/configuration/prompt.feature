@@ -25,4 +25,3 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
       | git repo             |
       | git ship             |
       | git sync             |
-      | git sync-fork        |

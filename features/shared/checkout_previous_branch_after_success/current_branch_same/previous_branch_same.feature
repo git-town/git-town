@@ -62,12 +62,3 @@ Feature: Git checkout history is preserved when the current and previous branch 
     When I run `git sync`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
-
-
-  Scenario: git-sync-fork
-    Given my repo has an upstream repo
-    And I have branches named "previous" and "current"
-    And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git sync-fork`
-    Then I am still on the "current" branch
-    And my previous Git branch is still "previous"

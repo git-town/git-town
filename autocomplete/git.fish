@@ -4,7 +4,7 @@
 # for command in (ls (brew --repository)/Library/Homebrew/cmd | sed -e "s/\.rb//g")
 #   set commands $command $commands
 # end
-set git_town_commands hack kill new-pull-request prune-branches rename-branch ship sync sync-fork town
+set git_town_commands hack kill new-pull-request prune-branches rename-branch ship sync town
 
 
 # Indicates through its error code whether the command line to auto-complete
@@ -34,7 +34,6 @@ complete --command git --arguments 'prune-branches'   --description 'Delete merg
 complete --command git --arguments 'rename-branch'    --description 'Rename a branch'                                                     --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'ship'             --description 'Deliver a completed feature branch'                                  --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'sync'             --description 'Update the current branch with all relevant changes'                 --condition '__fish_complete_git_town_no_command' --no-files
-complete --command git --arguments 'sync-fork'        --description 'Pull upstream updates into a forked repository'                      --condition '__fish_complete_git_town_no_command' --no-files
 complete --command git --arguments 'town'             --description 'Git Town management'                                                 --condition '__fish_complete_git_town_no_command' --no-files
 
 
