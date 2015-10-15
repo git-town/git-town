@@ -38,7 +38,7 @@ function has_remote_url {
 
 # Returns true if the repository has an upstream remote configured
 function has_remote_upstream {
-  if [ "$(git remote -v | grep -c 'upstream')" == 0 ]; then
+  if [ "$(git remote | grep -c '^upstream$')" == 0 ]; then
     echo false
   else
     echo true
