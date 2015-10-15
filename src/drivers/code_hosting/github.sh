@@ -7,7 +7,7 @@ function create_pull_request {
   local parent_branch=$3
 
   local to_compare;
-  if [ $parent_branch = "$MAIN_BRANCH_NAME" ]; then
+  if [ "$parent_branch" = "$MAIN_BRANCH_NAME" ]; then
     # Allow Github to redirect to the proper place if this repository is a fork
     to_compare="$branch"
   else

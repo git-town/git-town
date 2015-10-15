@@ -22,7 +22,7 @@ end
 
 # Returns the URL for making pull requests on GitHub
 def github_pull_request_url branch:, parent_branch:, repo:
-  to_compare = parent_branch === 'main' ? branch : "#{parent_branch}...#{branch}"
+  to_compare = parent_branch == 'main' ? branch : "#{parent_branch}...#{branch}"
   "https://github.com/#{repo}/compare/#{to_compare}?expand=1"
 end
 
