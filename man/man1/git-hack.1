@@ -11,6 +11,8 @@ git hack \- create a new feature branch
 
 
 .SH "DESCRIPTION"
+
+.PP
 Syncs the given parent branch (default: main branch),
 .br
 forks a new feature branch with the given name off it,
@@ -19,6 +21,8 @@ pushes the new feature branch to the remote repository,
 .br
 and brings over all uncommitted changes to the new feature branch.
 
+.PP
+When there is a remote "upstream", the main branch is synced with it upstream.
 
 .SH "OPTIONS"
 .IP "<branch_name>" 4
