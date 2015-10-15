@@ -74,6 +74,7 @@ Implements #123
 
 ## Release Process
 
+#### Originate/git-town
 * Create a feature branch which updates
   * `RELEASE_NOTES.md`
   * the version in `src/git-town` and the related features
@@ -81,6 +82,7 @@ Implements #123
 * Get the branch merged into master
 * Draft a new [release](https://github.com/Originate/git-town/releases/new) against master
 
+#### Homebrew/homebrew
 * Fork [homebrew](https://github.com/Homebrew/homebrew)
 * Update `Library/Formula/git-town.rb`
   * Get the sha256 by downloading the release and using `shasum -a 256 /path/to/file`
