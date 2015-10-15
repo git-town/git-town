@@ -85,6 +85,6 @@ Implements #123
 #### Homebrew/homebrew
 * Fork [homebrew](https://github.com/Homebrew/homebrew)
 * Update `Library/Formula/git-town.rb`
-  * Get the sha256 by downloading the release and using `shasum -a 256 /path/to/file`
+  * Get the sha256 by downloading the release (`.tar.gz`) and using `shasum -a 256 /path/to/file`
   * Ignore the `bottle` block. It is updated by the homebrew maintainers
 * Create a pull request and get it merged
