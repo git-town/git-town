@@ -6,7 +6,15 @@ function create_pull_request {
   local branch=$2
   local parent_branch=$3
 
-  open_browser "https://github.com/$repository/compare/$parent_branch...$branch?expand=1"
+  local to_compare;
+  if [ "$parent_branch" = "$MAIN_BRANCH_NAME" ]; then
+    # Allow Github to redirect to the proper place if this repository is a fork
+    to_compare="$branch"
+  else
+    to_compare="$parent_branch...$branch"
+  fi
+
+  open_browser "https://github.com/$repository/compare/$to_compare?expand=1"
 }
 
 

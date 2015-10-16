@@ -47,7 +47,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git new-pull-request` and enter "main"
-    Then I see a new GitHub pull request for the "feature" branch against the "main" branch in the "Originate/git-town" repo in my browser
+    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
@@ -56,4 +56,4 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git new-pull-request` and press ENTER
-    Then I see a new GitHub pull request for the "feature" branch against the "main" branch in the "Originate/git-town" repo in my browser
+    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
