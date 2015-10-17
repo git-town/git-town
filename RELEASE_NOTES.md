@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0 (2015-10-17)
+
 #### BREAKING CHANGES
 * remove `git sync-fork`
 
