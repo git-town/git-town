@@ -46,17 +46,6 @@ Feature: Show clear error if trying to continue after executing a successful com
     Then I get the error "The last command finished successfully and cannot be continued"
 
 
-  Scenario: continuing after successful git-sync-fork
-    Given my repo has an upstream repo
-    And the following commits exist in my repository
-      | BRANCH | LOCATION |
-      | main   | upstream |
-    And I am on the "main" branch
-    And I run `git sync-fork`
-    When I run `git sync-fork --continue`
-    Then I get the error "The last command finished successfully and cannot be continued"
-
-
   Scenario: continuing after successful git-sync
     Given I am on the "main" branch
     And the following commits exist in my repository

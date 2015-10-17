@@ -18,6 +18,9 @@ forks a new feature branch with the given name off it,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.
 
+Additionally, when there is a remote upstream,
+the main branch is synced with its upstream counterpart.
+
 
 #### OPTIONS
 

@@ -24,6 +24,8 @@ When run on the main branch or a perennial branch
 * pulls and pushes updates for the current branch
 * pushes tags
 
+Additionally, when there is a remote upstream,
+the main branch is synced with its upstream counterpart.
 
 #### OPTIONS
 
