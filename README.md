@@ -34,7 +34,6 @@ __Repository Maintenance__
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
 * [git rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
-* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
 __Configuration and Help__
