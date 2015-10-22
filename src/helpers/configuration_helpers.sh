@@ -52,6 +52,14 @@ function are_perennial_branches_configured {
   fi
 }
 
+# Returns whether or not the pull strategy is configured
+function is_pull_strategy_configured {
+  if get_configuration 'pull-branch-strategy'; then
+    echo true
+  else
+    echo false
+  fi
+}
 
 function echo_perennial_branch_usage {
   echo_inline_usage 'git town perennial-branches (--add | --remove) <branch_name>'
@@ -110,8 +118,13 @@ function run_config_operation {
       ensure_knows_configuration
     elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
+    elif [ "$operation" == "--pull-strategy" ]; then
+      if [ -z "$2" ] ; then
+        echo "usage: git town config --pull-strategy [ merge | rebase ]"
+      fi
+      store_configuration pull-branch-strategy "$2"
     else
-      echo "usage: git town config [--reset | --setup]"
+      echo "usage: git town config [--reset | --setup | --pull-strategy ]"
     fi
   else
     show_config

@@ -18,11 +18,11 @@ function sync_branch_steps {
       echo "merge_tracking_branch"
       echo "merge $(parent_branch "$branch")"
     else
-      echo "rebase_tracking_branch"
+      echo "$PULL_BRANCH_STRATEGY""_tracking_branch"
 
       if [ "$branch" = "$MAIN_BRANCH_NAME" ] && [ "$(has_remote_upstream)" = true ]; then
         echo "fetch_upstream"
-        echo "rebase upstream/$MAIN_BRANCH_NAME"
+        echo "$PULL_BRANCH_STRATEGY upstream/$MAIN_BRANCH_NAME"
       fi
     fi
 

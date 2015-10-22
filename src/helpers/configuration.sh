@@ -19,7 +19,13 @@ fi
 
 export MAIN_BRANCH_NAME=$(get_configuration main-branch-name)
 export PERENNIAL_BRANCH_NAMES=$(get_configuration perennial-branch-names)
+if : is_pull_strategy_configured; then
+  export PULL_BRANCH_STRATEGY=$(get_configuration pull-branch-strategy)
+else
+  export PULL_BRANCH_STRATEGY="rebase"
+fi
 
+echo "$PULL_BRANCH_STRATEGY"
 
 # Bypass the configuration if requested by caller (e.g. git-town)
 if [[ "$@" =~ --bypass-automatic-configuration ]]; then
