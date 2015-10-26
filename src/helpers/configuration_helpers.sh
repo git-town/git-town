@@ -90,6 +90,17 @@ function remove_all_configuration {
   git config --remove-section git-town > /dev/null 2>&1
 }
 
+#check to make sure the pull strategy is valid and then store it.
+function store_pull_strategy {
+  if [ -z "$2" ] ; then
+    echo "usage: git town config --pull-strategy [ merge | rebase ]"
+  elif [ "$2" != 'merge' ] && [ "$2" != 'rebase' ] ; then
+    echo "The only acceptable pull strategy values are merge and rebase"
+  else 
+    store_configuration pull-branch-strategy "$2"
+  fi
+}
+
 
 # Remove a perennial branch if possible
 function remove_perennial_branch {
@@ -119,13 +130,7 @@ function run_config_operation {
     elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
     elif [ "$operation" == "--pull-strategy" ]; then
-      if [ -z "$2" ] ; then
-        echo "usage: git town config --pull-strategy [ merge | rebase ]"
-      elif [ "$2" != 'merge' ] && [ "$2" != 'rebase' ] ; then
-        echo "The only acceptable pull strategy values are merge and rebase"
-      else 
-        store_configuration pull-branch-strategy "$2"
-      fi
+      store_pull_strategy "$@"
     else
       echo "usage: git town config [--reset | --setup | --pull-strategy ]"
     fi
