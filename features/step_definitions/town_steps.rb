@@ -8,6 +8,11 @@ Given(/^my perennial branches are not configured$/) do
 end
 
 
+Given(/^my repository has the "([^"]*)" pull strategy configured$/) do |pull_strategy|
+  set_configuration 'pull-branch-strategy', pull_strategy
+end
+
+
 Given(/^I have an old configuration file with (.+?)$/) do |data|
   delete_main_branch_configuration
   data = Kappamaki.attributes_from_sentence data
@@ -58,6 +63,11 @@ end
 
 Then(/^my repo is configured with no perennial branches$/) do
   expect(perennial_branch_configuration).to be_empty
+end
+
+
+Then(/^my repo is configured with the pull strategy "(.+?)"$/) do |pull_strategy|
+  expect(pull_strategy_configuration).to eql pull_strategy
 end
 
 
