@@ -69,11 +69,9 @@ function steps {
   echo "create_and_checkout_branch '$destination_branch_name' '$target_branch_name'"
 
   if [ "$(has_tracking_branch "$target_branch_name")" = true ]; then
-    echo "push_branch $destination_branch_name"
+    echo "create_tracking_branch $destination_branch_name"
     echo "delete_remote_branch $target_branch_name"
   fi
-
-  echo "delete_local_branch '$target_branch_name' force"
 
   if [ "$(is_perennial_branch "$target_branch_name")" = true ]; then
     echo "remove_perennial_branch $target_branch_name"
@@ -85,6 +83,8 @@ function steps {
   echo delete_parent_entry "$target_branch_name"
   echo store_parent_branch "$destination_branch_name" "$parent_branch_name"
   echo "delete_all_ancestor_entries"
+
+  echo "delete_local_branch '$target_branch_name' force"
 }
 
 

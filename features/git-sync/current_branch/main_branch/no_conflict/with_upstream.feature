@@ -1,25 +1,28 @@
-Feature: git-sync-fork on the main branch
+Feature: git-sync: on the main branch with a upstream remote
 
   Background:
     Given my repo has an upstream repo
     And the following commits exist in my repository
-      | BRANCH | LOCATION | MESSAGE         | FILE NAME     |
-      | main   | upstream | upstream commit | upstream_file |
+      | BRANCH | LOCATION | MESSAGE         |
+      | main   | upstream | upstream commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git sync-fork`
+    When I run `git sync`
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
-      | main   | git stash -u             |
+      | main   | git fetch --prune        |
+      |        | git stash -u             |
+      |        | git rebase origin/main   |
       |        | git fetch upstream       |
       |        | git rebase upstream/main |
       |        | git push                 |
+      |        | git push --tags          |
       |        | git stash pop            |
     And I am still on the "main" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH | LOCATION                    | MESSAGE         | FILE NAME     |
-      | main   | local, remote, and upstream | upstream commit | upstream_file |
+      | BRANCH | LOCATION                    | MESSAGE         |
+      | main   | local, remote, and upstream | upstream commit |

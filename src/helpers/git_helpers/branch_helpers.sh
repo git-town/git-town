@@ -37,6 +37,13 @@ function create_and_checkout_branch {
 }
 
 
+# Creates a new remote branch for the given local branch
+function create_tracking_branch {
+  local branch_name=$1
+  run_command "git push -u origin $branch_name"
+}
+
+
 # Deletes the local branch with the given name
 function delete_local_branch {
   local branch_name=$1
@@ -204,20 +211,16 @@ function previous_branch_name {
 function push_branch {
   local branch_name=$1
   local force=$2
-  if [ "$(has_tracking_branch "$branch_name")" = true ]; then
-    if [ "$(branch_needs_push "$branch_name")" = true ]; then
-      if [ -n "$force" ]; then
-        run_command "git push -f origin $branch_name"
+  if [ "$(branch_needs_push "$branch_name")" = true ]; then
+    if [ -n "$force" ]; then
+      run_command "git push -f origin $branch_name"
+    else
+      if [ "$(get_current_branch_name)" = "$branch_name" ]; then
+        run_command "git push"
       else
-        if [ "$(get_current_branch_name)" = "$branch_name" ]; then
-          run_command "git push"
-        else
-          run_command "git push origin $branch_name"
-        fi
+        run_command "git push origin $branch_name"
       fi
     fi
-  else
-    run_command "git push -u origin $branch_name"
   fi
 }
 
@@ -256,14 +259,21 @@ function set_previous_branch {
 }
 
 
-function undo_steps_for_create_and_checkout_feature_branch {
+function undo_steps_for_create_and_checkout_branch {
   local current_branch=$(get_current_branch_name)
   local branch_to_create="$1"
+  local current_branch=$(get_current_branch_name)
 
   echo "checkout $current_branch"
   echo "delete_local_branch $branch_to_create"
   echo "delete_parent_entry $branch_to_create"
   echo "delete_ancestors_entry $branch_to_create"
+}
+
+
+function undo_steps_for_create_tracking_branch {
+  local branch_name=$1
+  echo "delete_remote_branch $1"
 }
 
 
@@ -276,7 +286,7 @@ function undo_steps_for_delete_local_branch {
 
 function undo_steps_for_delete_remote_branch {
   local branch_to_delete="$1"
-  echo "push_branch $branch_to_delete"
+  echo "create_tracking_branch $branch_to_delete"
 }
 
 

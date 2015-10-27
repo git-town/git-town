@@ -1,4 +1,4 @@
-.TH "GIT-HACK" "1" "09/02/2015" "Git Town 0\&.7\&.3" "Git Town Manual"
+.TH "GIT-HACK" "1" "10/17/2015" "Git Town 0\&.9\&.0" "Git Town Manual"
 
 .SH "NAME"
 git hack \- create a new feature branch
@@ -11,12 +11,20 @@ git hack \- create a new feature branch
 
 
 .SH "DESCRIPTION"
-Syncs the given parent branch,
+
+.PP
+Syncs the given parent branch (default: main branch),
 .br
 forks a new feature branch with the given name off it,
 .br
+pushes the new feature branch to the remote repository,
+.br
 and brings over all uncommitted changes to the new feature branch.
 
+.PP
+Additionally, when there is a remote upstream,
+.br
+the main branch is synced with its upstream counterpart.
 
 .SH "OPTIONS"
 .IP "<branch_name>" 4

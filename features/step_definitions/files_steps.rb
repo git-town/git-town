@@ -12,10 +12,6 @@ end
 
 
 
-Then(/^I am left with my original files$/) do
-  expect(files_in_branches).to match_array @original_files
-end
-
 
 Then(/^I (?:still|again) have my uncommitted file$/) do
   verify_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content

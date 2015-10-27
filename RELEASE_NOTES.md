@@ -2,22 +2,43 @@
 
 ## Unreleased
 
-* **BREAKING CHANGE**: update internal storage of perennial branches
+## 0.9.0 (2015-10-17)
+
+#### BREAKING CHANGES
+* remove `git sync-fork`
+
+#### New Features
+* `git new-pull-request`: support forked repos
+  ([#682](https://github.com/Originate/git-town/issues/682))
+* `git sync`: if there is a remote upstream, the main branch is synced with its upstream couterpart
+  ([#685](https://github.com/Originate/git-town/issues/685))
+
+## 0.8.0 (2015-10-14)
+
+#### BREAKING CHANGES
+* removed `git extract`
+* update internal storage of perennial branches
   * if you have configured multiple perennial branches, you will need to reset your configuration
     * `git town config --reset`
     * `git town config --setup` or you will be prompted the next time you run a Git Town command
-* preserve checkout history so that `git checkout -` works as expected alongside Git Town commands
-  ([#65](https://github.com/Originate/git-town/issues/65))
-* `git new-pull-request`: syncs the branch before creating the pull request
-  ([#367](https://github.com/Originate/git-town/issues/367))
+
+#### New Features
 * configuration prompt: allow user to select branch by number, ability to recover from bad input
 * parent branch prompt: only show description and branch list once per command
+* preserve checkout history so that `git checkout -` works as expected alongside Git Town commands
+  ([#65](https://github.com/Originate/git-town/issues/65))
+* `git hack`: pushes the new branch to the remote repository
+  ([#664](https://github.com/Originate/git-town/issues/664))
+* `git new-pull-request`: syncs the branch before creating the pull request
+  ([#367](https://github.com/Originate/git-town/issues/367))
 * `git sync --all`: pushes tags
   ([#464](https://github.com/Originate/git-town/issues/464))
-* `git town version`: Homebrew installs no longer print date and SHA
-  ([#631](https://github.com/Originate/git-town/issues/631))
 * `git town config`: shows branch ancestry
   ([#651](https://github.com/Originate/git-town/issues/651))
+
+#### Bug Fixes
+* `git town version`: Homebrew installs no longer print date and SHA
+  ([#631](https://github.com/Originate/git-town/issues/631))
 
 ## 0.7.3 (2015-09-02)
 

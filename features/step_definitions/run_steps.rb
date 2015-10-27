@@ -14,13 +14,6 @@ When(/^I run `([^`]+)` in the "(.+?)" folder$/) do |commands, folder_name|
 end
 
 
-When(/^I run `([^`]+)` with the last( two)? commit shas?$/) do |command, two|
-  count = two ? 2 : 1
-  shas = recent_commit_shas(count).join(' ')
-  step "I run `#{command} #{shas}`"
-end
-
-
 When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, input|
   inputs = Kappamaki.from_sentence(input)
   @result = run command, inputs: inputs
@@ -35,11 +28,6 @@ end
 When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
   # In vim "ZZ" saves and exits
   step "I run `#{command}` and enter \"ZZ\""
-end
-
-
-When(/^I run `(.+?)` and enter main branch name "(.+?)"(?: and perennial branch names "(.+)")?/) do |cmd, main, perennial|
-  @result = run cmd, inputs: [main, perennial].compact
 end
 
 

@@ -34,3 +34,22 @@ Feature: git rename-branch: renaming a feature branch with child branches
       | child-feature          | renamed-parent-feature |
       | renamed-parent-feature | main                   |
 
+
+  Scenario: undo
+    When I run `git rename-branch --undo`
+    Then it runs the commands
+      | BRANCH                 | COMMAND                                                      |
+      | renamed-parent-feature | git branch parent-feature <%= sha 'parent feature commit' %> |
+      |                        | git push -u origin parent-feature                            |
+      |                        | git push origin :renamed-parent-feature                      |
+      |                        | git checkout parent-feature                                  |
+      | parent-feature         | git branch -d renamed-parent-feature                         |
+    And I end up on the "parent-feature" branch
+    And I have the following commits
+      | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
+      | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
+      | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |

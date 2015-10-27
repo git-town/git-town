@@ -71,3 +71,20 @@ keeps the final foo simpler when shipping that branch later.
 
 Implements #123
 ```
+
+## Release Process
+
+#### Originate/git-town
+* Create a feature branch which updates
+  * `RELEASE_NOTES.md`
+  * the version in `src/git-town` and the related features
+  * the version and date in `man/man1/*.1`
+* Get the feature branch reviewed and merged
+* Draft a new [release](https://github.com/Originate/git-town/releases/new) against `master`
+
+#### Homebrew/homebrew
+* Fork [Homebrew](https://github.com/Homebrew/homebrew)
+* Update `Library/Formula/git-town.rb`
+  * Get the sha256 by downloading the release (`.tar.gz`) and using `shasum -a 256 /path/to/file`
+  * Ignore the `bottle` block. It is updated by the homebrew maintainers
+* Create a pull request and get it merged

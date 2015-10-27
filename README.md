@@ -30,12 +30,10 @@ __Development Workflow__
 
 __Repository Maintenance__
 
-* [git extract](/documentation/commands/git-extract.md) - copies selected commits from the current branch into their own branch
 * [git kill](/documentation/commands/git-kill.md) - removes a feature branch
 * [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
 * [git rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
 * [git repo](/documentation/commands/git-repo.md) - view the repository homepage
-* [git sync-fork](/documentation/commands/git-sync-fork.md) - pull upstream updates into a forked repository
 
 
 __Configuration and Help__

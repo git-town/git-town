@@ -60,14 +60,15 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | main        | git rebase --continue            |
       |             | git push                         |
       |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | new-feature | git push -u origin new-feature   |
+      |             | git stash pop                    |
     And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-      | new-feature | local            | conflicting remote commit | conflicting_file |
+      | new-feature | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | NAME             | CONTENT          |
@@ -82,14 +83,15 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
       | BRANCH      | COMMAND                          |
       | main        | git push                         |
       |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | new-feature | git push -u origin new-feature   |
+      |             | git stash pop                    |
     And I end up on the "new-feature" branch
     And I still have my uncommitted file
     And now I have the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-      | new-feature | local            | conflicting remote commit | conflicting_file |
+      | new-feature | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
     And now I have the following committed files
       | BRANCH      | NAME             | CONTENT          |
