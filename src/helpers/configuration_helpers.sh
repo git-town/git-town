@@ -93,9 +93,9 @@ function remove_all_configuration {
 #check to make sure the pull strategy is valid and then store it.
 function store_pull_strategy {
   if [ -z "$2" ] ; then
-    echo "usage: git town config --pull-strategy [ merge | rebase ]"
+    echo "$PULL_BRANCH_STRATEGY"
   elif [ "$2" != 'merge' ] && [ "$2" != 'rebase' ] ; then
-    echo "The only acceptable pull strategy values are merge and rebase"
+    echo "usage: git town config --pull-strategy [(merge | rebase)]"
   else 
     store_configuration pull-branch-strategy "$2"
   fi
