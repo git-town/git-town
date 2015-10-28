@@ -26,4 +26,6 @@ if [[ "$@" =~ --bypass-automatic-configuration ]]; then
   return 0
 fi
 
-ensure_knows_configuration
+if [ "$(are_perennial_branches_configured)" = false ] && [ "$(is_main_branch_configured)" = false ]; then
+  ensure_knows_configuration
+fi
