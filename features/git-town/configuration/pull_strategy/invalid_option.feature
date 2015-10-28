@@ -7,7 +7,7 @@ Feature: passing an invalid option to the pull strategy configuration
 
   Scenario: using invalid option
     When I run `git town config --pull-strategy woof`
-    Then I get
+    Then I see
       """
 	  usage: git town config --pull-strategy [(merge | rebase)]
       """
