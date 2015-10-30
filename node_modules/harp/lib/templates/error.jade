@@ -1,0 +1,7 @@
+header
+	h1 #{ error.name } - #{ error.message }
+if error.stack
+	.stacktrace
+		h3 #{ error.filename }
+		pre.stack: code= error.stack
+

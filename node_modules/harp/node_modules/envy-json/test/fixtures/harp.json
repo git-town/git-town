@@ -1,0 +1,5 @@
+{
+  "name": "My Harp App",
+  "basicAuth": "$HARP_AUTH",
+  "environment": "$NODE_ENV"
+}

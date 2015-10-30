@@ -1,0 +1,14 @@
+header
+	h1 Welcome to Harp
+	h3 Your local Development Server is Running!
+if projects == ""
+	p You have no apps yet, but you are ready to create one!
+	p Inside your apps directory, run <code>harp init myproject</code> and then <code>harp server myproject</code>.
+else
+	h2 Your apps:
+	ul.projects
+		for project in projects
+			li
+				a(href="#{ project.localUrl }")
+					h2.project-name= project.name
+					code.project-path= project.localPath

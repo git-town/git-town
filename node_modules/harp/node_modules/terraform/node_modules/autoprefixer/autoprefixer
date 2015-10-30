@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+process.stderr.write('Autoprefixer CLI is deprecated. ' +
+                     'Use postcss-cli instead.\n');
+
+var Binary = require('./binary');
+
+var binary = new Binary(process);
+binary.run(function () {
+    if ( binary.status ) process.exit(binary.status);
+});

@@ -1,0 +1,87 @@
+{
+  "name": "cliui",
+  "version": "3.0.3",
+  "description": "easily create complex multi-column command-line-interfaces",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && nyc mocha",
+    "coverage": "nyc --reporter=text-lcov mocha | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bcoe/cliui.git"
+  },
+  "config": {
+    "blanket": {
+      "pattern": [
+        "index.js"
+      ],
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ],
+      "output-reporter": "spec"
+    }
+  },
+  "standard": {
+    "ignore": [
+      "**/example/**"
+    ],
+    "globals": [
+      "it"
+    ]
+  },
+  "keywords": [
+    "cli",
+    "command-line",
+    "layout",
+    "design",
+    "console",
+    "wrap",
+    "table"
+  ],
+  "author": {
+    "name": "Ben Coe",
+    "email": "ben@npmjs.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "string-width": "^1.0.1",
+    "strip-ansi": "^3.0.0",
+    "wrap-ansi": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "chalk": "^1.1.1",
+    "coveralls": "^2.11.4",
+    "mocha": "^2.3.3",
+    "nyc": "^3.2.2",
+    "standard": "^5.3.1"
+  },
+  "gitHead": "c7baa8a9096b11263aaadde7fda2cbc1f1d5683e",
+  "bugs": {
+    "url": "https://github.com/bcoe/cliui/issues"
+  },
+  "homepage": "https://github.com/bcoe/cliui#readme",
+  "_id": "cliui@3.0.3",
+  "_shasum": "476de5e3442c921b165bcf8556aee9c30e7e144e",
+  "_from": "cliui@>=3.0.3 <4.0.0",
+  "_npmVersion": "3.3.6",
+  "_nodeVersion": "1.1.0",
+  "_npmUser": {
+    "name": "bcoe",
+    "email": "ben@npmjs.com"
+  },
+  "dist": {
+    "shasum": "476de5e3442c921b165bcf8556aee9c30e7e144e",
+    "tarball": "http://registry.npmjs.org/cliui/-/cliui-3.0.3.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "bcoe",
+      "email": "ben@npmjs.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/cliui/-/cliui-3.0.3.tgz"
+}

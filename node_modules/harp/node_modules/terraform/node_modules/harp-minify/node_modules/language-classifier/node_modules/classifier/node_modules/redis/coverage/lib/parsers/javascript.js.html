@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/parsers/javascript.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../prettify.css">
+    <link rel="stylesheet" href="../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">lib/parsers/javascript.js</span></h1>
+    <h2>
+        Statements: <span class="metric">12.38% <small>(13 / 105)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">2.04% <small>(1 / 49)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">12.38% <small>(13 / 105)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric">1 statement, 1 branch</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">lib/parsers/</a> &#187; javascript.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+&nbsp;
+var util   = require('util');
+&nbsp;
+<span class="fstat-no" title="function not covered" >function JavascriptReplyParser() {</span>
+<span class="cstat-no" title="statement not covered" >    this.name = exports.name;</span>
+<span class="cstat-no" title="statement not covered" >    this._buffer            = new Buffer(0);</span>
+<span class="cstat-no" title="statement not covered" >    this._offset            = 0;</span>
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >function IncompleteReadBuffer(message) {</span>
+<span class="cstat-no" title="statement not covered" >    this.name = 'IncompleteReadBuffer';</span>
+<span class="cstat-no" title="statement not covered" >    this.message = message;</span>
+}
+util.inherits(IncompleteReadBuffer, Error);
+&nbsp;
+JavascriptReplyParser.prototype._parseResult = <span class="fstat-no" title="function not covered" >function (type) {</span>
+<span class="cstat-no" title="statement not covered" >    var start = 0,</span>
+        end = 0,
+        offset = 0,
+        packetHeader = 0;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (type === 43 || type === 58 || type === 45) { // + or : or -</span>
+        // up to the delimiter
+<span class="cstat-no" title="statement not covered" >        end = this._packetEndOffset() - 1;</span>
+<span class="cstat-no" title="statement not covered" >        start = this._offset;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (end &gt; this._buffer.length) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new IncompleteReadBuffer('Wait for more data.');</span>
+        }
+&nbsp;
+        // include the delimiter
+<span class="cstat-no" title="statement not covered" >        this._offset = end + 2;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (type === 43) {</span>
+<span class="cstat-no" title="statement not covered" >            return this._buffer.slice(start, end);</span>
+        } else <span class="cstat-no" title="statement not covered" >if (type === 58) {</span>
+            // return the coerced numeric value
+<span class="cstat-no" title="statement not covered" >            return +this._buffer.toString('ascii', start, end);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return new Error(this._buffer.toString('utf-8', start, end));</span>
+    } else <span class="cstat-no" title="statement not covered" >if (type === 36) { // $</span>
+        // set a rewind point, as the packet could be larger than the
+        // buffer in memory
+<span class="cstat-no" title="statement not covered" >        offset = this._offset - 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        packetHeader = this.parseHeader();</span>
+&nbsp;
+        // packets with a size of -1 are considered null
+<span class="cstat-no" title="statement not covered" >        if (packetHeader === -1) {</span>
+<span class="cstat-no" title="statement not covered" >            return null;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        end = this._offset + packetHeader;</span>
+<span class="cstat-no" title="statement not covered" >        start = this._offset;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (end &gt; this._buffer.length) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new IncompleteReadBuffer('Wait for more data.');</span>
+        }
+&nbsp;
+        // set the offset to after the delimiter
+<span class="cstat-no" title="statement not covered" >        this._offset = end + 2;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return this._buffer.slice(start, end);</span>
+    } else <span class="cstat-no" title="statement not covered" >if (type === 42) { // *</span>
+<span class="cstat-no" title="statement not covered" >        offset = this._offset;</span>
+<span class="cstat-no" title="statement not covered" >        packetHeader = this.parseHeader();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (packetHeader === -1) {</span>
+<span class="cstat-no" title="statement not covered" >            return null;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (packetHeader &gt; this._bytesRemaining()) {</span>
+<span class="cstat-no" title="statement not covered" >            this._offset = offset - 1;</span>
+<span class="cstat-no" title="statement not covered" >            throw new IncompleteReadBuffer('Wait for more data.');</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var reply = [];</span>
+<span class="cstat-no" title="statement not covered" >        var ntype, i, res;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        offset = this._offset - 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; packetHeader; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            ntype = this._buffer[this._offset++];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (this._offset &gt; this._buffer.length) {</span>
+<span class="cstat-no" title="statement not covered" >                throw new IncompleteReadBuffer('Wait for more data.');</span>
+            }
+<span class="cstat-no" title="statement not covered" >            res = this._parseResult(ntype);</span>
+<span class="cstat-no" title="statement not covered" >            reply.push(res);</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return reply;</span>
+    }
+};
+&nbsp;
+JavascriptReplyParser.prototype.execute = <span class="fstat-no" title="function not covered" >function (buffer) {</span>
+<span class="cstat-no" title="statement not covered" >    this.append(buffer);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    var type, ret, offset;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    while (true) {</span>
+<span class="cstat-no" title="statement not covered" >        offset = this._offset;</span>
+        // at least 4 bytes: :1\r\n
+<span class="cstat-no" title="statement not covered" >        if (this._bytesRemaining() &lt; 4) {</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        try {</span>
+<span class="cstat-no" title="statement not covered" >            type = this._buffer[this._offset++];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (type === 43) { // Strings +</span>
+<span class="cstat-no" title="statement not covered" >                ret = this._parseResult(type);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.send_reply(ret);</span>
+            } else  <span class="cstat-no" title="statement not covered" >if (type === 45) { // Errors -</span>
+<span class="cstat-no" title="statement not covered" >                ret = this._parseResult(type);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.send_error(ret);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === 58) { // Integers :</span>
+<span class="cstat-no" title="statement not covered" >                ret = this._parseResult(type);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.send_reply(ret);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === 36) { // Bulk strings $</span>
+<span class="cstat-no" title="statement not covered" >                ret = this._parseResult(type);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.send_reply(ret);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === 42) { // Arrays *</span>
+                // set a rewind point. if a failure occurs,
+                // wait for the next execute()/append() and try again
+<span class="cstat-no" title="statement not covered" >                offset = this._offset - 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                ret = this._parseResult(type);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                this.send_reply(ret);</span>
+            } else <span class="cstat-no" title="statement not covered" >if (type === 10 || type === 13) {</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                var err = new Error('Protocol error, got "' + String.fromCharCode(type) + '" as reply type byte');</span>
+<span class="cstat-no" title="statement not covered" >                this.send_error(err);</span>
+            }
+        } catch (err) {
+            // catch the error (not enough data), rewind, and wait
+            // for the next packet to appear
+<span class="cstat-no" title="statement not covered" >            this._offset = offset;</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        }
+    }
+};
+&nbsp;
+JavascriptReplyParser.prototype.append = <span class="fstat-no" title="function not covered" >function (newBuffer) {</span>
+&nbsp;
+    // out of data
+<span class="cstat-no" title="statement not covered" >    if (this._offset &gt;= this._buffer.length) {</span>
+<span class="cstat-no" title="statement not covered" >        this._buffer = newBuffer;</span>
+<span class="cstat-no" title="statement not covered" >        this._offset = 0;</span>
+<span class="cstat-no" title="statement not covered" >        return;</span>
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    this._buffer = Buffer.concat([this._buffer.slice(this._offset), newBuffer]);</span>
+<span class="cstat-no" title="statement not covered" >    this._offset = 0;</span>
+};
+&nbsp;
+JavascriptReplyParser.prototype.parseHeader = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >    var end   = this._packetEndOffset(),</span>
+        value = this._buffer.toString('ascii', this._offset, end - 1) | 0;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    this._offset = end + 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return value;</span>
+};
+&nbsp;
+JavascriptReplyParser.prototype._packetEndOffset = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >    var offset = this._offset;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    while (this._buffer[offset] !== 0x0d &amp;&amp; this._buffer[offset + 1] !== 0x0a) {</span>
+<span class="cstat-no" title="statement not covered" >        offset++;</span>
+&nbsp;
+        /* istanbul ignore if: activate the js parser out of memory test to test this */
+<span class="cstat-no" title="statement not covered" >        if (offset &gt;= this._buffer.length) {</span>
+<span class="cstat-skip" title="statement not covered" >            throw new IncompleteReadBuffer('Did not see LF after NL reading multi bulk count (' + offset + ' =&gt; ' + this._buffer.length + ', ' + this._offset + ')');</span>
+        }
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    offset++;</span>
+<span class="cstat-no" title="statement not covered" >    return offset;</span>
+};
+&nbsp;
+JavascriptReplyParser.prototype._bytesRemaining = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >    return (this._buffer.length - this._offset) &lt; 0 ? 0 : (this._buffer.length - this._offset);</span>
+};
+&nbsp;
+exports.Parser = JavascriptReplyParser;
+exports.name = 'javascript';
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Oct 17 2015 18:40:32 GMT+0200 (CEST)</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+I'm a sample repo for testing the [download-github-repo](https://github.com/ianstormtaylor/download-github-repo) node module.

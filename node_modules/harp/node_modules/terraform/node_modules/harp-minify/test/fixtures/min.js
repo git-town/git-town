@@ -1,0 +1,1 @@
+function User(t,e){this.name=t,this.age=e}User.prototype.toString=function(){return"<User name="+this.name+">"};
