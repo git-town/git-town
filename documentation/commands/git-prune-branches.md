@@ -12,4 +12,6 @@ git prune-branches
 
 #### DESCRIPTION
 
-Deletes merged branches in the local and remote repositories.
+Deletes branches whose remote branch no longer exists,
+i.e. branches that were shipped or killed,
+from the local repository.
