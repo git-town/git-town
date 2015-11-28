@@ -5,7 +5,7 @@ Feature: git prune-branches: delete branches that were shipped or removed on ano
   So that I keep my local repository free from obsolete branches and remain efficient.
 
   Rules:
-  - branches that have the origin "[<remote name>: gone]" when running "git branch -vv" are obsolete
+  - branches that have the remote branch name "[origin/<branch name>: gone]" when running "git branch -vv" are obsolete
 
 
   Background:

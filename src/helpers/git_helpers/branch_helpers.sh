@@ -183,7 +183,7 @@ function local_branches_without_main {
 
 
 function local_branches_with_gone_remote {
-  git branch -vv | tr '*' ' ' | grep  "\[.*: gone\]" | sed "s/^ *//" | grep -o "^[^ ]\+"
+  git branch -vv | tr '*' ' ' | grep  "\[origin/.*: gone\]" | sed "s/^ *//" | grep -o "^[^ ]\+"
 }
 
 
