@@ -183,7 +183,11 @@ function local_branches_without_main {
 
 
 function local_branches_with_gone_remote {
-  git branch -vv | tr '*' ' ' | grep  "\[origin/.*: gone\]" | sed "s/^ *//" | grep -o "^[^ ]\+"
+  git branch -vv              |  # get all branches
+  tr '*' ' '                  |  # remove the active branch marker
+  grep  "\[origin/.*: gone\]" |  # leave only branches whose remove is marked as gone
+  sed "s/^ *//"               |  # remove trailing whitespace
+  grep -o "^[^ ]\+"              # keep only the first word, which is the branch name
 }
 
 
