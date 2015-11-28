@@ -12,8 +12,8 @@ Feature: git prune-branches: delete branches that were shipped or removed on ano
     Given I have feature branches named "active-feature" and "deleted-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
-      | active-feature  | local and remote | active feature commit  |
-      | deleted-feature | local and remote | deleted feature commit |
+      | active-feature  | local and remote | active-feature commit  |
+      | deleted-feature | local and remote | deleted-feature commit |
     And the "deleted-feature" branch gets deleted on the remote
     And I am on the "deleted-feature" branch
     And I have an uncommitted file
@@ -38,7 +38,7 @@ Feature: git prune-branches: delete branches that were shipped or removed on ano
     When I run `git prune-branches --undo`
     Then it runs the commands
       | BRANCH | COMMAND                                                        |
-      | main   | git branch deleted-feature <%= sha 'deleted feature commit' %> |
+      | main   | git branch deleted-feature <%= sha 'deleted-feature commit' %> |
       |        | git checkout deleted-feature                                   |
     And I end up on the "deleted-feature" branch
     And I still have my uncommitted file
