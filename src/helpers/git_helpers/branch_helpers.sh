@@ -175,6 +175,11 @@ function local_branches_without_main {
 }
 
 
+function local_branches_with_gone_remote {
+  git br -vv | grep  "\[.*: gone\]" | sed "s/^ *//" | grep -o "^[^ ]\+"
+}
+
+
 # Returns the names of local branches that have been merged into main
 function local_merged_branches {
   git branch --merged "$MAIN_BRANCH_NAME" | tr -d ' ' | sed 's/\*//g'
@@ -228,19 +233,6 @@ function push_branch {
 # Returns the names of remote branches that have been merged into main
 function remote_merged_branches {
   git branch -r --merged "$MAIN_BRANCH_NAME" | grep -v HEAD | tr -d ' ' | sed 's/origin\///g'
-}
-
-
-# Returns the names of remote branches that have been merged into main
-# that have not been checked out locally
-function remote_only_merged_branches {
-  local local_temp=$(temp_filename)
-  local remote_temp=$(temp_filename)
-  local_merged_branches > "$local_temp"
-  remote_merged_branches > "$remote_temp"
-  comm -13 <(sort "$local_temp") <(sort "$remote_temp")
-  rm "$local_temp"
-  rm "$remote_temp"
 }
 
 
