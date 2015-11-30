@@ -8,17 +8,19 @@ function preconditions {
 
 
 function steps {
-  for branch_to_delete in $(local_branches_with_gone_remote); do
+  for branch_to_delete in $(local_branches_with_deleted_tracking_branch); do
 
     # check out the main branch if we are deleting the branch we are currently on
     if [ "$INITIAL_BRANCH_NAME" = "$branch_to_delete" ]; then
-      echo "checkout_branch $MAIN_BRANCH_NAME"
+      echo "checkout $MAIN_BRANCH_NAME"
     fi
 
     # remove the branch from the branch hierarchy configuration
-    parent_branch_name=$(parent_branch "$branch_to_delete")
-    echo_update_child_branches "$branch_to_delete" "$parent_branch_name"
-    echo_if_true "delete_parent_entry $branch_to_delete" "$(knows_parent_branch "$branch_to_delete")"
+    if [ "$(knows_parent_branch "$branch_to_delete")" = true ]; then
+      local parent_branch_name=$(parent_branch "$branch_to_delete")
+      echo_update_child_branches "$branch_to_delete" "$parent_branch_name"
+      echo "delete_parent_entry $branch_to_delete"
+    fi
 
     # delete the branch
     echo "delete_local_branch $branch_to_delete"

@@ -14,13 +14,6 @@ function branch_needs_push {
 
 
 # Checkout a branch
-function checkout_branch {
-  local branch_name=$1
-  run_command "git checkout $branch_name"
-}
-
-
-# Checkout a branch
 function checkout_branch_silently {
   local branch_name=$1
   run_command_silently "git checkout $branch_name"
@@ -182,11 +175,11 @@ function local_branches_without_main {
 }
 
 
-function local_branches_with_gone_remote {
-  git branch -vv              |  # get all branches
+function local_branches_with_deleted_tracking_branch {
+  git branch -vv              |  # get detailed data about all branches
   tr '*' ' '                  |  # remove the active branch marker
-  grep  "\[origin/.*: gone\]" |  # leave only branches whose remove is marked as gone
-  sed "s/^ *//"               |  # remove trailing whitespace
+  grep  "\[origin/.*: gone\]" |  # leave only branches with deleted tracking branch
+  sed "s/^ *//"               |  # remove leading whitespace
   grep -o "^[^ ]\+"              # keep only the first word, which is the branch name
 }
 
@@ -259,11 +252,6 @@ function set_previous_branch {
 
   checkout_branch_silently "$desired_previous_branch"
   checkout_branch_silently "$current_branch"
-}
-
-
-function undo_steps_for_checkout_branch {
-  echo "checkout $(get_current_branch_name)"
 }
 
 
