@@ -8,8 +8,8 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
   Background:
     Given I have a feature branch named "feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION         | MESSAGE       | FILE NAME    |
-      | main    | local and remote | main commit   | main_file    |
+      | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
+      | main   | local and remote | main commit | main_file |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "new_folder/file1" and content: "foo"
     When I run `git hack new-feature` in the "new_folder" folder
@@ -31,6 +31,6 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
     And I am in the project root folder
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH      | LOCATION         | MESSAGE       |
-      | main        | local and remote | main commit   |
-      | new-feature | local and remote | main commit   |
+      | BRANCH      | LOCATION         | MESSAGE     |
+      | main        | local and remote | main commit |
+      | new-feature | local and remote | main commit |
