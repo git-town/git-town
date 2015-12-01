@@ -1,15 +1,14 @@
-Feature: git hack: starting a new feature from the main branch (with remote repo)
+Feature: git hack: starting a new feature from a subfolder on the main branch (with remote repo)
 
-  As a developer working on a new feature on the main branch
-  I want to be able to create a new up-to-date feature branch and continue my work there
-  So that my work can exist on its own branch, code reviews remain effective, and my team productive.
+  As a developer working in a subfolder on the main branch
+  I want to be able to extract my open changes into a feature branch
+  So that I can get them reviewed.
 
 
   Background:
     Given the following commit exists in my repository
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
-      | main   | remote   | main_commit   | main_file        |
-      |        | local    | folder commit | new_folder/file1 |
+      | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch
     And I have an uncommitted file
     When I run `git hack new-feature` in the "new_folder" folder
@@ -32,7 +31,5 @@ Feature: git hack: starting a new feature from the main branch (with remote repo
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE       |
-      | main        | local and remote | main_commit   |
-      |             |                  | folder commit |
-      | new-feature | local and remote | main_commit   |
-      |             |                  | folder commit |
+      | main        | local and remote | folder commit |
+      | new-feature | local and remote | folder commit |
