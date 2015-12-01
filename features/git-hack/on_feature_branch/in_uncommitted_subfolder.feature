@@ -10,7 +10,6 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE       | FILE NAME    |
       | main    | local and remote | main commit   | main_file    |
-      | feature | local and remote | folder commit | feature_file |
     And I am on the "feature" branch
     And I have an uncommitted file with name: "new_folder/file1" and content: "foo"
     When I run `git hack new-feature` in the "new_folder" folder
@@ -34,5 +33,4 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE       |
       | main        | local and remote | main commit   |
-      | feature     | local and remote | folder commit |
       | new-feature | local and remote | main commit   |
