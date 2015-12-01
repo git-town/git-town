@@ -22,6 +22,11 @@ function undo_steps_for_change_directory {
 }
 
 
+function undo_steps_for_change_directory_if_exists {
+  undo_steps_for_change_directory
+}
+
+
 # Returns whether the current working directory
 # is in a subdirectory of the current Git workspace.
 function is_in_git_sub_directory {
