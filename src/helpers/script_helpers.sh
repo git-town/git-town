@@ -18,7 +18,7 @@ function command_steps {
 
   echo "preserve_checkout_history $INITIAL_PREVIOUS_BRANCH_NAME $INITIAL_BRANCH_NAME"
   echo_if_all_true "restore_open_changes" "$STASH_OPEN_CHANGES" "$INITIAL_OPEN_CHANGES"
-  echo_if_all_true "change_directory $INITIAL_DIRECTORY" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
+  echo_if_all_true "change_directory $INITIAL_DIRECTORY true" "$RUN_IN_GIT_ROOT" "$IN_SUB_FOLDER"
 }
 
 

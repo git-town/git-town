@@ -19,33 +19,33 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
   Maybe creating a completely new Git branch is what breaks things here.
 
 
-  # Background:
-  #   Given I have a feature branch named "feature"
-  #   Given the following commit exists in my repository
-  #     | BRANCH  | LOCATION         | MESSAGE       | FILE NAME        |
-  #     | feature | local and remote | folder commit | new_folder/file1 |
-  #   And I am on the "feature" branch
-  #   And I have an uncommitted file
-  #   When I run `git hack new-feature` in the "new_folder" folder
-  #
-  #
-  # Scenario: result
-  #   Then it runs the commands
-  #     | BRANCH      | COMMAND                           |
-  #     | feature     | git fetch --prune                 |
-  #     | <none>      | cd <%= git_root_folder %>         |
-  #     | feature     | git stash -u                      |
-  #     |             | git checkout main                 |
-  #     | main        | git rebase origin/main            |
-  #     |             | git push                          |
-  #     |             | git checkout -b new-feature main  |
-  #     | new-feature | git push -u origin new-feature    |
-  #     |             | git stash pop                     |
-  #     | <none>      | cd <%= git_folder "new_folder" %> |
-  #   And I end up on the "new-feature" branch
-  #   And I am in the "new_folder" folder
-  #   And I still have my uncommitted file
-  #   And I have the following commits
-  #     | BRANCH      | LOCATION         | MESSAGE       |
-  #     | feature     | local and remote | folder commit |
-  #     | new-feature | local and remote | folder commit |
+  Background:
+    Given I have a feature branch named "feature"
+    Given the following commit exists in my repository
+      | BRANCH  | LOCATION         | MESSAGE       | FILE NAME        |
+      | main    | local and remote | main commit   | main_file        |
+      | feature | local and remote | folder commit | new_folder/file1 |
+    And I am on the "feature" branch
+    And I have an uncommitted file
+    When I run `git hack new-feature` in the "new_folder" folder
+
+
+  Scenario: result
+    Then it runs the commands
+      | BRANCH      | COMMAND                           |
+      | feature     | git fetch --prune                 |
+      | <none>      | cd <%= git_root_folder %>         |
+      | feature     | git stash -u                      |
+      |             | git checkout main                 |
+      | main        | git rebase origin/main            |
+      |             | git checkout -b new-feature main  |
+      | new-feature | git push -u origin new-feature    |
+      |             | git stash pop                     |
+    And I end up on the "new-feature" branch
+    And I am in the project root folder
+    And I still have my uncommitted file
+    And I have the following commits
+      | BRANCH      | LOCATION         | MESSAGE       |
+      | main        | local and remote | main commit   |
+      | feature     | local and remote | folder commit |
+      | new-feature | local and remote | main commit   |

@@ -6,7 +6,10 @@
 # Changes into the given directory
 function change_directory {
   local directory=$1
-  run_command "cd $directory"
+  local omit_if_doesnt_exist=$2
+  if [ -d "$directory" ] || [ -z "$omit_if_doesnt_exist" ]; then
+    run_command "cd $directory"
+  fi
 }
 
 
