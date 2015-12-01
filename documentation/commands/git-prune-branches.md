@@ -12,6 +12,6 @@ git prune-branches
 
 #### DESCRIPTION
 
-Deletes branches whose remote branch no longer exists,
-i.e. branches that were shipped or killed on another machine,
-from the local repository.
+Deletes branches whose tracking branch no longer exists from the local repository.
+This usually means the branch was shipped or killed on another machine.
+
