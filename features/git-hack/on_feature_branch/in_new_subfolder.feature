@@ -16,7 +16,7 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
 
   Strangely enough, the same test (with the same side effects) works for git sync:
   https://github.com/Originate/git-town/blob/master/features/git-sync/folder_does_not_exist_on_main_branch/no_conflict.feature
-  Maybe switching to a completely new Git branch is what breaks things here.
+  Maybe creating a completely new Git branch is what breaks things here.
 
 
   # Background:
