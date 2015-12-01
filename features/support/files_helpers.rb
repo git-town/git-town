@@ -27,6 +27,8 @@ end
 
 def create_uncommitted_file options = {}
   options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
+  dirname = File.dirname options[:name]
+  FileUtils.mkdir_p(dirname) unless File.directory? dirname
   IO.write options[:name], options[:content]
   options[:name]
 end
@@ -46,5 +48,5 @@ end
 
 
 def uncommitted_files
-  array_output_of "git status --porcelain | awk '{print $2}'"
+  array_output_of "git status --porcelain --untracked-files=all | awk '{print $2}'"
 end
