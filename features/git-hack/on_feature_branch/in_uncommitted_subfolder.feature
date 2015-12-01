@@ -7,7 +7,7 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
 
   Background:
     Given I have a feature branch named "feature"
-    Given the following commit exists in my repository
+    And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE       | FILE NAME    |
       | main    | local and remote | main commit   | main_file    |
       | feature | local and remote | folder commit | feature_file |
