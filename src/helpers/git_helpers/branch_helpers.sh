@@ -13,13 +13,6 @@ function branch_needs_push {
 }
 
 
-# Checkout a branch
-function checkout_branch_silently {
-  local branch_name=$1
-  run_command_silently "git checkout $branch_name"
-}
-
-
 # Creates a new branch with the given name off the given parent branch
 function create_branch {
   local new_branch_name=$1
@@ -250,8 +243,8 @@ function set_previous_branch {
 
   local current_branch="$(get_current_branch_name)"
 
-  checkout_branch_silently "$desired_previous_branch"
-  checkout_branch_silently "$current_branch"
+  checkout_silently "$desired_previous_branch"
+  checkout_silently "$current_branch"
 }
 
 
