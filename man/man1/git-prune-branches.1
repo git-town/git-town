@@ -9,4 +9,7 @@ git-prune-branches \- delete merged branches
 
 
 .SH "DESCRIPTION"
-Deletes merged branches in the local and remote repositories.
+Deletes branches whose tracking branch no longer exists
+from the local repository.
+.br
+This usually means the branch was shipped or killed on another machine.
