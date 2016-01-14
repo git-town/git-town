@@ -1,4 +1,8 @@
-Feature: git-sync: on a feature branch with "pull" merge strategy
+Feature: git-sync: on a feature branch with merge pull branch strategy
+
+  As a developer syncing a feature branch with a merge pull branch strategy
+  I want my branch to merge in the main branch instead of rebasing
+  So that I never have to rewrite history.
 
   Background:
     Given my repository has the "merge" pull branch strategy configured
