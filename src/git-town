@@ -52,7 +52,7 @@ elif [ "$1" == "perennial-branches" ]; then
   ensure_git_repository
   shift
   show_or_update_perennial_branches "$@"
-elif [ "$1" == "pull-branch-strategy"]; then
+elif [ "$1" == "pull-branch-strategy" ]; then
   ensure_git_repository
   shift
   show_or_update_pull_branch_strategy "$@"

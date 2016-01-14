@@ -203,12 +203,13 @@ function show_or_update_perennial_branches {
 # otherwise show the current pull branch strategy
 function show_or_update_pull_branch_strategy {
   local strategy=$1
-  if [ -n "$strategy" ]; then
+  if [ -z "$strategy" ]; then
     echo "$PULL_BRANCH_STRATEGY"
   elif [ "$strategy" != 'merge' ] && [ "$strategy" != 'rebase' ] ; then
-    echo "Invalid pull branch strategy: '$strategy'. Valid pull branch strategies are 'merge' and 'rebase'"
+    echo "Invalid pull branch strategy: '$strategy'."
+    echo "Valid pull branch strategies are 'merge' and 'rebase'."
   else
-    store_configuration pull-branch-strategy "$2"
+    store_configuration pull-branch-strategy "$strategy"
   fi
 }
 
