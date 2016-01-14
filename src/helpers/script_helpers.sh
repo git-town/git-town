@@ -142,7 +142,6 @@ function run_steps {
 
   while [ "$(has_lines "$file")" = true ]; do
     local step=$(peek_line "$file")
-
     if [ "$option" = undoable ]; then
       local undo_steps=$(undo_steps_for "$step")
     fi

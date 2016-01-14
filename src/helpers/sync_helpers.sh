@@ -22,7 +22,7 @@ function sync_branch_steps {
 
       if [ "$branch" = "$MAIN_BRANCH_NAME" ] && [ "$(has_remote_upstream)" = true ]; then
         echo "fetch_upstream"
-        echo "$rebase upstream/$MAIN_BRANCH_NAME"
+        echo "rebase upstream/$MAIN_BRANCH_NAME"
       fi
     fi
 
