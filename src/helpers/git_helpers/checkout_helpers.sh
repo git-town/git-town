@@ -10,6 +10,13 @@ function checkout {
 }
 
 
+# Checkout a branch without this showing up in the output
+function checkout_silently {
+  local branch_name=$1
+  run_command_silently "git checkout $branch_name"
+}
+
+
 # Checks out the main branch (if not alread checked out)
 function checkout_main_branch {
   checkout "$MAIN_BRANCH_NAME"

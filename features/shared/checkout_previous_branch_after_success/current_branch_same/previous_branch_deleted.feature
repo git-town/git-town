@@ -13,6 +13,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
   Scenario: git-prune-branches
     Given I have branches named "previous" and "current"
+    And the "previous" branch gets deleted on the remote
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | current | local    | current_file | current content |

@@ -31,7 +31,7 @@ function _undo_steps {
   local step="${step_with_arguments[0]}"
   local arguments="${step_with_arguments[*]:1}"
   local fn="$step_name$step"
-  if [ "$(type "$fn" 2>&1 | grep -c 'not found')" = 0 ]; then
+  if type "${fn}" > /dev/null 2>&1; then
     eval "$fn $arguments"
   fi
 }
