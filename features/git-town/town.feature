@@ -11,5 +11,6 @@ Feature: Show correct git town usage
          or: git town install-fish-autocompletion
          or: git town main-branch [<branch_name>]
          or: git town perennial-branches [(--add | --remove) <branch_name>]
+         or: git town pull-branch-strategy [(merge | rebase)]
          or: git town version
       """
