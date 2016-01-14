@@ -1,4 +1,4 @@
-Feature: git sync: syncing inside a folder that doesn't exist on the main branch
+Feature: Using Git Town inside a folder that doesn't exist on the main branch
 
   (see ./no_conflict.feature)
 
@@ -13,11 +13,11 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local and remote | other feature commit       | file2            |                 |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `git sync --all` in the "new_folder" folder
 
 
   @finishes-with-non-empty-stash
-  Scenario: result
+  Scenario: git-sync
+    When I run `git sync --all` in the "new_folder" folder
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
@@ -35,8 +35,9 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     And my repo has a merge in progress
 
 
-  Scenario: aborting
-    When I run `git sync --abort`
+  Scenario: git-sync --abort
+    When I run `git sync --all` in the "new_folder" folder
+    And I run `git sync --abort`
     Then it runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
@@ -51,8 +52,9 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
 
 
   @finishes-with-non-empty-stash
-  Scenario: continuing without resolving the conflicts
-    When I run `git sync --continue`
+  Scenario: git-sync: continuing without resolving the conflicts
+    When I run `git sync --all` in the "new_folder" folder
+    And I run `git sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing the git sync"
     And I am still on the "current-feature" branch
@@ -60,7 +62,8 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
     And my repo still has a merge in progress
 
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: git-sync: continuing after resolving the conflicts
+    When I run `git sync --all` in the "new_folder" folder
     Given I resolve the conflict in "conflicting_file"
     When I run `git sync --continue`
     Then it runs the commands
