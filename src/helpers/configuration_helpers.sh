@@ -52,14 +52,6 @@ function are_perennial_branches_configured {
   fi
 }
 
-# Returns whether or not the pull strategy is configured
-function is_pull_strategy_configured {
-  if get_configuration 'pull-branch-strategy'; then
-    true
-  else
-    false
-  fi
-}
 
 function echo_perennial_branch_usage {
   echo_inline_usage 'git town perennial-branches (--add | --remove) <branch_name>'
@@ -90,17 +82,6 @@ function remove_all_configuration {
   git config --remove-section git-town > /dev/null 2>&1
 }
 
-#check to make sure the pull strategy is valid and then store it.
-function store_pull_strategy {
-  if [ -z "$2" ] ; then
-    echo "$PULL_BRANCH_STRATEGY"
-  elif [ "$2" != 'merge' ] && [ "$2" != 'rebase' ] ; then
-    echo "usage: git town config --pull-strategy [(merge | rebase)]"
-  else 
-    store_configuration pull-branch-strategy "$2"
-  fi
-}
-
 
 # Remove a perennial branch if possible
 function remove_perennial_branch {
@@ -129,10 +110,8 @@ function run_config_operation {
       ensure_knows_configuration
     elif [ "$operation" == "--reset" ]; then
       remove_all_configuration
-    elif [ "$operation" == "--pull-strategy" ]; then
-      store_pull_strategy "$@"
     else
-      echo "usage: git town config [--reset | --setup | --pull-strategy ]"
+      echo "usage: git town config [--reset | --setup]"
     fi
   else
     show_config
@@ -216,6 +195,20 @@ function show_or_update_perennial_branches {
     add_or_remove_perennial_branches "$operation" "$branch_name"
   else
     show_perennial_branches
+  fi
+}
+
+
+# Update the pull strategy branch if a strategy is specified,
+# otherwise show the current pull strategy
+function show_or_update_pull_strategy {
+  local strategy=$1
+  if [ -n "$strategy" ]; then
+    echo "$PULL_BRANCH_STRATEGY"
+  elif [ "$strategy" != 'merge' ] && [ "$strategy" != 'rebase' ] ; then
+    echo "Invalid pull strategy: $strategy. Valid pull strategies are 'merge' and 'rebase'"
+  else
+    store_configuration pull-branch-strategy "$2"
   fi
 }
 
