@@ -1,8 +1,8 @@
-Feature: git ship: shipping the current feature branch with a tracking branch
+Feature: git ship: shipping the current feature branch from a subfolder
 
-  As a developer having finished a feature
-  I want to be able to ship it safely in one easy step
-  So that I can quickly move on to the next feature and remain productive.
+  As a developer shipping a feature branch from a subfolder
+  I want the command to finish properly
+  So that my repo is left in a consistent state and I don't lose any data
 
 
   Background:

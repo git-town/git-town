@@ -1,6 +1,6 @@
-Feature: git ship: shipping the supplied feature branch with a tracking branch
+Feature: git ship: shipping the supplied feature branch from a subfolder
 
-  (see ../../current_branch/on_feature_branch/without_open_changes/with_tracking_branch.feature)
+  (see ../../current_branch/on_feature_branch/without_open_changes/in_subfolder.feature)
 
 
   Background:
