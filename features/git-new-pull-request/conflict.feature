@@ -1,8 +1,8 @@
 Feature: Syncing before creating the pull request
 
-  As a developer
-  I want my feature branch by synced before creating a pull request for it
-  So that my reviewers see the most up-to-date version of my code and their review is accurate.
+  As a developer trying to create a pull request when my feature branch conflicts with the main branch
+  I want to be given the choice to resolve the conflicts or abort
+  So that I can finish the operation as planned or postpone it to a better time.
 
 
   Background:
