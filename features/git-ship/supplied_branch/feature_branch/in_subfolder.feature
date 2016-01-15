@@ -17,8 +17,8 @@ Feature: git ship: shipping the supplied feature branch from a subfolder
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
-      | <none>  | cd <%= git_root_folder %>                      |
-      | other-feature               | git stash -u                       |
+      | <none>        | cd <%= git_root_folder %>          |
+      | other-feature | git stash -u                       |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
       |               | git checkout feature               |
@@ -32,7 +32,7 @@ Feature: git ship: shipping the supplied feature branch from a subfolder
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-      | <none>  | cd <%= git_folder "new_folder" %>                      |
+      | <none>        | cd <%= git_folder "new_folder" %>  |
     And I end up on the "other-feature" branch
     And I still have my uncommitted file
     And there is no "feature" branch
