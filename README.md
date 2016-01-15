@@ -57,6 +57,16 @@ Git Town is configured on a per-repository basis. It requires two pieces of info
 Upon first use in a repository, you will be prompted for this information.
 Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
 
+#### More Configuration
+
+The following are also configured on a per-repository basis.
+These configuration options have defaults and thus the user is not prompted to set them.
+Use the [git town](/documentation/commands/git-town.md) command to view or update them.
+
+* the pull branch strategy
+  * how to sync a local feature branch with its upstream
+  * default: `rebase`
+  * possible values: `merge`, `rebase`
 
 ## Documentation
 

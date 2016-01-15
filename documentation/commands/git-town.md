@@ -12,6 +12,7 @@ git town help
 git town install-fish-autocompletion
 git town main-branch [<branch_name>]
 git town perennial-branches [(--add | --remove) <branch_name>]
+git town pull-branch-strategy [(merge | rebase)]
 git town version
 ```
 
@@ -49,6 +50,16 @@ git town version
 >
 > # Remove "qa" branch from the list of perennial branches
 > git town perennial-branches --remove qa
+> ```
+
+* *pull-branch-strategy*
+> Displays the pull branch strategy. (default: 'rebase')
+> This strategy is used when syncing a local feature branch with its upstream.
+>
+> Specify a strategy to set the pull branch strategy.
+> ```bash
+> # Set the pull branch strategy as "merge"
+> git town pull-branch-strategy merge
 > ```
 
 * *install-fish-autocompletion*
