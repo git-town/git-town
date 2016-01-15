@@ -9,8 +9,12 @@ function branches_to_sync {
 }
 
 
-function preconditions {
+function initialize {
   activate_driver_family 'code_hosting'
+}
+
+
+function preconditions {
   if [ "$HAS_REMOTE" = true ]; then
     fetch
   fi
