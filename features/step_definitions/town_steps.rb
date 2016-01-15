@@ -66,13 +66,13 @@ Then(/^my repo is configured with no perennial branches$/) do
 end
 
 
-Then(/^my repo is configured with the pull branch strategy "(.+?)"$/) do |pull_branch_strategy|
-  expect(pull_branch_strategy_configuration).to eql pull_branch_strategy
+Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_name|
+  expect(main_branch_configuration).to eql branch_name
 end
 
 
-Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_name|
-  expect(main_branch_configuration).to eql branch_name
+Then(/^my repo is now configured with the pull branch strategy "(.+?)"$/) do |pull_branch_strategy|
+  expect(pull_branch_strategy_configuration).to eql pull_branch_strategy
 end
 
 
