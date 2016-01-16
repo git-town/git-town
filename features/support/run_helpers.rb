@@ -16,7 +16,7 @@ COMMAND_REGEX = /
 # Returns an array of the commands that were run in the last invocation of "run"
 def commands_of_last_run with_branch: true
   options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
-  result = Mortadella.new options
+  result = Mortadella::Horizontal.new options
   @last_run_result.out.split("\n").each do |line|
     match = line.match COMMAND_REGEX
     next unless match

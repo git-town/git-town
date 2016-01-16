@@ -9,9 +9,21 @@ function change_directory {
   run_command "cd $directory"
 }
 
+function change_directory_if_exists {
+  local directory=$1
+  if [ -d "$directory" ]; then
+    change_directory "$directory"
+  fi
+}
+
 
 function undo_steps_for_change_directory {
   echo "change_directory $(pwd)"
+}
+
+
+function undo_steps_for_change_directory_if_exists {
+  undo_steps_for_change_directory
 }
 
 

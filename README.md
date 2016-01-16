@@ -5,7 +5,7 @@
 [![Join the chat at https://gitter.im/Originate/git-town](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Originate/git-town?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Git Town makes software development teams who use Git even more productive and happy.
-It adds additional Git commands that support
+It adds Git commands that support
 [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
@@ -13,7 +13,7 @@ the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
 and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.
 
-See <http://www.git-town.com> for documentation.
+See [git-town.com](http://www.git-town.com) for documentation.
 
 
 ## Commands

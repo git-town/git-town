@@ -15,7 +15,7 @@ end
 # Returns a table of all files in all branches.
 # This is for comparing against expected files in a Cucumber table.
 def files_in_branches
-  result = Mortadella.new headers: %w(BRANCH NAME CONTENT)
+  result = Mortadella::Horizontal.new headers: %w(BRANCH NAME CONTENT)
   existing_local_branches(order: :main_first).each do |branch|
     files_in(branch: branch).each do |file|
       result << [branch, file, content_of(file: file, for_sha: branch)]
@@ -27,6 +27,8 @@ end
 
 def create_uncommitted_file options = {}
   options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
+  dirname = File.dirname options[:name]
+  FileUtils.mkdir_p(dirname) unless File.directory? dirname
   IO.write options[:name], options[:content]
   options[:name]
 end
@@ -46,5 +48,5 @@ end
 
 
 def uncommitted_files
-  array_output_of "git status --porcelain | awk '{print $2}'"
+  array_output_of "git status --porcelain --untracked-files=all | awk '{print $2}'"
 end
