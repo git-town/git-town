@@ -53,14 +53,11 @@ Use the cross-platform version of
 
   ```bash
   if [ ! condition ]; then
-    # runs if the condition is not true
   ```
 * checking booleans
 
   ```bash
   if [ $success = true ]; then
-    # runs if $success is true
-  fi
   ```
 * checking strings
 

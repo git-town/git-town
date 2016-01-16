@@ -48,6 +48,12 @@ Every Git Town command
 * See [here](./documentation/development/website.md)
 
 
+## Code style
+
+Please follow the existing code style.
+For reference, please take a look at our [Bash cheatsheet](documentation/development/bash_cheatsheet.md).
+
+
 ## Pull Requests
 
 Each pull request (PR) should have the same (optional) description that it will
