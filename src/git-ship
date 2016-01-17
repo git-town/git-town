@@ -49,6 +49,8 @@ function preconditions {
   if [ "$target_branch_name" != "$INITIAL_BRANCH_NAME" ]; then
     export STASH_OPEN_CHANGES=true
   fi
+
+  export RUN_IN_GIT_ROOT=true
 }
 
 
