@@ -11,6 +11,8 @@
 .br
 \fIgit town\fR perennial-branches [(--add | --remove) <branch_name>]
 .br
+\fIgit town\fR pull-branch-strategy [(merge | rebase)]
+.br
 \fIgit town\fR version
 
 
@@ -72,3 +74,10 @@ Add a new perennial branch
 
 .IP "git town perennial-branches --remove <branch_name>" 4
 Remove branch from perennial branches
+
+.IP "git town pull-branch-strategy" 4
+Displays your pull branch strategy
+
+.IP "git town pull-branch-strategy <strategy>" 4
+Set your pull branch strategy as <strategy>
+Valid strategy values: 'merge', 'rebase'.

@@ -199,6 +199,21 @@ function show_or_update_perennial_branches {
 }
 
 
+# Update the pull branch strategy branch if a strategy is specified,
+# otherwise show the current pull branch strategy
+function show_or_update_pull_branch_strategy {
+  local strategy=$1
+  if [ -z "$strategy" ]; then
+    echo "$PULL_BRANCH_STRATEGY"
+  elif [ "$strategy" != 'merge' ] && [ "$strategy" != 'rebase' ] ; then
+    echo "Invalid pull branch strategy: '$strategy'."
+    echo "Valid pull branch strategies are 'merge' and 'rebase'."
+  else
+    store_configuration pull-branch-strategy "$strategy"
+  fi
+}
+
+
 # Persists the given git-town configuration setting
 #
 # The configuration setting is provided as a name-value pair, and

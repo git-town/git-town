@@ -34,6 +34,11 @@ def perennial_branch_configuration
 end
 
 
+def pull_branch_strategy_configuration
+  output_of 'git config --get git-town.pull-branch-strategy || true'
+end
+
+
 def set_configuration configuration, value
   run "git config git-town.#{configuration} '#{value}'"
 end
