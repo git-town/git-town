@@ -53,12 +53,10 @@ git town version
 > ```
 
 * *pull-branch-strategy*
-> Displays the pull branch strategy. (default: 'rebase')
-> This strategy is used when syncing a local feature branch with its upstream.
+> Displays the pull branch strategy
 >
 > Specify a strategy to set the pull branch strategy.
 > ```bash
-> # Set the pull branch strategy as "merge"
 > git town pull-branch-strategy merge
 > ```
 

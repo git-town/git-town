@@ -49,24 +49,24 @@ Check out our [installation instructions](http://www.git-town.com/install.html) 
 
 ## Configuration
 
-Git Town is configured on a per-repository basis. It requires two pieces of information.
+Git Town is configured on a per-repository basis.
+Upon first use in a repository, you will be prompted for the required configuration.
+Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
+
+#### Required configuration
 
 * the main development branch
 * the [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
 
-Upon first use in a repository, you will be prompted for this information.
-Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
+#### Optional Configuration
 
-#### More Configuration
-
-The following are also configured on a per-repository basis.
-These configuration options have defaults and thus the user is not prompted to set them.
-Use the [git town](/documentation/commands/git-town.md) command to view or update them.
+The following configuration options have defaults, so the configuration wizard does not ask about them.
 
 * the pull branch strategy
   * how to sync a local feature branch with its upstream
   * default: `rebase`
   * possible values: `merge`, `rebase`
+
 
 ## Documentation
 
