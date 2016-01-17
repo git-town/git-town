@@ -93,6 +93,14 @@ function exit_with_messages {
 }
 
 
+# Does any necessary setup
+# Always runs regardless of aborting / continuing / undoing
+# This should be overriden by commands when necessary
+function initialize {
+  true
+}
+
+
 # Parses arguments, validates necessary state
 # This should be overriden by commands when necessary
 function preconditions {
@@ -111,6 +119,7 @@ function remove_step_files {
 
 
 function run {
+  initialize
   if [ "$1" = "--abort" ]; then
     ensure_abortable
     abort_command
