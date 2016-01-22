@@ -63,7 +63,7 @@ Use the [git town](/documentation/commands/git-town.md) command to view or updat
 The following configuration options have defaults, so the configuration wizard does not ask about them.
 
 * the pull branch strategy
-  * how to sync a local feature branch with its upstream
+  * how to sync the main branch / perennial branches with their upstream
   * default: `rebase`
   * possible values: `merge`, `rebase`
 

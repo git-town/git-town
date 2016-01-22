@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 0.10.0 (2016-01-21)
+
+#### BREAKING CHANGES
+* `git prune-branches`: new functionality - delete branches whose tracking branch no longer exists
+  ([#702](https://github.com/Originate/git-town/issues/702))
+
+#### New Features
+* `git sync`: add configuration option to merge the main branch / perennial branches with their upstream
+  ([#671](https://github.com/Originate/git-town/issues/671))
+* `git hack`, `git ship`: support for running in subfolders
+
+#### Bug Fixes
+* internationalize check for undefined function
+  ([#678](https://github.com/Originate/git-town/issues/678))
+* `git new-pull-request`: ability to continue after conflicts
+  ([#700](https://github.com/Originate/git-town/issues/700))
+
 ## 0.9.0 (2015-10-17)
 
 #### BREAKING CHANGES
@@ -266,4 +283,3 @@
 * basic test framework
 * Travis CI integration
 * self-hosting: uses Git Town for Git Town development
-
