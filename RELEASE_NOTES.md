@@ -27,7 +27,7 @@
 #### New Features
 * `git new-pull-request`: support forked repos
   ([#682](https://github.com/Originate/git-town/issues/682))
-* `git sync`: if there is a remote upstream, the main branch is synced with its upstream couterpart
+* `git sync`: if there is a remote upstream, the main branch is synced with its upstream counterpart
   ([#685](https://github.com/Originate/git-town/issues/685))
 
 ## 0.8.0 (2015-10-14)
