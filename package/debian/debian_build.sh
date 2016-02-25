@@ -1,4 +1,5 @@
 #!/bin/sh
+# makes a fakeroot structure and copies files to locations
 mkdir -pv usr/lib/git-core &&
 mkdir -pv usr/share/man/man1 &&
 cp -r ../../src/* usr/lib/git-core &&
