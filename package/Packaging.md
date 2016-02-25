@@ -27,7 +27,6 @@ For Either process you will need to update the version number for the package lo
 4. run the `./debian_build.sh` script
 5. The deb file will be in the `package` directory
 6. upload the deb file to the hosted repo (e.g. the releases page on github)
-7. Update the hash located in `documentation/installation.md`
 
 #### Process for the docker image:
 1. First, fix the version variable in `package/debian/Dockerfile` to the correct value
