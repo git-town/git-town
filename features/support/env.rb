@@ -6,13 +6,13 @@ require 'pathname'
 require 'rspec'
 
 
-SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
+SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src".freeze
 GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
-SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
+SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides".freeze
 
 MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
-TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
+TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt".freeze
 
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
@@ -23,7 +23,8 @@ DEBUG = {
 
   # Prints debug info only for the Git commands run
   commands_only: ENV['DEBUG_COMMANDS']
-}
+
+}.freeze
 
 
 # load memoized environment by copying contents
