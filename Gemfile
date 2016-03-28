@@ -4,7 +4,7 @@ ruby '2.2.3'
 
 group :development do
   gem 'activesupport', '4.2.6'
-  gem 'cucumber', '2.0.2'
+  gem 'cucumber', '2.1.0'
   gem 'cucumber_lint', '0.1.2'
   gem 'kappamaki', '1.0.0'
   gem 'mortadella', '1.0.0'
