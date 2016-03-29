@@ -1,6 +1,7 @@
 AllCops:
   TargetRubyVersion: 2.2
 
+
 Metrics/AbcSize:
   Max: 19
 
@@ -42,9 +43,9 @@ Style/NestedParenthesizedCalls:
   Enabled: false
 
 
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-
-
 Style/SignalException:
   EnforcedStyle: only_fail
+
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
