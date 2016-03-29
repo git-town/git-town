@@ -6,13 +6,13 @@ require 'pathname'
 require 'rspec'
 
 
-SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src".freeze
+SOURCE_DIRECTORY = File.join(File.dirname(__FILE__), '..', '..', 'src')
 GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
-SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides".freeze
+SHELL_OVERRIDE_DIRECTORY = File.join(File.dirname(__FILE__), 'shell_overrides')
 
 MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
-TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt".freeze
+TOOLS_INSTALLED_FILENAME = File.join(REPOSITORY_BASE, 'tools_installed.txt')
 
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
 
