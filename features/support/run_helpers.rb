@@ -98,7 +98,7 @@ end
 
 
 def should_print_command_output? command
-  DEBUG[:all] || (DEBUG[:commands_only] && git_town_command?(command))
+  @debug || (@debug_commands && git_town_command?(command))
 end
 
 
