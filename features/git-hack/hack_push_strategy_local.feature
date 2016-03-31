@@ -1,4 +1,4 @@
-Feature: git hack: doesn't not push branch to remote upon creation
+Feature: git hack: don't push branch to remote upon creation
 
   As a developer starting work on a new private feature
   I don't want git-hack to push my branch to the remote repo
