@@ -31,6 +31,15 @@ git town version
 > With the `--reset` flag, cleanly remove all Git Town configuration from the current repository.
 > With the `--setup` flag, start the Git Town configuration wizard.
 
+* *hack-push-strategy*
+> Displays the git-hack push strategy
+>
+> Specify a strategy to set the git-hack push strategy.
+> ```bash
+> git town hack-push-strategy push  # (Default). Your newly-hacked branch will be pushed upon creation.
+> git town hack-push-strategy local # Your newly-hacked branch will not be pushed upon creation.
+> ```
+
 * *main-branch*
 > Displays the name of the main development branch.
 >
@@ -57,6 +66,7 @@ git town version
 >
 > Specify a strategy to set the pull branch strategy.
 > ```bash
+> git town pull-branch-strategy rebase # (Default).
 > git town pull-branch-strategy merge
 > ```
 
