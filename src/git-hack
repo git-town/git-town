@@ -42,7 +42,7 @@ function steps {
   sync_branch_steps "$parent_branch_name"
 
   echo "create_and_checkout_feature_branch $target_branch_name $parent_branch_name"
-  echo_if_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE"
+  echo_if_all_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE" "$(hack_should_push)"
 }
 
 

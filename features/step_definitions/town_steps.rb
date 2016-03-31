@@ -8,8 +8,8 @@ Given(/^my perennial branches are not configured$/) do
 end
 
 
-Given(/^my repository has the "([^"]*)" pull branch strategy configured$/) do |pull_branch_strategy|
-  set_configuration 'pull-branch-strategy', pull_branch_strategy
+Given(/^my repository has the "([^"]*)" configuration set to "([^"]*)"$/) do |configuration, value|
+  set_configuration configuration, value
 end
 
 
@@ -71,8 +71,8 @@ Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_nam
 end
 
 
-Then(/^my repo is now configured with the pull branch strategy "(.+?)"$/) do |pull_branch_strategy|
-  expect(pull_branch_strategy_configuration).to eql pull_branch_strategy
+Then(/^my repo is now configured with "([^"]*)" set to "(.+?)"$/) do |configuration, value|
+  expect(get_configuration configuration).to eql value
 end
 
 

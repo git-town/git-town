@@ -7,12 +7,12 @@ Feature: set the pull branch strategy
 
   Scenario: update to merge
     When I run `git town pull-branch-strategy merge`
-    Then my repo is now configured with the pull branch strategy "merge"
+    Then my repo is now configured with "pull-branch-strategy" set to "merge"
 
 
   Scenario: update to rebase
     When I run `git town pull-branch-strategy rebase`
-    Then my repo is now configured with the pull branch strategy "rebase"
+    Then my repo is now configured with "pull-branch-strategy" set to "rebase"
 
 
   Scenario: invalid strategy

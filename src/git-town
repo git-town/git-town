@@ -56,6 +56,10 @@ elif [ "$1" == "pull-branch-strategy" ]; then
   ensure_git_repository
   shift
   show_or_update_pull_branch_strategy "$@"
+elif [ "$1" == "hack-push-strategy" ]; then
+  ensure_git_repository
+  shift
+  show_or_update_hack_push_strategy "$@"
 elif [ "$1" == "version" ]; then
   show_version
 elif [ "$1" == "install-fish-autocompletion" ]; then
@@ -71,6 +75,7 @@ elif [ -n "$1" ]; then
   echo_inline_usage_or "git town main-branch [<branch_name>]"
   echo_inline_usage_or "git town perennial-branches [(--add | --remove) <branch_name>]"
   echo_inline_usage_or "git town pull-branch-strategy [(merge | rebase)]"
+  echo_inline_usage_or "git town hack-push-strategy [(push | local)]"
   echo_inline_usage_or "git town version"
   exit_with_error newline
 fi

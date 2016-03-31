@@ -23,6 +23,10 @@ export PULL_BRANCH_STRATEGY=$(get_configuration pull-branch-strategy)
 if [ -z "$PULL_BRANCH_STRATEGY" ]; then
   PULL_BRANCH_STRATEGY="rebase"
 fi
+export HACK_PUSH_STRATEGY=$(get_configuration hack-push-strategy)
+if [ -z "$HACK_PUSH_STRATEGY" ]; then
+  HACK_PUSH_STRATEGY="push"
+fi
 
 
 # Bypass the configuration if requested by caller (e.g. git-town)

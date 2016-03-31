@@ -146,7 +146,15 @@ function show_config {
   if [ -n "$MAIN_BRANCH_NAME" ]; then
     echo_bold_underline "Branch Ancestry:"
     show_branch_tree "$MAIN_BRANCH_NAME" 0 | indent
+    echo
   fi
+
+  echo_bold_underline "Pull branch strategy:"
+  echo_indented "$(show_or_update_pull_branch_strategy)"
+  echo
+
+  echo_bold_underline "git-hack push strategy:"
+  echo_indented "$(show_or_update_hack_push_strategy)"
 }
 
 
@@ -195,6 +203,19 @@ function show_or_update_perennial_branches {
     add_or_remove_perennial_branches "$operation" "$branch_name"
   else
     show_perennial_branches
+  fi
+}
+
+
+function show_or_update_hack_push_strategy {
+  local strategy=$1
+  if [ -z "$strategy" ]; then
+    echo "$HACK_PUSH_STRATEGY"
+  elif [ "$strategy" != 'push' ] && [ "$strategy" != 'local' ]; then
+    echo "Invalid git-hack push strategy: '$strategy'."
+    echo "Valid git-hack push strategies are 'push' and 'local'."
+  else
+    store_configuration hack-push-strategy "$strategy"
   fi
 }
 
