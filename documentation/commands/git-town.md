@@ -8,11 +8,12 @@ git-town - general Git Town help, view and change Git Town configuration
 ```
 git town
 git town config [--reset | --setup]
+git town hack-push-strategy [(push | local)]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branch_name>]
 git town perennial-branches [(--add | --remove) <branch_name>]
-git town pull-branch-strategy [(merge | rebase)]
+git town pull-branch-strategy [(rebase | merge)]
 git town version
 ```
 
