@@ -72,7 +72,7 @@ end
 
 
 Then(/^my repo is now configured with "([^"]*)" set to "(.+?)"$/) do |configuration, value|
-  expect(get_configuration configuration).to eql value
+  expect(get_configuration(configuration)).to eql value
 end
 
 
