@@ -17,13 +17,13 @@ Feature: git hack: don't push branch to remote upon creation
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                              |
-      | main        | git fetch --prune                    |
-      |             | git rebase origin/main               |
-      |             | git fetch upstream                   |
-      |             | git rebase upstream/main             |
-      |             | git push                             |
-      |             | git checkout -b private-feature main |
+      | BRANCH | COMMAND                              |
+      | main   | git fetch --prune                    |
+      |        | git rebase origin/main               |
+      |        | git fetch upstream                   |
+      |        | git rebase upstream/main             |
+      |        | git push                             |
+      |        | git checkout -b private-feature main |
     And I am still on the "private-feature" branch
     And I have the following commits
       | BRANCH          | LOCATION                    | MESSAGE         |
