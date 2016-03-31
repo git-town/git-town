@@ -7,10 +7,11 @@ Feature: Show correct git town usage
       error: unsupported subcommand 'invalidcommand'
       usage: git town
          or: git town config [--reset | --setup]
+         or: git town hack-push-strategy [(push | local)]
          or: git town help
          or: git town install-fish-autocompletion
          or: git town main-branch [<branch_name>]
          or: git town perennial-branches [(--add | --remove) <branch_name>]
-         or: git town pull-branch-strategy [(merge | rebase)]
+         or: git town pull-branch-strategy [(rebase | merge)]
          or: git town version
       """
