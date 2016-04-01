@@ -1,3 +1,7 @@
+AllCops:
+  TargetRubyVersion: 2.2
+
+
 Metrics/AbcSize:
   Max: 19
 
@@ -29,6 +33,18 @@ Style/EmptyLinesAroundClassBody:
 
 Style/MethodDefParentheses:
   EnforcedStyle: require_no_parentheses
+
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+
+Style/NestedParenthesizedCalls:
+  Enabled: false
+
+
+Style/SignalException:
+  EnforcedStyle: only_fail
 
 
 Style/StringLiterals:

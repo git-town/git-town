@@ -6,24 +6,15 @@ require 'pathname'
 require 'rspec'
 
 
-SOURCE_DIRECTORY = "#{File.dirname(__FILE__)}/../../src"
+SOURCE_DIRECTORY = File.join(File.dirname(__FILE__), '..', '..', 'src')
 GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
-SHELL_OVERRIDE_DIRECTORY = "#{File.dirname(__FILE__)}/shell_overrides"
+SHELL_OVERRIDE_DIRECTORY = File.join(File.dirname(__FILE__), 'shell_overrides')
 
 MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
-TOOLS_INSTALLED_FILENAME = "#{REPOSITORY_BASE}/tools_installed.txt"
+TOOLS_INSTALLED_FILENAME = File.join(REPOSITORY_BASE, 'tools_installed.txt')
 
 FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
-
-DEBUG = {
-
-  # Prints debug info for all activities
-  all: ENV['DEBUG'],
-
-  # Prints debug info only for the Git commands run
-  commands_only: ENV['DEBUG_COMMANDS']
-}
 
 
 # load memoized environment by copying contents
@@ -68,6 +59,18 @@ end
 Before do
   @error_expected = false
   @non_empty_stash_expected = false
+  @debug = ENV['DEBUG']
+  @debug_commands = ENV['DEBUG_COMMANDS']
+end
+
+
+Before '@debug' do
+  @debug = true
+end
+
+
+Before '@debug-commands' do
+  @debug_commands = true
 end
 
 
@@ -83,24 +86,6 @@ After '~@ignore-run-error' do
     puts unformatted_last_run_output if @last_run_result.error
     expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
   end
-end
-
-
-Before '@debug' do
-  DEBUG[:all] = true
-end
-
-After '@debug' do
-  DEBUG[:all] = ENV['DEBUG']
-end
-
-
-Before '@debug-commands' do
-  DEBUG[:commands_only] = true
-end
-
-After '@debug-commands' do
-  DEBUG[:commands_only] = ENV['DEBUG_COMMANDS']
 end
 
 
