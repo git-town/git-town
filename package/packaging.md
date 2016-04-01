@@ -1,8 +1,7 @@
 # Git-Town Packaging and Release Process For Linux
 
-Instructions on how to update all the necessary packages once a new release is out
+This document contains instructions on how to update all the necessary packages once a new release is out.
 
-## Linux
 The current linux (all distros) maintainer is [allonsy](https://github.com/allonsy). If an update occurs, please bug him
 
 ### Arch Linux
