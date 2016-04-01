@@ -9,12 +9,9 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
     <th width="400px">
       Manually
     </th>
-    <th width="300px">
-      Debian Based Linux
-    </th>
   </tr>
   <tr class="subhead">
-    <td colspan="3">
+    <td colspan="2">
       <b>Install</b>
     </td>
   </tr>
@@ -29,15 +26,9 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
         <li>add DIR/man to your <code>$MANPATH</code></li>
       </ul>
     </td>
-    <td>
-      <ul>
-        <li>Download the latest deb file from the <a href="https://github.com/Originate/git-town/releases">releases page</a></li>
-        <li>Either open the deb file in your favorite gui package manager or run <code>dpkg -i $PATH_TO_DEBFILE</code></li>
-      </ul>
-    </td>
   </tr>
   <tr class="subhead">
-    <td colspan="3">
+    <td colspan="2">
       <b>Update</b>
     </td>
   </tr>
@@ -51,14 +42,9 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
         <li>run <code>git pull</code> in DIR</li>
       </ul>
     </td>
-    <td>
-      <ul>
-        <li>redownload a fresh deb file and run the same instructions as above</li>
-      </ul>
-    </td>
   </tr>
   <tr class="subhead">
-    <td colspan="3">
+    <td colspan="2">
       <b>Uninstall</b>
     </td>
   </tr>
@@ -71,11 +57,6 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
         <li>remove DIR</li>
         <li>remove DIR/src from your <code>$PATH</code></li>
         <li>remove DIR/man from your <code>$MANPATH</code></li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-        <li>run <code>apt-get remove gittown</code></li>
       </ul>
     </td>
   </tr>
