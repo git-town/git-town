@@ -5,13 +5,14 @@ This document contains instructions on how to update all the necessary packages 
 The current linux (all distros) maintainer is [allonsy](https://github.com/allonsy). If an update occurs, please bug him
 
 ### Arch Linux
-The package will need to be flagged out of date [here](https://aur.archlinux.org/packages/git-town/)
-This will tell [allonsy](https://github.com/allonsy) to update the package (most likely minimal intervention necessary). There is a button on the right hand side menu to flag the package.
+The package will need to be flagged out of date [here](https://aur.archlinux.org/packages/git-town/).
+This will tell [allonsy](https://github.com/allonsy) to update the package (most likely minimal intervention necessary).
+There is a button on the right hand side menu to flag the package.
 
 
 ### Debian Based Distributions
 The package will need to be repackaged into a deb tarball.
-There are two options: rebuild it from your own debian based machine or build it on the included docker image (recommended)
+There are two options: rebuild it from your own debian based machine or build it on the included docker image (recommended).
 
 For either process you will need to update the version number for the package located in the following configuration files:
  * `package/debian/debian/changelog`
