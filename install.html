@@ -22,17 +22,26 @@ toggle.onclick = function(){
       Using <a href="http://brew.sh">Homebrew</a>
     </th>
     <th width="400px">
+      On Linux
+    </th>
+    <th width="400px">
       Manually
     </th>
+
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="3">
       <b>Install</b>
     </td>
   </tr>
   <tr>
     <td>
       <code>brew install git-town</code>
+    </td>
+    <td>
+      <li>On Arch Linux, install <code><a href="https://aur.archlinux.org/packages/git-town/">git-town</a></code> from the AUR</li>
+      <li>On Debian/Ubuntu based distros, download the deb file from the latest release <a href="https://github.com/Originate/git-town/releases">here</a>.
+        Then, run <code>dpkg -i /path/to/deb</code>
     </td>
     <td>
       <ul>
@@ -43,7 +52,7 @@ toggle.onclick = function(){
     </td>
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="3">
       <b>Update</b>
     </td>
   </tr>
@@ -54,18 +63,29 @@ toggle.onclick = function(){
     </td>
     <td>
       <ul>
+        <li>Rerun the install instructions</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
         <li>run <code>git pull</code> in DIR</li>
       </ul>
     </td>
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="3">
       <b>Uninstall</b>
     </td>
   </tr>
   <tr>
     <td>
       <code>brew uninstall git-town</code><br>
+    </td>
+    <td>
+      <ul>
+        <li>On Arch Linux run:<br><code>pacman -R git-town</code></li>
+        <li>On Debian/Ubuntu run:<br><code>apt-get remove git-town</code></li>
+      </ul>
     </td>
     <td>
       <ul>
