@@ -7,17 +7,35 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
       Using <a href="http://brew.sh">Homebrew</a>
     </th>
     <th width="400px">
+      On Arch Linux
+    </th>
+    <th width="400px">
+      On Debian/Ubuntu
+    </th>
+    <th width="400px">
       Manually
     </th>
+
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="4">
       <b>Install</b>
     </td>
   </tr>
   <tr>
     <td>
       <code>brew install git-town</code>
+    </td>
+    <td>
+      <ul>
+        <li>On Arch Linux, install <code><a href="https://aur.archlinux.org/packages/git-town/">git-town</a></code> from the AUR</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>On Debian/Ubuntu based distros, download the deb file from the latest release <a href="https://github.com/Originate/git-town/releases">here</a>.</li>
+        <li>Then, run <code>dpkg -i /path/to/deb</code></li>
+      </ul>
     </td>
     <td>
       <ul>
@@ -28,7 +46,7 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
     </td>
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="4">
       <b>Update</b>
     </td>
   </tr>
@@ -39,18 +57,38 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
     </td>
     <td>
       <ul>
+        <li>Rerun the install instructions</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Rerun the install instructions</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
         <li>run <code>git pull</code> in DIR</li>
       </ul>
     </td>
   </tr>
   <tr class="subhead">
-    <td colspan="2">
+    <td colspan="4">
       <b>Uninstall</b>
     </td>
   </tr>
   <tr>
     <td>
       <code>brew uninstall git-town</code><br>
+    </td>
+    <td>
+      <ul>
+        <li>On Arch Linux run:<br><code>pacman -R git-town</code></li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>On Debian/Ubuntu run:<br><code>apt-get remove git-town</code></li>
+      </ul>
     </td>
     <td>
       <ul>
