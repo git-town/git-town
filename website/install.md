@@ -28,13 +28,13 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
     </td>
     <td>
       <ul>
-        <li>On Arch Linux, install <code><a href="https://aur.archlinux.org/packages/git-town/">git-town</a></code> from the AUR</li>
+        <li>Install <code><a href="https://aur.archlinux.org/packages/git-town/">git-town</a></code> from the AUR</li>
       </ul>
     </td>
     <td>
       <ul>
-        <li>On Debian/Ubuntu based distros, download the deb file from the latest release <a href="https://github.com/Originate/git-town/releases">here</a>.</li>
-        <li>Then, run <code>dpkg -i /path/to/deb</code></li>
+        <li>Download the deb file from the latest release <a href="https://github.com/Originate/git-town/releases">here</a>.</li>
+        <li>Run <code>dpkg -i /path/to/deb</code></li>
       </ul>
     </td>
     <td>
@@ -82,12 +82,12 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
     </td>
     <td>
       <ul>
-        <li>On Arch Linux run:<br><code>pacman -R git-town</code></li>
+        <li>Run:<br><code>pacman -R git-town</code></li>
       </ul>
     </td>
     <td>
       <ul>
-        <li>On Debian/Ubuntu run:<br><code>apt-get remove git-town</code></li>
+        <li>Run:<br><code>apt-get remove git-town</code></li>
       </ul>
     </td>
     <td>
