@@ -23,9 +23,9 @@ export PULL_BRANCH_STRATEGY=$(get_configuration pull-branch-strategy)
 if [ -z "$PULL_BRANCH_STRATEGY" ]; then
   PULL_BRANCH_STRATEGY="rebase"
 fi
-export HACK_PUSH_STRATEGY=$(get_configuration hack-push-strategy)
-if [ -z "$HACK_PUSH_STRATEGY" ]; then
-  HACK_PUSH_STRATEGY="push"
+export HACK_PUSH_FLAG=$(get_configuration hack-push-flag)
+if [ -z "$HACK_PUSH_FLAG" ]; then
+  HACK_PUSH_FLAG="true"
 fi
 
 

@@ -2,12 +2,12 @@ Feature: git hack: don't push branch to remote upon creation
 
   As a developer starting work on a new private feature
   I don't want git-hack to push my branch to the remote repo
-  So that the upstream repo is not aware of my work
+  So that my CI server doesn't unnecessarily run tests for commits without changes
 
 
   Background:
     Given my repo has an upstream repo
-    And my repository has the "hack-push-strategy" configuration set to "local"
+    And my repository has the "hack-push-flag" configuration set to "local"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |

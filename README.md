@@ -65,12 +65,12 @@ The following configuration options have defaults, so the configuration wizard d
 * the pull branch strategy
   * how to sync the main branch / perennial branches with their upstream
   * default: `rebase`
-  * possible values: `rebase`, `merge`
+  * possible values: `merge`, `rebase`
 
-* the git-hack push strategy
+* the git-hack push flag
   * whether or not newly-hacked branches should be pushed to remote repo
-  * default: `push`
-  * possible values: `push`, `local`
+  * default: `true`
+  * possible values: `true`, `false`
 
 
 ## Documentation

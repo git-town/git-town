@@ -154,9 +154,9 @@ function show_config {
   echo_indented "$(show_or_update_pull_branch_strategy)"
   echo
 
-  echo_bold_underline "git-hack push strategy:"
+  echo_bold_underline "git-hack push flag:"
   # shellcheck disable=SC2119
-  echo_indented "$(show_or_update_hack_push_strategy)"
+  echo_indented "$(show_or_update_hack_push_flag)"
 }
 
 
@@ -210,15 +210,15 @@ function show_or_update_perennial_branches {
 
 
 # shellcheck disable=SC2120
-function show_or_update_hack_push_strategy {
-  local strategy=$1
-  if [ -z "$strategy" ]; then
-    echo "$HACK_PUSH_STRATEGY"
-  elif [ "$strategy" != 'push' ] && [ "$strategy" != 'local' ]; then
-    echo "Invalid git-hack push strategy: '$strategy'."
-    echo "Valid git-hack push strategies are 'push' and 'local'."
+function show_or_update_hack_push_flag {
+  local flag=$1
+  if [ -z "$flag" ]; then
+    echo "$HACK_PUSH_FLAG"
+  elif [ "$flag" != 'true' ] && [ "$flag" != 'false' ]; then
+    echo "Invalid git-hack push flag: '$flag'."
+    echo "Valid git-hack push flags are 'true' and 'false'."
   else
-    store_configuration hack-push-strategy "$strategy"
+    store_configuration hack-push-flag "$flag"
   fi
 }
 

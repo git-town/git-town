@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function hack_should_push {
-  if [ "$HACK_PUSH_STRATEGY" == 'push' ]; then
+  if [ "$HACK_PUSH_FLAG" == 'true' ]; then
     echo true
   else
     echo false

@@ -3,7 +3,7 @@
 .SH "SYNOPSIS"
 \fIgit town\fR config [--reset | --setup]
 .br
-\fIgit town\fR hack-push-strategy [(push | local)]
+\fIgit town\fR hack-push-flag [(true | false)]
 .br
 \fIgit town\fR help
 .br
@@ -62,10 +62,10 @@ Run the Git Town configuration wizard
 .IP "git town install-fish-autocompletion" 4
 Installs the autocompletion definition for Fish shell
 
-.IP "git town hack-push-strategy <strategy>" 4
-Set your git-hack push strategy as <strategy>
+.IP "git town hack-push-flag <boolean>" 4
+Set your git-hack push flag
 .br
-Valid strategy values: 'push' (default) and 'local'
+Valid strategy values: 'true' (default) and 'false'
 
 .IP "git town main-branch" 4
 Displays your main branch
