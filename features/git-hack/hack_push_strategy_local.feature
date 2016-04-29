@@ -6,11 +6,10 @@ Feature: git hack: don't push branch to remote upon creation
 
 
   Background:
-    Given my repo has an upstream repo
-    And my repository has the "hack-push-flag" configuration set to "false"
+    Given my repository has the "hack-push-flag" configuration set to "false"
     And the following commits exist in my repository
-      | BRANCH | LOCATION | MESSAGE         |
-      | main   | upstream | upstream commit |
+      | BRANCH | LOCATION | MESSAGE       |
+      | main   | remote   | remote commit |
     And I am on the "main" branch
     When I run `git hack private-feature`
 
@@ -20,12 +19,9 @@ Feature: git hack: don't push branch to remote upon creation
       | BRANCH | COMMAND                              |
       | main   | git fetch --prune                    |
       |        | git rebase origin/main               |
-      |        | git fetch upstream                   |
-      |        | git rebase upstream/main             |
-      |        | git push                             |
       |        | git checkout -b private-feature main |
-    And I am still on the "private-feature" branch
+    And I end up on the "private-feature" branch
     And I have the following commits
-      | BRANCH          | LOCATION                    | MESSAGE         |
-      | main            | local, remote, and upstream | upstream commit |
-      | private-feature | local                       | upstream commit |
+      | BRANCH          | LOCATION         | MESSAGE       |
+      | main            | local and remote | remote commit |
+      | private-feature | local            | remote commit |
