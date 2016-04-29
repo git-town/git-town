@@ -23,7 +23,7 @@ the main branch is synced with its upstream counterpart.
 This can be disabled by toggling the "hack-push-flag" configuration:
 
 ```
-git town hack-push-flag local
+git town hack-push-flag false
 ```
 
 
