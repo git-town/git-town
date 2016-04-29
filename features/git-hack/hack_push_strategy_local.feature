@@ -7,7 +7,7 @@ Feature: git hack: don't push branch to remote upon creation
 
   Background:
     Given my repo has an upstream repo
-    And my repository has the "hack-push-flag" configuration set to "local"
+    And my repository has the "hack-push-flag" configuration set to "false"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
