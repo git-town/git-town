@@ -14,7 +14,7 @@ Feature: passing an invalid option to the pull strategy configuration
 
 
   Scenario: explicit rebase
-    Given my repository has the "rebase" pull branch strategy configured
+    Given my repository has the "pull-branch-strategy" configuration set to "rebase"
     When I run `git town pull-branch-strategy`
     Then I see
       """
@@ -23,7 +23,7 @@ Feature: passing an invalid option to the pull strategy configuration
 
 
   Scenario: explicit merge
-    Given my repository has the "merge" pull branch strategy configured
+    Given my repository has the "pull-branch-strategy" configuration set to "merge"
     When I run `git town pull-branch-strategy`
     Then I see
       """

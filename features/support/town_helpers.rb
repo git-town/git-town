@@ -13,6 +13,11 @@ def delete_perennial_branches_configuration
 end
 
 
+def get_configuration configuration
+  output_of "git config --get git-town.#{configuration} || true"
+end
+
+
 def git_town_configuration
   # OR'ed with true so that this doesn't exit with an error if config doesn't exist
   array_output_of 'git config --get-regex git-town || true'
@@ -20,22 +25,22 @@ end
 
 
 def main_branch_configuration
-  output_of 'git config --get git-town.main-branch-name || true'
+  get_configuration 'main-branch-name'
 end
 
 
 def non_feature_branch_configuration
-  output_of 'git config --get git-town.non-feature-branch-names || true'
+  get_configuration 'non-feature-branch-names'
 end
 
 
 def perennial_branch_configuration
-  output_of 'git config --get git-town.perennial-branch-names || true'
+  get_configuration 'perennial-branch-names'
 end
 
 
 def pull_branch_strategy_configuration
-  output_of 'git config --get git-town.pull-branch-strategy || true'
+  get_configuration 'pull-branch-strategy'
 end
 
 

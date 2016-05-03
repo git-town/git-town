@@ -146,7 +146,17 @@ function show_config {
   if [ -n "$MAIN_BRANCH_NAME" ]; then
     echo_bold_underline "Branch Ancestry:"
     show_branch_tree "$MAIN_BRANCH_NAME" 0 | indent
+    echo
   fi
+
+  echo_bold_underline "Pull branch strategy:"
+  # shellcheck disable=SC2119
+  echo_indented "$(show_or_update_pull_branch_strategy)"
+  echo
+
+  echo_bold_underline "git-hack push flag:"
+  # shellcheck disable=SC2119
+  echo_indented "$(show_or_update_hack_push_flag)"
 }
 
 
@@ -199,8 +209,23 @@ function show_or_update_perennial_branches {
 }
 
 
+# shellcheck disable=SC2120
+function show_or_update_hack_push_flag {
+  local flag=$1
+  if [ -z "$flag" ]; then
+    echo "$HACK_PUSH_FLAG"
+  elif [ "$flag" != 'true' ] && [ "$flag" != 'false' ]; then
+    echo "Invalid git-hack push flag: '$flag'."
+    echo "Valid git-hack push flags are 'true' and 'false'."
+  else
+    store_configuration hack-push-flag "$flag"
+  fi
+}
+
+
 # Update the pull branch strategy branch if a strategy is specified,
 # otherwise show the current pull branch strategy
+# shellcheck disable=SC2120
 function show_or_update_pull_branch_strategy {
   local strategy=$1
   if [ -z "$strategy" ]; then

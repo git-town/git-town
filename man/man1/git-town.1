@@ -3,6 +3,8 @@
 .SH "SYNOPSIS"
 \fIgit town\fR config [--reset | --setup]
 .br
+\fIgit town\fR hack-push-flag [(true | false)]
+.br
 \fIgit town\fR help
 .br
 \fIgit town\fR install-fish-autocompletion
@@ -11,7 +13,7 @@
 .br
 \fIgit town\fR perennial-branches [(--add | --remove) <branch_name>]
 .br
-\fIgit town\fR pull-branch-strategy [(merge | rebase)]
+\fIgit town\fR pull-branch-strategy [(rebase | merge)]
 .br
 \fIgit town\fR version
 
@@ -60,6 +62,11 @@ Run the Git Town configuration wizard
 .IP "git town install-fish-autocompletion" 4
 Installs the autocompletion definition for Fish shell
 
+.IP "git town hack-push-flag <boolean>" 4
+Set your git-hack push flag
+.br
+Valid strategy values: 'true' (default) and 'false'
+
 .IP "git town main-branch" 4
 Displays your main branch
 
@@ -80,4 +87,5 @@ Displays your pull branch strategy
 
 .IP "git town pull-branch-strategy <strategy>" 4
 Set your pull branch strategy as <strategy>
-Valid strategy values: 'merge', 'rebase'.
+.br
+Valid strategy values: 'rebase' (default) and 'merge'
