@@ -39,7 +39,7 @@ function preconditions {
     shift
   else
     target_branch_name=$(get_current_branch_name)
-    ensure_no_open_changes "You cannot ship with uncommitted changes."
+    ensure_no_open_changes "You have uncommitted changes. Did you mean to commit them before shipping?"
   fi
 
   ensure_is_feature_branch "$target_branch_name" "Only feature branches can be shipped."
