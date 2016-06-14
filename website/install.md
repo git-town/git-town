@@ -84,9 +84,7 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
       <li>Rerun the install instructions</li>
     </td>
     <td>
-      <ul>
-        <li>Run <code>apt-get remove git-town</code></li>
-      </ul>
+      <li>Run <code>apt-get remove git-town</code></li>
     </td>
   </tr>
 
