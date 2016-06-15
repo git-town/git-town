@@ -14,7 +14,7 @@ Feature: git ship: errors if there are open changes
 
   Scenario: result
     Then it runs no commands
-    And I get the error "You cannot ship with uncommitted changes."
+    And I get the error "You have uncommitted changes. Did you mean to commit them before shipping?"
     And I am still on the "feature" branch
     And I still have my uncommitted file
     And there are no commits

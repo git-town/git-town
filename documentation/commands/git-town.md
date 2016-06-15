@@ -8,11 +8,12 @@ git-town - general Git Town help, view and change Git Town configuration
 ```
 git town
 git town config [--reset | --setup]
+git town hack-push-flag [(true | false)]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branch_name>]
 git town perennial-branches [(--add | --remove) <branch_name>]
-git town pull-branch-strategy [(merge | rebase)]
+git town pull-branch-strategy [(rebase | merge)]
 git town version
 ```
 
@@ -30,6 +31,15 @@ git town version
 >
 > With the `--reset` flag, cleanly remove all Git Town configuration from the current repository.
 > With the `--setup` flag, start the Git Town configuration wizard.
+
+* *hack-push-flag*
+> Displays the git-hack push flag
+>
+> Specify a value for the git-hack push flag.
+> ```bash
+> git town hack-push-flag true  # (Default). Your newly-hacked branch will be pushed upon creation.
+> git town hack-push-flag false # Your newly-hacked branch will not be pushed upon creation.
+> ```
 
 * *main-branch*
 > Displays the name of the main development branch.
@@ -57,6 +67,7 @@ git town version
 >
 > Specify a strategy to set the pull branch strategy.
 > ```bash
+> git town pull-branch-strategy rebase # (Default).
 > git town pull-branch-strategy merge
 > ```
 

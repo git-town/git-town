@@ -2,7 +2,6 @@
 
 [![Build Status](https://circleci.com/gh/Originate/git-town/tree/master.svg?style=shield)](https://circleci.com/gh/Originate/git-town/tree/master)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
-[![Join the chat at https://gitter.im/Originate/git-town](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Originate/git-town?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Git Town makes software development teams who use Git even more productive and happy.
 It adds Git commands that support
@@ -66,6 +65,11 @@ The following configuration options have defaults, so the configuration wizard d
   * how to sync the main branch / perennial branches with their upstream
   * default: `rebase`
   * possible values: `merge`, `rebase`
+
+* the git-hack push flag
+  * whether or not newly-hacked branches should be pushed to remote repo
+  * default: `true`
+  * possible values: `true`, `false`
 
 
 ## Documentation

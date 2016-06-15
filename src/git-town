@@ -56,6 +56,10 @@ elif [ "$1" == "pull-branch-strategy" ]; then
   ensure_git_repository
   shift
   show_or_update_pull_branch_strategy "$@"
+elif [ "$1" == "hack-push-flag" ]; then
+  ensure_git_repository
+  shift
+  show_or_update_hack_push_flag "$@"
 elif [ "$1" == "version" ]; then
   show_version
 elif [ "$1" == "install-fish-autocompletion" ]; then
@@ -66,11 +70,12 @@ elif [ -n "$1" ]; then
   echo_inline_error "unsupported subcommand '$1'"
   echo_inline_usage "git town"
   echo_inline_usage_or "git town config [--reset | --setup]"
+  echo_inline_usage_or "git town hack-push-flag [(true | false)]"
   echo_inline_usage_or "git town help"
   echo_inline_usage_or "git town install-fish-autocompletion"
   echo_inline_usage_or "git town main-branch [<branch_name>]"
   echo_inline_usage_or "git town perennial-branches [(--add | --remove) <branch_name>]"
-  echo_inline_usage_or "git town pull-branch-strategy [(merge | rebase)]"
+  echo_inline_usage_or "git town pull-branch-strategy [(rebase | merge)]"
   echo_inline_usage_or "git town version"
   exit_with_error newline
 fi
