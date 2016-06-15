@@ -5,7 +5,7 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
   * Update: run `brew update` and then run `brew upgrade git-town`
   * Uninstall: run `brew uninstall git-town`
 ---
-
+<br>
 # Arch Linux
   * Install / Update: install [git-town](https://aur.archlinux.org/packages/git-town/) from the AUR
     * You may use your favorite AUR helper
@@ -15,14 +15,14 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
       * `cd` into the newly unpacked directory, and running `makepkg -si`
   * Uninstall: run `pacman -R git-town`
 ---
-
+<br>
 # Debian/Ubuntu based distros
   * Install / Update:
     * Download the deb file from the latest release [here](https://github.com/Originate/git-town/releases).
     * Run `dpkg -i /path/to/debfile`
   * Uninstall: run `apt-get remove git-town`
 ---
-
+<br>
 # Manual
   * Install
     * clone the repo to your machine (into DIR)
@@ -31,8 +31,8 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
   * Update: run `git pull` in DIR
   * Uninstall:
     * remove DIR
-      remove DIR/src from your `$PATH`
-      remove DIR/man from your `$MANPATH`
+    * remove DIR/src from your `$PATH`
+    * remove DIR/man from your `$MANPATH`
 ---
 
 
