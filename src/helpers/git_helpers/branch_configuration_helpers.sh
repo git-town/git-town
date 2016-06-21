@@ -80,7 +80,7 @@ function delete_ancestors_entry {
 }
 
 
-# Prints branches prefixed by a number and a colon
+# Prints branches prefixed by a number and a colon with the main branch first
 function echo_numbered_branches {
   local branches="$(local_branches_with_main_first | tr '\n' ' ')"
   local branch
@@ -93,6 +93,22 @@ function echo_numbered_branches {
     number=$(( number + 1 ))
   done
 }
+
+# Prints branches prefixed by a number and a colon with the order given alphabetically
+function echo_numbered_branches_alpha_order {
+  local branches="$(local_branches | tr '\n' ' ')"
+  local branch
+  local number=1
+  for branch in $branches; do
+    output_style_bold
+    printf "%3s: " "$number"
+    output_style_reset
+    echo "$branch"
+    number=$(( number + 1 ))
+  done
+}
+
+
 
 
 # Prints the header for the prompt when asking for parent branches
@@ -185,11 +201,18 @@ function ensure_knows_parent_branches {
 
 
 # Returns the branch name for the number shown in print_numbered_branches
+# when printed with the main branch first
 function get_numbered_branch {
   local number=$1
   local_branches_with_main_first | sed -n "${number}p"
 }
 
+# Returns the branch name for the number shown in print_numbered_branches
+# when printed in alpha order
+function get_numbered_branch_alpha_order {
+  local number=$1
+  local_branches | sed -n "${number}p"
+}
 
 # Returns whether the given branch has child branches
 function has_child_branches {

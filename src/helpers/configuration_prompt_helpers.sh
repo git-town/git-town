@@ -5,7 +5,7 @@
 function echo_configuration_header {
   echo "Git Town needs to be configured"
   echo
-  echo_numbered_branches
+  echo_numbered_branches_alpha_order
   echo
 }
 
@@ -32,7 +32,7 @@ function ensure_knows_configuration {
 
     read user_input
     if [[ $user_input =~ $numerical_regex ]] ; then
-      main_branch_input="$(get_numbered_branch "$user_input")"
+      main_branch_input="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$main_branch_input" ]; then
         echo_error_header
         echo_error "invalid branch number"
@@ -60,12 +60,12 @@ function ensure_knows_configuration {
   local perennial_branches_input=''
 
   while true; do
-    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value: ${PERENNIAL_BRANCH_NAMES}): "      
+    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value: ${PERENNIAL_BRANCH_NAMES}): "
 
     read user_input
     local branch
     if [[ $user_input =~ $numerical_regex ]] ; then
-      branch="$(get_numbered_branch "$user_input")"
+      branch="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$branch" ]; then
         echo_error_header
         echo_error "invalid branch number"
