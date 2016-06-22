@@ -1,66 +1,40 @@
 Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
 
+# Mac (using [Homebrew](http://brew.sh))
+* Install: run `brew install git-town`
+* Update: run `brew update` and then run `brew upgrade git-town`
+* Uninstall: run `brew uninstall git-town`
 
-<table>
-  <tr>
-    <th width="300px">
-      Using <a href="http://brew.sh">Homebrew</a>
-    </th>
-    <th width="400px">
-      Manually
-    </th>
-  </tr>
-  <tr class="subhead">
-    <td colspan="2">
-      <b>Install</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew install git-town</code>
-    </td>
-    <td>
-      <ul>
-        <li>clone the repo to your machine (into DIR)</li>
-        <li>add DIR/src to your <code>$PATH</code></li>
-        <li>add DIR/man to your <code>$MANPATH</code></li>
-      </ul>
-    </td>
-  </tr>
-  <tr class="subhead">
-    <td colspan="2">
-      <b>Update</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew update</code><br>
-      <code>brew upgrade git-town</code>
-    </td>
-    <td>
-      <ul>
-        <li>run <code>git pull</code> in DIR</li>
-      </ul>
-    </td>
-  </tr>
-  <tr class="subhead">
-    <td colspan="2">
-      <b>Uninstall</b>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>brew uninstall git-town</code><br>
-    </td>
-    <td>
-      <ul>
-        <li>remove DIR</li>
-        <li>remove DIR/src from your <code>$PATH</code></li>
-        <li>remove DIR/man from your <code>$MANPATH</code></li>
-      </ul>
-    </td>
-  </tr>
-</table>
+---
+# Arch Linux
+* Install / Update: install [git-town](https://aur.archlinux.org/packages/git-town/) from the AUR
+  * You may use your favorite AUR helper
+  * Alternatively, you can install manually from the AUR by:
+    * downloading the latest tarball [from this page](https://aur.archlinux.org/packages/git-town/)
+    * unpacking the tarball
+    * `cd` into the newly unpacked directory, and running `makepkg -si`
+* Uninstall: run `pacman -R git-town`
+
+---
+# Debian/Ubuntu based distros
+* Install / Update:
+  * Download the deb file from the latest release [here](https://github.com/Originate/git-town/releases).
+  * Run `dpkg -i /path/to/debfile`
+* Uninstall: run `apt-get remove git-town`
+
+---
+# Manual
+* Install
+  * clone the repo to your machine (into DIR)
+  * add DIR/src to your `$PATH`
+  * add DIR/man to your `$MANPATH`
+* Update: run `git pull` in DIR
+* Uninstall:
+  * remove DIR
+  * remove DIR/src from your `$PATH`
+  * remove DIR/man from your `$MANPATH`
+
+---
 
 
 #### Install autocompletion
