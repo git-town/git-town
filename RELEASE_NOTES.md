@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 0.10.1 (2016-06-23)
+
+#### New Features
+* `git hack`: add configuration for whether or not to push
+  ([#720](https://github.com/Originate/git-town/issues/720))
+
+#### Bug Fixes
+* configuration: make branch order consistent
+* `git ship`: update uncommitted changes error message
+  ([#718](https://github.com/Originate/git-town/issues/718))
+
 ## 0.10.0 (2016-01-21)
 
 #### BREAKING CHANGES
