@@ -48,6 +48,10 @@ elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
   shift
   show_or_update_main_branch "$@"
+elif [ "$1" == "parent-branch" ]; then
+  ensure_git_repository
+  shift
+  update_parent_branch "$@"
 elif [ "$1" == "perennial-branches" ]; then
   ensure_git_repository
   shift

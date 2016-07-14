@@ -270,3 +270,18 @@ function undo_steps_for_remove_perennial_branch {
   local branch_name=$1
   echo "add_perennial_branch $branch_name"
 }
+
+
+function update_parent_branch {
+  local child_branch_name=$1
+  local parent_branch_name=$2
+  if [ "$(has_branch "$child_branch_name")" = false ]; then
+    echo_inline_error "no branch named '$child_branch_name'"
+    exit_with_error
+  elif [ "$(has_branch "$parent_branch_name")" = false ]; then
+    echo_inline_error "no branch named '$parent_branch_name'"
+    exit_with_error
+  fi
+  delete_ancestors_entry "$child_branch_name"
+  store_parent_branch "$child_branch_name" "$parent_branch_name"
+}

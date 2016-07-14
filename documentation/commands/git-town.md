@@ -12,6 +12,7 @@ git town hack-push-flag [(true | false)]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branch_name>]
+git town parent-branch <child_branch_name> <parent_branch_name>
 git town perennial-branches [(--add | --remove) <branch_name>]
 git town pull-branch-strategy [(rebase | merge)]
 git town version
@@ -48,6 +49,14 @@ git town version
 > ```bash
 > # Set "master" as the main branch
 > git town main-branch master
+> ```
+
+* *parent-branch*
+> Update the parent branch of a feature branch
+>
+> ```bash
+> # Set the parent branch of "feature-a" as "feature-b"
+> git town parent-branch feature-a feature-b
 > ```
 
 * *perennial-branches*
