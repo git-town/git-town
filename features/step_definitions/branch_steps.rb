@@ -6,12 +6,12 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have a( local)?(?: feature)? branch named "([^"]+)"( on another machine)?$/) do |local, branch_name, remote|
+Given(/^I have a( local)?( feature)? branch named "([^"]+)"( on another machine)?$/) do |local, featur, branch_name, remote|
   user = 'developer'
   user += '_secondary' if remote
   in_repository user do
     create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
   end
 end
 
@@ -21,10 +21,10 @@ Given(/^I have a( local)?(?: feature)? branch named "([^"]+)" with no parent$/) 
 end
 
 
-Given(/^I have( local)?(?: feature)? branches named "(.+?)"$/) do |local, branch_names|
+Given(/^I have( local)?( feature)? branches named "(.+?)"$/) do |local, feature, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main'
+    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
   end
 end
 

@@ -15,7 +15,8 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
 
   Scenario: result
-    Then it runs the commands
+    Then I don't see "Please specify the parent branch of"
+    And it runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
       |            | git stash -u                 |
@@ -118,4 +119,3 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
       | production | local and remote | production remote commit | conflicting_file |
       |            |                  | production local commit  | conflicting_file |
       | qa         | local and remote | qa commit                | qa_file          |
-
