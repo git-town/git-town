@@ -27,6 +27,7 @@ Then(/^I am not prompted for any parent branches$/) do
   expect(configured_branch_hierarchy_information(ignore_errors: true).table.size).to eq 1
 end
 
+
 Then(/^my branch hierarchy metadata is unchanged$/) do
   expect(@branch_hierarchy_metadata.table).to eql configured_branch_hierarchy_information.table
 end
