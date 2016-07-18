@@ -6,7 +6,7 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^I have a( local)?( feature)? branch named "([^"]+)"( on another machine)?$/) do |local, featur, branch_name, remote|
+Given(/^I have a( local)?( feature)? branch named "([^"]+)"( on another machine)?$/) do |local, feature, branch_name, remote|
   user = 'developer'
   user += '_secondary' if remote
   in_repository user do
