@@ -18,10 +18,11 @@ This is stored in the git config under `git-town.main-branch-name`
 > \pəˈrenēəl\
 > *adjective*
 > lasting or existing for a long or apparently infinite time; enduring or continually recurring.
+
 These are branches that serve some special purpose, such as deployment.
 Perennial branches cannot be killed or shipped,
 and only rebase with their own tracking branch when synced.
-These are stored in the git config under `git-town.perennial-branch-names` as a space seperated list.
+These are stored in the git config under `git-town.perennial-branch-names` as a space separated list.
 
 
 ## Nested Feature Branches
@@ -62,7 +63,7 @@ Git Town only displays the changes between `feature2` and `feature1`,
 not the diff against `master`.
 
 Git Town stores the immediate parent of each feature branch in the git config under `git-town.<branch_name>.parent`.
-and the full ancestral line, top-down, as a space seperated list under `git-town-branch.<branch_name>.ancestors`
+and the full ancestral line, top-down, as a space separated list under `git-town-branch.<branch_name>.ancestors`
 
 For this example it would store
 ```
