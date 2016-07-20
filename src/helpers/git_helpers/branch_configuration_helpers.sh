@@ -140,7 +140,7 @@ function echo_update_child_branches {
 # Makes sure that we know all the parent branches
 # Asks the user if necessary
 function ensure_knows_parent_branches {
-  local branches=$1 # space seperated list of branches
+  local branches=$1 # space separated list of branches
 
   local branch
   local child
