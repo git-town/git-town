@@ -7,7 +7,7 @@ Each Git Town command begins by inspecting the current state of the Git reposito
 If there are no errors, it generates a list of steps to run.
 Each step is a bash function that wraps an individual Git command.
 
-When executing a step, the undo steps are determined and added to a seperate list.
+When executing a step, the undo steps are determined and added to a separate list.
 This is done by calling the methods
 * `undo_steps_for_[step]`: executed before the command runs
 * `post_undo_steps_for_[step]`: executed after the command runs
