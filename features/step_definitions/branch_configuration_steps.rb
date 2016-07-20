@@ -24,7 +24,7 @@ end
 
 
 Then(/^I am not prompted for any parent branches$/) do
-  expect(configured_branch_hierarchy_information(ignore_errors: true).table.size).to eq 1
+  expect(unformatted_last_run_output).not_to include("Please specify the parent branch of")
 end
 
 

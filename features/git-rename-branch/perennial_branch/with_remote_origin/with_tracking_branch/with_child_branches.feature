@@ -6,8 +6,7 @@ Feature: git rename-branch: renaming a feature branch with child branches
 
 
   Background:
-    Given I have a branch named "production"
-    And my perennial branches are configured as "production"
+    Given I have a perennial branch named "production"
     And I have a feature branch named "child-feature" as a child of "production"
     And the following commits exist in my repository
       | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |

@@ -1,8 +1,7 @@
 Feature: git sync --all: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given I have branches named "production" and "qa"
-    And my perennial branches are configured as "production" and "qa"
+    Given I have perennial branches named "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        | FILE CONTENT              |
       | main       | remote           | main commit              | main_file        | main content              |
@@ -15,7 +14,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
 
 
   Scenario: result
-    Then I don't see "Please specify the parent branch of"
+    Then I am not prompted for any parent branches
     And it runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |

@@ -5,8 +5,7 @@ Feature: git kill: errors when trying to kill a perennial branch
 
   Background:
     Given I have a feature branch named "feature"
-    And I have a branch named "qa"
-    And my perennial branches are configured as "qa"
+    And I have a perennial branch named "qa"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE     |
       | feature | local and remote | good commit |

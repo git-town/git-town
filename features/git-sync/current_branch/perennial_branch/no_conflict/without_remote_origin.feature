@@ -7,8 +7,7 @@ Feature: git sync: syncing the current perennial branch (without remote repo)
 
   Background:
     Given my repo does not have a remote origin
-    And I have local branches named "qa" and "production"
-    And my perennial branches are configured as "qa" and "production"
+    And I have local perennial branches named "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |

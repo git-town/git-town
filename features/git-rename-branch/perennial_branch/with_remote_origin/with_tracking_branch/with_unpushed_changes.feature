@@ -6,8 +6,7 @@ Feature: git rename-branch: errors if renaming a perennial branch that has unpus
 
 
   Background:
-    Given I have a branch named "production"
-    And my perennial branches are configured as "production"
+    Given I have a perennial branch named "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE                  |
       | main       | local and remote | main commit              |
