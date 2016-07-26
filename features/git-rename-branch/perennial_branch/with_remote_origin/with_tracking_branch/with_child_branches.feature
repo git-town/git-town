@@ -33,7 +33,6 @@ Feature: git rename-branch: renaming a feature branch with child branches
     And Git Town is now aware of this branch hierarchy
       | BRANCH             | PARENT             |
       | child-feature      | renamed-production |
-      | renamed-production | main               |
 
 
   Scenario: undo
@@ -54,4 +53,3 @@ Feature: git rename-branch: renaming a feature branch with child branches
     And Git Town is now aware of this branch hierarchy
       | BRANCH        | PARENT     |
       | child-feature | production |
-      | production    | main       |

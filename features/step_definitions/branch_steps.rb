@@ -12,7 +12,7 @@ Given(/^I have a( local)?( feature)?( perennial)? branch named "([^"]+)"( on ano
   in_repository user do
     create_branch branch_name, remote: !local
     set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
-    set_configuration 'perennial-branch-names', branch_name if perennial
+    add_perennial_branch branch_name if perennial
   end
 end
 
@@ -26,7 +26,7 @@ Given(/^I have( local)?( feature)?( perennial)? branches named "(.+?)"$/) do |lo
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
     set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
-    set_configuration 'perennial-branch-names', branch_name if perennial
+    add_perennial_branch branch_name if perennial
   end
 end
 

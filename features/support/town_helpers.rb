@@ -1,5 +1,7 @@
-def configure_perennial_branches configuration
-  set_configuration 'perennial-branch-names', configuration
+def add_perennial_branch branch
+  oldValue = perennial_branch_configuration
+  newValue = [oldValue, branch].reject(&:blank?).join(' ')
+  set_configuration 'perennial-branch-names', newValue
 end
 
 
