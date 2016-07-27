@@ -1,7 +1,7 @@
 def add_perennial_branch branch
-  oldValue = perennial_branch_configuration
-  newValue = [oldValue, branch].reject(&:blank?).join(' ')
-  set_configuration 'perennial-branch-names', newValue
+  old_value = perennial_branch_configuration
+  new_value = [old_value, branch].reject(&:blank?).join(' ')
+  set_configuration 'perennial-branch-names', new_value
 end
 
 

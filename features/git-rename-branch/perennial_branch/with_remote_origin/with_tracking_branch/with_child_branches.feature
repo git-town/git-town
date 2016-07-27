@@ -31,8 +31,8 @@ Feature: git rename-branch: renaming a feature branch with child branches
       | child-feature      | local and remote | child feature commit | child_feature_file | child feature content |
       | renamed-production | local and remote | production commit    | production_file    | production content    |
     And Git Town is now aware of this branch hierarchy
-      | BRANCH             | PARENT             |
-      | child-feature      | renamed-production |
+      | BRANCH        | PARENT             |
+      | child-feature | renamed-production |
 
 
   Scenario: undo

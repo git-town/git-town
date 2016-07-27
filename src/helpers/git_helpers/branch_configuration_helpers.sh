@@ -262,7 +262,11 @@ function parent_branch {
 function store_parent_branch {
   local branch=$1
   local parent_branch=$2
-  git config "git-town-branch.$branch.parent" "$parent_branch"
+  if [ -n "$parent_branch" ]; then
+    git config "git-town-branch.$branch.parent" "$parent_branch"
+  else
+    delete_parent_entry "$branch"
+  fi
 }
 
 
