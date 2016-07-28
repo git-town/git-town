@@ -1,8 +1,7 @@
 Feature: git sync --all: syncs all perennial branches
 
   Background:
-    Given I have branches named "production" and "qa"
-    And my perennial branches are configured as "production" and "qa"
+    Given I have perennial branches named "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |

@@ -6,8 +6,7 @@ Feature: git rename-branch: does nothing if renaming a perennial branch onto its
 
 
   Background:
-    Given I have a feature branch named "production"
-    And my perennial branches are configured as "production"
+    Given I have a perennial branch named "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | production | local and remote | production commit |

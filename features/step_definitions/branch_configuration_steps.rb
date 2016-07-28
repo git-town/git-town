@@ -23,6 +23,11 @@ Then(/^Git Town is not aware of any branch hierarchy$/) do
 end
 
 
+Then(/^I am not prompted for any parent branches$/) do
+  expect(unformatted_last_run_output).not_to include 'Please specify the parent branch of'
+end
+
+
 Then(/^my branch hierarchy metadata is unchanged$/) do
   expect(@branch_hierarchy_metadata.table).to eql configured_branch_hierarchy_information.table
 end

@@ -4,7 +4,7 @@ Feature: deleting the current and previous branches makes the main branch the ne
 
 
   Scenario: git-prune-branches
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the "previous" branch gets deleted on the remote
     And the "current" branch gets deleted on the remote
     And I am on the "current" branch with "previous" as the previous Git branch

@@ -6,8 +6,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
 
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my perennial branches are configured as "qa" and "production"
+    Given I have perennial branches named "qa" and "production"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |

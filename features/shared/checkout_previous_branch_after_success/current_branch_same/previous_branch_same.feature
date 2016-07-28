@@ -6,7 +6,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
 
   Scenario: git-kill
-    Given I have branches named "previous", "current", and "victim"
+    Given I have feature branches named "previous", "current", and "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill victim`
     Then I am still on the "current" branch
@@ -24,7 +24,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
 
   Scenario: git-prune-branches
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
       | previous | local    | previous_file | previous content |
@@ -46,7 +46,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
 
   Scenario: git-ship
-    Given I have branches named "previous", "current", and "feature"
+    Given I have feature branches named "previous", "current", and "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature_file | feature content |
@@ -57,7 +57,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
 
 
   Scenario: git-sync
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git sync`
     Then I am still on the "current" branch

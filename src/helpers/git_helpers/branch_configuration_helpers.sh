@@ -140,7 +140,7 @@ function echo_update_child_branches {
 # Makes sure that we know all the parent branches
 # Asks the user if necessary
 function ensure_knows_parent_branches {
-  local branches=$1 # space seperated list of branches
+  local branches=$1 # space separated list of branches
 
   local branch
   local child
@@ -152,6 +152,9 @@ function ensure_knows_parent_branches {
   for branch in $branches; do
     child=$branch
     if [ "$(knows_all_ancestor_branches "$child")" = true ]; then
+      continue
+    fi
+    if [ "$(is_perennial_branch "$child")" = true ]; then
       continue
     fi
 
@@ -259,7 +262,11 @@ function parent_branch {
 function store_parent_branch {
   local branch=$1
   local parent_branch=$2
-  git config "git-town-branch.$branch.parent" "$parent_branch"
+  if [ -n "$parent_branch" ]; then
+    git config "git-town-branch.$branch.parent" "$parent_branch"
+  else
+    delete_parent_entry "$branch"
+  fi
 }
 
 

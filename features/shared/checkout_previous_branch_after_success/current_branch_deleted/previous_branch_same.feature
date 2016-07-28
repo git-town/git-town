@@ -4,7 +4,7 @@ Feature: Git checkout history is preserved when deleting the current branch
 
 
   Scenario: git-kill
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill`
     Then I end up on the "main" branch
@@ -12,7 +12,7 @@ Feature: Git checkout history is preserved when deleting the current branch
 
 
   Scenario: git-prune-branches
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the "current" branch gets deleted on the remote
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
@@ -24,7 +24,7 @@ Feature: Git checkout history is preserved when deleting the current branch
 
 
   Scenario: git-ship
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | current | remote   | feature_file | feature content |

@@ -6,8 +6,7 @@ Feature: git ship: errors when trying to ship a perennial branch
 
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my perennial branches are configured as "qa" and "production"
+    Given I have perennial branches named "qa" and "production"
     And I am on the "production" branch
     When I run `git ship -m "feature done"`
 
