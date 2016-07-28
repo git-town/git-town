@@ -77,7 +77,7 @@ git town version
 >
 > ```bash
 > # Set the parent branch of "feature-a" to "feature-b"
-> git town parent-branch feature-a feature-b
+> git town set-parent-branch feature-a feature-b
 > ```
 
 * *version*
