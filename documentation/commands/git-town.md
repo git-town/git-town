@@ -21,12 +21,6 @@ git town version
 
 #### OPTIONS
 
-* *help*
-> Displays the help screen.
-
-* *version*
-> Displays the Git Town version.
-
 * *config*
 > Displays the current Git Town configuration.
 >
@@ -42,6 +36,12 @@ git town version
 > git town hack-push-flag false # Your newly-hacked branch will not be pushed upon creation.
 > ```
 
+* *help*
+> Displays the help screen.
+
+* *install-fish-autocompletion*
+> Installs the autocompletion definition for [Fish shell](http://fishshell.com)
+
 * *main-branch*
 > Displays the name of the main development branch.
 >
@@ -49,15 +49,7 @@ git town version
 > ```bash
 > # Set "master" as the main branch
 > git town main-branch master
-> ```
-
-* *parent-branch*
-> Update the parent branch of a feature branch
->
-> ```bash
-> # Set the parent branch of "feature-a" as "feature-b"
-> git town parent-branch feature-a feature-b
-> ```
+> ````
 
 * *perennial-branches*
 > Displays the names of all perennial branches.
@@ -80,5 +72,13 @@ git town version
 > git town pull-branch-strategy merge
 > ```
 
-* *install-fish-autocompletion*
-> Installs the autocompletion definition for [Fish shell](http://fishshell.com)
+* *set-parent-branch*
+> Update the parent branch of a feature branch
+>
+> ```bash
+> # Set the parent branch of "feature-a" to "feature-b"
+> git town parent-branch feature-a feature-b
+> ``
+
+* *version*
+> Displays the Git Town version.

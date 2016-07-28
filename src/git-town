@@ -44,14 +44,18 @@ if [ "$1" == "config" ]; then
   ensure_git_repository
   shift
   run_config_operation "$@"
+elif [ "$1" == "hack-push-flag" ]; then
+  ensure_git_repository
+  shift
+  show_or_update_hack_push_flag "$@"
+elif [ "$1" == "help" ] || [ -z "$1" ]; then
+  show_help
+elif [ "$1" == "install-fish-autocompletion" ]; then
+  install_fish_autocompletion
 elif [ "$1" == "main-branch" ]; then
   ensure_git_repository
   shift
   show_or_update_main_branch "$@"
-elif [ "$1" == "parent-branch" ]; then
-  ensure_git_repository
-  shift
-  update_parent_branch "$@"
 elif [ "$1" == "perennial-branches" ]; then
   ensure_git_repository
   shift
@@ -60,16 +64,12 @@ elif [ "$1" == "pull-branch-strategy" ]; then
   ensure_git_repository
   shift
   show_or_update_pull_branch_strategy "$@"
-elif [ "$1" == "hack-push-flag" ]; then
+elif [ "$1" == "set-parent-branch" ]; then
   ensure_git_repository
   shift
-  show_or_update_hack_push_flag "$@"
+  update_parent_branch "$@"
 elif [ "$1" == "version" ]; then
   show_version
-elif [ "$1" == "install-fish-autocompletion" ]; then
-  install_fish_autocompletion
-elif [ -z "$1" ] || [ "$1" == "help" ]; then
-  show_help
 elif [ -n "$1" ]; then
   echo_inline_error "unsupported subcommand '$1'"
   echo_inline_usage "git town"
