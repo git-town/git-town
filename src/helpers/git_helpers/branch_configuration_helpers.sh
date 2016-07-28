@@ -154,6 +154,9 @@ function ensure_knows_parent_branches {
     if [ "$(knows_all_ancestor_branches "$child")" = true ]; then
       continue
     fi
+    if [ "$(is_perennial_branch "$child")" = true ]; then
+      continue
+    fi
 
     while [ "$child" != "$MAIN_BRANCH_NAME" ]; do
       if [ "$(knows_parent_branch "$child")" = true ]; then
@@ -259,7 +262,11 @@ function parent_branch {
 function store_parent_branch {
   local branch=$1
   local parent_branch=$2
-  git config "git-town-branch.$branch.parent" "$parent_branch"
+  if [ -n "$parent_branch" ]; then
+    git config "git-town-branch.$branch.parent" "$parent_branch"
+  else
+    delete_parent_entry "$branch"
+  fi
 }
 
 

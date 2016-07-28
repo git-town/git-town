@@ -4,7 +4,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
 
   Scenario: git-kill
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git kill previous`
     Then I am still on the "current" branch
@@ -12,7 +12,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
 
   Scenario: git-prune-branches
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the "previous" branch gets deleted on the remote
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
@@ -24,7 +24,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
 
   Scenario: git-ship
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME    | FILE CONTENT    |
       | previous | remote   | feature_file | feature content |

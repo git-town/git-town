@@ -6,8 +6,7 @@ Feature: git sync: syncing the current perennial branch syncs the tags
 
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my perennial branches are configured as "qa" and "production"
+    Given I have perennial branches named "qa" and "production"
     And I am on the "production" branch
     And I have the following tags
       | NAME       | LOCATION |

@@ -6,8 +6,7 @@ Feature: git rename-branch: renaming a perennial branch with a tracking branch
 
 
   Background:
-    Given I have branches named "qa" and "production"
-    And my perennial branches are configured as "qa" and "production"
+    Given I have perennial branches named "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |

@@ -6,8 +6,7 @@ Feature: git kill: errors when trying to kill a perennial branch
 
 
   Background:
-    Given I have a branch named "qa"
-    And my perennial branches are configured as "qa"
+    Given I have a perennial branch named "qa"
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE   |
       | qa     | local and remote | qa commit |
@@ -26,4 +25,3 @@ Feature: git kill: errors when trying to kill a perennial branch
       | local      | main, qa |
       | remote     | main, qa |
     And I am left with my original commits
-

@@ -4,7 +4,7 @@ Feature: renaming the previous branch makes the main branch the new previous bra
 
 
   Scenario: git-rename-branch
-    Given I have branches named "previous" and "current"
+    Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git rename-branch previous previous-renamed`
     Then I end up on the "previous-renamed" branch
