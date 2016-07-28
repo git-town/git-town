@@ -49,7 +49,7 @@ git town version
 > ```bash
 > # Set "master" as the main branch
 > git town main-branch master
-> ````
+> ```
 
 * *perennial-branches*
 > Displays the names of all perennial branches.
