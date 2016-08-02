@@ -12,9 +12,9 @@ git town hack-push-flag [(true | false)]
 git town help
 git town install-fish-autocompletion
 git town main-branch [<branch_name>]
-git town parent-branch <child_branch_name> <parent_branch_name>
 git town perennial-branches [(--add | --remove) <branch_name>]
 git town pull-branch-strategy [(rebase | merge)]
+git town set-parent-branch <child_branch_name> <parent_branch_name>
 git town version
 ```
 
