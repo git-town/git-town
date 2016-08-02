@@ -1,6 +1,6 @@
 Feature: update the parent of a nested feature branch
 
-  As a user with a nested feature branch shipped whose parent was shipped from another machine
+  As a user with a nested feature branch whose parent was shipped from another machine
   I want to be able to update the parent branch for my nested feature branch
   So that I can use it without messing with the git configuration directly
 
