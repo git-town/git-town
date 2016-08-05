@@ -1,5 +1,7 @@
-gittown (0.10.1) UNRELEASED; urgency=medium
+gittown (1.0.0) RELEASED; urgency=medium
 
   * Initial release.
 
- -- allonsy <linuxbash8@gmail.com>  Tue, 08 Sep 2015 18:58:41 +0000
+  * See https://github.com/Originate/git-town/releases for a complete changelog
+
+ -- allonsy <alec.snyder@originate.com>  Fri, 05 Aug 2016 18:58:41 +0000
