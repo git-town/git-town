@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 1.0.0 (2016-08-05)
+
+#### New Features
+* `git town set-parent-branch <child_branch_name> <parent_branch_name>`: to update a parent branch
+  ([#729](https://github.com/Originate/git-town/issues/729))
+
+#### Bug Fixes
+* `git sync --all`: don't prompt for parent of perennial branches
+  ([#727](https://github.com/Originate/git-town/issues/727))
+
 ## 0.10.1 (2016-06-23)
 
 #### New Features
