@@ -5,8 +5,9 @@
 
 function contains_string {
   local haystack=$1
-  local needle=$2
-  if [[ $haystack =~ .*$needle.* ]]; then
+  # Note: cannot assign $2 to a variable here
+  #       because ShellCheck isn't smart enough to recognize the variable in the regex
+  if [[ $haystack =~ .*$2.* ]]; then
     echo true
   else
     echo false
