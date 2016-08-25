@@ -10,7 +10,11 @@
 # Loads the code-hosting driver that works with the given hostname
 function activate_driver_for_code_hosting {
   local origin_hostname="$(remote_domain)"
-  if [ "$(contains_string "$origin_hostname" github)" == true ]; then
+  if [ "$origin_hostname" == 'github.com' ]; then
+    activate_driver 'code_hosting' 'github'
+  elif [ "$origin_hostname" == 'bitbucket.org' ]; then
+    activate_driver 'code_hosting' 'bitbucket'
+  elif [ "$(contains_string "$origin_hostname" github)" == true ]; then
     activate_driver 'code_hosting' 'github'
   elif [ "$(contains_string "$origin_hostname" bitbucket)" == true ]; then
     activate_driver 'code_hosting' 'bitbucket'
