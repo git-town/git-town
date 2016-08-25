@@ -24,6 +24,7 @@ Feature: git-new-pull-request when origin is on GitHub
       | https://github.com/Originate/git-town                 | Originate/git-town             |
       | git@github.com:Originate/git-town.git                 | Originate/git-town             |
       | git@github.com:Originate/git-town                     | Originate/git-town             |
+      | git@github-as-account1:Originate/git-town.git         | Originate/git-town             |
       | http://github.com/Originate/originate.github.com.git  | Originate/originate.github.com |
       | http://github.com/Originate/originate.github.com      | Originate/originate.github.com |
       | https://github.com/Originate/originate.github.com.git | Originate/originate.github.com |
