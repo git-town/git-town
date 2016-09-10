@@ -18,7 +18,7 @@ Feature: git ship: resolving conflicts between the supplied feature branch and t
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
-      |               | git stash -u                       |
+      |               | git stash -a                       |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
       |               | git push                           |

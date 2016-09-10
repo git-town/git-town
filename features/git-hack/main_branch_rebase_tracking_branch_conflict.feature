@@ -20,7 +20,7 @@ Feature: git hack: resolving conflicts between main branch and its tracking bran
     Then it runs the commands
       | BRANCH           | COMMAND                |
       | existing-feature | git fetch --prune      |
-      |                  | git stash -u           |
+      |                  | git stash -a           |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
     And I get the error

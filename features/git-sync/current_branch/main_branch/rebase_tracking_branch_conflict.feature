@@ -19,7 +19,7 @@ Feature: git sync: resolving conflicts between the main branch and its tracking 
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      |        | git stash -u           |
+      |        | git stash -a           |
       |        | git rebase origin/main |
     And I get the error
       """

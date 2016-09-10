@@ -16,7 +16,7 @@ Feature: git sync --all: handling rebase conflicts between main branch and its t
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      |        | git stash -u           |
+      |        | git stash -a           |
       |        | git rebase origin/main |
     And I get the error
       """

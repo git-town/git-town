@@ -20,7 +20,7 @@ Feature: git hack: starting a new feature from a feature branch (with remote rep
     Then it runs the commands
       | BRANCH           | COMMAND                          |
       | existing-feature | git fetch --prune                |
-      |                  | git stash -u                     |
+      |                  | git stash -a                     |
       |                  | git checkout main                |
       | main             | git rebase origin/main           |
       |                  | git checkout -b new-feature main |

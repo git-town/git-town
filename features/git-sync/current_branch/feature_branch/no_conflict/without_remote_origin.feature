@@ -18,7 +18,7 @@ Feature: git sync: syncing the current feature branch (without a tracking branch
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
-      | feature | git stash -u             |
+      | feature | git stash -a             |
       |         | git merge --no-edit main |
       |         | git stash pop            |
     And I am still on the "feature" branch

@@ -19,7 +19,7 @@ Feature: git hack: starting a new feature from a subfolder on the main branch (w
       | BRANCH      | COMMAND                           |
       | main        | git fetch --prune                 |
       | <none>      | cd <%= git_root_folder %>         |
-      | main        | git stash -u                      |
+      | main        | git stash -a                      |
       |             | git rebase origin/main            |
       |             | git push                          |
       |             | git checkout -b new-feature main  |

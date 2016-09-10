@@ -18,7 +18,7 @@ Feature: git sync --all: handling rebase conflicts between perennial branch and 
     And it runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
-      |            | git stash -u                 |
+      |            | git stash -a                 |
       |            | git rebase origin/main       |
       |            | git checkout production      |
       | production | git rebase origin/production |

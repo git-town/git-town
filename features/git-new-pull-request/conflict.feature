@@ -23,7 +23,7 @@ Feature: Syncing before creating the pull request
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      |         | git stash -u                       |
+      |         | git stash -a                       |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |

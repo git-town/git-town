@@ -18,7 +18,7 @@ Feature: git hack: starting a new feature from the main branch (without remote r
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                          |
-      | main        | git stash -u                     |
+      | main        | git stash -a                     |
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch

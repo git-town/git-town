@@ -17,7 +17,7 @@ Feature: git ship: shipping the supplied feature branch without a remote origin
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                      |
-      | other-feature | git stash -u                 |
+      | other-feature | git stash -a                 |
       |               | git checkout feature         |
       | feature       | git merge --no-edit main     |
       |               | git checkout main            |

@@ -20,7 +20,7 @@ Feature: git sync: resolving conflicts between the current perennial branch and 
     Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      |        | git stash -u         |
+      |        | git stash -a         |
       |        | git rebase origin/qa |
     And I get the error
       """

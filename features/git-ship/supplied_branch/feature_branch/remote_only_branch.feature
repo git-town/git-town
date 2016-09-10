@@ -20,7 +20,7 @@ Feature: git ship: shipping the supplied feature branch with a tracking branch
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
-      |               | git stash -u                       |
+      |               | git stash -a                       |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
       |               | git checkout feature               |

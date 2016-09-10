@@ -20,7 +20,7 @@ Feature: git sync: syncing the current perennial branch (without remote repo)
   Scenario: no conflict
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | qa     | git stash -u  |
+      | qa     | git stash -a  |
       |        | git stash pop |
     And I am still on the "qa" branch
     And I still have my uncommitted file

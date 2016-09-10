@@ -21,7 +21,7 @@ Feature: git hack: starting a new feature from a new subfolder on the main branc
       | BRANCH      | COMMAND                          |
       | feature     | git fetch --prune                |
       | <none>      | cd <%= git_root_folder %>        |
-      | feature     | git stash -u                     |
+      | feature     | git stash -a                     |
       |             | git checkout main                |
       | main        | git rebase origin/main           |
       |             | git checkout -b new-feature main |

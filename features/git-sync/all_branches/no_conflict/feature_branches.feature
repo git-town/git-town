@@ -16,7 +16,7 @@ Feature: git sync --all: syncs all feature branches
     Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git fetch --prune                    |
-      |           | git stash -u                         |
+      |           | git stash -a                         |
       |           | git checkout main                    |
       | main      | git rebase origin/main               |
       |           | git checkout feature-1               |

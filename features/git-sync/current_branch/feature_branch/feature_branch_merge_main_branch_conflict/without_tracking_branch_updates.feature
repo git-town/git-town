@@ -15,7 +15,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      |         | git stash -u                       |
+      |         | git stash -a                       |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git push                           |

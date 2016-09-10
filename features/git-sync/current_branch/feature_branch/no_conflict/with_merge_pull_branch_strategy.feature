@@ -23,7 +23,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      |         | git stash -u                       |
+      |         | git stash -a                       |
       |         | git checkout main                  |
       | main    | git merge --no-edit origin/main    |
       |         | git push                           |

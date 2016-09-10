@@ -21,7 +21,7 @@ Feature: Forking off a remote branch
     Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | main           | git fetch --prune                            |
-      |                | git stash -u                                 |
+      |                | git stash -a                                 |
       |                | git rebase origin/main                       |
       |                | git checkout parent-feature                  |
       | parent-feature | git merge --no-edit origin/parent-feature    |
@@ -52,7 +52,7 @@ Feature: Forking off a remote branch
     When I run `git hack --undo`
     Then it runs the commands
       | BRANCH         | COMMAND                        |
-      | child-feature  | git stash -u                   |
+      | child-feature  | git stash -a                   |
       |                | git push origin :child-feature |
       |                | git checkout parent-feature    |
       | parent-feature | git branch -d child-feature    |

@@ -28,7 +28,7 @@ Feature: git rename-branch: renaming a perennial branch with a tracking branch
     Then it runs the commands
       | BRANCH             | COMMAND                                       |
       | production         | git fetch --prune                             |
-      |                    | git stash -u                                  |
+      |                    | git stash -a                                  |
       |                    | git checkout -b renamed-production production |
       | renamed-production | git push -u origin renamed-production         |
       |                    | git push origin :production                   |
@@ -49,7 +49,7 @@ Feature: git rename-branch: renaming a perennial branch with a tracking branch
     When I run `git rename-branch --undo`
     Then it runs the commands
         | BRANCH             | COMMAND                                              |
-        | renamed-production | git stash -u                                         |
+        | renamed-production | git stash -a                                         |
         |                    | git branch production <%= sha 'production commit' %> |
         |                    | git push -u origin production                        |
         |                    | git push origin :renamed-production                  |

@@ -17,7 +17,7 @@ Feature: git sync --all: handling merge conflicts between feature branch and mai
     Then it runs the commands
       | BRANCH    | COMMAND                              |
       | main      | git fetch --prune                    |
-      |           | git stash -u                         |
+      |           | git stash -a                         |
       |           | git rebase origin/main               |
       |           | git checkout feature-1               |
       | feature-1 | git merge --no-edit origin/feature-1 |

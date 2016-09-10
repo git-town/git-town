@@ -21,7 +21,7 @@ Feature: git sync: syncing the current perennial branch
     Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      |        | git stash -u         |
+      |        | git stash -a         |
       |        | git rebase origin/qa |
       |        | git push             |
       |        | git push --tags      |

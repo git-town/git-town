@@ -15,7 +15,7 @@ Feature: git sync: resolving conflicts between the current feature branch and th
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
-      | feature | git stash -u             |
+      | feature | git stash -a             |
       |         | git merge --no-edit main |
     And I get the error
       """

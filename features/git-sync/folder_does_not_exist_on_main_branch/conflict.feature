@@ -22,7 +22,7 @@ Feature: git sync: syncing inside a folder that doesn't exist on the main branch
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
       | <none>          | cd <%= git_root_folder %>                  |
-      | current-feature | git stash -u                               |
+      | current-feature | git stash -a                               |
       |                 | git checkout main                          |
       | main            | git rebase origin/main                     |
       |                 | git checkout current-feature               |
