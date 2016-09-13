@@ -1,12 +1,12 @@
 #### NAME
 
-git-repo - view the repository homepage
+git-town-repo - view the repository homepage
 
 
 #### SYNOPSIS
 
 ```
-git repo
+git town-repo
 ```
 
 

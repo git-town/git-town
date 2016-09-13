@@ -1,13 +1,13 @@
 #### NAME
 
-git-hack - create a new feature branch
+git-town-hack - create a new feature branch
 
 
 #### SYNOPSIS
 
 ```
-git hack <branch_name> [<parent_branch_name>]
-git hack (--abort | --continue)
+git town-hack <branch_name> [<parent_branch_name>]
+git town-hack (--abort | --continue)
 ```
 
 

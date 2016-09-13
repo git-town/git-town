@@ -1,12 +1,12 @@
 #### NAME
 
-git-prune-branches - delete merged branches
+git-town-prune-branches - delete merged branches
 
 
 #### SYNOPSIS
 
 ```
-git prune-branches
+git town-prune-branches
 ```
 
 
@@ -14,4 +14,3 @@ git prune-branches
 
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.
-

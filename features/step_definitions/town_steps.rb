@@ -43,6 +43,11 @@ Given(/I haven't configured Git Town yet/) do
 end
 
 
+Given(/^I don't have Git Town aliased$/) do
+  run 'git-town alias false'
+end
+
+
 
 
 Then(/^I don't have an old configuration file anymore$/) do

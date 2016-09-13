@@ -1,12 +1,12 @@
 #### NAME
 
-git-new-pull-request - create a new pull request
+git-town-new-pull-request - create a new pull request
 
 
 #### SYNOPSIS
 
 ```
-git new-pull-request
+git town-new-pull-request
 ```
 
 
@@ -21,4 +21,3 @@ against the immediate parent branch.
 
 Supported only for repositories hosted on [GitHub](http://github.com/) and
 [Bitbucket](https://bitbucket.org/).
-

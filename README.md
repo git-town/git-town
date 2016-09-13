@@ -21,18 +21,18 @@ Git Town provides these additional Git commands:
 
 __Development Workflow__
 
-* [git hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
-* [git sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
-* [git new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
-* [git ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
+* [git town-hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
+* [git town-sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
+* [git town-new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
+* [git town-ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
 
 
 __Repository Maintenance__
 
-* [git kill](/documentation/commands/git-kill.md) - removes a feature branch
-* [git prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
-* [git rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
-* [git repo](/documentation/commands/git-repo.md) - view the repository homepage
+* [git town-kill](/documentation/commands/git-kill.md) - removes a feature branch
+* [git town-prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
+* [git town-rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
+* [git town-repo](/documentation/commands/git-repo.md) - view the repository homepage
 
 
 __Configuration and Help__
@@ -45,6 +45,17 @@ __Configuration and Help__
 Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
 Check out our [installation instructions](http://www.git-town.com/install.html) for more details.
 
+### Aliasing
+
+Each command can be aliased individually to remove the `town-` prefix with:
+```
+git config --global alias.hack town-hack
+```
+
+As a convenience, you can add and remove aliases for all git town commands with:
+```
+git town alias <true | false>
+```
 
 ## Configuration
 
