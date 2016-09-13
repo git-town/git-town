@@ -37,3 +37,12 @@ Feature: git town: alias
     Given I run `git config --global alias.hack checkout`
     When I run `git town alias false`
     Then it runs no commands
+
+
+  Scenario: invalid value
+    When I run `git town alias other`
+    Then I see
+      """
+      Invalid alias boolean: 'other'.
+      Valid alias booleans are 'true' and 'false'.
+      """
