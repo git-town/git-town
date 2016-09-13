@@ -52,7 +52,7 @@ Each command can be aliased individually to remove the `town-` prefix with:
 git config --global alias.hack town-hack
 ```
 
-As a convenience, you can add and remove aliases for all git town commands with:
+As a convenience, you can add or remove global aliases for all `git-town` commands with:
 ```
 git town alias <true | false>
 ```
