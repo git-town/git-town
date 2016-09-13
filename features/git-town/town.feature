@@ -6,6 +6,7 @@ Feature: Show correct git town usage
       """
       error: unsupported subcommand 'invalidcommand'
       usage: git town
+         or: git town alias (true | false)
          or: git town config [--reset | --setup]
          or: git town hack-push-flag [(true | false)]
          or: git town help

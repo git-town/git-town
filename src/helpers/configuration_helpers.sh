@@ -30,12 +30,12 @@ function add_perennial_branch {
 function add_or_remove_alias {
   local command=$1
   local boolean=$2
-  local previousAlias="$(git config --global alias.$command)"
+  local previousAlias="$(git config --global "alias.$command")"
 
   if [ "$boolean" = true ]; then
     run_command "git config --global alias.$command town-$command"
   else
-    local previousAlias="$(git config --global alias.$command)"
+    local previousAlias="$(git config --global "alias.$command")"
     if [ "$previousAlias" = "town-$command" ]; then
       run_command "git config --global --unset alias.$command"
     fi

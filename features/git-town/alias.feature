@@ -1,6 +1,5 @@
 Feature: git town: alias
 
-
   Scenario: add alias
     When I run `git town alias true`
     Then it runs the commands

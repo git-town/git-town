@@ -76,7 +76,7 @@ elif [ "$1" == "version" ]; then
 elif [ -n "$1" ]; then
   echo_inline_error "unsupported subcommand '$1'"
   echo_inline_usage "git town"
-  echo_inline_usage_or "git town alias [true | false]"
+  echo_inline_usage_or "git town alias (true | false)"
   echo_inline_usage_or "git town config [--reset | --setup]"
   echo_inline_usage_or "git town hack-push-flag [(true | false)]"
   echo_inline_usage_or "git town help"
