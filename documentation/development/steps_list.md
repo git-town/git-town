@@ -2,7 +2,7 @@
 
 _The following refers to all commands except `git-new-pull-request`, `git-repo` and `git-town`._
 
-Each Git Town command begins by inspecting the current state of the Git  repository
+Each Git Town command begins by inspecting the current state of the Git repository
 (which branch you are on, whether you have open changes).
 If there are no errors, it generates a list of steps to run.
 Each step is a bash function that wraps an individual Git command.

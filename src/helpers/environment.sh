@@ -11,7 +11,7 @@ function is_git_repository {
 
 function ensure_git_repository {
   if [ "$(is_git_repository)" == false ]; then
-    echo_inline_error "This is not a Git  repository."
+    echo_inline_error "This is not a Git repository."
     exit_with_error
   fi
 }
