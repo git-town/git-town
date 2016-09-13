@@ -46,8 +46,13 @@ function add_or_remove_alias {
 # Add or remove the default alias for all git town commands
 function add_or_remove_aliases {
   local boolean=$1
-  declare -a commands=('hack' 'kill' 'new-pull-request' 'prune-branches' 'rename-branch' 'repo' 'ship' 'sync')
 
+  if [ "$boolean" != 'true' ] && [ "$boolean" != 'false' ]; then
+    echo "Invalid alias boolean: '$boolean'."
+    echo "Valid alias booleans are 'true' and 'false'."
+  fi
+
+  declare -a commands=('hack' 'kill' 'new-pull-request' 'prune-branches' 'rename-branch' 'repo' 'ship' 'sync')
   for command in "${commands[@]}"; do
     add_or_remove_alias "$command" "$boolean"
   done
