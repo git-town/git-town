@@ -11,6 +11,6 @@ Feature: git town: show the current Git Town version
 
 
   Scenario: Running outside of a Git repository
-    Given I'm currently not in a Git repository
+    Given I'm currently not in a git repository
     When I run `git town version`
     Then I see "Git Town 1.0.0"

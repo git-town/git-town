@@ -17,7 +17,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     And my repo is configured with no perennial branches
 
     Examples:
-      | COMMAND              |
+      | COMMAND                   |
       | git town-hack             |
       | git town-kill             |
       | git town-new-pull-request |
