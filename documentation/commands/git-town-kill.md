@@ -28,5 +28,5 @@ Does not delete perennial branches nor the main branch.
     If not provided, uses the current branch.
 
 --undo
-    Undo the previous `git kill` operation.
+    Undo the previous `git town-kill` operation.
 ```

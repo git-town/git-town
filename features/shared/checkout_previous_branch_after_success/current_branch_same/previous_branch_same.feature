@@ -8,7 +8,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
   Scenario: git-kill
     Given I have feature branches named "previous", "current", and "victim"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git kill victim`
+    When I run `git town-kill victim`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 
@@ -18,7 +18,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
     And I have "open" installed
     And my remote origin is "https://github.com/Originate/git-town.git"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git new-pull-request`
+    When I run `git town-new-pull-request`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 
@@ -30,7 +30,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
       | previous | local    | previous_file | previous content |
       | current  | local    | current_file  | current content  |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git prune-branches`
+    When I run `git town-prune-branches`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 
@@ -40,7 +40,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
     And I have "open" installed
     And my remote origin is "https://github.com/Originate/git-town.git"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git repo`
+    When I run `git town-repo`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 
@@ -51,7 +51,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git ship feature -m "feature done"`
+    When I run `git town-ship feature -m "feature done"`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 
@@ -59,6 +59,6 @@ Feature: Git checkout history is preserved when the current and previous branch 
   Scenario: git-sync
     Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git sync`
+    When I run `git town-sync`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"

@@ -8,6 +8,6 @@ Feature: deleting the current and previous branches makes the main branch the ne
     And the "previous" branch gets deleted on the remote
     And the "current" branch gets deleted on the remote
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git prune-branches`
+    When I run `git town-prune-branches`
     Then I end up on the "main" branch
     And my previous Git branch is now "main"

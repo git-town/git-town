@@ -35,7 +35,7 @@ function preconditions {
   fi
 
   if [ "$force_rename" = false ]; then
-    ensure_is_feature_branch "$target_branch_name" "Run 'git rename-branch $target_branch_name $destination_branch_name -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+    ensure_is_feature_branch "$target_branch_name" "Run 'git town-rename-branch $target_branch_name $destination_branch_name -f' to force the rename, then reconfigure git-town on any other clones of this repo."
   fi
 
   if [ "$target_branch_name" == "$destination_branch_name" ]; then
@@ -52,7 +52,7 @@ function preconditions {
 
       if [ "$local_branch_sha" != "$remote_branch_sha" ]; then
         echo_error_header
-        echo_error "The branch is not in sync with its tracking branch. Run 'git sync $target_branch_name' to sync the branch.'"
+        echo_error "The branch is not in sync with its tracking branch. Run 'git town-sync $target_branch_name' to sync the branch.'"
         exit_with_error newline
       fi
     fi
