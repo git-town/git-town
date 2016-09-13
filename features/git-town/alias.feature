@@ -1,8 +1,5 @@
 Feature: git town: alias
 
-  Background:
-    Given I don't have Git Town aliased
-
 
   Scenario: add alias
     When I run `git town alias true`

@@ -26,8 +26,6 @@ end
 
 
 def initialize_environment
-  run 'git-town alias true'
-
   # Create origin repo and set "main" as default branch
   create_repository :origin do
     run 'git symbolic-ref HEAD refs/heads/main'
