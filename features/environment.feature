@@ -1,11 +1,11 @@
 Feature: Git Town performs correctly depending on the environment
 
-  Scenario Outline: Git Town commands run outside of a git town-repository
-    Given I'm currently not in a git town-repository
+  Scenario Outline: Git Town commands run outside of a Git  repository
+    Given I'm currently not in a Git  repository
     When I run `<COMMAND>`
     Then I get the error
       """
-      error: This is not a git town-repository.
+      error: This is not a Git  repository.
       """
 
     Examples:

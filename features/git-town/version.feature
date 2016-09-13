@@ -10,7 +10,7 @@ Feature: git town: show the current Git Town version
     Then I see "Git Town 1.0.0"
 
 
-  Scenario: Running outside of a git town-repository
-    Given I'm currently not in a git town-repository
+  Scenario: Running outside of a Git  repository
+    Given I'm currently not in a Git  repository
     When I run `git town version`
     Then I see "Git Town 1.0.0"
