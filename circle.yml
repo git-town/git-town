@@ -5,18 +5,12 @@ machine:
     # but 8 processors yields the fastest results
     PARALLEL_TEST_PROCESSORS: 8
 
-    PATH: $HOME/.cabal/bin/:$PATH
-
-
 dependencies:
 
-  # Cache ShellCheck for subsequent builds
-  cache_directories:
-    - "~/.cabal"
-
   post:
-    - bin/circleci-install-shellcheck
-
+    - "sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe'"
+    - "sudo apt-get update"
+    - "sudo apt-get install shellcheck"
 
 notify:
   webhooks:
