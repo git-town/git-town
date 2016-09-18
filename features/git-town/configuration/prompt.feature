@@ -17,11 +17,11 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     And my repo is configured with no perennial branches
 
     Examples:
-      | COMMAND              |
-      | git hack             |
-      | git kill             |
-      | git new-pull-request |
-      | git prune-branches   |
-      | git repo             |
-      | git ship             |
-      | git sync             |
+      | COMMAND                   |
+      | git town-hack             |
+      | git town-kill             |
+      | git town-new-pull-request |
+      | git town-prune-branches   |
+      | git town-repo             |
+      | git town-ship             |
+      | git town-sync             |

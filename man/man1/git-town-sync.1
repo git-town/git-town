@@ -1,0 +1,50 @@
+.TH "GIT-TOWN-SYNC" "1" "08/05/2016" "Git Town 1\&.0\&.0" "Git Town Manual"
+
+.SH "NAME"
+git town-sync \- update the current branch with all relevant changes
+
+
+.SH "SYNOPSIS"
+\fIgit town-sync\fR [--all]
+.br
+\fIgit town-sync\fR (--abort | --continue | --skip)
+
+
+.SH "DESCRIPTION"
+Synchronizes the current branch with the rest of the world.
+
+.PP
+When run on a feature branch
+.br
+* syncs all ancestor branches
+.br
+* pulls updates for the current branch
+.br
+* merges the parent branch into the current branch
+.br
+* pushes the current branch
+
+.PP
+When run on the main branch or a perennial branch
+.br
+* pulls and pushes updates for the current branch
+.br
+* pushes tags
+
+.PP
+Additionally, when there is a remote upstream,
+.br
+the main branch is synced with its upstream counterpart.
+
+.SH "OPTIONS"
+.IP "--all" 4
+Syncs all local branches
+
+.IP "--abort" 4
+Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.
+
+.IP "--skip" 4
+Continue the operation by skipping the sync of the current branch.

@@ -12,7 +12,7 @@ Since we are developing in feature branches, you now need to
 * update your master branch to the latest version on GitHub
 * cut a new feature branch from the master branch
 
-Running `git hack reset-passwords` achieves all this in a single command.
+Running `git town-hack reset-passwords` achieves all this in a single command.
 This gives you the best possible start for building the new feature,
 on top of the latest version of the code base.
 
@@ -34,7 +34,7 @@ Altogether this simple operation requires between 5 and 7 individual Git command
 That's a lot of typing.
 And this can (should) happen several times per day, for each of your feature branches!
 
-`git sync` runs this whole process with a single command and brings you back to exactly where you started.
+`git town-sync` runs this whole process with a single command and brings you back to exactly where you started.
 
 With Bob's bug fixes and the new UI from Carol available in your branch,
 any more modification you make go right on top of their work.
@@ -45,7 +45,7 @@ any more modification you make go right on top of their work.
 Once your feature is ready for review, it's time to open a pull request on GitHub.
 You fire up a browser, go to GitHub, navigate to your repository and finally end up on a new pull request form.
 
-`git new-pull-request` lets you jump straight from the terminal to filling in the details of your pull request in your browser.
+`git town-new-pull-request` lets you jump straight from the terminal to filling in the details of your pull request in your browser.
 Your current branch is already selected,
 so all you need to do is fill out the title and description,
 tag the reviewers, and submit.
@@ -69,7 +69,7 @@ To do this safely, i.e. without breaking the master branch, you want to
 
 This requires between 10-15 individual Git commands.
 Git Town provides a single, convenient command for this as well:
-`git ship reset-passwords`.
+`git town-ship reset-passwords`.
 
 After running this, your feature is now safely merged as a single additional commit on the _master_ branch,
 the old feature branch is cleaned up everywhere,

@@ -104,6 +104,7 @@ end
 
 
 at_exit do
+  run 'git-town alias false'
   FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end
