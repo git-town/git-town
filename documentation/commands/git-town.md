@@ -7,6 +7,7 @@ git-town - general Git Town help, view and change Git Town configuration
 
 ```
 git town
+git town alias [true | false]
 git town config [--reset | --setup]
 git town hack-push-flag [(true | false)]
 git town help
@@ -20,6 +21,14 @@ git town version
 
 
 #### OPTIONS
+
+* *alias*
+> Add or remove default global aliases to remove the 'town-' prefix from all commands
+>
+> ```bash
+> git town alias true  # Add global aliases (skips commands which would overwrite existing aliases)
+> git town alias false # Remove global aliases
+> ```
 
 * *config*
 > Displays the current Git Town configuration.
