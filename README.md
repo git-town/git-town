@@ -21,18 +21,18 @@ Git Town provides these additional Git commands:
 
 __Development Workflow__
 
-* [git town-hack](/documentation/commands/git-hack.md) - cuts a new up-to-date feature branch off the main branch
-* [git town-sync](/documentation/commands/git-sync.md) - updates the current branch with all ongoing changes
-* [git town-new-pull-request](/documentation/commands/git-new-pull-request.md) - create a new pull request
-* [git town-ship](/documentation/commands/git-ship.md) - delivers a completed feature branch and removes it
+* [git town-hack](/documentation/commands/git-town-hack.md) - cuts a new up-to-date feature branch off the main branch
+* [git town-sync](/documentation/commands/git-town-sync.md) - updates the current branch with all ongoing changes
+* [git town-new-pull-request](/documentation/commands/git-town-new-pull-request.md) - create a new pull request
+* [git town-ship](/documentation/commands/git-town-ship.md) - delivers a completed feature branch and removes it
 
 
 __Repository Maintenance__
 
-* [git town-kill](/documentation/commands/git-kill.md) - removes a feature branch
-* [git town-prune-branches](/documentation/commands/git-prune-branches.md) - delete all merged branches
-* [git town-rename-branch](/documentation/commands/git-rename-branch.md) - rename a branch
-* [git town-repo](/documentation/commands/git-repo.md) - view the repository homepage
+* [git town-kill](/documentation/commands/git-town-kill.md) - removes a feature branch
+* [git town-prune-branches](/documentation/commands/git-town-prune-branches.md) - delete all merged branches
+* [git town-rename-branch](/documentation/commands/git-town-rename-branch.md) - rename a branch
+* [git town-repo](/documentation/commands/git-town-repo.md) - view the repository homepage
 
 
 __Configuration and Help__
