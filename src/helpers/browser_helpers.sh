@@ -7,8 +7,7 @@
 function open_browser {
   local url=$1
 
-  if [[ "$(uname)" == *"MINGW"* ]]
-  then
+  if [[ "$(uname)" == *"MINGW"* ]]; then
       eval "start $url"
       return
   fi
