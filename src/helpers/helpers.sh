@@ -3,7 +3,7 @@
 
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-export PROGRAM="$(echo "$0" | grep -o "[^/]*$")"
+export PROGRAM="$(echo "$0" | sed 's/\\/\//g' | sed 's/://g'| grep -o "[^/]*$")"
 export GIT_COMMAND="${PROGRAM/-/ }"
 
 source "$current_dir/git_helpers/author_helpers.sh"
@@ -40,7 +40,7 @@ source "$current_dir/environment.sh" "$@"
 source "$current_dir/configuration.sh" "$@"
 
 if [ "$(is_git_repository)" == true ]; then
-  temp_filename_suffix="$(git_root | tr '/' '_')"
+  temp_filename_suffix="$(git_root | tr '/' '_' | sed 's/://g')"
   export HAS_REMOTE=$(has_remote_url)
   export IN_SUB_FOLDER=$(is_in_git_sub_directory)
   export INITIAL_BRANCH_NAME=$(get_current_branch_name)
