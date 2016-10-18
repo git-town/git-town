@@ -1,6 +1,10 @@
 AllCops:
   TargetRubyVersion: 2.2
 
+  DisplayCopNames: true
+
+  DisplayStyleGuide: true
+
 
 Metrics/AbcSize:
   Max: 19
