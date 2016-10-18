@@ -23,6 +23,10 @@ Style/DotPosition:
   Enabled: true
 
 
+Style/EmptyCaseCondition:
+  Enabled: false
+
+
 Style/EmptyLines:
   Enabled: false
 
@@ -49,3 +53,7 @@ Style/SignalException:
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+
+
+Style/TernaryParentheses:
+  Enabled: false
