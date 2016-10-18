@@ -35,6 +35,10 @@ Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
 
 
+Style/GuardClause:
+  Enabled: false
+
+
 Style/MethodDefParentheses:
   EnforcedStyle: require_no_parentheses
 
