@@ -23,12 +23,20 @@ Style/DotPosition:
   Enabled: true
 
 
+Style/EmptyCaseCondition:
+  Enabled: false
+
+
 Style/EmptyLines:
   Enabled: false
 
 
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
+
+
+Style/GuardClause:
+  Enabled: false
 
 
 Style/MethodDefParentheses:
@@ -49,3 +57,7 @@ Style/SignalException:
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+
+
+Style/TernaryParentheses:
+  Enabled: false
