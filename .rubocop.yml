@@ -1,6 +1,10 @@
 AllCops:
   TargetRubyVersion: 2.2
 
+  DisplayCopNames: true
+
+  DisplayStyleGuide: true
+
 
 Metrics/AbcSize:
   Max: 19
@@ -33,6 +37,10 @@ Style/EmptyLines:
 
 Style/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines
+
+
+Style/GuardClause:
+  Enabled: false
 
 
 Style/MethodDefParentheses:

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2.0.0 (2016-09-18)
+
+#### BREAKING CHANGES
+* All commands now have a `town-` prefix. Example `git town-sync`. This is to prevent conflicts with `git-extras` which adds git commands by the same name and `hub` which wants you to alias git to it and adds commands by the same name.
+  * Use [git aliases](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) to remove the `town-` prefix if you would like. Run `git town alias true` to add aliases for all `git-town` commands (skips commands which would overwrite existing aliases).
+
 ## 1.0.0 (2016-08-05)
 
 #### New Features

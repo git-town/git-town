@@ -1,6 +1,8 @@
-.TH "GIT-TOWN" "1" "08/05/2016" "Git Town 1\&.0\&.0" "Git Town Manual"
+.TH "GIT-TOWN" "1" "09/18/2016" "Git Town 2\&.0\&.0" "Git Town Manual"
 
 .SH "SYNOPSIS"
+\fIgit town\fR alias [true | false]
+.br
 \fIgit town\fR config [--reset | --setup]
 .br
 \fIgit town\fR hack-push-flag [(true | false)]
@@ -25,21 +27,21 @@ For more information and full documentation, please visit: \fihttps://github.com
 
 
 .SH "GIT COMMANDS"
-\fBgit hack\fR              Cut a new feature branch off the main branch
+\fBgit town-hack\fR              Cut a new feature branch off the main branch
 .br
-\fBgit kill\fR              Remove an obsolete feature branch
+\fBgit town-kill\fR              Remove an obsolete feature branch
 .br
-\fBgit new-pull-request\fR  Create a new pull request
+\fBgit town-new-pull-request\fR  Create a new pull request
 .br
-\fBgit prune-branches\fR    Delete merged branches
+\fBgit town-prune-branches\fR    Delete merged branches
 .br
-\fBgit rename-branch\fR     Rename a branch both locally and remotely
+\fBgit town-rename-branch\fR     Rename a branch both locally and remotely
 .br
-\fBgit repo\fR              View the repository homepage
+\fBgit town-repo\fR              View the repository homepage
 .br
-\fBgit ship\fR              Deliver a completed feature branch
+\fBgit town-ship\fR              Deliver a completed feature branch
 .br
-\fBgit sync\fR              Update the current branch with all relevant changes
+\fBgit town-sync\fR              Update the current branch with all relevant changes
 
 All commands listed here support the '--help' flag.
 
@@ -49,6 +51,9 @@ Git Town will automatically prompt you for the main and perennial branches
 of your current repository if they haven't been set.
 
 You may also manually view and modify the configurations:
+
+.IP "git town alias <boolean>" 4
+Add/remove default global aliases to remove the 'town-' prefix from all commands
 
 .IP "git town config" 4
 Displays your current Git Town configuration

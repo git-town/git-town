@@ -3,7 +3,7 @@ third-party source code hosting services like [GitHub](http://github.com)
 or [Bitbucket](http://bitbucket.org) available.
 
 The particular driver to be used is automatically determined by analyzing
-the `origin` remote in the Git repo that the command is run.
+the `origin` remote in the git town-repo that the command is run.
 
 
 ## Interface

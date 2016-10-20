@@ -1,7 +1,7 @@
 Feature: resetting the configuration
 
   As a user no longer using Git Town on a repository
-  I want to be able to cleanly remove all Git Town configuration from my Git repo
+  I want to be able to cleanly remove all Git Town configuration from my git town-repo
   So that my repository is left in a clean state after the uninstallation.
 
 

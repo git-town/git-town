@@ -61,7 +61,7 @@ have when committed later and include the
 [issue](https://github.com/Originate/git-town/issues) it resolves.
 
 When merging approved PRs:
-* use `git ship`
+* use `git town-ship`
 * the message for the squashed commit should follow the
   [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 * [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
