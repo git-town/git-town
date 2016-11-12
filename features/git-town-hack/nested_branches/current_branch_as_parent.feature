@@ -19,7 +19,8 @@ Feature: Creating nested feature branches
     Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | parent-feature | git fetch --prune                            |
-      |                | git stash -u                                 |
+      |                | git add -A                                   |
+      |                | git stash                                    |
       |                | git checkout main                            |
       | main           | git rebase origin/main                       |
       |                | git checkout parent-feature                  |
@@ -45,7 +46,8 @@ Feature: Creating nested feature branches
     When I run `git town-hack --undo`
     Then it runs the commands
       | BRANCH         | COMMAND                        |
-      | child-feature  | git stash -u                   |
+      | child-feature  | git add -A                     |
+      |                | git stash                      |
       |                | git push origin :child-feature |
       |                | git checkout parent-feature    |
       | parent-feature | git branch -d child-feature    |
@@ -65,7 +67,8 @@ Feature: Creating nested feature branches
     Then it runs the commands
       | BRANCH         | COMMAND                                      |
       | parent-feature | git fetch --prune                            |
-      |                | git stash -u                                 |
+      |                | git add -A                                   |
+      |                | git stash                                    |
       |                | git checkout main                            |
       | main           | git rebase origin/main                       |
       |                | git checkout parent-feature                  |
@@ -91,7 +94,8 @@ Feature: Creating nested feature branches
     When I run `git town-hack --undo`
     Then it runs the commands
       | BRANCH         | COMMAND                        |
-      | child-feature  | git stash -u                   |
+      | child-feature  | git add -A                     |
+      |                | git stash                      |
       |                | git push origin :child-feature |
       |                | git checkout parent-feature    |
       | parent-feature | git branch -d child-feature    |

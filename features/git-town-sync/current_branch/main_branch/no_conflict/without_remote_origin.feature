@@ -18,7 +18,8 @@ Feature: git town-sync: syncing the main branch (without remote repo)
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | main   | git stash -u  |
+      | main   | git add -A    |
+      |        | git stash     |
       |        | git stash pop |
     And I am still on the "main" branch
     And I still have my uncommitted file

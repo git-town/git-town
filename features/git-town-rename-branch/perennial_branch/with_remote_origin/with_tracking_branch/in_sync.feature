@@ -28,7 +28,8 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     Then it runs the commands
       | BRANCH             | COMMAND                                       |
       | production         | git fetch --prune                             |
-      |                    | git stash -u                                  |
+      |                    | git add -A                                    |
+      |                    | git stash                                     |
       |                    | git checkout -b renamed-production production |
       | renamed-production | git push -u origin renamed-production         |
       |                    | git push origin :production                   |
@@ -49,7 +50,8 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     When I run `git town-rename-branch --undo`
     Then it runs the commands
         | BRANCH             | COMMAND                                              |
-        | renamed-production | git stash -u                                         |
+        | renamed-production | git add -A                                           |
+        |                    | git stash                                            |
         |                    | git branch production <%= sha 'production commit' %> |
         |                    | git push -u origin production                        |
         |                    | git push origin :renamed-production                  |

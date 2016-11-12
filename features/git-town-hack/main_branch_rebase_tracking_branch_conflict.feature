@@ -20,7 +20,8 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     Then it runs the commands
       | BRANCH           | COMMAND                |
       | existing-feature | git fetch --prune      |
-      |                  | git stash -u           |
+      |                  | git add -A             |
+      |                  | git stash              |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
     And I get the error

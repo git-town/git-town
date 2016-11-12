@@ -20,7 +20,8 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
   Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                          |
-      | existing-feature | git stash -u                     |
+      | existing-feature | git add -A                       |
+      |                  | git stash                        |
       |                  | git checkout -b new-feature main |
       | new-feature      | git stash pop                    |
     And I end up on the "new-feature" branch

@@ -22,7 +22,8 @@ Feature: git town-sync: syncing a nested feature branch (with known parent branc
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune                         |
-      |                | git stash -u                              |
+      |                | git add -A                                |
+      |                | git stash                                 |
       |                | git checkout main                         |
       | main           | git rebase origin/main                    |
       |                | git push                                  |
