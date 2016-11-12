@@ -96,5 +96,4 @@ Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/Originate/git-town/issues/new)
 or - even better - get down, go to town, and fire a feature-tested
 [pull request](https://help.github.com/articles/using-pull-requests/)
-our way!
-Check out our [contributing guide](/CONTRIBUTING.md) to start coding.
+our way! Check out our [contributing guide](/CONTRIBUTING.md) to start coding.
