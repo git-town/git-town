@@ -26,6 +26,41 @@ function add_perennial_branch {
 }
 
 
+# Add or remove the default alias for the given command
+function add_or_remove_alias {
+  local command=$1
+  local boolean=$2
+  local previousAlias="$(git config --global "alias.$command")"
+
+  if [ "$boolean" = true ]; then
+    run_command "git config --global alias.$command town-$command"
+  else
+    local previousAlias="$(git config --global "alias.$command")"
+    if [ "$previousAlias" = "town-$command" ]; then
+      run_command "git config --global --unset alias.$command"
+    fi
+  fi
+}
+
+
+# Add or remove the default alias for all git town commands
+function add_or_remove_aliases {
+  local boolean=$1
+
+  if [ "$boolean" != 'true' ] && [ "$boolean" != 'false' ]; then
+    echo "Invalid alias boolean: '$boolean'."
+    echo "Valid alias booleans are 'true' and 'false'."
+  fi
+
+  declare -a commands=('hack' 'kill' 'new-pull-request' 'prune-branches' 'rename-branch' 'repo' 'ship' 'sync')
+  for command in "${commands[@]}"; do
+    add_or_remove_alias "$command" "$boolean"
+  done
+
+  echo # trailing newline in case any commands run
+}
+
+
 # Add or remove perennial branch if possible
 function add_or_remove_perennial_branches {
   local option=$1

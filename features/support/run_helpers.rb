@@ -85,7 +85,7 @@ def run_shell_command command, inputs = []
     result.out = stdout.read
   end
 
-  result.error = status.exitstatus != 0 && !kill
+  result.error = status.exitstatus.nonzero? && !kill
   result
 end
 

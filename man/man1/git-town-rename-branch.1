@@ -1,0 +1,47 @@
+.TH "GIT-TOWN-RENAME-BRANCH" "1" "09/18/2016" "Git Town 2\&.0\&.0" "Git Town Manual"
+
+.SH "NAME"
+git-town-rename-branch \- rename a branch both locally and remotely
+
+
+.SH "SYNOPSIS"
+\fIgit town-rename-branch\fR <old_branch_name> <new_branch_name> [-f]
+
+
+.SH "DESCRIPTION"
+Renames the given branch on both the local machine and the remote if one is configured.
+.br
+Aborts if the new branch name already exists or the tracking branch is out of sync.
+.br
+This command is intended for feature branches. Renaming perennial branches has to be confirmed with the `-f` option.
+.PP
+* Creates a branch with the new name
+.br
+* Deletes the old branch
+.PP
+When there is a remote repository
+.br
+* Syncs the repository
+.PP
+When there is a tracking branch
+.br
+* Pushes the new branch to the remote repository
+.br
+* Deletes the old branch from the remote repository
+.PP
+When run on a perennial branch
+* Requires the use of the `-f` option
+.br
+* Reconfigures git-town locally for the perennial branch
+.br
+
+
+.SH "OPTIONS"
+.IP "<old_branch_name>" 4
+The name of the branch to rename.
+
+.IP "<new_branch_name>" 4
+The new name of the branch.
+
+.IP "-f" 4
+Forces the renaming of a perennial branch

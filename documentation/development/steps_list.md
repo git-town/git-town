@@ -23,7 +23,7 @@ If the user aborts then `abort_[step]` is called and the undo steps are executed
 If the user resolves the issue and continues then `continue_[step]` is called
 and we resume executing steps.
 
-`git sync` also allows the user to skip the current branch,
+`git town-sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
 
 
