@@ -14,6 +14,10 @@ function activate_driver_for_code_hosting {
     activate_driver 'code_hosting' 'github'
   elif [ "$origin_hostname" == 'bitbucket.org' ]; then
     activate_driver 'code_hosting' 'bitbucket'
+  elif [ "$(contains_string "$origin_hostname" github)" == true ]; then
+    activate_driver 'code_hosting' 'github'
+  elif [ "$(contains_string "$origin_hostname" bitbucket)" == true ]; then
+    activate_driver 'code_hosting' 'bitbucket'
   else
     echo_error_header
     echo_usage "Unsupported hosting service."
