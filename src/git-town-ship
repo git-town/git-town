@@ -8,7 +8,7 @@ function ensure_has_no_unshipped_ancestors {
   ensure_knows_parent_branches "$branch_name"
   if [ "$(parent_branch "$branch_name")" != "$MAIN_BRANCH_NAME" ]; then
     local ancestors_without_main="$(ancestor_branches "$branch_name" | cut -d ' ' -f 2-)"
-    local ancestors_list="\"${ancestors_without_main// /", "}\""
+    local ancestors_list="${ancestors_without_main// /, }"
     local oldest_ancestor="$(echo "$ancestors_without_main" | cut -d ' ' -f 1)"
 
     echo_error_header

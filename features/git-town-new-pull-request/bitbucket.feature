@@ -21,6 +21,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
       | https://username@bitbucket.org/Originate/git-town                 | Originate/git-town             |
       | git@bitbucket.org/Originate/git-town.git                          | Originate/git-town             |
       | git@bitbucket.org/Originate/git-town                              | Originate/git-town             |
+      | git@bitbucket-as-account2:Originate/git-town.git                  | Originate/git-town             |
       | http://username@bitbucket.org/Originate/originate.github.com.git  | Originate/originate.github.com |
       | http://username@bitbucket.org/Originate/originate.github.com      | Originate/originate.github.com |
       | https://username@bitbucket.org/Originate/originate.github.com.git | Originate/originate.github.com |
