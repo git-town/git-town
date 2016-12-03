@@ -3,6 +3,18 @@
 # Helper functions for working with strings
 
 
+function contains_string {
+  local haystack=$1
+  # shellcheck disable=SC2034
+  local needle=$2
+  if [[ $haystack =~ .*$needle.* ]]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
 # Insert string into a delimiter-separated string
 function insert_string {
   local delimiter_separated_string=$1
