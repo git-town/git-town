@@ -19,7 +19,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: result
-    Then I get the error "Shipping this branch would ship "feature-1", "feature-2" as well."
+    Then I get the error "Shipping this branch would ship feature-1, feature-2 as well."
     And I get the error "Please ship "feature-1" first."
     And it runs no commands
     And I end up on the "feature-3" branch
