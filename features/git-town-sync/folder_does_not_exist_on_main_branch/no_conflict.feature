@@ -22,7 +22,8 @@ Feature: git town-sync: syncing inside a folder that doesn't exist on the main b
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
       | <none>          | cd <%= git_root_folder %>                  |
-      | current-feature | git stash -u                               |
+      | current-feature | git add -A                                 |
+      |                 | git stash                                  |
       |                 | git checkout main                          |
       | main            | git rebase origin/main                     |
       |                 | git checkout current-feature               |
@@ -55,7 +56,8 @@ Feature: git town-sync: syncing inside a folder that doesn't exist on the main b
     Then it runs the commands
       | BRANCH          | COMMAND                           |
       | <none>          | cd <%= git_root_folder %>         |
-      | current-feature | git stash -u                      |
+      | current-feature | git add -A                        |
+      |                 | git stash                         |
       |                 | git checkout other-feature        |
       | other-feature   | git checkout current-feature      |
       | current-feature | git checkout main                 |

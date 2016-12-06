@@ -19,7 +19,8 @@ Feature: git town-sync: syncing the main branch
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      |        | git stash -u           |
+      |        | git add -A             |
+      |        | git stash              |
       |        | git rebase origin/main |
       |        | git push               |
       |        | git push --tags        |

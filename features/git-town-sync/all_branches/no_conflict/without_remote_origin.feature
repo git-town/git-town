@@ -16,7 +16,8 @@ Feature: git town-sync --all: syncs all feature branches (without remote repo)
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                  |
-      | feature-1 | git stash -u             |
+      | feature-1 | git add -A               |
+      |           | git stash                |
       |           | git merge --no-edit main |
       |           | git checkout feature-2   |
       | feature-2 | git merge --no-edit main |

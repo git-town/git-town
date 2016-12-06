@@ -20,7 +20,8 @@ Feature: git town-sync: resolving conflicts between the current perennial branch
     Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      |        | git stash -u         |
+      |        | git add -A           |
+      |        | git stash            |
       |        | git rebase origin/qa |
     And I get the error
       """

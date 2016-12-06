@@ -40,6 +40,19 @@ DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES = {
 }.freeze
 
 
+def ignore_file filename
+  create_local_commit branch: current_branch_name,
+                      file_name: '.gitignore',
+                      file_content: filename,
+                      message: 'ignoring files'
+end
+
+
+def verify_file filename, content
+  expect(IO.read filename).to eql content
+end
+
+
 def verify_uncommitted_file options
   options.reverse_merge! DEFAULT_UNCOMMITTED_FILE_ATTRIBUTES
   expect(uncommitted_files).to include options[:name]

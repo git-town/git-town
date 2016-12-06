@@ -16,7 +16,8 @@ Feature: git town-sync --all: handling rebase conflicts between main branch and 
     Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
-      |        | git stash -u           |
+      |        | git add -A             |
+      |        | git stash              |
       |        | git rebase origin/main |
     And I get the error
       """

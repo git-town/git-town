@@ -19,7 +19,8 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     Then it runs the commands
       | BRANCH        | COMMAND                |
       | other-feature | git fetch --prune      |
-      |               | git stash -u           |
+      |               | git add -A             |
+      |               | git stash              |
       |               | git checkout main      |
       | main          | git rebase origin/main |
     And I get the error

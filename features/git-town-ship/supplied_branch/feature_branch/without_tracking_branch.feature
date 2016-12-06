@@ -17,7 +17,8 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
-      |               | git stash -u                       |
+      |               | git add -A                         |
+      |               | git stash                          |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
       |               | git checkout feature               |

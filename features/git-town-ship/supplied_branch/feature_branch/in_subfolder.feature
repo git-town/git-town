@@ -18,7 +18,8 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
       | <none>        | cd <%= git_root_folder %>          |
-      | other-feature | git stash -u                       |
+      | other-feature | git add -A                         |
+      |               | git stash                          |
       |               | git checkout main                  |
       | main          | git rebase origin/main             |
       |               | git checkout feature               |

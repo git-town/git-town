@@ -20,7 +20,8 @@ Feature: git town-sync: syncing the current perennial branch (without remote rep
   Scenario: no conflict
     Then it runs the commands
       | BRANCH | COMMAND       |
-      | qa     | git stash -u  |
+      | qa     | git add -A    |
+      |        | git stash     |
       |        | git stash pop |
     And I am still on the "qa" branch
     And I still have my uncommitted file
