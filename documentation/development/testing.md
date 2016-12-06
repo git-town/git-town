@@ -66,3 +66,9 @@ by setting the Git configuration value
 `git-town.testing.remote-url` to the respective value.
 To keep this behavior clean and secure,
 this also requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
+
+
+## Auto-running tests
+
+The Git Town code base works with
+[Tertestrial](https://github.com/Originate/tertestrial-server).

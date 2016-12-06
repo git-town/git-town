@@ -17,6 +17,8 @@ This guide will help you get started and outline some things you should know whe
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
 * install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
 * run `bundle` to install ruby gems
+* optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
+  for auto-running tests
 
 
 ## Testing
