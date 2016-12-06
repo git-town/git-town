@@ -18,7 +18,8 @@ Feature: git town-sync: syncing the current feature branch (without a tracking b
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                  |
-      | feature | git stash -u             |
+      | feature | git add -A               |
+      |         | git stash                |
       |         | git merge --no-edit main |
       |         | git stash pop            |
     And I am still on the "feature" branch

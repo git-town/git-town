@@ -22,7 +22,8 @@ Feature: git town-sync: syncing the current feature branch with a tracking branc
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      |         | git stash -u                       |
+      |         | git add -A                         |
+      |         | git stash                          |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git push                           |

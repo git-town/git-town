@@ -42,7 +42,8 @@ function restore_open_changes {
 
 # Stashes uncommitted changes
 function stash_open_changes {
-  run_command "git stash -u"
+  run_command "git add -A"
+  run_command "git stash"
 }
 
 
