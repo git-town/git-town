@@ -14,7 +14,8 @@ Feature: git-hack: on the main branch with a upstream remote
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git fetch --prune                |
-      |             | git stash -u                     |
+      |             | git add -A                       |
+      |             | git stash                        |
       |             | git rebase origin/main           |
       |             | git fetch upstream               |
       |             | git rebase upstream/main         |

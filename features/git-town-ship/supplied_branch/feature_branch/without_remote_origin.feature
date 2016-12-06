@@ -17,7 +17,8 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                      |
-      | other-feature | git stash -u                 |
+      | other-feature | git add -A                   |
+      |               | git stash                    |
       |               | git checkout feature         |
       | feature       | git merge --no-edit main     |
       |               | git checkout main            |

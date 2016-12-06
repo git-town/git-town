@@ -16,7 +16,8 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
     Then it runs the commands
       | BRANCH    | COMMAND                              |
       | main      | git fetch --prune                    |
-      |           | git stash -u                         |
+      |           | git add -A                           |
+      |           | git stash                            |
       |           | git rebase origin/main               |
       |           | git checkout feature-1               |
       | feature-1 | git merge --no-edit origin/feature-1 |

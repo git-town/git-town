@@ -20,7 +20,8 @@ Feature: git town-sync: resolving conflicts between the current feature branch a
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
-      |         | git stash -u                       |
+      |         | git add -A                         |
+      |         | git stash                          |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |

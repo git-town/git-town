@@ -21,7 +21,8 @@ Feature: git town-sync: syncing the current perennial branch
     Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
-      |        | git stash -u         |
+      |        | git add -A           |
+      |        | git stash            |
       |        | git rebase origin/qa |
       |        | git push             |
       |        | git push --tags      |

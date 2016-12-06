@@ -18,7 +18,8 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git fetch --prune                |
-      |             | git stash -u                     |
+      |             | git add -A                       |
+      |             | git stash                        |
       |             | git rebase origin/main           |
       |             | git checkout -b new-feature main |
       | new-feature | git push -u origin new-feature   |

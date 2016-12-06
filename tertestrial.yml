@@ -1,1 +1,10 @@
-actions: ruby-cucumber-rspec
+actions:
+
+  - match:
+      filename: '\.feature$'
+    command: 'bundle exec cuke {{filename}}'
+
+  - match:
+      filename: '\.feature$'
+      line: '\d+'
+    command: 'bundle exec cuke {{filename}}:{{line}}'

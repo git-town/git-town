@@ -17,7 +17,8 @@ Feature: git town-sync --all: does not sync remote only branches
     Then it runs the commands
       | BRANCH     | COMMAND                               |
       | main       | git fetch --prune                     |
-      |            | git stash -u                          |
+      |            | git add -A                            |
+      |            | git stash                             |
       |            | git rebase origin/main                |
       |            | git checkout my-feature               |
       | my-feature | git merge --no-edit origin/my-feature |

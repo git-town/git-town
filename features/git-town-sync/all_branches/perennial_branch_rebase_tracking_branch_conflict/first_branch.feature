@@ -18,7 +18,8 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
     And it runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
-      |            | git stash -u                 |
+      |            | git add -A                   |
+      |            | git stash                    |
       |            | git rebase origin/main       |
       |            | git checkout production      |
       | production | git rebase origin/production |
