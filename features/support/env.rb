@@ -14,7 +14,7 @@ MEMOIZED_REPOSITORY_BASE = Dir.mktmpdir 'memoized'
 REPOSITORY_BASE = Dir.mktmpdir
 TOOLS_INSTALLED_FILENAME = File.join(REPOSITORY_BASE, 'tools_installed.txt')
 
-FISH_AUTOCOMPLETIONS_PATH = File.expand_path '~/.config/fish/completions/git.fish'
+FISH_AUTOCOMPLETIONS_PATH = File.join(REPOSITORY_BASE, '.config/fish/completions/git.fish')
 
 
 # load memoized environment by copying contents
@@ -86,20 +86,6 @@ After '~@ignore-run-error' do
     puts unformatted_last_run_output if @last_run_result.error
     expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
   end
-end
-
-
-Around '@modifies-fish-autocompletions' do |_scenario, block|
-  completions_path = File.expand_path('~/.config/fish/completions')
-  backup_path = File.expand_path('~/__config_fish_backup__')
-
-  FileUtils.cp_r completions_path, backup_path
-
-  block.call
-
-  FileUtils.rm_rf completions_path
-  FileUtils.cp_r backup_path, completions_path
-  FileUtils.rm_rf backup_path
 end
 
 
