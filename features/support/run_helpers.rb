@@ -76,7 +76,7 @@ end
 
 def run_shell_command command, inputs = []
   result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
-  command = "#{shell_overrides}; #{command} 2>&1"
+  command = "#{shell_overrides}; echo $HOME; #{command} 2>&1"
   kill = inputs.pop if inputs.last == '^C' # command shouldn't error if user aborts it
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
@@ -92,6 +92,7 @@ end
 
 def shell_overrides
   "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH;"\
+  "HOME=#{REPOSITORY_BASE};"\
   "export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME};"\
   'export GIT_TOWN_ENV=test'
 end
