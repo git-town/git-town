@@ -13,8 +13,8 @@ Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$
 end
 
 
-Given(/^I resolve the conflict in "(.+?)"$/) do |file_name|
-  IO.write file_name, 'resolved content'
+Given(/^I resolve the conflict in "([^"]+)"(?: with "([^"]+)")?$/) do |file_name, file_content|
+  IO.write file_name, (file_content || 'resolved content')
   run "git add #{file_name}"
 end
 

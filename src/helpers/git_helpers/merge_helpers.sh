@@ -9,7 +9,7 @@ function abort_merge {
 
 # Continues merge if one is in progress
 function continue_merge {
-  if [ "$(has_open_changes)" == true ]; then
+  if [ "$(merge_in_progress)" == true ]; then
     run_command "git commit --no-edit"
   fi
 }
@@ -21,6 +21,15 @@ function merge {
   run_command "git merge --no-edit $branch_name"
 }
 
+
+# Determines whether the current branch has a merge in progress
+function merge_in_progress {
+  if [ -e "$(git_root)/.git/MERGE_HEAD" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
 
 # Squash merges the given branch into the current branch
 function squash_merge {
