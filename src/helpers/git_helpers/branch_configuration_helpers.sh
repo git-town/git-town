@@ -32,13 +32,10 @@ function child_branches {
 function compile_ancestor_branches {
   local branch_name=$1
 
-  # delete the existing entry
-  delete_ancestors_entry "$branch_name"
-
   # re-create it from scratch
   local ancestors=''
   local current_branch="$branch_name"
-  while [ "$current_branch" != "$MAIN_BRANCH_NAME" ]; do
+  while [ "$current_branch" != "$MAIN_BRANCH_NAME" ] && [ -n "$current_branch" ]; do
     local parent=$(parent_branch "$current_branch")
     ancestors="$parent $ancestors"
     current_branch=$parent
@@ -46,10 +43,7 @@ function compile_ancestor_branches {
 
   # truncate the trailing space
   # shellcheck disable=SC2001
-  ancestors=$(echo "$ancestors" | sed 's/ $//')
-
-  # save the result into the configuration
-  git config "git-town-branch.$branch_name.ancestors" "$ancestors"
+  echo "$ancestors" | sed 's/ $//'
 }
 
 
@@ -142,6 +136,7 @@ function echo_update_child_branches {
 function ensure_knows_parent_branches {
   local branches=$1 # space separated list of branches
 
+  local ancestors
   local branch
   local child
   local header_shown=false
@@ -189,12 +184,22 @@ function ensure_knows_parent_branches {
               echo_error "branch '$user_input' doesn't exist"
             fi
           fi
+          if [ "$child" = "$parent" ]; then
+            echo_error_header
+            echo_error "'$child' cannot be the parent of itself"
+            parent=''
+          elif [ "$(has_ancestor_branch "$parent" "$child")" = true ]; then
+            echo_error_header
+            echo_error "Nested branch loop detected: '$child' is an ancestor '$parent'"
+            parent=''
+          fi
         done
         store_parent_branch "$child" "$parent"
       fi
       child=$parent
     done
-    compile_ancestor_branches "$branch"
+    ancestors=$(compile_ancestor_branches "$branch")
+    store_ancestor_branches "$branch" "$ancestors"
   done
 
   if [ "$header_shown" = true ]; then
@@ -216,6 +221,20 @@ function get_numbered_branch_alpha_order {
   local number=$1
   local_branches | sed -n "${number}p"
 }
+
+
+# Returns whether the first branch has the second branch as an ancestor
+function has_ancestor_branch {
+  local branch_name_1=$1
+  local branch_name_2=$2
+
+  if [ -z "$(compile_ancestor_branches "$branch_name_1" | sed "/(^| )$branch_name_2( |$)/p")" ]; then
+    echo false
+  else
+    echo true
+  fi
+}
+
 
 # Returns whether the given branch has child branches
 function has_child_branches {
@@ -255,6 +274,14 @@ function knows_all_ancestor_branches {
 function parent_branch {
   local branch_name=$1
   git config --get "git-town-branch.$branch_name.parent"
+}
+
+
+# Stores the ancestors for the given branch
+function store_ancestor_branches {
+  local branch=$1
+  local ancestor_branches=$2
+  git config "git-town-branch.$branch.ancestors" "$ancestor_branches"
 }
 
 

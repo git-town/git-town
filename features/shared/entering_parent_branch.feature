@@ -71,3 +71,22 @@ Feature: Entering a parent branch name when prompted
     Then Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
+
+
+  Scenario: entering self
+    When I run `git town-sync` and enter "feature-2" and "main"
+    Then I see "Please specify the parent branch of feature-2"
+    And I see "'feature-2' cannot be the parent of itself"
+    Then Git Town is now aware of this branch hierarchy
+      | BRANCH    | PARENT |
+      | feature-2 | main   |
+
+
+  Scenario: creating a loop
+    When I run `git town-sync` and enter "feature-1" and "feature-2" and "main"
+    Then I see "Please specify the parent branch of feature-2"
+    And I see "Nested branch loop detected: 'feature-1' is an ancestor 'feature-2'"
+    Then Git Town is now aware of this branch hierarchy
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-2 | feature-1 |
