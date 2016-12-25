@@ -5,6 +5,16 @@ Feature: Prompt for parent branch when unknown
   So the command can work as I expect
 
 
+  Scenario: prompting for parent branch when running git town-hack with parent
+    Given I have a feature branch named "feature-1" with no parent
+    When I run `git town-hack feature-2 feature-1` and press ENTER
+    Then I end up on the "feature-2" branch
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-2 | feature-1 |
+
+
   Scenario: prompting for parent branch when running git town-kill
     Given I have a feature branch named "feature" with no parent
     And I am on the "feature" branch
