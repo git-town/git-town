@@ -2,9 +2,9 @@ actions:
 
   - match:
       filename: '\.feature$'
-    command: 'bundle exec cuke {{filename}}'
+    command: 'bundle exec cucumber {{filename}}'
 
   - match:
       filename: '\.feature$'
       line: '\d+'
-    command: 'bundle exec cuke {{filename}}:{{line}}'
+    command: 'bundle exec cucumber {{filename}}:{{line}}'
