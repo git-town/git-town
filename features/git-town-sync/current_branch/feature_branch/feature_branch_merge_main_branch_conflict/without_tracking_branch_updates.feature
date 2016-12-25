@@ -82,6 +82,28 @@ Feature: git town-sync: resolving conflicts between the current feature branch a
       | feature | conflicting_file | resolved content |
 
 
+  Scenario: continuing after resolving the conflicts resulting in no changes
+    Given I resolve the conflict in "conflicting_file" with "feature content"
+    When I run `git town-sync --continue`
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git commit --no-edit |
+      |         | git push             |
+      |         | git stash pop        |
+    And I am still on the "feature" branch
+    And I still have my uncommitted file
+    And I still have the following commits
+      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | main    | local and remote | conflicting main commit          | conflicting_file |
+      | feature | local and remote | conflicting feature commit       | conflicting_file |
+      |         |                  | conflicting main commit          | conflicting_file |
+      |         |                  | Merge branch 'main' into feature |                  |
+    And I still have the following committed files
+      | BRANCH  | NAME             | CONTENT         |
+      | main    | conflicting_file | main content    |
+      | feature | conflicting_file | feature content |
+
+
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git town-sync --continue`
