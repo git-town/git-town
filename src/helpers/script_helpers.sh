@@ -154,9 +154,8 @@ function run_steps {
     if [ "$option" = undoable ]; then
       local undo_steps=$(undo_steps_for "$step")
     fi
-    eval "$step"
-
-    if [ $? == 0 ]; then
+    
+    if eval "$step"; then
       if [ "$option" = undoable ]; then
         local post_undo_steps=$(post_undo_steps_for "$step")
         if [ -n "$undo_steps" ]; then

@@ -282,10 +282,9 @@ function show_or_update_pull_branch_strategy {
 function store_configuration {
   local config_setting_name=$1
   local value=$2
-  git config "git-town.$config_setting_name" "$value"
 
   # update $MAIN_BRANCH_NAME and $PERENNIAL_BRANCH_NAMES accordingly
-  if [ $? == 0 ]; then
+  if git config "git-town.$config_setting_name" "$value"; then
     if [ "$config_setting_name" == "main-branch-name" ]; then
       MAIN_BRANCH_NAME="$value"
     elif [ "$config_setting_name" == "perennial-branch-names" ]; then

@@ -41,8 +41,7 @@ function commit_squash_merge {
     fi
   fi
   sed -i -e 's/^/# /g' .git/SQUASH_MSG
-  run_command "git commit $options"
-  if [ $? != 0 ]; then error_empty_commit; fi
+  if ! run_command "git commit $options"; then error_empty_commit; fi
 }
 
 

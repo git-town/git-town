@@ -10,7 +10,7 @@ dependencies:
   post:
     - "sudo apt-add-repository 'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe'"
     - "sudo apt-get update"
-    - "sudo apt-get install shellcheck"
+    - "sudo apt-get install shellcheck=0.4.5"
 
 notify:
   webhooks:
