@@ -92,6 +92,7 @@ end
 
 def shell_overrides
   "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH;"\
+  "HOME=#{REPOSITORY_BASE};"\
   "export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME};"\
   'export GIT_TOWN_ENV=test'
 end
