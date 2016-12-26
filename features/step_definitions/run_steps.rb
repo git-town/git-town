@@ -20,10 +20,16 @@ When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, input|
 end
 
 
+When(/^I run `(.+?)` and enter:$/) do |command, table|
+  @result = run command, inputs: table.raw.map { |row| row[0] }
+end
+
+
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
   # In vim "dG" removes all lines and "ZZ" saves and exits
   step "I run `#{command}` and enter \"dGZZ\""
 end
+
 
 When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
   # In vim "ZZ" saves and exits

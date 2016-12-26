@@ -83,7 +83,10 @@ Feature: Entering a parent branch name when prompted
 
 
   Scenario: creating a loop
-    When I run `git town-sync` and enter "feature-1" and "feature-2" and "main"
+    When I run `git town-sync` and enter:
+      | feature-1 |
+      | feature-2 |
+      | main      |
     Then I see "Please specify the parent branch of feature-2"
     And I see "Nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
     And Git Town is now aware of this branch hierarchy
