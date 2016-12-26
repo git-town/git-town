@@ -16,11 +16,11 @@ Feature: listing the configuration
     Then I see
       """
       Git Town needs to be configured
-      
+
         1: main
         2: production
         3: qa
-      
+
       Please specify the main development branch by name or number (current value: main): Please specify a perennial branch by name or number. Leave it blank to finish (current value: qa):
       """
 
@@ -36,7 +36,9 @@ Feature: listing the configuration
   Scenario: non-empty input
     Given I have configured the main branch name as "main"
     And my perennial branches are configured as "qa"
-    When I run `git town config --setup` and enter "main", "production" and ""
+    When I run `git town config --setup` and enter:
+      | main       |
+      | production |
+      |            |
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "production"
-

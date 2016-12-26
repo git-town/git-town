@@ -5,3 +5,6 @@ consistent_empty_lines:
   between_feature_and_description: 1
   between_feature_and_element: 1
   between_scenario_outline_and_examples: 1
+
+consistent_table_headers:
+  enabled: false
