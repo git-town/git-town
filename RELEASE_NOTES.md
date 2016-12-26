@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 2.1.0 (2016-12-26)
+
+#### New Features
+* support multiple SSH identities
+  ([#739](https://github.com/Originate/git-town/issues/739))
+
+#### Bug Fixes
+* update stashing strategy to avoid use of `git stash -u` which can delete ignored files
+  ([#744](https://github.com/Originate/git-town/issues/744))
+* fix merge conflicts resolution that results in no changes
+  ([#753](https://github.com/Originate/git-town/issues/753))
+* `git hack`: prompt for parent branch if unknown
+  ([#760](https://github.com/Originate/git-town/issues/760))
+* prevent parent branch loops
+  ([#751](https://github.com/Originate/git-town/issues/751))
+
 ## 2.0.0 (2016-09-18)
 
 #### BREAKING CHANGES
