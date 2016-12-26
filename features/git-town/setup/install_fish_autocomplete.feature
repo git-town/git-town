@@ -1,4 +1,3 @@
-@modifies-fish-completions
 Feature: Installing Fish Shell autocomplete definitions
 
   As a Fish shell user
