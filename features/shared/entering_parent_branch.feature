@@ -31,7 +31,7 @@ Feature: Entering a parent branch name when prompted
     When I run `git town-sync` and enter "2" and "1"
     Then I see "Please specify the parent branch of feature-2"
     And I see "Please specify the parent branch of feature-1"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-2 | feature-1 |
@@ -68,7 +68,7 @@ Feature: Entering a parent branch name when prompted
     When I run `git town-sync` and enter "zonk" and "main"
     Then I see "Please specify the parent branch of feature-2"
     And I see "branch 'zonk' doesn't exist"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
@@ -77,7 +77,7 @@ Feature: Entering a parent branch name when prompted
     When I run `git town-sync` and enter "feature-2" and "main"
     Then I see "Please specify the parent branch of feature-2"
     And I see "'feature-2' cannot be the parent of itself"
-    Then Git Town is now aware of this branch hierarchy
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
@@ -85,8 +85,8 @@ Feature: Entering a parent branch name when prompted
   Scenario: creating a loop
     When I run `git town-sync` and enter "feature-1" and "feature-2" and "main"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "Nested branch loop detected: 'feature-1' is an ancestor 'feature-2'"
-    Then Git Town is now aware of this branch hierarchy
+    And I see "Nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
+    And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
       | feature-2 | feature-1 |

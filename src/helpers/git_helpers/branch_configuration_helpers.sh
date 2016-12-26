@@ -190,7 +190,7 @@ function ensure_knows_parent_branches {
             parent=''
           elif [ "$(has_ancestor_branch "$parent" "$child")" = true ]; then
             echo_error_header
-            echo_error "Nested branch loop detected: '$child' is an ancestor '$parent'"
+            echo_error "Nested branch loop detected: '$child' is an ancestor of '$parent'"
             parent=''
           fi
         done
