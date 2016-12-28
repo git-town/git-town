@@ -14,8 +14,8 @@ Feature: Prepending a branch to a nested feature branch
     And I have a feature branch named "existing-feature" as a child of "existing-parent"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
-      | existing-parent  | local and remote | existing_parent_commit  | existing_parent_file  | existing parent content  |
       | existing-feature | local and remote | existing_feature_commit | existing_feature_file | existing feature content |
+      | existing-parent  | local and remote | existing_parent_commit  | existing_parent_file  | existing parent content  |
     And I am on the "existing-feature" branch
     And I have an uncommitted file
 
@@ -53,14 +53,16 @@ Feature: Prepending a branch to a nested feature branch
     Given I run `git town-prepend new-parent`
     When I run `git town-prepend --undo`
     Then it runs the commands
-      | BRANCH          | COMMAND                      |
-      | child-feature   | git add -A                   |
-      |                 | git stash                    |
-      |                 | git push origin :new-parent  |
-      |                 | git checkout existing-parent |
-      | existing-parent | git branch -d new-parent     |
-      |                 | git stash pop                |
-    And I end up on the "existing-parent" branch
+        | BRANCH           | COMMAND                       |
+        | new-parent       | git add -A                    |
+        |                  | git stash                     |
+        |                  | git push origin :new-parent   |
+        |                  | git checkout existing-parent  |
+        | existing-parent  | git branch -d new-parent      |
+        |                  | git checkout main             |
+        | main             | git checkout existing-feature |
+        | existing-feature | git stash pop                 |
+    And I end up on the "existing-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits
     And Git Town is now aware of this branch hierarchy
