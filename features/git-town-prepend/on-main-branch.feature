@@ -15,9 +15,9 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
   Scenario: result
     Given I have an uncommitted file
-    When I run `git town-prepend`
+    When I run `git town-prepend new-branch`
     Then it runs no commands
-    And I get the error "You can not add a parent for the main branch"
+    And I get the error "The branch 'main' is not a feature branch. Only feature branches can have parent branches."
     And I am still on the "main" branch
     And I still have my uncommitted file
     And the existing branches are
