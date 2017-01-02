@@ -1,0 +1,44 @@
+.TH "GIT-TOWN-APPEND" "1" "12/26/2016" "Git Town 2\&.1\&.0" "Git Town Manual"
+
+.SH "NAME"
+git town-append \- create a new feature branch as a direct child of the current branch
+
+
+.SH "SYNOPSIS"
+\fIgit town-append\fR <branch_name>
+.br
+\fIgit town-append\fR (--abort | --continue)
+
+
+.SH "DESCRIPTION"
+
+.PP
+Syncs the given branch,
+.br
+forks a new feature branch with the given name off the current branch,
+.br
+makes the new branch a child of the current branch,
+.br
+pushes the new feature branch to the remote repository,
+.br
+and brings over all uncommitted changes to the new feature branch.
+
+.PP
+Additionally, when there is a remote upstream,
+.br
+the main branch is synced with its upstream counterpart.
+.br
+This can be disabled by toggling the "hack-push-flag" configuration:
+.br
+$ git town hack-push-flag false
+
+
+.SH "OPTIONS"
+.IP "<branch_name>" 4
+The name of the branch to create.
+
+.IP "--abort" 4
+Cancel the operation and reset the workspace to a consistent state.
+
+.IP "--continue" 4
+Continue the operation after resolving conflicts.

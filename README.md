@@ -32,6 +32,7 @@ __Repository Maintenance__
 * [git town-kill](/documentation/commands/git-town-kill.md) - removes a feature branch
 * [git town-prune-branches](/documentation/commands/git-town-prune-branches.md) - delete all merged branches
 * [git town-rename-branch](/documentation/commands/git-town-rename-branch.md) - rename a branch
+* [git town-append](/documentation/commands/git-town-append.md) - insert a new branch as a direct child of the current branch
 * [git town-prepend](/documentation/commands/git-town-prepend.md) - insert a new branch between the current branch and its parent
 * [git town-repo](/documentation/commands/git-town-repo.md) - view the repository homepage
 
