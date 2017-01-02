@@ -17,13 +17,13 @@ Feature: Appending a branch to a feature branch
   Scenario: inserting a branch into the branch ancestry
     When I run `git town-append new-child`
     Then it runs the commands
-      | BRANCH           | COMMAND                                     |
-      | existing-feature | git fetch --prune                           |
-      |                  | git add -A                                  |
-      |                  | git stash                                   |
-      |                  | git checkout -b new-child existing-feature  |
-      | new-child        | git push -u origin new-child                |
-      |                  | git stash pop                               |
+      | BRANCH           | COMMAND                                    |
+      | existing-feature | git fetch --prune                          |
+      |                  | git add -A                                 |
+      |                  | git stash                                  |
+      |                  | git checkout -b new-child existing-feature |
+      | new-child        | git push -u origin new-child               |
+      |                  | git stash pop                              |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
