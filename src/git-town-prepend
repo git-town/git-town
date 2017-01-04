@@ -47,7 +47,6 @@ function steps {
   echo "delete_all_ancestor_entries"
 
   # make the new branch the parent of the existing branch
-  echo delete_parent_entry "$child_branch_name"
   echo store_parent_branch "$child_branch_name" "$target_branch_name"
 
   # make the old parent the parent of the new branch
