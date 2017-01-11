@@ -40,3 +40,8 @@ git town hack-push-flag false
 --continue
     Continue the operation after resolving conflicts.
 ```
+
+
+#### SEE ALSO
+* [git append](git-town-append.md) to create a new feature branch as a child of the current branch
+* [git hack](git-town-hack.md) to create a new top-level feature branch
