@@ -7,6 +7,7 @@ Feature: git town: alias
       | git config --global alias.hack town-hack                         |
       | git config --global alias.kill town-kill                         |
       | git config --global alias.new-pull-request town-new-pull-request |
+      | git config --global alias.prepend town-prepend                   |
       | git config --global alias.prune-branches town-prune-branches     |
       | git config --global alias.rename-branch town-rename-branch       |
       | git config --global alias.repo town-repo                         |
@@ -22,6 +23,7 @@ Feature: git town: alias
       | git config --global --unset alias.hack             |
       | git config --global --unset alias.kill             |
       | git config --global --unset alias.new-pull-request |
+      | git config --global --unset alias.prepend          |
       | git config --global --unset alias.prune-branches   |
       | git config --global --unset alias.rename-branch    |
       | git config --global --unset alias.repo             |

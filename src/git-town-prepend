@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/helpers/helpers.sh"
+
+
+function ensure_has_target_branch {
+  if [ -z "$target_branch_name" ]; then
+    echo_error_header
+    echo_error "No branch name provided."
+    exit_with_error newline
+  fi
+}
+
+
+function preconditions {
+  target_branch_name=$1
+  ensure_has_target_branch
+
+  child_branch_name=$INITIAL_BRANCH_NAME
+  ensure_is_feature_branch "$INITIAL_BRANCH_NAME" "Only feature branches can have parent branches."
+
+  ensure_knows_parent_branches "$child_branch_name"
+  parent_branch_name=$(parent_branch "$child_branch_name")
+
+  if [ "$(has_remote_url)" = true ]; then
+    fetch
+  fi
+
+  ensure_does_not_have_branch "$target_branch_name"
+
+  export RUN_IN_GIT_ROOT=true
+  export STASH_OPEN_CHANGES=true
+}
+
+
+function steps {
+  # sync the parent branch
+  for branch_name in $(ancestor_branches "$child_branch_name"); do
+    sync_branch_steps "$branch_name"
+  done
+
+  echo "create_and_checkout_feature_branch $target_branch_name $parent_branch_name"
+  echo_if_all_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE" "$(hack_should_push)"
+
+  echo "delete_all_ancestor_entries"
+
+  # make the new branch the parent of the existing branch
+  echo store_parent_branch "$child_branch_name" "$target_branch_name"
+
+  # make the old parent the parent of the new branch
+  echo store_parent_branch "$target_branch_name" "$parent_branch_name"
+}
+
+
+run "$@"
