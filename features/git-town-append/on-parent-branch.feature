@@ -26,6 +26,8 @@ Feature: Appending a branch to a parent branch
       | existing-parent | git fetch --prune                         |
       |                 | git add -A                                |
       |                 | git stash                                 |
+      |                 | git checkout main                         |
+      | main            | git rebase origin/main                    |
       |                 | git checkout -b new-child existing-parent |
       | new-child       | git push -u origin new-child              |
       |                 | git stash pop                             |
@@ -49,9 +51,10 @@ Feature: Appending a branch to a parent branch
         | new-child       | git add -A                   |
         |                 | git stash                    |
         |                 | git push origin :new-child   |
+        |                 | git checkout main            |
+        | main            | git branch -D new-child      |
         |                 | git checkout existing-parent |
-        | existing-parent | git branch -d new-child      |
-        |                 | git stash pop                |
+        | existing-parent | git stash pop                |
     And I end up on the "existing-parent" branch
     And I still have my uncommitted file
     And I am left with my original commits
