@@ -5,9 +5,10 @@ Feature: Prompt for parent branch when unknown
   So the command can work as I expect
 
 
-  Scenario: prompting for parent branch when running git town-hack with parent
+  Scenario: prompting for parent branch when running git town-append
     Given I have a feature branch named "feature-1" with no parent
-    When I run `git town-hack feature-2 feature-1` and press ENTER
+    And I am on the "feature-1" branch
+    When I run `git town-append feature-2` and press ENTER
     Then I end up on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |

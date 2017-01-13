@@ -1,11 +1,11 @@
 .TH "GIT-TOWN-HACK" "1" "12/26/2016" "Git Town 2\&.1\&.0" "Git Town Manual"
 
 .SH "NAME"
-git town-hack \- create a new feature branch
+git town-hack \- create a new feature branch off the main development branch
 
 
 .SH "SYNOPSIS"
-\fIgit town-hack\fR <branch_name> [<parent_branch_name>]
+\fIgit town-hack\fR <branch_name>
 .br
 \fIgit town-hack\fR (--abort | --continue)
 
@@ -13,7 +13,7 @@ git town-hack \- create a new feature branch
 .SH "DESCRIPTION"
 
 .PP
-Syncs the given parent branch (default: main branch),
+Syncs the main branch,
 .br
 forks a new feature branch with the given name off it,
 .br
@@ -34,13 +34,6 @@ $ git town hack-push-flag false
 .SH "OPTIONS"
 .IP "<branch_name>" 4
 The name of the branch to create.
-
-.IP "<parent_branch_name>" 4
-If provided, cuts the new branch off the given existing feature branch.
-.br
-Providing '.' here uses the current branch as the parent branch.
-.br
-If omitted, uses the main branch as the parent.
 
 .IP "--abort" 4
 Cancel the operation and reset the workspace to a consistent state.

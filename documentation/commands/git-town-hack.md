@@ -1,19 +1,19 @@
 #### NAME
 
-git-town-hack - create a new feature branch
+git-town-hack - create a new feature branch off the main development branch
 
 
 #### SYNOPSIS
 
 ```
-git town-hack <branch_name> [<parent_branch_name>]
+git town-hack <branch_name>
 git town-hack (--abort | --continue)
 ```
 
 
 #### DESCRIPTION
 
-Syncs the given parent branch (default: main branch),
+Syncs the main branch,
 forks a new feature branch with the given name off it,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.
@@ -32,11 +32,6 @@ git town hack-push-flag false
 ```
 <branch_name>
     The name of the branch to create.
-
-<parent_branch_name>
-    If provided, cuts the new branch off the given existing feature branch.
-    Providing '.' here uses the current branch as the parent branch.
-    If omitted, uses the main branch as the parent.
 
 --abort
     Cancel the operation and reset the workspace to a consistent state.
