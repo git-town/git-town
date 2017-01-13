@@ -21,14 +21,16 @@ Feature: Appending a branch to a perennial branch
       | production | git fetch --prune                    |
       |            | git add -A                           |
       |            | git stash                            |
+      |            | git rebase origin/production         |
       |            | git checkout -b new-child production |
       | new-child  | git push -u origin new-child         |
       |            | git stash pop                        |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH     | LOCATION | MESSAGE           |
-      | production | remote   | production_commit |
+      | BRANCH     | LOCATION         | MESSAGE           |
+      | new-child  | local and remote | production_commit |
+      | production | local and remote | production_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT     |
       | new-child | production |
@@ -47,5 +49,5 @@ Feature: Appending a branch to a perennial branch
     And I end up on the "production" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH     | LOCATION | MESSAGE           |
-      | production | remote   | production_commit |
+      | BRANCH     | LOCATION         | MESSAGE           |
+      | production | local and remote | production_commit |

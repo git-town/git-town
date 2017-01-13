@@ -20,14 +20,16 @@ Feature: Appending a branch to a feature branch
       | main      | git fetch --prune              |
       |           | git add -A                     |
       |           | git stash                      |
+      |           | git rebase origin/main         |
       |           | git checkout -b new-child main |
       | new-child | git push -u origin new-child   |
       |           | git stash pop                  |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH | LOCATION | MESSAGE     |
-      | main   | remote   | main_commit |
+      | BRANCH    | LOCATION         | MESSAGE     |
+      | main      | local and remote | main_commit |
+      | new-child | local and remote | main_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | new-child | main   |
@@ -46,5 +48,5 @@ Feature: Appending a branch to a feature branch
     And I end up on the "main" branch
     And I still have my uncommitted file
     And I have the following commits
-      | BRANCH | LOCATION | MESSAGE     |
-      | main   | remote   | main_commit |
+      | BRANCH | LOCATION         | MESSAGE     |
+      | main   | local and remote | main_commit |

@@ -17,15 +17,18 @@ Feature: Appending a branch to a feature branch
   Scenario: inserting a branch into the branch ancestry
     When I run `git town-append new-child`
     Then it runs the commands
-      | BRANCH           | COMMAND                                    |
-      | existing-feature | git fetch --prune                          |
-      |                  | git add -A                                 |
-      |                  | git stash                                  |
-      |                  | git checkout main                          |
-      | main             | git rebase origin/main                     |
-      |                  | git checkout -b new-child existing-feature |
-      | new-child        | git push -u origin new-child               |
-      |                  | git stash pop                              |
+      | BRANCH           | COMMAND                                     |
+      | existing-feature | git fetch --prune                           |
+      |                  | git add -A                                  |
+      |                  | git stash                                   |
+      |                  | git checkout main                           |
+      | main             | git rebase origin/main                      |
+      |                  | git checkout existing-feature               |
+      | existing-feature | git merge --no-edit origin/existing-feature |
+      |                  | git merge --no-edit main                    |
+      |                  | git checkout -b new-child existing-feature  |
+      | new-child        | git push -u origin new-child                |
+      |                  | git stash pop                               |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
@@ -42,14 +45,15 @@ Feature: Appending a branch to a feature branch
     Given I run `git town-append new-child`
     When I run `git town-append --undo`
     Then it runs the commands
-        | BRANCH           | COMMAND                       |
-        | new-child        | git add -A                    |
-        |                  | git stash                     |
-        |                  | git push origin :new-child    |
-        |                  | git checkout main             |
-        | main             | git branch -D new-child       |
-        |                  | git checkout existing-feature |
-        | existing-feature | git stash pop                 |
+      | BRANCH           | COMMAND                       |
+      | new-child        | git add -A                    |
+      |                  | git stash                     |
+      |                  | git push origin :new-child    |
+      |                  | git checkout existing-feature |
+      | existing-feature | git branch -d new-child       |
+      |                  | git checkout main             |
+      | main             | git checkout existing-feature |
+      | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits
