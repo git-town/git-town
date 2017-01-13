@@ -49,4 +49,3 @@ Feature: Appending a branch to a perennial branch
     And I have the following commits
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
-

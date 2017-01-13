@@ -21,6 +21,8 @@ Feature: Appending a branch to a feature branch
       | existing-feature | git fetch --prune                          |
       |                  | git add -A                                 |
       |                  | git stash                                  |
+      |                  | git checkout main                          |
+      | main             | git rebase origin/main                     |
       |                  | git checkout -b new-child existing-feature |
       | new-child        | git push -u origin new-child               |
       |                  | git stash pop                              |
@@ -44,9 +46,10 @@ Feature: Appending a branch to a feature branch
         | new-child        | git add -A                    |
         |                  | git stash                     |
         |                  | git push origin :new-child    |
+        |                  | git checkout main             |
+        | main             | git branch -D new-child       |
         |                  | git checkout existing-feature |
-        | existing-feature | git branch -d new-child       |
-        |                  | git stash pop                 |
+        | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits
