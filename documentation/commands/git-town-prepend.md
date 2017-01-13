@@ -13,8 +13,8 @@ git town-prepend (--abort | --continue)
 
 #### DESCRIPTION
 
-Syncs the given parent branch (default: main branch),
-forks a new feature branch with the given name off its parent,
+Syncs the parent branch (prompts if unknown),
+forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.
