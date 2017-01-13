@@ -18,10 +18,8 @@ function preconditions {
   child_branch_name=$INITIAL_BRANCH_NAME
   ensure_is_feature_branch "$INITIAL_BRANCH_NAME" "Only feature branches can have parent branches."
 
+  ensure_knows_parent_branches "$child_branch_name"
   parent_branch_name=$(parent_branch "$child_branch_name")
-  if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
-    ensure_knows_parent_branches "$parent_branch_name"
-  fi
 
   if [ "$(has_remote_url)" = true ]; then
     fetch
@@ -36,10 +34,9 @@ function preconditions {
 
 function steps {
   # sync the parent branch
-  for branch_name in $(ancestor_branches "$parent_branch_name"); do
+  for branch_name in $(ancestor_branches "$child_branch_name"); do
     sync_branch_steps "$branch_name"
   done
-  sync_branch_steps "$parent_branch_name"
 
   echo "create_and_checkout_feature_branch $target_branch_name $parent_branch_name"
   echo_if_all_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE" "$(hack_should_push)"
