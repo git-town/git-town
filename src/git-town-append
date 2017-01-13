@@ -16,9 +16,7 @@ function preconditions {
   ensure_has_target_branch
 
   parent_branch_name=$INITIAL_BRANCH_NAME
-  if [ "$parent_branch_name" != "$MAIN_BRANCH_NAME" ]; then
-    ensure_knows_parent_branches "$parent_branch_name"
-  fi
+  ensure_knows_parent_branches "$parent_branch_name"
 
   if [ "$(has_remote_url)" = true ]; then
     fetch
