@@ -19,11 +19,3 @@ Feature: git town-rename-branch: requires two branch names
     And I get the error "No branch name provided"
     And I am still on the "current-feature" branch
     And I am left with my original commits
-
-
-  Scenario: one branch name given
-    When I run `git town-rename-branch current-feature`
-    Then it runs no commands
-    And I get the error "No branch name provided"
-    And I am still on the "current-feature" branch
-    And I am left with my original commits
