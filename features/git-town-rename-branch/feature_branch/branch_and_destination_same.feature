@@ -16,7 +16,7 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
 
 
   Scenario: result
-    Then I see "Renaming branch to same name, nothing needed."
+    Then I see "Renaming branch to same name, nothing to do."
     And I end up on the "current-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits

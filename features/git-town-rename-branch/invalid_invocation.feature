@@ -1,6 +1,6 @@
-Feature: git town-rename-branch: requires two branch names
+Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional force flag
 
-  As a developer forgetting to provide the name of the branch and its new name
+  As a developer invoking town-rename-branch with incorrect arity
   I should be reminded that I have to provide the branch names to this command
   So that I can use it correctly without having to look that fact up in the readme.
 
@@ -21,9 +21,9 @@ Feature: git town-rename-branch: requires two branch names
     And I am left with my original commits
 
 
-  Scenario: one branch name given
-    When I run `git town-rename-branch current-feature`
+  Scenario: three branch names given
+    When I run `git town-rename-branch one two three`
     Then it runs no commands
-    And I get the error "No branch name provided"
+    And I get the error "Extraneous argument 'three'. See 'git town-rename-branch --help' for usage"
     And I am still on the "current-feature" branch
     And I am left with my original commits
