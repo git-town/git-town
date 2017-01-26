@@ -22,14 +22,13 @@ function ensure_knows_configuration {
   fi
 
   local main_branch_input
-  local main_branch_prompt='Please specify the main development branch by name or number'
+  local main_branch_current_value='None'
+  if [ "$(is_main_branch_configured)" = true ]; then
+    main_branch_current_value=$(echo_inline_cyan_bold "$MAIN_BRANCH_NAME")
+  fi
 
   while [ -z "$main_branch_input" ]; do
-    if [ "$(is_main_branch_configured)" = true ]; then
-      echo -n "$main_branch_prompt (current value: $(echo_inline_cyan_bold "$MAIN_BRANCH_NAME")): "
-    else
-      echo -n "$main_branch_prompt (current value: None): "
-    fi
+    echo -n "Please specify the main development branch by name or number (current value: $main_branch_current_value): "
 
     read user_input
     if [[ $user_input =~ $numerical_regex ]] ; then
@@ -62,14 +61,13 @@ function ensure_knows_configuration {
 
 
   local perennial_branches_input=''
-  local perennial_branches_prompt='Please specify a perennial branch by name or number. Leave it blank to finish'
+  local perennial_branches_current_values='None'
+  if [ "$(are_perennial_branches_configured)" = true ]; then
+    perennial_branches_current_values=$(echo_inline_cyan_bold "$PERENNIAL_BRANCH_NAMES")
+  fi
 
   while true; do
-    if [ "$(are_perennial_branches_configured)" = true ]; then
-      echo -n "$perennial_branches_prompt (current value(s): $(echo_inline_cyan_bold "$PERENNIAL_BRANCH_NAMES")): "
-    else
-      echo -n "$perennial_branches_prompt (current value(s): None): "
-    fi
+    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value(s): $perennial_branches_current_values): "
 
     read user_input
     local branch
