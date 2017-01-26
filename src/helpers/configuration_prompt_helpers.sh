@@ -35,7 +35,7 @@ function ensure_knows_configuration {
       main_branch_input="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$main_branch_input" ]; then
         echo_error_header
-        echo_error "invalid branch number"
+        echo_error "Invalid branch number"
       fi
     elif [ -z "$user_input" ]; then
       if [ "$(is_main_branch_configured)" = true ]; then
@@ -49,7 +49,7 @@ function ensure_knows_configuration {
         main_branch_input=$user_input
       else
         echo_error_header
-        echo_error "branch '$user_input' doesn't exist"
+        echo_error "Branch '$user_input' doesn't exist"
       fi
     fi
   done
@@ -68,7 +68,7 @@ function ensure_knows_configuration {
       branch="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$branch" ]; then
         echo_error_header
-        echo_error "invalid branch number"
+        echo_error "Invalid branch number"
       fi
     elif [ -z "$user_input" ]; then
       break
@@ -82,7 +82,7 @@ function ensure_knows_configuration {
         fi
       else
         echo_error_header
-        echo_error "branch '$user_input' doesn't exist"
+        echo_error "Branch '$user_input' doesn't exist"
       fi
     fi
 
