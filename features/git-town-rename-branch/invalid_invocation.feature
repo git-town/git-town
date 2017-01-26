@@ -1,4 +1,4 @@
-Feature: git town-rename-branch: requires >= 1 and < 2 branch names, and an optional force flag
+Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional force flag
 
   As a developer invoking town-rename-branch with incorrect arity
   I should be reminded that I have to provide the branch names to this command
