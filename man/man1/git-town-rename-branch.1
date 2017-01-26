@@ -5,7 +5,7 @@ git-town-rename-branch \- rename a branch both locally and remotely
 
 
 .SH "SYNOPSIS"
-\fIgit town-rename-branch\fR <old_branch_name> <new_branch_name> [-f]
+\fIgit town-rename-branch\fR [<old_branch_name>] <new_branch_name> [-f]
 
 
 .SH "DESCRIPTION"
@@ -39,6 +39,8 @@ When run on a perennial branch
 .SH "OPTIONS"
 .IP "<old_branch_name>" 4
 The name of the branch to rename.
+.br
+If omitted, the current branch will be renamed.
 
 .IP "<new_branch_name>" 4
 The new name of the branch.
