@@ -11,8 +11,8 @@ Feature: git town-rename-branch: rename current branch implicitly
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE     |
       | main       | local and remote | main commit |
-      | production | local and remote | prod commit |
       | feature    | local and remote | feat commit |
+      | production | local and remote | prod commit |
 
 
   Scenario: rename feature branch
@@ -25,6 +25,14 @@ Feature: git town-rename-branch: rename current branch implicitly
       | main            | local and remote | main commit |
       | production      | local and remote | prod commit |
       | renamed-feature | local and remote | feat commit |
+
+
+  Scenario: rename branch to itself
+    Given I am on the "feature" branch
+    When I run `git town-rename-branch feature`
+    Then I see "Renaming branch to same name, nothing to do."
+    And I end up on the "feature" branch
+    And I am left with my original commits
 
 
   Scenario: rename perennial branch

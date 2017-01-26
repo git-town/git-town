@@ -16,7 +16,7 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
 
 
   Scenario: result
-    Then I see "Renaming branch to same name, nothing needed."
+    Then I see "Renaming branch to same name, nothing to do."
     And I end up on the "production" branch
     And I still have my uncommitted file
     And I am left with my original commits
