@@ -35,7 +35,7 @@ Feature: Initial configuration
       |      |
       | main |
       |      |
-    Then I see "A main development branch is required to enable the features provided by Git Town."
+    Then I see "A main development branch is required to enable the features provided by Git Town"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 

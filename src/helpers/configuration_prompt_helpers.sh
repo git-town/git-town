@@ -37,13 +37,15 @@ function ensure_knows_configuration {
       if [ -z "$main_branch_input" ]; then
         echo_error_header
         echo_error "Invalid branch number"
+        echo
       fi
     elif [ -z "$user_input" ]; then
       if [ "$(is_main_branch_configured)" = true ]; then
         main_branch_input=$MAIN_BRANCH_NAME
       else
         echo_error_header
-        echo_error "A main development branch is required to enable the features provided by Git Town."
+        echo_error "A main development branch is required to enable the features provided by Git Town"
+        echo
       fi
     else
       if [ "$(has_branch "$user_input")" == true ]; then
@@ -51,6 +53,7 @@ function ensure_knows_configuration {
       else
         echo_error_header
         echo_error "Branch '$user_input' doesn't exist"
+        echo
       fi
     fi
   done
@@ -75,6 +78,7 @@ function ensure_knows_configuration {
       if [ -z "$branch" ]; then
         echo_error_header
         echo_error "Invalid branch number"
+        echo
       fi
     elif [ -z "$user_input" ]; then
       break
@@ -83,12 +87,14 @@ function ensure_knows_configuration {
         if [ "$user_input" == "$MAIN_BRANCH_NAME" ]; then
           echo_error_header
           echo_error "'$user_input' is already set as the main branch"
+          echo
         else
           branch=$user_input
         fi
       else
         echo_error_header
         echo_error "Branch '$user_input' doesn't exist"
+        echo
       fi
     fi
 
