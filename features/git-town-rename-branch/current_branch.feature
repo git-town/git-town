@@ -16,8 +16,8 @@ Feature: git town-rename-branch: rename current branch implicitly
 
 
   Scenario: rename feature branch
-    When I am on the "feature" branch
-    And I run `git town-rename-branch renamed-feature`
+    Given I am on the "feature" branch
+    When I run `git town-rename-branch renamed-feature`
     Then I end up on the "renamed-feature" branch
     And my repo is configured with perennial branches as "production"
     And I have the following commits
@@ -28,8 +28,16 @@ Feature: git town-rename-branch: rename current branch implicitly
 
 
   Scenario: rename perennial branch
-    When I am on the "production" branch
-    And I run `git town-rename-branch renamed-production -f`
+    Given I am on the "production" branch
+    When I run `git town-rename-branch renamed-production`
+    Then it runs no commands
+    And I get the error "The branch 'production' is not a feature branch."
+    And I get the error "Run 'git town-rename-branch production renamed-production -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+
+
+  Scenario: rename perennial branch (forced)
+    Given I am on the "production" branch
+    When I run `git town-rename-branch renamed-production -f`
     Then I end up on the "renamed-production" branch
     And my repo is configured with perennial branches as "renamed-production"
     And I have the following commits
