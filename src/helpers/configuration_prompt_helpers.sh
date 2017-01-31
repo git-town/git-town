@@ -22,7 +22,7 @@ function ensure_knows_configuration {
   fi
 
   local main_branch_input
-  local main_branch_current_value='None'
+  local main_branch_current_value='none'
   if [ "$(is_main_branch_configured)" = true ]; then
     main_branch_current_value=$(echo_inline_cyan_bold "$MAIN_BRANCH_NAME")
   fi
@@ -67,7 +67,7 @@ function ensure_knows_configuration {
   fi
 
   while true; do
-    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value(s): $perennial_branches_current_values): "
+    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value: $perennial_branches_current_values): "
 
     read user_input
     local branch
