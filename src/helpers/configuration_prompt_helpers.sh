@@ -22,34 +22,37 @@ function ensure_knows_configuration {
   fi
 
   local main_branch_input
+  local main_branch_current_value='none'
+  if [ "$(is_main_branch_configured)" = true ]; then
+    main_branch_current_value=$(echo_inline_cyan_bold "$MAIN_BRANCH_NAME")
+  fi
 
   while [ -z "$main_branch_input" ]; do
-    if [ "$(is_main_branch_configured)" = true ]; then
-      echo -n "Please specify the main development branch by name or number (current value: ${MAIN_BRANCH_NAME}): "
-    else
-      echo -n "Please specify the main development branch by name or number (current value: None): "
-    fi
+    echo -n "Please specify the main development branch by name or number (current value: $main_branch_current_value): "
 
     read user_input
     if [[ $user_input =~ $numerical_regex ]] ; then
       main_branch_input="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$main_branch_input" ]; then
         echo_error_header
-        echo_error "invalid branch number"
+        echo_error "Invalid branch number"
+        echo
       fi
     elif [ -z "$user_input" ]; then
       if [ "$(is_main_branch_configured)" = true ]; then
         main_branch_input=$MAIN_BRANCH_NAME
       else
         echo_error_header
-        echo_error "no input received"
+        echo_error "A main development branch is required to enable the features provided by Git Town"
+        echo
       fi
     else
       if [ "$(has_branch "$user_input")" == true ]; then
         main_branch_input=$user_input
       else
         echo_error_header
-        echo_error "branch '$user_input' doesn't exist"
+        echo_error "Branch '$user_input' doesn't exist"
+        echo
       fi
     fi
   done
@@ -58,9 +61,13 @@ function ensure_knows_configuration {
 
 
   local perennial_branches_input=''
+  local perennial_branches_current_values='None'
+  if [ "$(are_perennial_branches_configured)" = true ]; then
+    perennial_branches_current_values=$(echo_inline_cyan_bold "$PERENNIAL_BRANCH_NAMES")
+  fi
 
   while true; do
-    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value: ${PERENNIAL_BRANCH_NAMES}): "
+    echo -n "Please specify a perennial branch by name or number. Leave it blank to finish (current value: $perennial_branches_current_values): "
 
     read user_input
     local branch
@@ -68,7 +75,8 @@ function ensure_knows_configuration {
       branch="$(get_numbered_branch_alpha_order "$user_input")"
       if [ -z "$branch" ]; then
         echo_error_header
-        echo_error "invalid branch number"
+        echo_error "Invalid branch number"
+        echo
       fi
     elif [ -z "$user_input" ]; then
       break
@@ -77,12 +85,14 @@ function ensure_knows_configuration {
         if [ "$user_input" == "$MAIN_BRANCH_NAME" ]; then
           echo_error_header
           echo_error "'$user_input' is already set as the main branch"
+          echo
         else
           branch=$user_input
         fi
       else
         echo_error_header
-        echo_error "branch '$user_input' doesn't exist"
+        echo_error "Branch '$user_input' doesn't exist"
+        echo
       fi
     fi
 

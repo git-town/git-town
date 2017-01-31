@@ -80,7 +80,7 @@ function add_or_remove_perennial_branches {
 
 # Returns whether or not the perennial branches are configured
 function are_perennial_branches_configured {
-  if get_configuration 'perennial-branch-names'; then
+  if [ -n "$PERENNIAL_BRANCH_NAMES" ]; then
     echo true
   else
     echo false

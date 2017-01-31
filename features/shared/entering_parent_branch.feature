@@ -40,7 +40,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering a wrong number
     When I run `git town-sync` and enter "5" and "1"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "invalid branch number"
+    And I see "Invalid branch number"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -67,7 +67,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering a wrong name
     When I run `git town-sync` and enter "zonk" and "main"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "branch 'zonk' doesn't exist"
+    And I see "Branch 'zonk' doesn't exist"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
