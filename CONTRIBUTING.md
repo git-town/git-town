@@ -23,6 +23,7 @@ This guide will help you get started and outline some things you should know whe
   * cd into `gt`
   * run `go install`
   * now you can run `gt` on the command line
+  * see https://golang.org/doc/install#testing for details on how to test
 
 * install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
