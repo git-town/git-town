@@ -5,6 +5,9 @@ require 'open4'
 require 'pathname'
 require 'rspec'
 
+# compile the Go app here,
+# so that the tests always run against the latest version of the source code
+`go install`
 
 SOURCE_DIRECTORY = File.join(File.dirname(__FILE__), '..', '..', 'src')
 GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
