@@ -97,8 +97,8 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: fix loop incorrectly reported (#784)
     Given Git Town is aware of this branch hierarchy
-      | BRANCH        | PARENT  |
-      | feature-1     | main    |
+      | BRANCH    | PARENT  |
+      | feature-1 | main    |
     When I run `git town-sync` and enter:
       | feature-1 |
     Then I see "Please specify the parent branch of feature-2"

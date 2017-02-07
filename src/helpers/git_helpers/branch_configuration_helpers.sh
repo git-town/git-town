@@ -228,7 +228,7 @@ function has_ancestor_branch {
   local branch_name_1=$1
   local branch_name_2=$2
 
-  if [ "$(compile_ancestor_branches "$branch_name_1" | grep -c "\bfeature-1\b")" = 0 ]; then
+  if [ "$(compile_ancestor_branches "$branch_name_1" | grep -c "\b$branch_name_2\b")" = 0 ]; then
     echo false
   else
     echo true
