@@ -10,10 +10,10 @@ machine:
 
 checkout:
 
-  override:
-    - git clone --depth=2 --branch=$CIRCLE_BRANCH https://github.com/Originate/git-town.git /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - git checkout $CIRCLE_SHA1
+  # override:
+  #   - git clone --depth=2 --branch=$CIRCLE_BRANCH https://github.com/Originate/git-town.git /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+  #   - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+  #   - git checkout $CIRCLE_SHA1
 
 
 dependencies:
@@ -22,9 +22,9 @@ dependencies:
   cache_directories:
     - "~/.cabal"
 
-  override:
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - go install
+  # override:
+  #   - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+  #   - go install
 
   post:
     - bin/circleci-install-shellcheck
