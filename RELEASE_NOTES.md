@@ -5,7 +5,7 @@
 ## 3.0.0 (2016-02-07)
 
 #### BREAKING CHANGES
-* `git hack`: no longer accepts a parent branch
+* `git hack`: no longer accepts a parent branch (functionality moved to `git append`)
 
 #### New Features
 * `git append`: create a new branch as a child of the current branch
