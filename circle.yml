@@ -24,7 +24,7 @@ dependencies:
 
   override:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
-    - mv /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+    - cp /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
 
   post:
