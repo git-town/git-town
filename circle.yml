@@ -24,8 +24,6 @@ dependencies:
 
   override:
     - cd /home/ubuntu/.go_workspace/src/github.com/gt
-    - go get github.com/Masterminds/glide
-    - glide install
     - go install
 
   post:
