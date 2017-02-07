@@ -10,7 +10,8 @@ machine:
 
 checkout:
   override:
-    - git clone --depth=2 --branch=$CIRCLE_SHA1 https://github.com/Originate/git-town.git
+    - git clone --depth=2 --branch=$CIRCLE_BRANCH https://github.com/Originate/git-town.git
+    - git checkout $CIRCLE_SHA1
 
 dependencies:
 
