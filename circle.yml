@@ -22,9 +22,9 @@ dependencies:
   cache_directories:
     - "~/.cabal"
 
-  # override:
-  #   - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-  #   - go install
+  override:
+    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+    - go install
 
   post:
     - bin/circleci-install-shellcheck
