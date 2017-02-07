@@ -13,8 +13,10 @@ This guide will help you get started and outline some things you should know whe
 ## Setup
 
 * install [Go](https://golang.org)
+  * on macOS via `brew install go`
 * set up the Go directory structure on your machine
-  * set the environment variable `$GOPATH` to your Go workspace (let's assume that is `~/go` here)
+  * set the environment variable `$GOPATH` to your Go workspace
+    (you can point it to any folder on your hard drive, let's assume `~/go` here)
   * add `~/go/bin` to your `$PATH`
   * create the directory `~/go/src/github.com/Originate`
   * cd into that directory, and run `git clone git@github.com:Originate/git-town.git gt`
