@@ -26,7 +26,7 @@ dependencies:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
-    - cd git-town && bundle install
+    - cd /home/ubuntu/git-town && bundle install
 
   post:
     - bin/circleci-install-shellcheck
