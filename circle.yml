@@ -8,6 +8,10 @@ machine:
     PATH: $HOME/.cabal/bin/:$PATH
 
 
+checkout:
+  override:
+    - git clone --depth=2 --branch=$CIRCLE_SHA1 https://github.com/Originate/git-town.git
+
 dependencies:
 
   # Cache ShellCheck for subsequent builds
