@@ -8,8 +8,8 @@ machine:
     PATH: $HOME/.cabal/bin/:$PATH
 
 
-checkout:
-
+# checkout:
+#
   # override:
   #   - git clone --depth=2 --branch=$CIRCLE_BRANCH https://github.com/Originate/git-town.git /home/ubuntu/.go_workspace/src/github.com/Originate/gt
   #   - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
