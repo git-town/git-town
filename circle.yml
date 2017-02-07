@@ -23,7 +23,9 @@ dependencies:
     - "~/.cabal"
 
   override:
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+    - mkdir -p .go_workspace/src/github.com/Originate
+    - mv git-town .go_workspace/src/github.com/Originate/gt
+    - cd .go_workspace/src/github.com/Originate/gt
     - go install
 
   post:
