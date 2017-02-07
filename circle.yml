@@ -23,10 +23,9 @@ dependencies:
     - "~/.cabal"
 
   override:
-    - mkdir -p .go_workspace/src/github.com/Originate
-    - mv git-town .go_workspace/src/github.com/Originate/gt
-    - cd .go_workspace/src/github.com/Originate/gt
-    - go install
+    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
+    - mv /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
 
   post:
     - bin/circleci-install-shellcheck
