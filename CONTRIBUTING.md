@@ -12,7 +12,16 @@ This guide will help you get started and outline some things you should know whe
 
 ## Setup
 
-* fork and clone the repository to your machine
+* install [Go](https://golang.org)
+* set up the Go directory structure on your machine
+  * set the environment variable `$GOPATH` to your Go workspace (let's assume that is `~/go` here)
+  * add `~/go/bin` to your `$PATH`
+  * create the directory `~/go/src/github.com/Originate`
+  * cd into that directory, and run `git clone git@github.com:Originate/git-town.git gt`
+  * cd into `gt`
+  * run `go install`
+  * now you can run `gt` on the command line
+
 * install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
 * install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
