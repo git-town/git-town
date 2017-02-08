@@ -2,7 +2,7 @@ FROM amezin/debian-build-essentials:jessie
 MAINTAINER allonsy
 
 #supply the version number here. Do not prepend a 'v'
-ENV version 2.1.0
+ENV version 3.0.0
 
 RUN apt-get update && apt-get install -y git
 
