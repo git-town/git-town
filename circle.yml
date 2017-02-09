@@ -26,6 +26,7 @@ dependencies:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
+    - gt version
     - cd /home/ubuntu/git-town && bundle install
 
   post:
