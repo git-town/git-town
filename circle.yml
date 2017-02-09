@@ -8,14 +8,6 @@ machine:
     PATH: $HOME/.cabal/bin/:$PATH
 
 
-# checkout:
-#
-  # override:
-  #   - git clone --depth=2 --branch=$CIRCLE_BRANCH https://github.com/Originate/git-town.git /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-  #   - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-  #   - git checkout $CIRCLE_SHA1
-
-
 dependencies:
 
   # Cache ShellCheck for subsequent builds
@@ -26,6 +18,7 @@ dependencies:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt/.git
+    - cat /home/ubuntu/git-town/cmd/version.go
     - cat /home/ubuntu/.go_workspace/src/github.com/Originate/gt/cmd/version.go
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
     - echo $PATH
