@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Short: "Displays the version of the currently installed Git Town executable",
 	Long:  `Displays the version of the currently installed Git Town executable`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Git Town 2.2.0")
+		fmt.Println("Git Town 4.0.0")
 	},
 }
 
