@@ -16,10 +16,9 @@ dependencies:
 
   override:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
-    - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt/.git
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
+    - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cd /home/ubuntu/git-town && bundle install
 
   post:
