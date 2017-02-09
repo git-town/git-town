@@ -19,12 +19,7 @@ dependencies:
     - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt/.git
-    - cat /home/ubuntu/git-town/cmd/version.go
-    - cat /home/ubuntu/.go_workspace/src/github.com/Originate/gt/cmd/version.go
     - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
-    - echo $PATH
-    - which gt
-    - gt version
     - cd /home/ubuntu/git-town && bundle install
 
   post:
