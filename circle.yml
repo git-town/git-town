@@ -16,6 +16,7 @@ dependencies:
 
   override:
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
+    - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
     - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt/.git
     - cat /home/ubuntu/git-town/cmd/version.go
