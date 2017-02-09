@@ -5,6 +5,7 @@ require 'open4'
 require 'pathname'
 require 'rspec'
 
+
 SOURCE_DIRECTORY = File.join(File.dirname(__FILE__), '..', '..', 'src')
 GIT_TOWN_DIRECTORY = File.expand_path('..', SOURCE_DIRECTORY)
 SHELL_OVERRIDE_DIRECTORY = File.join(File.dirname(__FILE__), 'shell_overrides')
