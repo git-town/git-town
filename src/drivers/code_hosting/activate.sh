@@ -25,7 +25,7 @@ function activate_driver_for_code_hosting {
   else
     echo_error_header
     echo_usage "Unsupported hosting service."
-    echo_usage 'This command requires hosting on GitHub, GitLab or Bitbucket.'
+    echo_usage 'This command requires hosting on GitHub, GitLab, or Bitbucket.'
     exit_with_error newline
   fi
 }
