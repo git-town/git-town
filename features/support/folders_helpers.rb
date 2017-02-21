@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Returns the full path to the folder with the given name inside the current
 # Git workspace
 def git_folder folder_name

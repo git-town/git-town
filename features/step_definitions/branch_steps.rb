@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do

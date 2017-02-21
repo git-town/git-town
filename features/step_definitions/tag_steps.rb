@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^I have the following tags$/) do |tags|
   tags.hashes.each do |tag|
     send "create_#{tag['LOCATION']}_tag", tag['NAME']

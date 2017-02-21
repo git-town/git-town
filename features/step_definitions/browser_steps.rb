@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Then(/^I see a new (.+?) pull request for the "([^"]+)" branch in the "(.+?)" repo in my browser$/) do |domain, branch, repo|
   url = pull_request_url domain: domain, branch: branch, repo: repo
   expect(@last_run_result.out.strip).to include "#{@tool} called with: #{url}"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Returns the branch hierarchy information that is currently configured in the current repository
 def configured_branch_hierarchy_information ignore_errors: false
   result = Mortadella::Horizontal.new headers: %w(BRANCH PARENT)
