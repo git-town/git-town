@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Then(/^my repo(?: still)? has a merge in progress$/) do
   expect(merge_in_progress?).to be_truthy
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Creates a tag with the given name in the local repo
 def create_local_tag tag_name
   run "git tag -a #{tag_name} -m '#{tag_name}'"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Finds Git tags, returns them as TagList instances
 class TagFinder
 
