@@ -14,7 +14,7 @@ function create_pull_request {
     to_compare="$parent_branch...$branch"
   fi
 
-  open_browser "https://gitlab.com/$repository/compare/$to_compare?expand=1"
+  open_browser "https://gitlab.com/$repository/compare/$to_compare"
 }
 
 
