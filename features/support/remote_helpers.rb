@@ -6,7 +6,7 @@ def base_url domain
   case domain
   when 'Bitbucket' then 'https://bitbucket.org'
   when 'GitHub' then 'https://github.com'
-  when 'Gitlab' then 'https://gitlab.com'
+  when 'GitLab' then 'https://gitlab.com'
   else fail "Unknown domain: #{domain}"
   end
 end
@@ -29,7 +29,7 @@ end
 
 # Returns the URL for making merge requests on GitLab
 def gitlab_pull_request_url branch:, parent_branch:, repo:
-  parent_branch ||= 'main' # set default parent_branch to master
+  parent_branch ||= 'main' # set default parent_branch to main
   source = "merge_request%5Bsource_branch%5D=#{branch}"
   dest   = "merge_request%5Btarget_branch%5D=#{parent_branch}"
   "https://gitlab.com/#{repo}/merge_requests/new?#{source}&#{dest}"
