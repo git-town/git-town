@@ -14,3 +14,4 @@ Feature: git-repo when origin is on GitHub
       | https://github.com/Originate/git-town     |
       | git@github.com:Originate/git-town.git     |
       | git@github.com:Originate/git-town         |
+      | ssh://git@github.com/Originate/git-town   |
