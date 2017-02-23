@@ -31,6 +31,8 @@ Feature: git-new-pull-request when origin is on GitHub
       | https://github.com/Originate/originate.github.com     | Originate/originate.github.com |
       | git@github.com:Originate/originate.github.com.git     | Originate/originate.github.com |
       | git@github.com:Originate/originate.github.com         | Originate/originate.github.com |
+      | ssh://git@github.com/Originate/git-town.git           | Originate/git-town             |
+      | ssh://git@github.com/Originate/git-town               | Originate/git-town             |
 
 
   Scenario: nested feature branch with known parent
