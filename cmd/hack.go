@@ -8,15 +8,15 @@ import (
   "github.com/Originate/gt/cmd/script"
   "github.com/Originate/gt/cmd/utils"
 
-	"github.com/spf13/cobra"
+  "github.com/spf13/cobra"
 )
 
 // versionCmd represents the version command
 var hackCmd = &cobra.Command{
-	Use:   "hack",
+  Use:   "hack",
   Short: "Create a new feature branch off the main development branch",
-	Long:  `Create a new feature branch off the main development branch`,
-	Run: func(cmd *cobra.Command, args []string) {
+  Long:  `Create a new feature branch off the main development branch`,
+  Run: func(cmd *cobra.Command, args []string) {
     if len(args) == 0 {
       utils.ExitWithErrorMessage("No branch name provided.")
     }
@@ -24,13 +24,13 @@ var hackCmd = &cobra.Command{
     fetchCmd := []string{"git", "fetch", "--prune"}
     fetchErr := script.RunCommand(fetchCmd)
     if fetchErr != nil {
-  		log.Fatal(fetchErr)
-  	}
+      log.Fatal(fetchErr)
+    }
     git.EnsureDoesNotHaveBranch(targetBranchName)
     fmt.Println()
-	},
+  },
 }
 
 func init() {
-	RootCmd.AddCommand(hackCmd)
+  RootCmd.AddCommand(hackCmd)
 }

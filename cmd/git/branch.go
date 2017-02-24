@@ -7,6 +7,7 @@ import (
   "github.com/Originate/gt/cmd/utils"
 )
 
+
 func EnsureDoesNotHaveBranch(branchName string) {
   if HasBranch(branchName) {
     message := fmt.Sprintf("A branch named '%s' already exists", branchName)
@@ -14,10 +15,12 @@ func EnsureDoesNotHaveBranch(branchName string) {
   }
 }
 
+
 func GetCurrentBranchName() string {
   cmd := []string{"git", "rev-parse", "--abbrev-ref", "HEAD"}
   return utils.GetCommandOutput(cmd)
 }
+
 
 func HasBranch(branchName string) bool {
   cmd := []string{"git", "branch", "-a"}
@@ -30,6 +33,6 @@ func HasBranch(branchName string) bool {
     if line == branchName {
       return true
     }
-	}
+  }
   return false
 }
