@@ -11,7 +11,7 @@ import (
   "github.com/spf13/cobra"
 )
 
-// versionCmd represents the version command
+
 var hackCmd = &cobra.Command{
   Use:   "hack",
   Short: "Create a new feature branch off the main development branch",
@@ -30,6 +30,7 @@ var hackCmd = &cobra.Command{
     fmt.Println()
   },
 }
+
 
 func init() {
   RootCmd.AddCommand(hackCmd)
