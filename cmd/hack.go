@@ -34,26 +34,3 @@ var hackCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(hackCmd)
 }
-
-// function ensure_has_target_branch {
-//   if [ -z "$target_branch_name" ]; then
-//     echo_error_header
-//     echo_error "No branch name provided."
-//     exit_with_error newline
-//   fi
-// }
-//
-//
-// function preconditions {
-//   target_branch_name=$1
-//   ensure_has_target_branch
-//
-//   if [ "$(has_remote_url)" = true ]; then
-//     fetch
-//   fi
-//
-//   ensure_does_not_have_branch "$target_branch_name"
-//
-//   export RUN_IN_GIT_ROOT=true
-//   export STASH_OPEN_CHANGES=true
-// }
