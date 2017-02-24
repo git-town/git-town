@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Represents a sorted list of Git tags and their locations
 class TagList
 
