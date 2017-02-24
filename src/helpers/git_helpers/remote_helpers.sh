@@ -16,14 +16,14 @@ function remote_url {
 
 # Returns the domain of the remote repository
 function remote_domain {
-  remote_url | sed -E "s#(https?://([^@]*@)?|git@)([^/:]+).*#\3#"
+  remote_url | sed -E "s#(^[^:]*://([^@]*@)?|git@)([^/:]+).*#\3#"
 }
 
 
 # Returns the USER/REPO for the remote repository
 function remote_repository_name {
   local domain=$(remote_domain)
-  remote_url | sed -E "s#.*$domain[/:](.+)#\1#" | sed "s/\.git$//" | sed 's#ssh://git@[^/]*/##'
+  remote_url | sed -E "s#.*$domain[/:](.+)#\1#" | sed "s/\.git$//"
 }
 
 
