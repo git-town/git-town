@@ -1,10 +1,11 @@
 package toml
 
 import (
+	"errors"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
-	"strings"
 )
 
 func TestTomlTreeConversionToString(t *testing.T) {
@@ -15,7 +16,8 @@ points = { x = 1, y = 2 }`)
 		t.Fatal("Unexpected error:", err)
 	}
 
-	reparsedTree, err := Load(toml.ToString())
+	tomlString, _ := toml.ToString()
+	reparsedTree, err := Load(tomlString)
 
 	assertTree(t, reparsedTree, err, map[string]interface{}{
 		"name": map[string]interface{}{
@@ -39,7 +41,7 @@ func TestTomlTreeConversionToStringKeysOrders(t *testing.T) {
 		  foo = 1
 		  bar = "baz2"`)
 
-		stringRepr := tree.ToString()
+		stringRepr, _ := tree.ToString()
 
 		t.Log("Intermediate string representation:")
 		t.Log(stringRepr)
@@ -47,15 +49,14 @@ func TestTomlTreeConversionToStringKeysOrders(t *testing.T) {
 		r := strings.NewReader(stringRepr)
 		toml, err := LoadReader(r)
 
-
 		if err != nil {
 			t.Fatal("Unexpected error:", err)
 		}
 
 		assertTree(t, toml, err, map[string]interface{}{
 			"foobar": true,
-			"bar": "baz",
-			"foo": 1,
+			"bar":    "baz",
+			"foo":    1,
 			"qux": map[string]interface{}{
 				"foo": 1,
 				"bar": "baz2",
@@ -67,6 +68,19 @@ func TestTomlTreeConversionToStringKeysOrders(t *testing.T) {
 func testMaps(t *testing.T, actual, expected map[string]interface{}) {
 	if !reflect.DeepEqual(actual, expected) {
 		t.Fatal("trees aren't equal.\n", "Expected:\n", expected, "\nActual:\n", actual)
+	}
+}
+
+func TestToStringTypeConversionError(t *testing.T) {
+	tree := TomlTree{
+		values: map[string]interface{}{
+			"thing": []string{"unsupported"},
+		},
+	}
+	_, err := tree.ToString()
+	expected := errors.New("unsupported value type []string: [unsupported]")
+	if err.Error() != expected.Error() {
+		t.Errorf("expecting error %s, but got %s instead", expected, err)
 	}
 }
 
@@ -151,15 +165,15 @@ func TestTomlTreeConversionToMapWithArrayOfInlineTables(t *testing.T) {
 		"params": map[string]interface{}{
 			"language_tabs": []interface{}{
 				map[string]interface{}{
-					"key": "shell",
+					"key":  "shell",
 					"name": "Shell",
 				},
 				map[string]interface{}{
-					"key": "ruby",
+					"key":  "ruby",
 					"name": "Ruby",
 				},
 				map[string]interface{}{
-					"key": "python",
+					"key":  "python",
 					"name": "Python",
 				},
 			},
