@@ -16,7 +16,7 @@ function remote_url {
 
 # Returns the domain of the remote repository
 function remote_domain {
-  remote_url | sed -E "s#(https?://([^@]*@)?|git@)([^/:]+).*#\3#"
+  remote_url | sed -E "s#(^[^:]*://([^@]*@)?|git@)([^/:]+).*#\3#"
 }
 
 
