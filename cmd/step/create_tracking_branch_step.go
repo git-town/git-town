@@ -5,7 +5,7 @@ import (
 )
 
 type CreateTrackingBranchStep struct {
-  branchName string
+  BranchName string
 }
 
 func (step CreateTrackingBranchStep) CreateAbortStep() Step {
@@ -21,5 +21,5 @@ func (step CreateTrackingBranchStep) CreateUndoStep() Step {
 }
 
 func (step CreateTrackingBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "push", "origin", step.branchName})
+  return script.RunCommand([]string{"git", "push", "-u", "origin", step.BranchName})
 }

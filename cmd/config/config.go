@@ -52,6 +52,22 @@ func HasRemote() bool {
   return GetRemoteUrl() != ""
 }
 
+func ShouldHackPush() bool {
+  hackPushFlag := getConfigurationValue("hack-push-flag")
+  if hackPushFlag == "" {
+    hackPushFlag = "true"
+  }
+  return hackPushFlag == "true"
+}
+
+func StoreParentBranch(branchName, parentBranchName string) {
+  storeConfigurationValue(fmt.Sprintf("%s.parent", branchName), parentBranchName)
+}
+
 func getConfigurationValue(key string) string {
   return util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key)})
+}
+
+func storeConfigurationValue(key, value string) {
+  util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key), value})
 }
