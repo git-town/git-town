@@ -14,7 +14,7 @@ import (
 func RunCommand(cmd []string) error {
   header := strings.Join(cmd, " ")
   if strings.HasPrefix(header, "git") {
-    header = "[" + git.GetCurrentBranchName() + "] " + header
+    header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
   }
   fmt.Println()
   color.New(color.Bold).Println(header)

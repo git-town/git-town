@@ -9,7 +9,7 @@ Feature: git town-hack: requires a branch name
     Given I have a feature branch named "existing-feature"
     And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `git town-hack`
+    When I run `gt hack`
 
 
   Scenario: result

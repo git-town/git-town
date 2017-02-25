@@ -3,28 +3,34 @@ package git
 import (
   "fmt"
   "strings"
+  "os"
 
-  "github.com/Originate/gt/cmd/utils"
+  "github.com/Originate/gt/cmd/util"
 )
 
 
 func EnsureDoesNotHaveBranch(branchName string) {
   if HasBranch(branchName) {
     message := fmt.Sprintf("A branch named '%s' already exists", branchName)
-    utils.ExitWithErrorMessage(message)
+    util.ExitWithErrorMessage(message)
   }
 }
 
 
 func GetCurrentBranchName() string {
   cmd := []string{"git", "rev-parse", "--abbrev-ref", "HEAD"}
-  return utils.GetCommandOutput(cmd)
+  return util.GetCommandOutput(cmd)
+}
+
+
+func GetTrackingBranchName(branchName string) string {
+  return fmt.Sprintf("origin/%s", branchName)
 }
 
 
 func HasBranch(branchName string) bool {
   cmd := []string{"git", "branch", "-a"}
-  lines := strings.Split(utils.GetCommandOutput(cmd), "\n")
+  lines := strings.Split(util.GetCommandOutput(cmd), "\n")
   for i := 0; i < len(lines); i++ {
     line := lines[i]
     line = strings.Trim(line, "* ")
@@ -35,4 +41,55 @@ func HasBranch(branchName string) bool {
     }
   }
   return false
+}
+
+func GetGitRoot() string {
+  return util.GetCommandOutput([]string{"git", "rev-parse", "--show-toplevel"})
+}
+
+func IsMergeInProgress() bool {
+  _, err := os.Stat(fmt.Sprintf("%s/.git/MERGE_HEAD", GetGitRoot()))
+  return err == nil
+}
+
+func IsRebaseInProgress() bool {
+  status := util.GetCommandOutput([]string{"git", "status"})
+  return strings.Contains(status, "rebase in progress")
+}
+
+func GetCurrentSha() string {
+  return GetBranchSha("HEAD")
+}
+
+func GetBranchSha(branchName string) string {
+  return util.GetCommandOutput([]string{"git", "rev-parse", branchName})
+}
+
+func HasTrackingBranch(branchName string) bool {
+  trackingBranchName := GetTrackingBranchName(branchName)
+  output := util.GetCommandOutput([]string{"git", "branch", "-r"})
+  lines := strings.Split(output, "\n")
+  for i := 0; i < len(lines); i++ {
+    line := lines[i]
+    line = strings.TrimSpace(line)
+    if line == trackingBranchName {
+      return true
+    }
+  }
+  return false
+}
+
+func ShouldBranchBePushed(branchName string) bool {
+  trackingBranchName := GetTrackingBranchName(branchName)
+  output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", fmt.Sprintf("%s...%s", branchName, trackingBranchName)})
+  lines := strings.Split(output, "\n")
+  return len(lines) > 0
+}
+
+func IsFeatureBranch(branchName string) bool {
+  return true // TODO
+}
+
+func GetParentBranch(branchName string) string {
+  return "master" // TODO
 }
