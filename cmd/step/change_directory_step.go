@@ -9,15 +9,15 @@ type ChangeDirectoryStep struct {
 }
 
 func (step ChangeDirectoryStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ChangeDirectoryStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ChangeDirectoryStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ChangeDirectoryStep) Run() error {

@@ -8,15 +8,15 @@ import (
 type ContinueRebaseBranchStep int
 
 func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ContinueRebaseBranchStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ContinueRebaseBranchStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ContinueRebaseBranchStep) Run() error {

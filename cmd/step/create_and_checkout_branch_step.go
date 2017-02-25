@@ -11,15 +11,15 @@ type CreateAndCheckoutBranchStep struct {
 }
 
 func (step CreateAndCheckoutBranchStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step CreateAndCheckoutBranchStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step CreateAndCheckoutBranchStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step CreateAndCheckoutBranchStep) Run() error {

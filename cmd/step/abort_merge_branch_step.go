@@ -7,15 +7,15 @@ import (
 type AbortMergeBranchStep int
 
 func (step AbortMergeBranchStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step AbortMergeBranchStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step AbortMergeBranchStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step AbortMergeBranchStep) Run() error {

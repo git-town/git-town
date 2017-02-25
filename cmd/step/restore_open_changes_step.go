@@ -7,15 +7,15 @@ import (
 type RestoreOpenChangesStep int
 
 func (step RestoreOpenChangesStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step RestoreOpenChangesStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step RestoreOpenChangesStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step RestoreOpenChangesStep) Run() error {

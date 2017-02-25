@@ -11,15 +11,15 @@ type ResetToShaStep struct {
 }
 
 func (step ResetToShaStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ResetToShaStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ResetToShaStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step ResetToShaStep) Run() error {

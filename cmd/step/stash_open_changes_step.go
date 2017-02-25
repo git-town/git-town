@@ -7,15 +7,15 @@ import (
 type StashOpenChangesStep int
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step StashOpenChangesStep) CreateContinueStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step StashOpenChangesStep) CreateUndoStep() Step {
-  return new(NoOpStep)
+  return nil
 }
 
 func (step StashOpenChangesStep) Run() error {
