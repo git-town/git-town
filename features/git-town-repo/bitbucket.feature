@@ -14,3 +14,5 @@ Feature: git-repo when origin is on Bitbucket
       | https://username@bitbucket.org/Originate/git-town     |
       | git@bitbucket.org/Originate/git-town.git              |
       | git@bitbucket.org/Originate/git-town                  |
+      | ssh://git@bitbucket.org/Originate/git-town.git        |
+      | ssh://git@bitbucket.org/Originate/git-town            |
