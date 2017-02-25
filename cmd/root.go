@@ -6,7 +6,10 @@ import (
 
   "github.com/spf13/cobra"
   "github.com/spf13/viper"
+<<<<<<< HEAD
   "github.com/fatih/color"
+=======
+>>>>>>> go
 )
 
 var cfgFile string
