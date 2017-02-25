@@ -1,33 +1,34 @@
 package step
 
 import (
+  "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
-  "github.com/Originate/gt/cmd/util"
 )
 
-func GetSyncBranchSteps(branchName string, config util.Config) []Step {
-  isFeature := git.IsFeatureBranch(branchName)
+func GetSyncBranchSteps(branchName string) []Step {
+  isFeature := config.IsFeatureBranch(branchName)
+  hasRemote := config.HasRemote()
 
   var steps []Step
 
-  if config.HasRemote || isFeature {
+  if hasRemote || isFeature {
     steps = append(steps, CheckoutBranchStep{branchName: branchName})
     if isFeature {
-      steps = append(steps, new(MergeTrackingBranchStep), MergeBranchStep{branchName: git.GetParentBranch(branchName)})
+      steps = append(steps, new(MergeTrackingBranchStep), MergeBranchStep{branchName: config.GetParentBranch(branchName)})
     } else {
-      if config.PullBranchStrategy == "rebase" {
+      if config.GetPullBranchStrategy() == "rebase" {
         steps = append(steps, new(RebaseTrackingBranchStep))
       } else {
         steps = append(steps, new(MergeTrackingBranchStep))
       }
 
-      // if config.mainBranchName == branchName && git.hasRemoteUpstream() {
+      // if config.getMainBranchName() == branchName && git.hasRemoteUpstream() {
       //   append(steps, new(FetchUpstreamStep))
       //   append(steps, new(RebaseBranchStep(branchName: fmt.Sprintf("upstream/%s", config.mainBranchName))))
       // }
     }
 
-    if config.HasRemote {
+    if hasRemote {
       if git.HasTrackingBranch(branchName) {
         steps = append(steps, PushBranchStep{branchName: branchName})
       } else {

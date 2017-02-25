@@ -22,5 +22,8 @@ func (step CheckoutBranchStep) CreateUndoStep() Step {
 }
 
 func (step CheckoutBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "checkout", step.branchName})
+  if git.GetCurrentBranchName() != step.branchName {
+    return script.RunCommand([]string{"git", "checkout", step.branchName})
+  }
+  return nil
 }

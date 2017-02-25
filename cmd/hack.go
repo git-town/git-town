@@ -4,10 +4,11 @@ import (
   "fmt"
   "log"
 
+  "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
   "github.com/Originate/gt/cmd/script"
-  "github.com/Originate/gt/cmd/util"
   "github.com/Originate/gt/cmd/step"
+  "github.com/Originate/gt/cmd/util"
 
   "github.com/spf13/cobra"
 )
@@ -28,22 +29,16 @@ var hackCmd = &cobra.Command{
       log.Fatal(fetchErr)
     }
     git.EnsureDoesNotHaveBranch(targetBranchName)
-    fmt.Println()
-    var p []string
-    config := util.Config{
-      HasRemote: true,
-      MainBranchName: "master",
-      PerennialBranchNames: p,
-      PullBranchStrategy: "rebase",
-    }
     var steps []step.Step
-    steps = append(steps, step.GetSyncBranchSteps("master", config)...)
+    steps = append(steps, step.GetSyncBranchSteps(config.GetMainBranch())...)
+    steps = step.Wrap(steps, step.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
     for i := 0; i < len(steps); i++ {
       err := steps[i].Run()
       if err != nil {
         log.Fatal(err)
       }
     }
+    fmt.Println()
     // echo "create_and_checkout_feature_branch $target_branch_name $MAIN_BRANCH_NAME"
     // echo_if_all_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE" "$(hack_should_push)"
   },

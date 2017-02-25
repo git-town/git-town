@@ -22,5 +22,5 @@ func (step RebaseBranchStep) CreateUndoStep() Step {
 }
 
 func (step RebaseBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "rebase", "--no-edit", step.branchName})
+  return script.RunCommand([]string{"git", "rebase", step.branchName})
 }

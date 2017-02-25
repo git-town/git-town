@@ -2,13 +2,21 @@ package util
 
 import (
   "fmt"
-  "log"
   "os"
   "os/exec"
   "strings"
 
   "github.com/fatih/color"
 )
+
+func Contains(list []string, item string) bool {
+  for i := 0; i < len(list); i++ {
+    if item == list[i] {
+      return true
+    }
+  }
+  return false
+}
 
 func ExitWithErrorMessage(message string) {
   errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
@@ -22,9 +30,6 @@ func ExitWithErrorMessage(message string) {
 
 func GetCommandOutput(cmd []string) string {
   subProcess := exec.Command(cmd[0], cmd[1:]...)
-  output, err := subProcess.CombinedOutput()
-  if err != nil {
-    log.Fatal(err)
-  }
+  output, _ := subProcess.CombinedOutput()
   return strings.TrimSpace(string(output))
 }

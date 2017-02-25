@@ -82,14 +82,14 @@ func HasTrackingBranch(branchName string) bool {
 func ShouldBranchBePushed(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
   output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", fmt.Sprintf("%s...%s", branchName, trackingBranchName)})
-  lines := strings.Split(output, "\n")
-  return len(lines) > 0
+  return output != ""
 }
 
-func IsFeatureBranch(branchName string) bool {
-  return true // TODO
+func HasOpenChanges() bool {
+  output := util.GetCommandOutput([]string{"git", "status", "-porcelain"})
+  return output != ""
 }
 
-func GetParentBranch(branchName string) string {
-  return "master" // TODO
+func GetRootDirectory() string {
+  return util.GetCommandOutput([]string{"git", "rev-parse", "--show-toplevel"})
 }
