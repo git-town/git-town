@@ -86,7 +86,7 @@ func ShouldBranchBePushed(branchName string) bool {
 }
 
 func HasOpenChanges() bool {
-  output := util.GetCommandOutput([]string{"git", "status", "-porcelain"})
+  output := util.GetCommandOutput([]string{"git", "status", "--porcelain"})
   return output != ""
 }
 

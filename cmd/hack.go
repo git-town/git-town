@@ -24,10 +24,12 @@ var hackCmd = &cobra.Command{
       util.ExitWithErrorMessage("No branch name provided.")
     }
     targetBranchName := args[0]
-    fetchCmd := []string{"git", "fetch", "--prune"}
-    fetchErr := script.RunCommand(fetchCmd)
-    if fetchErr != nil {
-      log.Fatal(fetchErr)
+    if config.HasRemote() {
+      fetchCmd := []string{"git", "fetch", "--prune"}
+      fetchErr := script.RunCommand(fetchCmd)
+      if fetchErr != nil {
+        log.Fatal(fetchErr)
+      }
     }
     git.EnsureDoesNotHaveBranch(targetBranchName)
     // Build Steps
@@ -47,8 +49,6 @@ var hackCmd = &cobra.Command{
       }
     }
     fmt.Println()
-    // echo "create_and_checkout_feature_branch $target_branch_name $MAIN_BRANCH_NAME"
-    // echo_if_all_true "create_tracking_branch $target_branch_name" "$HAS_REMOTE" "$(hack_should_push)"
   },
 }
 

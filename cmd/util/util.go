@@ -30,6 +30,10 @@ func ExitWithErrorMessage(message string) {
 
 func GetCommandOutput(cmd []string) string {
   subProcess := exec.Command(cmd[0], cmd[1:]...)
-  output, _ := subProcess.CombinedOutput()
-  return strings.TrimSpace(string(output))
+  output, err := subProcess.CombinedOutput()
+  if err != nil {
+    return ""
+  } else {
+    return strings.TrimSpace(string(output))
+  }
 }
