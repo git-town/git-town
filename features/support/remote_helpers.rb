@@ -29,9 +29,8 @@ end
 
 # Returns the URL for making merge requests on GitLab
 def gitlab_pull_request_url branch:, parent_branch:, repo:
-  parent_branch ||= 'main' # set default parent_branch to main
   source = "merge_request%5Bsource_branch%5D=#{branch}"
-  dest   = "merge_request%5Btarget_branch%5D=#{parent_branch}"
+  dest   = "merge_request%5Btarget_branch%5D=#{parent_branch || 'main'}"
   "https://gitlab.com/#{repo}/merge_requests/new?#{source}&#{dest}"
 end
 
