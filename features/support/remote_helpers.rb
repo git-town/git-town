@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cgi'
 
 
@@ -6,6 +7,7 @@ def base_url domain
   case domain
   when 'Bitbucket' then 'https://bitbucket.org'
   when 'GitHub' then 'https://github.com'
+  when 'GitLab' then 'https://gitlab.com'
   else fail "Unknown domain: #{domain}"
   end
 end
@@ -24,6 +26,12 @@ end
 def github_pull_request_url branch:, parent_branch: nil, repo:
   to_compare = parent_branch ? "#{parent_branch}...#{branch}" : branch
   "https://github.com/#{repo}/compare/#{to_compare}?expand=1"
+end
+
+# Returns the URL for making pull requests on GitLab
+def gitlab_pull_request_url branch:, parent_branch: nil, repo:
+  to_compare = parent_branch ? "#{parent_branch}...#{branch}" : branch
+  "https://gitlab.com/#{repo}/compare/#{to_compare}?expand=1"
 end
 
 

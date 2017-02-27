@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^my repo has an upstream repo$/) do
   clone_repository :origin, :upstream, bare: true
   clone_repository :upstream, :upstream_developer

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^I already have the Git autocompletion symlink$/) do
   FileUtils.mkdir_p File.dirname(FISH_AUTOCOMPLETIONS_PATH)
   FileUtils.symlink 'foo', FISH_AUTOCOMPLETIONS_PATH
