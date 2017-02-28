@@ -5,7 +5,7 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
-type ContinueRebaseBranchStep int
+type ContinueRebaseBranchStep struct {}
 
 func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
   return nil

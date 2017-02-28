@@ -4,7 +4,7 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
-type RestoreOpenChangesStep int
+type RestoreOpenChangesStep struct {}
 
 func (step RestoreOpenChangesStep) CreateAbortStep() Step {
   return nil

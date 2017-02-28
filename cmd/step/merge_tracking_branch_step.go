@@ -4,7 +4,7 @@ import (
   "github.com/Originate/gt/cmd/git"
 )
 
-type MergeTrackingBranchStep int
+type MergeTrackingBranchStep struct {}
 
 func (step MergeTrackingBranchStep) CreateAbortStep() Step {
   return new(AbortMergeBranchStep)

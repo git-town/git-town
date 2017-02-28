@@ -4,7 +4,7 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
-type StashOpenChangesStep int
+type StashOpenChangesStep struct {}
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {
   return nil
