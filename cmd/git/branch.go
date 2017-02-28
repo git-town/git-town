@@ -54,7 +54,6 @@ func HasBranch(branchName string) bool {
 }
 
 
-
 func HasTrackingBranch(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
   output := util.GetCommandOutput([]string{"git", "branch", "-r"})
