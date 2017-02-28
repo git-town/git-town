@@ -6,8 +6,8 @@ import (
 )
 
 type ResetToShaStep struct {
-  sha string
-  hard bool
+  Hard bool
+  Sha string
 }
 
 func (step ResetToShaStep) CreateAbortStep() Step {
@@ -23,12 +23,12 @@ func (step ResetToShaStep) CreateUndoStep() Step {
 }
 
 func (step ResetToShaStep) Run() error {
-  if step.sha == git.GetCurrentSha() {
+  if step.Sha == git.GetCurrentSha() {
     cmd := []string{"git", "reset"}
-    if step.hard {
+    if step.Hard {
       cmd = append(cmd, "--hard")
     }
-    cmd = append(cmd, step.sha)
+    cmd = append(cmd, step.Sha)
     return script.RunCommand(cmd)
   }
   return nil

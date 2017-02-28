@@ -6,21 +6,21 @@ import (
 )
 
 type MergeBranchStep struct {
-  branchName string
+  BranchName string
 }
 
 func (step MergeBranchStep) CreateAbortStep() Step {
-  return new(AbortMergeBranchStep)
+  return AbortMergeBranchStep{}
 }
 
 func (step MergeBranchStep) CreateContinueStep() Step {
-  return new(ContinueMergeBranchStep)
+  return ContinueMergeBranchStep{}
 }
 
 func (step MergeBranchStep) CreateUndoStep() Step {
-  return ResetToShaStep{hard: true, sha: git.GetCurrentSha()}
+  return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
 func (step MergeBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "merge", "--no-edit", step.branchName})
+  return script.RunCommand([]string{"git", "merge", "--no-edit", step.BranchName})
 }

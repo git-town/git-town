@@ -13,7 +13,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `git town-hack new-feature`
+    When I run `gt hack new-feature`
 
 
   Scenario: result
@@ -26,15 +26,15 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | main             | git rebase origin/main |
     And I get the error
       """
-      To abort, run "git town-hack --abort".
-      To continue after you have resolved the conflicts, run "git town-hack --continue".
+      To abort, run "gt hack --abort".
+      To continue after you have resolved the conflicts, run "gt hack --continue".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git town-hack --abort`
+    When I run `gt hack --abort`
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |

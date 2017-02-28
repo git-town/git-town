@@ -6,8 +6,8 @@ import (
 )
 
 type PushBranchStep struct {
-  branchName string
-  force bool
+  BranchName string
+  Force bool
 }
 
 func (step PushBranchStep) CreateAbortStep() Step {
@@ -23,13 +23,13 @@ func (step PushBranchStep) CreateUndoStep() Step {
 }
 
 func (step PushBranchStep) Run() error {
-  if git.ShouldBranchBePushed(step.branchName) {
-    if step.force {
-      return script.RunCommand([]string{"git", "push", "-f", "origin", step.branchName})
-    } else if git.GetCurrentBranchName() == step.branchName {
+  if git.ShouldBranchBePushed(step.BranchName) {
+    if step.Force {
+      return script.RunCommand([]string{"git", "push", "-f", "origin", step.BranchName})
+    } else if git.GetCurrentBranchName() == step.BranchName {
       return script.RunCommand([]string{"git", "push"})
     } else {
-      return script.RunCommand([]string{"git", "push", "origin", step.branchName})
+      return script.RunCommand([]string{"git", "push", "origin", step.BranchName})
     }
   }
   return nil

@@ -6,21 +6,21 @@ import (
 )
 
 type RebaseBranchStep struct {
-  branchName string
+  BranchName string
 }
 
 func (step RebaseBranchStep) CreateAbortStep() Step {
-  return new(AbortRebaseBranchStep)
+  return AbortRebaseBranchStep{}
 }
 
 func (step RebaseBranchStep) CreateContinueStep() Step {
-  return new(ContinueRebaseBranchStep)
+  return ContinueRebaseBranchStep{}
 }
 
 func (step RebaseBranchStep) CreateUndoStep() Step {
-  return ResetToShaStep{hard: true, sha: git.GetCurrentSha()}
+  return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
 func (step RebaseBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "rebase", step.branchName})
+  return script.RunCommand([]string{"git", "rebase", step.BranchName})
 }

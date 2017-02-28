@@ -14,8 +14,8 @@ type WrapOptions struct {
 
 func Wrap(steps []Step, options WrapOptions) []Step {
   if options.StashOpenChanges && git.HasOpenChanges() {
-    steps = append([]Step{new(StashOpenChangesStep)}, steps...)
-    steps = append(steps, new(RestoreOpenChangesStep))
+    steps = append([]Step{StashOpenChangesStep{}}, steps...)
+    steps = append(steps, RestoreOpenChangesStep{})
   }
 
   // TODO echo "preserve_checkout_history $INITIAL_PREVIOUS_BRANCH_NAME $INITIAL_BRANCH_NAME"
@@ -27,8 +27,8 @@ func Wrap(steps []Step, options WrapOptions) []Step {
   gitRootDirectory := git.GetRootDirectory()
 
   if options.RunInGitRoot && initialDirectory != gitRootDirectory {
-    steps = append([]Step{ChangeDirectoryStep{directory: gitRootDirectory}}, steps...)
-    steps = append(steps, ChangeDirectoryStep{directory: initialDirectory})
+    steps = append([]Step{ChangeDirectoryStep{Directory: gitRootDirectory}}, steps...)
+    steps = append(steps, ChangeDirectoryStep{Directory: initialDirectory})
   }
 
   return steps

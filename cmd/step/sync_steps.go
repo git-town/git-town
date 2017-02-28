@@ -12,9 +12,9 @@ func GetSyncBranchSteps(branchName string) []Step {
   var steps []Step
 
   if hasRemote || isFeature {
-    steps = append(steps, CheckoutBranchStep{branchName: branchName})
+    steps = append(steps, CheckoutBranchStep{BranchName: branchName})
     if isFeature {
-      steps = append(steps, new(MergeTrackingBranchStep), MergeBranchStep{branchName: config.GetParentBranch(branchName)})
+      steps = append(steps, new(MergeTrackingBranchStep), MergeBranchStep{BranchName: config.GetParentBranch(branchName)})
     } else {
       if config.GetPullBranchStrategy() == "rebase" {
         steps = append(steps, new(RebaseTrackingBranchStep))
@@ -30,7 +30,7 @@ func GetSyncBranchSteps(branchName string) []Step {
 
     if hasRemote {
       if git.HasTrackingBranch(branchName) {
-        steps = append(steps, PushBranchStep{branchName: branchName})
+        steps = append(steps, PushBranchStep{BranchName: branchName})
       } else {
         steps = append(steps, new(CreateTrackingBranchStep))
       }

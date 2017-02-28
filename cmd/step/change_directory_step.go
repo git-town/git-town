@@ -5,7 +5,7 @@ import (
 )
 
 type ChangeDirectoryStep struct {
-  directory string
+  Directory string
 }
 
 func (step ChangeDirectoryStep) CreateAbortStep() Step {
@@ -21,5 +21,5 @@ func (step ChangeDirectoryStep) CreateUndoStep() Step {
 }
 
 func (step ChangeDirectoryStep) Run() error {
-  return script.RunCommand([]string{"cd", step.directory})
+  return script.RunCommand([]string{"cd", step.Directory})
 }

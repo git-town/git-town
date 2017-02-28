@@ -15,7 +15,7 @@ func (step StashOpenChangesStep) CreateContinueStep() Step {
 }
 
 func (step StashOpenChangesStep) CreateUndoStep() Step {
-  return nil
+  return RestoreOpenChangesStep{}
 }
 
 func (step StashOpenChangesStep) Run() error {

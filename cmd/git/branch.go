@@ -2,8 +2,10 @@ package git
 
 import (
   "fmt"
-  "strings"
+  "io/ioutil"
+  "log"
   "os"
+  "strings"
 
   "github.com/Originate/gt/cmd/util"
 )
@@ -18,8 +20,17 @@ func EnsureDoesNotHaveBranch(branchName string) {
 
 
 func GetCurrentBranchName() string {
-  cmd := []string{"git", "rev-parse", "--abbrev-ref", "HEAD"}
-  return util.GetCommandOutput(cmd)
+  if IsRebaseInProgress() {
+    filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
+    content, err := ioutil.ReadFile(filename)
+    if err != nil {
+      log.Fatal(err)
+    }
+    return strings.Replace(strings.TrimSpace(string(content)), "refs/heads/", "", -1)
+  } else {
+    cmd := []string{"git", "rev-parse", "--abbrev-ref", "HEAD"}
+    return util.GetCommandOutput(cmd)
+  }
 }
 
 
@@ -43,12 +54,12 @@ func HasBranch(branchName string) bool {
   return false
 }
 
-func GetGitRoot() string {
+func GetRootDirectory() string {
   return util.GetCommandOutput([]string{"git", "rev-parse", "--show-toplevel"})
 }
 
 func IsMergeInProgress() bool {
-  _, err := os.Stat(fmt.Sprintf("%s/.git/MERGE_HEAD", GetGitRoot()))
+  _, err := os.Stat(fmt.Sprintf("%s/.git/MERGE_HEAD", GetRootDirectory()))
   return err == nil
 }
 
@@ -88,8 +99,4 @@ func ShouldBranchBePushed(branchName string) bool {
 func HasOpenChanges() bool {
   output := util.GetCommandOutput([]string{"git", "status", "--porcelain"})
   return output != ""
-}
-
-func GetRootDirectory() string {
-  return util.GetCommandOutput([]string{"git", "rev-parse", "--show-toplevel"})
 }

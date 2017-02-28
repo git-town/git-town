@@ -7,21 +7,21 @@ import (
 type MergeTrackingBranchStep struct {}
 
 func (step MergeTrackingBranchStep) CreateAbortStep() Step {
-  return new(AbortMergeBranchStep)
+  return AbortMergeBranchStep{}
 }
 
 func (step MergeTrackingBranchStep) CreateContinueStep() Step {
-  return new(ContinueMergeBranchStep)
+  return ContinueMergeBranchStep{}
 }
 
 func (step MergeTrackingBranchStep) CreateUndoStep() Step {
-  return ResetToShaStep{hard: true, sha: git.GetCurrentSha()}
+  return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
 func (step MergeTrackingBranchStep) Run() error {
   branchName := git.GetCurrentBranchName()
   if git.HasTrackingBranch(branchName) {
-    step := MergeBranchStep{branchName: git.GetTrackingBranchName(branchName)}
+    step := MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)}
     return step.Run()
   }
   return nil

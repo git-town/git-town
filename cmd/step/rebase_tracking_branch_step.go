@@ -7,21 +7,21 @@ import (
 type RebaseTrackingBranchStep struct {}
 
 func (step RebaseTrackingBranchStep) CreateAbortStep() Step {
-  return new(AbortRebaseBranchStep)
+  return AbortRebaseBranchStep{}
 }
 
 func (step RebaseTrackingBranchStep) CreateContinueStep() Step {
-  return new(ContinueRebaseBranchStep)
+  return ContinueRebaseBranchStep{}
 }
 
 func (step RebaseTrackingBranchStep) CreateUndoStep() Step {
-  return ResetToShaStep{hard: true, sha: git.GetCurrentSha()}
+  return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
 func (step RebaseTrackingBranchStep) Run() error {
   branchName := git.GetCurrentBranchName()
   if git.HasTrackingBranch(branchName) {
-    step := RebaseBranchStep{branchName: git.GetTrackingBranchName(branchName)}
+    step := RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)}
     return step.Run()
   }
   return nil

@@ -6,7 +6,7 @@ import (
 )
 
 type CheckoutBranchStep struct {
-  branchName string
+  BranchName string
 }
 
 func (step CheckoutBranchStep) CreateAbortStep() Step {
@@ -18,12 +18,12 @@ func (step CheckoutBranchStep) CreateContinueStep() Step {
 }
 
 func (step CheckoutBranchStep) CreateUndoStep() Step {
-  return CheckoutBranchStep{branchName: git.GetCurrentBranchName()}
+  return CheckoutBranchStep{BranchName: git.GetCurrentBranchName()}
 }
 
 func (step CheckoutBranchStep) Run() error {
-  if git.GetCurrentBranchName() != step.branchName {
-    return script.RunCommand([]string{"git", "checkout", step.branchName})
+  if git.GetCurrentBranchName() != step.BranchName {
+    return script.RunCommand([]string{"git", "checkout", step.BranchName})
   }
   return nil
 }
