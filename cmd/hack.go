@@ -23,9 +23,10 @@ var hackCmd = &cobra.Command{
     if abortFlag || continueFlag {
       runResult := step.Import("hack")
       if abortFlag {
-        step.Run(runResult.AbortSteps, "hack", "")
+        step.Run(append([]step.Step{runResult.AbortStep}, runResult.UndoSteps...), []step.Step{}, "hack", "")
       } else {
-        step.Run(runResult.ContinueSteps, "hack", "")
+        git.EnsureDoesNotHaveConflicts()
+        step.Run(runResult.ContinueSteps, runResult.UndoSteps, "hack", "")
       }
     } else {
       // Preconditions
@@ -51,7 +52,7 @@ var hackCmd = &cobra.Command{
       }
       steps = step.Wrap(steps, step.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
       // Run Steps
-      step.Run(steps, "hack", "")
+      step.Run(steps, []step.Step{}, "hack", "")
     }
   },
 }

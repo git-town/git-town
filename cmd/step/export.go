@@ -7,11 +7,11 @@ import (
   "reflect"
 )
 
-func export(commandName string, abortSteps, continueSteps []Step) {
+func export(commandName string, abortStep Step, continueSteps, undoSteps []Step) {
   runResultData := SerializedRunResult{
-    AbortSteps: exportSteps(abortSteps),
+    AbortStep: exportStep(abortStep),
     ContinueSteps: exportSteps(continueSteps),
-    Success: false,
+    UndoSteps: exportSteps(undoSteps),
   }
   content, err := json.Marshal(runResultData)
   if err != nil {

@@ -1,6 +1,8 @@
 package step
 
 import (
+  "os"
+
   "github.com/Originate/gt/cmd/script"
 )
 
@@ -9,17 +11,22 @@ type ChangeDirectoryStep struct {
 }
 
 func (step ChangeDirectoryStep) CreateAbortStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step ChangeDirectoryStep) CreateContinueStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step ChangeDirectoryStep) CreateUndoStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step ChangeDirectoryStep) Run() error {
-  return script.RunCommand([]string{"cd", step.Directory})
+  _, err := os.Stat(step.Directory)
+  if err == nil {
+    script.PrintCommand([]string{"cd", step.Directory})
+    return os.Chdir(step.Directory)
+  }
+  return nil
 }

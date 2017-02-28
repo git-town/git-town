@@ -47,15 +47,15 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-hack --continue`
-    Then I get the error "You must resolve the conflicts before continuing the git town-hack"
+    When I run `gt hack --continue`
+    Then I get the error "You must resolve the conflicts before continuing."
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git town-hack --continue `
+    When I run `gt hack --continue`
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git rebase --continue            |
@@ -79,7 +79,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git town-hack --continue `
+    When I run `git rebase --continue; gt hack --continue`
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git push                         |

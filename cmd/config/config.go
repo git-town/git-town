@@ -52,6 +52,10 @@ func HasRemote() bool {
   return GetRemoteUrl() != ""
 }
 
+func HasRemoteUpstream() bool {
+  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"}) != ""
+}
+
 func ShouldHackPush() bool {
   hackPushFlag := getConfigurationValue("hack-push-flag")
   if hackPushFlag == "" {

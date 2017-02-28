@@ -9,15 +9,15 @@ type CreateTrackingBranchStep struct {
 }
 
 func (step CreateTrackingBranchStep) CreateAbortStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step CreateTrackingBranchStep) CreateContinueStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step CreateTrackingBranchStep) CreateUndoStep() Step {
-  return nil // TODO delete remote branch
+  return NoOpStep{} // TODO delete remote branch
 }
 
 func (step CreateTrackingBranchStep) Run() error {

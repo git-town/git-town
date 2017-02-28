@@ -7,11 +7,11 @@ import (
 type StashOpenChangesStep struct {}
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step StashOpenChangesStep) CreateContinueStep() Step {
-  return nil
+  return NoOpStep{}
 }
 
 func (step StashOpenChangesStep) CreateUndoStep() Step {

@@ -7,20 +7,17 @@ import (
   "github.com/fatih/color"
 )
 
-func Run(steps []Step, command string, skipMessage string) {
-  var undoSteps []Step
+func Run(steps []Step, undoSteps []Step, command string, skipMessage string) {
   for i := 0; i < len(steps); i++ {
     undoStep := steps[i].CreateUndoStep()
     err := steps[i].Run()
     if err != nil {
-      abortSteps := append([]Step{steps[i].CreateAbortStep()}, undoSteps...)
+      abortStep := steps[i].CreateAbortStep()
       continueSteps := append([]Step{steps[i].CreateContinueStep()}, steps[i+1:]...)
-      export(command, abortSteps, continueSteps)
+      export(command, abortStep, continueSteps, undoSteps)
       exitWithMessages(command, skipMessage)
     }
-    if undoStep != nil {
-      undoSteps = append([]Step{undoStep}, undoSteps...)
-    }
+    undoSteps = append([]Step{undoStep}, undoSteps...)
   }
   fmt.Println()
 }

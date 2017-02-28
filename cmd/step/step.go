@@ -15,9 +15,8 @@ type Step interface {
 }
 
 type RunResult struct {
-  AbortSteps []Step
+  AbortStep Step
   ContinueSteps []Step
-  Success bool
   UndoSteps []Step
 }
 
@@ -27,9 +26,8 @@ type SerializedStep struct {
 }
 
 type SerializedRunResult struct {
-  AbortSteps []SerializedStep
+  AbortStep SerializedStep
   ContinueSteps []SerializedStep
-  Success bool
   UndoSteps []SerializedStep
 }
 
