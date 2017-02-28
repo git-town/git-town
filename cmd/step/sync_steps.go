@@ -2,10 +2,11 @@ package step
 
 import (
   "fmt"
-  
+
   "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
 )
+
 
 func GetSyncBranchSteps(branchName string) []Step {
   isFeature := config.IsFeatureBranch(branchName)

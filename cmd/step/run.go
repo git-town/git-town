@@ -7,6 +7,7 @@ import (
   "github.com/fatih/color"
 )
 
+
 func Run(steps []Step, undoSteps []Step, command string, skipMessage string) {
   for i := 0; i < len(steps); i++ {
     undoStep := steps[i].CreateUndoStep()
@@ -21,6 +22,8 @@ func Run(steps []Step, undoSteps []Step, command string, skipMessage string) {
   }
   fmt.Println()
 }
+
+// Helpers
 
 func exitWithMessages(command string, skipMessage string) {
   messageFmt := color.New(color.FgRed)

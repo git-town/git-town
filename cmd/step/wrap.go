@@ -7,10 +7,12 @@ import (
   "github.com/Originate/gt/cmd/git"
 )
 
+
 type WrapOptions struct {
   RunInGitRoot bool
   StashOpenChanges bool
 }
+
 
 func Wrap(steps []Step, options WrapOptions) []Step {
   if options.StashOpenChanges && git.HasOpenChanges() {

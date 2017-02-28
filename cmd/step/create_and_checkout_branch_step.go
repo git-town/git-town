@@ -5,22 +5,27 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
+
 type CreateAndCheckoutBranchStep struct {
   BranchName string
   ParentBranchName string
 }
 
+
 func (step CreateAndCheckoutBranchStep) CreateAbortStep() Step {
   return NoOpStep{}
 }
+
 
 func (step CreateAndCheckoutBranchStep) CreateContinueStep() Step {
   return NoOpStep{}
 }
 
+
 func (step CreateAndCheckoutBranchStep) CreateUndoStep() Step {
   return NoOpStep{}
 }
+
 
 func (step CreateAndCheckoutBranchStep) Run() error {
   config.StoreParentBranch(step.BranchName, step.ParentBranchName)

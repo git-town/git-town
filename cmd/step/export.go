@@ -7,6 +7,7 @@ import (
   "reflect"
 )
 
+
 func export(commandName string, abortStep Step, continueSteps, undoSteps []Step) {
   runResultData := SerializedRunResult{
     AbortStep: exportStep(abortStep),
@@ -24,13 +25,6 @@ func export(commandName string, abortStep Step, continueSteps, undoSteps []Step)
   }
 }
 
-func getType(myvar interface{}) string {
-  if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
-    return "*" + t.Elem().Name()
-  } else {
-    return t.Name()
-  }
-}
 
 func exportStep(step Step) SerializedStep {
   data, err := json.Marshal(step)
@@ -43,6 +37,7 @@ func exportStep(step Step) SerializedStep {
   }
 }
 
+
 func exportSteps(steps []Step) []SerializedStep {
   var output []SerializedStep
   for i := 0; i < len(steps); i++ {
@@ -50,4 +45,13 @@ func exportSteps(steps []Step) []SerializedStep {
     output = append(output, exportStep(step))
   }
   return output
+}
+
+
+func getType(myvar interface{}) string {
+  if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
+    return "*" + t.Elem().Name()
+  } else {
+    return t.Name()
+  }
 }

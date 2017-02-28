@@ -7,6 +7,7 @@ import(
   "log"
 )
 
+
 func Import(commandName string) RunResult {
   filename := getRunResultFilename(commandName)
   content, err := ioutil.ReadFile(filename)
@@ -24,6 +25,7 @@ func Import(commandName string) RunResult {
     UndoSteps: importSteps(runResultData.UndoSteps),
   }
 }
+
 
 func importStep(serializedStep SerializedStep) Step {
   switch serializedStep.Type {
@@ -79,6 +81,7 @@ func importStep(serializedStep SerializedStep) Step {
   log.Fatal(fmt.Sprintf("Cannot deserialize steps: %s %s", serializedStep.Type, serializedStep.Data))
   return nil
 }
+
 
 func importSteps(serializedSteps []SerializedStep) []Step {
   var output []Step

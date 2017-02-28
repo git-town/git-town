@@ -6,21 +6,26 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
+
 type ChangeDirectoryStep struct {
   Directory string
 }
+
 
 func (step ChangeDirectoryStep) CreateAbortStep() Step {
   return NoOpStep{}
 }
 
+
 func (step ChangeDirectoryStep) CreateContinueStep() Step {
   return NoOpStep{}
 }
 
+
 func (step ChangeDirectoryStep) CreateUndoStep() Step {
   return NoOpStep{}
 }
+
 
 func (step ChangeDirectoryStep) Run() error {
   _, err := os.Stat(step.Directory)

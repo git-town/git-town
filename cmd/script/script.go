@@ -11,14 +11,6 @@ import (
   "github.com/fatih/color"
 )
 
-func RunCommand(cmd []string) error {
-  PrintCommand(cmd)
-  subProcess := exec.Command(cmd[0], cmd[1:]...)
-  subProcess.Stdout = os.Stdout
-  subProcess.Stderr = os.Stderr
-  return subProcess.Run()
-}
-
 
 func PrintCommand(cmd []string) {
   header := strings.Join(cmd, " ")
@@ -27,4 +19,13 @@ func PrintCommand(cmd []string) {
   }
   fmt.Println()
   color.New(color.Bold).Println(header)
+}
+
+
+func RunCommand(cmd []string) error {
+  PrintCommand(cmd)
+  subProcess := exec.Command(cmd[0], cmd[1:]...)
+  subProcess.Stdout = os.Stdout
+  subProcess.Stderr = os.Stderr
+  return subProcess.Run()
 }

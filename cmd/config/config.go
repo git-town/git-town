@@ -9,26 +9,20 @@ import (
 )
 
 
-func IsFeatureBranch(branchName string) bool {
-  return branchName != GetMainBranch() && !IsPernnialBranch(branchName)
+func GetMainBranch() string {
+  return getConfigurationValue("main-branch-name")
 }
 
-func IsPernnialBranch(branchName string) bool {
-  perennialBranches := GetPerennialBranches()
-  return util.Contains(perennialBranches, branchName)
-}
 
 func GetParentBranch(branchName string) string {
   return getConfigurationValue(fmt.Sprintf("%s.parent", branchName))
 }
 
-func GetMainBranch() string {
-  return getConfigurationValue("main-branch-name")
-}
 
 func GetPerennialBranches() []string {
   return strings.Split(getConfigurationValue("perennial-branch-names"), " ")
 }
+
 
 func GetPullBranchStrategy() string {
   pullBranchStrategy := getConfigurationValue("pull-branch-strategy")
@@ -37,6 +31,7 @@ func GetPullBranchStrategy() string {
   }
   return pullBranchStrategy
 }
+
 
 func GetRemoteUrl() string {
   if os.Getenv("GIT_TOWN_ENV") == "test" {
@@ -48,13 +43,27 @@ func GetRemoteUrl() string {
   return util.GetCommandOutput([]string{"git", "remote", "get-url", "origin"})
 }
 
+
+func IsFeatureBranch(branchName string) bool {
+  return branchName != GetMainBranch() && !IsPernnialBranch(branchName)
+}
+
+
+func IsPernnialBranch(branchName string) bool {
+  perennialBranches := GetPerennialBranches()
+  return util.Contains(perennialBranches, branchName)
+}
+
+
 func HasRemote() bool {
   return GetRemoteUrl() != ""
 }
 
+
 func HasRemoteUpstream() bool {
   return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"}) != ""
 }
+
 
 func ShouldHackPush() bool {
   hackPushFlag := getConfigurationValue("hack-push-flag")
@@ -64,13 +73,19 @@ func ShouldHackPush() bool {
   return hackPushFlag == "true"
 }
 
+
 func StoreParentBranch(branchName, parentBranchName string) {
   storeConfigurationValue(fmt.Sprintf("%s.parent", branchName), parentBranchName)
 }
 
+
+// Helpers
+
+
 func getConfigurationValue(key string) string {
   return util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key)})
 }
+
 
 func storeConfigurationValue(key, value string) {
   util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key), value})

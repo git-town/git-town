@@ -5,22 +5,27 @@ import (
   "github.com/Originate/gt/cmd/script"
 )
 
+
 type PushBranchStep struct {
   BranchName string
   Force bool
 }
 
+
 func (step PushBranchStep) CreateAbortStep() Step {
   return NoOpStep{}
 }
+
 
 func (step PushBranchStep) CreateContinueStep() Step {
   return NoOpStep{}
 }
 
+
 func (step PushBranchStep) CreateUndoStep() Step {
   return NoOpStep{}
 }
+
 
 func (step PushBranchStep) Run() error {
   if git.ShouldBranchBePushed(step.BranchName) {

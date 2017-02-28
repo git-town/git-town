@@ -5,11 +5,11 @@ import (
 )
 
 
-func GetCurrentSha() string {
-  return GetBranchSha("HEAD")
+func GetBranchSha(branchName string) string {
+  return util.GetCommandOutput([]string{"git", "rev-parse", branchName})
 }
 
 
-func GetBranchSha(branchName string) string {
-  return util.GetCommandOutput([]string{"git", "rev-parse", branchName})
+func GetCurrentSha() string {
+  return GetBranchSha("HEAD")
 }
