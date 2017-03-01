@@ -22,3 +22,4 @@ for dir in $(go list ./... | grep -v /vendor/); do
   golint -set_exit_status "$dir"
   go vet "$dir"
 done
+gocyclo -over 10 cmd/

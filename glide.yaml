@@ -5,3 +5,4 @@ import:
 - package: github.com/golang/lint
   subpackages:
   - golint
+- package: github.com/fzipp/gocyclo
