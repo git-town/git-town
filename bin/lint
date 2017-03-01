@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 set -e
 
+##################
+# LINT BASH
+#
+
 # Excluded rules (see https://github.com/koalaman/shellcheck/wiki/)
 #
 # SC1090: we already run shellcheck on all our source files
 # SC2155: would bloat the code base
 # SC2162: read -r option not available on Mac OSX 10.10
-
 exclude="SC1090,SC2155,SC2162"
-
 find bin src -type f ! -name '*.md' -print0 | xargs -0 shellcheck --exclude="$exclude"
+
+
+##################
+# LINT GO
+#
+
+for dir in $(go list ./... | grep -v /vendor/); do
+  golint -set_exit_status "$dir"
+  go vet "$dir"
+done

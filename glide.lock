@@ -1,8 +1,12 @@
-hash: d576153bffcb3088cc901b219fcac5ff48dfe76de64f8eec66c7ad730ae6a3aa
-updated: 2017-02-07T09:26:00.73392125-08:00
+hash: 7309e64becf2f6e79794713e717bb51e7489b2da4a46d3b177e0a4d41090d0d8
+updated: 2017-03-01T08:02:22.82062831-08:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: fd9ec7deca8bf46ecd2a795baaacf2b3a9be1197
+- name: github.com/golang/lint
+  version: cb00e5669539f047b2f4c53a421a01b0c8e172c6
+  subpackages:
+  - golint
 - name: github.com/hashicorp/hcl
   version: 7cb7455c285ca3bf3362aa4ba6a06a6d6f5c3ba0
   subpackages:
