@@ -3,7 +3,6 @@ package git
 import (
   "fmt"
   "os"
-  "strings"
 
   "github.com/Originate/gt/cmd/util"
 )
@@ -22,8 +21,7 @@ func GetRootDirectory() string {
 
 
 func HasConflicts() bool {
-  output := util.GetCommandOutput([]string{"git", "status"})
-  return strings.Contains(output, "Unmerged paths")
+  return util.CommandOutputContains([]string{"git", "status"}, "Unmerged paths")
 }
 
 
@@ -40,6 +38,5 @@ func IsMergeInProgress() bool {
 
 
 func IsRebaseInProgress() bool {
-  status := util.GetCommandOutput([]string{"git", "status"})
-  return strings.Contains(status, "rebase in progress")
+  return util.CommandOutputContains([]string{"git", "status"}, "rebase in progress")
 }

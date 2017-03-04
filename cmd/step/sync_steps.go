@@ -10,11 +10,11 @@ import (
 
 func GetSyncBranchSteps(branchName string) []Step {
   isFeature := config.IsFeatureBranch(branchName)
-  hasRemote := config.HasRemote()
+  hasRemoteOrigin := config.HasRemoteOrigin()
 
   var steps []Step
 
-  if hasRemote || isFeature {
+  if hasRemoteOrigin || isFeature {
     steps = append(steps, CheckoutBranchStep{BranchName: branchName})
     if isFeature {
       steps = append(steps, MergeTrackingBranchStep{}, MergeBranchStep{BranchName: config.GetParentBranch(branchName)})
@@ -31,7 +31,7 @@ func GetSyncBranchSteps(branchName string) []Step {
       }
     }
 
-    if hasRemote {
+    if hasRemoteOrigin {
       if git.HasTrackingBranch(branchName) {
         steps = append(steps, PushBranchStep{BranchName: branchName})
       } else {

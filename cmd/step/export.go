@@ -8,7 +8,7 @@ import (
 )
 
 
-func export(commandName string, abortStep Step, continueSteps, undoSteps []Step) {
+func Export(commandName string, abortStep Step, continueSteps, undoSteps []Step) {
   runResultData := SerializedRunResult{
     AbortStep: exportStep(abortStep),
     ContinueSteps: exportSteps(continueSteps),

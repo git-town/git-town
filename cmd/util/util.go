@@ -9,7 +9,11 @@ import (
   "github.com/fatih/color"
 )
 
-func Contains(list []string, item string) bool {
+func CommandOutputContains(cmd []string, value string) bool {
+  return strings.Contains(GetCommandOutput(cmd), value)
+}
+
+func ContainsString(list []string, item string) bool {
   for i := 0; i < len(list); i++ {
     if item == list[i] {
       return true

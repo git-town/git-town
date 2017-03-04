@@ -12,8 +12,7 @@ import (
 
 func EnsureDoesNotHaveBranch(branchName string) {
   if HasBranch(branchName) {
-    message := fmt.Sprintf("A branch named '%s' already exists", branchName)
-    util.ExitWithErrorMessage(message)
+    util.ExitWithErrorMessage(fmt.Sprintf("A branch named '%s' already exists", branchName))
   }
 }
 
@@ -21,28 +20,27 @@ func EnsureDoesNotHaveBranch(branchName string) {
 func GetCurrentBranchName() string {
   if IsRebaseInProgress() {
     filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
-    content, err := ioutil.ReadFile(filename)
+    rawContent, err := ioutil.ReadFile(filename)
     if err != nil {
       log.Fatal(err)
     }
-    return strings.Replace(strings.TrimSpace(string(content)), "refs/heads/", "", -1)
+    content := strings.TrimSpace(string(rawContent))
+    return strings.Replace(content, "refs/heads/", "", -1)
   } else {
-    cmd := []string{"git", "rev-parse", "--abbrev-ref", "HEAD"}
-    return util.GetCommandOutput(cmd)
+    return util.GetCommandOutput([]string{"git", "rev-parse", "--abbrev-ref", "HEAD"})
   }
 }
 
 
 func GetTrackingBranchName(branchName string) string {
-  return fmt.Sprintf("origin/%s", branchName)
+  return "origin/" + branchName
 }
 
 
 func HasBranch(branchName string) bool {
   cmd := []string{"git", "branch", "-a"}
   lines := strings.Split(util.GetCommandOutput(cmd), "\n")
-  for i := 0; i < len(lines); i++ {
-    line := lines[i]
+  for _, line := range(lines) {
     line = strings.Trim(line, "* ")
     line = strings.TrimSpace(line)
     line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -71,6 +69,6 @@ func HasTrackingBranch(branchName string) bool {
 
 func ShouldBranchBePushed(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
-  output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", fmt.Sprintf("%s...%s", branchName, trackingBranchName)})
+  output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", branchName + "..." + trackingBranchName})
   return output != ""
 }

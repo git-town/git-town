@@ -1,7 +1,6 @@
 package config
 
 import (
-  "fmt"
   "os"
   "strings"
 
@@ -15,7 +14,7 @@ func GetMainBranch() string {
 
 
 func GetParentBranch(branchName string) string {
-  return getConfigurationValue(fmt.Sprintf("%s.parent", branchName))
+  return getConfigurationValue(branchName + ".parent")
 }
 
 
@@ -25,15 +24,12 @@ func GetPerennialBranches() []string {
 
 
 func GetPullBranchStrategy() string {
-  pullBranchStrategy := getConfigurationValue("pull-branch-strategy")
-  if pullBranchStrategy == "" {
-    pullBranchStrategy = "rebase"
-  }
+  pullBranchStrategy := getConfigurationValueWithDefault("pull-branch-strategy", "rebase")
   return pullBranchStrategy
 }
 
 
-func GetRemoteUrl() string {
+func GetRemoteOriginUrl() string {
   if os.Getenv("GIT_TOWN_ENV") == "test" {
     mockRemoteUrl := getConfigurationValue("testing.remote-url")
     if mockRemoteUrl != "" {
@@ -44,38 +40,40 @@ func GetRemoteUrl() string {
 }
 
 
+func GetRemoteUpstreamUrl() string {
+  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"})
+}
+
+
 func IsFeatureBranch(branchName string) bool {
-  return branchName != GetMainBranch() && !IsPernnialBranch(branchName)
+  return branchName != GetMainBranch() && !IsPerennialBranch(branchName)
 }
 
 
-func IsPernnialBranch(branchName string) bool {
+func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
-  return util.Contains(perennialBranches, branchName)
+  return util.ContainsString(perennialBranches, branchName)
 }
 
 
-func HasRemote() bool {
-  return GetRemoteUrl() != ""
+func HasRemoteOrigin() bool {
+  return GetRemoteOriginUrl() != ""
 }
 
 
 func HasRemoteUpstream() bool {
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"}) != ""
+  return GetRemoteUpstreamUrl() != ""
 }
 
 
 func ShouldHackPush() bool {
-  hackPushFlag := getConfigurationValue("hack-push-flag")
-  if hackPushFlag == "" {
-    hackPushFlag = "true"
-  }
+  hackPushFlag := getConfigurationValueWithDefault("hack-push-flag", "true")
   return hackPushFlag == "true"
 }
 
 
 func StoreParentBranch(branchName, parentBranchName string) {
-  storeConfigurationValue(fmt.Sprintf("%s.parent", branchName), parentBranchName)
+  storeConfigurationValue(branchName + ".parent", parentBranchName)
 }
 
 
@@ -83,10 +81,17 @@ func StoreParentBranch(branchName, parentBranchName string) {
 
 
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key)})
+  return util.GetCommandOutput([]string{"git", "config", "git-town." + key})
 }
 
+func getConfigurationValueWithDefault(key, defaultValue string) string {
+  value := util.GetCommandOutput([]string{"git", "config", "git-town." + key})
+  if value == "" {
+    return defaultValue
+  }
+  return value
+}
 
 func storeConfigurationValue(key, value string) {
-  util.GetCommandOutput([]string{"git", "config", fmt.Sprintf("git-town.%s", key), value})
+  util.GetCommandOutput([]string{"git", "config", "git-town." + key, value})
 }
