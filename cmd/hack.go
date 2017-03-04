@@ -6,8 +6,7 @@ import (
   "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
   "github.com/Originate/gt/cmd/script"
-  "github.com/Originate/gt/cmd/step"
-  "github.com/Originate/gt/cmd/step_runner"
+  "github.com/Originate/gt/cmd/steps"
   "github.com/Originate/gt/cmd/util"
 
   "github.com/spf13/cobra"
@@ -21,15 +20,15 @@ var hackCmd = &cobra.Command{
   Short: "Create a new feature branch off the main development branch",
   Long:  `Create a new feature branch off the main development branch`,
   Run: func(cmd *cobra.Command, args []string) {
-    stepRunner.Run(stepRunner.Options{
+    steps.Run(steps.RunOptions{
       Command: "hack",
       IsAbort: abortFlag,
       IsContinue: continueFlag,
       IsSkip: false,
       SkipMessage: "",
-      StepGenerator: func() []step.Step {
+      StepListGenerator: func() steps.StepList {
         targetBranchName := checkPreconditions(args)
-        return getSteps(targetBranchName)
+        return getStepList(targetBranchName)
       },
     })
   },
@@ -51,15 +50,15 @@ func checkPreconditions(args []string) string {
   return targetBranchName
 }
 
-func getSteps(targetBranchName string) []step.Step {
+func getStepList(targetBranchName string) steps.StepList {
   mainBranchName := config.GetMainBranch()
-  var steps []step.Step
-  steps = append(steps, step.GetSyncBranchSteps(mainBranchName)...)
-  steps = append(steps, step.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
+  stepList := steps.StepList{}
+  stepList.AppendAll(steps.GetSyncBranchSteps(mainBranchName))
+  stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
   if config.HasRemoteOrigin() && config.ShouldHackPush() {
-    steps = append(steps, step.CreateTrackingBranchStep{BranchName: targetBranchName})
+    stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
   }
-  return step.Wrap(steps, step.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+  return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 }
 
 func init() {

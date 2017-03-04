@@ -1,4 +1,4 @@
-package step
+package steps
 
 import (
   "github.com/Originate/gt/cmd/git"
@@ -28,14 +28,14 @@ func (step PushBranchStep) CreateUndoStep() Step {
 
 
 func (step PushBranchStep) Run() error {
-  if git.ShouldBranchBePushed(step.BranchName) {
-    if step.Force {
-      return script.RunCommand([]string{"git", "push", "-f", "origin", step.BranchName})
-    } else if git.GetCurrentBranchName() == step.BranchName {
-      return script.RunCommand([]string{"git", "push"})
-    } else {
-      return script.RunCommand([]string{"git", "push", "origin", step.BranchName})
-    }
+  if !git.ShouldBranchBePushed(step.BranchName) {
+    return nil
   }
-  return nil
+  if step.Force {
+    return script.RunCommand([]string{"git", "push", "-f", "origin", step.BranchName})
+  }
+  if git.GetCurrentBranchName() == step.BranchName {
+    return script.RunCommand([]string{"git", "push"})
+  }
+  return script.RunCommand([]string{"git", "push", "origin", step.BranchName})
 }

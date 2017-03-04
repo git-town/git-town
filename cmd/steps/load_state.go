@@ -1,4 +1,4 @@
-package step
+package steps
 
 import(
   "encoding/json"
@@ -8,26 +8,26 @@ import(
 )
 
 
-func Import(commandName string) RunResult {
-  filename := getRunResultFilename(commandName)
+func loadState(command string) RunState {
+  filename := getRunResultFilename(command)
   content, err := ioutil.ReadFile(filename)
   if err != nil {
     log.Fatal(err)
   }
-  var runResultData SerializedRunResult
-  err = json.Unmarshal(content, &runResultData)
+  var serializedRunState SerializedRunState
+  err = json.Unmarshal(content, &serializedRunState)
   if err != nil {
     log.Fatal(err)
   }
-  return RunResult{
-    AbortStep: importStep(runResultData.AbortStep),
-    ContinueSteps: importSteps(runResultData.ContinueSteps),
-    UndoSteps: importSteps(runResultData.UndoSteps),
+  return RunState{
+    AbortStep: deserializeStep(serializedRunState.AbortStep),
+    RunStepList: deserializeStepList(serializedRunState.RunSteps),
+    UndoStepList: deserializeStepList(serializedRunState.UndoSteps),
   }
 }
 
 
-func importStep(serializedStep SerializedStep) Step {
+func deserializeStep(serializedStep SerializedStep) Step {
   switch serializedStep.Type {
   case "AbortMergeBranchStep":
     return AbortMergeBranchStep{}
@@ -83,10 +83,9 @@ func importStep(serializedStep SerializedStep) Step {
 }
 
 
-func importSteps(serializedSteps []SerializedStep) []Step {
-  var output []Step
+func deserializeStepList(serializedSteps []SerializedStep) (stepList StepList) {
   for i := 0; i < len(serializedSteps); i++ {
-    output = append(output, importStep(serializedSteps[i]))
+    stepList.Append(deserializeStep(serializedSteps[i]))
   }
-  return output
+  return stepList
 }

@@ -1,4 +1,4 @@
-package step
+package steps
 
 import (
   "encoding/json"
@@ -8,17 +8,17 @@ import (
 )
 
 
-func Export(commandName string, abortStep Step, continueSteps, undoSteps []Step) {
-  runResultData := SerializedRunResult{
-    AbortStep: exportStep(abortStep),
-    ContinueSteps: exportSteps(continueSteps),
-    UndoSteps: exportSteps(undoSteps),
+func saveState(runState RunState) {
+  serializedRunState := SerializedRunState{
+    AbortStep: serializeStep(runState.AbortStep),
+    RunSteps: serializeSteps(runState.RunStepList.List),
+    UndoSteps: serializeSteps(runState.UndoStepList.List),
   }
-  content, err := json.Marshal(runResultData)
+  content, err := json.Marshal(serializedRunState)
   if err != nil {
     log.Fatal(err)
   }
-  filename := getRunResultFilename(commandName)
+  filename := getRunResultFilename(runState.Command)
   err = ioutil.WriteFile(filename, content, 0644)
   if err != nil {
     log.Fatal(err)
@@ -26,7 +26,7 @@ func Export(commandName string, abortStep Step, continueSteps, undoSteps []Step)
 }
 
 
-func exportStep(step Step) SerializedStep {
+func serializeStep(step Step) SerializedStep {
   data, err := json.Marshal(step)
   if err != nil {
     log.Fatal(err)
@@ -38,11 +38,10 @@ func exportStep(step Step) SerializedStep {
 }
 
 
-func exportSteps(steps []Step) []SerializedStep {
+func serializeSteps(steps []Step) []SerializedStep {
   var output []SerializedStep
-  for i := 0; i < len(steps); i++ {
-    step := steps[i]
-    output = append(output, exportStep(step))
+  for _, step := range(steps) {
+    output = append(output, serializeStep(step))
   }
   return output
 }

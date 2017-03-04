@@ -1,4 +1,4 @@
-package step
+package steps
 
 import (
   "fmt"

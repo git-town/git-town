@@ -14,8 +14,8 @@ func CommandOutputContains(cmd []string, value string) bool {
 }
 
 func ContainsString(list []string, item string) bool {
-  for i := 0; i < len(list); i++ {
-    if item == list[i] {
+  for _, element := range(list) {
+    if item == element {
       return true
     }
   }

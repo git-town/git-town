@@ -1,4 +1,4 @@
-package step
+package steps
 
 import (
   "github.com/Originate/gt/cmd/git"
@@ -29,12 +29,12 @@ func (step ResetToShaStep) CreateUndoStep() Step {
 
 func (step ResetToShaStep) Run() error {
   if step.Sha == git.GetCurrentSha() {
-    cmd := []string{"git", "reset"}
-    if step.Hard {
-      cmd = append(cmd, "--hard")
-    }
-    cmd = append(cmd, step.Sha)
-    return script.RunCommand(cmd)
+    return nil
   }
-  return nil
+  cmd := []string{"git", "reset"}
+  if step.Hard {
+    cmd = append(cmd, "--hard")
+  }
+  cmd = append(cmd, step.Sha)
+  return script.RunCommand(cmd)
 }
