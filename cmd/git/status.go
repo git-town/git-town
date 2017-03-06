@@ -10,7 +10,7 @@ import (
 
 func EnsureDoesNotHaveConflicts() {
   if HasConflicts() {
-    util.ExitWithErrorMessage("You must resolve the conflicts before continuing.")
+    util.ExitWithErrorMessage("You must resolve the conflicts before continuing")
   }
 }
 
