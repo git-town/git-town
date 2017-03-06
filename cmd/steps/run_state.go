@@ -8,10 +8,10 @@ type RunState struct {
   UndoStepList StepList
 }
 
-func (runState RunState) CreateAbortRunState() (result RunState) {
+func (runState *RunState) CreateAbortRunState() (result RunState) {
   result.Command = runState.Command
   result.RunStepList.Append(runState.AbortStep)
   result.RunStepList.AppendList(runState.UndoStepList)
   result.SkipMessage = runState.SkipMessage
-  return result
+  return
 }

@@ -24,13 +24,14 @@ func Run(options RunOptions) {
     runState.Command = options.Command
     runState.SkipMessage = options.SkipMessage
     if options.IsAbort {
-      runSteps(runState.CreateAbortRunState())
+      abortRunState := runState.CreateAbortRunState()
+      runSteps(&abortRunState)
     } else {
       git.EnsureDoesNotHaveConflicts()
-      runSteps(runState)
+      runSteps(&runState)
     }
   } else {
-    runSteps(RunState{
+    runSteps(&RunState{
       Command: options.Command,
       RunStepList: options.StepListGenerator(),
     })
@@ -39,7 +40,7 @@ func Run(options RunOptions) {
 
 // Helpers
 
-func runSteps(runState RunState) {
+func runSteps(runState *RunState) {
   for {
     step := runState.RunStepList.Pop()
     if step == nil {

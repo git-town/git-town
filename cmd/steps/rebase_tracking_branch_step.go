@@ -26,8 +26,7 @@ func (step RebaseTrackingBranchStep) CreateUndoStep() Step {
 func (step RebaseTrackingBranchStep) Run() error {
   branchName := git.GetCurrentBranchName()
   if git.HasTrackingBranch(branchName) {
-    step := RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)}
-    return step.Run()
+    return RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)}.Run()
   }
   return nil
 }

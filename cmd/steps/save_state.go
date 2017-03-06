@@ -8,7 +8,7 @@ import (
 )
 
 
-func saveState(runState RunState) {
+func saveState(runState *RunState) {
   serializedRunState := SerializedRunState{
     AbortStep: serializeStep(runState.AbortStep),
     RunSteps: serializeSteps(runState.RunStepList.List),
@@ -33,21 +33,20 @@ func serializeStep(step Step) SerializedStep {
   }
   return SerializedStep{
     Data: data,
-    Type: getType(step),
+    Type: getTypeName(step),
   }
 }
 
 
-func serializeSteps(steps []Step) []SerializedStep {
-  var output []SerializedStep
+func serializeSteps(steps []Step) (result []SerializedStep) {
   for _, step := range(steps) {
-    output = append(output, serializeStep(step))
+    result = append(result, serializeStep(step))
   }
-  return output
+  return
 }
 
 
-func getType(myvar interface{}) string {
+func getTypeName(myvar interface{}) string {
   if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
     return "*" + t.Elem().Name()
   } else {

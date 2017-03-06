@@ -84,8 +84,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
 
 
 func deserializeStepList(serializedSteps []SerializedStep) (stepList StepList) {
-  for i := 0; i < len(serializedSteps); i++ {
-    stepList.Append(deserializeStep(serializedSteps[i]))
+  for _, serializedStep := range(serializedSteps) {
+    stepList.Append(deserializeStep(serializedStep))
   }
   return stepList
 }

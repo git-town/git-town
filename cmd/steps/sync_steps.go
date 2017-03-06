@@ -8,37 +8,39 @@ import (
 )
 
 
-func GetSyncBranchSteps(branchName string) []Step {
+func GetSyncBranchSteps(branchName string) (result StepList) {
   isFeature := config.IsFeatureBranch(branchName)
   hasRemoteOrigin := config.HasRemoteOrigin()
 
-  var steps []Step
+  if !hasRemoteOrigin && !isFeature {
+    return
+  }
 
-  if hasRemoteOrigin || isFeature {
-    steps = append(steps, CheckoutBranchStep{BranchName: branchName})
-    if isFeature {
-      steps = append(steps, MergeTrackingBranchStep{}, MergeBranchStep{BranchName: config.GetParentBranch(branchName)})
+  result.Append(CheckoutBranchStep{BranchName: branchName})
+  if isFeature {
+    result.Append(MergeTrackingBranchStep{})
+    result.Append(MergeBranchStep{BranchName: config.GetParentBranch(branchName)})
+  } else {
+    if config.GetPullBranchStrategy() == "rebase" {
+      result.Append(RebaseTrackingBranchStep{})
     } else {
-      if config.GetPullBranchStrategy() == "rebase" {
-        steps = append(steps, RebaseTrackingBranchStep{})
-      } else {
-        steps = append(steps, MergeTrackingBranchStep{})
-      }
-
-      mainBranchName := config.GetMainBranch()
-      if mainBranchName == branchName && config.HasRemoteUpstream() {
-        steps = append(steps, FetchUpstreamStep{}, RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
-      }
+      result.Append(MergeTrackingBranchStep{})
     }
 
-    if hasRemoteOrigin {
-      if git.HasTrackingBranch(branchName) {
-        steps = append(steps, PushBranchStep{BranchName: branchName})
-      } else {
-        steps = append(steps, new(CreateTrackingBranchStep))
-      }
+    mainBranchName := config.GetMainBranch()
+    if mainBranchName == branchName && config.HasRemoteUpstream() {
+      result.Append(FetchUpstreamStep{})
+      result.Append(RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
     }
   }
 
-  return steps
+  if hasRemoteOrigin {
+    if git.HasTrackingBranch(branchName) {
+      result.Append(PushBranchStep{BranchName: branchName})
+    } else {
+      result.Append(new(CreateTrackingBranchStep))
+    }
+  }
+
+  return
 }

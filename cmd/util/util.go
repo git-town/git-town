@@ -13,15 +13,6 @@ func CommandOutputContains(cmd []string, value string) bool {
   return strings.Contains(GetCommandOutput(cmd), value)
 }
 
-func ContainsString(list []string, item string) bool {
-  for _, element := range(list) {
-    if item == element {
-      return true
-    }
-  }
-  return false
-}
-
 func ExitWithErrorMessage(message string) {
   errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
   errMessageFmt := color.New(color.FgRed)

@@ -26,8 +26,7 @@ func HasConflicts() bool {
 
 
 func HasOpenChanges() bool {
-  output := util.GetCommandOutput([]string{"git", "status", "--porcelain"})
-  return output != ""
+  return util.GetCommandOutput([]string{"git", "status", "--porcelain"}) != ""
 }
 
 

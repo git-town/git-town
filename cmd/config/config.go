@@ -2,6 +2,7 @@ package config
 
 import (
   "os"
+  "sort"
   "strings"
 
   "github.com/Originate/gt/cmd/util"
@@ -24,8 +25,7 @@ func GetPerennialBranches() []string {
 
 
 func GetPullBranchStrategy() string {
-  pullBranchStrategy := getConfigurationValueWithDefault("pull-branch-strategy", "rebase")
-  return pullBranchStrategy
+  return getConfigurationValueWithDefault("pull-branch-strategy", "rebase")
 }
 
 
@@ -52,7 +52,7 @@ func IsFeatureBranch(branchName string) bool {
 
 func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
-  return util.ContainsString(perennialBranches, branchName)
+  return sort.SearchStrings(perennialBranches, branchName) < len(perennialBranches)
 }
 
 
@@ -66,14 +66,12 @@ func HasRemoteUpstream() bool {
 }
 
 
-func ShouldHackPush() bool {
-  hackPushFlag := getConfigurationValueWithDefault("hack-push-flag", "true")
-  return hackPushFlag == "true"
+func SetParentBranch(branchName, parentBranchName string) {
+  storeConfigurationValue(branchName + ".parent", parentBranchName)
 }
 
-
-func StoreParentBranch(branchName, parentBranchName string) {
-  storeConfigurationValue(branchName + ".parent", parentBranchName)
+func ShouldHackPush() bool {
+  return getConfigurationValueWithDefault("hack-push-flag", "true") == "true"
 }
 
 
@@ -85,7 +83,7 @@ func getConfigurationValue(key string) string {
 }
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
-  value := util.GetCommandOutput([]string{"git", "config", "git-town." + key})
+  value := getConfigurationValue(key)
   if value == "" {
     return defaultValue
   }

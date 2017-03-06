@@ -19,13 +19,7 @@ func EnsureDoesNotHaveBranch(branchName string) {
 
 func GetCurrentBranchName() string {
   if IsRebaseInProgress() {
-    filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
-    rawContent, err := ioutil.ReadFile(filename)
-    if err != nil {
-      log.Fatal(err)
-    }
-    content := strings.TrimSpace(string(rawContent))
-    return strings.Replace(content, "refs/heads/", "", -1)
+    return getCurrentBranchNameDuringRebase()
   } else {
     return util.GetCommandOutput([]string{"git", "rev-parse", "--abbrev-ref", "HEAD"})
   }
@@ -38,9 +32,8 @@ func GetTrackingBranchName(branchName string) string {
 
 
 func HasBranch(branchName string) bool {
-  cmd := []string{"git", "branch", "-a"}
-  lines := strings.Split(util.GetCommandOutput(cmd), "\n")
-  for _, line := range(lines) {
+  output := util.GetCommandOutput([]string{"git", "branch", "-a"})
+  for _, line := range(strings.Split(output, "\n")) {
     line = strings.Trim(line, "* ")
     line = strings.TrimSpace(line)
     line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -55,11 +48,8 @@ func HasBranch(branchName string) bool {
 func HasTrackingBranch(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
   output := util.GetCommandOutput([]string{"git", "branch", "-r"})
-  lines := strings.Split(output, "\n")
-  for i := 0; i < len(lines); i++ {
-    line := lines[i]
-    line = strings.TrimSpace(line)
-    if line == trackingBranchName {
+  for _, line := range(strings.Split(output, "\n")) {
+    if strings.TrimSpace(line) == trackingBranchName {
       return true
     }
   }
@@ -71,4 +61,18 @@ func ShouldBranchBePushed(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
   output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", branchName + "..." + trackingBranchName})
   return output != ""
+}
+
+
+// Helpers
+
+
+func getCurrentBranchNameDuringRebase() string {
+  filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
+  rawContent, err := ioutil.ReadFile(filename)
+  if err != nil {
+    log.Fatal(err)
+  }
+  content := strings.TrimSpace(string(rawContent))
+  return strings.Replace(content, "refs/heads/", "", -1)
 }

@@ -26,8 +26,7 @@ func (step MergeTrackingBranchStep) CreateUndoStep() Step {
 func (step MergeTrackingBranchStep) Run() error {
   branchName := git.GetCurrentBranchName()
   if git.HasTrackingBranch(branchName) {
-    step := MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)}
-    return step.Run()
+    return MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)}.Run()
   }
   return nil
 }

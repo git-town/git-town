@@ -40,8 +40,7 @@ func checkPreconditions(args []string) string {
   }
   targetBranchName := args[0]
   if config.HasRemoteOrigin() {
-    fetchCmd := []string{"git", "fetch", "--prune"}
-    fetchErr := script.RunCommand(fetchCmd)
+    fetchErr := script.RunCommand([]string{"git", "fetch", "--prune"})
     if fetchErr != nil {
       log.Fatal(fetchErr)
     }
@@ -53,7 +52,7 @@ func checkPreconditions(args []string) string {
 func getStepList(targetBranchName string) steps.StepList {
   mainBranchName := config.GetMainBranch()
   stepList := steps.StepList{}
-  stepList.AppendAll(steps.GetSyncBranchSteps(mainBranchName))
+  stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
   stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
   if config.HasRemoteOrigin() && config.ShouldHackPush() {
     stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})

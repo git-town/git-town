@@ -33,5 +33,5 @@ func Wrap(stepList StepList, options WrapOptions) (result StepList) {
     result.Append(ChangeDirectoryStep{Directory: initialDirectory})
   }
 
-  return result
+  return
 }
