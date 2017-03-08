@@ -19,7 +19,7 @@ dependencies:
     - mkdir -p "$(dirname "$GO_PROJECT")"
     - if [[ ! -e "$GO_PROJECT" ]]; then ln -s $HOME/git-town "$GO_PROJECT"; fi
     - cd $GO_PROJECT && go install && go get gopkg.in/alecthomas/gometalinter.v1
-    - /home/ubuntu/.go_workspace/bin/gometalinter.v1 --install
+    - gometalinter.v1 --install
     - cd /home/ubuntu/git-town && bundle install
 
   post:
