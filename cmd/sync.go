@@ -6,6 +6,7 @@ import (
 
   "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
+  "github.com/Originate/gt/cmd/prompt"
   "github.com/Originate/gt/cmd/script"
   "github.com/Originate/gt/cmd/steps"
 
@@ -28,9 +29,9 @@ type SyncFlags struct {
 var syncFlags SyncFlags
 
 var syncCmd = &cobra.Command{
-  Use:   "hack",
-  Short: "Create a new feature branch off the main development branch",
-  Long:  `Create a new feature branch off the main development branch`,
+  Use:   "sync",
+  Short: "Update the current branch with all relevant changes",
+  Long:  `Update the current branch with all relevant changes`,
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
       CanSkip: func() bool {
@@ -61,11 +62,11 @@ func checkSyncPreconditions() (result SyncConfig){
   result.InitialBranch = git.GetCurrentBranchName()
   if syncFlags.All {
     branches := git.GetLocalBranchesWithMainBranchFirst()
-    prompt.EnsureKnowsAllParentBranches(branches)
+    prompt.EnsureKnowsParentBranches(branches)
     result.BranchesToSync = branches
     result.ShouldPushTags = true
   } else if config.IsFeatureBranch(result.InitialBranch) {
-    prompt.EnsureKnowsParentBranches(result.InitialBranch)
+    prompt.EnsureKnowsParentBranch(result.InitialBranch)
     result.BranchesToSync = append(config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
   } else {
     result.BranchesToSync = []string{result.InitialBranch}
@@ -91,5 +92,5 @@ func init() {
   syncCmd.Flags().BoolVar(&syncFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
   syncCmd.Flags().BoolVar(&syncFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
   syncCmd.Flags().BoolVar(&syncFlags.Skip, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
-  syncCmd.AddCommand(hackCmd)
+  RootCmd.AddCommand(syncCmd)
 }

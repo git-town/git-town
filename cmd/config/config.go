@@ -9,6 +9,11 @@ import (
 )
 
 
+func GetAncestorBranches(branchName string) []string {
+  return []string{}
+}
+
+
 func GetMainBranch() string {
   return getConfigurationValue("main-branch-name")
 }

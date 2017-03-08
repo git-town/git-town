@@ -12,7 +12,7 @@ Feature: git town-sync: syncing the main branch (without remote repo)
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |
     And I have an uncommitted file
-    When I run `git town-sync`
+    When I run `gt sync`
 
 
   Scenario: result

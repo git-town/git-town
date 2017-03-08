@@ -6,6 +6,7 @@ import (
   "log"
   "strings"
 
+  "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/util"
 )
 
@@ -26,27 +27,18 @@ func GetCurrentBranchName() string {
 }
 
 
-func GetLocalBranchesWithMainBranchFirst() (result string[]) {
-
-
-  // function local_branches {
-  //   git branch | tr -d ' ' | sed 's/\*//g'
-  // }
-  //
-  //
-  // # Returns the names of local branches
-  // function local_branches_with_main_first {
-  //   if [ -n "$MAIN_BRANCH_NAME" ]; then
-  //     echo "$MAIN_BRANCH_NAME"
-  //   fi
-  //   local_branches_without_main
-  // }
-  //
-  //
-  // # Returns the names of local branches without the main branch
-  // function local_branches_without_main {
-  //   local_branches | grep -v "^$MAIN_BRANCH_NAME\$"
-  // }
+func GetLocalBranchesWithMainBranchFirst() (result []string) {
+  mainBranch := config.GetMainBranch()
+  result = append(result, mainBranch)
+  output := util.GetCommandOutput([]string{"git", "branch"})
+  for _, line := range(strings.Split(output, "\n")) {
+    line = strings.Trim(line, "* ")
+    line = strings.TrimSpace(line)
+    if line != mainBranch {
+      result = append(result, line)
+    }
+  }
+  return
 }
 
 
@@ -56,8 +48,15 @@ func GetTrackingBranchName(branchName string) string {
 
 
 func HasBranch(branchName string) bool {
-  for _, branch := range(getAllBranches()) {
-    if branch == branchName {
+  output := util.GetCommandOutput([]string{"git", "branch", "-a"})
+  for _, line := range(strings.Split(output, "\n")) {
+    if (strings.Contains(line, "remotes/origin/HEAD ->")) {
+      continue
+    }
+    line = strings.Trim(line, "* ")
+    line = strings.TrimSpace(line)
+    line = strings.Replace(line, "remotes/origin/", "", 1)
+    if line == branchName {
       return true
     }
   }
@@ -86,22 +85,8 @@ func ShouldBranchBePushed(branchName string) bool {
 
 // Helpers
 
-func getAllBranches() (result []string) {
-  output := util.GetCommandOutput([]string{"git", "branch", "-a"})
-  for _, line := range(strings.Split(output, "\n")) {
-    if (strings.Contains(line, "remotes/origin/HEAD ->")) {
-      continue
-    }
-    line = strings.Trim(line, "* ")
-    line = strings.TrimSpace(line)
-    line = strings.Replace(line, "remotes/origin/", "", 1)
-    result = append(result, line)
-  }
-  return
-}
 
-
-func getLocalBranches() (result []string) {
+func getLocalBranchesWithoutMain() (result []string) {
   output := util.GetCommandOutput([]string{"git", "branch"})
   for _, line := range(strings.Split(output, "\n")) {
     line = strings.Trim(line, "* ")
