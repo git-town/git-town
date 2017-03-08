@@ -7,6 +7,8 @@ machine:
 
     PATH: $HOME/.cabal/bin/:$PATH
 
+    GO_PROJECT: "$HOME/.go_workspace/src/github.com/Originate/gt"
+
 
 dependencies:
 
@@ -15,15 +17,15 @@ dependencies:
     - "~/.cabal"
 
   override:
-    - rm -rf /home/ubuntu/.go_workspace/src
-    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
-    - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install && go get gopkg.in/alecthomas/gometalinter.v1
+    - mkdir -p "$(dirname "$GO_PROJECT")"
+    - if [[ ! -e "$GO_PROJECT" ]]; then ln -s $HOME/git-town "$GO_PROJECT"; fi
+    - cd $GO_PROJECT && go install && go get gopkg.in/alecthomas/gometalinter.v1
     - /home/ubuntu/.go_workspace/bin/gometalinter.v1 --install
     - cd /home/ubuntu/git-town && bundle install
 
   post:
     - bin/circleci-install-shellcheck
+
 
 notify:
   webhooks:
@@ -33,7 +35,7 @@ notify:
 test:
   override:
     - bundle exec rake lint:bash
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && gometalinter.v1 --deadline=20s cmd/
+    - cd $GO_PROJECT && gometalinter.v1 --deadline=20s cmd/
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test
