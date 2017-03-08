@@ -34,7 +34,7 @@ notify:
 test:
   override:
     - bundle exec rake lint:bash
-    - cd $GO_PROJECT && gometalinter.v1 --deadline=20s cmd/
+    - gometalinter.v1 --deadline=20s cmd/
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test
