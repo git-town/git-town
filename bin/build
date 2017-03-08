@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+go install github.com/Originate/git-town/cmd/gt
