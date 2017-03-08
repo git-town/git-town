@@ -15,10 +15,11 @@ dependencies:
     - "~/.cabal"
 
   override:
+    - rm -rf /home/ubuntu/.go_workspace/src
     - mkdir -p /home/ubuntu/.go_workspace/src/github.com/Originate
     - cp -r /home/ubuntu/git-town /home/ubuntu/.go_workspace/src/github.com/Originate/gt
-    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install
-    - rm -rf /home/ubuntu/.go_workspace/src/github.com/Originate/gt
+    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && go install && go get gopkg.in/alecthomas/gometalinter.v1
+    - /home/ubuntu/.go_workspace/bin/gometalinter.v1 --install
     - cd /home/ubuntu/git-town && bundle install
 
   post:
@@ -32,6 +33,7 @@ notify:
 test:
   override:
     - bundle exec rake lint:bash
+    - cd /home/ubuntu/.go_workspace/src/github.com/Originate/gt && gometalinter.v1 --deadline=20s cmd/
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test
