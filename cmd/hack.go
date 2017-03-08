@@ -21,11 +21,12 @@ var hackCmd = &cobra.Command{
   Long:  `Create a new feature branch off the main development branch`,
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
+      CanSkip: func() bool { return false },
       Command: "hack",
       IsAbort: abortFlag,
       IsContinue: continueFlag,
       IsSkip: false,
-      SkipMessage: "",
+      SkipMessageGenerator: func() string { return "" },
       StepListGenerator: func() steps.StepList {
         targetBranchName := checkPreconditions(args)
         return getStepList(targetBranchName)

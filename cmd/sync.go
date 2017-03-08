@@ -1,13 +1,13 @@
 package cmd
 
 import (
+  "fmt"
   "log"
 
   "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/git"
   "github.com/Originate/gt/cmd/script"
   "github.com/Originate/gt/cmd/steps"
-  "github.com/Originate/gt/cmd/util"
 
   "github.com/spf13/cobra"
 )
@@ -18,10 +18,14 @@ type SyncConfig struct {
   ShouldPushTags bool
 }
 
-var allFlag bool
-var abortFlag bool
-var continueFlag bool
-var skipFlag bool
+type SyncFlags struct {
+  All bool
+  Abort bool
+  Continue bool
+  Skip bool
+}
+
+var syncFlags SyncFlags
 
 var syncCmd = &cobra.Command{
   Use:   "hack",
@@ -30,48 +34,49 @@ var syncCmd = &cobra.Command{
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
       CanSkip: func() bool {
-        return git.IsRebaseInProgress() and git.GetCurrentBranchName() is config.GetMainBranch()
+        return git.IsRebaseInProgress() && git.GetCurrentBranchName() == config.GetMainBranch()
       },
       Command: "sync",
-      IsAbort: abortFlag,
-      IsContinue: continueFlag,
-      IsSkip: skipFlag,
+      IsAbort: syncFlags.Abort,
+      IsContinue: syncFlags.Continue,
+      IsSkip: syncFlags.Skip,
       SkipMessageGenerator: func() string {
-        return fmt.prinf("To skip the sync of the %s branch", git.GetCurrentBranchName())
+        return fmt.Sprintf("To skip the sync of the %s branch", git.GetCurrentBranchName())
       },
       StepListGenerator: func() steps.StepList {
-        syncConfig := checkPreconditions()
-        return getStepList(syncConfig)
+        syncConfig := checkSyncPreconditions()
+        return getSyncStepList(syncConfig)
       },
     })
   },
 }
 
-func checkPreconditions() (result SyncConfig){
+func checkSyncPreconditions() (result SyncConfig){
   if config.HasRemoteOrigin() {
     fetchErr := script.RunCommand([]string{"git", "fetch", "--prune"})
     if fetchErr != nil {
       log.Fatal(fetchErr)
     }
   }
-  result.InitialBranch := git.GetCurrentBranchName()
-  if allFlag {
+  result.InitialBranch = git.GetCurrentBranchName()
+  if syncFlags.All {
     branches := git.GetLocalBranchesWithMainBranchFirst()
-    script.EnsureKnowsAllParentBranches(branches)
+    prompt.EnsureKnowsAllParentBranches(branches)
     result.BranchesToSync = branches
     result.ShouldPushTags = true
-  } else if config.isFeatureBranch(result.InitialBranch) {
-    script.EnsureKnowsParentBranches(result.InitialBranch)
+  } else if config.IsFeatureBranch(result.InitialBranch) {
+    prompt.EnsureKnowsParentBranches(result.InitialBranch)
     result.BranchesToSync = append(config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
   } else {
-    result.BranchesToSync = []string{result.InitialBranch)}
+    result.BranchesToSync = []string{result.InitialBranch}
     result.ShouldPushTags = true
   }
+  return
 }
 
-func getStepList(syncConfig SyncConfig) steps.StepList {
+func getSyncStepList(syncConfig SyncConfig) steps.StepList {
   stepList := steps.StepList{}
-  for _, branchName in range(syncConfig.BranchesToSync) {
+  for _, branchName := range(syncConfig.BranchesToSync) {
     stepList.AppendList(steps.GetSyncBranchSteps(branchName))
   }
   stepList.Append(steps.CheckoutBranchStep{BranchName: syncConfig.InitialBranch})
@@ -82,9 +87,9 @@ func getStepList(syncConfig SyncConfig) steps.StepList {
 }
 
 func init() {
-  syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-  syncCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-  syncCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
-  syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
+  syncCmd.Flags().BoolVar(&syncFlags.All, "all", false, "Sync all local branches")
+  syncCmd.Flags().BoolVar(&syncFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
+  syncCmd.Flags().BoolVar(&syncFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
+  syncCmd.Flags().BoolVar(&syncFlags.Skip, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
   syncCmd.AddCommand(hackCmd)
 }

@@ -10,11 +10,12 @@ import (
 )
 
 type RunOptions struct {
+  CanSkip func() bool
   Command string
   IsAbort bool
   IsContinue bool
   IsSkip bool
-  SkipMessage string
+  SkipMessageGenerator func() string
   StepListGenerator func() StepList
 }
 
@@ -22,7 +23,6 @@ func Run(options RunOptions) {
   if options.IsAbort || options.IsContinue {
     runState := loadState(options.Command)
     runState.Command = options.Command
-    runState.SkipMessage = options.SkipMessage
     if options.IsAbort {
       abortRunState := runState.CreateAbortRunState()
       runSteps(&abortRunState)
