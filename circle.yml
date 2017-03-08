@@ -6,7 +6,6 @@ machine:
     PARALLEL_TEST_PROCESSORS: 8
 
     PATH: $HOME/.cabal/bin/:$PATH
-
     GO_PROJECT: "$HOME/.go_workspace/src/github.com/Originate/gt"
 
 
