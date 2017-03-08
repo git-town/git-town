@@ -38,3 +38,4 @@ test:
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test
+
