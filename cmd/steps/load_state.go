@@ -63,6 +63,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
     step := PushBranchStep{}
     json.Unmarshal(serializedStep.Data, &step)
     return step
+  case "PushTagsStep":
+    return PushTagsStep{}
   case "RebaseBranchStep":
     step := RebaseBranchStep{}
     json.Unmarshal(serializedStep.Data, &step)
