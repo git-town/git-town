@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing a feature branch pulls tags
+Feature: gt sync: syncing a feature branch pulls tags
 
   As a developer using Git tags for release management
   I want that tags are pulled automatically for me whenever I sync
@@ -12,7 +12,7 @@ Feature: git town-sync: syncing a feature branch pulls tags
       | local-tag  | local    |
       | remote-tag | remote   |
     And I am on the "feature" branch
-    And I run `git town-sync`
+    And I run `gt sync`
 
 
   Scenario: result

@@ -23,7 +23,7 @@ func (step PushBranchStep) CreateContinueStep() Step {
 
 
 func (step PushBranchStep) CreateUndoStep() Step {
-  return NoOpStep{}
+  return SkipCurrentBranchSteps{}
 }
 
 

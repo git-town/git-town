@@ -6,6 +6,7 @@ import (
   "log"
   "strings"
 
+  "github.com/Originate/gt/cmd/config"
   "github.com/Originate/gt/cmd/util"
 )
 
@@ -23,6 +24,21 @@ func GetCurrentBranchName() string {
   } else {
     return util.GetCommandOutput([]string{"git", "rev-parse", "--abbrev-ref", "HEAD"})
   }
+}
+
+
+func GetLocalBranchesWithMainBranchFirst() (result []string) {
+  mainBranch := config.GetMainBranch()
+  result = append(result, mainBranch)
+  output := util.GetCommandOutput([]string{"git", "branch"})
+  for _, line := range(strings.Split(output, "\n")) {
+    line = strings.Trim(line, "* ")
+    line = strings.TrimSpace(line)
+    if line != mainBranch {
+      result = append(result, line)
+    }
+  }
+  return
 }
 
 

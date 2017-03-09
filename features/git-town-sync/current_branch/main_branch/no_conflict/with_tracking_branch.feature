@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing the main branch
+Feature: gt sync: syncing the main branch
 
   As a developer syncing the main branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
@@ -12,7 +12,7 @@ Feature: git town-sync: syncing the main branch
       | local    | local commit  | local_file  |
       | remote   | remote commit | remote_file |
     And I have an uncommitted file
-    When I run `git town-sync`
+    When I run `gt sync`
 
 
   Scenario: result

@@ -12,8 +12,12 @@ import (
   "github.com/spf13/cobra"
 )
 
-var abortFlag bool
-var continueFlag bool
+type HackFlags struct {
+  Abort bool
+  Continue bool
+}
+
+var hackFlags HackFlags
 
 var hackCmd = &cobra.Command{
   Use:   "hack",
@@ -21,20 +25,21 @@ var hackCmd = &cobra.Command{
   Long:  `Create a new feature branch off the main development branch`,
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
+      CanSkip: func() bool { return false },
       Command: "hack",
-      IsAbort: abortFlag,
-      IsContinue: continueFlag,
+      IsAbort: hackFlags.Abort,
+      IsContinue: hackFlags.Continue,
       IsSkip: false,
-      SkipMessage: "",
+      SkipMessageGenerator: func() string { return "" },
       StepListGenerator: func() steps.StepList {
-        targetBranchName := checkPreconditions(args)
-        return getStepList(targetBranchName)
+        targetBranchName := checkHackPreconditions(args)
+        return getHackStepList(targetBranchName)
       },
     })
   },
 }
 
-func checkPreconditions(args []string) string {
+func checkHackPreconditions(args []string) string {
   if len(args) == 0 {
     util.ExitWithErrorMessage("No branch name provided.")
   }
@@ -49,7 +54,7 @@ func checkPreconditions(args []string) string {
   return targetBranchName
 }
 
-func getStepList(targetBranchName string) steps.StepList {
+func getHackStepList(targetBranchName string) steps.StepList {
   mainBranchName := config.GetMainBranch()
   stepList := steps.StepList{}
   stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
@@ -61,7 +66,7 @@ func getStepList(targetBranchName string) steps.StepList {
 }
 
 func init() {
-  hackCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-  hackCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+  hackCmd.Flags().BoolVar(&hackFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
+  hackCmd.Flags().BoolVar(&hackFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
   RootCmd.AddCommand(hackCmd)
 }

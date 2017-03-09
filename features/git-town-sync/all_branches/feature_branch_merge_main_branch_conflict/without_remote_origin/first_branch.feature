@@ -1,4 +1,4 @@
-Feature: git town-sync --all: handling merge conflicts between feature branch and main branch (without remote repo)
+Feature: gt sync --all: handling merge conflicts between feature branch and main branch (without remote repo)
 
   Background:
     Given my repo does not have a remote origin
@@ -10,7 +10,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit | feature2_file    | feature-2 content |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result
@@ -22,9 +22,9 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
       | feature-1 | git merge --no-edit main |
     And I get the error
       """
-      To abort, run "git town-sync --abort".
-      To continue after you have resolved the conflicts, run "git town-sync --continue".
-      To skip the sync of the 'feature-1' branch, run "git town-sync --skip".
+      To abort, run "gt sync --abort".
+      To continue after you have resolved the conflicts, run "gt sync --continue".
+      To skip the sync of the 'feature-1' branch, run "gt sync --skip".
       """
     And I end up on the "feature-1" branch
     And my uncommitted file is stashed
@@ -32,7 +32,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: aborting
-    When I run `git town-sync --abort`
+    When I run `gt sync --abort`
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-1 | git merge --abort |
@@ -44,7 +44,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git town-sync --skip`
+    When I run `gt sync --skip`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git merge --abort        |
@@ -70,9 +70,9 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-sync --continue`
+    When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing the git town-sync"
+    And I get the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -85,7 +85,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git town-sync --continue`
+    And I run `gt sync --continue`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git commit --no-edit     |
@@ -114,7 +114,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit; git town-sync --continue`
+    And I run `git commit --no-edit; gt sync --continue`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git checkout feature-2   |

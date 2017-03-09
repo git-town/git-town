@@ -9,29 +9,52 @@ import (
 )
 
 
+func CompileAncestorBranches(branchName string) (result []string) {
+  current := branchName
+  for {
+    parent := GetParentBranch(current)
+    result = append([]string{parent}, result...)
+    if parent == GetMainBranch() || IsPerennialBranch(parent) {
+      break
+    }
+    current = parent
+  }
+  return
+}
+
+
+func GetAncestorBranches(branchName string) []string {
+  value := getConfigurationValue("git-town-branch." + branchName + ".ancestors")
+  if value == "" {
+    return []string{}
+  }
+  return strings.Split(value, " ")
+}
+
+
 func GetMainBranch() string {
-  return getConfigurationValue("main-branch-name")
+  return getConfigurationValue("git-town.main-branch-name")
 }
 
 
 func GetParentBranch(branchName string) string {
-  return getConfigurationValue(branchName + ".parent")
+  return getConfigurationValue("git-town-branch." + branchName + ".parent")
 }
 
 
 func GetPerennialBranches() []string {
-  return strings.Split(getConfigurationValue("perennial-branch-names"), " ")
+  return strings.Split(getConfigurationValue("git-town.perennial-branch-names"), " ")
 }
 
 
 func GetPullBranchStrategy() string {
-  return getConfigurationValueWithDefault("pull-branch-strategy", "rebase")
+  return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
 }
 
 
 func GetRemoteOriginUrl() string {
   if os.Getenv("GIT_TOWN_ENV") == "test" {
-    mockRemoteUrl := getConfigurationValue("testing.remote-url")
+    mockRemoteUrl := getConfigurationValue("git-town.testing.remote-url")
     if mockRemoteUrl != "" {
       return mockRemoteUrl
     }
@@ -56,6 +79,13 @@ func IsPerennialBranch(branchName string) bool {
 }
 
 
+func KnowsAllAncestorBranches(branchName string) bool {
+  return branchName == GetMainBranch() ||
+    IsPerennialBranch(branchName) ||
+    len(GetAncestorBranches(branchName)) > 0
+}
+
+
 func HasRemoteOrigin() bool {
   return GetRemoteOriginUrl() != ""
 }
@@ -66,20 +96,25 @@ func HasRemoteUpstream() bool {
 }
 
 
-func SetParentBranch(branchName, parentBranchName string) {
-  storeConfigurationValue(branchName + ".parent", parentBranchName)
+func SetAncestorBranches(branchName string, ancestorBranches []string) {
+  setConfigurationValue("git-town-branch." + branchName + ".ancestors", strings.Join(ancestorBranches, " "))
 }
 
+
+func SetParentBranch(branchName, parentBranchName string) {
+  setConfigurationValue("git-town-branch." + branchName + ".parent", parentBranchName)
+}
+
+
 func ShouldHackPush() bool {
-  return getConfigurationValueWithDefault("hack-push-flag", "true") == "true"
+  return getConfigurationValueWithDefault("git-town.hack-push-flag", "true") == "true"
 }
 
 
 // Helpers
 
-
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput([]string{"git", "config", "git-town." + key})
+  return util.GetCommandOutput([]string{"git", "config", key})
 }
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
@@ -90,6 +125,6 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
   return value
 }
 
-func storeConfigurationValue(key, value string) {
-  util.GetCommandOutput([]string{"git", "config", "git-town." + key, value})
+func setConfigurationValue(key, value string) {
+  util.GetCommandOutput([]string{"git", "config", key, value})
 }
