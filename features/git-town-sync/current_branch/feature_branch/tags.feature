@@ -12,7 +12,7 @@ Feature: git town-sync: syncing a feature branch pulls tags
       | local-tag  | local    |
       | remote-tag | remote   |
     And I am on the "feature" branch
-    And I run `git town-sync`
+    And I run `gt sync`
 
 
   Scenario: result

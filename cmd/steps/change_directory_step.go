@@ -1,6 +1,7 @@
 package steps
 
 import (
+  "log"
   "os"
 
   "github.com/Originate/gt/cmd/script"
@@ -23,7 +24,11 @@ func (step ChangeDirectoryStep) CreateContinueStep() Step {
 
 
 func (step ChangeDirectoryStep) CreateUndoStep() Step {
-  return NoOpStep{}
+  dir, err := os.Getwd()
+  if err != nil {
+    log.Fatal(err)
+  }
+  return ChangeDirectoryStep{Directory: dir}
 }
 
 

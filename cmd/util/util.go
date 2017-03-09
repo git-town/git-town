@@ -1,7 +1,9 @@
 package util
 
 import (
+  "bufio"
   "fmt"
+  "log"
   "os"
   "os/exec"
   "strings"
@@ -31,4 +33,24 @@ func GetCommandOutput(cmd []string) string {
   } else {
     return strings.TrimSpace(string(output))
   }
+}
+
+func ReadLineFromStdin() string {
+  buffer := bufio.NewReader(os.Stdin)
+  line, isPrefix, err := buffer.ReadLine()
+  if isPrefix {
+    log.Fatal("Too much input")
+  }
+  if err != nil {
+    log.Fatal(err)
+  }
+  return string(line)
+}
+
+func Reverse(input []string) []string {
+  result := make([]string, len(input))
+  for i, j := 0, len(input) - 1; i < j; i, j = i + 1, j - 1 {
+		result[i], result[j] = input[j], input[i]
+	}
+  return result
 }

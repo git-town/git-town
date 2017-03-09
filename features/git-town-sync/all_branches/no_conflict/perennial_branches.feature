@@ -11,7 +11,7 @@ Feature: git town-sync --all: syncs all perennial branches
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result

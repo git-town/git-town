@@ -21,6 +21,7 @@ func loadState(command string) RunState {
   }
   return RunState{
     AbortStep: deserializeStep(serializedRunState.AbortStep),
+    Command: command,
     RunStepList: deserializeStepList(serializedRunState.RunSteps),
     UndoStepList: deserializeStepList(serializedRunState.UndoSteps),
   }
@@ -59,6 +60,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
     return step
   case "MergeTrackingBranchStep":
     return MergeTrackingBranchStep{}
+  case "NoOpStep":
+    return NoOpStep{}
   case "PushBranchStep":
     step := PushBranchStep{}
     json.Unmarshal(serializedStep.Data, &step)
@@ -77,6 +80,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
     return step
   case "RestoreOpenChangesStep":
     return RestoreOpenChangesStep{}
+  case "SkipCurrentBranchSteps":
+    return SkipCurrentBranchSteps{}
   case "StashOpenChangesStep":
     return StashOpenChangesStep{}
   }

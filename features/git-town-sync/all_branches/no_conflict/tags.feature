@@ -11,7 +11,7 @@ Feature: git town-sync: syncing all branches syncs the tags
       | local-tag  | local    |
       | remote-tag | remote   |
     And I am on the "main" branch
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result

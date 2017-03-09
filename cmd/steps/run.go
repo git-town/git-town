@@ -20,31 +20,37 @@ type RunOptions struct {
 }
 
 func Run(options RunOptions) {
-  if options.IsAbort || options.IsContinue {
+  if options.IsAbort {
     runState := loadState(options.Command)
-    runState.Command = options.Command
-    if options.IsAbort {
-      abortRunState := runState.CreateAbortRunState()
-      runSteps(&abortRunState)
-    } else {
-      git.EnsureDoesNotHaveConflicts()
-      runSteps(&runState)
-    }
+    abortRunState := runState.CreateAbortRunState()
+    runSteps(&abortRunState, options)
+  } else if options.IsContinue {
+    runState := loadState(options.Command)
+    git.EnsureDoesNotHaveConflicts()
+    runSteps(&runState, options)
+  } else if options.IsSkip {
+    runState := loadState(options.Command)
+    skipRunState := runState.CreateSkipRunState()
+    runSteps(&skipRunState, options)
   } else {
     runSteps(&RunState{
       Command: options.Command,
       RunStepList: options.StepListGenerator(),
-    })
+    }, options)
   }
 }
 
 // Helpers
 
-func runSteps(runState *RunState) {
+func runSteps(runState *RunState, options RunOptions) {
   for {
     step := runState.RunStepList.Pop()
     if step == nil {
       return
+    }
+    if getTypeName(step) == "SkipCurrentBranchSteps" {
+      runState.SkipCurrentBranchSteps()
+      continue
     }
     undoStep := step.CreateUndoStep()
     err := step.Run()
@@ -52,7 +58,11 @@ func runSteps(runState *RunState) {
       runState.AbortStep = step.CreateAbortStep()
       runState.RunStepList.Prepend(step.CreateContinueStep())
       saveState(runState)
-      exitWithMessages(runState.Command, runState.SkipMessage)
+      skipMessage := ""
+      if options.CanSkip() {
+        skipMessage = options.SkipMessageGenerator()
+      }
+      exitWithMessages(runState.Command, skipMessage)
     }
     runState.UndoStepList.Prepend(undoStep)
   }

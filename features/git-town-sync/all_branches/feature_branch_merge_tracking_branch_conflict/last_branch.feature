@@ -10,7 +10,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
       |           | remote           | feature-2 remote commit | conflicting_file | feature-2 remote content |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result
@@ -28,9 +28,9 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
       | feature-2 | git merge --no-edit origin/feature-2 |
     And I get the error
       """
-      To abort, run "git town-sync --abort".
-      To continue after you have resolved the conflicts, run "git town-sync --continue".
-      To skip the sync of the 'feature-2' branch, run "git town-sync --skip".
+      To abort, run "gt sync --abort".
+      To continue after you have resolved the conflicts, run "gt sync --continue".
+      To skip the sync of the 'feature-2' branch, run "gt sync --skip".
       """
     And I end up on the "feature-2" branch
     And my uncommitted file is stashed
@@ -38,7 +38,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: aborting
-    When I run `git town-sync --abort`
+    When I run `gt sync --abort`
     Then it runs the commands
       | BRANCH    | COMMAND                |
       | feature-2 | git merge --abort      |

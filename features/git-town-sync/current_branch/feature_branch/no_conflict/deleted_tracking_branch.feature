@@ -12,7 +12,7 @@ Feature: git town-sync: restores deleted tracking branch
       | feature | local and remote | feature commit | feature_file |
     And the "feature" branch gets deleted on the remote
     And I am on the "feature" branch
-    When I run `git town-sync`
+    When I run `gt sync`
 
 
   Scenario: result

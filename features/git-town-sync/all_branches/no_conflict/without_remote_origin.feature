@@ -10,7 +10,7 @@ Feature: git town-sync --all: syncs all feature branches (without remote repo)
       | feature-2 | local    | feature-2 commit | feature2_file | feature-2 content |
     And I am on the "feature-1" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result

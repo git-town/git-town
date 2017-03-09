@@ -18,7 +18,7 @@ Feature: git town-sync: syncing a nested feature branch (with known parent branc
       |                | remote   | remote child feature commit  | remote_child_feature_file  |
     And I am on the "child-feature" branch
     And I have an uncommitted file
-    When I run `git town-sync`
+    When I run `gt sync`
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune                         |

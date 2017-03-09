@@ -12,6 +12,13 @@ func (stepList *StepList) AppendList(otherList StepList) {
   stepList.List = append(stepList.List, otherList.List...)
 }
 
+func (stepList *StepList) Peek() (result Step) {
+  if len(stepList.List) == 0 {
+    return nil
+  }
+  return stepList.List[0]
+}
+
 func (stepList *StepList) Pop() (result Step) {
   if len(stepList.List) == 0 {
     return nil

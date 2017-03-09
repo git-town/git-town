@@ -9,6 +9,7 @@ import (
   "github.com/Originate/gt/cmd/prompt"
   "github.com/Originate/gt/cmd/script"
   "github.com/Originate/gt/cmd/steps"
+  "github.com/Originate/gt/cmd/util"
 
   "github.com/spf13/cobra"
 )
@@ -35,14 +36,14 @@ var syncCmd = &cobra.Command{
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
       CanSkip: func() bool {
-        return git.IsRebaseInProgress() && git.GetCurrentBranchName() == config.GetMainBranch()
+        return !(git.IsRebaseInProgress() && git.GetCurrentBranchName() == config.GetMainBranch())
       },
       Command: "sync",
       IsAbort: syncFlags.Abort,
       IsContinue: syncFlags.Continue,
       IsSkip: syncFlags.Skip,
       SkipMessageGenerator: func() string {
-        return fmt.Sprintf("To skip the sync of the %s branch", git.GetCurrentBranchName())
+        return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
       },
       StepListGenerator: func() steps.StepList {
         syncConfig := checkSyncPreconditions()
@@ -66,8 +67,11 @@ func checkSyncPreconditions() (result SyncConfig){
     result.BranchesToSync = branches
     result.ShouldPushTags = true
   } else if config.IsFeatureBranch(result.InitialBranch) {
-    prompt.EnsureKnowsParentBranch(result.InitialBranch)
-    result.BranchesToSync = append(config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+    prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+    result.BranchesToSync = append(
+      util.Reverse(config.GetAncestorBranches(result.InitialBranch)),
+      result.InitialBranch,
+    )
   } else {
     result.BranchesToSync = []string{result.InitialBranch}
     result.ShouldPushTags = true
