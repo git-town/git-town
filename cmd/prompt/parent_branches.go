@@ -45,7 +45,7 @@ func askForBranchAncestry(branchName string) {
 }
 
 func askForParentBranch(branchName string) string {
-  return "" // TODO
+  panic("unimplemented")
 }
 
 func printParentBranchHeader() {
