@@ -33,6 +33,11 @@ This guide will help you get started and outline some things you should know whe
   for auto-running tests
 
 
+## Building
+
+* run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
+
+
 ## Testing
 
 * tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
