@@ -33,11 +33,11 @@ func askForBranchAncestry(branchName string) {
   current := branchName
   for {
     parent := config.GetParentBranch(current)
-    if parent != "" {
-      parent := askForParentBranch(current)
+    if parent == "" {
+      parent = askForParentBranch(current)
       config.SetParentBranch(current, parent)
     }
-    if parent == config.GetMainBranch() {
+    if parent == config.GetMainBranch() || config.IsPerennialBranch(parent) {
       break
     }
     current = parent

@@ -9,7 +9,6 @@ import (
   "github.com/Originate/gt/cmd/prompt"
   "github.com/Originate/gt/cmd/script"
   "github.com/Originate/gt/cmd/steps"
-  "github.com/Originate/gt/cmd/util"
 
   "github.com/spf13/cobra"
 )
@@ -68,11 +67,7 @@ func checkSyncPreconditions() (result SyncConfig){
     result.ShouldPushTags = true
   } else if config.IsFeatureBranch(result.InitialBranch) {
     prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-    result.BranchesToSync = append(
-      util.Reverse(config.GetAncestorBranches(result.InitialBranch)),
-      result.InitialBranch,
-    )
-    fmt.Println(result.BranchesToSync)
+    result.BranchesToSync = append(config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
   } else {
     result.BranchesToSync = []string{result.InitialBranch}
     result.ShouldPushTags = true

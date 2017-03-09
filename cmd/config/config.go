@@ -13,8 +13,8 @@ func CompileAncestorBranches(branchName string) (result []string) {
   current := branchName
   for {
     parent := GetParentBranch(current)
-    result = append(result, parent)
-    if parent == GetMainBranch() {
+    result = append([]string{parent}, result...)
+    if parent == GetMainBranch() || IsPerennialBranch(parent) {
       break
     }
     current = parent

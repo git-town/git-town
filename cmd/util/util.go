@@ -32,11 +32,3 @@ func GetCommandOutput(cmd []string) string {
     return strings.TrimSpace(string(output))
   }
 }
-
-func Reverse(input []string) []string {
-  result := make([]string, len(input))
-  for i, j := 0, len(input) - 1; i <= j; i, j = i + 1, j - 1 {
-    result[i], result[j] = input[j], input[i]
-  }
-  return result
-}
