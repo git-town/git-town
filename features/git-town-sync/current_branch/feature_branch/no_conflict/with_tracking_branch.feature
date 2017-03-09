@@ -14,7 +14,7 @@ Feature: gt sync: syncing the current feature branch with a tracking branch
       | feature | local    | local feature commit  | local_feature_file  |
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
-    And I have an uncommitte dfile
+    And I have an uncommitted file
     When I run `gt sync`
 
 
