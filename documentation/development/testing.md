@@ -4,9 +4,11 @@
 
 ```bash
 # running the different test types
-rake         # runs all tests
-rake lint    # runs the linters
-rake test    # runs the feature tests
+rake           # runs all tests
+bin/lint       # runs the linters
+bin/lint_bash  # runs the Bash linters
+bin/lint_go    # runs the Go linters
+rake test      # runs the feature tests
 
 # running individual scenarios/features
 cucumber <filename>[:<lineno>]
