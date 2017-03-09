@@ -78,11 +78,13 @@ func IsPerennialBranch(branchName string) bool {
   return sort.SearchStrings(perennialBranches, branchName) < len(perennialBranches)
 }
 
+
 func KnowsAllAncestorBranches(branchName string) bool {
   return branchName == GetMainBranch() ||
     IsPerennialBranch(branchName) ||
     len(GetAncestorBranches(branchName)) > 0
 }
+
 
 func HasRemoteOrigin() bool {
   return GetRemoteOriginUrl() != ""

@@ -6,6 +6,7 @@ import (
   "github.com/Originate/gt/cmd/config"
 )
 
+
 func EnsureKnowsParentBranches(branchNames []string) {
   headerShown := false
   for _, branchName := range(branchNames) {
@@ -25,15 +26,17 @@ func EnsureKnowsParentBranches(branchNames []string) {
   }
 }
 
+
+// Helpers
+
 func askForBranchAncestry(branchName string) {
   current := branchName
   for {
-    fmt.Println("parent", config.GetParentBranch(current))
-    if config.GetParentBranch(current) != "" {
-      break
+    parent = config.GetParentBranch(current)
+    if parent != "" {
+      parent := askForParentBranch(current)
+      config.SetParentBranch(current, parent)
     }
-    parent := askForParentBranch(current)
-    config.SetParentBranch(current, parent)
     if parent == config.GetMainBranch() {
       break
     }
