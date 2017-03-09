@@ -1,4 +1,4 @@
-Feature: git town-sync: resolving conflicts between the current feature branch and its tracking branch
+Feature: gt sync: resolving conflicts between the current feature branch and its tracking branch
 
   As a developer syncing a feature branch that conflicts with the tracking branch
   I want to be given the choice to resolve the conflicts or abort

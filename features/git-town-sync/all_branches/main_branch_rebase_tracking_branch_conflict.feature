@@ -1,4 +1,4 @@
-Feature: git town-sync --all: handling rebase conflicts between main branch and its tracking branch
+Feature: gt sync --all: handling rebase conflicts between main branch and its tracking branch
 
   Background:
     Given I have a feature branch named "feature"
@@ -9,7 +9,7 @@ Feature: git town-sync --all: handling rebase conflicts between main branch and 
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result
@@ -21,15 +21,15 @@ Feature: git town-sync --all: handling rebase conflicts between main branch and 
       |        | git rebase origin/main |
     And I get the error
       """
-      To abort, run "git town-sync --abort".
-      To continue after you have resolved the conflicts, run "git town-sync --continue".
+      To abort, run "gt sync --abort".
+      To continue after you have resolved the conflicts, run "gt sync --continue".
       """
     And my uncommitted file is stashed
     And my repo has a rebase in progress
 
 
   Scenario: aborting
-    When I run `git town-sync --abort`
+    When I run `gt sync --abort`
     Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
@@ -44,16 +44,16 @@ Feature: git town-sync --all: handling rebase conflicts between main branch and 
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-sync --continue`
+    When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing the git town-sync"
+    And I get the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git town-sync --continue`
+    And I run `gt sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -79,7 +79,7 @@ Feature: git town-sync --all: handling rebase conflicts between main branch and 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue; git town-sync --continue`
+    And I run `git rebase --continue; gt sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |

@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing inside a folder that doesn't exist on the main branch
+Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
 
   As a developer syncing inside a committed folder that doesn't exist on the main branch
   I want the command to finish properly

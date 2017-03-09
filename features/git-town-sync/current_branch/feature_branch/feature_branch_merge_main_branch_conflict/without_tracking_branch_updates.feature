@@ -1,4 +1,4 @@
-Feature: git town-sync: resolving conflicts between the current feature branch and the main branch
+Feature: gt sync: resolving conflicts between the current feature branch and the main branch
 
   Background:
     Given I have a feature branch named "feature"

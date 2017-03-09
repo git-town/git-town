@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing the current feature branch without a tracking branch
+Feature: gt sync: syncing the current feature branch without a tracking branch
 
   (see ./with_a_tracking_branch.feature)
 

@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing a nested feature branch (with known parent branches)
+Feature: gt sync: syncing a nested feature branch (with known parent branches)
 
   As a developer developing a feature branch that was cut from another feature branch
   I want my branch to be synced off the updated parent branch

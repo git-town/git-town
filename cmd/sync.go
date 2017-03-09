@@ -72,6 +72,7 @@ func checkSyncPreconditions() (result SyncConfig){
       util.Reverse(config.GetAncestorBranches(result.InitialBranch)),
       result.InitialBranch,
     )
+    fmt.Println(result.BranchesToSync)
   } else {
     result.BranchesToSync = []string{result.InitialBranch}
     result.ShouldPushTags = true

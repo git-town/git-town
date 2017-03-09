@@ -1,4 +1,4 @@
-Feature: git town-sync --all: handling merge conflicts between feature branch and its tracking branch
+Feature: gt sync --all: handling merge conflicts between feature branch and its tracking branch
 
   Background:
     Given I have feature branches named "feature-1" and "feature-2"
@@ -58,7 +58,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git town-sync --skip`
+    When I run `gt sync --skip`
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git merge --abort |
@@ -78,9 +78,9 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-sync --continue`
+    When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing the git town-sync"
+    And I get the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-2" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -88,7 +88,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git town-sync --continue`
+    And I run `gt sync --continue`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git commit --no-edit     |
@@ -114,7 +114,7 @@ Feature: git town-sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit; git town-sync --continue`
+    And I run `git commit --no-edit; gt sync --continue`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git merge --no-edit main |

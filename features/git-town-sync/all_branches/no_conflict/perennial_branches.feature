@@ -1,4 +1,4 @@
-Feature: git town-sync --all: syncs all perennial branches
+Feature: gt sync --all: syncs all perennial branches
 
   Background:
     Given I have perennial branches named "production" and "qa"

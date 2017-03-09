@@ -1,4 +1,4 @@
-Feature: git town-sync --all: does not sync remote only branches
+Feature: gt sync --all: does not sync remote only branches
 
   Background:
     Given I have a feature branch named "my-feature"

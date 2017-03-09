@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing the main branch
+Feature: gt sync: syncing the main branch
 
   As a developer syncing the main branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team

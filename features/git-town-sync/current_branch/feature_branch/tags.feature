@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing a feature branch pulls tags
+Feature: gt sync: syncing a feature branch pulls tags
 
   As a developer using Git tags for release management
   I want that tags are pulled automatically for me whenever I sync

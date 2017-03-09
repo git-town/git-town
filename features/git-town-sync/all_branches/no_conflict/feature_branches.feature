@@ -1,4 +1,4 @@
-Feature: git town-sync --all: syncs all feature branches
+Feature: gt sync --all: syncs all feature branches
 
   Background:
     Given I have feature branches named "feature-1" and "feature-2"

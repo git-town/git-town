@@ -1,4 +1,4 @@
-Feature: git town-sync: syncing all branches syncs the tags
+Feature: gt sync: syncing all branches syncs the tags
 
   As a developer using Git tags for release management
   I want my tags to be published whenever I sync all my branches
