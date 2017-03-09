@@ -283,6 +283,17 @@ func TestArrayNested(t *testing.T) {
 	})
 }
 
+func TestNestedArrayComment(t *testing.T) {
+	tree, err := Load(`
+someArray = [
+# does not work
+["entry1"]
+]`)
+	assertTree(t, tree, err, map[string]interface{}{
+		"someArray": [][]string{{"entry1"}},
+	})
+}
+
 func TestNestedEmptyArrays(t *testing.T) {
 	tree, err := Load("a = [[[]]]")
 	assertTree(t, tree, err, map[string]interface{}{
@@ -456,7 +467,7 @@ func TestDuplicateKeys(t *testing.T) {
 
 func TestEmptyIntermediateTable(t *testing.T) {
 	_, err := Load("[foo..bar]")
-	if err.Error() != "(1, 2): invalid group array key: empty key group" {
+	if err.Error() != "(1, 2): invalid table array key: empty table key" {
 		t.Error("Bad error message:", err.Error())
 	}
 }
@@ -580,12 +591,12 @@ func TestParseKeyGroupArray(t *testing.T) {
 
 func TestParseKeyGroupArrayUnfinished(t *testing.T) {
 	_, err := Load("[[foo.bar]\na = 42")
-	if err.Error() != "(1, 10): was expecting token [[, but got unclosed key group array instead" {
+	if err.Error() != "(1, 10): was expecting token [[, but got unclosed table array key instead" {
 		t.Error("Bad error message:", err.Error())
 	}
 
 	_, err = Load("[[foo.[bar]\na = 42")
-	if err.Error() != "(1, 3): unexpected token group name cannot contain ']', was expecting a key group array" {
+	if err.Error() != "(1, 3): unexpected token table array key cannot contain ']', was expecting a table array key" {
 		t.Error("Bad error message:", err.Error())
 	}
 }
@@ -646,7 +657,7 @@ func TestToTomlValue(t *testing.T) {
 		{time.Date(1979, time.May, 27, 7, 32, 0, 0, time.UTC),
 			"1979-05-27T07:32:00Z"},
 		{[]interface{}{"gamma", "delta"},
-			"[\n  \"gamma\",\n  \"delta\",\n]"},
+			"[\"gamma\",\"delta\"]"},
 		{nil, ""},
 	} {
 		result := toTomlValue(item.Value, 0)
@@ -662,7 +673,10 @@ func TestToString(t *testing.T) {
 		t.Errorf("Test failed to parse: %v", err)
 		return
 	}
-	result := tree.ToString()
+	result, err := tree.ToString()
+	if err != nil {
+		t.Errorf("Unexpected error: %s", err)
+	}
 	expected := "\n[foo]\n\n  [[foo.bar]]\n    a = 42\n\n  [[foo.bar]]\n    a = 69\n"
 	if result != expected {
 		t.Errorf("Expected got '%s', expected '%s'", result, expected)
@@ -753,13 +767,13 @@ func TestNestedTreePosition(t *testing.T) {
 }
 
 func TestInvalidGroupArray(t *testing.T) {
-	_, err := Load("[key#group]\nanswer = 42")
+	_, err := Load("[table#key]\nanswer = 42")
 	if err == nil {
 		t.Error("Should error")
 	}
 
 	_, err = Load("[foo.[bar]\na = 42")
-	if err.Error() != "(1, 2): unexpected token group name cannot contain ']', was expecting a key group" {
+	if err.Error() != "(1, 2): unexpected token table key cannot contain ']', was expecting a table key" {
 		t.Error("Bad error message:", err.Error())
 	}
 }
@@ -773,7 +787,7 @@ func TestDoubleEqual(t *testing.T) {
 
 func TestGroupArrayReassign(t *testing.T) {
 	_, err := Load("[hello]\n[[hello]]")
-	if err.Error() != "(2, 3): key \"hello\" is already assigned and not of type group array" {
+	if err.Error() != "(2, 3): key \"hello\" is already assigned and not of type table array" {
 		t.Error("Bad error message:", err.Error())
 	}
 }

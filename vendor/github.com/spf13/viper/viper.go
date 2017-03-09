@@ -1093,22 +1093,28 @@ func (v *Viper) ReadInConfig() error {
 		return err
 	}
 
-	v.config = make(map[string]interface{})
+	config := make(map[string]interface{})
 
-	return v.unmarshalReader(bytes.NewReader(file), v.config)
+	err = v.unmarshalReader(bytes.NewReader(file), config)
+	if err != nil {
+		return err
+	}
+
+	v.config = config
+	return nil
 }
 
 // MergeInConfig merges a new configuration with an existing config.
 func MergeInConfig() error { return v.MergeInConfig() }
 func (v *Viper) MergeInConfig() error {
 	jww.INFO.Println("Attempting to merge in config file")
-	if !stringInSlice(v.getConfigType(), SupportedExts) {
-		return UnsupportedConfigError(v.getConfigType())
-	}
-
 	filename, err := v.getConfigFile()
 	if err != nil {
 		return err
+	}
+
+	if !stringInSlice(v.getConfigType(), SupportedExts) {
+		return UnsupportedConfigError(v.getConfigType())
 	}
 
 	file, err := afero.ReadFile(v.fs, filename)

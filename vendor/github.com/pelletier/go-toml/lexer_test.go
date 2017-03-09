@@ -56,7 +56,7 @@ func TestNestedQuotedUnicodeKeyGroup(t *testing.T) {
 func TestUnclosedKeyGroup(t *testing.T) {
 	testFlow(t, "[hello world", []token{
 		{Position{1, 1}, tokenLeftBracket, "["},
-		{Position{1, 2}, tokenError, "unclosed key group"},
+		{Position{1, 2}, tokenError, "unclosed table key"},
 	})
 }
 
@@ -261,6 +261,24 @@ func TestMultilineArrayComments(t *testing.T) {
 		{Position{3, 2}, tokenComma, ","},
 		{Position{4, 1}, tokenRightBracket, "]"},
 		{Position{4, 2}, tokenEOF, ""},
+	})
+}
+
+func TestNestedArraysComment(t *testing.T) {
+	toml := `
+someArray = [
+# does not work
+["entry1"]
+]`
+	testFlow(t, toml, []token{
+		{Position{2, 1}, tokenKey, "someArray"},
+		{Position{2, 11}, tokenEqual, "="},
+		{Position{2, 13}, tokenLeftBracket, "["},
+		{Position{4, 1}, tokenLeftBracket, "["},
+		{Position{4, 3}, tokenString, "entry1"},
+		{Position{4, 10}, tokenRightBracket, "]"},
+		{Position{5, 1}, tokenRightBracket, "]"},
+		{Position{5, 2}, tokenEOF, ""},
 	})
 }
 
