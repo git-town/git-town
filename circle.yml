@@ -18,8 +18,7 @@ dependencies:
   override:
     - mkdir -p "$(dirname "$GO_PROJECT")"
     - if [[ ! -e "$GO_PROJECT" ]]; then ln -s $HOME/git-town "$GO_PROJECT"; fi
-    - cd $GO_PROJECT && go install && go get gopkg.in/alecthomas/gometalinter.v1
-    - gometalinter.v1 --install
+    - cd $GO_PROJECT && bin/setup
     - cd /home/ubuntu/git-town && bundle install
 
   post:
