@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+gometalinter.v1 --deadline=20s
