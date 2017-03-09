@@ -1,7 +1,6 @@
 package config
 
 import (
-  "fmt"
   "os"
   "sort"
   "strings"
@@ -20,7 +19,6 @@ func CompileAncestorBranches(branchName string) (result []string) {
     }
     current = parent
   }
-  fmt.Println(branchName, result)
   return
 }
 
