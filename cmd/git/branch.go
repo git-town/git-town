@@ -50,9 +50,6 @@ func GetTrackingBranchName(branchName string) string {
 func HasBranch(branchName string) bool {
   output := util.GetCommandOutput([]string{"git", "branch", "-a"})
   for _, line := range(strings.Split(output, "\n")) {
-    if (strings.Contains(line, "remotes/origin/HEAD ->")) {
-      continue
-    }
     line = strings.Trim(line, "* ")
     line = strings.TrimSpace(line)
     line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -84,17 +81,6 @@ func ShouldBranchBePushed(branchName string) bool {
 
 
 // Helpers
-
-
-func getLocalBranchesWithoutMain() (result []string) {
-  output := util.GetCommandOutput([]string{"git", "branch"})
-  for _, line := range(strings.Split(output, "\n")) {
-    line = strings.Trim(line, "* ")
-    line = strings.TrimSpace(line)
-    result = append(result, line)
-  }
-  return
-}
 
 
 func getCurrentBranchNameDuringRebase() string {

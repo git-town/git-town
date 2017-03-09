@@ -32,7 +32,7 @@ func EnsureKnowsParentBranches(branchNames []string) {
 func askForBranchAncestry(branchName string) {
   current := branchName
   for {
-    parent = config.GetParentBranch(current)
+    parent := config.GetParentBranch(current)
     if parent != "" {
       parent := askForParentBranch(current)
       config.SetParentBranch(current, parent)
