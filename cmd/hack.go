@@ -3,11 +3,11 @@ package cmd
 import (
   "log"
 
-  "github.com/Originate/gt/cmd/config"
-  "github.com/Originate/gt/cmd/git"
-  "github.com/Originate/gt/cmd/script"
-  "github.com/Originate/gt/cmd/steps"
-  "github.com/Originate/gt/cmd/util"
+  "github.com/Originate/gt/lib/config"
+  "github.com/Originate/gt/lib/git"
+  "github.com/Originate/gt/lib/script"
+  "github.com/Originate/gt/lib/steps"
+  "github.com/Originate/gt/lib/util"
 
   "github.com/spf13/cobra"
 )

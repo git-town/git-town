@@ -3,8 +3,8 @@ package steps
 import (
   "fmt"
 
-  "github.com/Originate/gt/cmd/config"
-  "github.com/Originate/gt/cmd/git"
+  "github.com/Originate/gt/lib/config"
+  "github.com/Originate/gt/lib/git"
 )
 
 

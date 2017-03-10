@@ -3,7 +3,7 @@ package steps
 import (
   "os"
 
-  "github.com/Originate/gt/cmd/script"
+  "github.com/Originate/gt/lib/script"
 )
 
 

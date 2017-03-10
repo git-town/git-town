@@ -4,7 +4,7 @@ import (
   "log"
   "os"
 
-  "github.com/Originate/gt/cmd/git"
+  "github.com/Originate/gt/lib/git"
 )
 
 type WrapOptions struct {
