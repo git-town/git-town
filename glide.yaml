@@ -1,4 +1,4 @@
-package: github.com/Originate/gt
+package: github.com/Originate/git-town
 import:
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
