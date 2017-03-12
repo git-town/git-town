@@ -4,11 +4,11 @@ import (
   "fmt"
   "log"
 
-  "github.com/Originate/gt/cmd/config"
-  "github.com/Originate/gt/cmd/git"
-  "github.com/Originate/gt/cmd/prompt"
-  "github.com/Originate/gt/cmd/script"
-  "github.com/Originate/gt/cmd/steps"
+  "github.com/Originate/gt/lib/config"
+  "github.com/Originate/gt/lib/git"
+  "github.com/Originate/gt/lib/prompt"
+  "github.com/Originate/gt/lib/script"
+  "github.com/Originate/gt/lib/steps"
 
   "github.com/spf13/cobra"
 )
