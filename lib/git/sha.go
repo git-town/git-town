@@ -1,7 +1,7 @@
 package git
 
 import (
-  "github.com/Originate/gt/cmd/util"
+  "github.com/Originate/gt/lib/util"
 )
 
 

@@ -4,7 +4,7 @@ import (
   "fmt"
   "strings"
 
-  "github.com/Originate/gt/cmd/git"
+  "github.com/Originate/gt/lib/git"
 )
 
 

@@ -6,7 +6,7 @@ import (
   "os/exec"
   "strings"
 
-  "github.com/Originate/gt/cmd/git"
+  "github.com/Originate/gt/lib/git"
 
   "github.com/fatih/color"
 )
