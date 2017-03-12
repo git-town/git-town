@@ -9,7 +9,7 @@ import (
   "github.com/fatih/color"
 )
 
-func CommandOutputContains(cmd []string, value string) bool {
+func DoesCommandOuputContain(cmd []string, value string) bool {
   return strings.Contains(GetCommandOutput(cmd), value)
 }
 

@@ -21,7 +21,7 @@ func GetRootDirectory() string {
 
 
 func HasConflicts() bool {
-  return util.CommandOutputContains([]string{"git", "status"}, "Unmerged paths")
+  return util.DoesCommandOuputContain([]string{"git", "status"}, "Unmerged paths")
 }
 
 
@@ -37,5 +37,5 @@ func IsMergeInProgress() bool {
 
 
 func IsRebaseInProgress() bool {
-  return util.CommandOutputContains([]string{"git", "status"}, "rebase in progress")
+  return util.DoesCommandOuputContain([]string{"git", "status"}, "rebase in progress")
 }

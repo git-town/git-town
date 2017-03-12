@@ -15,11 +15,10 @@ func CompileAncestorBranches(branchName string) (result []string) {
     parent := GetParentBranch(current)
     result = append([]string{parent}, result...)
     if parent == GetMainBranch() || IsPerennialBranch(parent) {
-      break
+      return
     }
     current = parent
   }
-  return
 }
 
 
