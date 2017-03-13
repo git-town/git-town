@@ -2,7 +2,6 @@ package config
 
 import (
   "os"
-  "sort"
   "strings"
 
   "github.com/Originate/gt/lib/util"
@@ -52,7 +51,7 @@ func IsFeatureBranch(branchName string) bool {
 
 func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
-  return sort.SearchStrings(perennialBranches, branchName) < len(perennialBranches)
+  return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
 
@@ -91,7 +90,7 @@ func getConfigurationValue(key string) string {
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
   value := getConfigurationValue(key)
-  if value != "" {
+  if value == "" {
     return defaultValue
   }
   return value
