@@ -2,6 +2,7 @@ package util
 
 import (
   "fmt"
+  "log"
   "os"
   "os/exec"
   "strings"
@@ -27,7 +28,7 @@ func GetCommandOutput(cmd []string) string {
   subProcess := exec.Command(cmd[0], cmd[1:]...)
   output, err := subProcess.CombinedOutput()
   if err != nil {
-    return ""
+    log.Fatal(err)
   } else {
     return strings.TrimSpace(string(output))
   }
