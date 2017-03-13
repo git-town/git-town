@@ -5,6 +5,7 @@ import (
   "log"
   "os"
   "os/exec"
+  "sort"
   "strings"
 
   "github.com/fatih/color"
@@ -12,6 +13,12 @@ import (
 
 func DoesCommandOuputContain(cmd []string, value string) bool {
   return strings.Contains(GetCommandOutput(cmd), value)
+}
+
+func DoesCommandOuputContainLine(cmd []string, line string) bool {
+  lines := strings.Split(GetCommandOutput(cmd), "\n")
+  sort.Strings(lines)
+  return sort.SearchStrings(lines, line) < len(lines)
 }
 
 func ExitWithErrorMessage(message string) {
@@ -29,7 +36,6 @@ func GetCommandOutput(cmd []string) string {
   output, err := subProcess.CombinedOutput()
   if err != nil {
     log.Fatal(err)
-  } else {
-    return strings.TrimSpace(string(output))
   }
+  return strings.TrimSpace(string(output))
 }

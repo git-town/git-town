@@ -57,18 +57,19 @@ func IsPerennialBranch(branchName string) bool {
 
 
 func HasRemoteOrigin() bool {
-  return GetRemoteOriginUrl() != ""
+  return hasRemote("origin")
 }
 
 
 func HasRemoteUpstream() bool {
-  return GetRemoteUpstreamUrl() != ""
+  return hasRemote("upstream")
 }
 
 
 func SetParentBranch(branchName, parentBranchName string) {
   storeConfigurationValue(branchName + ".parent", parentBranchName)
 }
+
 
 func ShouldHackPush() bool {
   return getConfigurationValueWithDefault("hack-push-flag", "true") == "true"
@@ -79,16 +80,33 @@ func ShouldHackPush() bool {
 
 
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput([]string{"git", "config", "git-town." + key})
+  namespacedKey := "git-town." + key
+  value := ""
+  if hasConfigurationValue(namespacedKey) {
+    value = util.GetCommandOutput([]string{"git", "config", namespacedKey})
+  }
+  return value
 }
+
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
   value := getConfigurationValue(key)
-  if value == "" {
+  if value != "" {
     return defaultValue
   }
   return value
 }
+
+
+func hasConfigurationValue(key string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--local", "--name"}, key)
+}
+
+
+func hasRemote(name string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
+}
+
 
 func storeConfigurationValue(key, value string) {
   util.GetCommandOutput([]string{"git", "config", "git-town." + key, value})
