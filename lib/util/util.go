@@ -10,15 +10,6 @@ import (
   "github.com/fatih/color"
 )
 
-func DoesStringArrayContain(list []string, value string) bool {
-  for _, element := range(list) {
-    if element == value {
-      return true
-    }
-  }
-  return false
-}
-
 func DoesCommandOuputContain(cmd []string, value string) bool {
   return strings.Contains(GetCommandOutput(cmd), value)
 }
@@ -26,6 +17,15 @@ func DoesCommandOuputContain(cmd []string, value string) bool {
 func DoesCommandOuputContainLine(cmd []string, value string) bool {
   list := strings.Split(GetCommandOutput(cmd), "\n")
   return DoesStringArrayContain(list, value)
+}
+
+func DoesStringArrayContain(list []string, value string) bool {
+  for _, element := range(list) {
+    if element == value {
+      return true
+    }
+  }
+  return false
 }
 
 func ExitWithErrorMessage(message string) {
