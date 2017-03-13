@@ -27,5 +27,5 @@ func (step MergeBranchStep) CreateUndoStep() Step {
 
 
 func (step MergeBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "merge", "--no-edit", step.BranchName})
+  return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
 }
