@@ -16,7 +16,7 @@ func EnsureDoesNotHaveConflicts() {
 
 
 func GetRootDirectory() string {
-  return util.GetCommandOutput([]string{"git", "rev-parse", "--show-toplevel"})
+  return util.GetCommandOutput("git", "rev-parse", "--show-toplevel")
 }
 
 
@@ -26,7 +26,7 @@ func HasConflicts() bool {
 
 
 func HasOpenChanges() bool {
-  return util.GetCommandOutput([]string{"git", "status", "--porcelain"}) != ""
+  return util.GetCommandOutput("git", "status", "--porcelain") != ""
 }
 
 
