@@ -2,7 +2,6 @@ package config
 
 import (
   "os"
-  "sort"
   "strings"
 
   "github.com/Originate/gt/lib/util"
@@ -74,7 +73,7 @@ func IsFeatureBranch(branchName string) bool {
 
 func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
-  return sort.SearchStrings(perennialBranches, branchName) < len(perennialBranches)
+  return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
 
@@ -85,13 +84,8 @@ func KnowsAllAncestorBranches(branchName string) bool {
 }
 
 
-func HasRemoteOrigin() bool {
-  return GetRemoteOriginUrl() != ""
-}
-
-
-func HasRemoteUpstream() bool {
-  return GetRemoteUpstreamUrl() != ""
+func HasRemote(name string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
 }
 
 
@@ -113,8 +107,14 @@ func ShouldHackPush() bool {
 // Helpers
 
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput("git", "config", "git-town." + key)
+  namespacedKey := "git-town." + key
+  value := ""
+  if hasConfigurationValue(namespacedKey) {
+    value = util.GetCommandOutput("git", "config", namespacedKey)
+  }
+  return value
 }
+
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
   value := getConfigurationValue(key)
@@ -123,6 +123,12 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
   }
   return value
 }
+
+
+func hasConfigurationValue(key string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--local", "--name"}, key)
+}
+
 
 func setConfigurationValue(key, value string) {
   util.GetCommandOutput("git", "config", "git-town." + key, value)

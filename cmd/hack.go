@@ -44,7 +44,7 @@ func checkHackPreconditions(args []string) string {
     util.ExitWithErrorMessage("No branch name provided.")
   }
   targetBranchName := args[0]
-  if config.HasRemoteOrigin() {
+  if config.HasRemote("origin") {
     fetchErr := script.RunCommand("git", "fetch", "--prune")
     if fetchErr != nil {
       log.Fatal(fetchErr)
@@ -59,7 +59,7 @@ func getHackStepList(targetBranchName string) steps.StepList {
   stepList := steps.StepList{}
   stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
   stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
-  if config.HasRemoteOrigin() && config.ShouldHackPush() {
+  if config.HasRemote("origin") && config.ShouldHackPush() {
     stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
   }
   return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

@@ -53,7 +53,7 @@ var syncCmd = &cobra.Command{
 }
 
 func checkSyncPreconditions() (result SyncConfig){
-  if config.HasRemoteOrigin() {
+  if config.HasRemote("origin") {
     fetchErr := script.RunCommand("git", "fetch", "--prune")
     if fetchErr != nil {
       log.Fatal(fetchErr)
@@ -81,7 +81,7 @@ func getSyncStepList(syncConfig SyncConfig) steps.StepList {
     stepList.AppendList(steps.GetSyncBranchSteps(branchName))
   }
   stepList.Append(steps.CheckoutBranchStep{BranchName: syncConfig.InitialBranch})
-  if config.HasRemoteOrigin() && syncConfig.ShouldPushTags {
+  if config.HasRemote("origin") && syncConfig.ShouldPushTags {
     stepList.Append(steps.PushTagsStep{})
   }
   return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
