@@ -66,7 +66,7 @@ func GetRemoteUpstreamUrl() string {
 }
 
 
-func HasStoredAncestorBranches(branchName string) bool {
+func HasCompiledAncestorBranches(branchName string) bool {
   return len(GetAncestorBranches(branchName)) > 0
 }
 
