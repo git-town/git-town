@@ -10,7 +10,7 @@ import (
 func EnsureKnowsParentBranches(branchNames []string) {
   headerShown := false
   for _, branchName := range(branchNames) {
-    if config.KnowsAllAncestorBranches(branchName) {
+    if config.IsMainBranch(branchName) || config.IsPerennialBranch(branchName) || config.HasStoredAncestorBranches(branchName) {
       continue
     }
     if !headerShown {

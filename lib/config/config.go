@@ -13,7 +13,7 @@ func CompileAncestorBranches(branchName string) (result []string) {
   for {
     parent := GetParentBranch(current)
     result = append([]string{parent}, result...)
-    if parent == GetMainBranch() || IsPerennialBranch(parent) {
+    if IsMainBranch(parent) || IsPerennialBranch(parent) {
       return
     }
     current = parent
@@ -66,26 +66,29 @@ func GetRemoteUpstreamUrl() string {
 }
 
 
+func HasStoredAncestorBranches(branchName string) bool {
+  return len(GetAncestorBranches(branchName)) > 0
+}
+
+
+func HasRemote(name string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
+}
+
+
 func IsFeatureBranch(branchName string) bool {
-  return branchName != GetMainBranch() && !IsPerennialBranch(branchName)
+  return !IsMainBranch(branchName) && !IsPerennialBranch(branchName)
+}
+
+
+func IsMainBranch(branchName string) bool {
+  return branchName == GetMainBranch()
 }
 
 
 func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
   return util.DoesStringArrayContain(perennialBranches, branchName)
-}
-
-
-func KnowsAllAncestorBranches(branchName string) bool {
-  return branchName == GetMainBranch() ||
-    IsPerennialBranch(branchName) ||
-    len(GetAncestorBranches(branchName)) > 0
-}
-
-
-func HasRemote(name string) bool {
-  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
 }
 
 

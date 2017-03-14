@@ -35,7 +35,7 @@ var syncCmd = &cobra.Command{
   Run: func(cmd *cobra.Command, args []string) {
     steps.Run(steps.RunOptions{
       CanSkip: func() bool {
-        return !(git.IsRebaseInProgress() && git.GetCurrentBranchName() == config.GetMainBranch())
+        return !(git.IsRebaseInProgress() && config.IsMainBranch(git.GetCurrentBranchName()))
       },
       Command: "sync",
       IsAbort: syncFlags.Abort,
