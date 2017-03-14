@@ -2,7 +2,7 @@ actions:
 
   - match:
       filename: '\.feature$'
-    command: 'bin/build install && bundle exec cucumber {{filename}}'
+    command: 'bin/build && bundle exec cucumber {{filename}}'
 
   - match:
       filename: '\.feature$'
