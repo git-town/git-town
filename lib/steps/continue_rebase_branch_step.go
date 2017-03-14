@@ -26,7 +26,7 @@ func (step ContinueRebaseBranchStep) CreateUndoStep() Step {
 
 func (step ContinueRebaseBranchStep) Run() error {
   if git.IsRebaseInProgress() {
-    return script.RunCommand([]string{"git", "rebase", "--continue"})
+    return script.RunCommand("git", "rebase", "--continue")
   }
   return nil
 }

@@ -24,5 +24,5 @@ func (step RestoreOpenChangesStep) CreateUndoStep() Step {
 
 
 func (step RestoreOpenChangesStep) Run() error {
-  return script.RunCommand([]string{"git", "stash", "pop"})
+  return script.RunCommand("git", "stash", "pop")
 }
