@@ -1,8 +1,6 @@
 package prompt
 
 import (
-  "fmt"
-
   "github.com/Originate/gt/lib/config"
 )
 
