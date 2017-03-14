@@ -38,7 +38,7 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
     if git.HasTrackingBranch(branchName) {
       result.Append(PushBranchStep{BranchName: branchName})
     } else {
-      result.Append(new(CreateTrackingBranchStep))
+      result.Append(CreateTrackingBranchStep{BranchName: branchName})
     }
   }
 

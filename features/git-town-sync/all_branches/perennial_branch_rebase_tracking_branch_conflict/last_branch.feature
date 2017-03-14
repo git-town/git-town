@@ -1,4 +1,4 @@
-Feature: git town-sync --all: handling rebase conflicts between perennial branch and its tracking branch
+Feature: gt sync --all: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
     Given I have perennial branches named "production" and "qa"
@@ -10,7 +10,7 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-sync --all`
+    When I run `gt sync --all`
 
 
   Scenario: result
@@ -27,16 +27,16 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
       | qa         | git rebase origin/qa         |
     And I get the error
       """
-      To abort, run "git town-sync --abort".
-      To continue after you have resolved the conflicts, run "git town-sync --continue".
-      To skip the sync of the 'qa' branch, run "git town-sync --skip".
+      To abort, run "gt sync --abort".
+      To continue after you have resolved the conflicts, run "gt sync --continue".
+      To skip the sync of the 'qa' branch, run "gt sync --skip".
       """
     And my uncommitted file is stashed
     And my repo has a rebase in progress
 
 
   Scenario: aborting
-    When I run `git town-sync --abort`
+    When I run `gt sync --abort`
     Then it runs the commands
       | BRANCH     | COMMAND                 |
       | qa         | git rebase --abort      |
@@ -54,7 +54,7 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: skipping
-    When I run `git town-sync --skip`
+    When I run `gt sync --skip`
     Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
@@ -72,16 +72,16 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-sync --continue`
+    When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing the git town-sync"
+    And I get the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git town-sync --continue`
+    And I run `gt sync --continue`
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
@@ -101,7 +101,7 @@ Feature: git town-sync --all: handling rebase conflicts between perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue; git town-sync --continue`
+    And I run `git rebase --continue; gt sync --continue`
     Then it runs the commands
       | BRANCH | COMMAND           |
       | qa     | git push          |
