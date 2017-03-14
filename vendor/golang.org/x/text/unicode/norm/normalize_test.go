@@ -878,6 +878,25 @@ func TestString(t *testing.T) {
 	})
 }
 
+func TestLinking(t *testing.T) {
+	const prog = `
+	package main
+	import "fmt"
+	import "golang.org/x/text/unicode/norm"
+	func main() { fmt.Println(norm.%s) }
+	`
+	baseline, errB := testtext.CodeSize(fmt.Sprintf(prog, "MaxSegmentSize"))
+	withTables, errT := testtext.CodeSize(fmt.Sprintf(prog, `NFC.String("")`))
+	if errB != nil || errT != nil {
+		t.Skipf("code size failed: %v and %v", errB, errT)
+	}
+	// Tables are at least 50K
+	if d := withTables - baseline; d < 50*1024 {
+		t.Errorf("tables appear not to be dropped: %d - %d = %d",
+			withTables, baseline, d)
+	}
+}
+
 func appendBench(f Form, in []byte) func() {
 	buf := make([]byte, 0, 4*len(in))
 	return func() {

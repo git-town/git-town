@@ -13,7 +13,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       | feature | local and remote | folder commit | new_folder/file1 |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `git town-hack new-feature` in the "new_folder" folder
+    When I run `gt hack new-feature` in the "new_folder" folder
 
 
   Scenario: result
