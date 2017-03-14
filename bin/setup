@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-go install github.com/Originate/git-town/cmd/gt
+bin/build
 go get gopkg.in/alecthomas/gometalinter.v1
 gometalinter.v1 --install
