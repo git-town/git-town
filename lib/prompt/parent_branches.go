@@ -1,7 +1,7 @@
 package prompt
 
 import (
-  "github.com/Originate/gt/lib/config"
+  "github.com/Originate/git-town/lib/config"
 )
 
 

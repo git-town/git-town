@@ -19,8 +19,8 @@ This guide will help you get started and outline some things you should know whe
     (you can point it to any folder on your hard drive, let's assume `~/go` here)
   * add `~/go/bin` to your `$PATH`
   * create the directory `~/go/src/github.com/Originate`
-  * cd into that directory, and run `git clone git@github.com:Originate/git-town.git gt`
-  * cd into `gt`
+  * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
+  * cd into `$GOPATH/src/github.com/Originate/git-town`
   * run `bin/setup`
   * now you can run `gt` on the command line
   * see https://golang.org/doc/install#testing for details on how to test
@@ -31,6 +31,11 @@ This guide will help you get started and outline some things you should know whe
 * run `bundle` to install ruby gems
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
+
+
+## Building
+
+* run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
 
 
 ## Testing

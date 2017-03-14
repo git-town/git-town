@@ -6,8 +6,8 @@ import (
   "log"
   "strings"
 
-  "github.com/Originate/gt/lib/config"
-  "github.com/Originate/gt/lib/util"
+  "github.com/Originate/git-town/lib/config"
+  "github.com/Originate/git-town/lib/util"
 )
 
 
