@@ -24,9 +24,9 @@ func (step StashOpenChangesStep) CreateUndoStep() Step {
 
 
 func (step StashOpenChangesStep) Run() error {
-  err := script.RunCommand([]string{"git", "add", "-A"})
+  err := script.RunCommand("git", "add", "-A")
   if err != nil {
     return err
   }
-  return script.RunCommand([]string{"git", "stash"})
+  return script.RunCommand("git", "stash")
 }

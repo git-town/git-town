@@ -26,5 +26,5 @@ func (step CreateTrackingBranchStep) CreateUndoStep() Step {
 
 
 func (step CreateTrackingBranchStep) Run() error {
-  return script.RunCommand([]string{"git", "push", "-u", "origin", step.BranchName})
+  return script.RunCommand("git", "push", "-u", "origin", step.BranchName)
 }

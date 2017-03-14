@@ -36,5 +36,5 @@ func (step ResetToShaStep) Run() error {
     cmd = append(cmd, "--hard")
   }
   cmd = append(cmd, step.Sha)
-  return script.RunCommand(cmd)
+  return script.RunCommand(cmd...)
 }

@@ -2,7 +2,6 @@ package config
 
 import (
   "os"
-  "sort"
   "strings"
 
   "github.com/Originate/git-town/lib/util"
@@ -36,12 +35,12 @@ func GetRemoteOriginUrl() string {
       return mockRemoteUrl
     }
   }
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "origin"})
+  return util.GetCommandOutput("git", "remote", "get-url", "origin")
 }
 
 
 func GetRemoteUpstreamUrl() string {
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"})
+  return util.GetCommandOutput("git", "remote", "get-url", "upstream")
 }
 
 
@@ -52,23 +51,18 @@ func IsFeatureBranch(branchName string) bool {
 
 func IsPerennialBranch(branchName string) bool {
   perennialBranches := GetPerennialBranches()
-  return sort.SearchStrings(perennialBranches, branchName) < len(perennialBranches)
+  return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
-
-func HasRemoteOrigin() bool {
-  return GetRemoteOriginUrl() != ""
-}
-
-
-func HasRemoteUpstream() bool {
-  return GetRemoteUpstreamUrl() != ""
+func HasRemote(name string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
 }
 
 
 func SetParentBranch(branchName, parentBranchName string) {
   storeConfigurationValue(branchName + ".parent", parentBranchName)
 }
+
 
 func ShouldHackPush() bool {
   return getConfigurationValueWithDefault("hack-push-flag", "true") == "true"
@@ -79,8 +73,14 @@ func ShouldHackPush() bool {
 
 
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput([]string{"git", "config", "git-town." + key})
+  namespacedKey := "git-town." + key
+  value := ""
+  if hasConfigurationValue(namespacedKey) {
+    value = util.GetCommandOutput("git", "config", namespacedKey)
+  }
+  return value
 }
+
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
   value := getConfigurationValue(key)
@@ -90,6 +90,12 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
   return value
 }
 
+
+func hasConfigurationValue(key string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--local", "--name"}, key)
+}
+
+
 func storeConfigurationValue(key, value string) {
-  util.GetCommandOutput([]string{"git", "config", "git-town." + key, value})
+  util.GetCommandOutput("git", "config", "git-town." + key, value)
 }

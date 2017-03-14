@@ -29,5 +29,5 @@ func (step CreateAndCheckoutBranchStep) CreateUndoStep() Step {
 
 func (step CreateAndCheckoutBranchStep) Run() error {
   config.SetParentBranch(step.BranchName, step.ParentBranchName)
-  return script.RunCommand([]string{"git", "checkout", "-b", step.BranchName, step.ParentBranchName})
+  return script.RunCommand("git", "checkout", "-b", step.BranchName, step.ParentBranchName)
 }

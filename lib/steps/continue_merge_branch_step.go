@@ -26,7 +26,7 @@ func (step ContinueMergeBranchStep) CreateUndoStep() Step {
 
 func (step ContinueMergeBranchStep) Run() error {
   if git.IsMergeInProgress() {
-    return script.RunCommand([]string{"git", "commit", "--no-edit"})
+    return script.RunCommand("git", "commit", "--no-edit")
   }
   return nil
 }

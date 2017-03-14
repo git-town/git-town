@@ -24,5 +24,5 @@ func (step FetchUpstreamStep) CreateUndoStep() Step {
 
 
 func (step FetchUpstreamStep) Run() error {
-  return script.RunCommand([]string{"git", "fetch", "upstream"})
+  return script.RunCommand("git", "fetch", "upstream")
 }

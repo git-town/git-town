@@ -30,7 +30,7 @@ func (step ChangeDirectoryStep) CreateUndoStep() Step {
 func (step ChangeDirectoryStep) Run() error {
   _, err := os.Stat(step.Directory)
   if err == nil {
-    script.PrintCommand([]string{"cd", step.Directory})
+    script.PrintCommand("cd", step.Directory)
     return os.Chdir(step.Directory)
   }
   return nil
