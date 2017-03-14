@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+if [ -n "$(gofmt -d cmd lib 2>&1)" ]; then
+  echo "Code is not formatted. Run 'gofmt -w cmd lib'"
+  exit 1
+fi
+
 gometalinter.v1 --deadline=20s

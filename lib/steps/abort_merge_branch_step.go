@@ -1,28 +1,23 @@
 package steps
 
 import (
-  "github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/script"
 )
 
-
-type AbortMergeBranchStep struct {}
-
+type AbortMergeBranchStep struct{}
 
 func (step AbortMergeBranchStep) CreateAbortStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step AbortMergeBranchStep) CreateContinueStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step AbortMergeBranchStep) CreateUndoStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
 
-
 func (step AbortMergeBranchStep) Run() error {
-  return script.RunCommand("git", "merge", "--abort")
+	return script.RunCommand("git", "merge", "--abort")
 }

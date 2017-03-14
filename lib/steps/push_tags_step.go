@@ -1,28 +1,23 @@
 package steps
 
 import (
-  "github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/script"
 )
 
-
-type PushTagsStep struct {}
-
+type PushTagsStep struct{}
 
 func (step PushTagsStep) CreateAbortStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step PushTagsStep) CreateContinueStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step PushTagsStep) CreateUndoStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
 
-
 func (step PushTagsStep) Run() error {
-  return script.RunCommand("git", "push", "--tags")
+	return script.RunCommand("git", "push", "--tags")
 }

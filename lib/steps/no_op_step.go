@@ -1,23 +1,19 @@
 package steps
 
-type NoOpStep struct {}
-
+type NoOpStep struct{}
 
 func (step NoOpStep) CreateAbortStep() Step {
-  return step
+	return step
 }
-
 
 func (step NoOpStep) CreateContinueStep() Step {
-  return step
+	return step
 }
-
 
 func (step NoOpStep) CreateUndoStep() Step {
-  return step
+	return step
 }
 
-
 func (step NoOpStep) Run() error {
-  return nil
+	return nil
 }
