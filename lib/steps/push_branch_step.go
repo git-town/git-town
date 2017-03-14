@@ -1,8 +1,8 @@
 package steps
 
 import (
-  "github.com/Originate/gt/lib/git"
-  "github.com/Originate/gt/lib/script"
+  "github.com/Originate/git-town/lib/git"
+  "github.com/Originate/git-town/lib/script"
 )
 
 
