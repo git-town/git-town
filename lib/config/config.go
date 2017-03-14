@@ -109,6 +109,7 @@ func ShouldHackPush() bool {
 
 // Helpers
 
+
 func getConfigurationValue(key string) string {
   namespacedKey := "git-town." + key
   value := ""
