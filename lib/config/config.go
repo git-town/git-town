@@ -133,5 +133,5 @@ func hasConfigurationValue(key string) bool {
 
 
 func setConfigurationValue(key, value string) {
-  util.GetCommandOutput("git", "config", "git-town." + key, value)
+  util.GetCommandOutput("git", "config", key, value)
 }
