@@ -110,13 +110,11 @@ func ShouldHackPush() bool {
 // Helpers
 
 
-func getConfigurationValue(key string) string {
-  namespacedKey := "git-town." + key
-  value := ""
-  if hasConfigurationValue(namespacedKey) {
-    value = util.GetCommandOutput("git", "config", namespacedKey)
+func getConfigurationValue(key string) (result string) {
+  if hasConfigurationValue(key) {
+    result = util.GetCommandOutput("git", "config", key)
   }
-  return value
+  return
 }
 
 
