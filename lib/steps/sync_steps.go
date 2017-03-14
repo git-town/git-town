@@ -10,7 +10,7 @@ import (
 
 func GetSyncBranchSteps(branchName string) (result StepList) {
   isFeature := config.IsFeatureBranch(branchName)
-  hasRemoteOrigin := config.HasRemoteOrigin()
+  hasRemoteOrigin := config.HasRemote("origin")
 
   if !hasRemoteOrigin && !isFeature {
     return
@@ -28,7 +28,7 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
     }
 
     mainBranchName := config.GetMainBranch()
-    if mainBranchName == branchName && config.HasRemoteUpstream() {
+    if mainBranchName == branchName && config.HasRemote("upstream") {
       result.Append(FetchUpstreamStep{})
       result.Append(RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
     }

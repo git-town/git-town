@@ -35,12 +35,12 @@ func GetRemoteOriginUrl() string {
       return mockRemoteUrl
     }
   }
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "origin"})
+  return util.GetCommandOutput("git", "remote", "get-url", "origin")
 }
 
 
 func GetRemoteUpstreamUrl() string {
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"})
+  return util.GetCommandOutput("git", "remote", "get-url", "upstream")
 }
 
 
@@ -54,14 +54,8 @@ func IsPerennialBranch(branchName string) bool {
   return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
-
-func HasRemoteOrigin() bool {
-  return hasRemote("origin")
-}
-
-
-func HasRemoteUpstream() bool {
-  return hasRemote("upstream")
+func HasRemote(name string) bool {
+  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
 }
 
 
@@ -82,7 +76,7 @@ func getConfigurationValue(key string) string {
   namespacedKey := "git-town." + key
   value := ""
   if hasConfigurationValue(namespacedKey) {
-    value = util.GetCommandOutput([]string{"git", "config", namespacedKey})
+    value = util.GetCommandOutput("git", "config", namespacedKey)
   }
   return value
 }
@@ -102,11 +96,6 @@ func hasConfigurationValue(key string) bool {
 }
 
 
-func hasRemote(name string) bool {
-  return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
-}
-
-
 func storeConfigurationValue(key, value string) {
-  util.GetCommandOutput([]string{"git", "config", "git-town." + key, value})
+  util.GetCommandOutput("git", "config", "git-town." + key, value)
 }

@@ -11,11 +11,11 @@ import (
 )
 
 func DoesCommandOuputContain(cmd []string, value string) bool {
-  return strings.Contains(GetCommandOutput(cmd), value)
+  return strings.Contains(GetCommandOutput(cmd...), value)
 }
 
 func DoesCommandOuputContainLine(cmd []string, value string) bool {
-  list := strings.Split(GetCommandOutput(cmd), "\n")
+  list := strings.Split(GetCommandOutput(cmd...), "\n")
   return DoesStringArrayContain(list, value)
 }
 
@@ -38,7 +38,7 @@ func ExitWithErrorMessage(message string) {
   os.Exit(1)
 }
 
-func GetCommandOutput(cmd []string) string {
+func GetCommandOutput(cmd ...string) string {
   subProcess := exec.Command(cmd[0], cmd[1:]...)
   output, err := subProcess.CombinedOutput()
   if err != nil {
