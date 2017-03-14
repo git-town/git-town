@@ -4,7 +4,7 @@ import (
   "fmt"
   "strings"
 
-  "github.com/Originate/gt/lib/git"
+  "github.com/Originate/git-town/lib/git"
 )
 
 

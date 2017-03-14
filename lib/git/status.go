@@ -4,7 +4,7 @@ import (
   "fmt"
   "os"
 
-  "github.com/Originate/gt/lib/util"
+  "github.com/Originate/git-town/lib/util"
 )
 
 
