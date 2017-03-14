@@ -58,12 +58,12 @@ func GetRemoteOriginUrl() string {
       return mockRemoteUrl
     }
   }
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "origin"})
+  return util.GetCommandOutput("git", "remote", "get-url", "origin")
 }
 
 
 func GetRemoteUpstreamUrl() string {
-  return util.GetCommandOutput([]string{"git", "remote", "get-url", "upstream"})
+  return util.GetCommandOutput("git", "remote", "get-url", "upstream")
 }
 
 
@@ -113,7 +113,7 @@ func ShouldHackPush() bool {
 // Helpers
 
 func getConfigurationValue(key string) string {
-  return util.GetCommandOutput([]string{"git", "config", key})
+  return util.GetCommandOutput("git", "config", "git-town." + key)
 }
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
@@ -125,5 +125,5 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 }
 
 func setConfigurationValue(key, value string) {
-  util.GetCommandOutput([]string{"git", "config", key, value})
+  util.GetCommandOutput("git", "config", "git-town." + key, value)
 }

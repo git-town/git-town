@@ -6,7 +6,7 @@ import (
 
 
 func GetBranchSha(branchName string) string {
-  return util.GetCommandOutput([]string{"git", "rev-parse", branchName})
+  return util.GetCommandOutput("git", "rev-parse", branchName)
 }
 
 

@@ -54,7 +54,7 @@ var syncCmd = &cobra.Command{
 
 func checkSyncPreconditions() (result SyncConfig){
   if config.HasRemoteOrigin() {
-    fetchErr := script.RunCommand([]string{"git", "fetch", "--prune"})
+    fetchErr := script.RunCommand("git", "fetch", "--prune")
     if fetchErr != nil {
       log.Fatal(fetchErr)
     }

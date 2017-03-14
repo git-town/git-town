@@ -24,5 +24,5 @@ func (step PushTagsStep) CreateUndoStep() Step {
 
 
 func (step PushTagsStep) Run() error {
-  return script.RunCommand([]string{"git", "push", "--tags"})
+  return script.RunCommand("git", "push", "--tags")
 }

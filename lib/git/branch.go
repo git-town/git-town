@@ -22,7 +22,7 @@ func GetCurrentBranchName() string {
   if IsRebaseInProgress() {
     return getCurrentBranchNameDuringRebase()
   } else {
-    return util.GetCommandOutput([]string{"git", "rev-parse", "--abbrev-ref", "HEAD"})
+    return util.GetCommandOutput("git", "rev-parse", "--abbrev-ref", "HEAD")
   }
 }
 
@@ -30,7 +30,7 @@ func GetCurrentBranchName() string {
 func GetLocalBranchesWithMainBranchFirst() (result []string) {
   mainBranch := config.GetMainBranch()
   result = append(result, mainBranch)
-  output := util.GetCommandOutput([]string{"git", "branch"})
+  output := util.GetCommandOutput("git", "branch")
   for _, line := range(strings.Split(output, "\n")) {
     line = strings.Trim(line, "* ")
     line = strings.TrimSpace(line)
@@ -48,7 +48,7 @@ func GetTrackingBranchName(branchName string) string {
 
 
 func HasBranch(branchName string) bool {
-  output := util.GetCommandOutput([]string{"git", "branch", "-a"})
+  output := util.GetCommandOutput("git", "branch", "-a")
   for _, line := range(strings.Split(output, "\n")) {
     line = strings.Trim(line, "* ")
     line = strings.TrimSpace(line)
@@ -63,7 +63,7 @@ func HasBranch(branchName string) bool {
 
 func HasTrackingBranch(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
-  output := util.GetCommandOutput([]string{"git", "branch", "-r"})
+  output := util.GetCommandOutput("git", "branch", "-r")
   for _, line := range(strings.Split(output, "\n")) {
     if strings.TrimSpace(line) == trackingBranchName {
       return true
@@ -75,7 +75,7 @@ func HasTrackingBranch(branchName string) bool {
 
 func ShouldBranchBePushed(branchName string) bool {
   trackingBranchName := GetTrackingBranchName(branchName)
-  output := util.GetCommandOutput([]string{"git", "rev-list", "--left-right", branchName + "..." + trackingBranchName})
+  output := util.GetCommandOutput("git", "rev-list", "--left-right", branchName + "..." + trackingBranchName)
   return output != ""
 }
 

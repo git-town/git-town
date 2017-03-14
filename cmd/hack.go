@@ -45,7 +45,7 @@ func checkHackPreconditions(args []string) string {
   }
   targetBranchName := args[0]
   if config.HasRemoteOrigin() {
-    fetchErr := script.RunCommand([]string{"git", "fetch", "--prune"})
+    fetchErr := script.RunCommand("git", "fetch", "--prune")
     if fetchErr != nil {
       log.Fatal(fetchErr)
     }

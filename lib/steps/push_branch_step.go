@@ -32,10 +32,10 @@ func (step PushBranchStep) Run() error {
     return nil
   }
   if step.Force {
-    return script.RunCommand([]string{"git", "push", "-f", "origin", step.BranchName})
+    return script.RunCommand("git", "push", "-f", "origin", step.BranchName)
   }
   if git.GetCurrentBranchName() == step.BranchName {
-    return script.RunCommand([]string{"git", "push"})
+    return script.RunCommand("git", "push")
   }
-  return script.RunCommand([]string{"git", "push", "origin", step.BranchName})
+  return script.RunCommand("git", "push", "origin", step.BranchName)
 }
