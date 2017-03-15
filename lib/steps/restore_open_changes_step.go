@@ -1,28 +1,23 @@
 package steps
 
 import (
-  "github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/script"
 )
 
-
-type RestoreOpenChangesStep struct {}
-
+type RestoreOpenChangesStep struct{}
 
 func (step RestoreOpenChangesStep) CreateAbortStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step RestoreOpenChangesStep) CreateContinueStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step RestoreOpenChangesStep) CreateUndoStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
 
-
 func (step RestoreOpenChangesStep) Run() error {
-  return script.RunCommand("git", "stash", "pop")
+	return script.RunCommand("git", "stash", "pop")
 }

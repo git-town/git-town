@@ -1,28 +1,23 @@
 package steps
 
 import (
-  "github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/script"
 )
 
-
-type FetchUpstreamStep struct {}
-
+type FetchUpstreamStep struct{}
 
 func (step FetchUpstreamStep) CreateAbortStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step FetchUpstreamStep) CreateContinueStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step FetchUpstreamStep) CreateUndoStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
 
-
 func (step FetchUpstreamStep) Run() error {
-  return script.RunCommand("git", "fetch", "upstream")
+	return script.RunCommand("git", "fetch", "upstream")
 }

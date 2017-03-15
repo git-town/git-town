@@ -1,30 +1,25 @@
 package steps
 
 import (
-  "github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/script"
 )
 
-
 type CreateTrackingBranchStep struct {
-  BranchName string
+	BranchName string
 }
-
 
 func (step CreateTrackingBranchStep) CreateAbortStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step CreateTrackingBranchStep) CreateContinueStep() Step {
-  return NoOpStep{}
+	return NoOpStep{}
 }
-
 
 func (step CreateTrackingBranchStep) CreateUndoStep() Step {
-  return NoOpStep{} // TODO delete remote branch
+	return NoOpStep{} // TODO delete remote branch
 }
 
-
 func (step CreateTrackingBranchStep) Run() error {
-  return script.RunCommand("git", "push", "-u", "origin", step.BranchName)
+	return script.RunCommand("git", "push", "-u", "origin", step.BranchName)
 }

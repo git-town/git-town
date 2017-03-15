@@ -1,33 +1,30 @@
 package steps
 
 import (
-  "fmt"
-  "strings"
+	"fmt"
+	"strings"
 
-  "github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/git"
 )
 
-
 type Step interface {
-  CreateAbortStep() Step
-  CreateContinueStep() Step
-  CreateUndoStep() Step
-  Run() error
+	CreateAbortStep() Step
+	CreateContinueStep() Step
+	CreateUndoStep() Step
+	Run() error
 }
-
 
 type SerializedStep struct {
-  Data []byte
-  Type string
+	Data []byte
+	Type string
 }
 
-
 type SerializedRunState struct {
-  AbortStep SerializedStep
-  RunSteps []SerializedStep
-  UndoSteps []SerializedStep
+	AbortStep SerializedStep
+	RunSteps  []SerializedStep
+	UndoSteps []SerializedStep
 }
 
 func getRunResultFilename(command string) string {
-  return fmt.Sprintf("/tmp/%s_%s", command, strings.Replace(git.GetRootDirectory(), "/", "_", -1))
+	return fmt.Sprintf("/tmp/%s_%s", command, strings.Replace(git.GetRootDirectory(), "/", "_", -1))
 }
