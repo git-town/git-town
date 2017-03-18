@@ -1,7 +1,9 @@
 package util
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -29,12 +31,7 @@ func DoesStringArrayContain(list []string, value string) bool {
 }
 
 func ExitWithErrorMessage(message string) {
-	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
-	errMessageFmt := color.New(color.FgRed)
-	fmt.Println()
-	errHeaderFmt.Println("  Error")
-	errMessageFmt.Printf("  %s\n", message)
-	fmt.Println()
+	PrintError(message)
 	os.Exit(1)
 }
 
@@ -45,4 +42,22 @@ func GetCommandOutput(cmd ...string) string {
 		log.Fatal("Command: ", strings.Join(cmd, " "), "\nOutput: "+string(output), "\nError: ", err)
 	}
 	return strings.TrimSpace(string(output))
+}
+
+func GetUserInput() string {
+	reader := bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString('\n')
+	if err != nil && err != io.EOF {
+		log.Fatal("Error getting user input:", err)
+	}
+	return strings.TrimSpace(text)
+}
+
+func PrintError(message string) {
+	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
+	errMessageFmt := color.New(color.FgRed)
+	fmt.Println()
+	errHeaderFmt.Println("  Error")
+	errMessageFmt.Printf("  %s\n", message)
+	fmt.Println()
 }
