@@ -47,9 +47,9 @@ func askForBranchAncestry(branchName string) {
 
 func askForParentBranch(branchName string) string {
 	branchNameFmt := color.New(color.Bold).Add(color.FgCyan)
-	branches := git.GetLocalBranchesWithMainBranchFirst()
 	mainBranch := config.GetMainBranch()
 	message := fmt.Sprintf("Please specify the parent branch of %s by name or number (default: %s): ", branchNameFmt.Sprintf(branchName), mainBranch)
+	numberedBranches := git.GetLocalBranchesWithMainBranchFirst()
 	numericRegex, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
 		log.Fatal("Error compiling numeric regular expression: ", err)
@@ -64,8 +64,8 @@ func askForParentBranch(branchName string) string {
 			if err != nil {
 				log.Fatal("Error parsing string to integer: ", err)
 			}
-			if index >= 1 && index <= len(branches) {
-				parent = branches[index-1]
+			if index >= 1 && index <= len(numberedBranches) {
+				parent = numberedBranches[index-1]
 			} else {
 				util.PrintError("Invalid branch number")
 			}
