@@ -55,10 +55,10 @@ func askForParentBranch(branchName string) string {
 		log.Fatal("Error compiling numeric regular expression: ", err)
 	}
 
-	parent := ""
 	for {
 		fmt.Printf(message)
 		userInput := util.GetUserInput()
+		parent := ""
 		if numericRegex.MatchString(userInput) {
 			index, err := strconv.Atoi(userInput)
 			if err != nil {
@@ -81,10 +81,8 @@ func askForParentBranch(branchName string) string {
 			continue
 		} else if branchName == parent {
 			util.PrintError(fmt.Sprintf("'%s' cannot be the parent of itself", parent))
-			parent = ""
 		} else if config.HasAncestorBranch(parent, branchName) {
 			util.PrintError(fmt.Sprintf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
-			parent = ""
 		} else {
 			return parent
 		}
@@ -98,7 +96,7 @@ func printParentBranchHeader() {
 		parentBranchHeaderShown = true
 		fmt.Println()
 		fmt.Println("Feature branches can be branched directly off ")
-		fmt.Println("%s or from other feature branches.", config.GetMainBranch())
+		fmt.Printf("%s or from other feature branches.\n", config.GetMainBranch())
 		fmt.Println()
 		fmt.Println("The former allows to develop and ship features completely independent of each other.")
 		fmt.Println("The latter allows to build on top of currently unshipped features.")

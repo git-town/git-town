@@ -44,9 +44,10 @@ func GetCommandOutput(cmd ...string) string {
 	return strings.TrimSpace(string(output))
 }
 
+var inputReader = bufio.NewReader(os.Stdin)
+
 func GetUserInput() string {
-	reader := bufio.NewReader(os.Stdin)
-	text, err := reader.ReadString('\n')
+	text, err := inputReader.ReadString('\n')
 	if err != nil && err != io.EOF {
 		log.Fatal("Error getting user input:", err)
 	}
