@@ -72,14 +72,6 @@ func askForParentBranch(branchName string) string {
 	}
 }
 
-func printNumberedBranches() {
-	boldFmt := color.New(color.Bold)
-	branches := git.GetLocalBranchesWithMainBranchFirst()
-	for index, branchName := range branches {
-		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
-	}
-}
-
 func parseParentBranch(userInput string) string {
 	mainBranch := config.GetMainBranch()
 	numericRegex, err := regexp.Compile("^[0-9]+$")
@@ -111,6 +103,14 @@ func parseParentBranchNumber(userInput string) string {
 	} else {
 		util.PrintError("Invalid branch number")
 		return ""
+	}
+}
+
+func printNumberedBranches() {
+	boldFmt := color.New(color.Bold)
+	branches := git.GetLocalBranchesWithMainBranchFirst()
+	for index, branchName := range branches {
+		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
 	}
 }
 
