@@ -49,39 +49,15 @@ func askForParentBranch(branchName string) string {
 	branchNameFmt := color.New(color.Bold).Add(color.FgCyan)
 	mainBranch := config.GetMainBranch()
 	message := fmt.Sprintf("Please specify the parent branch of %s by name or number (default: %s): ", branchNameFmt.Sprintf(branchName), mainBranch)
-	numberedBranches := git.GetLocalBranchesWithMainBranchFirst()
-	numericRegex, err := regexp.Compile("^[0-9]+$")
-	if err != nil {
-		log.Fatal("Error compiling numeric regular expression: ", err)
-	}
 
 	for {
 		fmt.Printf(message)
-		userInput := util.GetUserInput()
-		parent := ""
-		if numericRegex.MatchString(userInput) {
-			index, err := strconv.Atoi(userInput)
-			if err != nil {
-				log.Fatal("Error parsing string to integer: ", err)
-			}
-			if index >= 1 && index <= len(numberedBranches) {
-				parent = numberedBranches[index-1]
-			} else {
-				util.PrintError("Invalid branch number")
-			}
-		} else if userInput == "" {
-			parent = mainBranch
-		} else if git.HasBranch(userInput) {
-			parent = userInput
-		} else {
-			util.PrintError(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
-		}
-
+		parent := parseParentBranch(util.GetUserInput())
 		if parent == "" {
 			continue
 		} else if branchName == parent {
 			util.PrintError(fmt.Sprintf("'%s' cannot be the parent of itself", parent))
-		} else if config.HasAncestorBranch(parent, branchName) {
+		} else if config.IsAncestorBranch(parent, branchName) {
 			util.PrintError(fmt.Sprintf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
 		} else {
 			return parent
@@ -89,18 +65,54 @@ func askForParentBranch(branchName string) string {
 	}
 }
 
+func parseParentBranch(userInput string) string {
+	mainBranch := config.GetMainBranch()
+	numericRegex, err := regexp.Compile("^[0-9]+$")
+	if err != nil {
+		log.Fatal("Error compiling numeric regular expression: ", err)
+	}
+
+	if numericRegex.MatchString(userInput) {
+		return parseParentBranchNumber(userInput)
+	} else if userInput == "" {
+		return mainBranch
+	} else if git.HasBranch(userInput) {
+		return userInput
+	} else {
+		util.PrintError(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
+	}
+
+	return ""
+}
+
+func parseParentBranchNumber(userInput string) string {
+	numberedBranches := git.GetLocalBranchesWithMainBranchFirst()
+	index, err := strconv.Atoi(userInput)
+	if err != nil {
+		log.Fatal("Error parsing string to integer: ", err)
+	}
+	if index >= 1 && index <= len(numberedBranches) {
+		return numberedBranches[index-1]
+	} else {
+		util.PrintError("Invalid branch number")
+		return ""
+	}
+}
+
 var parentBranchHeaderShown = false
+var parentBranchHeaderTemplate = `
+Feature branches can be branched directly off
+%s or from other feature branches.
+
+The former allows to develop and ship features completely independent of each other.
+The latter allows to build on top of currently unshipped features.
+
+`
 
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		fmt.Println()
-		fmt.Println("Feature branches can be branched directly off ")
-		fmt.Printf("%s or from other feature branches.\n", config.GetMainBranch())
-		fmt.Println()
-		fmt.Println("The former allows to develop and ship features completely independent of each other.")
-		fmt.Println("The latter allows to build on top of currently unshipped features.")
-		fmt.Println()
+		fmt.Printf(parentBranchHeaderTemplate, config.GetMainBranch())
 		printNumberedBranches()
 		fmt.Println()
 	}

@@ -57,9 +57,9 @@ func GetRemoteUpstreamUrl() string {
 	return util.GetCommandOutput("git", "remote", "get-url", "upstream")
 }
 
-func HasAncestorBranch(branchName1, branchName2 string) bool {
-	ancestorBranches := CompileAncestorBranches(branchName1)
-	return util.DoesStringArrayContain(ancestorBranches, branchName2)
+func IsAncestorBranch(branchName, ancestorBranchName string) bool {
+	ancestorBranches := CompileAncestorBranches(branchName)
+	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
 
 func HasCompiledAncestorBranches(branchName string) bool {

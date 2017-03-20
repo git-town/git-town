@@ -3,7 +3,6 @@ package util
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -48,7 +47,7 @@ var inputReader = bufio.NewReader(os.Stdin)
 
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
-	if err != nil && err != io.EOF {
+	if err != nil {
 		log.Fatal("Error getting user input:", err)
 	}
 	return strings.TrimSpace(text)
