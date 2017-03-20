@@ -29,6 +29,17 @@ func EnsureKnowsParentBranches(branchNames []string) {
 
 // Helpers
 
+var parentBranchHeaderShown = false
+var parentBranchHeaderTemplate = `
+Feature branches can be branched directly off
+%s or from other feature branches.
+
+The former allows to develop and ship features completely independent of each other.
+The latter allows to build on top of currently unshipped features.
+
+`
+var parentBranchPromptTemplate = "Please specify the parent branch of %s by name or number (default: %s): "
+
 func askForBranchAncestry(branchName string) {
 	current := branchName
 	for {
@@ -47,7 +58,7 @@ func askForBranchAncestry(branchName string) {
 
 func askForParentBranch(branchName string) string {
 	for {
-		printParentBranchPrompt()
+		printParentBranchPrompt(branchName)
 		parent := parseParentBranch(util.GetUserInput())
 		if parent == "" {
 			continue
@@ -58,6 +69,14 @@ func askForParentBranch(branchName string) string {
 		} else {
 			return parent
 		}
+	}
+}
+
+func printNumberedBranches() {
+	boldFmt := color.New(color.Bold)
+	branches := git.GetLocalBranchesWithMainBranchFirst()
+	for index, branchName := range branches {
+		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
 	}
 }
 
@@ -95,16 +114,6 @@ func parseParentBranchNumber(userInput string) string {
 	}
 }
 
-var parentBranchHeaderShown = false
-var parentBranchHeaderTemplate = `
-Feature branches can be branched directly off
-%s or from other feature branches.
-
-The former allows to develop and ship features completely independent of each other.
-The latter allows to build on top of currently unshipped features.
-
-`
-
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
@@ -116,13 +125,5 @@ func printParentBranchHeader() {
 
 func printParentBranchPrompt(branchName string) {
 	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(branchName)
-	fmt.Printf("Please specify the parent branch of %s by name or number (default: %s): ", coloredBranchName, config.GetMainBranch())
-}
-
-func printNumberedBranches() {
-	boldFmt := color.New(color.Bold)
-	branches := git.GetLocalBranchesWithMainBranchFirst()
-	for index, branchName := range branches {
-		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
-	}
+	fmt.Printf(parentBranchPromptTemplate, coloredBranchName, config.GetMainBranch())
 }
