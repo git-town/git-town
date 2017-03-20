@@ -46,12 +46,8 @@ func askForBranchAncestry(branchName string) {
 }
 
 func askForParentBranch(branchName string) string {
-	branchNameFmt := color.New(color.Bold).Add(color.FgCyan)
-	mainBranch := config.GetMainBranch()
-	message := fmt.Sprintf("Please specify the parent branch of %s by name or number (default: %s): ", branchNameFmt.Sprintf(branchName), mainBranch)
-
 	for {
-		fmt.Printf(message)
+		printParentBranchPrompt()
 		parent := parseParentBranch(util.GetUserInput())
 		if parent == "" {
 			continue
@@ -116,6 +112,11 @@ func printParentBranchHeader() {
 		printNumberedBranches()
 		fmt.Println()
 	}
+}
+
+func printParentBranchPrompt(branchName string) {
+	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(branchName)
+	fmt.Printf("Please specify the parent branch of %s by name or number (default: %s): ", coloredBranchName, config.GetMainBranch())
 }
 
 func printNumberedBranches() {
