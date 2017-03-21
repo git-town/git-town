@@ -27,6 +27,10 @@ func GetAncestorBranches(branchName string) []string {
 	return strings.Split(value, " ")
 }
 
+func GetChildBranches() []string {
+
+}
+
 func GetMainBranch() string {
 	return getConfigurationValue("git-town.main-branch-name")
 }

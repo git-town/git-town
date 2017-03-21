@@ -10,6 +10,10 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
+func DoesBranchHaveUnmergedCommits(branchName string) bool {
+	return util.GetCommandOutput("git", "log", config.GetMainBranch()+".."+branchName) != ""
+}
+
 func EnsureDoesNotHaveBranch(branchName string) {
 	if HasBranch(branchName) {
 		util.ExitWithErrorMessage(fmt.Sprintf("A branch named '%s' already exists", branchName))
@@ -22,6 +26,19 @@ func GetCurrentBranchName() string {
 	} else {
 		return util.GetCommandOutput("git", "rev-parse", "--abbrev-ref", "HEAD")
 	}
+}
+
+func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
+	output := util.GetCommandOutput("git", "branch", "-vv")
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.Trim(line, "* ")
+		fields := strings.Fields(line)
+		branchName := fields[0]
+		if fields[2] == fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName)) {
+			result = append(result, line)
+		}
+	}
+	return
 }
 
 func GetLocalBranchesWithMainBranchFirst() (result []string) {

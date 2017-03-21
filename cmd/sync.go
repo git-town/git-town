@@ -41,6 +41,7 @@ var syncCmd = &cobra.Command{
 			IsAbort:    syncFlags.Abort,
 			IsContinue: syncFlags.Continue,
 			IsSkip:     syncFlags.Skip,
+			IsUndo:     false,
 			SkipMessageGenerator: func() string {
 				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
 			},

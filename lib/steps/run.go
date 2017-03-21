@@ -15,6 +15,7 @@ type RunOptions struct {
 	IsAbort              bool
 	IsContinue           bool
 	IsSkip               bool
+	IsUndo               bool
 	SkipMessageGenerator func() string
 	StepListGenerator    func() StepList
 }
