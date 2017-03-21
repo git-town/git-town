@@ -19,6 +19,14 @@ func CompileAncestorBranches(branchName string) (result []string) {
 	}
 }
 
+func DeleteAncestorBranches(branchName string) {
+	removeConfigurationValue("git-town-branch." + branchName + ".ancestors")
+}
+
+func DeleteParentBranch(branchName string) {
+	removeConfigurationValue("git-town-branch." + branchName + ".parent")
+}
+
 func GetAncestorBranches(branchName string) []string {
 	value := getConfigurationValue("git-town-branch." + branchName + ".ancestors")
 	if value == "" {
@@ -27,8 +35,18 @@ func GetAncestorBranches(branchName string) []string {
 	return strings.Split(value, " ")
 }
 
-func GetChildBranches() []string {
-
+func GetChildBranches(branchName string) (result []string) {
+	configs := util.GetCommandOutput("git", "config", "--get-regexp", "^git-town-branch\\..*\\.parent$")
+	for _, config := range strings.Split(configs, "\n") {
+		splitConfig := strings.Split(config, " ")
+		key := splitConfig[0]
+		value := splitConfig[1]
+		if value == branchName {
+			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+			result = append([]string{child}, result...)
+		}
+	}
+	return
 }
 
 func GetMainBranch() string {
@@ -122,4 +140,8 @@ func hasConfigurationValue(key string) bool {
 
 func setConfigurationValue(key, value string) {
 	util.GetCommandOutput("git", "config", key, value)
+}
+
+func removeConfigurationValue(key string) {
+	util.GetCommandOutput("git", "config", "--unset", key)
 }

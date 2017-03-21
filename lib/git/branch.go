@@ -32,10 +32,11 @@ func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 	output := util.GetCommandOutput("git", "branch", "-vv")
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.Trim(line, "* ")
-		fields := strings.Fields(line)
-		branchName := fields[0]
-		if fields[2] == fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName)) {
-			result = append(result, line)
+		parts := strings.SplitN(line, " ", 2)
+		branchName := parts[0]
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName))
+		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
+			result = append(result, branchName)
 		}
 	}
 	return

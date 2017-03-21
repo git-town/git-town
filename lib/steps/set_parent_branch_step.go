@@ -18,7 +18,12 @@ func (step SetParentBranchStep) CreateContinueStep() Step {
 }
 
 func (step SetParentBranchStep) CreateUndoStep() Step {
-	return NoOpStep{}
+	oldParent := config.GetParentBranch(step.BranchName)
+	if oldParent == "" {
+		return DeleteParentBranchStep{BranchName: step.BranchName}
+	} else {
+		return SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: oldParent}
+	}
 }
 
 func (step SetParentBranchStep) Run() error {

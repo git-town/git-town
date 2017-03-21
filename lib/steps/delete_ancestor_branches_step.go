@@ -4,23 +4,23 @@ import (
 	"github.com/Originate/git-town/lib/config"
 )
 
-type DeleteAncestorBranches struct {
+type DeleteAncestorBranchesStep struct {
 	BranchName string
 }
 
-func (step DeleteAncestorBranches) CreateAbortStep() Step {
+func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {
 	return NoOpStep{}
 }
 
-func (step DeleteAncestorBranches) CreateContinueStep() Step {
+func (step DeleteAncestorBranchesStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step DeleteAncestorBranches) CreateUndoStep() Step {
+func (step DeleteAncestorBranchesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
-func (step DeleteAncestorBranches) Run() error {
+func (step DeleteAncestorBranchesStep) Run() error {
 	config.DeleteAncestorBranches(step.BranchName)
 	return nil
 }

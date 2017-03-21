@@ -9,9 +9,11 @@ import (
 
 func saveState(runState *RunState) {
 	serializedRunState := SerializedRunState{
-		AbortStep: serializeStep(runState.AbortStep),
 		RunSteps:  serializeSteps(runState.RunStepList.List),
 		UndoSteps: serializeSteps(runState.UndoStepList.List),
+	}
+	if runState.AbortStep != nil {
+		serializedRunState.AbortStep = serializeStep(runState.AbortStep)
 	}
 	content, err := json.Marshal(serializedRunState)
 	if err != nil {

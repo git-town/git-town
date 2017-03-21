@@ -19,7 +19,8 @@ func (step DeleteLocalBranchStep) CreateContinueStep() Step {
 }
 
 func (step DeleteLocalBranchStep) CreateUndoStep() Step {
-	return NoOpStep{}
+	sha := git.GetBranchSha(step.BranchName)
+	return CreateBranchStep{BranchName: step.BranchName, StartingPoint: sha}
 }
 
 func (step DeleteLocalBranchStep) Run() error {
