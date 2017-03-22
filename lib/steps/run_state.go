@@ -35,6 +35,12 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 	return
 }
 
+func (runState *RunState) CreateUndoRunState() (result RunState) {
+	result.Command = runState.Command
+	result.RunStepList.AppendList(runState.UndoStepList)
+	return
+}
+
 func (runState *RunState) SkipCurrentBranchSteps() {
 	for {
 		step := runState.RunStepList.Peek()

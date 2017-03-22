@@ -30,6 +30,7 @@ var hackCmd = &cobra.Command{
 			IsAbort:              hackFlags.Abort,
 			IsContinue:           hackFlags.Continue,
 			IsSkip:               false,
+			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				targetBranchName := checkHackPreconditions(args)

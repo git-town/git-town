@@ -15,6 +15,7 @@ type RunOptions struct {
 	IsAbort              bool
 	IsContinue           bool
 	IsSkip               bool
+	IsUndo               bool
 	SkipMessageGenerator func() string
 	StepListGenerator    func() StepList
 }
@@ -32,6 +33,10 @@ func Run(options RunOptions) {
 		runState := loadState(options.Command)
 		skipRunState := runState.CreateSkipRunState()
 		runSteps(&skipRunState, options)
+	} else if options.IsUndo {
+		runState := loadState(options.Command)
+		undoRunState := runState.CreateUndoRunState()
+		runSteps(&undoRunState, options)
 	} else {
 		runSteps(&RunState{
 			Command:     options.Command,
@@ -46,6 +51,9 @@ func runSteps(runState *RunState, options RunOptions) {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
+			runState.AbortStep = NoOpStep{}
+			saveState(runState)
+			fmt.Println()
 			return
 		}
 		if getTypeName(step) == "SkipCurrentBranchSteps" {
@@ -66,7 +74,6 @@ func runSteps(runState *RunState, options RunOptions) {
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}
-	fmt.Println()
 }
 
 func exitWithMessages(command string, skipMessage string) {
