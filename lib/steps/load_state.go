@@ -13,7 +13,7 @@ func loadState(command string) RunState {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var serializedRunState SerializedRunState
+	var serializedRunState *SerializedRunState
 	err = json.Unmarshal(content, &serializedRunState)
 	if err != nil {
 		log.Fatal(err)
@@ -90,8 +90,6 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return SkipCurrentBranchSteps{}
 	case "StashOpenChangesStep":
 		return StashOpenChangesStep{}
-	case "":
-		return NoOpStep{}
 	}
 	log.Fatal(fmt.Sprintf("Cannot deserialize steps: %s %s", serializedStep.Type, serializedStep.Data))
 	return nil

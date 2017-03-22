@@ -71,6 +71,7 @@ func runSteps(runState *RunState, options RunOptions) {
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}
+	runState.AbortStep = NoOpStep{}
 	saveState(runState)
 	fmt.Println()
 }
