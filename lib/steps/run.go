@@ -51,7 +51,10 @@ func runSteps(runState *RunState, options RunOptions) {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
-			break
+			runState.AbortStep = NoOpStep{}
+			saveState(runState)
+			fmt.Println()
+			return
 		}
 		if getTypeName(step) == "SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
@@ -71,9 +74,6 @@ func runSteps(runState *RunState, options RunOptions) {
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}
-	runState.AbortStep = NoOpStep{}
-	saveState(runState)
-	fmt.Println()
 }
 
 func exitWithMessages(command string, skipMessage string) {
