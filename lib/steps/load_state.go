@@ -13,7 +13,7 @@ func loadState(command string) RunState {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var serializedRunState *SerializedRunState
+	var serializedRunState SerializedRunState
 	err = json.Unmarshal(content, &serializedRunState)
 	if err != nil {
 		log.Fatal(err)
