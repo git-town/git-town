@@ -20,6 +20,12 @@ func EnsureDoesNotHaveBranch(branchName string) {
 	}
 }
 
+func EnsureHasBranch(branchName string) {
+	if HasBranch(branchName) {
+		util.ExitWithErrorMessage(fmt.Sprintf("There is no branch named '%s'", branchName))
+	}
+}
+
 func GetCurrentBranchName() string {
 	if IsRebaseInProgress() {
 		return getCurrentBranchNameDuringRebase()
@@ -66,6 +72,18 @@ func HasBranch(branchName string) bool {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		line = strings.Replace(line, "remotes/origin/", "", 1)
+		if line == branchName {
+			return true
+		}
+	}
+	return false
+}
+
+func HasLocalBranch(branchName string) bool {
+	output := util.GetCommandOutput("git", "branch")
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
 		if line == branchName {
 			return true
 		}

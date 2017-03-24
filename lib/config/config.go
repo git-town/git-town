@@ -20,8 +20,12 @@ func CompileAncestorBranches(branchName string) (result []string) {
 	}
 }
 
-func DeleteAncestorBranches(branchName string) {
-	removeConfigurationValue("git-town-branch." + branchName + ".ancestors")
+func DeleteAllAncestorBranches() {
+	configs := util.GetCommandOutput("git", "config", "--get-regexp", "^git-town-branch\\..*\\.ancestors$")
+	for _, config := range strings.Split(configs, "\n") {
+		splitConfig := strings.Split(config, " ")
+		removeConfigurationValue(splitConfig[0])
+	}
 }
 
 func DeleteParentBranch(branchName string) {
