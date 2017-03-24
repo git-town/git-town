@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -25,6 +26,12 @@ func DeleteAncestorBranches(branchName string) {
 
 func DeleteParentBranch(branchName string) {
 	removeConfigurationValue("git-town-branch." + branchName + ".parent")
+}
+
+func EnsureIsFeatureBranch(branchName, errorSuffix string) {
+	if !IsFeatureBranch(branchName) {
+		util.ExitWithErrorMessage(fmt.Sprintf("The branch '%s' is not a feature branch. %s", branchName, errorSuffix))
+	}
 }
 
 func GetAncestorBranches(branchName string) []string {
