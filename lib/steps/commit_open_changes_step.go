@@ -27,5 +27,5 @@ func (step CommitOpenChangesStep) Run() error {
 	if err != nil {
 		return err
 	}
-	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("'WIP on %s'", git.GetCurrentBranchName()))
+	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("WIP on %s", git.GetCurrentBranchName()))
 }
