@@ -2,9 +2,9 @@ actions:
 
   - match:
       filename: '\.feature$'
-    command: 'bin/build && DEBUG_COMMANDS=1 bundle exec cucumber {{filename}}'
+    command: 'bin/build && bundle exec cucumber {{filename}}'
 
   - match:
       filename: '\.feature$'
       line: '\d+'
-    command: 'bin/build && DEBUG_COMMANDS=1 bundle exec cucumber {{filename}}:{{line}}'
+    command: 'bin/build && bundle exec cucumber {{filename}}:{{line}}'
