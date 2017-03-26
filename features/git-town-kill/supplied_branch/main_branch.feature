@@ -14,7 +14,7 @@ Feature: git town-kill: errors when trying to kill the main branch
 
   Scenario: result
     Given I have an uncommitted file
-    When I run `git town-kill main`
+    When I run `gt kill main`
     Then it runs no commands
     And I get the error "You can only kill feature branches"
     And I am still on the "feature" branch

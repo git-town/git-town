@@ -21,7 +21,7 @@ func EnsureDoesNotHaveBranch(branchName string) {
 }
 
 func EnsureHasBranch(branchName string) {
-	if HasBranch(branchName) {
+	if !HasBranch(branchName) {
 		util.ExitWithErrorMessage(fmt.Sprintf("There is no branch named '%s'", branchName))
 	}
 }

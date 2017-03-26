@@ -22,5 +22,5 @@ func (step CreateRemoteBranchStep) CreateUndoStep() Step {
 }
 
 func (step CreateRemoteBranchStep) Run() error {
-	return script.RunCommand("git", "push", "origin", step.Sha+":/refs/heads/"+step.BranchName)
+	return script.RunCommand("git", "push", "origin", step.Sha+":refs/heads/"+step.BranchName)
 }

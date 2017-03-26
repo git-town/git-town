@@ -13,7 +13,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
       | other-feature   | local    | other feature commit   | other_feature_file   |
     And I am on the "current-feature" branch
     And I have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
-    When I run `git town-kill other-feature`
+    When I run `gt kill other-feature`
 
 
   Scenario: result
@@ -32,7 +32,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
 
 
   Scenario: undoing the kill
-    When I run `git town-kill --undo`
+    When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH          | COMMAND                                                    |
       | current-feature | git branch other-feature <%= sha 'other feature commit' %> |
