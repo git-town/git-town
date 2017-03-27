@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 3.0.0 (2016-02-07)
+## 3.0.0 (2017-02-07)
 
 #### BREAKING CHANGES
 * `git hack`: no longer accepts a parent branch (functionality moved to `git append`)
