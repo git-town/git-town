@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 3.1.0 (2017-03-27)
+
+#### New Features
+* `git new-pull-request`, `git repo`:
+  * support `ssh://` urls (thanks to @zhangwei)
+  * add GitLab support (thanks to @dgjnpr)
+
 ## 3.0.0 (2017-02-07)
 
 #### BREAKING CHANGES
