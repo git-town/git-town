@@ -68,11 +68,11 @@ Feature: Syncing before creating the pull request
     Given I resolve the conflict in "conflicting_file"
     When I run `gt new-pull-request --continue`
     Then it runs the commands
-      | BRANCH  | COMMAND              |
-      | feature | git commit --no-edit |
-      |         | git push             |
+      | BRANCH  | COMMAND                                                             |
+      | feature | git commit --no-edit                                                |
+      |         | git push                                                            |
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
-      | feature | git stash pop        |
+      | feature | git stash pop                                                       |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And I still have my uncommitted file
@@ -88,10 +88,10 @@ Feature: Syncing before creating the pull request
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; gt new-pull-request --continue`
     Then it runs the commands
-      | BRANCH  | COMMAND       |
-      | feature | git push      |
+      | BRANCH  | COMMAND                                                             |
+      | feature | git push                                                            |
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
-      | feature | git stash pop        |
+      | feature | git stash pop                                                       |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And I still have my uncommitted file

@@ -25,23 +25,23 @@ Feature: Syncing before creating the pull request
 
   Scenario: result
     Then it runs the commands
-      | BRANCH         | COMMAND                                   |
-      | child-feature  | git fetch --prune                         |
-      |                | git add -A                                |
-      |                | git stash                                 |
-      |                | git checkout main                         |
-      | main           | git rebase origin/main                    |
-      |                | git push                                  |
-      |                | git checkout parent-feature               |
-      | parent-feature | git merge --no-edit origin/parent-feature |
-      |                | git merge --no-edit main                  |
-      |                | git push                                  |
-      |                | git checkout child-feature                |
-      | child-feature  | git merge --no-edit origin/child-feature  |
-      |                | git merge --no-edit parent-feature        |
-      |                | git push                                  |
-      |  <none>        | open https://github.com/Originate/git-town/compare/parent-feature...child-feature?expand=1 |
-      | child-feature  | git stash pop                             |
+      | BRANCH         | COMMAND                                                                                    |
+      | child-feature  | git fetch --prune                                                                          |
+      |                | git add -A                                                                                 |
+      |                | git stash                                                                                  |
+      |                | git checkout main                                                                          |
+      | main           | git rebase origin/main                                                                     |
+      |                | git push                                                                                   |
+      |                | git checkout parent-feature                                                                |
+      | parent-feature | git merge --no-edit origin/parent-feature                                                  |
+      |                | git merge --no-edit main                                                                   |
+      |                | git push                                                                                   |
+      |                | git checkout child-feature                                                                 |
+      | child-feature  | git merge --no-edit origin/child-feature                                                   |
+      |                | git merge --no-edit parent-feature                                                         |
+      |                | git push                                                                                   |
+      | <none>         | open https://github.com/Originate/git-town/compare/parent-feature...child-feature?expand=1 |
+      | child-feature  | git stash pop                                                                              |
     And I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "child-feature" branch
     And I still have my uncommitted file
