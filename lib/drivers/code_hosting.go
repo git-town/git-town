@@ -18,10 +18,14 @@ func GetCodeHostingDriver() CodeHostingDriver {
 		return GithubCodeHostingDriver{}
 	} else if originHostname == "bitbucket.org" {
 		return BitbucketCodeHostingDriver{}
+	} else if originHostname == "gitlab.com" {
+		return GitlabCodeHostingDriver{}
 	} else if strings.Contains(originHostname, "github") {
 		return GithubCodeHostingDriver{}
 	} else if strings.Contains(originHostname, "bitbucket") {
 		return BitbucketCodeHostingDriver{}
+	} else if strings.Contains(originHostname, "gitlab") {
+		return GitlabCodeHostingDriver{}
 	} else {
 		util.ExitWithErrorMessage("Unsupported hosting service.", "This command requires hosting on GitHub or Bitbucket")
 		return nil
