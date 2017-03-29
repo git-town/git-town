@@ -34,6 +34,16 @@ func GetCurrentBranchName() string {
 	}
 }
 
+func GetLocalBranches() (result []string) {
+	output := util.GetCommandOutput("git", "branch")
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
+		result = append(result, line)
+	}
+	return
+}
+
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 	output := util.GetCommandOutput("git", "branch", "-vv")
 	for _, line := range strings.Split(output, "\n") {
@@ -51,12 +61,9 @@ func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 func GetLocalBranchesWithMainBranchFirst() (result []string) {
 	mainBranch := config.GetMainBranch()
 	result = append(result, mainBranch)
-	output := util.GetCommandOutput("git", "branch")
-	for _, line := range strings.Split(output, "\n") {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		if line != mainBranch {
-			result = append(result, line)
+	for _, branch := range GetLocalBranches() {
+		if branch != mainBranch {
+			result = append(result, branch)
 		}
 	}
 	return
@@ -80,15 +87,7 @@ func HasBranch(branchName string) bool {
 }
 
 func HasLocalBranch(branchName string) bool {
-	output := util.GetCommandOutput("git", "branch")
-	for _, line := range strings.Split(output, "\n") {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		if line == branchName {
-			return true
-		}
-	}
-	return false
+	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
 func HasTrackingBranch(branchName string) bool {
