@@ -6,7 +6,7 @@ Feature: git town-kill: killing a remote only branch
       | BRANCH  | LOCATION         | MESSAGE        |
       | feature | local and remote | feature commit |
     And I am on the "main" branch
-    When I run `git town-kill feature`
+    When I run `gt kill feature`
 
 
   Scenario: result
@@ -21,7 +21,7 @@ Feature: git town-kill: killing a remote only branch
 
 
   Scenario: undoing the kill
-    When I run `git town-kill --undo`
+    When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH | COMMAND                                                        |
       | main   | git push origin <%= sha 'feature commit' %>:refs/heads/feature |

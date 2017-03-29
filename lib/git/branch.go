@@ -20,12 +20,28 @@ func EnsureDoesNotHaveBranch(branchName string) {
 	}
 }
 
+func EnsureHasBranch(branchName string) {
+	if !HasBranch(branchName) {
+		util.ExitWithErrorMessage(fmt.Sprintf("There is no branch named '%s'", branchName))
+	}
+}
+
 func GetCurrentBranchName() string {
 	if IsRebaseInProgress() {
 		return getCurrentBranchNameDuringRebase()
 	} else {
 		return util.GetCommandOutput("git", "rev-parse", "--abbrev-ref", "HEAD")
 	}
+}
+
+func GetLocalBranches() (result []string) {
+	output := util.GetCommandOutput("git", "branch")
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
+		result = append(result, line)
+	}
+	return
 }
 
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
@@ -45,12 +61,9 @@ func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 func GetLocalBranchesWithMainBranchFirst() (result []string) {
 	mainBranch := config.GetMainBranch()
 	result = append(result, mainBranch)
-	output := util.GetCommandOutput("git", "branch")
-	for _, line := range strings.Split(output, "\n") {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		if line != mainBranch {
-			result = append(result, line)
+	for _, branch := range GetLocalBranches() {
+		if branch != mainBranch {
+			result = append(result, branch)
 		}
 	}
 	return
@@ -71,6 +84,10 @@ func HasBranch(branchName string) bool {
 		}
 	}
 	return false
+}
+
+func HasLocalBranch(branchName string) bool {
+	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
 func HasTrackingBranch(branchName string) bool {

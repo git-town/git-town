@@ -50,10 +50,10 @@ func getPruneBranchesList() (result steps.StepList) {
 		parent := config.GetParentBranch(branchName)
 		if parent != "" {
 			for _, child := range config.GetChildBranches(branchName) {
-				result.Append(steps.DeleteAncestorBranchesStep{BranchName: child})
 				result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(steps.DeleteParentBranchStep{BranchName: branchName})
+			result.Append(steps.DeleteAncestorBranchesStep{})
 		}
 
 		result.Append(steps.DeleteLocalBranchStep{BranchName: branchName})

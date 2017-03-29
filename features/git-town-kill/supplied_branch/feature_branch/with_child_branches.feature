@@ -14,7 +14,7 @@ Feature: git town-kill: killing the given branch with child branches
       | feature-3 | local and remote | feature 3 commit |
     And I am on the "feature-3" branch
     And I have an uncommitted file
-    When I run `git town-kill feature-2`
+    When I run `gt kill feature-2`
 
 
   Scenario: result
@@ -40,7 +40,7 @@ Feature: git town-kill: killing the given branch with child branches
 
 
   Scenario: undoing the kill
-    When I run `git town-kill --undo`
+    When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH    | COMMAND                                            |
       | feature-3 | git branch feature-2 <%= sha 'feature 2 commit' %> |
