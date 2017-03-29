@@ -52,6 +52,10 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := CreateAndCheckoutBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
+	case "CreatePullRequestStep":
+		step := CreatePullRequestStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "CreateTrackingBranchStep":
 		step := CreateTrackingBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)

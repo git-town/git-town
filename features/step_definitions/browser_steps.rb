@@ -11,5 +11,5 @@ end
 
 
 Then(/^I see the (Bitbucket|GitHub) homepage of the "(.+?)" repository in my browser$/) do |domain, repository|
-  expect(@last_run_result.out.strip).to eql "#{@tool} called with: #{repository_homepage_url domain, repository}"
+  expect(@last_run_result.out.strip).to include "#{@tool} called with: #{repository_homepage_url domain, repository}"
 end

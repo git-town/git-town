@@ -15,7 +15,7 @@ Feature: Syncing before creating the pull request
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `git town-new-pull-request`
+    When I run `gt new-pull-request`
 
 
   @finishes-with-non-empty-stash
@@ -32,8 +32,8 @@ Feature: Syncing before creating the pull request
       |         | git merge --no-edit main           |
     And I get the error
       """
-      To abort, run "git town-new-pull-request --abort".
-      To continue after you have resolved the conflicts, run "git town-new-pull-request --continue".
+      To abort, run "gt new-pull-request --abort".
+      To continue after you have resolved the conflicts, run "gt new-pull-request --continue".
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -41,7 +41,7 @@ Feature: Syncing before creating the pull request
 
 
   Scenario: aborting
-    When I run `git town-new-pull-request --abort`
+    When I run `gt new-pull-request --abort`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -56,9 +56,9 @@ Feature: Syncing before creating the pull request
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
-    When I run `git town-new-pull-request --continue`
+    When I run `gt new-pull-request --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing the git town-new-pull-request"
+    And I get the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -66,12 +66,13 @@ Feature: Syncing before creating the pull request
 
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git town-new-pull-request --continue`
+    When I run `gt new-pull-request --continue`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
-      |         | git stash pop        |
+      | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
+      | feature | git stash pop        |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And I still have my uncommitted file
@@ -85,11 +86,12 @@ Feature: Syncing before creating the pull request
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git town-new-pull-request --continue`
+    When I run `git commit --no-edit; gt new-pull-request --continue`
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |
-      |         | git stash pop |
+      | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
+      | feature | git stash pop        |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And I still have my uncommitted file

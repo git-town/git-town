@@ -8,7 +8,7 @@ Feature: git-new-pull-request: when origin is unsupported
   Background:
     Given I have a feature branch named "feature"
     And I am on the "feature" branch
-    When I run `git town-new-pull-request`
+    When I run `gt new-pull-request`
 
 
   Scenario: result

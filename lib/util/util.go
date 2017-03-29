@@ -29,8 +29,8 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
-func ExitWithErrorMessage(message string) {
-	PrintError(message)
+func ExitWithErrorMessage(messages ...string) {
+	PrintError(messages...)
 	os.Exit(1)
 }
 
@@ -53,11 +53,13 @@ func GetUserInput() string {
 	return strings.TrimSpace(text)
 }
 
-func PrintError(message string) {
+func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
 	errHeaderFmt.Println("  Error")
-	errMessageFmt.Printf("  %s\n", message)
+	for _, message := range messages {
+		errMessageFmt.Printf("  %s\n", message)
+	}
 	fmt.Println()
 }

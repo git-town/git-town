@@ -1,7 +1,9 @@
 package config
 
 import (
+	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/Originate/git-town/lib/util"
@@ -73,6 +75,33 @@ func GetRemoteOriginUrl() string {
 		}
 	}
 	return util.GetCommandOutput("git", "remote", "get-url", "origin")
+}
+
+func GetRemoteOriginHostname() string {
+	url := GetRemoteOriginUrl()
+	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
+	if err != nil {
+		log.Fatal("Error compiling hostname regular expression: ", err)
+	}
+	matches := hostnameRegex.FindStringSubmatch(url)
+	if matches == nil {
+		return ""
+	}
+	return matches[3]
+}
+
+func GetRemoteRepositoryName() string {
+	url := GetRemoteOriginUrl()
+	hostname := GetRemoteOriginHostname()
+	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
+	if err != nil {
+		log.Fatal("Error compiling repository name regular expression: ", err)
+	}
+	matches := repositoryNameRegex.FindStringSubmatch(url)
+	if matches == nil {
+		return ""
+	}
+	return strings.TrimSuffix(matches[1], ".git")
 }
 
 func GetRemoteUpstreamUrl() string {

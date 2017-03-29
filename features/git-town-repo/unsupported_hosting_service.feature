@@ -1,7 +1,7 @@
 Feature: git-repo when origin is unsupported
 
   Background:
-    When I run `git town-repo`
+    When I run `gt repo`
 
 
   Scenario: result

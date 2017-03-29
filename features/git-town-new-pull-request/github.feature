@@ -13,7 +13,7 @@ Feature: git-new-pull-request when origin is on GitHub
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
-    When I run `git town-new-pull-request`
+    When I run `gt new-pull-request`
     Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:
