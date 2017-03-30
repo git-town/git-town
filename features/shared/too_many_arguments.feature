@@ -1,7 +1,7 @@
 Feature: too many arguments
 
   As a developer providing too many arguments
-  I should be reminded that the command expects no arguments
+  I should be reminded of how many arguments the command expects
   So that I can use it correctly without having to look that fact up in the readme.
 
 
