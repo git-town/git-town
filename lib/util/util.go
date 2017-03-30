@@ -29,8 +29,8 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
-func ExitWithErrorMessage(message string) {
-	PrintError(message)
+func ExitWithErrorMessage(messages ...string) {
+	PrintError(messages...)
 	os.Exit(1)
 }
 
@@ -43,6 +43,23 @@ func GetCommandOutput(cmd ...string) string {
 	return strings.TrimSpace(string(output))
 }
 
+var openBrowserCommands = []string{"xdg-open", "open"}
+var missingOpenBrowserCommandMessages = []string{
+	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
+	"If you would like another command to be supported,",
+	"please open an issue at https://github.com/Originate/git-town/issues",
+}
+
+func GetOpenBrowserCommand() string {
+	for _, command := range openBrowserCommands {
+		if GetCommandOutput("which", command) != "" {
+			return command
+		}
+	}
+	ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
+	return ""
+}
+
 var inputReader = bufio.NewReader(os.Stdin)
 
 func GetUserInput() string {
@@ -53,11 +70,13 @@ func GetUserInput() string {
 	return strings.TrimSpace(text)
 }
 
-func PrintError(message string) {
+func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
 	errHeaderFmt.Println("  Error")
-	errMessageFmt.Printf("  %s\n", message)
+	for _, message := range messages {
+		errMessageFmt.Println("  " + message)
+	}
 	fmt.Println()
 }

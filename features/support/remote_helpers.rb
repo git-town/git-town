@@ -17,7 +17,7 @@ def bitbucket_pull_request_url branch:, parent_branch:, repo:
   sha = recent_commit_shas(1).join('')[0, 12] # TODO: update to have the branch as an argument
   source = CGI.escape "#{repo}:#{sha}:#{branch}"
   dest = CGI.escape "#{repo}::#{parent_branch}"
-  "https://bitbucket.org/#{repo}/pull-request/new?source=#{source}&dest=#{dest}"
+  "https://bitbucket.org/#{repo}/pull-request/new?dest=#{dest}&source=#{source}"
 end
 
 

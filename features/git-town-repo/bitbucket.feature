@@ -3,7 +3,7 @@ Feature: git-repo when origin is on Bitbucket
   Scenario Outline: result
     Given my remote origin is <ORIGIN>
     And I have "open" installed
-    When I run `git town-repo`
+    When I run `gt repo`
     Then I see the Bitbucket homepage of the "Originate/git-town" repository in my browser
 
     Examples:

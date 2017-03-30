@@ -2,14 +2,24 @@ package script
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/util"
 
 	"github.com/fatih/color"
 )
+
+func OpenBrowser(url string) {
+	command := util.GetOpenBrowserCommand()
+	err := RunCommand(command, url)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func PrintCommand(cmd ...string) {
 	header := ""
