@@ -49,6 +49,9 @@ var syncCmd = &cobra.Command{
 			},
 		})
 	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return validateMaxArgs(args, 0)
+	},
 }
 
 func checkSyncPreconditions() (result SyncConfig) {

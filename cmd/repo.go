@@ -16,6 +16,9 @@ var repoCommand = &cobra.Command{
 		repository := config.GetUrlRepositoryName(config.GetRemoteOriginUrl())
 		script.OpenBrowser(driver.GetRepositoryUrl(repository))
 	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return validateMaxArgs(args, 0)
+	},
 }
 
 func init() {

@@ -1,10 +1,11 @@
 package cmd
 
 import (
+	"errors"
+
 	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/steps"
-	"github.com/Originate/git-town/lib/util"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ type HackFlags struct {
 var hackFlags HackFlags
 
 var hackCmd = &cobra.Command{
-	Use:   "hack",
+	Use:   "hack <branch>",
 	Short: "Create a new feature branch off the main development branch",
 	Long:  `Create a new feature branch off the main development branch`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -35,12 +36,15 @@ var hackCmd = &cobra.Command{
 			},
 		})
 	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 && !hackFlags.Abort && !hackFlags.Continue {
+			return errors.New("No branch name provided.")
+		}
+		return validateMaxArgs(args, 1)
+	},
 }
 
 func checkHackPreconditions(args []string) string {
-	if len(args) == 0 {
-		util.ExitWithErrorMessage("No branch name provided.")
-	}
 	targetBranchName := args[0]
 	if config.HasRemote("origin") {
 		steps.FetchStep{}.Run()
