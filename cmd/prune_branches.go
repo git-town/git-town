@@ -34,7 +34,7 @@ var pruneBranchesCommand = &cobra.Command{
 			},
 		})
 	},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 0 {
 			return errors.New("Too many arguments")
 		}

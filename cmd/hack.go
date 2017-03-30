@@ -36,8 +36,8 @@ var hackCmd = &cobra.Command{
 			},
 		})
 	},
-	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 {
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 && !hackFlags.Abort && !hackFlags.Continue {
 			return errors.New("No branch name provided.")
 		}
 		if len(args) > 1 {
