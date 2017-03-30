@@ -40,8 +40,8 @@ Feature: Syncing before creating the pull request
       | child-feature  | git merge --no-edit origin/child-feature                                                   |
       |                | git merge --no-edit parent-feature                                                         |
       |                | git push                                                                                   |
+      |                | git stash pop                                                                              |
       | <none>         | open https://github.com/Originate/git-town/compare/parent-feature...child-feature?expand=1 |
-      | child-feature  | git stash pop                                                                              |
     And I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "child-feature" branch
     And I still have my uncommitted file
