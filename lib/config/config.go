@@ -88,8 +88,7 @@ func GetRemoteOriginUrl() string {
 	return util.GetCommandOutput("git", "remote", "get-url", "origin")
 }
 
-func GetRemoteOriginHostname() string {
-	url := GetRemoteOriginUrl()
+func GetUrlHostname(url string) string {
 	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
 	if err != nil {
 		log.Fatal("Error compiling hostname regular expression: ", err)
@@ -101,9 +100,8 @@ func GetRemoteOriginHostname() string {
 	return matches[3]
 }
 
-func GetRemoteRepositoryName() string {
-	url := GetRemoteOriginUrl()
-	hostname := GetRemoteOriginHostname()
+func GetUrlRepositoryName(url string) string {
+	hostname := GetUrlHostname(url)
 	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
 	if err != nil {
 		log.Fatal("Error compiling repository name regular expression: ", err)

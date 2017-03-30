@@ -43,6 +43,23 @@ func GetCommandOutput(cmd ...string) string {
 	return strings.TrimSpace(string(output))
 }
 
+var openBrowserCommands = []string{"xdg-open", "open"}
+var missingOpenBrowserCommandMessages = []string{
+	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
+	"If you would like another command to be supported,",
+	"please open an issue at https://github.com/Originate/git-town/issues",
+}
+
+func GetOpenBrowserCommand() string {
+	for _, command := range openBrowserCommands {
+		if GetCommandOutput("which", command) != "" {
+			return command
+		}
+	}
+	ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
+	return ""
+}
+
 var inputReader = bufio.NewReader(os.Stdin)
 
 func GetUserInput() string {
@@ -59,7 +76,7 @@ func PrintError(messages ...string) {
 	fmt.Println()
 	errHeaderFmt.Println("  Error")
 	for _, message := range messages {
-		errMessageFmt.Printf("  %s\n", message)
+		errMessageFmt.Println("  " + message)
 	}
 	fmt.Println()
 }

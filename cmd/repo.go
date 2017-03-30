@@ -13,7 +13,8 @@ var repoCommand = &cobra.Command{
 	Long:  `View the repository homepage`,
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetCodeHostingDriver()
-		script.OpenBrowser(driver.GetRepositoryUrl(config.GetRemoteRepositoryName()))
+		repository := config.GetUrlRepositoryName(config.GetRemoteOriginUrl())
+		script.OpenBrowser(driver.GetRepositoryUrl(repository))
 	},
 }
 

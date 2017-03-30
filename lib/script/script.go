@@ -21,16 +21,11 @@ var missingBrowserToolMessages = []string{
 }
 
 func OpenBrowser(url string) {
-	for _, browserTool := range browserTools {
-		if util.GetCommandOutput("which", browserTool) != "" {
-			err := RunCommand(browserTool, url)
-			if err != nil {
-				log.Fatal(err)
-			}
-			return
-		}
+	command := util.GetOpenBrowserCommand()
+	err := RunCommand(command, url)
+	if err != nil {
+		log.Fatal(err)
 	}
-	util.ExitWithErrorMessage(missingBrowserToolMessages...)
 }
 
 func PrintCommand(cmd ...string) {

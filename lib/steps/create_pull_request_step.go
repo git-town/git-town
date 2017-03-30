@@ -1,8 +1,6 @@
 package steps
 
 import (
-	"fmt"
-
 	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/drivers"
 	"github.com/Originate/git-town/lib/script"
@@ -26,9 +24,8 @@ func (step CreatePullRequestStep) CreateUndoStep() Step {
 
 func (step CreatePullRequestStep) Run() error {
 	driver := drivers.GetCodeHostingDriver()
-	repository := config.GetRemoteRepositoryName()
+	repository := config.GetUrlRepositoryName(config.GetRemoteOriginUrl())
 	parentBranch := config.GetParentBranch(step.BranchName)
-	fmt.Println(parentBranch)
 	script.OpenBrowser(driver.GetNewPullRequestUrl(repository, step.BranchName, parentBranch))
 	return nil
 }
