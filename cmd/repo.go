@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+
 	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/drivers"
 	"github.com/Originate/git-town/lib/script"
@@ -15,6 +17,12 @@ var repoCommand = &cobra.Command{
 		driver := drivers.GetCodeHostingDriver()
 		repository := config.GetUrlRepositoryName(config.GetRemoteOriginUrl())
 		script.OpenBrowser(driver.GetRepositoryUrl(repository))
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 0 {
+			return errors.New("Too many arguments")
+		}
+		return nil
 	},
 }
 

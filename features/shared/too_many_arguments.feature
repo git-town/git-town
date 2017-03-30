@@ -6,7 +6,7 @@ Feature: too many arguments
 
 
   Scenario: hack
-    When I run `gt hack feature1`
+    When I run `gt hack arg1 arg2`
     Then it runs no commands
     And I get the error "Too many arguments"
     And I get the error
@@ -17,7 +17,7 @@ Feature: too many arguments
 
 
   Scenario: kill
-    When I run `gt kill feature1 feature2`
+    When I run `gt kill arg1 arg2`
     Then it runs no commands
     And I get the error "Too many arguments"
     And I get the error
@@ -27,8 +27,19 @@ Feature: too many arguments
       """
 
 
+  Scenario: new-pull-request
+    When I run `gt new-pull-request arg1`
+    Then it runs no commands
+    And I get the error "Too many arguments"
+    And I get the error
+      """
+      Usage:
+        gt new-pull-request [flags]
+      """
+
+
   Scenario: prune-branches
-    When I run `gt prune-branches feature1`
+    When I run `gt prune-branches arg1`
     Then it runs no commands
     And I get the error "Too many arguments"
     And I get the error
@@ -38,8 +49,19 @@ Feature: too many arguments
       """
 
 
+  Scenario: repo
+    When I run `gt repo arg1`
+    Then it runs no commands
+    And I get the error "Too many arguments"
+    And I get the error
+      """
+      Usage:
+        gt repo [flags]
+      """
+
+
   Scenario: sync
-    When I run `gt sync feature1`
+    When I run `gt sync arg1`
     Then it runs no commands
     And I get the error "Too many arguments"
     And I get the error
