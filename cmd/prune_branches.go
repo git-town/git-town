@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+
 	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/steps"
@@ -31,6 +33,12 @@ var pruneBranchesCommand = &cobra.Command{
 				return getPruneBranchesList()
 			},
 		})
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 0 {
+			return errors.New("Too many arguments")
+		}
+		return nil
 	},
 }
 

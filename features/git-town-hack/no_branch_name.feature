@@ -15,5 +15,10 @@ Feature: git town-hack: requires a branch name
   Scenario: result
     Then it runs no commands
     And I get the error "No branch name provided"
+    And I get the error
+      """
+      Usage:
+        gt hack <branch> [flags]
+      """
     And I am still on the "existing-feature" branch
     And I still have my uncommitted file

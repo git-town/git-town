@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Originate/git-town/lib/config"
@@ -48,6 +49,12 @@ var syncCmd = &cobra.Command{
 				return getSyncStepList(syncConfig)
 			},
 		})
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 0 {
+			return errors.New("Too many arguments")
+		}
+		return nil
 	},
 }
 

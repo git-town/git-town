@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"errors"
 
 	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
@@ -36,13 +36,16 @@ var killCommand = &cobra.Command{
 			IsUndo:               killFlags.Undo,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				if len(args) > 1 {
-					log.Fatal(cmd.UsageTemplate())
-				}
 				killConfig := checkKillPreconditions(args)
 				return getKillStepList(killConfig)
 			},
 		})
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 1 {
+			return errors.New("Too many arguments")
+		}
+		return nil
 	},
 }
 
