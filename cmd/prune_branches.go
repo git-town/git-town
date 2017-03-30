@@ -16,7 +16,6 @@ var pruneBranchesFlags PruneBranchesFlags
 var pruneBranchesCommand = &cobra.Command{
 	Use:   "prune-branches",
 	Short: "Deletes local branches whose tracking branch no longer exists",
-	Long:  `Deletes local branches whose tracking branch no longer exists`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },

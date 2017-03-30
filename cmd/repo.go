@@ -9,8 +9,7 @@ import (
 
 var repoCommand = &cobra.Command{
 	Use:   "repo",
-	Short: "View the repository homepage",
-	Long:  `View the repository homepage`,
+	Short: "Opens the repository homepage",
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetCodeHostingDriver()
 		repository := config.GetUrlRepositoryName(config.GetRemoteOriginUrl())

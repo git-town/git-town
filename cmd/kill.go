@@ -25,7 +25,6 @@ var killFlags KillFlags
 var killCommand = &cobra.Command{
 	Use:   "kill [<branch>]",
 	Short: "Removes an obsolete feature branch",
-	Long:  "Removes an obsolete feature branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },

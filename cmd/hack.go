@@ -18,8 +18,7 @@ var hackFlags HackFlags
 
 var hackCmd = &cobra.Command{
 	Use:   "hack",
-	Short: "Create a new feature branch off the main development branch",
-	Long:  `Create a new feature branch off the main development branch`,
+	Short: "Creates a new feature branch off the main development branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
