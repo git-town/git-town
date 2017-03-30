@@ -88,6 +88,10 @@ func GetRemoteOriginUrl() string {
 	return util.GetCommandOutput("git", "remote", "get-url", "origin")
 }
 
+func GetRemoteUpstreamUrl() string {
+	return util.GetCommandOutput("git", "remote", "get-url", "upstream")
+}
+
 func GetUrlHostname(url string) string {
 	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
 	if err != nil {
@@ -111,10 +115,6 @@ func GetUrlRepositoryName(url string) string {
 		return ""
 	}
 	return strings.TrimSuffix(matches[1], ".git")
-}
-
-func GetRemoteUpstreamUrl() string {
-	return util.GetCommandOutput("git", "remote", "get-url", "upstream")
 }
 
 func IsAncestorBranch(branchName, ancestorBranchName string) bool {
