@@ -34,7 +34,16 @@ func OpenBrowser(url string) {
 }
 
 func PrintCommand(cmd ...string) {
-	header := strings.Join(cmd, " ")
+	header := ""
+	for index, part := range cmd {
+		if strings.Contains(part, " ") {
+			part = "'" + part + "'"
+		}
+		if index != 0 {
+			header = header + " "
+		}
+		header = header + part
+	}
 	if strings.HasPrefix(header, "git") {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}

@@ -16,18 +16,18 @@ Feature: git town-kill: killing the current feature branch with child branches
       | feature-3 | local and remote | feature 3 commit |
     And I am on the "feature-2" branch
     And I have an uncommitted file
-    When I run `git town-kill`
+    When I run `gt kill`
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                          |
       | feature-2 | git fetch --prune                |
+      |           | git push origin :feature-2       |
       |           | git add -A                       |
       |           | git commit -m 'WIP on feature-2' |
       |           | git checkout feature-1           |
-      | feature-1 | git push origin :feature-2       |
-      |           | git branch -D feature-2          |
+      | feature-1 | git branch -D feature-2          |
     And I end up on the "feature-1" branch
     And I don't have any uncommitted files
     And the existing branches are
@@ -45,14 +45,13 @@ Feature: git town-kill: killing the current feature branch with child branches
 
 
   Scenario: undoing the kill
-    When I run `git town-kill --undo`
+    When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH    | COMMAND                                            |
       | feature-1 | git branch feature-2 <%= sha 'WIP on feature-2' %> |
-      |           | git push -u origin feature-2                       |
       |           | git checkout feature-2                             |
       | feature-2 | git reset <%= sha 'feature 2 commit' %>            |
-      |           | git push -f origin feature-2                       |
+      |           | git push -u origin feature-2                       |
     And I end up on the "feature-2" branch
     And I again have my uncommitted file
     And the existing branches are

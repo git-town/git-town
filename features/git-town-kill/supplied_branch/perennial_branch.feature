@@ -15,7 +15,7 @@ Feature: git town-kill: errors when trying to kill a perennial branch
 
   Scenario: result
     Given I have an uncommitted file
-    When I run `git town-kill qa`
+    When I run `gt kill qa`
     Then it runs no commands
     And I get the error "You can only kill feature branches"
     And I am still on the "feature" branch

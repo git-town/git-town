@@ -4,9 +4,7 @@ import (
 	"github.com/Originate/git-town/lib/config"
 )
 
-type DeleteAncestorBranchesStep struct {
-	BranchName string
-}
+type DeleteAncestorBranchesStep struct{}
 
 func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -21,6 +19,6 @@ func (step DeleteAncestorBranchesStep) CreateUndoStep() Step {
 }
 
 func (step DeleteAncestorBranchesStep) Run() error {
-	config.DeleteAncestorBranches(step.BranchName)
+	config.DeleteAllAncestorBranches()
 	return nil
 }

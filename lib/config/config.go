@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -21,12 +22,22 @@ func CompileAncestorBranches(branchName string) (result []string) {
 	}
 }
 
-func DeleteAncestorBranches(branchName string) {
-	removeConfigurationValue("git-town-branch." + branchName + ".ancestors")
+func DeleteAllAncestorBranches() {
+	configs := util.GetCommandOutput("git", "config", "--get-regexp", "^git-town-branch\\..*\\.ancestors$")
+	for _, config := range strings.Split(configs, "\n") {
+		splitConfig := strings.Split(config, " ")
+		removeConfigurationValue(splitConfig[0])
+	}
 }
 
 func DeleteParentBranch(branchName string) {
 	removeConfigurationValue("git-town-branch." + branchName + ".parent")
+}
+
+func EnsureIsFeatureBranch(branchName, errorSuffix string) {
+	if !IsFeatureBranch(branchName) {
+		util.ExitWithErrorMessage(fmt.Sprintf("The branch '%s' is not a feature branch. %s", branchName, errorSuffix))
+	}
 }
 
 func GetAncestorBranches(branchName string) []string {
