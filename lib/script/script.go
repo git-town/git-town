@@ -13,13 +13,6 @@ import (
 	"github.com/fatih/color"
 )
 
-var browserTools = []string{"xdg-open", "open"}
-var missingBrowserToolMessages = []string{
-	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
-	"If you would like another command to be supported,",
-	"please open an issue at https://github.com/Originate/git-town/issues",
-}
-
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
