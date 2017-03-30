@@ -40,10 +40,7 @@ var hackCmd = &cobra.Command{
 		if len(args) == 0 && !hackFlags.Abort && !hackFlags.Continue {
 			return errors.New("No branch name provided.")
 		}
-		if len(args) > 1 {
-			return errors.New("Too many arguments.")
-		}
-		return nil
+		return validateMaxArgs(args, 1)
 	},
 }
 
