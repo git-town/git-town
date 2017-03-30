@@ -2,7 +2,9 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/Originate/git-town/lib/util"
@@ -88,6 +90,31 @@ func GetRemoteOriginUrl() string {
 
 func GetRemoteUpstreamUrl() string {
 	return util.GetCommandOutput("git", "remote", "get-url", "upstream")
+}
+
+func GetUrlHostname(url string) string {
+	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
+	if err != nil {
+		log.Fatal("Error compiling hostname regular expression: ", err)
+	}
+	matches := hostnameRegex.FindStringSubmatch(url)
+	if matches == nil {
+		return ""
+	}
+	return matches[3]
+}
+
+func GetUrlRepositoryName(url string) string {
+	hostname := GetUrlHostname(url)
+	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
+	if err != nil {
+		log.Fatal("Error compiling repository name regular expression: ", err)
+	}
+	matches := repositoryNameRegex.FindStringSubmatch(url)
+	if matches == nil {
+		return ""
+	}
+	return strings.TrimSuffix(matches[1], ".git")
 }
 
 func IsAncestorBranch(branchName, ancestorBranchName string) bool {
