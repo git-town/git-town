@@ -6,6 +6,8 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
+var fetched bool
+
 type FetchStep struct{}
 
 func (step FetchStep) CreateAbortStep() Step {
@@ -21,9 +23,12 @@ func (step FetchStep) CreateUndoStep() Step {
 }
 
 func (step FetchStep) Run() error {
-	err := script.RunCommand("git", "fetch", "--prune")
-	if err != nil {
-		log.Fatal(err)
+	if !fetched {
+		err := script.RunCommand("git", "fetch", "--prune")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fetched = true
 	}
 	return nil
 }

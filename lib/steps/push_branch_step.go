@@ -8,6 +8,7 @@ import (
 type PushBranchStep struct {
 	BranchName string
 	Force      bool
+	Undoable   bool
 }
 
 func (step PushBranchStep) CreateAbortStep() Step {
@@ -19,7 +20,11 @@ func (step PushBranchStep) CreateContinueStep() Step {
 }
 
 func (step PushBranchStep) CreateUndoStep() Step {
-	return SkipCurrentBranchSteps{}
+	if step.Undoable {
+		return NoOpStep{}
+	} else {
+		return SkipCurrentBranchSteps{}
+	}
 }
 
 func (step PushBranchStep) Run() error {

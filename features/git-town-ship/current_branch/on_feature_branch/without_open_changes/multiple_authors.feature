@@ -16,7 +16,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario Outline: prompt for squashed commit author
-    When I run `git town-ship -m 'feature done'` and <ACTION>
+    When I run `gt ship -m 'feature done'` and <ACTION>
     Then I see
       """
       Multiple people authored the 'feature' branch.

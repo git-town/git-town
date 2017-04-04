@@ -11,22 +11,22 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME               | FILE CONTENT    |
       | feature | local and remote | feature commit | new_folder/feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git town-ship -m "feature done"` in the "new_folder" folder
+    When I run `gt ship -m "feature done"` in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | <none>  | cd <%= git_root_folder %>          |
       | feature | git fetch --prune                  |
-      |         | git checkout main                  |
+      | <none>  | cd <%= git_root_folder %>          |
+      | feature | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
+      |         | git commit -m 'feature done'       |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
@@ -39,13 +39,13 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
 
 
   Scenario: undo
-    When I run `git town-ship --undo`
+    When I run `gt ship --undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | <none>  | cd <%= git_root_folder %>                      |
       | main    | git branch feature <%= sha 'feature commit' %> |
-      |         | git push -u origin feature                     |
-      |         | git revert <%= sha 'feature done' %>           |
+      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature                     |
+      |         | git revert HEAD          |
       |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |

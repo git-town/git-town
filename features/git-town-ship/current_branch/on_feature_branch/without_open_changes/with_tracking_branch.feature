@@ -11,7 +11,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git town-ship -m "feature done"`
+    When I run `gt ship -m "feature done"`
 
 
   Scenario: result
@@ -25,7 +25,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m "feature done"       |
+      |         | git commit -m 'feature done'       |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
@@ -37,12 +37,12 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
 
   Scenario: undo
-    When I run `git town-ship --undo`
+    When I run `gt ship --undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
-      |         | git push -u origin feature                     |
-      |         | git revert <%= sha 'feature done' %>           |
+      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature |
+      |         | git revert HEAD           |
       |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |

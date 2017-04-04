@@ -64,6 +64,20 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := CreateTrackingBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
+	case "DeleteAncestorBranchesStep":
+		return DeleteAncestorBranchesStep{}
+	case "DeleteLocalBranchStep":
+		step := DeleteLocalBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "DeleteParentBranchStep":
+		step := DeleteParentBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "DeleteRemoteBranchStep":
+		step := DeleteRemoteBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "MergeBranchStep":
 		step := MergeBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
@@ -90,8 +104,14 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return step
 	case "RestoreOpenChangesStep":
 		return RestoreOpenChangesStep{}
+	case "RevertCommitStep":
+		return RevertCommitStep{}
 	case "SetParentBranchStep":
 		step := SetParentBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "SquashMergeBranchStep":
+		step := SquashMergeBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
 	case "SkipCurrentBranchSteps":

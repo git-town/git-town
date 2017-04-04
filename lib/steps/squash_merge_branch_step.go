@@ -1,13 +1,19 @@
 package steps
 
-import "github.com/Originate/git-town/lib/script"
+import (
+	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/prompt"
+	"github.com/Originate/git-town/lib/script"
+	"github.com/Originate/git-town/lib/util"
+)
 
 type SquashMergeBranchStep struct {
-	BranchName string
+	BranchName    string
+	CommitMessage string
 }
 
 func (step SquashMergeBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
+	return DiscardOpenChangesStep{}
 }
 
 func (step SquashMergeBranchStep) CreateContinueStep() Step {
@@ -15,13 +21,22 @@ func (step SquashMergeBranchStep) CreateContinueStep() Step {
 }
 
 func (step SquashMergeBranchStep) CreateUndoStep() Step {
-	return NoOpStep{}
+	return RevertCommitStep{}
 }
 
 func (step SquashMergeBranchStep) Run() error {
-	return script.RunCommand("git", "merge", "--squash", step.BranchName)
-}
-
-func (step SquashMergeBranchStep) ShouldAbortOnError() (bool, string) {
-	return false, ""
+	err := script.RunCommand("git", "merge", "--squash", step.BranchName)
+	if err != nil {
+		return err
+	}
+	commitCmd := []string{"git", "commit"}
+	if step.CommitMessage != "" {
+		commitCmd = append(commitCmd, "-m", step.CommitMessage)
+	}
+	author := prompt.GetSquashCommitAuthor(step.BranchName)
+	if author != git.GetLocalAuthor() {
+		commitCmd = append(commitCmd, "--author", author)
+	}
+	util.GetCommandOutput("sed", "-i", "-e", "s/^/# /g", ".git/SQUASH_MSG")
+	return script.RunCommand(commitCmd...)
 }
