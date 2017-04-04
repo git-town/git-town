@@ -15,13 +15,15 @@ Feature: git town-ship: shipping a child branch
       | feature-2 | local and remote | feature 2 commit | feature_2_file | feature 2 content |
       | feature-3 | local and remote | feature 3 commit | feature_3_file | feature 3 content |
     And I am on the "feature-3" branch
-    When I run `git town-ship -m "feature 3 done"`
+    When I run `gt ship`
 
 
   Scenario: result
-    Then I get the error "Shipping this branch would ship feature-1, feature-2 as well."
+    Then it runs the commands
+      | BRANCH    | COMMAND           |
+      | feature-3 | git fetch --prune |
+    And I get the error "Shipping this branch would ship feature-1, feature-2 as well."
     And I get the error "Please ship "feature-1" first."
-    And it runs no commands
     And I end up on the "feature-3" branch
     And I am left with my original commits
     And my branch hierarchy metadata is unchanged

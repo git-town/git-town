@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/util"
 
 	"github.com/fatih/color"
 )
@@ -64,13 +65,19 @@ func runSteps(runState *RunState, options RunOptions) {
 		err := step.Run()
 		if err != nil {
 			runState.AbortStep = step.CreateAbortStep()
-			runState.RunStepList.Prepend(step.CreateContinueStep())
-			saveState(runState)
-			skipMessage := ""
-			if options.CanSkip() {
-				skipMessage = options.SkipMessageGenerator()
+			if getTypeName(step) == "CommitSquashMergeBranchStep" {
+				abortRunState := runState.CreateAbortRunState()
+				runSteps(&abortRunState, options)
+				util.ExitWithErrorMessage("Aborted because commit exited with error")
+			} else {
+				runState.RunStepList.Prepend(step.CreateContinueStep())
+				saveState(runState)
+				skipMessage := ""
+				if options.CanSkip() {
+					skipMessage = options.SkipMessageGenerator()
+				}
+				exitWithMessages(runState.Command, skipMessage)
 			}
-			exitWithMessages(runState.Command, skipMessage)
 		}
 		runState.UndoStepList.Prepend(undoStep)
 	}

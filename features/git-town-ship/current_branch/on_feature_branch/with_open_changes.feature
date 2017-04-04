@@ -9,7 +9,7 @@ Feature: git town-ship: errors if there are open changes
     Given I have a feature branch named "feature"
     And I have an uncommitted file
     And I am on the "feature" branch
-    When I run `git town-ship -m "feature done"`
+    When I run `gt ship`
 
 
   Scenario: result

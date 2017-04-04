@@ -7,6 +7,12 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
+func EnsureDoesNotHaveUncommitedChanges(message string) {
+	if HasOpenChanges() {
+		util.ExitWithErrorMessage("You have uncommitted changes. " + message)
+	}
+}
+
 func EnsureDoesNotHaveConflicts() {
 	if HasConflicts() {
 		util.ExitWithErrorMessage("You must resolve the conflicts before continuing")
