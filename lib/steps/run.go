@@ -61,6 +61,10 @@ func runSteps(runState *RunState, options RunOptions) {
 			runState.SkipCurrentBranchSteps()
 			continue
 		}
+		if getTypeName(step) == "PushBranchAfterCurrentBranchSteps" {
+			runState.AddPushBranchStepAfterCurrentBranchSteps()
+			continue
+		}
 		undoStep := step.CreateUndoStep()
 		err := step.Run()
 		if err != nil {

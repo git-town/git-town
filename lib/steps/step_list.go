@@ -31,3 +31,7 @@ func (stepList *StepList) Pop() (result Step) {
 func (stepList *StepList) Prepend(step Step) {
 	stepList.List = append([]Step{step}, stepList.List...)
 }
+
+func (stepList *StepList) PrependList(otherList StepList) {
+	stepList.List = append(otherList.List, stepList.List...)
+}

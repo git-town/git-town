@@ -86,6 +86,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return MergeTrackingBranchStep{}
 	case "NoOpStep":
 		return NoOpStep{}
+	case "PushBranchAfterCurrentBranchSteps":
+		return PushBranchAfterCurrentBranchSteps{}
 	case "PushBranchStep":
 		step := PushBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)

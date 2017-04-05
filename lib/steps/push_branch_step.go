@@ -21,7 +21,7 @@ func (step PushBranchStep) CreateContinueStep() Step {
 
 func (step PushBranchStep) CreateUndoStep() Step {
 	if step.Undoable {
-		return NoOpStep{}
+		return PushBranchAfterCurrentBranchSteps{}
 	} else {
 		return SkipCurrentBranchSteps{}
 	}

@@ -1,6 +1,8 @@
 package steps
 
 import (
+	"log"
+
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/script"
@@ -27,7 +29,7 @@ func (step SquashMergeBranchStep) CreateUndoStep() Step {
 func (step SquashMergeBranchStep) Run() error {
 	err := script.RunCommand("git", "merge", "--squash", step.BranchName)
 	if err != nil {
-		return err
+		log.Fatal("Error squash merging:", err)
 	}
 	commitCmd := []string{"git", "commit"}
 	if step.CommitMessage != "" {
