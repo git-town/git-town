@@ -22,6 +22,10 @@ func (step FetchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step FetchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step FetchStep) Run() error {
 	if !fetched {
 		err := script.RunCommand("git", "fetch", "--prune")
@@ -31,4 +35,8 @@ func (step FetchStep) Run() error {
 		fetched = true
 	}
 	return nil
+}
+
+func (step FetchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

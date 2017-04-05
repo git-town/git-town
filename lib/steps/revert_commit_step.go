@@ -1,9 +1,6 @@
 package steps
 
-import (
-	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/script"
-)
+import "github.com/Originate/git-town/lib/script"
 
 type RevertCommitStep struct{}
 
@@ -19,10 +16,14 @@ func (step RevertCommitStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step RevertCommitStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step RevertCommitStep) Run() error {
-	err := script.RunCommand("git", "revert", "HEAD")
-	if err != nil {
-		return err
-	}
-	return PushBranchStep{BranchName: git.GetCurrentBranchName()}.Run()
+	return script.RunCommand("git", "revert", "HEAD")
+}
+
+func (step RevertCommitStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

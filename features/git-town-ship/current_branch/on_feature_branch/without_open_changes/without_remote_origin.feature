@@ -21,7 +21,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
       | feature | git merge --no-edit main     |
       |         | git checkout main            |
       | main    | git merge --squash feature   |
-      |         | git commit -m 'feature done' |
+      |         | git commit -m "feature done" |
       |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch

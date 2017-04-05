@@ -14,6 +14,14 @@ func (step NoOpStep) CreateUndoStep() Step {
 	return step
 }
 
+func (step NoOpStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step NoOpStep) Run() error {
 	return nil
+}
+
+func (step NoOpStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

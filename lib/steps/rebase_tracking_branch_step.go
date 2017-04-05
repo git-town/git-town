@@ -18,10 +18,18 @@ func (step RebaseTrackingBranchStep) CreateUndoStep() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
+func (step RebaseTrackingBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step RebaseTrackingBranchStep) Run() error {
 	branchName := git.GetCurrentBranchName()
 	if git.HasTrackingBranch(branchName) {
 		return RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)}.Run()
 	}
 	return nil
+}
+
+func (step RebaseTrackingBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

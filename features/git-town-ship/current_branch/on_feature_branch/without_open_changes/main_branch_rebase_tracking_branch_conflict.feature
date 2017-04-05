@@ -53,7 +53,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m 'feature done'       |
+      |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
@@ -77,7 +77,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m 'feature done'       |
+      |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |

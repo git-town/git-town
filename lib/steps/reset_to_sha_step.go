@@ -22,6 +22,10 @@ func (step ResetToShaStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step ResetToShaStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step ResetToShaStep) Run() error {
 	if step.Sha == git.GetCurrentSha() {
 		return nil
@@ -32,4 +36,8 @@ func (step ResetToShaStep) Run() error {
 	}
 	cmd = append(cmd, step.Sha)
 	return script.RunCommand(cmd...)
+}
+
+func (step ResetToShaStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

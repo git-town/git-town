@@ -18,10 +18,18 @@ func (step MergeTrackingBranchStep) CreateUndoStep() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
+func (step MergeTrackingBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step MergeTrackingBranchStep) Run() error {
 	branchName := git.GetCurrentBranchName()
 	if git.HasTrackingBranch(branchName) {
 		return MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)}.Run()
 	}
 	return nil
+}
+
+func (step MergeTrackingBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

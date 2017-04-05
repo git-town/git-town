@@ -11,7 +11,9 @@ type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
 	CreateUndoStep() Step
+	GetAutomaticAbortErrorMessage() string
 	Run() error
+	ShouldAutomaticallyAbortOnError() bool
 }
 
 type SerializedStep struct {

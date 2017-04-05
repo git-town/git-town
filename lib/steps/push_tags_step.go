@@ -18,6 +18,14 @@ func (step PushTagsStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step PushTagsStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step PushTagsStep) Run() error {
 	return script.RunCommand("git", "push", "--tags")
+}
+
+func (step PushTagsStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

@@ -21,9 +21,17 @@ func (step CheckoutBranchStep) CreateUndoStep() Step {
 	return CheckoutBranchStep{BranchName: git.GetCurrentBranchName()}
 }
 
+func (step CheckoutBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step CheckoutBranchStep) Run() error {
 	if git.GetCurrentBranchName() != step.BranchName {
 		return script.RunCommand("git", "checkout", step.BranchName)
 	}
 	return nil
+}
+
+func (step CheckoutBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

@@ -25,7 +25,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git merge --no-edit main           |
       |         | git checkout main                  |
       | main    | git merge --squash feature         |
-      |         | git commit -m 'feature done'       |
+      |         | git commit -m "feature done"       |
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |

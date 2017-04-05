@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/util"
 )
 
@@ -29,6 +30,10 @@ func HasConflicts() bool {
 
 func HasOpenChanges() bool {
 	return util.GetCommandOutput("git", "status", "--porcelain") != ""
+}
+
+func HasShippableChanges(branchName string) bool {
+	return util.GetCommandOutput("git", "diff", config.GetMainBranch()+".."+branchName) != ""
 }
 
 func IsMergeInProgress() bool {

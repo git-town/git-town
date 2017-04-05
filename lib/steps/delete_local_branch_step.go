@@ -23,10 +23,18 @@ func (step DeleteLocalBranchStep) CreateUndoStep() Step {
 	return CreateBranchStep{BranchName: step.BranchName, StartingPoint: sha}
 }
 
+func (step DeleteLocalBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step DeleteLocalBranchStep) Run() error {
 	op := "-d"
 	if step.Force || git.DoesBranchHaveUnmergedCommits(step.BranchName) {
 		op = "-D"
 	}
 	return script.RunCommand("git", "branch", op, step.BranchName)
+}
+
+func (step DeleteLocalBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

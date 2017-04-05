@@ -18,6 +18,14 @@ func (step RestoreOpenChangesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step RestoreOpenChangesStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step RestoreOpenChangesStep) Run() error {
 	return script.RunCommand("git", "stash", "pop")
+}
+
+func (step RestoreOpenChangesStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

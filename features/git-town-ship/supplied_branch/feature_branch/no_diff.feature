@@ -11,7 +11,7 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "other-feature" branch
     And I have an uncommitted file
-    When I run `git town-ship empty-feature`
+    When I run `gt ship empty-feature`
 
 
   Scenario: result

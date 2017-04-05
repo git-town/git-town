@@ -19,9 +19,17 @@ func (step ContinueMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step ContinueMergeBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step ContinueMergeBranchStep) Run() error {
 	if git.IsMergeInProgress() {
 		return script.RunCommand("git", "commit", "--no-edit")
 	}
 	return nil
+}
+
+func (step ContinueMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

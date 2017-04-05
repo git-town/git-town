@@ -22,10 +22,18 @@ func (step CommitOpenChangesStep) CreateUndoStep() Step {
 	return ResetToShaStep{Sha: git.GetBranchSha(branchName)}
 }
 
+func (step CommitOpenChangesStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step CommitOpenChangesStep) Run() error {
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err
 	}
 	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("WIP on %s", git.GetCurrentBranchName()))
+}
+
+func (step CommitOpenChangesStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

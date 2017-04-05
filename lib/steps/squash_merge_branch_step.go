@@ -26,6 +26,10 @@ func (step SquashMergeBranchStep) CreateUndoStep() Step {
 	return RevertCommitStep{}
 }
 
+func (step SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
+	return "Aborted because commit exited with error"
+}
+
 func (step SquashMergeBranchStep) Run() error {
 	err := script.RunCommand("git", "merge", "--squash", step.BranchName)
 	if err != nil {
@@ -41,4 +45,8 @@ func (step SquashMergeBranchStep) Run() error {
 	}
 	util.GetCommandOutput("sed", "-i", "-e", "s/^/# /g", ".git/SQUASH_MSG")
 	return script.RunCommand(commitCmd...)
+}
+
+func (step SquashMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return true
 }

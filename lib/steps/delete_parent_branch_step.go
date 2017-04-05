@@ -23,7 +23,15 @@ func (step DeleteParentBranchStep) CreateUndoStep() Step {
 	}
 }
 
+func (step DeleteParentBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step DeleteParentBranchStep) Run() error {
 	config.DeleteParentBranch(step.BranchName)
 	return nil
+}
+
+func (step DeleteParentBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

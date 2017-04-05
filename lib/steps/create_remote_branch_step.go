@@ -21,6 +21,14 @@ func (step CreateRemoteBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step CreateRemoteBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step CreateRemoteBranchStep) Run() error {
 	return script.RunCommand("git", "push", "origin", step.Sha+":refs/heads/"+step.BranchName)
+}
+
+func (step CreateRemoteBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

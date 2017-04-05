@@ -18,10 +18,18 @@ func (step StashOpenChangesStep) CreateUndoStep() Step {
 	return RestoreOpenChangesStep{}
 }
 
+func (step StashOpenChangesStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step StashOpenChangesStep) Run() error {
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err
 	}
 	return script.RunCommand("git", "stash")
+}
+
+func (step StashOpenChangesStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

@@ -78,6 +78,10 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := DeleteRemoteBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
+	case "EnsureHasShippableChangesStep":
+		step := EnsureHasShippableChangesStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "MergeBranchStep":
 		step := MergeBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)

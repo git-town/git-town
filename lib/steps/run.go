@@ -57,6 +57,7 @@ func runSteps(runState *RunState, options RunOptions) {
 			fmt.Println()
 			return
 		}
+		fmt.Println(getTypeName(step))
 		if getTypeName(step) == "SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
 			continue
@@ -69,10 +70,10 @@ func runSteps(runState *RunState, options RunOptions) {
 		err := step.Run()
 		if err != nil {
 			runState.AbortStep = step.CreateAbortStep()
-			if getTypeName(step) == "CommitSquashMergeBranchStep" {
+			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
 				runSteps(&abortRunState, options)
-				util.ExitWithErrorMessage("Aborted because commit exited with error")
+				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				saveState(runState)

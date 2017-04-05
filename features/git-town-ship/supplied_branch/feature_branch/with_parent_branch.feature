@@ -13,7 +13,7 @@ Feature: git town-ship: shipping a child branch
       | feature-2 | local and remote | feature 2 commit | feature_2_file | feature 2 content |
       | feature-3 | local and remote | feature 3 commit | feature_3_file | feature 3 content |
     And I am on the "feature-1" branch
-    When I run `git town-ship feature-3 -m "feature 3 done"`
+    When I run `gt ship feature-3 -m "feature 3 done"`
 
 
   Scenario: result

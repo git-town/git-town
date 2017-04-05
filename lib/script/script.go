@@ -25,7 +25,7 @@ func PrintCommand(cmd ...string) {
 	header := ""
 	for index, part := range cmd {
 		if strings.Contains(part, " ") {
-			part = "'" + part + "'"
+			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
 		}
 		if index != 0 {
 			header = header + " "

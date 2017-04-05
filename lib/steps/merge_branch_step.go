@@ -21,6 +21,14 @@ func (step MergeBranchStep) CreateUndoStep() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
+func (step MergeBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step MergeBranchStep) Run() error {
 	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
+}
+
+func (step MergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

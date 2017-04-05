@@ -86,7 +86,7 @@ func getShipStepList(shipConfig ShipConfig) steps.StepList {
 	stepList.Append(steps.CheckoutBranchStep{BranchName: shipConfig.TargetBranch})
 	stepList.Append(steps.MergeTrackingBranchStep{})
 	stepList.Append(steps.MergeBranchStep{BranchName: mainBranch})
-	// TODO ensure_has_shippable_changes
+	stepList.Append(steps.EnsureHasShippableChangesStep{BranchName: shipConfig.TargetBranch})
 	stepList.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
 	stepList.Append(steps.SquashMergeBranchStep{BranchName: shipConfig.TargetBranch, CommitMessage: shipFlags.CommitMessage})
 	if config.HasRemote("origin") {

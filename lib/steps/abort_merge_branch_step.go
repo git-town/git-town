@@ -1,8 +1,6 @@
 package steps
 
-import (
-	"github.com/Originate/git-town/lib/script"
-)
+import "github.com/Originate/git-town/lib/script"
 
 type AbortMergeBranchStep struct{}
 
@@ -18,6 +16,14 @@ func (step AbortMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step AbortMergeBranchStep) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step AbortMergeBranchStep) Run() error {
 	return script.RunCommand("git", "merge", "--abort")
+}
+
+func (step AbortMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

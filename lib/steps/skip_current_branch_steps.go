@@ -14,6 +14,14 @@ func (step SkipCurrentBranchSteps) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+func (step SkipCurrentBranchSteps) GetAutomaticAbortErrorMessage() string {
+	return ""
+}
+
 func (step SkipCurrentBranchSteps) Run() error {
 	return nil
+}
+
+func (step SkipCurrentBranchSteps) ShouldAutomaticallyAbortOnError() bool {
+	return false
 }

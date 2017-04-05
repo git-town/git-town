@@ -11,7 +11,7 @@ Feature: git town-ship: shipping the current feature branch
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git town-ship -m 'message containing "double quotes"'`
+    When I run `gt ship -m 'message containing "double quotes"'`
 
 
   Scenario: result
@@ -38,12 +38,12 @@ Feature: git town-ship: shipping the current feature branch
 
 
   Scenario: undo
-    When I run `git town-ship --undo`
+    When I run `gt ship --undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                                    |
       | main    | git branch feature <%= sha 'feature commit' %>             |
-      |         | git push -u origin feature                                 |
-      |         | git revert <%= sha 'message containing "double quotes"' %> |
+      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature                                 |
+      |         | git revert HEAD |
       |         | git push                                                   |
       |         | git checkout feature                                       |
       | feature | git checkout main                                          |
