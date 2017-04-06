@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RootCmd is the main Cobra object
 var RootCmd = &cobra.Command{
 	Use:   "gt",
 	Short: "Generic, high-level Git workflow support",
@@ -17,6 +18,7 @@ It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab 
 and it allows you to perform many common Git operations faster and easier.`,
 }
 
+// Execute runs the Cobra stack
 func Execute() {
 	color.NoColor = false // Prevent color from auto disable
 
