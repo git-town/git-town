@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/gitconfig"
@@ -47,7 +48,10 @@ var syncCmd = &cobra.Command{
 
 func checkSyncPreconditions() (result SyncConfig) {
 	if gitconfig.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		err := steps.FetchStep{}.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	if AllFlag {

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
@@ -39,7 +41,10 @@ var newPullRequestCommand = &cobra.Command{
 
 func checkNewPullRequestPreconditions() (result NewPullRequestConfig) {
 	if gitconfig.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		err := steps.FetchStep{}.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})

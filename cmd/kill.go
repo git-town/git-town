@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
@@ -55,7 +57,10 @@ func checkKillPreconditions(args []string) (result KillConfig) {
 	}
 
 	if gitconfig.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		err := steps.FetchStep{}.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	if result.InitialBranch != result.TargetBranch {
