@@ -6,4 +6,4 @@ if [ -n "$(gofmt -d cmd lib 2>&1)" ]; then
   exit 1
 fi
 
-gometalinter.v1 --deadline=20s
+gometalinter.v1 cmd --deadline=20s
