@@ -3,7 +3,7 @@ package drivers
 import (
 	"strings"
 
-	"github.com/Originate/git-town/lib/config"
+	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/util"
 )
 
@@ -13,7 +13,7 @@ type CodeHostingDriver interface {
 }
 
 func GetCodeHostingDriver() CodeHostingDriver {
-	hostname := config.GetUrlHostname(config.GetRemoteOriginUrl())
+	hostname := gitconfig.GetUrlHostname(gitconfig.GetRemoteOriginUrl())
 	if hostname == "github.com" || strings.Contains(hostname, "github") {
 		return GithubCodeHostingDriver{}
 	} else if hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket") {

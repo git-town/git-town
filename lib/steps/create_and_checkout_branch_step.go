@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/lib/config"
+	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/script"
 )
 
@@ -23,6 +23,6 @@ func (step CreateAndCheckoutBranchStep) CreateUndoStep() Step {
 }
 
 func (step CreateAndCheckoutBranchStep) Run() error {
-	config.SetParentBranch(step.BranchName, step.ParentBranchName)
+	gitconfig.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return script.RunCommand("git", "checkout", "-b", step.BranchName, step.ParentBranchName)
 }

@@ -6,12 +6,12 @@ import (
 	"log"
 	"strings"
 
-	"github.com/Originate/git-town/lib/config"
+	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/util"
 )
 
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return util.GetCommandOutput("git", "log", config.GetMainBranch()+".."+branchName) != ""
+	return util.GetCommandOutput("git", "log", gitconfig.GetMainBranch()+".."+branchName) != ""
 }
 
 func EnsureDoesNotHaveBranch(branchName string) {
@@ -59,7 +59,7 @@ func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 }
 
 func GetLocalBranchesWithMainBranchFirst() (result []string) {
-	mainBranch := config.GetMainBranch()
+	mainBranch := gitconfig.GetMainBranch()
 	result = append(result, mainBranch)
 	for _, branch := range GetLocalBranches() {
 		if branch != mainBranch {

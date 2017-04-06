@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
 )
@@ -38,7 +38,7 @@ var pruneBranchesCommand = &cobra.Command{
 }
 
 func checkPruneBranchesPreconditions() {
-	if config.HasRemote("origin") {
+	if gitconfig.HasRemote("origin") {
 		steps.FetchStep{}.Run()
 	}
 }
@@ -47,12 +47,12 @@ func getPruneBranchesList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
-			result.Append(steps.CheckoutBranchStep{BranchName: config.GetMainBranch()})
+			result.Append(steps.CheckoutBranchStep{BranchName: gitconfig.GetMainBranch()})
 		}
 
-		parent := config.GetParentBranch(branchName)
+		parent := gitconfig.GetParentBranch(branchName)
 		if parent != "" {
-			for _, child := range config.GetChildBranches(branchName) {
+			for _, child := range gitconfig.GetChildBranches(branchName) {
 				result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(steps.DeleteParentBranchStep{BranchName: branchName})

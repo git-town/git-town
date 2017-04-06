@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/lib/config"
+	"github.com/Originate/git-town/lib/gitconfig"
 )
 
 type SetParentBranchStep struct {
@@ -18,7 +18,7 @@ func (step SetParentBranchStep) CreateContinueStep() Step {
 }
 
 func (step SetParentBranchStep) CreateUndoStep() Step {
-	oldParent := config.GetParentBranch(step.BranchName)
+	oldParent := gitconfig.GetParentBranch(step.BranchName)
 	if oldParent == "" {
 		return DeleteParentBranchStep{BranchName: step.BranchName}
 	} else {
@@ -27,6 +27,6 @@ func (step SetParentBranchStep) CreateUndoStep() Step {
 }
 
 func (step SetParentBranchStep) Run() error {
-	config.SetParentBranch(step.BranchName, step.ParentBranchName)
+	gitconfig.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil
 }
