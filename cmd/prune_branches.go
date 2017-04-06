@@ -7,12 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type PruneBranchesFlags struct {
-	Undo bool
-}
-
-var pruneBranchesFlags PruneBranchesFlags
-
 var pruneBranchesCommand = &cobra.Command{
 	Use:   "prune-branches",
 	Short: "Deletes local branches whose tracking branch no longer exists",
@@ -24,7 +18,7 @@ var pruneBranchesCommand = &cobra.Command{
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,
-			IsUndo:               pruneBranchesFlags.Undo,
+			IsUndo:               UndoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				checkPruneBranchesPreconditions()
@@ -65,6 +59,6 @@ func getPruneBranchesList() (result steps.StepList) {
 }
 
 func init() {
-	pruneBranchesCommand.Flags().BoolVar(&pruneBranchesFlags.Undo, "undo", false, "Undo a previous command")
+	pruneBranchesCommand.Flags().BoolVar(&UndoFlag, "undo", false, "Undo a previous command")
 	RootCmd.AddCommand(pruneBranchesCommand)
 }

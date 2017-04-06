@@ -10,13 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type HackFlags struct {
-	Abort    bool
-	Continue bool
-}
-
-var hackFlags HackFlags
-
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
 	Short: "Create a new feature branch off the main development branch",
@@ -25,8 +18,8 @@ var hackCmd = &cobra.Command{
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
-			IsAbort:              hackFlags.Abort,
-			IsContinue:           hackFlags.Continue,
+			IsAbort:              AbortFlag,
+			IsContinue:           ContinueFlag,
 			IsSkip:               false,
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
@@ -37,7 +30,7 @@ var hackCmd = &cobra.Command{
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !hackFlags.Abort && !hackFlags.Continue {
+		if len(args) == 0 && !AbortFlag && !ContinueFlag {
 			return errors.New("No branch name provided.")
 		}
 		return validateMaxArgs(args, 1)
@@ -65,7 +58,7 @@ func getHackStepList(targetBranchName string) steps.StepList {
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&hackFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
-	hackCmd.Flags().BoolVar(&hackFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&AbortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&ContinueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
 	RootCmd.AddCommand(hackCmd)
 }
