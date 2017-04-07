@@ -20,7 +20,7 @@ var pruneBranchesCommand = &cobra.Command{
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,
-			IsUndo:               UndoFlag,
+			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				checkPruneBranchesPreconditions()
@@ -64,6 +64,6 @@ func getPruneBranchesList() (result steps.StepList) {
 }
 
 func init() {
-	pruneBranchesCommand.Flags().BoolVar(&UndoFlag, "undo", false, "Undo a previous command")
+	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
 	RootCmd.AddCommand(pruneBranchesCommand)
 }

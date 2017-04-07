@@ -23,8 +23,8 @@ var newPullRequestCommand = &cobra.Command{
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "new-pull-request",
-			IsAbort:              AbortFlag,
-			IsContinue:           ContinueFlag,
+			IsAbort:              abortFlag,
+			IsContinue:           continueFlag,
 			IsSkip:               false,
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
@@ -63,7 +63,7 @@ func getNewPullRequestStepList(config NewPullRequestConfig) steps.StepList {
 }
 
 func init() {
-	newPullRequestCommand.Flags().BoolVar(&AbortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	newPullRequestCommand.Flags().BoolVar(&ContinueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	newPullRequestCommand.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	newPullRequestCommand.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
 	RootCmd.AddCommand(newPullRequestCommand)
 }
