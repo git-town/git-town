@@ -1,10 +1,6 @@
 package steps
 
-import (
-	"fmt"
-
-	"github.com/Originate/git-town/lib/git"
-)
+import "github.com/Originate/git-town/lib/git"
 
 type RunState struct {
 	AbortStep    Step
@@ -19,7 +15,6 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 	popped := StepList{}
 	for {
 		step := runState.RunStepList.Peek()
-		fmt.Println(getTypeName(step))
 		if getTypeName(step) != "CheckoutBranchStep" {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
