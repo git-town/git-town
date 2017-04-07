@@ -28,9 +28,9 @@ var syncCmd = &cobra.Command{
 				return !(git.IsRebaseInProgress() && gitconfig.IsMainBranch(git.GetCurrentBranchName()))
 			},
 			Command:    "sync",
-			IsAbort:    AbortFlag,
-			IsContinue: ContinueFlag,
-			IsSkip:     SkipFlag,
+			IsAbort:    abortFlag,
+			IsContinue: continueFlag,
+			IsSkip:     skipFlag,
 			IsUndo:     false,
 			SkipMessageGenerator: func() string {
 				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
@@ -53,7 +53,7 @@ func checkSyncPreconditions() (result syncConfig) {
 		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
-	if AllFlag {
+	if allFlag {
 		branches := git.GetLocalBranchesWithMainBranchFirst()
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
@@ -81,9 +81,9 @@ func getSyncStepList(config syncConfig) steps.StepList {
 }
 
 func init() {
-	syncCmd.Flags().BoolVar(&AllFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&AbortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	syncCmd.Flags().BoolVar(&ContinueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
-	syncCmd.Flags().BoolVar(&SkipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
+	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
+	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }
