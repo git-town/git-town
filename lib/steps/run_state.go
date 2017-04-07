@@ -9,6 +9,8 @@ import (
 type RunState struct {
 	AbortStep    Step
 	Command      string
+	IsAbort      bool
+	isUndo       bool
 	RunStepList  StepList
 	UndoStepList StepList
 }
@@ -30,6 +32,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 
 func (runState *RunState) CreateAbortRunState() (result RunState) {
 	result.Command = runState.Command
+	result.IsAbort = true
 	result.RunStepList.Append(runState.AbortStep)
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
@@ -58,6 +61,7 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 
 func (runState *RunState) CreateUndoRunState() (result RunState) {
 	result.Command = runState.Command
+	result.isUndo = true
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
 }

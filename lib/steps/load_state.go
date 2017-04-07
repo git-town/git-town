@@ -5,18 +5,34 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
-func loadState(command string) RunState {
+func hasSavedState(command string) bool {
 	filename := getRunResultFilename(command)
-	content, err := ioutil.ReadFile(filename)
-	if err != nil {
-		log.Fatal(err)
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
+}
+
+func clearSavedState(command string) {
+	if hasSavedState(command) {
+		os.Remove(getRunResultFilename(command))
 	}
+}
+
+func loadState(command string) RunState {
 	var serializedRunState SerializedRunState
-	err = json.Unmarshal(content, &serializedRunState)
-	if err != nil {
-		log.Fatal(err)
+	if hasSavedState(command) {
+		content, err := ioutil.ReadFile(getRunResultFilename(command))
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = json.Unmarshal(content, &serializedRunState)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		serializedRunState.AbortStep = SerializedStep{Type: "NoOpStep"}
 	}
 	return RunState{
 		AbortStep:    deserializeStep(serializedRunState.AbortStep),

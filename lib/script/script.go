@@ -42,7 +42,8 @@ func PrintCommand(cmd ...string) {
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
-	subProcess.Stdout = os.Stdout
 	subProcess.Stderr = os.Stderr
+	subProcess.Stdin = os.Stdin
+	subProcess.Stdout = os.Stdout
 	return subProcess.Run()
 }

@@ -13,14 +13,14 @@ func (stepList *StepList) AppendList(otherList StepList) {
 }
 
 func (stepList *StepList) Peek() (result Step) {
-	if len(stepList.List) == 0 {
+	if stepList.isEmpty() {
 		return nil
 	}
 	return stepList.List[0]
 }
 
 func (stepList *StepList) Pop() (result Step) {
-	if len(stepList.List) == 0 {
+	if stepList.isEmpty() {
 		return nil
 	}
 	result = stepList.List[0]
@@ -34,4 +34,8 @@ func (stepList *StepList) Prepend(step Step) {
 
 func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
+}
+
+func (stepList *StepList) isEmpty() bool {
+	return len(stepList.List) == 0
 }

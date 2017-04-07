@@ -37,8 +37,13 @@ func Run(options RunOptions) {
 	} else if options.IsUndo {
 		runState := loadState(options.Command)
 		undoRunState := runState.CreateUndoRunState()
-		runSteps(&undoRunState, options)
+		if undoRunState.RunStepList.isEmpty() {
+			util.ExitWithErrorMessage("Nothing to undo")
+		} else {
+			runSteps(&undoRunState, options)
+		}
 	} else {
+		clearSavedState(options.Command)
 		runSteps(&RunState{
 			Command:     options.Command,
 			RunStepList: options.StepListGenerator(),
@@ -52,12 +57,13 @@ func runSteps(runState *RunState, options RunOptions) {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
-			runState.AbortStep = NoOpStep{}
-			saveState(runState)
+			if !runState.IsAbort && !runState.isUndo {
+				runState.AbortStep = NoOpStep{}
+				saveState(runState)
+			}
 			fmt.Println()
 			return
 		}
-		fmt.Println(getTypeName(step))
 		if getTypeName(step) == "SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
 			continue
