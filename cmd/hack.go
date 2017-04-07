@@ -19,8 +19,8 @@ var hackCmd = &cobra.Command{
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
-			IsAbort:              AbortFlag,
-			IsContinue:           ContinueFlag,
+			IsAbort:              abortFlag,
+			IsContinue:           continueFlag,
 			IsSkip:               false,
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
@@ -31,7 +31,7 @@ var hackCmd = &cobra.Command{
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !AbortFlag && !ContinueFlag {
+		if len(args) == 0 && !abortFlag && !continueFlag {
 			return errors.New("no branch name provided")
 		}
 		return validateMaxArgs(args, 1)
@@ -62,7 +62,7 @@ func getHackStepList(targetBranchName string) steps.StepList {
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&AbortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	hackCmd.Flags().BoolVar(&ContinueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
 	RootCmd.AddCommand(hackCmd)
 }

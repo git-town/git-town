@@ -27,7 +27,7 @@ var killCommand = &cobra.Command{
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,
-			IsUndo:               UndoFlag,
+			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				return getKillStepList(checkKillPreconditions(args))
@@ -94,6 +94,6 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&UndoFlag, "undo", false, "Undo a previous command")
+	killCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
 	RootCmd.AddCommand(killCommand)
 }

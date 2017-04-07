@@ -4,11 +4,11 @@ import "errors"
 
 // These variables represent command-line flags
 var (
-	AbortFlag    bool
-	AllFlag      bool
-	ContinueFlag bool
-	SkipFlag     bool
-	UndoFlag     bool
+	abortFlag,
+	allFlag,
+	continueFlag,
+	skipFlag,
+	undoFlag bool
 )
 
 func validateMaxArgs(args []string, max int) error {
