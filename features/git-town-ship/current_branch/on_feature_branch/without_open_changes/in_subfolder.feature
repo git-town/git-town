@@ -41,16 +41,16 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
   Scenario: undo
     When I run `gt ship --undo`
     Then it runs the commands
-      | BRANCH  | COMMAND                                        |
-      | <none>  | cd <%= git_root_folder %>                      |
-      | main    | git branch feature <%= sha 'feature commit' %> |
-      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature                     |
-      |         | git revert HEAD          |
-      |         | git push                                       |
-      |         | git checkout feature                           |
-      | feature | git checkout main                              |
-      | main    | git checkout feature                           |
-      | <none>  | cd <%= git_folder "new_folder" %>              |
+      | BRANCH  | COMMAND                                                        |
+      | <none>  | cd <%= git_root_folder %>                                      |
+      | main    | git branch feature <%= sha 'feature commit' %>                 |
+      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature |
+      |         | git revert HEAD                                                |
+      |         | git push                                                       |
+      |         | git checkout feature                                           |
+      | feature | git checkout main                                              |
+      | main    | git checkout feature                                           |
+      | <none>  | cd <%= git_folder "new_folder" %>                              |
     And I end up on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME               |

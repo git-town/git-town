@@ -46,7 +46,7 @@ Feature: git town-ship: shipping a parent branch
     Then it runs the commands
       | BRANCH         | COMMAND                                                      |
       | main           | git branch parent-feature <%= sha 'parent feature commit' %> |
-      |                | git revert HEAD                  |
+      |                | git revert HEAD                                              |
       |                | git push                                                     |
       |                | git checkout parent-feature                                  |
       | parent-feature | git checkout main                                            |

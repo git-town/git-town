@@ -35,7 +35,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |
-      |        | git revert HEAD           |
+      |        | git revert HEAD                                |
       |        | git checkout feature                           |
     And I end up on the "feature" branch
     And I have the following commits
