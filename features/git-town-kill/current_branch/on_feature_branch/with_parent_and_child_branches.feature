@@ -25,7 +25,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       | feature-2 | git fetch --prune                |
       |           | git push origin :feature-2       |
       |           | git add -A                       |
-      |           | git commit -m 'WIP on feature-2' |
+      |           | git commit -m "WIP on feature-2" |
       |           | git checkout feature-1           |
       | feature-1 | git branch -D feature-2          |
     And I end up on the "feature-1" branch
