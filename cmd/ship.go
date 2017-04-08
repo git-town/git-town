@@ -98,7 +98,7 @@ func getShipStepList(shipConfig ShipConfig) steps.StepList {
 	}
 	childBranches := config.GetChildBranches(shipConfig.TargetBranch)
 	if git.HasTrackingBranch(shipConfig.TargetBranch) && len(childBranches) == 0 {
-		stepList.Append(steps.DeleteRemoteBranchStep{BranchName: shipConfig.TargetBranch})
+		stepList.Append(steps.DeleteRemoteBranchStep{BranchName: shipConfig.TargetBranch, IsTracking: true})
 	}
 	stepList.Append(steps.DeleteLocalBranchStep{BranchName: shipConfig.TargetBranch})
 	stepList.Append(steps.DeleteParentBranchStep{BranchName: shipConfig.TargetBranch})

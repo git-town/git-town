@@ -42,7 +42,7 @@ Feature: git town-ship: shipping the current feature branch
     Then it runs the commands
       | BRANCH  | COMMAND                                                        |
       | main    | git branch feature <%= sha 'feature commit' %>                 |
-      |         | git push origin <%= sha 'feature commit' %>:refs/heads/feature |
+      |         | git push -u origin feature |
       |         | git revert HEAD                                                |
       |         | git push                                                       |
       |         | git checkout feature                                           |
