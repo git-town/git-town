@@ -11,7 +11,14 @@ import (
 func hasSavedState(command string) bool {
 	filename := getRunResultFilename(command)
 	_, err := os.Stat(filename)
-	return !os.IsNotExist(err)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		} else {
+			log.Fatal("Error getting stat for run result file:", err)
+		}
+	}
+	return true
 }
 
 func clearSavedState(command string) {
