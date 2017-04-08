@@ -5,6 +5,7 @@ import (
 )
 
 type SetParentBranchStep struct {
+	NoAutomaticAbort
 	BranchName       string
 	ParentBranchName string
 }
@@ -26,15 +27,7 @@ func (step SetParentBranchStep) CreateUndoStep() Step {
 	}
 }
 
-func (step SetParentBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step SetParentBranchStep) Run() error {
 	config.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil
-}
-
-func (step SetParentBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

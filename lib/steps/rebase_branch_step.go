@@ -6,6 +6,7 @@ import (
 )
 
 type RebaseBranchStep struct {
+	NoAutomaticAbort
 	BranchName string
 }
 
@@ -21,14 +22,6 @@ func (step RebaseBranchStep) CreateUndoStep() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
-func (step RebaseBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step RebaseBranchStep) Run() error {
 	return script.RunCommand("git", "rebase", step.BranchName)
-}
-
-func (step RebaseBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

@@ -4,7 +4,9 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
-type StashOpenChangesStep struct{}
+type StashOpenChangesStep struct {
+	NoAutomaticAbort
+}
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -18,18 +20,10 @@ func (step StashOpenChangesStep) CreateUndoStep() Step {
 	return RestoreOpenChangesStep{}
 }
 
-func (step StashOpenChangesStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step StashOpenChangesStep) Run() error {
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err
 	}
 	return script.RunCommand("git", "stash")
-}
-
-func (step StashOpenChangesStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

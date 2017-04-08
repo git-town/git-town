@@ -5,7 +5,9 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
-type ContinueMergeBranchStep struct{}
+type ContinueMergeBranchStep struct {
+	NoAutomaticAbort
+}
 
 func (step ContinueMergeBranchStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -19,17 +21,9 @@ func (step ContinueMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
-func (step ContinueMergeBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step ContinueMergeBranchStep) Run() error {
 	if git.IsMergeInProgress() {
 		return script.RunCommand("git", "commit", "--no-edit")
 	}
 	return nil
-}
-
-func (step ContinueMergeBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

@@ -8,6 +8,7 @@ import (
 )
 
 type ChangeDirectoryStep struct {
+	NoAutomaticAbort
 	Directory string
 }
 
@@ -27,10 +28,6 @@ func (step ChangeDirectoryStep) CreateUndoStep() Step {
 	return ChangeDirectoryStep{Directory: dir}
 }
 
-func (step ChangeDirectoryStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step ChangeDirectoryStep) Run() error {
 	_, err := os.Stat(step.Directory)
 	if err == nil {
@@ -38,8 +35,4 @@ func (step ChangeDirectoryStep) Run() error {
 		return os.Chdir(step.Directory)
 	}
 	return nil
-}
-
-func (step ChangeDirectoryStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

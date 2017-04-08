@@ -4,7 +4,9 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
-type PushTagsStep struct{}
+type PushTagsStep struct {
+	NoAutomaticAbort
+}
 
 func (step PushTagsStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -18,14 +20,6 @@ func (step PushTagsStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
-func (step PushTagsStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step PushTagsStep) Run() error {
 	return script.RunCommand("git", "push", "--tags")
-}
-
-func (step PushTagsStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

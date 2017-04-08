@@ -4,7 +4,9 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
-type DiscardOpenChangesStep struct{}
+type DiscardOpenChangesStep struct {
+	NoAutomaticAbort
+}
 
 func (step DiscardOpenChangesStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -18,14 +20,6 @@ func (step DiscardOpenChangesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
-func (step DiscardOpenChangesStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step DiscardOpenChangesStep) Run() error {
 	return script.RunCommand("git", "reset", "--hard")
-}
-
-func (step DiscardOpenChangesStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

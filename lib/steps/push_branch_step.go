@@ -6,6 +6,7 @@ import (
 )
 
 type PushBranchStep struct {
+	NoAutomaticAbort
 	BranchName string
 	Force      bool
 	Undoable   bool
@@ -27,10 +28,6 @@ func (step PushBranchStep) CreateUndoStep() Step {
 	}
 }
 
-func (step PushBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step PushBranchStep) Run() error {
 	if !git.ShouldBranchBePushed(step.BranchName) {
 		return nil
@@ -42,8 +39,4 @@ func (step PushBranchStep) Run() error {
 		return script.RunCommand("git", "push")
 	}
 	return script.RunCommand("git", "push", "origin", step.BranchName)
-}
-
-func (step PushBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

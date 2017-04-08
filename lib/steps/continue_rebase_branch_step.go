@@ -5,7 +5,9 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
-type ContinueRebaseBranchStep struct{}
+type ContinueRebaseBranchStep struct {
+	NoAutomaticAbort
+}
 
 func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
 	return NoOpStep{}
@@ -19,17 +21,9 @@ func (step ContinueRebaseBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
-func (step ContinueRebaseBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step ContinueRebaseBranchStep) Run() error {
 	if git.IsRebaseInProgress() {
 		return script.RunCommand("git", "rebase", "--continue")
 	}
 	return nil
-}
-
-func (step ContinueRebaseBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

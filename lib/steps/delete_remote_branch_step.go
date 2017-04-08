@@ -6,6 +6,7 @@ import (
 )
 
 type DeleteRemoteBranchStep struct {
+	NoAutomaticAbort
 	BranchName string
 	IsTracking bool
 }
@@ -27,14 +28,6 @@ func (step DeleteRemoteBranchStep) CreateUndoStep() Step {
 	}
 }
 
-func (step DeleteRemoteBranchStep) GetAutomaticAbortErrorMessage() string {
-	return ""
-}
-
 func (step DeleteRemoteBranchStep) Run() error {
 	return script.RunCommand("git", "push", "origin", ":"+step.BranchName)
-}
-
-func (step DeleteRemoteBranchStep) ShouldAutomaticallyAbortOnError() bool {
-	return false
 }

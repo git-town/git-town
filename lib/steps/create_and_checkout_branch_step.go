@@ -6,6 +6,7 @@ import (
 )
 
 type CreateAndCheckoutBranchStep struct {
+	NoAutomaticAbort
 	BranchName       string
 	ParentBranchName string
 }
