@@ -54,7 +54,7 @@ func checkShipPreconditions(args []string) (result ShipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
-		git.EnsureDoesNotHaveUncommitedChanges("Did you mean to commit them before shipping?")
+		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	} else {
 		result.TargetBranch = args[0]
 	}
