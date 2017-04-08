@@ -66,8 +66,13 @@ func checkShipPreconditions(args []string) (result ShipConfig) {
 	}
 	config.EnsureIsFeatureBranch(result.TargetBranch, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
-	if config.GetParentBranch(result.TargetBranch) != config.GetMainBranch() {
-		ancestors := config.GetAncestorBranches(result.TargetBranch)
+	ensureParentBranchIsMainBranch(result.TargetBranch)
+	return
+}
+
+func ensureParentBranchIsMainBranch(branchName string) {
+	if config.GetParentBranch(branchName) != config.GetMainBranch() {
+		ancestors := config.GetAncestorBranches(branchName)
 		ancestorsWithoutMain := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMain[0]
 		util.ExitWithErrorMessage(
@@ -75,7 +80,6 @@ func checkShipPreconditions(args []string) (result ShipConfig) {
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
 	}
-	return
 }
 
 func getShipStepList(shipConfig ShipConfig) steps.StepList {
