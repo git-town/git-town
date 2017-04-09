@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
@@ -48,14 +47,14 @@ func checkKillPreconditions(args []string) (result killConfig) {
 		result.TargetBranch = args[0]
 	}
 
-	gitconfig.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
+	git.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
 
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if gitconfig.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		err := steps.FetchStep{}.Run()
 		if err != nil {
 			log.Fatal(err)
@@ -71,7 +70,7 @@ func checkKillPreconditions(args []string) (result killConfig) {
 
 func getKillStepList(config killConfig) (result steps.StepList) {
 	if config.IsTargetBranchLocal {
-		targetBranchParent := gitconfig.GetParentBranch(config.TargetBranch)
+		targetBranchParent := git.GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) {
 			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
@@ -82,7 +81,7 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range gitconfig.GetChildBranches(config.TargetBranch) {
+		for _, child := range git.GetChildBranches(config.TargetBranch) {
 			result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
