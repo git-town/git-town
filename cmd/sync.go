@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
 
@@ -25,7 +24,7 @@ var syncCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && gitconfig.IsMainBranch(git.GetCurrentBranchName()))
+				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
 			},
 			Command:    "sync",
 			IsAbort:    abortFlag,
@@ -47,7 +46,7 @@ var syncCmd = &cobra.Command{
 }
 
 func checkSyncPreconditions() (result SyncConfig) {
-	if gitconfig.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		err := steps.FetchStep{}.Run()
 		if err != nil {
 			log.Fatal(err)
@@ -59,9 +58,9 @@ func checkSyncPreconditions() (result SyncConfig) {
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else if gitconfig.IsFeatureBranch(result.InitialBranch) {
+	} else if git.IsFeatureBranch(result.InitialBranch) {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(gitconfig.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	} else {
 		result.BranchesToSync = []string{result.InitialBranch}
 		result.ShouldPushTags = true
@@ -75,7 +74,7 @@ func getSyncStepList(syncConfig SyncConfig) steps.StepList {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	stepList.Append(steps.CheckoutBranchStep{BranchName: syncConfig.InitialBranch})
-	if gitconfig.HasRemote("origin") && syncConfig.ShouldPushTags {
+	if git.HasRemote("origin") && syncConfig.ShouldPushTags {
 		stepList.Append(steps.PushTagsStep{})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

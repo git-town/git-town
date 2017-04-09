@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
@@ -40,7 +39,7 @@ var newPullRequestCommand = &cobra.Command{
 }
 
 func checkNewPullRequestPreconditions() (result NewPullRequestConfig) {
-	if gitconfig.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		err := steps.FetchStep{}.Run()
 		if err != nil {
 			log.Fatal(err)
@@ -48,7 +47,7 @@ func checkNewPullRequestPreconditions() (result NewPullRequestConfig) {
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.BranchesToSync = append(gitconfig.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 
