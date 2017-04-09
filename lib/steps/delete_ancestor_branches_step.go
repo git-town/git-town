@@ -1,8 +1,6 @@
 package steps
 
-import (
-	"github.com/Originate/git-town/lib/gitconfig"
-)
+import "github.com/Originate/git-town/lib/git"
 
 type DeleteAncestorBranchesStep struct{}
 
@@ -19,6 +17,6 @@ func (step DeleteAncestorBranchesStep) CreateUndoStep() Step {
 }
 
 func (step DeleteAncestorBranchesStep) Run() error {
-	gitconfig.DeleteAllAncestorBranches()
+	git.DeleteAllAncestorBranches()
 	return nil
 }

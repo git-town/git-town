@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
 
@@ -25,7 +24,7 @@ var syncCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && gitconfig.IsMainBranch(git.GetCurrentBranchName()))
+				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
 			},
 			Command:    "sync",
 			IsAbort:    abortFlag,
@@ -45,8 +44,13 @@ var syncCmd = &cobra.Command{
 	},
 }
 
+<<<<<<< HEAD
 func checkSyncPreconditions() (result syncConfig) {
 	if gitconfig.HasRemote("origin") {
+=======
+func checkSyncPreconditions() (result SyncConfig) {
+	if git.HasRemote("origin") {
+>>>>>>> kg-lint-4
 		err := steps.FetchStep{}.Run()
 		if err != nil {
 			log.Fatal(err)
@@ -58,9 +62,9 @@ func checkSyncPreconditions() (result syncConfig) {
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else if gitconfig.IsFeatureBranch(result.InitialBranch) {
+	} else if git.IsFeatureBranch(result.InitialBranch) {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(gitconfig.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	} else {
 		result.BranchesToSync = []string{result.InitialBranch}
 		result.ShouldPushTags = true
@@ -74,7 +78,7 @@ func getSyncStepList(config syncConfig) steps.StepList {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	stepList.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if gitconfig.HasRemote("origin") && config.ShouldPushTags {
+	if git.HasRemote("origin") && config.ShouldPushTags {
 		stepList.Append(steps.PushTagsStep{})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

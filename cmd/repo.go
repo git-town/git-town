@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/lib/drivers"
-	"github.com/Originate/git-town/lib/gitconfig"
+	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/script"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ var repoCommand = &cobra.Command{
 	Long:  `View the repository homepage`,
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetCodeHostingDriver()
-		repository := gitconfig.GetUrlRepositoryName(gitconfig.GetRemoteOriginUrl())
+		repository := git.GetUrlRepositoryName(git.GetRemoteOriginUrl())
 		script.OpenBrowser(driver.GetRepositoryUrl(repository))
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
