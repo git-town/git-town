@@ -44,13 +44,8 @@ var syncCmd = &cobra.Command{
 	},
 }
 
-<<<<<<< HEAD
 func checkSyncPreconditions() (result syncConfig) {
-	if gitconfig.HasRemote("origin") {
-=======
-func checkSyncPreconditions() (result SyncConfig) {
 	if git.HasRemote("origin") {
->>>>>>> kg-lint-4
 		err := steps.FetchStep{}.Run()
 		if err != nil {
 			log.Fatal(err)
