@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 )
 
 func GetSyncBranchSteps(branchName string) (result StepList) {
-	isFeature := gitconfig.IsFeatureBranch(branchName)
-	hasRemoteOrigin := gitconfig.HasRemote("origin")
+	isFeature := git.IsFeatureBranch(branchName)
+	hasRemoteOrigin := git.HasRemote("origin")
 
 	if !hasRemoteOrigin && !isFeature {
 		return
@@ -18,16 +17,16 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
 	result.Append(CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
 		result.Append(MergeTrackingBranchStep{})
-		result.Append(MergeBranchStep{BranchName: gitconfig.GetParentBranch(branchName)})
+		result.Append(MergeBranchStep{BranchName: git.GetParentBranch(branchName)})
 	} else {
-		if gitconfig.GetPullBranchStrategy() == "rebase" {
+		if git.GetPullBranchStrategy() == "rebase" {
 			result.Append(RebaseTrackingBranchStep{})
 		} else {
 			result.Append(MergeTrackingBranchStep{})
 		}
 
-		mainBranchName := gitconfig.GetMainBranch()
-		if mainBranchName == branchName && gitconfig.HasRemote("upstream") {
+		mainBranchName := git.GetMainBranch()
+		if mainBranchName == branchName && git.HasRemote("upstream") {
 			result.Append(FetchUpstreamStep{})
 			result.Append(RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 		}
