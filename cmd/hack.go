@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/gitconfig"
 	"github.com/Originate/git-town/lib/steps"
 
 	"github.com/spf13/cobra"
@@ -46,7 +45,7 @@ var hackCmd = &cobra.Command{
 
 func checkHackPreconditions(args []string) string {
 	targetBranchName := args[0]
-	if gitconfig.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		steps.FetchStep{}.Run()
 	}
 	git.EnsureDoesNotHaveBranch(targetBranchName)
@@ -54,11 +53,11 @@ func checkHackPreconditions(args []string) string {
 }
 
 func getHackStepList(targetBranchName string) steps.StepList {
-	mainBranchName := gitconfig.GetMainBranch()
+	mainBranchName := git.GetMainBranch()
 	stepList := steps.StepList{}
 	stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
 	stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
-	if gitconfig.HasRemote("origin") && gitconfig.ShouldHackPush() {
+	if git.HasRemote("origin") && git.ShouldHackPush() {
 		stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
