@@ -3,19 +3,11 @@ package cmd
 import (
 	"errors"
 
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/steps"
 
 	"github.com/spf13/cobra"
 )
-
-type HackFlags struct {
-	Abort    bool
-	Continue bool
-}
-
-var hackFlags HackFlags
 
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
@@ -25,8 +17,8 @@ var hackCmd = &cobra.Command{
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
-			IsAbort:              hackFlags.Abort,
-			IsContinue:           hackFlags.Continue,
+			IsAbort:              abortFlag,
+			IsContinue:           continueFlag,
 			IsSkip:               false,
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
@@ -37,8 +29,8 @@ var hackCmd = &cobra.Command{
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !hackFlags.Abort && !hackFlags.Continue {
-			return errors.New("No branch name provided.")
+		if len(args) == 0 && !abortFlag && !continueFlag {
+			return errors.New("no branch name provided")
 		}
 		return validateMaxArgs(args, 1)
 	},
@@ -46,7 +38,7 @@ var hackCmd = &cobra.Command{
 
 func checkHackPreconditions(args []string) string {
 	targetBranchName := args[0]
-	if config.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		steps.FetchStep{}.Run()
 	}
 	git.EnsureDoesNotHaveBranch(targetBranchName)
@@ -54,18 +46,18 @@ func checkHackPreconditions(args []string) string {
 }
 
 func getHackStepList(targetBranchName string) steps.StepList {
-	mainBranchName := config.GetMainBranch()
+	mainBranchName := git.GetMainBranch()
 	stepList := steps.StepList{}
 	stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
 	stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
-	if config.HasRemote("origin") && config.ShouldHackPush() {
+	if git.HasRemote("origin") && git.ShouldHackPush() {
 		stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&hackFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
-	hackCmd.Flags().BoolVar(&hackFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
 	RootCmd.AddCommand(hackCmd)
 }

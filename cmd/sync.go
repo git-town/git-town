@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
@@ -17,15 +16,6 @@ type SyncConfig struct {
 	ShouldPushTags bool
 }
 
-type SyncFlags struct {
-	All      bool
-	Abort    bool
-	Continue bool
-	Skip     bool
-}
-
-var syncFlags SyncFlags
-
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Update the current branch with all relevant changes",
@@ -33,12 +23,12 @@ var syncCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && config.IsMainBranch(git.GetCurrentBranchName()))
+				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
 			},
 			Command:    "sync",
-			IsAbort:    syncFlags.Abort,
-			IsContinue: syncFlags.Continue,
-			IsSkip:     syncFlags.Skip,
+			IsAbort:    abortFlag,
+			IsContinue: continueFlag,
+			IsSkip:     skipFlag,
 			IsUndo:     false,
 			SkipMessageGenerator: func() string {
 				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
@@ -55,18 +45,18 @@ var syncCmd = &cobra.Command{
 }
 
 func checkSyncPreconditions() (result SyncConfig) {
-	if config.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		steps.FetchStep{}.Run()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
-	if syncFlags.All {
+	if allFlag {
 		branches := git.GetLocalBranchesWithMainBranchFirst()
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else if config.IsFeatureBranch(result.InitialBranch) {
+	} else if git.IsFeatureBranch(result.InitialBranch) {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	} else {
 		result.BranchesToSync = []string{result.InitialBranch}
 		result.ShouldPushTags = true
@@ -80,16 +70,16 @@ func getSyncStepList(syncConfig SyncConfig) steps.StepList {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	stepList.Append(steps.CheckoutBranchStep{BranchName: syncConfig.InitialBranch})
-	if config.HasRemote("origin") && syncConfig.ShouldPushTags {
+	if git.HasRemote("origin") && syncConfig.ShouldPushTags {
 		stepList.Append(steps.PushTagsStep{})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 }
 
 func init() {
-	syncCmd.Flags().BoolVar(&syncFlags.All, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&syncFlags.Abort, "abort", false, "Abort a previous command that resulted in a conflict")
-	syncCmd.Flags().BoolVar(&syncFlags.Continue, "continue", false, "Continue a previous command that resulted in a conflict")
-	syncCmd.Flags().BoolVar(&syncFlags.Skip, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
+	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
+	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }

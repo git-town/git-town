@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/util"
 	"github.com/fatih/color"
@@ -14,12 +13,12 @@ import (
 
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if config.IsMainBranch(branchName) || config.IsPerennialBranch(branchName) || config.HasCompiledAncestorBranches(branchName) {
+		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasCompiledAncestorBranches(branchName) {
 			continue
 		}
 		askForBranchAncestry(branchName)
-		ancestors := config.CompileAncestorBranches(branchName)
-		config.SetAncestorBranches(branchName, ancestors)
+		ancestors := git.CompileAncestorBranches(branchName)
+		git.SetAncestorBranches(branchName, ancestors)
 
 		if parentBranchHeaderShown {
 			fmt.Println()
@@ -43,13 +42,13 @@ var parentBranchPromptTemplate = "Please specify the parent branch of %s by name
 func askForBranchAncestry(branchName string) {
 	current := branchName
 	for {
-		parent := config.GetParentBranch(current)
+		parent := git.GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
 			parent = askForParentBranch(current)
-			config.SetParentBranch(current, parent)
+			git.SetParentBranch(current, parent)
 		}
-		if parent == config.GetMainBranch() || config.IsPerennialBranch(parent) {
+		if parent == git.GetMainBranch() || git.IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -64,7 +63,7 @@ func askForParentBranch(branchName string) string {
 			continue
 		} else if branchName == parent {
 			util.PrintError(fmt.Sprintf("'%s' cannot be the parent of itself", parent))
-		} else if config.IsAncestorBranch(parent, branchName) {
+		} else if git.IsAncestorBranch(parent, branchName) {
 			util.PrintError(fmt.Sprintf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
 		} else {
 			return parent
@@ -73,7 +72,7 @@ func askForParentBranch(branchName string) string {
 }
 
 func parseParentBranch(userInput string) string {
-	mainBranch := config.GetMainBranch()
+	mainBranch := git.GetMainBranch()
 	numericRegex, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
 		log.Fatal("Error compiling numeric regular expression: ", err)
@@ -117,7 +116,7 @@ func printNumberedBranches() {
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		fmt.Printf(parentBranchHeaderTemplate, config.GetMainBranch())
+		fmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
 		printNumberedBranches()
 		fmt.Println()
 	}
@@ -125,5 +124,5 @@ func printParentBranchHeader() {
 
 func printParentBranchPrompt(branchName string) {
 	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(branchName)
-	fmt.Printf(parentBranchPromptTemplate, coloredBranchName, config.GetMainBranch())
+	fmt.Printf(parentBranchPromptTemplate, coloredBranchName, git.GetMainBranch())
 }

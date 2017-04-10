@@ -1,24 +1,17 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
 )
 
-type KillFlags struct {
-	Undo bool
-}
-
 type KillConfig struct {
 	InitialBranch       string
 	IsTargetBranchLocal bool
 	TargetBranch        string
 }
-
-var killFlags KillFlags
 
 var killCommand = &cobra.Command{
 	Use:   "kill [<branch>]",
@@ -31,7 +24,7 @@ var killCommand = &cobra.Command{
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,
-			IsUndo:               killFlags.Undo,
+			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				killConfig := checkKillPreconditions(args)
@@ -53,14 +46,14 @@ func checkKillPreconditions(args []string) (result KillConfig) {
 		result.TargetBranch = args[0]
 	}
 
-	config.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
+	git.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
 
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if config.HasRemote("origin") {
+	if git.HasRemote("origin") {
 		steps.FetchStep{}.Run()
 	}
 
@@ -73,7 +66,7 @@ func checkKillPreconditions(args []string) (result KillConfig) {
 
 func getKillStepList(killConfig KillConfig) (result steps.StepList) {
 	if killConfig.IsTargetBranchLocal {
-		targetBranchParent := config.GetParentBranch(killConfig.TargetBranch)
+		targetBranchParent := git.GetParentBranch(killConfig.TargetBranch)
 		if git.HasTrackingBranch(killConfig.TargetBranch) {
 			result.Append(steps.DeleteRemoteBranchStep{BranchName: killConfig.TargetBranch, IsTracking: true})
 		}
@@ -84,7 +77,7 @@ func getKillStepList(killConfig KillConfig) (result steps.StepList) {
 			result.Append(steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(steps.DeleteLocalBranchStep{BranchName: killConfig.TargetBranch, Force: true})
-		for _, child := range config.GetChildBranches(killConfig.TargetBranch) {
+		for _, child := range git.GetChildBranches(killConfig.TargetBranch) {
 			result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(steps.DeleteParentBranchStep{BranchName: killConfig.TargetBranch})
@@ -96,6 +89,6 @@ func getKillStepList(killConfig KillConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&killFlags.Undo, "undo", false, "Undo a previous command")
+	killCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
 	RootCmd.AddCommand(killCommand)
 }

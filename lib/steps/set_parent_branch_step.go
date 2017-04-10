@@ -1,8 +1,6 @@
 package steps
 
-import (
-	"github.com/Originate/git-town/lib/config"
-)
+import "github.com/Originate/git-town/lib/git"
 
 type SetParentBranchStep struct {
 	NoAutomaticAbort
@@ -19,7 +17,7 @@ func (step SetParentBranchStep) CreateContinueStep() Step {
 }
 
 func (step SetParentBranchStep) CreateUndoStep() Step {
-	oldParent := config.GetParentBranch(step.BranchName)
+	oldParent := git.GetParentBranch(step.BranchName)
 	if oldParent == "" {
 		return DeleteParentBranchStep{BranchName: step.BranchName}
 	} else {
@@ -28,6 +26,6 @@ func (step SetParentBranchStep) CreateUndoStep() Step {
 }
 
 func (step SetParentBranchStep) Run() error {
-	config.SetParentBranch(step.BranchName, step.ParentBranchName)
+	git.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil
 }
