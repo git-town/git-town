@@ -7,17 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type KillFlags struct {
-	Undo bool
-}
-
 type KillConfig struct {
 	InitialBranch       string
 	IsTargetBranchLocal bool
 	TargetBranch        string
 }
-
-var killFlags KillFlags
 
 var killCommand = &cobra.Command{
 	Use:   "kill [<branch>]",
@@ -30,7 +24,7 @@ var killCommand = &cobra.Command{
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,
-			IsUndo:               killFlags.Undo,
+			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				killConfig := checkKillPreconditions(args)
@@ -95,6 +89,6 @@ func getKillStepList(killConfig KillConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&killFlags.Undo, "undo", false, "Undo a previous command")
+	killCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
 	RootCmd.AddCommand(killCommand)
 }
