@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Originate/git-town/lib/config"
+	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/util"
 	"github.com/fatih/color"
 )
@@ -48,7 +48,7 @@ func askForAuthor(authors []Author) string {
 }
 
 func getBranchAuthors(branchName string) (result []Author) {
-	output := util.GetCommandOutput("git", "shortlog", "-s", "-n", "-e", config.GetMainBranch()+".."+branchName)
+	output := util.GetCommandOutput("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName)
 	fmt.Println("output", output)
 	for _, line := range strings.Split(output, "\n") {
 		line := strings.TrimSpace(line)

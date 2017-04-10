@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/git-town/lib/config"
 	"github.com/Originate/git-town/lib/util"
 )
 
@@ -33,7 +32,7 @@ func HasOpenChanges() bool {
 }
 
 func HasShippableChanges(branchName string) bool {
-	return util.GetCommandOutput("git", "diff", config.GetMainBranch()+".."+branchName) != ""
+	return util.GetCommandOutput("git", "diff", GetMainBranch()+".."+branchName) != ""
 }
 
 func IsMergeInProgress() bool {
