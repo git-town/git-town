@@ -30,7 +30,7 @@ var hackCmd = &cobra.Command{
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 && !abortFlag && !continueFlag {
-			return errors.New("No branch name provided.")
+			return errors.New("no branch name provided")
 		}
 		return validateMaxArgs(args, 1)
 	},
