@@ -70,6 +70,14 @@ func GetUserInput() string {
 	return strings.TrimSpace(text)
 }
 
+func Pluralize(count, word string) string {
+	result := count + " " + word
+	if count != "1" {
+		result = result + "s"
+	}
+	return result
+}
+
 func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)

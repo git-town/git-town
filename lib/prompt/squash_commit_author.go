@@ -88,10 +88,7 @@ func parseAuthorNumber(userInput string, authors []Author) string {
 func printNumberedAuthors(authors []Author) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
-		stat := author.NumberOfCommits + " commit"
-		if author.NumberOfCommits != "1" {
-			stat = stat + "s"
-		}
+		stat := util.Pluralize(author.NumberOfCommits, "commit")
 		fmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
 	}
 }
