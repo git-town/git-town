@@ -1,10 +1,6 @@
 package steps
 
-import (
-	"log"
-
-	"github.com/Originate/git-town/lib/script"
-)
+import "github.com/Originate/git-town/lib/script"
 
 type FetchStep struct{}
 
@@ -21,9 +17,5 @@ func (step FetchStep) CreateUndoStep() Step {
 }
 
 func (step FetchStep) Run() error {
-	err := script.RunCommand("git", "fetch", "--prune")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return nil
+	return script.RunCommand("git", "fetch", "--prune")
 }
