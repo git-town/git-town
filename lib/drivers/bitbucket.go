@@ -12,9 +12,8 @@ import (
 // repositories hosted on Bitbucket
 type BitbucketCodeHostingDriver struct{}
 
-// GetNewPullRequestURL returns the URL for creating a new pull request
-// for the given branch, into the given parent branch, in the given repository
-// that is hosted on Bitbucket.
+// GetNewPullRequestURL returns the URL of the page
+// to create a new pull request on Bitbucket
 func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))

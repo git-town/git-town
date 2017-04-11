@@ -13,7 +13,7 @@ var repoCommand = &cobra.Command{
 	Long:  `View the repository homepage`,
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetCodeHostingDriver()
-		repository := git.GetUrlRepositoryName(git.GetRemoteOriginUrl())
+		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 		script.OpenBrowser(driver.GetRepositoryURL(repository))
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {

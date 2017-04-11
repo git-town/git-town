@@ -24,7 +24,7 @@ func (step CreatePullRequestStep) CreateUndoStep() Step {
 
 func (step CreatePullRequestStep) Run() error {
 	driver := drivers.GetCodeHostingDriver()
-	repository := git.GetUrlRepositoryName(git.GetRemoteOriginUrl())
+	repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 	parentBranch := git.GetParentBranch(step.BranchName)
 	script.OpenBrowser(driver.GetNewPullRequestURL(repository, step.BranchName, parentBranch))
 	return nil

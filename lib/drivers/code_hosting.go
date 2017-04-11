@@ -17,7 +17,7 @@ type CodeHostingDriver interface {
 // GetCodeHostingDriver returns an instance of the code hosting driver
 // to use for the repository in the current working directory
 func GetCodeHostingDriver() CodeHostingDriver {
-	hostname := git.GetUrlHostname(git.GetRemoteOriginUrl())
+	hostname := git.GetURLHostname(git.GetRemoteOriginURL())
 	switch {
 	case hostname == "github.com" || strings.Contains(hostname, "github"):
 		return GithubCodeHostingDriver{}
