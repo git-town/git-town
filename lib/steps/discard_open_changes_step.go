@@ -5,7 +5,7 @@ import (
 )
 
 type DiscardOpenChangesStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step DiscardOpenChangesStep) CreateAbortStep() Step {

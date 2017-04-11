@@ -6,7 +6,7 @@ import (
 )
 
 type ResetToShaStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	Hard bool
 	Sha  string
 }

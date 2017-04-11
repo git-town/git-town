@@ -6,7 +6,7 @@ import (
 )
 
 type RebaseBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 type ContinueMergeBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step ContinueMergeBranchStep) CreateAbortStep() Step {

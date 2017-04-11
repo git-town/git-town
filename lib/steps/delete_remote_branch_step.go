@@ -6,7 +6,7 @@ import (
 )
 
 type DeleteRemoteBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 	IsTracking bool
 }

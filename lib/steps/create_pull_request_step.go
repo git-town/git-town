@@ -7,7 +7,7 @@ import (
 )
 
 type CreatePullRequestStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 }
 

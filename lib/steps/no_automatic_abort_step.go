@@ -1,11 +1,11 @@
 package steps
 
-type NoAutomaticAbort struct{}
+type NoAutomaticAbortOnError struct{}
 
-func (step NoAutomaticAbort) GetAutomaticAbortErrorMessage() string {
+func (step NoAutomaticAbortOnError) GetAutomaticAbortErrorMessage() string {
 	return ""
 }
 
-func (step NoAutomaticAbort) ShouldAutomaticallyAbortOnError() bool {
+func (step NoAutomaticAbortOnError) ShouldAutomaticallyAbortOnError() bool {
 	return false
 }

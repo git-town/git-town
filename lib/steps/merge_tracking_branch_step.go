@@ -5,7 +5,7 @@ import (
 )
 
 type MergeTrackingBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step MergeTrackingBranchStep) CreateAbortStep() Step {

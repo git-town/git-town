@@ -1,7 +1,7 @@
 package steps
 
 type PushBranchAfterCurrentBranchSteps struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step PushBranchAfterCurrentBranchSteps) CreateAbortStep() Step {

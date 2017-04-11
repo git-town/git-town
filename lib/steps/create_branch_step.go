@@ -3,7 +3,7 @@ package steps
 import "github.com/Originate/git-town/lib/script"
 
 type CreateBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName    string
 	StartingPoint string
 }

@@ -1,7 +1,7 @@
 package steps
 
 type NoOpStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step NoOpStep) CreateAbortStep() Step {

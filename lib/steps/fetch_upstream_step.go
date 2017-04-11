@@ -5,7 +5,7 @@ import (
 )
 
 type FetchUpstreamStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step FetchUpstreamStep) CreateAbortStep() Step {

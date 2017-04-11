@@ -5,7 +5,7 @@ import (
 )
 
 type CreateTrackingBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 }
 

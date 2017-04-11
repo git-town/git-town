@@ -5,7 +5,7 @@ import (
 )
 
 type RebaseTrackingBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step RebaseTrackingBranchStep) CreateAbortStep() Step {

@@ -3,7 +3,7 @@ package steps
 import "github.com/Originate/git-town/lib/git"
 
 type DeleteAncestorBranchesStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {

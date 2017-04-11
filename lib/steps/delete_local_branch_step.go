@@ -6,7 +6,7 @@ import (
 )
 
 type DeleteLocalBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 	Force      bool
 }

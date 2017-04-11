@@ -8,7 +8,7 @@ import (
 )
 
 type CommitOpenChangesStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step CommitOpenChangesStep) CreateAbortStep() Step {

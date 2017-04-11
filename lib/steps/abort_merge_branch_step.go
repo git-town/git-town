@@ -3,7 +3,7 @@ package steps
 import "github.com/Originate/git-town/lib/script"
 
 type AbortMergeBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step AbortMergeBranchStep) CreateAbortStep() Step {

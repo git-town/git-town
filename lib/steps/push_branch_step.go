@@ -6,7 +6,7 @@ import (
 )
 
 type PushBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 	Force      bool
 	Undoable   bool

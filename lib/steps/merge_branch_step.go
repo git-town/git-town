@@ -6,7 +6,7 @@ import (
 )
 
 type MergeBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type ChangeDirectoryStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	Directory string
 }
 

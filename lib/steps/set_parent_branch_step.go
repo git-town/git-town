@@ -3,7 +3,7 @@ package steps
 import "github.com/Originate/git-town/lib/git"
 
 type SetParentBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName       string
 	ParentBranchName string
 }

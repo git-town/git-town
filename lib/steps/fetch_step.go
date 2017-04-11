@@ -7,7 +7,7 @@ import (
 )
 
 type FetchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step FetchStep) CreateAbortStep() Step {

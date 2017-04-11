@@ -5,7 +5,7 @@ import (
 )
 
 type PushTagsStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step PushTagsStep) CreateAbortStep() Step {

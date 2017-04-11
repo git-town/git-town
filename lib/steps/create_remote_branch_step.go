@@ -5,7 +5,7 @@ import (
 )
 
 type CreateRemoteBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 	Sha        string
 }

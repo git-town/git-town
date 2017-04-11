@@ -5,7 +5,7 @@ import (
 )
 
 type StashOpenChangesStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {

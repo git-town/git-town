@@ -3,7 +3,7 @@ package steps
 import "github.com/Originate/git-town/lib/script"
 
 type RevertCommitStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 }
 
 func (step RevertCommitStep) CreateAbortStep() Step {

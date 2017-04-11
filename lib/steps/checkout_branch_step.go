@@ -6,7 +6,7 @@ import (
 )
 
 type CheckoutBranchStep struct {
-	NoAutomaticAbort
+	NoAutomaticAbortOnError
 	BranchName string
 }
 
