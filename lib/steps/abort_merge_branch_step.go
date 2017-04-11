@@ -4,6 +4,7 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
+// AbortMergeBranchStep aborts the current merge conflict.
 type AbortMergeBranchStep struct{}
 
 func (step AbortMergeBranchStep) CreateAbortStep() Step {
@@ -18,6 +19,7 @@ func (step AbortMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
+// Run executes this step.
 func (step AbortMergeBranchStep) Run() error {
 	return script.RunCommand("git", "merge", "--abort")
 }
