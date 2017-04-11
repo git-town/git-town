@@ -6,6 +6,7 @@ import (
 
 type RebaseTrackingBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 }
 
 func (step RebaseTrackingBranchStep) CreateAbortStep() Step {
@@ -16,7 +17,7 @@ func (step RebaseTrackingBranchStep) CreateContinueStep() Step {
 	return ContinueRebaseBranchStep{}
 }
 
-func (step RebaseTrackingBranchStep) CreateUndoStep() Step {
+func (step RebaseTrackingBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

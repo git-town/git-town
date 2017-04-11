@@ -6,6 +6,7 @@ import (
 
 type StashOpenChangesStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 }
 
 func (step StashOpenChangesStep) CreateAbortStep() Step {
@@ -16,7 +17,7 @@ func (step StashOpenChangesStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step StashOpenChangesStep) CreateUndoStep() Step {
+func (step StashOpenChangesStep) CreateUndoStepBeforeRun() Step {
 	return RestoreOpenChangesStep{}
 }
 

@@ -7,6 +7,7 @@ import (
 
 type DeleteRemoteBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 	IsTracking bool
 }
@@ -19,7 +20,7 @@ func (step DeleteRemoteBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step DeleteRemoteBranchStep) CreateUndoStep() Step {
+func (step DeleteRemoteBranchStep) CreateUndoStepBeforeRun() Step {
 	if step.IsTracking {
 		return CreateTrackingBranchStep{BranchName: step.BranchName}
 	} else {

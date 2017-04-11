@@ -7,6 +7,7 @@ import (
 
 type ResetToShaStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 	Hard bool
 	Sha  string
 }
@@ -16,10 +17,6 @@ func (step ResetToShaStep) CreateAbortStep() Step {
 }
 
 func (step ResetToShaStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step ResetToShaStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

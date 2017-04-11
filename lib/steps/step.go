@@ -10,7 +10,8 @@ import (
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
-	CreateUndoStep() Step
+	CreateUndoStepBeforeRun() Step
+	CreateUndoStepAfterRun() Step
 	GetAutomaticAbortErrorMessage() string
 	Run() error
 	ShouldAutomaticallyAbortOnError() bool

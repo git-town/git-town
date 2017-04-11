@@ -6,6 +6,7 @@ import (
 
 type RestoreOpenChangesStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step RestoreOpenChangesStep) CreateAbortStep() Step {
@@ -13,10 +14,6 @@ func (step RestoreOpenChangesStep) CreateAbortStep() Step {
 }
 
 func (step RestoreOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step RestoreOpenChangesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

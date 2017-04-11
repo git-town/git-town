@@ -6,6 +6,7 @@ import (
 
 type CreateRemoteBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName string
 	Sha        string
 }
@@ -15,10 +16,6 @@ func (step CreateRemoteBranchStep) CreateAbortStep() Step {
 }
 
 func (step CreateRemoteBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step CreateRemoteBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

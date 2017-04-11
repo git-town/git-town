@@ -7,6 +7,7 @@ import (
 
 type ContinueRebaseBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
@@ -15,10 +16,6 @@ func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
 
 func (step ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
-}
-
-func (step ContinueRebaseBranchStep) CreateUndoStep() Step {
-	return NoOpStep{}
 }
 
 func (step ContinueRebaseBranchStep) Run() error {

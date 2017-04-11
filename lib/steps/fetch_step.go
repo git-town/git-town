@@ -8,6 +8,7 @@ import (
 
 type FetchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step FetchStep) CreateAbortStep() Step {
@@ -15,10 +16,6 @@ func (step FetchStep) CreateAbortStep() Step {
 }
 
 func (step FetchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step FetchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

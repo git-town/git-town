@@ -6,6 +6,7 @@ import (
 
 type PushTagsStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step PushTagsStep) CreateAbortStep() Step {
@@ -13,10 +14,6 @@ func (step PushTagsStep) CreateAbortStep() Step {
 }
 
 func (step PushTagsStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step PushTagsStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

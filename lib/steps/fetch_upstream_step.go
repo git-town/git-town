@@ -6,6 +6,7 @@ import (
 
 type FetchUpstreamStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step FetchUpstreamStep) CreateAbortStep() Step {
@@ -13,10 +14,6 @@ func (step FetchUpstreamStep) CreateAbortStep() Step {
 }
 
 func (step FetchUpstreamStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step FetchUpstreamStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

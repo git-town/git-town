@@ -134,7 +134,9 @@ func deserializeStep(serializedStep SerializedStep) Step {
 	case "RestoreOpenChangesStep":
 		return RestoreOpenChangesStep{}
 	case "RevertCommitStep":
-		return RevertCommitStep{}
+		step := RevertCommitStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "SetParentBranchStep":
 		step := SetParentBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)

@@ -10,6 +10,7 @@ import (
 )
 
 type SquashMergeBranchStep struct {
+	NoUndoStepBeforeRun
 	BranchName    string
 	CommitMessage string
 }
@@ -22,8 +23,8 @@ func (step SquashMergeBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step SquashMergeBranchStep) CreateUndoStep() Step {
-	return RevertCommitStep{}
+func (step SquashMergeBranchStep) CreateUndoStepAfterRun() Step {
+	return RevertCommitStep{Sha: git.GetCurrentSha()}
 }
 
 func (step SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {

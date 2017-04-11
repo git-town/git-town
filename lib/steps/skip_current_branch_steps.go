@@ -2,6 +2,7 @@ package steps
 
 type SkipCurrentBranchSteps struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step SkipCurrentBranchSteps) CreateAbortStep() Step {
@@ -9,10 +10,6 @@ func (step SkipCurrentBranchSteps) CreateAbortStep() Step {
 }
 
 func (step SkipCurrentBranchSteps) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step SkipCurrentBranchSteps) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

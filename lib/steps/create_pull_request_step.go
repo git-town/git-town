@@ -8,6 +8,7 @@ import (
 
 type CreatePullRequestStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName string
 }
 
@@ -16,10 +17,6 @@ func (step CreatePullRequestStep) CreateAbortStep() Step {
 }
 
 func (step CreatePullRequestStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step CreatePullRequestStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

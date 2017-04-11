@@ -9,6 +9,7 @@ import (
 
 type ChangeDirectoryStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	Directory string
 }
 
@@ -20,7 +21,7 @@ func (step ChangeDirectoryStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step ChangeDirectoryStep) CreateUndoStep() Step {
+func (step ChangeDirectoryStep) CreateUndoStepBeforeRun() Step {
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)

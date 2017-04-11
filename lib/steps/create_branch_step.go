@@ -4,6 +4,7 @@ import "github.com/Originate/git-town/lib/script"
 
 type CreateBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName    string
 	StartingPoint string
 }
@@ -13,10 +14,6 @@ func (step CreateBranchStep) CreateAbortStep() Step {
 }
 
 func (step CreateBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step CreateBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

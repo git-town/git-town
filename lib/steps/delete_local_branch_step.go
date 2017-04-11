@@ -7,6 +7,7 @@ import (
 
 type DeleteLocalBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 	Force      bool
 }
@@ -19,7 +20,7 @@ func (step DeleteLocalBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step DeleteLocalBranchStep) CreateUndoStep() Step {
+func (step DeleteLocalBranchStep) CreateUndoStepBeforeRun() Step {
 	sha := git.GetBranchSha(step.BranchName)
 	return CreateBranchStep{BranchName: step.BranchName, StartingPoint: sha}
 }

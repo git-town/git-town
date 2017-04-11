@@ -37,7 +37,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
-      |         | git revert HEAD                                |
+      |         | git revert <%= sha 'feature done' %>           |
       |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |

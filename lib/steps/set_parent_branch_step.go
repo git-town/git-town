@@ -4,6 +4,7 @@ import "github.com/Originate/git-town/lib/git"
 
 type SetParentBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName       string
 	ParentBranchName string
 }
@@ -16,7 +17,7 @@ func (step SetParentBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step SetParentBranchStep) CreateUndoStep() Step {
+func (step SetParentBranchStep) CreateUndoStepBeforeRun() Step {
 	oldParent := git.GetParentBranch(step.BranchName)
 	if oldParent == "" {
 		return DeleteParentBranchStep{BranchName: step.BranchName}

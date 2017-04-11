@@ -6,6 +6,7 @@ import (
 
 type MergeTrackingBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 }
 
 func (step MergeTrackingBranchStep) CreateAbortStep() Step {
@@ -16,7 +17,7 @@ func (step MergeTrackingBranchStep) CreateContinueStep() Step {
 	return ContinueMergeBranchStep{}
 }
 
-func (step MergeTrackingBranchStep) CreateUndoStep() Step {
+func (step MergeTrackingBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

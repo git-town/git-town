@@ -7,6 +7,7 @@ import (
 
 type MergeBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -18,7 +19,7 @@ func (step MergeBranchStep) CreateContinueStep() Step {
 	return ContinueMergeBranchStep{}
 }
 
-func (step MergeBranchStep) CreateUndoStep() Step {
+func (step MergeBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

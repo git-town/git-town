@@ -45,7 +45,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | <none>  | cd <%= git_root_folder %>                      |
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git push -u origin feature                     |
-      |         | git revert HEAD                                |
+      |         | git revert <%= sha 'feature done' %>           |
       |         | git push                                       |
       |         | git checkout feature                           |
       | feature | git checkout main                              |

@@ -4,6 +4,7 @@ import "github.com/Originate/git-town/lib/script"
 
 type AbortMergeBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step AbortMergeBranchStep) CreateAbortStep() Step {
@@ -11,10 +12,6 @@ func (step AbortMergeBranchStep) CreateAbortStep() Step {
 }
 
 func (step AbortMergeBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step AbortMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

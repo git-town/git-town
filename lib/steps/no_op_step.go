@@ -12,7 +12,11 @@ func (step NoOpStep) CreateContinueStep() Step {
 	return step
 }
 
-func (step NoOpStep) CreateUndoStep() Step {
+func (step NoOpStep) CreateUndoStepBeforeRun() Step {
+	return step
+}
+
+func (step NoOpStep) CreateUndoStepAfterRun() Step {
 	return step
 }
 

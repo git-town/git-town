@@ -4,6 +4,7 @@ import "github.com/Originate/git-town/lib/git"
 
 type DeleteAncestorBranchesStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
 }
 
 func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {
@@ -11,10 +12,6 @@ func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {
 }
 
 func (step DeleteAncestorBranchesStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step DeleteAncestorBranchesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

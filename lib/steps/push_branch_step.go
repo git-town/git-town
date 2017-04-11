@@ -7,6 +7,7 @@ import (
 
 type PushBranchStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 	Force      bool
 	Undoable   bool
@@ -20,7 +21,7 @@ func (step PushBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step PushBranchStep) CreateUndoStep() Step {
+func (step PushBranchStep) CreateUndoStepBeforeRun() Step {
 	if step.Undoable {
 		return PushBranchAfterCurrentBranchSteps{}
 	} else {

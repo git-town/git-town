@@ -4,6 +4,8 @@ import "github.com/Originate/git-town/lib/script"
 
 type RevertCommitStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStep
+	Sha string
 }
 
 func (step RevertCommitStep) CreateAbortStep() Step {
@@ -19,5 +21,5 @@ func (step RevertCommitStep) CreateUndoStep() Step {
 }
 
 func (step RevertCommitStep) Run() error {
-	return script.RunCommand("git", "revert", "HEAD")
+	return script.RunCommand("git", "revert", step.Sha)
 }

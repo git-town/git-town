@@ -9,6 +9,7 @@ import (
 
 type EnsureHasShippableChangesStep struct {
 	BranchName string
+	NoUndoStep
 }
 
 func (step EnsureHasShippableChangesStep) CreateAbortStep() Step {
@@ -16,10 +17,6 @@ func (step EnsureHasShippableChangesStep) CreateAbortStep() Step {
 }
 
 func (step EnsureHasShippableChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-func (step EnsureHasShippableChangesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

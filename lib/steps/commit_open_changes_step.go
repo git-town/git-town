@@ -9,6 +9,7 @@ import (
 
 type CommitOpenChangesStep struct {
 	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 }
 
 func (step CommitOpenChangesStep) CreateAbortStep() Step {
@@ -19,7 +20,7 @@ func (step CommitOpenChangesStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-func (step CommitOpenChangesStep) CreateUndoStep() Step {
+func (step CommitOpenChangesStep) CreateUndoStepBeforeRun() Step {
 	branchName := git.GetCurrentBranchName()
 	return ResetToShaStep{Sha: git.GetBranchSha(branchName)}
 }
