@@ -4,6 +4,7 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
+// PushTagsStep pushes newly created Git tags to the remote.
 type PushTagsStep struct{}
 
 // CreateAbortStep returns the abort step for this step.
