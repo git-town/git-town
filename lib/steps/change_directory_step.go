@@ -7,18 +7,22 @@ import (
 	"github.com/Originate/git-town/lib/script"
 )
 
+// ChangeDirectoryStep changes the current working directory.
 type ChangeDirectoryStep struct {
 	Directory string
 }
 
+// CreateAbortStep returns the abort step for this step.
 func (step ChangeDirectoryStep) CreateAbortStep() Step {
 	return NoOpStep{}
 }
 
+// CreateContinueStep returns the continue step for this step.
 func (step ChangeDirectoryStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
+// CreateUndoStep returns the undo step for this step.
 func (step ChangeDirectoryStep) CreateUndoStep() Step {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -27,6 +31,7 @@ func (step ChangeDirectoryStep) CreateUndoStep() Step {
 	return ChangeDirectoryStep{Directory: dir}
 }
 
+// Run executes this step.
 func (step ChangeDirectoryStep) Run() error {
 	_, err := os.Stat(step.Directory)
 	if err == nil {
