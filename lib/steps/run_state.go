@@ -1,5 +1,8 @@
 package steps
 
+// RunState represents the current state of a Git Town command,
+// including which operations are left to do,
+// and how to undo what has ben done so far.
 type RunState struct {
 	AbortStep    Step
 	Command      string
@@ -7,6 +10,9 @@ type RunState struct {
 	UndoStepList StepList
 }
 
+// CreateAbortRunState returns a new runstate
+// to be run to aborting and undoing the Git Town command
+// represented by this runstate.
 func (runState *RunState) CreateAbortRunState() (result RunState) {
 	result.Command = runState.Command
 	result.RunStepList.Append(runState.AbortStep)
@@ -14,6 +20,8 @@ func (runState *RunState) CreateAbortRunState() (result RunState) {
 	return
 }
 
+// CreateSkipRunState returns a new Runstate
+// that skips operations for the current branch.
 func (runState *RunState) CreateSkipRunState() (result RunState) {
 	result.Command = runState.Command
 	result.RunStepList.Append(runState.AbortStep)
@@ -35,12 +43,17 @@ func (runState *RunState) CreateSkipRunState() (result RunState) {
 	return
 }
 
+// CreateUndoRunState returns a new runstate
+// to be run when undoing the Git Town command
+// represented by this runstate.
 func (runState *RunState) CreateUndoRunState() (result RunState) {
 	result.Command = runState.Command
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
 }
 
+// SkipCurrentBranchSteps removes the steps for the current branch
+// from this run state.
 func (runState *RunState) SkipCurrentBranchSteps() {
 	for {
 		step := runState.RunStepList.Peek()

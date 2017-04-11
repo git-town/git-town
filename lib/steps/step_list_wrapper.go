@@ -7,11 +7,14 @@ import (
 	"github.com/Originate/git-town/lib/git"
 )
 
+// WrapOptions represents the options given to Wrap.
 type WrapOptions struct {
 	RunInGitRoot     bool
 	StashOpenChanges bool
 }
 
+// Wrap wraps the given StepList in steps that
+// change to the Git root directory or stash away open changes.
 func Wrap(stepList StepList, options WrapOptions) (result StepList) {
 	result.AppendList(stepList)
 

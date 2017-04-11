@@ -2,6 +2,9 @@ package steps
 
 import "github.com/Originate/git-town/lib/git"
 
+// DeleteAncestorBranchesStep removes all ancestor information
+// for the current branch
+// from the Git Town configuration.
 type DeleteAncestorBranchesStep struct{}
 
 // CreateAbortStep returns the abort step for this step.
