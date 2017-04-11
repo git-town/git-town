@@ -14,7 +14,7 @@ var repoCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetCodeHostingDriver()
 		repository := git.GetUrlRepositoryName(git.GetRemoteOriginUrl())
-		script.OpenBrowser(driver.GetRepositoryUrl(repository))
+		script.OpenBrowser(driver.GetRepositoryURL(repository))
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return validateMaxArgs(args, 0)

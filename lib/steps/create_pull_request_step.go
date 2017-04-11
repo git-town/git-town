@@ -26,6 +26,6 @@ func (step CreatePullRequestStep) Run() error {
 	driver := drivers.GetCodeHostingDriver()
 	repository := git.GetUrlRepositoryName(git.GetRemoteOriginUrl())
 	parentBranch := git.GetParentBranch(step.BranchName)
-	script.OpenBrowser(driver.GetNewPullRequestUrl(repository, step.BranchName, parentBranch))
+	script.OpenBrowser(driver.GetNewPullRequestURL(repository, step.BranchName, parentBranch))
 	return nil
 }

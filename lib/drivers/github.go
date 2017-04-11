@@ -8,7 +8,7 @@ import (
 
 type GithubCodeHostingDriver struct{}
 
-func (driver GithubCodeHostingDriver) GetNewPullRequestUrl(repository string, branch string, parentBranch string) string {
+func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
@@ -16,6 +16,6 @@ func (driver GithubCodeHostingDriver) GetNewPullRequestUrl(repository string, br
 	return fmt.Sprintf("https://github.com/%s/compare/%s?expand=1", repository, toCompare)
 }
 
-func (driver GithubCodeHostingDriver) GetRepositoryUrl(repository string) string {
+func (driver GithubCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://github.com/" + repository
 }
