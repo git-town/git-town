@@ -9,6 +9,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// RunOptions bundles the parameters for running a Git Town command.
 type RunOptions struct {
 	CanSkip              func() bool
 	Command              string
@@ -20,6 +21,7 @@ type RunOptions struct {
 	StepListGenerator    func() StepList
 }
 
+// Run runs the Git Town command described by the given RunOptions.
 func Run(options RunOptions) {
 	if options.IsAbort {
 		runState := loadState(options.Command)

@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
@@ -21,6 +22,7 @@ func OpenBrowser(url string) {
 	}
 }
 
+// PrintCommand prints the given command-line operation on the console.
 func PrintCommand(cmd ...string) {
 	header := ""
 	for index, part := range cmd {
@@ -39,6 +41,7 @@ func PrintCommand(cmd ...string) {
 	color.New(color.Bold).Println(header)
 }
 
+// RunCommand executes the given command-line operation.
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
