@@ -7,6 +7,8 @@ import (
 	"github.com/Originate/git-town/lib/git"
 )
 
+// Step represents a dedicated activity within a Git Town command.
+// Git Town commands are comprised of a number of steps that need to be executed.
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
@@ -14,11 +16,13 @@ type Step interface {
 	Run() error
 }
 
+// SerializedStep is used to store Steps as JSON.
 type SerializedStep struct {
 	Data []byte
 	Type string
 }
 
+// SerializedRunState is used to store RunStates as JSON.
 type SerializedRunState struct {
 	AbortStep SerializedStep
 	RunSteps  []SerializedStep
