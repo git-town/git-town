@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +33,7 @@ var pruneBranchesCommand = &cobra.Command{
 
 func checkPruneBranchesPreconditions() {
 	if git.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		script.Fetch()
 	}
 }
 

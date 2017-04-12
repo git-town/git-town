@@ -5,6 +5,7 @@ import (
 
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
+	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 
 	"github.com/spf13/cobra"
@@ -46,7 +47,7 @@ var syncCmd = &cobra.Command{
 
 func checkSyncPreconditions() (result SyncConfig) {
 	if git.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		script.Fetch()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	if allFlag {

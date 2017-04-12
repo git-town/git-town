@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 
 	"github.com/spf13/cobra"
@@ -39,7 +40,7 @@ var hackCmd = &cobra.Command{
 func checkHackPreconditions(args []string) string {
 	targetBranchName := args[0]
 	if git.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(targetBranchName)
 	return targetBranchName
