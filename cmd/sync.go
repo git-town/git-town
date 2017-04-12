@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SyncConfig struct {
+type syncConfig struct {
 	InitialBranch  string
 	BranchesToSync []string
 	ShouldPushTags bool
@@ -35,8 +35,7 @@ var syncCmd = &cobra.Command{
 				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
 			},
 			StepListGenerator: func() steps.StepList {
-				syncConfig := checkSyncPreconditions()
-				return getSyncStepList(syncConfig)
+				return getSyncStepList(checkSyncPreconditions())
 			},
 		})
 	},
@@ -45,7 +44,7 @@ var syncCmd = &cobra.Command{
 	},
 }
 
-func checkSyncPreconditions() (result SyncConfig) {
+func checkSyncPreconditions() (result syncConfig) {
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
@@ -65,13 +64,13 @@ func checkSyncPreconditions() (result SyncConfig) {
 	return
 }
 
-func getSyncStepList(syncConfig SyncConfig) steps.StepList {
+func getSyncStepList(config syncConfig) steps.StepList {
 	stepList := steps.StepList{}
-	for _, branchName := range syncConfig.BranchesToSync {
+	for _, branchName := range config.BranchesToSync {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	stepList.Append(steps.CheckoutBranchStep{BranchName: syncConfig.InitialBranch})
-	if git.HasRemote("origin") && syncConfig.ShouldPushTags {
+	stepList.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+	if git.HasRemote("origin") && config.ShouldPushTags {
 		stepList.Append(steps.PushTagsStep{})
 	}
 	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
