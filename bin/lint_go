@@ -11,4 +11,4 @@ fi
 # - gocyclo: will be enabled and the code refactored later
 # - goconst: let's enable this after more generic refactorings
 gometalinter.v1 -D gas -D gocyclo -D goconst lib/...
-gometalinter.v1 cmd --deadline=20s
+gometalinter.v1 cmd
