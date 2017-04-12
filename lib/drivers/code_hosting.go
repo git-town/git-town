@@ -7,20 +7,25 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
+// CodeHostingDriver defines the interface
+// of drivers for the different code hosting services
 type CodeHostingDriver interface {
-	GetRepositoryUrl(repository string) string
-	GetNewPullRequestUrl(repository string, branch string, parentBranch string) string
+	GetRepositoryURL(repository string) string
+	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
 }
 
+// GetCodeHostingDriver returns an instance of the code hosting driver
+// to use for the repository in the current working directory
 func GetCodeHostingDriver() CodeHostingDriver {
-	hostname := git.GetUrlHostname(git.GetRemoteOriginUrl())
-	if hostname == "github.com" || strings.Contains(hostname, "github") {
+	hostname := git.GetURLHostname(git.GetRemoteOriginURL())
+	switch {
+	case hostname == "github.com" || strings.Contains(hostname, "github"):
 		return GithubCodeHostingDriver{}
-	} else if hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket") {
+	case hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket"):
 		return BitbucketCodeHostingDriver{}
-	} else if hostname == "gitlab.com" || strings.Contains(hostname, "gitlab") {
+	case hostname == "gitlab.com" || strings.Contains(hostname, "gitlab"):
 		return GitlabCodeHostingDriver{}
-	} else {
+	default:
 		util.ExitWithErrorMessage("Unsupported hosting service.", "This command requires hosting on GitHub, GitLab, or Bitbucket")
 		return nil
 	}

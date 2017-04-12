@@ -5,15 +5,20 @@ import (
 	"net/url"
 )
 
+// GitlabCodeHostingDriver provides tools for working with repositories
+// on Gitlab.
 type GitlabCodeHostingDriver struct{}
 
-func (driver GitlabCodeHostingDriver) GetNewPullRequestUrl(repository string, branch string, parentBranch string) string {
+// GetNewPullRequestURL returns the URL of the page
+// to create a new pull request on Gitlab
+func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
 	return fmt.Sprintf("https://gitlab.com/%s/merge_requests/new?%s", repository, query.Encode())
 }
 
-func (driver GitlabCodeHostingDriver) GetRepositoryUrl(repository string) string {
+// GetRepositoryURL returns the URL of the given repository on Gitlab
+func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://gitlab.com/" + repository
 }

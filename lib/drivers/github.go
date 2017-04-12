@@ -6,9 +6,13 @@ import (
 	"github.com/Originate/git-town/lib/git"
 )
 
+// GithubCodeHostingDriver provides tools for working with repositories
+// hosted on Github
 type GithubCodeHostingDriver struct{}
 
-func (driver GithubCodeHostingDriver) GetNewPullRequestUrl(repository string, branch string, parentBranch string) string {
+// GetNewPullRequestURL returns the URL of the page
+// to create a new pull request on Github
+func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
@@ -16,6 +20,7 @@ func (driver GithubCodeHostingDriver) GetNewPullRequestUrl(repository string, br
 	return fmt.Sprintf("https://github.com/%s/compare/%s?expand=1", repository, toCompare)
 }
 
-func (driver GithubCodeHostingDriver) GetRepositoryUrl(repository string) string {
+// GetRepositoryURL returns the URL of the given repository on github.com
+func (driver GithubCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://github.com/" + repository
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/Originate/git-town/lib/git"
 )
 
+// GetSyncBranchSteps returns the steps to sync the branch with the given name.
 func GetSyncBranchSteps(branchName string) (result StepList) {
 	isFeature := git.IsFeatureBranch(branchName)
 	hasRemoteOrigin := git.HasRemote("origin")

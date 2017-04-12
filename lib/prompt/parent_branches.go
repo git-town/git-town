@@ -11,6 +11,9 @@ import (
 	"github.com/fatih/color"
 )
 
+// EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
+// is known to Git Town.
+// Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
 		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasCompiledAncestorBranches(branchName) {
@@ -80,14 +83,15 @@ func parseParentBranch(userInput string) string {
 
 	if numericRegex.MatchString(userInput) {
 		return parseParentBranchNumber(userInput)
-	} else if userInput == "" {
+	}
+	if userInput == "" {
 		return mainBranch
-	} else if git.HasBranch(userInput) {
+	}
+	if git.HasBranch(userInput) {
 		return userInput
-	} else {
-		util.PrintError(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
 	}
 
+	util.PrintError(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
 	return ""
 }
 
@@ -99,10 +103,10 @@ func parseParentBranchNumber(userInput string) string {
 	}
 	if index >= 1 && index <= len(numberedBranches) {
 		return numberedBranches[index-1]
-	} else {
-		util.PrintError("Invalid branch number")
-		return ""
 	}
+
+	util.PrintError("Invalid branch number")
+	return ""
 }
 
 func printNumberedBranches() {
