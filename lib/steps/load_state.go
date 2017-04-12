@@ -14,9 +14,8 @@ func hasSavedState(command string) bool {
 	if err != nil {
 		if os.IsNotExist(err) {
 			return false
-		} else {
-			log.Fatal("Error getting stat for run result file:", err)
 		}
+		log.Fatal("Error getting stat for run result file:", err)
 	}
 	return true
 }

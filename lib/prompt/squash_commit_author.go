@@ -12,21 +12,22 @@ import (
 	"github.com/fatih/color"
 )
 
+// GetSquashCommitAuthor gets the author of the supplied branch.
+// If the branch has more than one author, the author is queried from the user.
 func GetSquashCommitAuthor(branchName string) string {
 	authors := getBranchAuthors(branchName)
 	if len(authors) == 1 {
 		return authors[0].NameAndEmail
-	} else {
-		fmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
-		printNumberedAuthors(authors)
-		fmt.Println()
-		return askForAuthor(authors)
 	}
+	fmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
+	printNumberedAuthors(authors)
+	fmt.Println()
+	return askForAuthor(authors)
 }
 
 // Helpers
 
-type Author struct {
+type branchAuthor struct {
 	NameAndEmail    string
 	NumberOfCommits string
 }
@@ -37,7 +38,7 @@ Please choose an author for the squash commit.
 
 `
 
-func askForAuthor(authors []Author) string {
+func askForAuthor(authors []branchAuthor) string {
 	for {
 		fmt.Print("Enter user's number or a custom author (default: 1): ")
 		author := parseAuthor(util.GetUserInput(), authors)
@@ -47,17 +48,17 @@ func askForAuthor(authors []Author) string {
 	}
 }
 
-func getBranchAuthors(branchName string) (result []Author) {
+func getBranchAuthors(branchName string) (result []branchAuthor) {
 	output := util.GetCommandOutput("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName)
 	for _, line := range strings.Split(output, "\n") {
-		line := strings.TrimSpace(line)
+		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
-		result = append(result, Author{NameAndEmail: parts[1], NumberOfCommits: parts[0]})
+		result = append(result, branchAuthor{NameAndEmail: parts[1], NumberOfCommits: parts[0]})
 	}
 	return
 }
 
-func parseAuthor(userInput string, authors []Author) string {
+func parseAuthor(userInput string, authors []branchAuthor) string {
 	numericRegex, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
 		log.Fatal("Error compiling numeric regular expression: ", err)
@@ -65,27 +66,26 @@ func parseAuthor(userInput string, authors []Author) string {
 
 	if numericRegex.MatchString(userInput) {
 		return parseAuthorNumber(userInput, authors)
-	} else if userInput == "" {
-		return authors[0].NameAndEmail
-	} else {
-		return userInput
 	}
+	if userInput == "" {
+		return authors[0].NameAndEmail
+	}
+	return userInput
 }
 
-func parseAuthorNumber(userInput string, authors []Author) string {
+func parseAuthorNumber(userInput string, authors []branchAuthor) string {
 	index, err := strconv.Atoi(userInput)
 	if err != nil {
 		log.Fatal("Error parsing string to integer: ", err)
 	}
 	if index >= 1 && index <= len(authors) {
 		return authors[index-1].NameAndEmail
-	} else {
-		util.PrintError("Invalid author number")
-		return ""
 	}
+	util.PrintError("Invalid author number")
+	return ""
 }
 
-func printNumberedAuthors(authors []Author) {
+func printNumberedAuthors(authors []branchAuthor) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
 		stat := util.Pluralize(author.NumberOfCommits, "commit")

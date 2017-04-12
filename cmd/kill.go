@@ -3,11 +3,12 @@ package cmd
 import (
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
+	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/spf13/cobra"
 )
 
-type KillConfig struct {
+type killConfig struct {
 	InitialBranch       string
 	IsTargetBranchLocal bool
 	TargetBranch        string
@@ -27,8 +28,7 @@ var killCommand = &cobra.Command{
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				killConfig := checkKillPreconditions(args)
-				return getKillStepList(killConfig)
+				return getKillStepList(checkKillPreconditions(args))
 			},
 		})
 	},
@@ -37,7 +37,7 @@ var killCommand = &cobra.Command{
 	},
 }
 
-func checkKillPreconditions(args []string) (result KillConfig) {
+func checkKillPreconditions(args []string) (result killConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 
 	if len(args) == 0 {
@@ -54,7 +54,7 @@ func checkKillPreconditions(args []string) (result KillConfig) {
 	}
 
 	if git.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		script.Fetch()
 	}
 
 	if result.InitialBranch != result.TargetBranch {
@@ -64,26 +64,26 @@ func checkKillPreconditions(args []string) (result KillConfig) {
 	return
 }
 
-func getKillStepList(killConfig KillConfig) (result steps.StepList) {
-	if killConfig.IsTargetBranchLocal {
-		targetBranchParent := git.GetParentBranch(killConfig.TargetBranch)
-		if git.HasTrackingBranch(killConfig.TargetBranch) {
-			result.Append(steps.DeleteRemoteBranchStep{BranchName: killConfig.TargetBranch, IsTracking: true})
+func getKillStepList(config killConfig) (result steps.StepList) {
+	if config.IsTargetBranchLocal {
+		targetBranchParent := git.GetParentBranch(config.TargetBranch)
+		if git.HasTrackingBranch(config.TargetBranch) {
+			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
-		if killConfig.InitialBranch == killConfig.TargetBranch {
+		if config.InitialBranch == config.TargetBranch {
 			if git.HasOpenChanges() {
 				result.Append(steps.CommitOpenChangesStep{})
 			}
 			result.Append(steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
-		result.Append(steps.DeleteLocalBranchStep{BranchName: killConfig.TargetBranch, Force: true})
-		for _, child := range git.GetChildBranches(killConfig.TargetBranch) {
+		result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
+		for _, child := range git.GetChildBranches(config.TargetBranch) {
 			result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
-		result.Append(steps.DeleteParentBranchStep{BranchName: killConfig.TargetBranch})
+		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
 		result.Append(steps.DeleteAncestorBranchesStep{})
 	} else {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: killConfig.TargetBranch, IsTracking: false})
+		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	}
 	return
 }

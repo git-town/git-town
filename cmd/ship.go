@@ -5,13 +5,14 @@ import (
 
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/prompt"
+	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/Originate/git-town/lib/util"
 
 	"github.com/spf13/cobra"
 )
 
-type ShipConfig struct {
+type shipConfig struct {
 	InitialBranch       string
 	IsTargetBranchLocal bool
 	TargetBranch        string
@@ -42,7 +43,7 @@ var shipCmd = &cobra.Command{
 	},
 }
 
-func checkShipPreconditions(args []string) (result ShipConfig) {
+func checkShipPreconditions(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
@@ -51,7 +52,7 @@ func checkShipPreconditions(args []string) (result ShipConfig) {
 		result.TargetBranch = args[0]
 	}
 	if git.HasRemote("origin") {
-		steps.FetchStep{}.Run()
+		script.Fetch()
 	}
 	if result.TargetBranch != result.InitialBranch {
 		git.EnsureHasBranch(result.TargetBranch)
@@ -74,7 +75,7 @@ func ensureParentBranchIsMainBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config ShipConfig) steps.StepList {
+func getShipStepList(config shipConfig) steps.StepList {
 	mainBranch := git.GetMainBranch()
 	areInitialAndTargetDifferent := config.TargetBranch != config.InitialBranch
 	stepList := steps.StepList{}
