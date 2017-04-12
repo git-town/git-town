@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type NewPullRequestConfig struct {
+type newPullRequestConfig struct {
 	InitialBranch  string
 	BranchesToSync []string
 }
@@ -37,7 +37,7 @@ var newPullRequestCommand = &cobra.Command{
 	},
 }
 
-func checkNewPullRequestPreconditions() (result NewPullRequestConfig) {
+func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
@@ -47,7 +47,7 @@ func checkNewPullRequestPreconditions() (result NewPullRequestConfig) {
 	return
 }
 
-func getNewPullRequestStepList(config NewPullRequestConfig) steps.StepList {
+func getNewPullRequestStepList(config newPullRequestConfig) steps.StepList {
 	stepList := steps.StepList{}
 	for _, branchName := range config.BranchesToSync {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
