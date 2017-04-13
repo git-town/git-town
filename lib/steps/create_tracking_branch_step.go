@@ -19,7 +19,7 @@ func (step CreateTrackingBranchStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step CreateTrackingBranchStep) CreateContinueStep() Step {
-	return DeleteRemoteBranchStep{BranchName: step.BranchName}
+	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
