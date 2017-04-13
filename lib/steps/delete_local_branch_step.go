@@ -8,20 +8,10 @@ import (
 // DeleteLocalBranchStep deletes the branch with the given name,
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStepAfterRun
 	BranchName string
 	Force      bool
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step DeleteLocalBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step DeleteLocalBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

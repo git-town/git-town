@@ -9,19 +9,9 @@ import (
 
 // ChangeDirectoryStep changes the current working directory.
 type ChangeDirectoryStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStepAfterRun
 	Directory string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step ChangeDirectoryStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step ChangeDirectoryStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

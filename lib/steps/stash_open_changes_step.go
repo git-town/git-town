@@ -6,18 +6,8 @@ import (
 
 // StashOpenChangesStep stores all uncommitted changes on the Git stash.
 type StashOpenChangesStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStepAfterRun
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step StashOpenChangesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step StashOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

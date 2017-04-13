@@ -6,18 +6,8 @@ import (
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
 type RestoreOpenChangesStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStep
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step RestoreOpenChangesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step RestoreOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.

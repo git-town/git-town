@@ -7,19 +7,9 @@ import (
 
 // CheckoutBranchStep checks out a new branch.
 type CheckoutBranchStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStepAfterRun
 	BranchName string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CheckoutBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CheckoutBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

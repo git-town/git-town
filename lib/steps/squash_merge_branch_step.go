@@ -11,6 +11,7 @@ import (
 
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch
 type SquashMergeBranchStep struct {
+	NoContinueStep
 	NoUndoStepBeforeRun
 	BranchName    string
 	CommitMessage string
@@ -19,11 +20,6 @@ type SquashMergeBranchStep struct {
 // CreateAbortStep returns the abort step for this step.
 func (step SquashMergeBranchStep) CreateAbortStep() Step {
 	return DiscardOpenChangesStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step SquashMergeBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepAfterRun returns the undo step for this step after it is run.

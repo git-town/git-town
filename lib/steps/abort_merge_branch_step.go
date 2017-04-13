@@ -4,7 +4,7 @@ import "github.com/Originate/git-town/lib/script"
 
 // AbortMergeBranchStep aborts the current merge conflict.
 type AbortMergeBranchStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStep
 }
 

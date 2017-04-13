@@ -6,18 +6,8 @@ import "github.com/Originate/git-town/lib/git"
 // for the current branch
 // from the Git Town configuration.
 type DeleteAncestorBranchesStep struct {
-	NoAutomaticAbortOnError
+	NoExpectedError
 	NoUndoStep
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step DeleteAncestorBranchesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step DeleteAncestorBranchesStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.
