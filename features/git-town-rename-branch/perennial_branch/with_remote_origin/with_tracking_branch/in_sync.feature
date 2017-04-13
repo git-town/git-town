@@ -17,24 +17,21 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
 
   Scenario: error when trying to rename
-    When I run `git town-rename-branch production renamed-production`
+    When I run `gt rename-branch production renamed-production`
     Then it runs no commands
-    And I get the error "The branch 'production' is not a feature branch."
-    And I get the error "Run 'git town-rename-branch production renamed-production -f' to force the rename, then reconfigure git-town on any other clones of this repo."
+    And I get the error "'production' is a perennial branch. Perennial branches require the '--force' option to be renamed."
 
 
   Scenario: forcing rename
-    When I run `git town-rename-branch production renamed-production -f`
+    When I run `gt rename-branch --force production renamed-production`
     Then it runs the commands
-      | BRANCH             | COMMAND                                       |
-      | production         | git fetch --prune                             |
-      |                    | git add -A                                    |
-      |                    | git stash                                     |
-      |                    | git checkout -b renamed-production production |
-      | renamed-production | git push -u origin renamed-production         |
-      |                    | git push origin :production                   |
-      |                    | git branch -D production                      |
-      |                    | git stash pop                                 |
+      | BRANCH             | COMMAND                                  |
+      | production         | git fetch --prune                        |
+      |                    | git branch renamed-production production |
+      |                    | git checkout renamed-production          |
+      | renamed-production | git push -u origin renamed-production    |
+      |                    | git push origin :production              |
+      |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
     And my repo is configured with perennial branches as "qa" and "renamed-production"
     And I still have my uncommitted file
@@ -46,18 +43,15 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
 
   Scenario: undo
-    Given I run `git town-rename-branch production renamed-production -f`
-    When I run `git town-rename-branch --undo`
+    Given I run `gt rename-branch --force production renamed-production`
+    When I run `gt rename-branch --undo`
     Then it runs the commands
         | BRANCH             | COMMAND                                              |
-        | renamed-production | git add -A                                           |
-        |                    | git stash                                            |
-        |                    | git branch production <%= sha 'production commit' %> |
+        | renamed-production | git branch production <%= sha 'production commit' %> |
         |                    | git push -u origin production                        |
         |                    | git push origin :renamed-production                  |
         |                    | git checkout production                              |
-        | production         | git branch -d renamed-production                     |
-        |                    | git stash pop                                        |
+        | production         | git branch -D renamed-production                     |
     And I end up on the "production" branch
     And my repo is configured with perennial branches as "qa" and "production"
     And I still have my uncommitted file

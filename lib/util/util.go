@@ -35,6 +35,17 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
+// RemoveStringElement returns a new string slice which is the given string slice
+// with the given string removed
+func RemoveStringElement(list []string, value string) (result []string) {
+	for _, element := range list {
+		if element != value {
+			result = append(result, element)
+		}
+	}
+	return
+}
+
 // ExitWithErrorMessage prints the given error message and terminates the application.
 func ExitWithErrorMessage(messages ...string) {
 	PrintError(messages...)

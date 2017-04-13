@@ -8,7 +8,7 @@ import (
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
 	NoAutomaticAbortOnError
-	NoUndoStep
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -19,7 +19,12 @@ func (step CreateTrackingBranchStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step CreateTrackingBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
+	return DeleteRemoteBranchStep{BranchName: step.BranchName}
+}
+
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step CreateTrackingBranchStep) CreateUndoStepBeforeRun() Step {
+	return DeleteRemoteBranchStep{BranchName: step.BranchName}
 }
 
 // Run executes this step.

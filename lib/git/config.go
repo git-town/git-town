@@ -15,6 +15,13 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
+// AddPerennialBranch adds the given branch as a perennial branch
+func AddPerennialBranch(branchName string) {
+	oldValue := GetPerennialBranches()
+	newValue := append(oldValue, branchName)
+	setPerennialBranches(newValue)
+}
+
 // CompileAncestorBranches re-calculates and returns the list of ancestor branches
 // of the given branch
 // based off the "git-town-branch.XXX.ancestors" configuration values.
@@ -35,10 +42,12 @@ func CompileAncestorBranches(branchName string) (result []string) {
 // DeleteAllAncestorBranches removes all Git Town ancestor entries
 // for all branches from the configuration.
 func DeleteAllAncestorBranches() {
-	configs := util.GetCommandOutput("git", "config", "--get-regexp", "^git-town-branch\\..*\\.ancestors$")
-	for _, config := range strings.Split(configs, "\n") {
-		splitConfig := strings.Split(config, " ")
-		removeConfigurationValue(splitConfig[0])
+	configRegexp, err := regexp.Compile("^git-town-branch\\..*\\.ancestors$")
+	if err != nil {
+		log.Fatal("Error compiling ancestor branches configuration regular expression: ", err)
+	}
+	for _, key := range getConfigurationKeysMatching(configRegexp) {
+		removeConfigurationValue(key)
 	}
 }
 
@@ -70,12 +79,13 @@ func GetAncestorBranches(branchName string) []string {
 // GetChildBranches returns the names of all branches for which the given branch
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
-	configs := util.GetCommandOutput("git", "config", "--get-regexp", "^git-town-branch\\..*\\.parent$")
-	for _, config := range strings.Split(configs, "\n") {
-		splitConfig := strings.Split(config, " ")
-		key := splitConfig[0]
-		value := splitConfig[1]
-		if value == branchName {
+	configRegexp, err := regexp.Compile("^git-town-branch\\..*\\.parent$")
+	if err != nil {
+		log.Fatal("Error compiling parent branch configuration regular expression: ", err)
+	}
+	for _, key := range getConfigurationKeysMatching(configRegexp) {
+		parent := getConfigurationValue(key)
+		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append([]string{child}, result...)
 		}
@@ -185,6 +195,13 @@ func IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
+// RemovePerennialBranch removes the given branch as a perennial branch
+func RemovePerennialBranch(branchName string) {
+	oldValue := GetPerennialBranches()
+	newValue := util.RemoveStringElement(oldValue, branchName)
+	setPerennialBranches(newValue)
+}
+
 // SetAncestorBranches stores the given list of branches as ancestors
 // for the given branch in the Git Town configuration.
 func SetAncestorBranches(branchName string, ancestorBranches []string) {
@@ -220,12 +237,26 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 	return value
 }
 
+func getConfigurationKeysMatching(configRegexp *regexp.Regexp) (result []string) {
+	lines := util.GetCommandOutput("git", "config", "-l", "--local", "--name")
+	for _, line := range strings.Split(lines, "\n") {
+		if configRegexp.MatchString(line) {
+			result = append(result, line)
+		}
+	}
+	return
+}
+
 func hasConfigurationValue(key string) bool {
 	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--local", "--name"}, key)
 }
 
 func setConfigurationValue(key, value string) {
 	util.GetCommandOutput("git", "config", key, value)
+}
+
+func setPerennialBranches(branchNames []string) {
+	setConfigurationValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 func removeConfigurationValue(key string) {

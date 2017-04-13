@@ -13,17 +13,18 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
     And I am on the "parent-feature" branch
-    When I run `git town-rename-branch parent-feature renamed-parent-feature`
+    When I run `gt rename-branch parent-feature renamed-parent-feature`
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH                 | COMMAND                                               |
-      | parent-feature         | git fetch --prune                                     |
-      |                        | git checkout -b renamed-parent-feature parent-feature |
-      | renamed-parent-feature | git push -u origin renamed-parent-feature             |
-      |                        | git push origin :parent-feature                       |
-      |                        | git branch -D parent-feature                          |
+      | BRANCH                 | COMMAND                                          |
+      | parent-feature         | git fetch --prune                                |
+      |                        | git branch renamed-parent-feature parent-feature |
+      |                        | git checkout renamed-parent-feature              |
+      | renamed-parent-feature | git push -u origin renamed-parent-feature        |
+      |                        | git push origin :parent-feature                  |
+      |                        | git branch -D parent-feature                     |
     And I end up on the "renamed-parent-feature" branch
     And I have the following commits
       | BRANCH                 | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
@@ -36,14 +37,14 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
   Scenario: undo
-    When I run `git town-rename-branch --undo`
+    When I run `gt rename-branch --undo`
     Then it runs the commands
       | BRANCH                 | COMMAND                                                      |
       | renamed-parent-feature | git branch parent-feature <%= sha 'parent feature commit' %> |
       |                        | git push -u origin parent-feature                            |
       |                        | git push origin :renamed-parent-feature                      |
       |                        | git checkout parent-feature                                  |
-      | parent-feature         | git branch -d renamed-parent-feature                         |
+      | parent-feature         | git branch -D renamed-parent-feature                         |
     And I end up on the "parent-feature" branch
     And I have the following commits
       | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
