@@ -19,7 +19,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     Then it runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git add -A                             |
-      |                 | git commit -m 'WIP on current-feature' |
+      |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I end up on the "main" branch

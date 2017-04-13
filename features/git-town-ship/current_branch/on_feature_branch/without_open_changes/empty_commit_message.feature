@@ -11,7 +11,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git town-ship` and enter an empty commit message
+    When I run `gt ship` and enter an empty commit message
 
 
   Scenario: result
@@ -30,7 +30,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And I get the error "Ship aborted because commit exited with error"
+    And I get the error "Aborted because commit exited with error"
     And I am still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
@@ -38,7 +38,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
 
 
   Scenario: undo
-    When I run `git town-ship --undo`
+    When I run `gt ship --undo`
     Then I get the error "Nothing to undo"
     And I am still on the "feature" branch
     And I still have the following commits

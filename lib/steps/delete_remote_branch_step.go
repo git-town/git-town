@@ -7,6 +7,8 @@ import (
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.
 type DeleteRemoteBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 	IsTracking bool
 }
@@ -21,8 +23,8 @@ func (step DeleteRemoteBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step DeleteRemoteBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step DeleteRemoteBranchStep) CreateUndoStepBeforeRun() Step {
 	if step.IsTracking {
 		return CreateTrackingBranchStep{BranchName: step.BranchName}
 	}

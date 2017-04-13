@@ -81,6 +81,16 @@ func GetUserInput() string {
 	return strings.TrimSpace(text)
 }
 
+// Pluralize outputs the count and the word. The word is made plural
+// if the count isn't one
+func Pluralize(count, word string) string {
+	result := count + " " + word
+	if count != "1" {
+		result = result + "s"
+	}
+	return result
+}
+
 // PrintError prints the given error message to the console.
 func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)

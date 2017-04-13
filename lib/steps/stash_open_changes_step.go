@@ -5,7 +5,10 @@ import (
 )
 
 // StashOpenChangesStep stores all uncommitted changes on the Git stash.
-type StashOpenChangesStep struct{}
+type StashOpenChangesStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step StashOpenChangesStep) CreateAbortStep() Step {
@@ -17,8 +20,8 @@ func (step StashOpenChangesStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step StashOpenChangesStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step StashOpenChangesStep) CreateUndoStepBeforeRun() Step {
 	return RestoreOpenChangesStep{}
 }
 

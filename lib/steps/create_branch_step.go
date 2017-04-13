@@ -5,6 +5,8 @@ import "github.com/Originate/git-town/lib/script"
 // CreateBranchStep creates a new branch
 // but leaves the current branch unchanged.
 type CreateBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName    string
 	StartingPoint string
 }
@@ -16,11 +18,6 @@ func (step CreateBranchStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step CreateBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step CreateBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

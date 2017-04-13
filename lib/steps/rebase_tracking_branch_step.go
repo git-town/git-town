@@ -5,7 +5,10 @@ import (
 )
 
 // RebaseTrackingBranchStep rebases the current branch against its tracking branch.
-type RebaseTrackingBranchStep struct{}
+type RebaseTrackingBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step RebaseTrackingBranchStep) CreateAbortStep() Step {
@@ -17,8 +20,8 @@ func (step RebaseTrackingBranchStep) CreateContinueStep() Step {
 	return ContinueRebaseBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step RebaseTrackingBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step RebaseTrackingBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

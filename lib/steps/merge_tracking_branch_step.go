@@ -6,7 +6,10 @@ import (
 
 // MergeTrackingBranchStep merges the tracking branch of the current branch
 // into the current branch.
-type MergeTrackingBranchStep struct{}
+type MergeTrackingBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step MergeTrackingBranchStep) CreateAbortStep() Step {
@@ -18,8 +21,8 @@ func (step MergeTrackingBranchStep) CreateContinueStep() Step {
 	return ContinueMergeBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step MergeTrackingBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step MergeTrackingBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

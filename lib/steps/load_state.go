@@ -5,18 +5,40 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
-func loadState(command string) RunState {
+func hasSavedState(command string) bool {
 	filename := getRunResultFilename(command)
-	content, err := ioutil.ReadFile(filename)
+	_, err := os.Stat(filename)
 	if err != nil {
-		log.Fatal(err)
+		if os.IsNotExist(err) {
+			return false
+		}
+		log.Fatal("Error getting stat for run result file:", err)
 	}
+	return true
+}
+
+func clearSavedState(command string) {
+	if hasSavedState(command) {
+		os.Remove(getRunResultFilename(command))
+	}
+}
+
+func loadState(command string) RunState {
 	var serializedRunState SerializedRunState
-	err = json.Unmarshal(content, &serializedRunState)
-	if err != nil {
-		log.Fatal(err)
+	if hasSavedState(command) {
+		content, err := ioutil.ReadFile(getRunResultFilename(command))
+		if err != nil {
+			log.Fatal(err)
+		}
+		err = json.Unmarshal(content, &serializedRunState)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		serializedRunState.AbortStep = SerializedStep{Type: "NoOpStep"}
 	}
 	return RunState{
 		AbortStep:    deserializeStep(serializedRunState.AbortStep),
@@ -64,6 +86,24 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := CreateTrackingBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
+	case "DeleteAncestorBranchesStep":
+		return DeleteAncestorBranchesStep{}
+	case "DeleteLocalBranchStep":
+		step := DeleteLocalBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "DeleteParentBranchStep":
+		step := DeleteParentBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "DeleteRemoteBranchStep":
+		step := DeleteRemoteBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "EnsureHasShippableChangesStep":
+		step := EnsureHasShippableChangesStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "MergeBranchStep":
 		step := MergeBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
@@ -72,6 +112,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return MergeTrackingBranchStep{}
 	case "NoOpStep":
 		return NoOpStep{}
+	case "PushBranchAfterCurrentBranchSteps":
+		return PushBranchAfterCurrentBranchSteps{}
 	case "PushBranchStep":
 		step := PushBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
@@ -90,8 +132,16 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return step
 	case "RestoreOpenChangesStep":
 		return RestoreOpenChangesStep{}
+	case "RevertCommitStep":
+		step := RevertCommitStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
 	case "SetParentBranchStep":
 		step := SetParentBranchStep{}
+		json.Unmarshal(serializedStep.Data, &step)
+		return step
+	case "SquashMergeBranchStep":
+		step := SquashMergeBranchStep{}
 		json.Unmarshal(serializedStep.Data, &step)
 		return step
 	case "SkipCurrentBranchSteps":

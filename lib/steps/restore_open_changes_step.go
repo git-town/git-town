@@ -5,7 +5,10 @@ import (
 )
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
-type RestoreOpenChangesStep struct{}
+type RestoreOpenChangesStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step RestoreOpenChangesStep) CreateAbortStep() Step {
@@ -14,11 +17,6 @@ func (step RestoreOpenChangesStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step RestoreOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step RestoreOpenChangesStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

@@ -2,7 +2,9 @@ package steps
 
 // NoOpStep does nothing.
 // It is used for steps that have no undo or abort steps.
-type NoOpStep struct{}
+type NoOpStep struct {
+	NoAutomaticAbortOnError
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step NoOpStep) CreateAbortStep() Step {
@@ -14,8 +16,13 @@ func (step NoOpStep) CreateContinueStep() Step {
 	return step
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step NoOpStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step NoOpStep) CreateUndoStepBeforeRun() Step {
+	return step
+}
+
+// CreateUndoStepAfterRun returns the undo step for this step after it is run.
+func (step NoOpStep) CreateUndoStepAfterRun() Step {
 	return step
 }
 

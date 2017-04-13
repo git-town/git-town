@@ -12,8 +12,11 @@ import (
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
-	CreateUndoStep() Step
+	CreateUndoStepBeforeRun() Step
+	CreateUndoStepAfterRun() Step
+	GetAutomaticAbortErrorMessage() string
 	Run() error
+	ShouldAutomaticallyAbortOnError() bool
 }
 
 // SerializedStep is used to store Steps as JSON.

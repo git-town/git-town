@@ -7,7 +7,10 @@ import (
 
 // ContinueRebaseBranchStep finishes an ongoing rebase operation
 // assuming all conflicts have been resolved by the user.
-type ContinueRebaseBranchStep struct{}
+type ContinueRebaseBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
@@ -17,11 +20,6 @@ func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
 // CreateContinueStep returns the continue step for this step.
 func (step ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step ContinueRebaseBranchStep) CreateUndoStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.

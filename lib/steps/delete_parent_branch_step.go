@@ -4,6 +4,8 @@ import "github.com/Originate/git-town/lib/git"
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -17,8 +19,8 @@ func (step DeleteParentBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step DeleteParentBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step DeleteParentBranchStep) CreateUndoStepBeforeRun() Step {
 	parent := git.GetParentBranch(step.BranchName)
 	if parent == "" {
 		return NoOpStep{}

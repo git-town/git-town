@@ -6,7 +6,10 @@ import (
 
 // AbortRebaseBranchStep represents aborting on ongoing merge conflict.
 // This step is used in the abort scripts for Git Town commands.
-type AbortRebaseBranchStep struct{}
+type AbortRebaseBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step AbortRebaseBranchStep) CreateAbortStep() Step {
@@ -15,11 +18,6 @@ func (step AbortRebaseBranchStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step AbortRebaseBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step AbortRebaseBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

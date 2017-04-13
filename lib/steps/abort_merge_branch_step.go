@@ -1,11 +1,12 @@
 package steps
 
-import (
-	"github.com/Originate/git-town/lib/script"
-)
+import "github.com/Originate/git-town/lib/script"
 
 // AbortMergeBranchStep aborts the current merge conflict.
-type AbortMergeBranchStep struct{}
+type AbortMergeBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
+}
 
 // CreateAbortStep returns the abort step for this step.
 func (step AbortMergeBranchStep) CreateAbortStep() Step {
@@ -14,11 +15,6 @@ func (step AbortMergeBranchStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step AbortMergeBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step AbortMergeBranchStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

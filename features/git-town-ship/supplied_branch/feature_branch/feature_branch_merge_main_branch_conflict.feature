@@ -11,7 +11,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other-feature" branch
     And I have an uncommitted file
-    And I run `git town-ship feature -m "feature done"`
+    And I run `gt ship feature -m "feature done"`
 
 
   Scenario: result
@@ -28,8 +28,8 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git merge --no-edit main           |
     And I get the error
       """
-      To abort, run "git town-ship --abort".
-      To continue after you have resolved the conflicts, run "git town-ship --continue".
+      To abort, run "gt ship --abort".
+      To continue after you have resolved the conflicts, run "gt ship --continue".
       """
     And I end up on the "feature" branch
     And my uncommitted file is stashed
@@ -37,7 +37,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
 
   Scenario: aborting
-    When I run `git town-ship --abort`
+    When I run `gt ship --abort`
     Then it runs the commands
       | BRANCH        | COMMAND                    |
       | feature       | git merge --abort          |
@@ -55,7 +55,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git town-ship --continue`
+    When I run `gt ship --continue`
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
@@ -78,7 +78,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git town-ship --continue`
+    When I run `git commit --no-edit; gt ship --continue`
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git checkout main            |

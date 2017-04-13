@@ -5,6 +5,8 @@ import "github.com/Originate/git-town/lib/git"
 // SetParentBranchStep registers the branch with the given name as a parent
 // of the branch with the other given name.
 type SetParentBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName       string
 	ParentBranchName string
 }
@@ -19,8 +21,8 @@ func (step SetParentBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step SetParentBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step SetParentBranchStep) CreateUndoStepBeforeRun() Step {
 	oldParent := git.GetParentBranch(step.BranchName)
 	if oldParent == "" {
 		return DeleteParentBranchStep{BranchName: step.BranchName}

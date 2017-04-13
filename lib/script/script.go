@@ -27,7 +27,7 @@ func PrintCommand(cmd ...string) {
 	header := ""
 	for index, part := range cmd {
 		if strings.Contains(part, " ") {
-			part = "'" + part + "'"
+			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
 		}
 		if index != 0 {
 			header = header + " "
@@ -45,7 +45,8 @@ func PrintCommand(cmd ...string) {
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
-	subProcess.Stdout = os.Stdout
 	subProcess.Stderr = os.Stderr
+	subProcess.Stdin = os.Stdin
+	subProcess.Stdout = os.Stdout
 	return subProcess.Run()
 }

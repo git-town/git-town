@@ -7,6 +7,8 @@ import (
 
 // CheckoutBranchStep checks out a new branch.
 type CheckoutBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -20,8 +22,8 @@ func (step CheckoutBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step CheckoutBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step CheckoutBranchStep) CreateUndoStepBeforeRun() Step {
 	return CheckoutBranchStep{BranchName: git.GetCurrentBranchName()}
 }
 

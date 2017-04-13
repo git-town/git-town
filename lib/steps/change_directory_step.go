@@ -9,6 +9,8 @@ import (
 
 // ChangeDirectoryStep changes the current working directory.
 type ChangeDirectoryStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	Directory string
 }
 
@@ -22,8 +24,8 @@ func (step ChangeDirectoryStep) CreateContinueStep() Step {
 	return NoOpStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step ChangeDirectoryStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step ChangeDirectoryStep) CreateUndoStepBeforeRun() Step {
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)

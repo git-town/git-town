@@ -15,6 +15,14 @@ func EnsureDoesNotHaveConflicts() {
 	}
 }
 
+// EnsureDoesNotHaveOpenChanges assets that the workspace
+// has no open changes
+func EnsureDoesNotHaveOpenChanges(message string) {
+	if HasOpenChanges() {
+		util.ExitWithErrorMessage("You have uncommitted changes. " + message)
+	}
+}
+
 // GetRootDirectory returns the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func GetRootDirectory() string {
@@ -29,6 +37,12 @@ func HasConflicts() bool {
 // HasOpenChanges returns whether the local repository contains uncommitted changes.
 func HasOpenChanges() bool {
 	return util.GetCommandOutput("git", "status", "--porcelain") != ""
+}
+
+// HasShippableChanges returns whether the supplied branch has an changes
+// not currently on the main branchName
+func HasShippableChanges(branchName string) bool {
+	return util.GetCommandOutput("git", "diff", GetMainBranch()+".."+branchName) != ""
 }
 
 // IsMergeInProgress returns whether the local repository is in the middle of

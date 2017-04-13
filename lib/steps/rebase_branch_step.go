@@ -8,6 +8,8 @@ import (
 // RebaseBranchStep rebases the current branch
 // against the branch with the given name.
 type RebaseBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -21,8 +23,8 @@ func (step RebaseBranchStep) CreateContinueStep() Step {
 	return ContinueRebaseBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step RebaseBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step RebaseBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

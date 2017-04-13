@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/util"
 
 	"github.com/fatih/color"
 )
@@ -38,8 +39,13 @@ func Run(options RunOptions) {
 	} else if options.IsUndo {
 		runState := loadState(options.Command)
 		undoRunState := runState.CreateUndoRunState()
-		runSteps(&undoRunState, options)
+		if undoRunState.RunStepList.isEmpty() {
+			util.ExitWithErrorMessage("Nothing to undo")
+		} else {
+			runSteps(&undoRunState, options)
+		}
 	} else {
+		clearSavedState(options.Command)
 		runSteps(&RunState{
 			Command:     options.Command,
 			RunStepList: options.StepListGenerator(),
@@ -53,8 +59,10 @@ func runSteps(runState *RunState, options RunOptions) {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
-			runState.AbortStep = NoOpStep{}
-			saveState(runState)
+			if !runState.IsAbort && !runState.isUndo {
+				runState.AbortStep = NoOpStep{}
+				saveState(runState)
+			}
 			fmt.Println()
 			return
 		}
@@ -62,19 +70,31 @@ func runSteps(runState *RunState, options RunOptions) {
 			runState.SkipCurrentBranchSteps()
 			continue
 		}
-		undoStep := step.CreateUndoStep()
+		if getTypeName(step) == "PushBranchAfterCurrentBranchSteps" {
+			runState.AddPushBranchStepAfterCurrentBranchSteps()
+			continue
+		}
+		undoStepBeforeRun := step.CreateUndoStepBeforeRun()
 		err := step.Run()
 		if err != nil {
 			runState.AbortStep = step.CreateAbortStep()
-			runState.RunStepList.Prepend(step.CreateContinueStep())
-			saveState(runState)
-			skipMessage := ""
-			if options.CanSkip() {
-				skipMessage = options.SkipMessageGenerator()
+			if step.ShouldAutomaticallyAbortOnError() {
+				abortRunState := runState.CreateAbortRunState()
+				runSteps(&abortRunState, options)
+				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
+			} else {
+				runState.RunStepList.Prepend(step.CreateContinueStep())
+				saveState(runState)
+				skipMessage := ""
+				if options.CanSkip() {
+					skipMessage = options.SkipMessageGenerator()
+				}
+				exitWithMessages(runState.Command, skipMessage)
 			}
-			exitWithMessages(runState.Command, skipMessage)
 		}
-		runState.UndoStepList.Prepend(undoStep)
+		undoStepAfterRun := step.CreateUndoStepAfterRun()
+		runState.UndoStepList.Prepend(undoStepBeforeRun)
+		runState.UndoStepList.Prepend(undoStepAfterRun)
 	}
 }
 

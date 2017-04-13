@@ -7,6 +7,8 @@ import (
 
 // MergeBranchStep merges the branch with the given name into the current branch
 type MergeBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStepAfterRun
 	BranchName string
 }
 
@@ -20,8 +22,8 @@ func (step MergeBranchStep) CreateContinueStep() Step {
 	return ContinueMergeBranchStep{}
 }
 
-// CreateUndoStep returns the undo step for this step.
-func (step MergeBranchStep) CreateUndoStep() Step {
+// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
+func (step MergeBranchStep) CreateUndoStepBeforeRun() Step {
 	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 

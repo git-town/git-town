@@ -8,7 +8,7 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
   Background:
     Given I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-ship non-existing-branch`
+    When I run `gt ship non-existing-branch`
 
 
   Scenario: result

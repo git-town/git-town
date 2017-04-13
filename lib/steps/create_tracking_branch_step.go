@@ -7,6 +7,8 @@ import (
 // CreateTrackingBranchStep pushes the current branch up to origin
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName string
 }
 
@@ -18,11 +20,6 @@ func (step CreateTrackingBranchStep) CreateAbortStep() Step {
 // CreateContinueStep returns the continue step for this step.
 func (step CreateTrackingBranchStep) CreateContinueStep() Step {
 	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step CreateTrackingBranchStep) CreateUndoStep() Step {
-	return NoOpStep{} // TODO delete remote branch
 }
 
 // Run executes this step.

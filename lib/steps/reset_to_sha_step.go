@@ -8,6 +8,8 @@ import (
 // ResetToShaStep undoes all commits on the current branch
 // all the way until the given SHA.
 type ResetToShaStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
 	Hard bool
 	Sha  string
 }
@@ -19,11 +21,6 @@ func (step ResetToShaStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step ResetToShaStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step ResetToShaStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 

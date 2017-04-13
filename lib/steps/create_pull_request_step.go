@@ -8,6 +8,8 @@ import (
 
 // CreatePullRequestStep creates a new pull request for the current branch.
 type CreatePullRequestStep struct {
+	NoAutomaticAbortOnError
+	NoUndoStep
 	BranchName string
 }
 
@@ -18,11 +20,6 @@ func (step CreatePullRequestStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step CreatePullRequestStep) CreateContinueStep() Step {
-	return NoOpStep{}
-}
-
-// CreateUndoStep returns the undo step for this step.
-func (step CreatePullRequestStep) CreateUndoStep() Step {
 	return NoOpStep{}
 }
 
