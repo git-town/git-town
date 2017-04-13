@@ -26,7 +26,7 @@ func GetCodeHostingDriver() CodeHostingDriver {
 	case hostname == "gitlab.com" || strings.Contains(hostname, "gitlab"):
 		return GitlabCodeHostingDriver{}
 	default:
-		util.ExitWithErrorMessage("Unsupported hosting service.", "This command requires hosting on GitHub, GitLab, or Bitbucket")
+		util.ExitWithErrorMessage("unsupported hosting service", "This command requires hosting on GitHub, GitLab, or Bitbucket.")
 		return nil
 	}
 }

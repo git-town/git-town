@@ -58,7 +58,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing without resolving the conflicts
     When I run `gt new-pull-request --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And I get the error "you must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress

@@ -77,7 +77,7 @@ Feature: gt sync --all: handling merge conflicts between feature branch and its 
   Scenario: continuing without resolving the conflicts
     When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And I get the error "you must resolve the conflicts before continuing"
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress

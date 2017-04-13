@@ -45,7 +45,7 @@ Feature: Initial configuration
       | 4    |
       | main |
       |      |
-    Then I see "Invalid branch number"
+    Then I see "invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -55,7 +55,7 @@ Feature: Initial configuration
       | non-existent |
       | main         |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
+    Then I see "branch 'non-existent' doesn't exist"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -77,7 +77,7 @@ Feature: Initial configuration
       | 4    |
       | 3    |
       |      |
-    Then I see "Invalid branch number"
+    Then I see "invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "production"
 
@@ -88,6 +88,6 @@ Feature: Initial configuration
       | non-existent |
       | dev          |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
+    Then I see "branch 'non-existent' doesn't exist"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "dev"

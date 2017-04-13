@@ -48,7 +48,7 @@ Feature: gt sync: resolving conflicts between the main branch and its tracking b
 
   Scenario: continuing without resolving the conflicts
     When I run `gt sync --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then I get the error "you must resolve the conflicts before continuing"
     And my repo still has a rebase in progress
     And my uncommitted file is stashed
 

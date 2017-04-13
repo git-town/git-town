@@ -48,7 +48,7 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
   Scenario: continuing without resolving the conflicts
     When I run `gt sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And I get the error "you must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 

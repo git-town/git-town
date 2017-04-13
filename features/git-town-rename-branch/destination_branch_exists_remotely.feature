@@ -19,7 +19,7 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
     Then it runs the commands
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
-    And I get the error "A branch named 'existing-feature' already exists"
+    And I get the error "a branch named 'existing-feature' already exists"
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits

@@ -76,7 +76,7 @@ var inputReader = bufio.NewReader(os.Stdin)
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
 	if err != nil {
-		log.Fatal("Error getting user input:", err)
+		log.Fatal("error getting user input:", err)
 	}
 	return strings.TrimSpace(text)
 }
@@ -96,7 +96,7 @@ func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	errHeaderFmt.Println("  Error")
+	errHeaderFmt.Println("  error")
 	for _, message := range messages {
 		errMessageFmt.Println("  " + message)
 	}

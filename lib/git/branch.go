@@ -18,14 +18,14 @@ func DoesBranchHaveUnmergedCommits(branchName string) bool {
 // EnsureDoesNotHaveBranch enforces that a branch with the given name does not exist
 func EnsureDoesNotHaveBranch(branchName string) {
 	if HasBranch(branchName) {
-		util.ExitWithErrorMessage(fmt.Sprintf("A branch named '%s' already exists", branchName))
+		util.ExitWithErrorMessage(fmt.Sprintf("a branch named '%s' already exists", branchName))
 	}
 }
 
 // EnsureHasBranch enforces that a branch with the given name exists
 func EnsureHasBranch(branchName string) {
 	if !HasBranch(branchName) {
-		util.ExitWithErrorMessage(fmt.Sprintf("There is no branch named '%s'", branchName))
+		util.ExitWithErrorMessage(fmt.Sprintf("there is no branch named '%s'", branchName))
 	}
 }
 

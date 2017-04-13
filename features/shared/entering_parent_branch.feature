@@ -40,7 +40,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering a wrong number
     When I run `gt sync` and enter "5" and "1"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "Invalid branch number"
+    And I see "invalid branch number"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -67,7 +67,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering a wrong name
     When I run `gt sync` and enter "zonk" and "main"
     Then I see "Please specify the parent branch of feature-2"
-    And I see "Branch 'zonk' doesn't exist"
+    And I see "branch 'zonk' doesn't exist"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -88,7 +88,7 @@ Feature: Entering a parent branch name when prompted
       | feature-2 |
       | main      |
     Then I see "Please specify the parent branch of feature-2"
-    And I see "Nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
+    And I see "nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -102,7 +102,7 @@ Feature: Entering a parent branch name when prompted
     When I run `gt sync` and enter:
       | feature-1 |
     Then I see "Please specify the parent branch of feature-2"
-    And I don't see "Nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
+    And I don't see "nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |

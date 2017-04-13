@@ -67,7 +67,7 @@ func askForParentBranch(branchName string) string {
 		} else if branchName == parent {
 			util.PrintError(fmt.Sprintf("'%s' cannot be the parent of itself", parent))
 		} else if git.IsAncestorBranch(parent, branchName) {
-			util.PrintError(fmt.Sprintf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
+			util.PrintError(fmt.Sprintf("nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
 		} else {
 			return parent
 		}
@@ -78,7 +78,7 @@ func parseParentBranch(userInput string) string {
 	mainBranch := git.GetMainBranch()
 	numericRegex, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
-		log.Fatal("Error compiling numeric regular expression: ", err)
+		log.Fatal("error compiling numeric regular expression: ", err)
 	}
 
 	if numericRegex.MatchString(userInput) {
@@ -91,7 +91,7 @@ func parseParentBranch(userInput string) string {
 		return userInput
 	}
 
-	util.PrintError(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
+	util.PrintError(fmt.Sprintf("branch '%s' doesn't exist", userInput))
 	return ""
 }
 
@@ -99,13 +99,13 @@ func parseParentBranchNumber(userInput string) string {
 	numberedBranches := git.GetLocalBranchesWithMainBranchFirst()
 	index, err := strconv.Atoi(userInput)
 	if err != nil {
-		log.Fatal("Error parsing string to integer: ", err)
+		log.Fatal("error parsing string to integer: ", err)
 	}
 	if index >= 1 && index <= len(numberedBranches) {
 		return numberedBranches[index-1]
 	}
 
-	util.PrintError("Invalid branch number")
+	util.PrintError("invalid branch number")
 	return ""
 }
 

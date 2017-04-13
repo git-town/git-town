@@ -11,7 +11,7 @@ import (
 // has no unresolved merge conflicts.
 func EnsureDoesNotHaveConflicts() {
 	if HasConflicts() {
-		util.ExitWithErrorMessage("You must resolve the conflicts before continuing")
+		util.ExitWithErrorMessage("you must resolve the conflicts before continuing")
 	}
 }
 
