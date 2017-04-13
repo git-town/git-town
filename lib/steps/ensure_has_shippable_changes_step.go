@@ -9,18 +9,8 @@ import (
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch
 type EnsureHasShippableChangesStep struct {
-	NoUndoStep
+	NoOpStep
 	BranchName string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step EnsureHasShippableChangesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step EnsureHasShippableChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step

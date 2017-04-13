@@ -7,8 +7,7 @@ import (
 
 // MergeBranchStep merges the branch with the given name into the current branch
 type MergeBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 }
 

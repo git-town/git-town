@@ -6,8 +6,7 @@ import (
 
 // RebaseTrackingBranchStep rebases the current branch against its tracking branch.
 type RebaseTrackingBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
+	NoOpStep
 }
 
 // CreateAbortStep returns the abort step for this step.

@@ -8,8 +8,7 @@ import (
 // ContinueMergeBranchStep finishes an ongoing merge conflict
 // assuming all conflicts have been resolved by the user.
 type ContinueMergeBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
+	NoOpStep
 }
 
 // CreateAbortStep returns the abort step for this step.

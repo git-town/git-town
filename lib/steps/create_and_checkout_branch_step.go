@@ -7,20 +7,9 @@ import (
 
 // CreateAndCheckoutBranchStep creates a new branch and makes it the current one.
 type CreateAndCheckoutBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
+	NoOpStep
 	BranchName       string
 	ParentBranchName string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CreateAndCheckoutBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CreateAndCheckoutBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.

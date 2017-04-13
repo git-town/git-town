@@ -8,19 +8,8 @@ import (
 
 // CreatePullRequestStep creates a new pull request for the current branch.
 type CreatePullRequestStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
+	NoOpStep
 	BranchName string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CreatePullRequestStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CreatePullRequestStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.
