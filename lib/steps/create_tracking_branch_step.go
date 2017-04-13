@@ -7,19 +7,8 @@ import (
 // CreateTrackingBranchStep pushes the current branch up to origin
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
+	NoOpStep
 	BranchName string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CreateTrackingBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CreateTrackingBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.

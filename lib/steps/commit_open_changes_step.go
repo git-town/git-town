@@ -10,18 +10,7 @@ import (
 // CommitOpenChangesStep commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CommitOpenChangesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CommitOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
+	NoOpStep
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

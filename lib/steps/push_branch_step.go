@@ -8,21 +8,10 @@ import (
 // PushBranchStep pushes the branch with the given name to the origin remote.
 // Optionally with force.
 type PushBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 	Force      bool
 	Undoable   bool
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step PushBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step PushBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

@@ -6,20 +6,9 @@ import (
 
 // CreateRemoteBranchStep pushes the current branch up to origin.
 type CreateRemoteBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
+	NoOpStep
 	BranchName string
 	Sha        string
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step CreateRemoteBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step CreateRemoteBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // Run executes this step.
