@@ -131,7 +131,7 @@ func HasTrackingBranch(branchName string) bool {
 	return false
 }
 
-// HasTrackingBranch returns whether the branch with the given name is in sync with its trackig branch
+// IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch
 func IsBranchInSync(branchName string) bool {
 	if HasTrackingBranch(branchName) {
 		localSha := GetBranchSha(branchName)
