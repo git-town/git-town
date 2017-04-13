@@ -6,18 +6,7 @@ import (
 
 // DiscardOpenChangesStep resets the branch to the last commit, discarding uncommitted changes.
 type DiscardOpenChangesStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStep
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step DiscardOpenChangesStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step DiscardOpenChangesStep) CreateContinueStep() Step {
-	return NoOpStep{}
+	NoOpStep
 }
 
 // Run executes this step.

@@ -7,8 +7,7 @@ import (
 // MergeTrackingBranchStep merges the tracking branch of the current branch
 // into the current branch.
 type MergeTrackingBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
+	NoOpStep
 }
 
 // CreateAbortStep returns the abort step for this step.
