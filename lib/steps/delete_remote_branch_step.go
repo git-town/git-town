@@ -7,8 +7,7 @@ import (
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.
 type DeleteRemoteBranchStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 	IsTracking bool
 }

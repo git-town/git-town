@@ -7,8 +7,7 @@ import (
 // CreateTrackingBranchStep pushes the current branch up to origin
 // and marks it as tracking the current branch.
 type CreateTrackingBranchStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	BranchName string
 }
 

@@ -8,8 +8,7 @@ import (
 // DeleteLocalBranchStep deletes the branch with the given name,
 // optionally in a safe or unsafe way.
 type DeleteLocalBranchStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 	Force      bool
 }

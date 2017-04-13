@@ -4,8 +4,7 @@ import "github.com/Originate/git-town/lib/script"
 
 // RevertCommitStep reverts the commit with the given sha.
 type RevertCommitStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	Sha string
 }
 

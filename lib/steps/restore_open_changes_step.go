@@ -6,8 +6,7 @@ import (
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
 type RestoreOpenChangesStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 }
 
 // Run executes this step.

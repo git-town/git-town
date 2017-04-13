@@ -7,8 +7,7 @@ import (
 
 // CreateAndCheckoutBranchStep creates a new branch and makes it the current one.
 type CreateAndCheckoutBranchStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	BranchName       string
 	ParentBranchName string
 }

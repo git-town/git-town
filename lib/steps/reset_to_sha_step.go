@@ -8,8 +8,7 @@ import (
 // ResetToShaStep undoes all commits on the current branch
 // all the way until the given SHA.
 type ResetToShaStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	Hard bool
 	Sha  string
 }

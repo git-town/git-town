@@ -6,8 +6,7 @@ import (
 
 // PushTagsStep pushes newly created Git tags to the remote.
 type PushTagsStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 }
 
 // Run executes this step.

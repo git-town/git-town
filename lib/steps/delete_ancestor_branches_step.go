@@ -6,8 +6,7 @@ import "github.com/Originate/git-town/lib/git"
 // for the current branch
 // from the Git Town configuration.
 type DeleteAncestorBranchesStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 }
 
 // Run executes this step.

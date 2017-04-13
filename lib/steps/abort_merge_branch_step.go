@@ -4,18 +4,7 @@ import "github.com/Originate/git-town/lib/script"
 
 // AbortMergeBranchStep aborts the current merge conflict.
 type AbortMergeBranchStep struct {
-	NoExpectedError
-	NoUndoStep
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step AbortMergeBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step AbortMergeBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
+	NoOpStep
 }
 
 // Run executes this step.

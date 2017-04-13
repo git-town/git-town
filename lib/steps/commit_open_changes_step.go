@@ -10,8 +10,7 @@ import (
 // CommitOpenChangesStep commits all open changes as a new commit.
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

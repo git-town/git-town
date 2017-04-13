@@ -7,8 +7,7 @@ import (
 // AbortRebaseBranchStep represents aborting on ongoing merge conflict.
 // This step is used in the abort scripts for Git Town commands.
 type AbortRebaseBranchStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 }
 
 // Run executes this step.

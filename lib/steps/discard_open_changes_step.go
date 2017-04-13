@@ -6,8 +6,7 @@ import (
 
 // DiscardOpenChangesStep resets the branch to the last commit, discarding uncommitted changes.
 type DiscardOpenChangesStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 }
 
 // Run executes this step.

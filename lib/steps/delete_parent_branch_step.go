@@ -4,8 +4,7 @@ import "github.com/Originate/git-town/lib/git"
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 }
 

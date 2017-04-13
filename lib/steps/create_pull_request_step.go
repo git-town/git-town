@@ -8,8 +8,7 @@ import (
 
 // CreatePullRequestStep creates a new pull request for the current branch.
 type CreatePullRequestStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	BranchName string
 }
 

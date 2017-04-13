@@ -5,8 +5,7 @@ import "github.com/Originate/git-town/lib/script"
 // CreateBranchStep creates a new branch
 // but leaves the current branch unchanged.
 type CreateBranchStep struct {
-	NoExpectedError
-	NoUndoStep
+	NoOpStep
 	BranchName    string
 	StartingPoint string
 }

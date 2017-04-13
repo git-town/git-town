@@ -7,8 +7,7 @@ import (
 
 // CheckoutBranchStep checks out a new branch.
 type CheckoutBranchStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 }
 

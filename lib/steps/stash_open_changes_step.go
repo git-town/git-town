@@ -6,8 +6,7 @@ import (
 
 // StashOpenChangesStep stores all uncommitted changes on the Git stash.
 type StashOpenChangesStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

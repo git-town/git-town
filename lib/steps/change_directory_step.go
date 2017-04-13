@@ -9,8 +9,7 @@ import (
 
 // ChangeDirectoryStep changes the current working directory.
 type ChangeDirectoryStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	Directory string
 }
 

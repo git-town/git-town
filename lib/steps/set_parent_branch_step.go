@@ -5,8 +5,7 @@ import "github.com/Originate/git-town/lib/git"
 // SetParentBranchStep registers the branch with the given name as a parent
 // of the branch with the other given name.
 type SetParentBranchStep struct {
-	NoExpectedError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName       string
 	ParentBranchName string
 }
