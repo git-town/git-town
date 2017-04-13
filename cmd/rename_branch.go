@@ -52,30 +52,18 @@ func checkRenameBranchPreconditions(args []string) (result renameBranchConfig) {
 		result.OldBranchName = args[0]
 		result.NewBranchName = args[1]
 	}
-	if git.IsMainBranch(result.OldBranchName) {
-		util.ExitWithErrorMessage("The main branch cannot be renamed.")
-	}
-	if git.IsPerennialBranch(result.OldBranchName) && !forceFlag {
-		util.ExitWithErrorMessage(fmt.Sprintf("'%s' is a perennial branch. Perennial branches require the '--force' option to be renamed.", result.OldBranchName))
+	git.EnsureIsNotMainBranch(result.OldBranchName, "The main branch cannot be renamed.")
+	if !forceFlag {
+		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("'%s' is a perennial branch. Perennial branches require the '--force' option to be renamed.", result.OldBranchName))
 	}
 	if result.OldBranchName == result.NewBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
 	script.Fetch()
 	git.EnsureHasBranch(result.OldBranchName)
-	ensureBranchInSync(result.OldBranchName)
+	git.EnsureBranchInSync(result.OldBranchName, "Please sync the branches before renaming.")
 	git.EnsureDoesNotHaveBranch(result.NewBranchName)
 	return
-}
-
-func ensureBranchInSync(branchName string) {
-	if git.HasTrackingBranch(branchName) {
-		localSha := git.GetBranchSha(branchName)
-		remoteSha := git.GetBranchSha(git.GetTrackingBranchName(branchName))
-		if localSha != remoteSha {
-			util.ExitWithErrorMessage(fmt.Sprintf("'%s' is not in sync with its tracking branch. Sync the branches before renaming.", branchName))
-		}
-	}
 }
 
 func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {

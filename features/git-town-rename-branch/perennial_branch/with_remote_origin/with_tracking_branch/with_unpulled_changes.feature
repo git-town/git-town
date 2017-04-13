@@ -21,7 +21,7 @@ Feature: git town-rename-branch: errors if renaming a perennial branch that has 
     Then it runs the commands
       | BRANCH     | COMMAND           |
       | production | git fetch --prune |
-    And I get the error "'production' is not in sync with its tracking branch. Sync the branches before renaming."
+    And I get the error "'production' is not in sync with its tracking branch. Please sync the branches before renaming."
     And I end up on the "production" branch
     And I still have my uncommitted file
     And I am left with my original commits
