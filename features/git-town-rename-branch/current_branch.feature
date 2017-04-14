@@ -48,7 +48,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "production" branch
     When I run `gt rename-branch renamed-production`
     Then it runs no commands
-    And I get the error "'production' is a perennial branch. Perennial branches require the '--force' option to be renamed."
+    And I get the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: rename perennial branch (forced)

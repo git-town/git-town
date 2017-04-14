@@ -54,7 +54,7 @@ func checkRenameBranchPreconditions(args []string) (result renameBranchConfig) {
 	}
 	git.EnsureIsNotMainBranch(result.OldBranchName, "The main branch cannot be renamed.")
 	if !forceFlag {
-		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("'%s' is a perennial branch. Perennial branches require the '--force' option to be renamed.", result.OldBranchName))
+		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("'%s' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.OldBranchName))
 	}
 	if result.OldBranchName == result.NewBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
@@ -72,8 +72,8 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(steps.CheckoutBranchStep{BranchName: config.NewBranchName})
 	}
 	if git.IsPerennialBranch(config.OldBranchName) {
-		result.Append(steps.RemovePerennialBranch{BranchName: config.OldBranchName})
-		result.Append(steps.AddPerennialBranch{BranchName: config.NewBranchName})
+		result.Append(steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
+		result.Append(steps.AddToPerennialBranches{BranchName: config.NewBranchName})
 	} else {
 		result.Append(steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
 		result.Append(steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.GetParentBranch(config.OldBranchName)})

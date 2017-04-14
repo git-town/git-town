@@ -15,8 +15,8 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
-// AddPerennialBranch adds the given branch as a perennial branch
-func AddPerennialBranch(branchName string) {
+// AddToPerennialBranches adds the given branch as a perennial branch
+func AddToPerennialBranches(branchName string) {
 	setPerennialBranches(append(GetPerennialBranches(), branchName))
 }
 
@@ -183,8 +183,8 @@ func IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
-// RemovePerennialBranch removes the given branch as a perennial branch
-func RemovePerennialBranch(branchName string) {
+// RemoveFromPerennialBranches removes the given branch as a perennial branch
+func RemoveFromPerennialBranches(branchName string) {
 	setPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))
 }
 
