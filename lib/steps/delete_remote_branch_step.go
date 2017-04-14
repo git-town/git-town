@@ -7,20 +7,9 @@ import (
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.
 type DeleteRemoteBranchStep struct {
-	NoAutomaticAbortOnError
-	NoUndoStepAfterRun
+	NoOpStep
 	BranchName string
 	IsTracking bool
-}
-
-// CreateAbortStep returns the abort step for this step.
-func (step DeleteRemoteBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
-}
-
-// CreateContinueStep returns the continue step for this step.
-func (step DeleteRemoteBranchStep) CreateContinueStep() Step {
-	return NoOpStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.

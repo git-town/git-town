@@ -10,17 +10,13 @@ import (
 // EnsureDoesNotHaveConflicts asserts that the workspace
 // has no unresolved merge conflicts.
 func EnsureDoesNotHaveConflicts() {
-	if HasConflicts() {
-		util.ExitWithErrorMessage("you must resolve the conflicts before continuing")
-	}
+	util.Ensure(!HasConflicts(), "You must resolve the conflicts before continuing")
 }
 
 // EnsureDoesNotHaveOpenChanges assets that the workspace
 // has no open changes
 func EnsureDoesNotHaveOpenChanges(message string) {
-	if HasOpenChanges() {
-		util.ExitWithErrorMessage("You have uncommitted changes. " + message)
-	}
+	util.Ensure(!HasOpenChanges(), "You have uncommitted changes. "+message)
 }
 
 // GetRootDirectory returns the path of the rood directory of the current repository,

@@ -19,8 +19,7 @@ type syncConfig struct {
 
 var syncCmd = &cobra.Command{
 	Use:   "sync",
-	Short: "Update the current branch with all relevant changes",
-	Long:  `Update the current branch with all relevant changes`,
+	Short: "Updates the current branch with all relevant changes",
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
