@@ -38,6 +38,15 @@ Feature: too many arguments
       """
 
 
+  Scenario: perennial-branches
+    When I run `gt perennial-branches arg1`
+    Then I get the error "Too many arguments"
+    And I get the error
+      """
+      Usage:
+        gt perennial-branches [flags]
+      """
+
   Scenario: prune-branches
     When I run `gt prune-branches arg1`
     Then it runs no commands

@@ -40,6 +40,11 @@ func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(!IsPerennialBranch(branchName), errorMessage)
 }
 
+// EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
+func EnsureIsPerennialBranch(branchName, errorMessage string) {
+	util.Ensure(IsPerennialBranch(branchName), errorMessage)
+}
+
 // GetCurrentBranchName returns the name of the currently checked out branch
 func GetCurrentBranchName() string {
 	if IsRebaseInProgress() {
