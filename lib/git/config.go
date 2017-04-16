@@ -200,6 +200,12 @@ func SetParentBranch(branchName, parentBranchName string) {
 	setConfigurationValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
+// SetPullBranchStrategy updates the configured pull branch strategy.
+// See https://github.com/Originate/git-town/blob/master/documentation/commands/git-town.md
+func SetPullBranchStrategy(strategy string) {
+	setConfigurationValue("git-town.pull-branch-strategy", strategy)
+}
+
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {

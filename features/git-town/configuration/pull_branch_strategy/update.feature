@@ -6,19 +6,20 @@ Feature: set the pull branch strategy
 
 
   Scenario: update to merge
-    When I run `git town pull-branch-strategy merge`
+    When I run `gt pull-branch-strategy merge`
     Then my repo is now configured with "pull-branch-strategy" set to "merge"
 
 
   Scenario: update to rebase
-    When I run `git town pull-branch-strategy rebase`
+    When I run `gt pull-branch-strategy rebase`
     Then my repo is now configured with "pull-branch-strategy" set to "rebase"
 
 
   Scenario: invalid strategy
-    When I run `git town pull-branch-strategy woof`
-    Then I see
+    When I run `gt pull-branch-strategy woof`
+    Then I get the error "Invalid value: 'woof'"
+    And I get the error
       """
-      Invalid pull branch strategy: 'woof'.
-      Valid pull branch strategies are 'merge' and 'rebase'.
+      Usage:
+        gt pull-branch-strategy [(rebase | merge)] [flags]
       """
