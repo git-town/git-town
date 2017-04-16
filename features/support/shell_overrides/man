@@ -2,4 +2,6 @@
 
 # A test mock for "man" (displays documentation)
 
+# A test mock for "man" (displays documentation)
+
 echo "man called with: $@"
