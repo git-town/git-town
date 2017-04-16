@@ -47,6 +47,7 @@ Feature: too many arguments
         gt perennial-branches [flags]
       """
 
+
   Scenario: prune-branches
     When I run `gt prune-branches arg1`
     Then it runs no commands
