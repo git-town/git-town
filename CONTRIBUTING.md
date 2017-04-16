@@ -50,10 +50,11 @@ This guide will help you get started and outline some things you should know whe
 
 ## Developing
 
-To add a new Go library:
-* `glide get <package name>`
-* the source code of the added library is located in [vendor](vendor),
-  add it to Git
+* update depependencies: `glide up`
+* add a new Go library:
+  * update dependencies in a separate PR
+  * `glide get <package name>`
+  * add the source code of the added library, which is located in [vendor](vendor), to Git
 
 
 ## Command documentation
