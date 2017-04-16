@@ -15,10 +15,10 @@ Feature: too many arguments
         gt hack <branch> [flags]
       """
 
+
   Scenario: hack-push-flag
     When I run `gt hack-push-flag arg1 arg2`
-    Then it runs no commands
-    And I get the error "Too many arguments"
+    Then I get the error "Too many arguments"
     And I get the error
       """
       Usage:
