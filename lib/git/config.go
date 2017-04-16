@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/Originate/git-town/lib/util"
@@ -204,6 +205,12 @@ func SetParentBranch(branchName, parentBranchName string) {
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
 	return getConfigurationValueWithDefault("git-town.hack-push-flag", "true") == "true"
+}
+
+// UpdateShouldHackPush updates whether the current repository is configured to push
+// freshly created branches up to the origin remote.
+func UpdateShouldHackPush(value bool) {
+	setConfigurationValue("git-town.hack-push-flag", strconv.FormatBool(value))
 }
 
 // Helpers

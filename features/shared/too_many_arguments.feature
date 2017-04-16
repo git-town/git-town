@@ -15,6 +15,16 @@ Feature: too many arguments
         gt hack <branch> [flags]
       """
 
+  Scenario: hack-push-flag
+    When I run `gt hack-push-flag arg1 arg2`
+    Then it runs no commands
+    And I get the error "Too many arguments"
+    And I get the error
+      """
+      Usage:
+        gt hack-push-flag [(true | false)] [flags]
+      """
+
 
   Scenario: kill
     When I run `gt kill arg1 arg2`
