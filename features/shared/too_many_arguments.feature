@@ -51,7 +51,7 @@ Feature: too many arguments
 
   Scenario: pull-branch-strategy
     When I run `gt pull-branch-strategy arg1 arg2`
-    And I get the error "Too many arguments"
+    Then I get the error "Too many arguments"
     And I get the error
       """
       Usage:
