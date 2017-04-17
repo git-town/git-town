@@ -16,28 +16,36 @@ var perennialBranchesCommand = &cobra.Command{
 	Short: "Displays or updates your perennial branches",
 	Run: func(cmd *cobra.Command, args []string) {
 		if branchToAdd != "" {
-			git.EnsureHasBranch(branchToAdd)
-			git.EnsureIsNotMainBranch(branchToAdd, fmt.Sprintf("'%s' is already set as the main branch", branchToAdd))
-			git.EnsureIsNotPerennialBranch(branchToAdd, fmt.Sprintf("'%s' is already a perennial branch", branchToAdd))
-			git.AddToPerennialBranches(branchToAdd)
-			return
+			addPerennialBranch(branchToAdd)
+		} else if branchToRemove != "" {
+			removePerennialBranch(branchToRemove)
+		} else {
+			printPerennialBranches()
 		}
-
-		if branchToRemove != "" {
-			git.EnsureIsPerennialBranch(branchToRemove, fmt.Sprintf("'%s' is not a perennial branch", branchToRemove))
-			git.RemoveFromPerennialBranches(branchToRemove)
-			return
-		}
-
-		output := strings.Join(git.GetPerennialBranches(), "\n")
-		if output == "" {
-			output = "[none]"
-		}
-		fmt.Println(output)
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return validateMaxArgs(args, 0)
 	},
+}
+
+func addPerennialBranch(branchName string) {
+	git.EnsureHasBranch(branchToAdd)
+	git.EnsureIsNotMainBranch(branchToAdd, fmt.Sprintf("'%s' is already set as the main branch", branchToAdd))
+	git.EnsureIsNotPerennialBranch(branchToAdd, fmt.Sprintf("'%s' is already a perennial branch", branchToAdd))
+	git.AddToPerennialBranches(branchToAdd)
+}
+
+func printPerennialBranches() {
+	output := strings.Join(git.GetPerennialBranches(), "\n")
+	if output == "" {
+		output = "[none]"
+	}
+	fmt.Println(output)
+}
+
+func removePerennialBranch(branchName string) {
+	git.EnsureIsPerennialBranch(branchToRemove, fmt.Sprintf("'%s' is not a perennial branch", branchToRemove))
+	git.RemoveFromPerennialBranches(branchToRemove)
 }
 
 func init() {
