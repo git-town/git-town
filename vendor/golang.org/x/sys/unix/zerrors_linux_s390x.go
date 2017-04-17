@@ -1425,7 +1425,6 @@ const (
 	SOL_IP                           = 0x0
 	SOL_IPV6                         = 0x29
 	SOL_IRDA                         = 0x10a
-	SOL_NETLINK                      = 0x10e
 	SOL_PACKET                       = 0x107
 	SOL_RAW                          = 0xff
 	SOL_SOCKET                       = 0x1
@@ -1484,10 +1483,6 @@ const (
 	SO_TIMESTAMPNS                   = 0x23
 	SO_TYPE                          = 0x3
 	SO_WIFI_STATUS                   = 0x29
-	SPLICE_F_GIFT                    = 0x8
-	SPLICE_F_MORE                    = 0x4
-	SPLICE_F_MOVE                    = 0x1
-	SPLICE_F_NONBLOCK                = 0x2
 	S_BLKSIZE                        = 0x200
 	S_IEXEC                          = 0x40
 	S_IFBLK                          = 0x6000
