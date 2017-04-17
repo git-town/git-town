@@ -1451,10 +1451,6 @@ const (
 	SO_TIMESTAMPNS                   = 0x23
 	SO_TYPE                          = 0x1008
 	SO_WIFI_STATUS                   = 0x29
-	SPLICE_F_GIFT                    = 0x8
-	SPLICE_F_MORE                    = 0x4
-	SPLICE_F_MOVE                    = 0x1
-	SPLICE_F_NONBLOCK                = 0x2
 	S_BLKSIZE                        = 0x200
 	S_IEXEC                          = 0x40
 	S_IFBLK                          = 0x6000
