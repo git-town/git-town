@@ -6,7 +6,7 @@ Feature: passing an invalid option to the hack push flag configuration
 
 
   Scenario: default setting
-    When I run `git town hack-push-flag`
+    When I run `gt hack-push-flag`
     Then I see
       """
       true
@@ -15,7 +15,7 @@ Feature: passing an invalid option to the hack push flag configuration
 
   Scenario: set to "true"
     Given my repository has the "hack-push-flag" configuration set to "true"
-    When I run `git town hack-push-flag`
+    When I run `gt hack-push-flag`
     Then I see
       """
       true
@@ -24,7 +24,7 @@ Feature: passing an invalid option to the hack push flag configuration
 
   Scenario: set to "false"
     Given my repository has the "hack-push-flag" configuration set to "false"
-    When I run `git town hack-push-flag`
+    When I run `gt hack-push-flag`
     Then I see
       """
       false
