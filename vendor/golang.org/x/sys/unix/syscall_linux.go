@@ -1118,25 +1118,6 @@ func Munmap(b []byte) (err error) {
 //sys	Mlockall(flags int) (err error)
 //sys	Munlockall() (err error)
 
-// Vmsplice splices user pages from a slice of Iovecs into a pipe specified by fd,
-// using the specified flags.
-func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
-	n, _, errno := Syscall6(
-		SYS_VMSPLICE,
-		uintptr(fd),
-		uintptr(unsafe.Pointer(&iovs[0])),
-		uintptr(len(iovs)),
-		uintptr(flags),
-		0,
-		0,
-	)
-	if errno != 0 {
-		return 0, syscall.Errno(errno)
-	}
-
-	return int(n), nil
-}
-
 /*
  * Unimplemented
  */
@@ -1264,6 +1245,7 @@ func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
 // Utimensat
 // Vfork
 // Vhangup
+// Vmsplice
 // Vserver
 // Waitid
 // _Sysctl
