@@ -12,11 +12,10 @@ var pullBranchStrategyCommand = &cobra.Command{
 	Short: "Displays or sets your pull branch strategy",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println(git.GetPullBranchStrategy())
-			return
+			printPullBranchStrategy()
+		} else {
+			setPullBranchStrategy(args[0])
 		}
-
-		git.SetPullBranchStrategy(args[0])
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
@@ -24,6 +23,14 @@ var pullBranchStrategyCommand = &cobra.Command{
 		}
 		return validateMaxArgs(args, 1)
 	},
+}
+
+func printPullBranchStrategy() {
+	fmt.Println(git.GetPullBranchStrategy())
+}
+
+func setPullBranchStrategy(value string) {
+	git.SetPullBranchStrategy(value)
 }
 
 func init() {
