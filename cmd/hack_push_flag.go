@@ -13,11 +13,10 @@ var hackPushFlagCommand = &cobra.Command{
 	Short: "Displays or sets your hack push flag",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println(strconv.FormatBool(git.ShouldHackPush()))
-			return
+			printHackPushFlag()
+		} else {
+			setHackPushFlag(args[0])
 		}
-
-		git.UpdateShouldHackPush(args[0] == "true")
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 && args[0] != "true" && args[0] != "false" {
@@ -25,6 +24,14 @@ var hackPushFlagCommand = &cobra.Command{
 		}
 		return validateMaxArgs(args, 1)
 	},
+}
+
+func printHackPushFlag() {
+	fmt.Println(strconv.FormatBool(git.ShouldHackPush()))
+}
+
+func setHackPushFlag(value string) {
+	git.UpdateShouldHackPush(value == "true")
 }
 
 func init() {
