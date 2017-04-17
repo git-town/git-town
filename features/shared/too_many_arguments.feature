@@ -28,7 +28,7 @@ Feature: too many arguments
 
 
   Scenario: main-branch
-    When I run `gt main-branch arg1 arg1`
+    When I run `gt main-branch arg1 arg2`
     Then I get the error "Too many arguments"
     And I get the error
       """

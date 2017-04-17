@@ -12,21 +12,27 @@ var mainBranchCommand = &cobra.Command{
 	Short: "Displays or sets your main branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			output := git.GetMainBranch()
-			if output == "" {
-				output = "[none]"
-			}
-			fmt.Println(output)
-			return
+			printMainBranch()
+		} else {
+			setMainBranch(args[0])
 		}
-
-		newMainBranch := args[0]
-		git.EnsureHasBranch(newMainBranch)
-		git.SetMainBranch(newMainBranch)
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return validateMaxArgs(args, 1)
 	},
+}
+
+func printMainBranch() {
+	output := git.GetMainBranch()
+	if output == "" {
+		output = "[none]"
+	}
+	fmt.Println(output)
+}
+
+func setMainBranch(branchName string) {
+	git.EnsureHasBranch(branchName)
+	git.SetMainBranch(branchName)
 }
 
 func init() {
