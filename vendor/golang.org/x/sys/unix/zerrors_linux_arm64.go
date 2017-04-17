@@ -808,7 +808,6 @@ const (
 	NETLINK_ADD_MEMBERSHIP           = 0x1
 	NETLINK_AUDIT                    = 0x9
 	NETLINK_BROADCAST_ERROR          = 0x4
-	NETLINK_CAP_ACK                  = 0xa
 	NETLINK_CONNECTOR                = 0xb
 	NETLINK_CRYPTO                   = 0x15
 	NETLINK_DNRTMSG                  = 0xe
@@ -821,8 +820,6 @@ const (
 	NETLINK_IP6_FW                   = 0xd
 	NETLINK_ISCSI                    = 0x8
 	NETLINK_KOBJECT_UEVENT           = 0xf
-	NETLINK_LISTEN_ALL_NSID          = 0x8
-	NETLINK_LIST_MEMBERSHIPS         = 0x9
 	NETLINK_NETFILTER                = 0xc
 	NETLINK_NFLOG                    = 0x5
 	NETLINK_NO_ENOBUFS               = 0x5
@@ -856,7 +853,6 @@ const (
 	NLM_F_ATOMIC                     = 0x400
 	NLM_F_CREATE                     = 0x400
 	NLM_F_DUMP                       = 0x300
-	NLM_F_DUMP_FILTERED              = 0x20
 	NLM_F_DUMP_INTR                  = 0x10
 	NLM_F_ECHO                       = 0x8
 	NLM_F_EXCL                       = 0x200
@@ -1311,7 +1307,6 @@ const (
 	SOL_IP                           = 0x0
 	SOL_IPV6                         = 0x29
 	SOL_IRDA                         = 0x10a
-	SOL_NETLINK                      = 0x10e
 	SOL_PACKET                       = 0x107
 	SOL_RAW                          = 0xff
 	SOL_SOCKET                       = 0x1
@@ -1366,10 +1361,6 @@ const (
 	SO_TIMESTAMPNS                   = 0x23
 	SO_TYPE                          = 0x3
 	SO_WIFI_STATUS                   = 0x29
-	SPLICE_F_GIFT                    = 0x8
-	SPLICE_F_MORE                    = 0x4
-	SPLICE_F_MOVE                    = 0x1
-	SPLICE_F_NONBLOCK                = 0x2
 	S_BLKSIZE                        = 0x200
 	S_IEXEC                          = 0x40
 	S_IFBLK                          = 0x6000
