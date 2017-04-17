@@ -194,6 +194,12 @@ func SetAncestorBranches(branchName string, ancestorBranches []string) {
 	setConfigurationValue("git-town-branch."+branchName+".ancestors", strings.Join(ancestorBranches, " "))
 }
 
+// SetMainBranch marks the given branch as the main branch
+// in the Git Town configuration.
+func SetMainBranch(branchName string) {
+	setConfigurationValue("git-town.main-branch-name", branchName)
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func SetParentBranch(branchName, parentBranchName string) {
