@@ -50,11 +50,14 @@ This guide will help you get started and outline some things you should know whe
 
 ## Developing
 
-* update depependencies: `glide up`
+* all dependencies are located in the [vendor](vendor) folder,
+  which is checked into Git
+* update dependencies: `glide up`
 * add a new Go library:
   * update dependencies in a separate PR
   * `glide get <package name>`
-  * add the source code of the added library, which is located in [vendor](vendor), to Git
+  * don't forget to add the updated glide files and vendor folder
+    in the pull request for the feature that requires the new library
 
 
 ## Command documentation
