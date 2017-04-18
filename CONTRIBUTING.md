@@ -53,7 +53,7 @@ This guide will help you get started and outline some things you should know whe
 * all dependencies are located in the [vendor](vendor) folder,
   which is checked into Git
 * update dependencies: `glide up`
-* add a new Go library:
+* adding a new Go library:
   * update dependencies in a separate PR
   * `glide get <package name>`
   * don't forget to add the updated glide files and vendor folder
