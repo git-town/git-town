@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/Originate/git-town/lib/util"
@@ -194,16 +195,34 @@ func SetAncestorBranches(branchName string, ancestorBranches []string) {
 	setConfigurationValue("git-town-branch."+branchName+".ancestors", strings.Join(ancestorBranches, " "))
 }
 
+// SetMainBranch marks the given branch as the main branch
+// in the Git Town configuration.
+func SetMainBranch(branchName string) {
+	setConfigurationValue("git-town.main-branch-name", branchName)
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func SetParentBranch(branchName, parentBranchName string) {
 	setConfigurationValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
+// SetPullBranchStrategy updates the configured pull branch strategy.
+// See https://github.com/Originate/git-town/blob/master/documentation/commands/git-town.md
+func SetPullBranchStrategy(strategy string) {
+	setConfigurationValue("git-town.pull-branch-strategy", strategy)
+}
+
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
 	return getConfigurationValueWithDefault("git-town.hack-push-flag", "true") == "true"
+}
+
+// UpdateShouldHackPush updates whether the current repository is configured to push
+// freshly created branches up to the origin remote.
+func UpdateShouldHackPush(value bool) {
+	setConfigurationValue("git-town.hack-push-flag", strconv.FormatBool(value))
 }
 
 // Helpers
