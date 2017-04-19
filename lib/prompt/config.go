@@ -9,10 +9,9 @@ import (
 	"github.com/fatih/color"
 )
 
-// GetConfiguration prompts the user for the require Git Town Configuration
-func GetConfiguration() {
+// PromptForMainBranch asks the user to confgure the main branch
+func PromptForMainBranch() {
 	printConfigurationHeader()
-
 	newMainBranch := askForBranch(branchPromptConfig{
 		branchNames: git.GetLocalBranches(),
 		prompt:      getMainBranchPrompt(),
@@ -24,14 +23,18 @@ func GetConfiguration() {
 		},
 	})
 	git.SetMainBranch(newMainBranch)
+}
 
+// PromptForMainBranch asks the user to confgure the perennial branches
+func PromptForPerennialBranches() {
+	printConfigurationHeader()
 	var newPerennialBranches []string
 	for {
 		newPerennialBranch := askForBranch(branchPromptConfig{
 			branchNames: git.GetLocalBranches(),
 			prompt:      getPerennialBranchesPrompt(),
 			validate: func(branchName string) error {
-				if branchName == newMainBranch {
+				if branchName == git.GetMainBranch() {
 					return fmt.Errorf("'%s' is already set as the main branch", branchName)
 				}
 				return nil
