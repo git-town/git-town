@@ -1,7 +1,6 @@
 package prompt
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/Originate/git-town/lib/git"
@@ -66,10 +65,10 @@ func askForBranchAncestry(branchName string) {
 
 func validateParentBranch(branchName string, parent string) error {
 	if branchName == parent {
-		return errors.New(fmt.Sprintf("'%s' cannot be the parent of itself", parent))
+		return fmt.Errorf("'%s' cannot be the parent of itself", parent)
 	}
 	if branchName != "" && git.IsAncestorBranch(parent, branchName) {
-		return errors.New(fmt.Sprintf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent))
+		return fmt.Errorf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent)
 	}
 	return nil
 }

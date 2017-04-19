@@ -48,7 +48,7 @@ func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 		return userInput, nil
 	}
 
-	return "", errors.New(fmt.Sprintf("Branch '%s' doesn't exist", userInput))
+	return "", fmt.Errorf("Branch '%s' doesn't exist", userInput)
 }
 
 func parseBranchNumber(branchNames []string, userInput string) (string, error) {

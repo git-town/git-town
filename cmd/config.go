@@ -59,7 +59,7 @@ func resetConfig() {
 }
 
 func setupConfig() {
-	prompt.EnsureKnowsConfiguration()
+	prompt.GetConfiguration()
 }
 
 func init() {

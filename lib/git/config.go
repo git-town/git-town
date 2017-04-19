@@ -184,6 +184,7 @@ func IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
+// RemoveAllConfiguration removes all Git Town configuration
 func RemoveAllConfiguration() {
 	util.GetCommandOutput("git", "config", "--remove-section", "git-town")
 }
