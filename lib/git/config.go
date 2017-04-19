@@ -18,7 +18,7 @@ import (
 
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
-	setPerennialBranches(append(GetPerennialBranches(), branchName))
+	SetPerennialBranches(append(GetPerennialBranches(), branchName))
 }
 
 // CompileAncestorBranches re-calculates and returns the list of ancestor branches
@@ -184,9 +184,13 @@ func IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
+func RemoveAllConfiguration() {
+	util.GetCommandOutput("git", "config", "--remove-section", "git-town")
+}
+
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
 func RemoveFromPerennialBranches(branchName string) {
-	setPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))
+	SetPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))
 }
 
 // SetAncestorBranches stores the given list of branches as ancestors
@@ -205,6 +209,11 @@ func SetMainBranch(branchName string) {
 // in the Git Town configuration.
 func SetParentBranch(branchName, parentBranchName string) {
 	setConfigurationValue("git-town-branch."+branchName+".parent", parentBranchName)
+}
+
+// SetPerennialBranches marks the given branches as perennial branches
+func SetPerennialBranches(branchNames []string) {
+	setConfigurationValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
@@ -262,10 +271,6 @@ func hasConfigurationValue(key string) bool {
 
 func setConfigurationValue(key, value string) {
 	util.GetCommandOutput("git", "config", key, value)
-}
-
-func setPerennialBranches(branchNames []string) {
-	setConfigurationValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 func removeConfigurationValue(key string) {

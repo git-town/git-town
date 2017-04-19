@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/util"
 	"github.com/spf13/cobra"
 )
@@ -54,11 +55,11 @@ func printConfig() {
 }
 
 func resetConfig() {
-
+	git.RemoveAllConfiguration()
 }
 
 func setupConfig() {
-
+	prompt.EnsureKnowsConfiguration()
 }
 
 func init() {
