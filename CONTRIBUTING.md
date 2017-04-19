@@ -24,6 +24,8 @@ This guide will help you get started and outline some things you should know whe
   * run `bin/setup`
   * now you can run `gt` on the command line
   * see https://golang.org/doc/install#testing for details on how to test
+* install [Glide](https://github.com/Masterminds/glide) (package manager for Go)
+  * on macOS: `brew install glide`
 
 * install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
@@ -44,6 +46,18 @@ This guide will help you get started and outline some things you should know whe
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
 * See [here](./documentation/development/testing.md) for how to run the tests
+
+
+## Developing
+
+* all dependencies are located in the [vendor](vendor) folder,
+  which is checked into Git
+* update dependencies: `glide up`
+* adding a new Go library:
+  * update dependencies in a separate PR
+  * `glide get <package name>`
+  * your pull request for the feature that requires the new library
+    should contain the updated glide files and vendor folder
 
 
 ## Command documentation
