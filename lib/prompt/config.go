@@ -9,8 +9,8 @@ import (
 	"github.com/fatih/color"
 )
 
-// PromptForMainBranch asks the user to confgure the main branch
-func PromptForMainBranch() {
+// UpdateMainBranch has the user to confgure the main branch
+func UpdateMainBranch() {
 	printConfigurationHeader()
 	newMainBranch := askForBranch(branchPromptConfig{
 		branchNames: git.GetLocalBranches(),
@@ -25,8 +25,8 @@ func PromptForMainBranch() {
 	git.SetMainBranch(newMainBranch)
 }
 
-// PromptForMainBranch asks the user to confgure the perennial branches
-func PromptForPerennialBranches() {
+// UpdatePerennialBranches has the user to confgure the perennial branches
+func UpdatePerennialBranches() {
 	printConfigurationHeader()
 	var newPerennialBranches []string
 	for {
