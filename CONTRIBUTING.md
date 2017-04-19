@@ -56,8 +56,8 @@ This guide will help you get started and outline some things you should know whe
 * adding a new Go library:
   * update dependencies in a separate PR
   * `glide get <package name>`
-  * don't forget to add the updated glide files and vendor folder
-    in the pull request for the feature that requires the new library
+  * your pull request for the feature that requires the new library
+    should contain the updated glide files and vendor folder
 
 
 ## Command documentation
