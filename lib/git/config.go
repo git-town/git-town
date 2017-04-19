@@ -76,7 +76,7 @@ func GetChildBranches(branchName string) (result []string) {
 		parent := getConfigurationValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-			result = append([]string{child}, result...)
+			result = append(result, child)
 		}
 	}
 	return

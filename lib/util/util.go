@@ -81,6 +81,13 @@ func GetUserInput() string {
 	return strings.TrimSpace(text)
 }
 
+// Indent outputs the given string with the given level of indentation
+// on each line. Each level of indentation is two spaces.
+func Indent(message string, level int) string {
+	prefix := strings.Repeat("  ", level)
+	return prefix + strings.Replace(message, "\n", "\n"+prefix, -1)
+}
+
 // Pluralize outputs the count and the word. The word is made plural
 // if the count isn't one
 func Pluralize(count, word string) string {
@@ -101,6 +108,12 @@ func PrintError(messages ...string) {
 		errMessageFmt.Println("  " + message)
 	}
 	fmt.Println()
+}
+
+// PrintTitle bolds and underlines the given message and prints it to the console
+func PrintTitle(title string) {
+	titleFmt := color.New(color.Bold).Add(color.Underline)
+	titleFmt.Println(title)
 }
 
 // RemoveStringFromSlice returns a new string slice which is the given string slice
