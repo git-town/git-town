@@ -82,6 +82,14 @@ func GetChildBranches(branchName string) (result []string) {
 	return
 }
 
+// GetGlobalConfigurationValue returns the global git configuration value for the given key
+func GetGlobalConfigurationValue(key string) (result string) {
+	if hasConfigurationValue("global", key) {
+		result = util.GetCommandOutput("git", "config", "--global", key)
+	}
+	return
+}
+
 // GetMainBranch returns the name of the main branch.
 func GetMainBranch() string {
 	return getConfigurationValue("git-town.main-branch-name")
@@ -145,6 +153,11 @@ func GetURLRepositoryName(url string) string {
 		return ""
 	}
 	return strings.TrimSuffix(matches[1], ".git")
+}
+
+// HasGlobalConfigurationValue returns whether there is a global git configuration for the given key
+func HasGlobalConfigurationValue(key string) bool {
+	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--global", "--name"}, key)
 }
 
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
@@ -228,7 +241,7 @@ func UpdateShouldHackPush(value bool) {
 // Helpers
 
 func getConfigurationValue(key string) (result string) {
-	if hasConfigurationValue(key) {
+	if hasConfigurationValue("local", key) {
 		result = util.GetCommandOutput("git", "config", key)
 	}
 	return
@@ -256,8 +269,8 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 	return
 }
 
-func hasConfigurationValue(key string) bool {
-	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--local", "--name"}, key)
+func hasConfigurationValue(location, key string) bool {
+	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--" + location, "--name"}, key)
 }
 
 func setConfigurationValue(key, value string) {

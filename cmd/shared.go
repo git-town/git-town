@@ -1,6 +1,11 @@
 package cmd
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"log"
+	"strconv"
+)
 
 // These variables represent command-line flags
 var (
@@ -31,4 +36,19 @@ func validateMaxArgs(args []string, max int) error {
 		return errors.New("Too many arguments")
 	}
 	return nil
+}
+
+func validateBooleanArgument(arg string) error {
+	if arg != "true" && arg != "false" {
+		return fmt.Errorf("Invalid value: '%s'", arg)
+	}
+	return nil
+}
+
+func convertStringToBool(arg string) bool {
+	value, err := strconv.ParseBool(arg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return value
 }
