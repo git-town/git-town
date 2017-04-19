@@ -30,28 +30,17 @@ var configCommand = &cobra.Command{
 }
 
 func printConfig() {
-	util.PrintTitle("Main branch:")
-	fmt.Println(util.Indent(git.GetPrintableMainBranch(), 1))
 	fmt.Println()
-
-	util.PrintTitle("Perennial branches:")
-	fmt.Println(util.Indent(git.GetPrintablePerennialBranches(), 1))
-	fmt.Println()
+	util.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
+	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
 
 	mainBranch := git.GetMainBranch()
 	if mainBranch != "" {
-		util.PrintTitle("Branch Ancestry:")
-		fmt.Println(util.Indent(git.GetPrintableBranchTree(mainBranch), 1))
-		fmt.Println()
+		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}
 
-	util.PrintTitle("Pull branch strategy:")
-	fmt.Println(util.Indent(git.GetPullBranchStrategy(), 1))
-	fmt.Println()
-
-	util.PrintTitle("git-hack push flag:")
-	fmt.Println(util.Indent(git.GetPrintableHackPushFlag(), 1))
-	fmt.Println()
+	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
+	util.PrintLabelAndValue("git-hack push flag:", git.GetPrintableHackPushFlag())
 }
 
 func resetConfig() {

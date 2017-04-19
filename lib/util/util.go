@@ -110,10 +110,14 @@ func PrintError(messages ...string) {
 	fmt.Println()
 }
 
-// PrintTitle bolds and underlines the given message and prints it to the console
-func PrintTitle(title string) {
-	titleFmt := color.New(color.Bold).Add(color.Underline)
-	titleFmt.Println(title)
+// PrintLabelAndValue prints the label bolded and underlined
+// the value indented on the next line
+// followed by an empty line
+func PrintLabelAndValue(label, value string) {
+	labelFmt := color.New(color.Bold).Add(color.Underline)
+	labelFmt.Println(label + ":")
+	fmt.Println(Indent(value, 1))
+	fmt.Println()
 }
 
 // RemoveStringFromSlice returns a new string slice which is the given string slice
