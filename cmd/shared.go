@@ -16,7 +16,7 @@ var (
 	undoFlag bool
 )
 
-func convertStringToBool(arg string) bool {
+func stringToBool(arg string) bool {
 	value, err := strconv.ParseBool(arg)
 	if err != nil {
 		log.Fatal(err)
@@ -32,6 +32,13 @@ func validateArgsCount(args []string, count int) error {
 	return validateMaxArgs(args, count)
 }
 
+func validateBooleanArgument(arg string) error {
+	if arg != "true" && arg != "false" {
+		return fmt.Errorf("Invalid value: '%s'", arg)
+	}
+	return nil
+}
+
 func validateMinArgs(args []string, min int) error {
 	if len(args) < min {
 		return errors.New("Too few arguments")
@@ -42,13 +49,6 @@ func validateMinArgs(args []string, min int) error {
 func validateMaxArgs(args []string, max int) error {
 	if len(args) > max {
 		return errors.New("Too many arguments")
-	}
-	return nil
-}
-
-func validateBooleanArgument(arg string) error {
-	if arg != "true" && arg != "false" {
-		return fmt.Errorf("Invalid value: '%s'", arg)
 	}
 	return nil
 }

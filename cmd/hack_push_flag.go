@@ -15,7 +15,7 @@ var hackPushFlagCommand = &cobra.Command{
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
-			setHackPushFlag(convertStringToBool(args[0]))
+			setHackPushFlag(stringToBool(args[0]))
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
