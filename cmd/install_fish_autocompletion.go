@@ -39,7 +39,7 @@ func installFishAutocompletion() {
 }
 
 var fishAutocompletionTemplate = `
-# All Git Town commands\n
+# All Git Town commands
 set git_town_commands %s
 
 # Indicates through its error code whether the command line to auto-complete
