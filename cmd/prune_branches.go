@@ -54,6 +54,7 @@ func getPruneBranchesList() (result steps.StepList) {
 
 		result.Append(steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
+	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
 	return
 }
 

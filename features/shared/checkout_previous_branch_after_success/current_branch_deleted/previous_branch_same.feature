@@ -3,10 +3,10 @@ Feature: Git checkout history is preserved when deleting the current branch
   (see ../same_current_branch/previous_branch_same.feature)
 
 
-  Scenario: git-kill
+  Scenario: kill
     Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git town-kill`
+    When I run `gt kill`
     Then I end up on the "main" branch
     And my previous Git branch is still "previous"
 
@@ -18,7 +18,7 @@ Feature: Git checkout history is preserved when deleting the current branch
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
       | previous | local    | previous_file | previous content |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git town-prune-branches`
+    When I run `gt prune-branches`
     Then I end up on the "main" branch
     And my previous Git branch is still "previous"
 
@@ -29,6 +29,6 @@ Feature: Git checkout history is preserved when deleting the current branch
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | current | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git town-ship -m "feature done"`
+    When I run `gt ship -m "feature done"`
     Then I end up on the "main" branch
     And my previous Git branch is still "previous"

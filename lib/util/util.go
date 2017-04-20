@@ -51,6 +51,13 @@ func GetCommandOutput(cmd ...string) string {
 	return strings.TrimSpace(string(output))
 }
 
+// GetFullCommandOutput runs the given command and returns its output and error
+func GetFullCommandOutput(cmd ...string) (string, error) {
+	subProcess := exec.Command(cmd[0], cmd[1:]...)
+	output, err := subProcess.CombinedOutput()
+	return strings.TrimSpace(string(output)), err
+}
+
 var openBrowserCommands = []string{"xdg-open", "open"}
 var missingOpenBrowserCommandMessages = []string{
 	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",

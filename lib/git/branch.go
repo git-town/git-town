@@ -96,6 +96,25 @@ func GetLocalBranchesWithMainBranchFirst() (result []string) {
 	return
 }
 
+// GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch
+func GetPreviouslyCheckedOutBranch() string {
+	branch, err := util.GetFullCommandOutput("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	if err != nil {
+		return ""
+	}
+	return branch
+}
+
+func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) string {
+	if HasLocalBranch(initialPreviouslyCheckedOutBranch) {
+		if GetCurrentBranchName() == initialBranch || !HasLocalBranch(initialBranch) {
+			return initialPreviouslyCheckedOutBranch
+		}
+		return initialBranch
+	}
+	return GetMainBranch()
+}
+
 // GetTrackingBranchName returns the name of the remote branch
 // that corresponds to the local branch with the given name
 func GetTrackingBranchName(branchName string) string {

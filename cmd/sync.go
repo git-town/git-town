@@ -63,16 +63,16 @@ func checkSyncPreconditions() (result syncConfig) {
 	return
 }
 
-func getSyncStepList(config syncConfig) steps.StepList {
-	stepList := steps.StepList{}
+func getSyncStepList(config syncConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
+		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	stepList.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+	result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	if git.HasRemote("origin") && config.ShouldPushTags {
-		stepList.Append(steps.PushTagsStep{})
+		result.Append(steps.PushTagsStep{})
 	}
-	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	return
 }
 
 func init() {

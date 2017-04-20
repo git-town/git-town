@@ -1,5 +1,12 @@
 package steps
 
+import (
+	"log"
+	"os"
+
+	"github.com/Originate/git-town/lib/git"
+)
+
 // StepList is a list of steps
 // with convenience functions for adding and removing steps.
 type StepList struct {
@@ -47,4 +54,35 @@ func (stepList *StepList) Prepend(step Step) {
 // PrependList adds all elements of the given StepList to the start of this StepList.
 func (stepList *StepList) PrependList(otherList StepList) {
 	stepList.List = append(otherList.List, stepList.List...)
+}
+
+// WrapOptions represents the options given to Wrap.
+type WrapOptions struct {
+	RunInGitRoot     bool
+	StashOpenChanges bool
+}
+
+// Wrap wraps the given StepList in steps that
+// change to the Git root directory or stash away open changes.
+func (stepList *StepList) Wrap(options WrapOptions) {
+	if options.StashOpenChanges && git.HasOpenChanges() {
+		stepList.Prepend(StashOpenChangesStep{})
+		stepList.Append(RestoreOpenChangesStep{})
+	}
+
+	stepList.Append(PreserveCheckoutHistoryStep{
+		InitialBranch:                     git.GetCurrentBranchName(),
+		InitialPreviouslyCheckedOutBranch: git.GetPreviouslyCheckedOutBranch(),
+	})
+
+	initialDirectory, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	gitRootDirectory := git.GetRootDirectory()
+
+	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
+		stepList.Prepend(ChangeDirectoryStep{Directory: gitRootDirectory})
+		stepList.Append(ChangeDirectoryStep{Directory: initialDirectory})
+	}
 }
