@@ -11,7 +11,7 @@ Feature: Git checkout history is preserved when deleting the current branch
     And my previous Git branch is still "previous"
 
 
-  Scenario: git-prune-branches
+  Scenario: prune-branches
     Given I have feature branches named "previous" and "current"
     And the "current" branch gets deleted on the remote
     And the following commit exists in my repository
@@ -23,7 +23,7 @@ Feature: Git checkout history is preserved when deleting the current branch
     And my previous Git branch is still "previous"
 
 
-  Scenario: git-ship
+  Scenario: ship
     Given I have feature branches named "previous" and "current"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
