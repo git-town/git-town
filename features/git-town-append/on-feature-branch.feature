@@ -26,8 +26,8 @@ Feature: Appending a branch to a feature branch
       |                  | git checkout existing-feature               |
       | existing-feature | git merge --no-edit origin/existing-feature |
       |                  | git merge --no-edit main                    |
-      |                  | git branch new-child existing-feature  |
-      |                  | git checkout new-child   |
+      |                  | git branch new-child existing-feature       |
+      |                  | git checkout new-child                      |
       | new-child        | git push -u origin new-child                |
       |                  | git stash pop                               |
     And I end up on the "new-child" branch
