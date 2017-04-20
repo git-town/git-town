@@ -23,7 +23,8 @@ Feature: Prepending a branch to a feature branch
       |                  | git stash                       |
       |                  | git checkout main               |
       | main             | git rebase origin/main          |
-      |                  | git checkout -b new-parent main |
+      |                  | git branch new-parent main |
+      |                  | git checkout new-parent |
       | new-parent       | git push -u origin new-parent   |
       |                  | git stash pop                   |
     And I end up on the "new-parent" branch
@@ -35,3 +36,23 @@ Feature: Prepending a branch to a feature branch
       | BRANCH           | PARENT     |
       | existing-feature | new-parent |
       | new-parent       | main       |
+
+
+  Scenario: Undo
+    Given I run `gt prepend new-parent`
+    When I run `gt prepend --undo`
+    Then it runs the commands
+        | BRANCH           | COMMAND                       |
+        | new-parent       | git add -A                    |
+        |                  | git stash                     |
+        |                  | git push origin :new-parent   |
+        |                  | git checkout main             |
+        | main             | git branch -d new-parent      |
+        |                  | git checkout existing-feature |
+        | existing-feature | git stash pop                 |
+    And I end up on the "existing-feature" branch
+    And I still have my uncommitted file
+    And I am left with my original commits
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH           | PARENT |
+      | existing-feature | main   |
