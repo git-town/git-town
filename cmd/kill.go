@@ -88,6 +88,6 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	killCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(killCommand)
 }

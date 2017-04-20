@@ -11,6 +11,10 @@ var (
 	undoFlag bool
 )
 
+var abortFlagDescription = "Abort a previous command that resulted in a conflict"
+var continueFlagDescription = "Continue a previous command that resulted in a conflict"
+var undoFlagDescription = "Undo a previous command"
+
 func validateArgsCount(args []string, count int) error {
 	err := validateMinArgs(args, count)
 	if err != nil {
