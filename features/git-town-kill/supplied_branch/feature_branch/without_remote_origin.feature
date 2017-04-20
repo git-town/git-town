@@ -19,7 +19,10 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                     |
-      | current-feature | git branch -D other-feature |
+      | current-feature | git add -A                  |
+      |                 | git stash                   |
+      |                 | git branch -D other-feature |
+      |                 | git stash pop               |
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
     And the existing branches are
@@ -35,7 +38,10 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
     When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH          | COMMAND                                                    |
-      | current-feature | git branch other-feature <%= sha 'other feature commit' %> |
+      | current-feature | git add -A                                                 |
+      |                 | git stash                                                  |
+      |                 | git branch other-feature <%= sha 'other feature commit' %> |
+      |                 | git stash pop                                              |
     And I am still on the "current-feature" branch
     And I still have my uncommitted file
     And the existing branches are

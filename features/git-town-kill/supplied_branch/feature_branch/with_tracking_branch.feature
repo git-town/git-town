@@ -21,8 +21,11 @@ Feature: git town-kill: killing the given feature branch
     Then it runs the commands
       | BRANCH       | COMMAND                       |
       | good-feature | git fetch --prune             |
+      |              | git add -A                    |
+      |              | git stash                     |
       |              | git push origin :dead-feature |
       |              | git branch -D dead-feature    |
+      |              | git stash pop                 |
     And I am still on the "good-feature" branch
     And I still have my uncommitted file
     And the existing branches are
@@ -39,8 +42,11 @@ Feature: git town-kill: killing the given feature branch
     When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH       | COMMAND                                              |
-      | good-feature | git branch dead-feature <%= sha 'dead-end commit' %> |
+      | good-feature | git add -A                                           |
+      |              | git stash                                            |
+      |              | git branch dead-feature <%= sha 'dead-end commit' %> |
       |              | git push -u origin dead-feature                      |
+      |              | git stash pop                                        |
     And I am still on the "good-feature" branch
     And I still have my uncommitted file
     And the existing branches are

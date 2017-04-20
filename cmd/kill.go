@@ -84,7 +84,10 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 	} else {
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
+	result.Wrap(steps.WrapOptions{
+		RunInGitRoot:     false,
+		StashOpenChanges: config.InitialBranch != config.TargetBranch && config.TargetBranch == git.GetPreviouslyCheckedOutBranch(),
+	})
 	return
 }
 
