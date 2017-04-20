@@ -30,4 +30,4 @@ Feature: Installing Fish Shell autocomplete definitions
     Given I have an existing Git autocompletion symlink
     When I run `gt install-fish-autocompletion`
     Then I get the error "Git autocompletion for Fish shell already exists"
-    And I still have my original Git autocompletion symlink
+    And I still have my original Git autocompletion file

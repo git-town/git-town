@@ -38,8 +38,3 @@ end
 Then(/^I still have my original Git autocompletion file$/) do
   expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
 end
-
-
-Then(/^I still have my original Git autocompletion symlink$/) do
-  expect(File.symlink? FISH_AUTOCOMPLETIONS_PATH).to be_truthy
-end

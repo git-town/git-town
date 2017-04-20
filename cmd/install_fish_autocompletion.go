@@ -64,7 +64,6 @@ end
 # This is done through __fish_complete_git_town_no_command
 %s
 
-
 # Define autocompletion of Git branch names.
 #
 # This is only enabled for commands that take branch names.
