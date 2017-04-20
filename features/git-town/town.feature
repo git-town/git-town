@@ -1,7 +1,7 @@
 Feature: Show correct git town usage
 
   Scenario: invalid git town command
-    When I run `git town invalidcommand`
+    When I run `gt invalidcommand`
     Then I get the error
       """
       error: unsupported subcommand 'invalidcommand'

@@ -11,10 +11,10 @@ Feature: show help screen when Git Town is configured
 
 
   Scenario: git town with no flags
-    When I run `git town`
+    When I run `gt`
     Then I see the "git-town" man page
 
 
   Scenario: git town, configured, with "help" subcommand
-    When I run `git town help`
+    When I run `gt help`
     Then I see the "git-town" man page
