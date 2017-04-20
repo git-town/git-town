@@ -17,16 +17,16 @@ Feature: Prepending a branch to a feature branch
   Scenario: inserting a branch into the branch ancestry
     When I run `gt prepend new-parent`
     Then it runs the commands
-      | BRANCH           | COMMAND                         |
-      | existing-feature | git fetch --prune               |
-      |                  | git add -A                      |
-      |                  | git stash                       |
-      |                  | git checkout main               |
-      | main             | git rebase origin/main          |
-      |                  | git branch new-parent main |
-      |                  | git checkout new-parent |
-      | new-parent       | git push -u origin new-parent   |
-      |                  | git stash pop                   |
+      | BRANCH           | COMMAND                       |
+      | existing-feature | git fetch --prune             |
+      |                  | git add -A                    |
+      |                  | git stash                     |
+      |                  | git checkout main             |
+      | main             | git rebase origin/main        |
+      |                  | git branch new-parent main    |
+      |                  | git checkout new-parent       |
+      | new-parent       | git push -u origin new-parent |
+      |                  | git stash pop                 |
     And I end up on the "new-parent" branch
     And I still have my uncommitted file
     And I have the following commits
