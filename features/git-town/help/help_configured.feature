@@ -10,11 +10,15 @@ Feature: show help screen when Git Town is configured
     And my perennial branches are configured as "qa" and "staging"
 
 
-  Scenario: git town with no flags
-    When I run `gt`
-    Then I see the "git-town" man page
+  Scenario Outline:
+    When I run `<COMMAND>`
+    Then I see
+      """
+      Usage:
+        gt [command]
+      """
 
-
-  Scenario: git town, configured, with "help" subcommand
-    When I run `gt help`
-    Then I see the "git-town" man page
+    Examples:
+      | COMMAND |
+      | gt      |
+      | gt help |

@@ -6,10 +6,14 @@ Feature: show help screen even outside of a Git repository
   Scenario Outline: Running outside of a Git repository
     Given I'm currently not in a git repository
     When I run `<COMMAND>`
-    Then I see the "git-town" man page
+    Then I see
+      """
+      Usage:
+        gt [command]
+      """
     And I don't see "fatal: Not a Git repository"
 
     Examples:
-      | COMMAND       |
-      | git town      |
-      | git town help |
+      | COMMAND |
+      | gt      |
+      | gt help |
