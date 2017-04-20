@@ -15,12 +15,15 @@ var hackPushFlagCommand = &cobra.Command{
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
-			setHackPushFlag(args[0])
+			setHackPushFlag(stringToBool(args[0]))
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 && args[0] != "true" && args[0] != "false" {
-			return fmt.Errorf("Invalid value: '%s'", args[0])
+		if len(args) == 1 {
+			err := validateBooleanArgument(args[0])
+			if err != nil {
+				return err
+			}
 		}
 		return validateMaxArgs(args, 1)
 	},
@@ -30,8 +33,8 @@ func printHackPushFlag() {
 	fmt.Println(strconv.FormatBool(git.ShouldHackPush()))
 }
 
-func setHackPushFlag(value string) {
-	git.UpdateShouldHackPush(value == "true")
+func setHackPushFlag(value bool) {
+	git.UpdateShouldHackPush(value)
 }
 
 func init() {
