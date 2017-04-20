@@ -5,9 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/user"
 	"path"
 
+	"github.com/Originate/git-town/lib/util"
 	"github.com/spf13/cobra"
 )
 
@@ -23,19 +23,19 @@ var installFishAutocompletionCommand = &cobra.Command{
 }
 
 func installFishAutocompletion() {
-	user, err := user.Current()
+	filename := path.Join(os.Getenv("HOME"), ".config", "fish", "completions", "git.fish")
+	err := os.MkdirAll(path.Dir(filename), 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
-	filename := path.Join(user.HomeDir, ".config", "fish", "completions", "git.fish")
-	err = os.MkdirAll(path.Dir(filename), 0644)
-	if err != nil {
-		log.Fatal(err)
+	if util.DoesFileExist(filename) {
+		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
 	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Git autocompletion for Fish shell installed")
 }
 
 var fishAutocompletionTemplate = `
