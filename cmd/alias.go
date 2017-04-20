@@ -1,18 +1,36 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/Originate/git-town/lib/git"
 	"github.com/Originate/git-town/lib/script"
 	"github.com/spf13/cobra"
 )
 
+var commandsToAlias = []string{
+	"append",
+	"hack",
+	"kill",
+	"new-pull-request",
+	"prepend",
+	"prune-branches",
+	"rename-branch",
+	"repo",
+	"ship",
+	"sync",
+}
+
 var aliasCommand = &cobra.Command{
 	Use:   "alias (true | false)",
 	Short: "Adds or removes default global aliases",
 	Run: func(cmd *cobra.Command, args []string) {
-		addOrRemoveAliases(stringToBool(args[0]))
+		toggle := stringToBool(args[0])
+		for _, command := range commandsToAlias {
+			if toggle {
+				addAlias(command)
+			} else {
+				removeAlias(command)
+			}
+		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		err := validateArgsCount(args, 1)
@@ -41,29 +59,6 @@ func removeAlias(command string) {
 	if previousAlias == getAliasValue(command) {
 		script.RunCommandSafe("git", "config", "--global", "--unset", key)
 	}
-}
-
-func addOrRemoveAliases(toggle bool) {
-	commands := []string{
-		"append",
-		"hack",
-		"kill",
-		"new-pull-request",
-		"prepend",
-		"prune-branches",
-		"rename-branch",
-		"repo",
-		"ship",
-		"sync",
-	}
-	for _, command := range commands {
-		if toggle {
-			addAlias(command)
-		} else {
-			removeAlias(command)
-		}
-	}
-	fmt.Println() // Trailing newline
 }
 
 func init() {
