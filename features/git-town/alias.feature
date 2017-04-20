@@ -1,24 +1,24 @@
 Feature: git town: alias
 
   Scenario: add alias
-    When I run `git town alias true`
+    When I run `gt alias true`
     Then it runs the commands
-      | COMMAND                                                          |
-      | git config --global alias.append town-append                     |
-      | git config --global alias.hack town-hack                         |
-      | git config --global alias.kill town-kill                         |
-      | git config --global alias.new-pull-request town-new-pull-request |
-      | git config --global alias.prepend town-prepend                   |
-      | git config --global alias.prune-branches town-prune-branches     |
-      | git config --global alias.rename-branch town-rename-branch       |
-      | git config --global alias.repo town-repo                         |
-      | git config --global alias.ship town-ship                         |
-      | git config --global alias.sync town-sync                         |
+      | COMMAND                                                           |
+      | git config --global alias.append "!gt append"                     |
+      | git config --global alias.hack "!gt hack"                         |
+      | git config --global alias.kill "!gt kill"                         |
+      | git config --global alias.new-pull-request "!gt new-pull-request" |
+      | git config --global alias.prepend "!gt prepend"                   |
+      | git config --global alias.prune-branches "!gt prune-branches"     |
+      | git config --global alias.rename-branch "!gt rename-branch"       |
+      | git config --global alias.repo "!gt repo"                         |
+      | git config --global alias.ship "!gt ship"                         |
+      | git config --global alias.sync "!gt sync"                         |
 
 
   Scenario: remove alias
-    Given I run `git town alias true`
-    When I run `git town alias false`
+    Given I run `gt alias true`
+    When I run `gt alias false`
     Then it runs the commands
       | COMMAND                                            |
       | git config --global --unset alias.append           |
@@ -35,14 +35,15 @@ Feature: git town: alias
 
   Scenario: remove alias does not remove unrelated aliases
     Given I run `git config --global alias.hack checkout`
-    When I run `git town alias false`
+    When I run `gt alias false`
     Then it runs no commands
 
 
   Scenario: invalid value
-    When I run `git town alias other`
-    Then I see
+    When I run `gt alias other`
+    Then I get the error "Invalid value: 'other'"
+    And I get the error
       """
-      Invalid alias boolean: 'other'.
-      Valid alias booleans are 'true' and 'false'.
+      Usage:
+        gt alias (true | false) [flags]
       """
