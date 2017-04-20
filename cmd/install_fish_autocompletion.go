@@ -24,7 +24,7 @@ var installFishAutocompletionCommand = &cobra.Command{
 
 func installFishAutocompletion() {
 	filename := path.Join(os.Getenv("HOME"), ".config", "fish", "completions", "git.fish")
-	err := os.MkdirAll(path.Dir(filename), 0755)
+	err := os.MkdirAll(path.Dir(filename), 0700)
 	if err != nil {
 		log.Fatal(err)
 	}

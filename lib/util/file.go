@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// DoesFileExist returns whether or not a file exists at the given path
 func DoesFileExist(filename string) bool {
 	_, err := os.Stat(filename)
 	if err != nil {
