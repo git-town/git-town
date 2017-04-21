@@ -11,7 +11,7 @@ Feature: update the parent of a nested feature branch
 
 
   Scenario: updating the parent branch
-    When I run `git town set-parent-branch child-feature main`
+    When I run `gt set-parent-branch child-feature main`
     Then Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT |
       | child-feature  | main   |
@@ -19,16 +19,16 @@ Feature: update the parent of a nested feature branch
 
 
   Scenario: invalid child branch name
-    When I run `git town set-parent-branch non-existing parent-feature`
+    When I run `gt set-parent-branch non-existing parent-feature`
     Then I get the error
       """
-      error: no branch named 'non-existing'
+      There is no branch named 'non-existing'
       """
 
 
   Scenario: invalid parent branch name
-    When I run `git town set-parent-branch child-feature non-existing`
+    When I run `gt set-parent-branch child-feature non-existing`
     Then I get the error
       """
-      error: no branch named 'non-existing'
+      There is no branch named 'non-existing'
       """

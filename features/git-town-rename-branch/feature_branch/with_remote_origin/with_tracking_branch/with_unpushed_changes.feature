@@ -14,12 +14,14 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
       |                 | local            | local feature commit |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `git town-rename-branch current-feature renamed-feature`
+    When I run `gt rename-branch current-feature renamed-feature`
 
 
   Scenario: result
-    Then I get the error "The branch is not in sync with its tracking branch."
-    And I get the error "Run 'git town-sync current-feature' to sync the branch."
+    Then it runs the commands
+      | BRANCH          | COMMAND           |
+      | current-feature | git fetch --prune |
+    And I get the error "'current-feature' is not in sync with its tracking branch. Please sync the branches before renaming."
     And I end up on the "current-feature" branch
     And I still have my uncommitted file
     And I am left with my original commits

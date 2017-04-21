@@ -12,14 +12,14 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
       | other-feature   | local    | other feature commit   |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `git town-kill current-feature`
+    When I run `gt kill current-feature`
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git add -A                             |
-      |                 | git commit -m 'WIP on current-feature' |
+      |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I end up on the "main" branch
@@ -33,7 +33,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
 
 
   Scenario: undoing the kill
-    When I run `git town-kill --undo`
+    When I run `gt kill --undo`
     Then it runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |

@@ -6,6 +6,7 @@ machine:
     PARALLEL_TEST_PROCESSORS: 8
 
     PATH: $HOME/.cabal/bin/:$PATH
+    GO_PROJECT: "$HOME/.go_workspace/src/github.com/Originate/git-town"
 
 
 dependencies:
@@ -14,8 +15,17 @@ dependencies:
   cache_directories:
     - "~/.cabal"
 
-  post:
+  pre:
+    - rm -rf "$GO_PROJECT"
+    - mkdir -p "$(dirname "$GO_PROJECT")"
+    - mv "$HOME/git-town" "$GO_PROJECT"
+    - ln -s "$GO_PROJECT" "$HOME/git-town"
+
+  override:
+    - bin/setup
     - bin/circleci-install-shellcheck
+    - bundle install
+
 
 notify:
   webhooks:
@@ -25,6 +35,7 @@ notify:
 test:
   override:
     - bundle exec rake lint:bash
+    - bin/lint_go
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test

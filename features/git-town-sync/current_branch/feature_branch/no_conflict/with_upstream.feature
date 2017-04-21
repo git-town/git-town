@@ -9,7 +9,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       | feature | local    | local commit    |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `git town-sync`
+    When I run `gt sync`
 
 
   Scenario: result

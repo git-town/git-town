@@ -12,7 +12,21 @@ This guide will help you get started and outline some things you should know whe
 
 ## Setup
 
-* fork and clone the repository to your machine
+* install [Go](https://golang.org)
+  * on macOS via `brew install go`
+* set up the Go directory structure on your machine
+  * set the environment variable `$GOPATH` to your Go workspace
+    (you can point it to any folder on your hard drive, let's assume `~/go` here)
+  * add `~/go/bin` to your `$PATH`
+  * create the directory `~/go/src/github.com/Originate`
+  * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
+  * cd into `$GOPATH/src/github.com/Originate/git-town`
+  * run `bin/setup`
+  * now you can run `gt` on the command line
+  * see https://golang.org/doc/install#testing for details on how to test
+* install [Glide](https://github.com/Masterminds/glide) (package manager for Go)
+  * on macOS: `brew install glide`
+
 * install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
 * install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
@@ -21,12 +35,29 @@ This guide will help you get started and outline some things you should know whe
   for auto-running tests
 
 
+## Building
+
+* run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
+
+
 ## Testing
 
 * tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
 * See [here](./documentation/development/testing.md) for how to run the tests
+
+
+## Developing
+
+* all dependencies are located in the [vendor](vendor) folder,
+  which is checked into Git
+* update dependencies: `glide up`
+* adding a new Go library:
+  * update dependencies in a separate PR
+  * `glide get <package name>`
+  * your pull request for the feature that requires the new library
+    should contain the updated glide files and vendor folder
 
 
 ## Command documentation

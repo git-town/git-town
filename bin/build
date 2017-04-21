@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+go install github.com/Originate/git-town/cmd/gt

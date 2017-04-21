@@ -9,11 +9,16 @@ Feature: git town-hack: requires a branch name
     Given I have a feature branch named "existing-feature"
     And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `git town-hack`
+    When I run `gt hack`
 
 
   Scenario: result
     Then it runs no commands
-    And I get the error "No branch name provided"
+    And I get the error "no branch name provided"
+    And I get the error
+      """
+      Usage:
+        gt hack <branch> [flags]
+      """
     And I am still on the "existing-feature" branch
     And I still have my uncommitted file

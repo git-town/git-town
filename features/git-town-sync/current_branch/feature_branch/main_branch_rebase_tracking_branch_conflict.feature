@@ -1,4 +1,4 @@
-Feature: git town-sync: resolving conflicts between the main branch and its tracking branch when syncing the current feature branch
+Feature: gt sync: resolving conflicts between the main branch and its tracking branch when syncing the current feature branch
 
   As a developer syncing a feature branch when there are conflicts between the local and remote main branches
   I want to be given the choice to resolve the conflicts or abort
@@ -13,7 +13,7 @@ Feature: git town-sync: resolving conflicts between the main branch and its trac
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `git town-sync`
+    When I run `gt sync`
 
 
   Scenario: result
@@ -26,15 +26,15 @@ Feature: git town-sync: resolving conflicts between the main branch and its trac
       | main    | git rebase origin/main |
     And I get the error
       """
-      To abort, run "git town-sync --abort".
-      To continue after you have resolved the conflicts, run "git town-sync --continue".
+      To abort, run "gt sync --abort".
+      To continue after you have resolved the conflicts, run "gt sync --continue".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git town-sync --abort`
+    When I run `gt sync --abort`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
@@ -47,15 +47,15 @@ Feature: git town-sync: resolving conflicts between the main branch and its trac
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git town-sync --continue`
-    Then I get the error "You must resolve the conflicts before continuing the git town-sync"
+    When I run `gt sync --continue`
+    Then I get the error "You must resolve the conflicts before continuing"
     And my repo still has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git town-sync --continue`
+    When I run `gt sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -81,7 +81,7 @@ Feature: git town-sync: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git town-sync --continue`
+    When I run `git rebase --continue; gt sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |

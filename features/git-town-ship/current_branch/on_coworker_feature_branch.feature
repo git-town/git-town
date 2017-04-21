@@ -11,8 +11,9 @@ Feature: git town-ship: shipping a coworker's feature branch
       | BRANCH  | LOCATION         | MESSAGE         | FILE NAME     |
       | feature | local and remote | coworker commit | coworker_file |
     And I fetch updates
+    And I set the parent branch of "feature" as "main"
     And I am on the "feature" branch
-    When I run `git town-ship -m 'feature done'`
+    When I run `gt ship -m 'feature done'`
 
 
   Scenario: result
@@ -26,7 +27,7 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         | git merge --no-edit main                                                |
       |         | git checkout main                                                       |
       | main    | git merge --squash feature                                              |
-      |         | git commit --author="coworker <coworker@example.com>" -m "feature done" |
+      |         | git commit -m "feature done" --author "coworker <coworker@example.com>" |
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |

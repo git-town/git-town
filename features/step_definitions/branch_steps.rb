@@ -76,6 +76,13 @@ Given(/^I am on the "(.+?)" branch with "(.+?)" as the previous Git branch/) do 
 end
 
 
+Given(/^(I|my coworker) sets? the parent branch of "([^"]*)" as "([^"]*)"$/) do |who, child_branch, parent_branch|
+  user = (who == 'I') ? :developer : :coworker
+  in_repository user do
+    set_parent_branch branch: child_branch, parent: parent_branch
+  end
+end
+
 
 
 Then(/^my previous Git branch is (?:now|still) "(.+?)"/) do |previous_branch|

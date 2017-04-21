@@ -7,7 +7,7 @@ Feature: git town-ship: errors when trying to ship the main branch
 
   Background:
     Given I am on the "main" branch
-    When I run `git town-ship -m 'something done'`
+    When I run `gt ship -m 'something done'`
 
 
   Scenario: result
