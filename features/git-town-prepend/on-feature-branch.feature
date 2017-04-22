@@ -38,7 +38,7 @@ Feature: Prepending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I run `git town-prepend new-parent`
+    Given I had run `git town-prepend new-parent`
     When I run `git town-prepend --undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
