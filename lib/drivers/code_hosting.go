@@ -7,11 +7,22 @@ import (
 	"github.com/Originate/git-town/lib/util"
 )
 
+// MergeOptions defines the options to MergePullRequest function
+type MergePullRequestOptions struct {
+	CommitMessage string
+	CommitTitle   string
+	MergeMethod   string
+	Number        int
+	Sha           string
+}
+
 // CodeHostingDriver defines the interface
 // of drivers for the different code hosting services
 type CodeHostingDriver interface {
 	GetRepositoryURL(repository string) string
 	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
+	GetPullRequestNumber(repository string, branch string, parentBranch string) (int, error)
+	MergePullRequest(repository string, options MergePullRequestOptions) error
 }
 
 // GetCodeHostingDriver returns an instance of the code hosting driver

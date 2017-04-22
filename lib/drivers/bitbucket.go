@@ -1,6 +1,7 @@
 package drivers
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -25,4 +26,12 @@ func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string,
 // on Bitbucket.com
 func (driver BitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://bitbucket.org/" + repository
+}
+
+func (driver BitbucketCodeHostingDriver) GetPullRequestNumber(repository string, branch string, parentBranch string) (int, error) {
+	return -1, errors.New("Unimplemented")
+}
+
+func (driver BitbucketCodeHostingDriver) MergePullRequest(repository string, options MergePullRequestOptions) error {
+	return errors.New("Unimplemented")
 }

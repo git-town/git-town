@@ -1,6 +1,7 @@
 package drivers
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 )
@@ -21,4 +22,12 @@ func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, br
 // GetRepositoryURL returns the URL of the given repository on Gitlab
 func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://gitlab.com/" + repository
+}
+
+func (driver GitlabCodeHostingDriver) GetPullRequestNumber(repository string, branch string, parentBranch string) (int, error) {
+	return -1, errors.New("Unimplemented")
+}
+
+func (driver GitlabCodeHostingDriver) MergePullRequest(repository string, options MergePullRequestOptions) error {
+	return errors.New("Unimplemented")
 }
