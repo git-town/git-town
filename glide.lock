@@ -22,10 +22,3 @@ imports:
   repo: https://go.googlesource.com/sys
   subpackages:
   - unix
-testImports:
-- name: github.com/onsi/ginkgo
-  version: f40a49d81e5c12e90400620b6242fb29a8e7c9d9
-  subpackages:
-  - ginkgo
-- name: github.com/onsi/gomega
-  version: 9b8c753e8dfb382618ba8fa19b4197b5dcb0434c

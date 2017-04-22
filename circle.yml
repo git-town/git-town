@@ -36,6 +36,7 @@ test:
   override:
     - bundle exec rake lint:bash
     - bin/lint_go
+    - bin/unit_test_go
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
     - bundle exec rake test
