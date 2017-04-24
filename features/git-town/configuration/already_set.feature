@@ -41,7 +41,7 @@ Feature: listing the configuration
   Scenario: non-empty input
     Given I have configured the main branch name as "main"
     And my perennial branches are configured as "qa"
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | main       |
       | production |
       |            |
