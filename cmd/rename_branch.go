@@ -91,7 +91,7 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 }
 
 func init() {
-	renameBranchCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	renameBranchCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	renameBranchCommand.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	RootCmd.AddCommand(renameBranchCommand)
 }

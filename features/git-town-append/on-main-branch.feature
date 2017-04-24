@@ -11,19 +11,20 @@ Feature: Appending a branch to a feature branch
       | main   | remote   | main_commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `git town-append new-child`
+    When I run `gt append new-child`
 
 
   Scenario: inserting a branch into the branch ancestry
     Then it runs the commands
-      | BRANCH    | COMMAND                        |
-      | main      | git fetch --prune              |
-      |           | git add -A                     |
-      |           | git stash                      |
-      |           | git rebase origin/main         |
-      |           | git checkout -b new-child main |
-      | new-child | git push -u origin new-child   |
-      |           | git stash pop                  |
+      | BRANCH    | COMMAND                      |
+      | main      | git fetch --prune            |
+      |           | git add -A                   |
+      |           | git stash                    |
+      |           | git rebase origin/main       |
+      |           | git branch new-child main    |
+      |           | git checkout new-child       |
+      | new-child | git push -u origin new-child |
+      |           | git stash pop                |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
@@ -36,7 +37,7 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: Undo
-    When I run `git town-append --undo`
+    When I run `gt append --undo`
     Then it runs the commands
         | BRANCH    | COMMAND                    |
         | new-child | git add -A                 |

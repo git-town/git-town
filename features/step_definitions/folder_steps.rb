@@ -1,6 +1,9 @@
-Given(/^I already have the Git autocompletion symlink$/) do
+Given(/^I have an existing Git autocompletion symlink$/) do
+  symlinked_file = File.join(REPOSITORY_BASE, '.config/completions/custom')
   FileUtils.mkdir_p File.dirname(FISH_AUTOCOMPLETIONS_PATH)
-  FileUtils.symlink 'foo', FISH_AUTOCOMPLETIONS_PATH
+  FileUtils.mkdir_p File.dirname(symlinked_file)
+  FileUtils.symlink symlinked_file, FISH_AUTOCOMPLETIONS_PATH
+  IO.write symlinked_file, 'existing Git autocompletion data'
 end
 
 
@@ -27,11 +30,11 @@ Then(/^I am in the project root folder$/) do
 end
 
 
-Then(/^I still have my original Git autocompletion file$/) do
-  expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
+Then(/^I have a Git autocompletion file$/) do
+  expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to include 'complete --command git'
 end
 
 
-Then(/^I still have my original Git autocompletion symlink$/) do
-  expect(File.symlink? FISH_AUTOCOMPLETIONS_PATH).to be_truthy
+Then(/^I still have my original Git autocompletion file$/) do
+  expect(IO.read FISH_AUTOCOMPLETIONS_PATH).to eql 'existing Git autocompletion data'
 end
