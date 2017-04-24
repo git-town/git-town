@@ -11,7 +11,7 @@ Feature: git town-hack: don't push branch to remote upon creation
       | BRANCH | LOCATION | MESSAGE       |
       | main   | remote   | remote commit |
     And I am on the "main" branch
-    When I run `git town-hack private-feature`
+    When I run `gt hack private-feature`
 
 
   Scenario: result

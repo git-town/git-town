@@ -7,11 +7,15 @@ Feature: show help screen when Git Town is not configured
     Given I haven't configured Git Town yet
 
 
-  Scenario: git town with no flags
-    When I run `git town`
-    Then I see the "git-town" man page
+  Scenario Outline:
+    When I run `<COMMAND>`
+    Then I see
+      """
+      Usage:
+        gt [command]
+      """
 
-
-  Scenario: git town, configured, with "help" subcommand
-    When I run `git town help`
-    Then I see the "git-town" man page
+    Examples:
+      | COMMAND |
+      | gt      |
+      | gt help |

@@ -30,6 +30,9 @@ func Run(options RunOptions) {
 		runSteps(&abortRunState, options)
 	} else if options.IsContinue {
 		runState := loadState(options.Command)
+		if runState.RunStepList.isEmpty() {
+			util.ExitWithErrorMessage("Nothing to continue")
+		}
 		git.EnsureDoesNotHaveConflicts()
 		runSteps(&runState, options)
 	} else if options.IsSkip {

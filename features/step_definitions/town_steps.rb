@@ -13,21 +13,8 @@ Given(/^my repository has the "([^"]*)" configuration set to "([^"]*)"$/) do |co
 end
 
 
-Given(/^I have an old configuration file with (.+?)$/) do |data|
-  delete_main_branch_configuration
-  data = Kappamaki.attributes_from_sentence data
-  IO.write '.main_branch_name', data[:'main branch']
-end
-
-
 Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
-end
-
-
-Given(/^my non-feature branches are configured as (.*)$/) do |data|
-  branch_names = Kappamaki.from_sentence data
-  set_configuration 'non-feature-branch-names', branch_names.join(' ')
 end
 
 
