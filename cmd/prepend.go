@@ -72,8 +72,8 @@ func getPrependStepList(config prependConfig) steps.StepList {
 }
 
 func init() {
-	prependCommand.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	prependCommand.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
-	prependCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	prependCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
+	prependCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	prependCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(prependCommand)
 }

@@ -68,8 +68,8 @@ func getAppendStepList(config appendConfig) steps.StepList {
 }
 
 func init() {
-	appendCommand.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	appendCommand.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
-	appendCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	appendCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlag)
+	appendCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	appendCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(appendCommand)
 }
