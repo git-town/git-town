@@ -75,47 +75,42 @@ complete --command git --arguments "(git branch | tr -d '* ')" --no-files
 %s
 `
 
-type commandDefinition struct {
-	name        string
-	description string
-}
-
-type optionDefinition struct {
+type autocompleteDefinition struct {
 	name        string
 	description string
 }
 
 func buildAutocompletionDefinition() string {
-	commands := []commandDefinition{
-		commandDefinition{name: "hack", description: hackCmd.Short},
-		commandDefinition{name: "kill", description: killCommand.Short},
-		commandDefinition{name: "new-pull-request", description: newPullRequestCommand.Short},
-		commandDefinition{name: "prune-branches", description: pruneBranchesCommand.Short},
-		commandDefinition{name: "rename-branch", description: renameBranchCommand.Short},
-		commandDefinition{name: "repo", description: repoCommand.Short},
-		commandDefinition{name: "ship", description: shipCmd.Short},
-		commandDefinition{name: "sync", description: syncCmd.Short},
+	commands := []autocompleteDefinition{
+		autocompleteDefinition{name: "hack", description: hackCmd.Short},
+		autocompleteDefinition{name: "kill", description: killCommand.Short},
+		autocompleteDefinition{name: "new-pull-request", description: newPullRequestCommand.Short},
+		autocompleteDefinition{name: "prune-branches", description: pruneBranchesCommand.Short},
+		autocompleteDefinition{name: "rename-branch", description: renameBranchCommand.Short},
+		autocompleteDefinition{name: "repo", description: repoCommand.Short},
+		autocompleteDefinition{name: "ship", description: shipCmd.Short},
+		autocompleteDefinition{name: "sync", description: syncCmd.Short},
 	}
-	options := []optionDefinition{
-		optionDefinition{name: "abort", description: abortFlagDescription},
-		optionDefinition{name: "continue", description: continueFlagDescription},
-		optionDefinition{name: "undo", description: undoFlagDescription},
+	options := []autocompleteDefinition{
+		autocompleteDefinition{name: "abort", description: abortFlagDescription},
+		autocompleteDefinition{name: "continue", description: continueFlagDescription},
+		autocompleteDefinition{name: "undo", description: undoFlagDescription},
 	}
 
 	commandsSpaceSeparated := ""
 	for _, command := range commands {
 		commandsSpaceSeparated += command.name + " "
 	}
-	commandAutcompletion := ""
+	commandAutocompletion := ""
 	for _, command := range commands {
-		commandAutcompletion += fmt.Sprintf("complete --command git --arguments '%s' --description '%s' --condition '__fish_complete_git_town_no_command' --no-files\n", command.name, command.description)
+		commandAutocompletion += fmt.Sprintf("complete --command git --arguments '%s' --description '%s' --condition '__fish_complete_git_town_no_command' --no-files\n", command.name, command.description)
 	}
 	optionAutocompletion := ""
 	for _, option := range options {
 		optionAutocompletion += fmt.Sprintf("complete --command git --long-option '%s' --description '%s' --no-files\n", option.name, option.description)
 	}
 
-	return fmt.Sprintf(fishAutocompletionTemplate, commandsSpaceSeparated, commandAutcompletion, optionAutocompletion)
+	return fmt.Sprintf(fishAutocompletionTemplate, commandsSpaceSeparated, commandAutocompletion, optionAutocompletion)
 }
 
 func init() {
