@@ -19,7 +19,7 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git town-kill
     Given I have a feature branch named "feature" with no parent
     And I am on the "feature" branch
-    When I run `git town-kill` and press ENTER
+    When I run `gt kill` and press ENTER
     Then I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
