@@ -17,7 +17,7 @@ Feature: git town: alias
 
 
   Scenario: remove alias
-    Given I run `git town alias true`
+    Given I have run `git town alias true`
     When I run `git town alias false`
     Then it runs the commands
       | COMMAND                                            |
@@ -34,7 +34,7 @@ Feature: git town: alias
 
 
   Scenario: remove alias does not remove unrelated aliases
-    Given I run `git config --global alias.hack checkout`
+    Given I have run `git config --global alias.hack checkout`
     When I run `git town alias false`
     Then it runs no commands
 

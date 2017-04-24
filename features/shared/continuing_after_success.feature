@@ -6,7 +6,7 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-hack
-    Given I run `git town-hack new-feature`
+    Given I have run `git town-hack new-feature`
     When I run `git town-hack --continue`
     Then I get the error "The last command finished successfully and cannot be continued"
 
