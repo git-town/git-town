@@ -9,6 +9,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
 func EnsureIsConfigured() {
 	if git.GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
