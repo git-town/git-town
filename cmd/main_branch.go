@@ -23,11 +23,7 @@ var mainBranchCommand = &cobra.Command{
 }
 
 func printMainBranch() {
-	output := git.GetMainBranch()
-	if output == "" {
-		output = "[none]"
-	}
-	fmt.Println(output)
+	fmt.Println(git.GetPrintableMainBranch())
 }
 
 func setMainBranch(branchName string) {

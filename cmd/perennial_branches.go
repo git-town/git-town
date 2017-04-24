@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/Originate/git-town/lib/git"
 	"github.com/spf13/cobra"
@@ -36,11 +35,7 @@ func addPerennialBranch(branchName string) {
 }
 
 func printPerennialBranches() {
-	output := strings.Join(git.GetPerennialBranches(), "\n")
-	if output == "" {
-		output = "[none]"
-	}
-	fmt.Println(output)
+	fmt.Println(git.GetPrintablePerennialBranches())
 }
 
 func removePerennialBranch(branchName string) {

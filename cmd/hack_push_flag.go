@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/Originate/git-town/lib/git"
 	"github.com/spf13/cobra"
@@ -30,7 +29,7 @@ var hackPushFlagCommand = &cobra.Command{
 }
 
 func printHackPushFlag() {
-	fmt.Println(strconv.FormatBool(git.ShouldHackPush()))
+	fmt.Println(git.GetPrintableHackPushFlag())
 }
 
 func setHackPushFlag(value bool) {
