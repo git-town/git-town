@@ -12,19 +12,20 @@ Feature: Appending a branch to a perennial branch
       | production | remote   | production_commit |
     And I am on the "production" branch
     And I have an uncommitted file
-    When I run `git town-append new-child`
+    When I run `gt append new-child`
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND                              |
-      | production | git fetch --prune                    |
-      |            | git add -A                           |
-      |            | git stash                            |
-      |            | git rebase origin/production         |
-      |            | git checkout -b new-child production |
-      | new-child  | git push -u origin new-child         |
-      |            | git stash pop                        |
+      | BRANCH     | COMMAND                         |
+      | production | git fetch --prune               |
+      |            | git add -A                      |
+      |            | git stash                       |
+      |            | git rebase origin/production    |
+      |            | git branch new-child production |
+      |            | git checkout new-child          |
+      | new-child  | git push -u origin new-child    |
+      |            | git stash pop                   |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
@@ -37,14 +38,14 @@ Feature: Appending a branch to a perennial branch
 
 
   Scenario: Undo
-    When I run `git town-append --undo`
+    When I run `gt append --undo`
     Then it runs the commands
         | BRANCH     | COMMAND                    |
         | new-child  | git add -A                 |
         |            | git stash                  |
         |            | git push origin :new-child |
         |            | git checkout production    |
-        | production | git branch -d new-child    |
+        | production | git branch -D new-child    |
         |            | git stash pop              |
     And I end up on the "production" branch
     And I still have my uncommitted file

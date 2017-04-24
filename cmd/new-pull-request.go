@@ -57,7 +57,7 @@ func getNewPullRequestStepList(config newPullRequestConfig) steps.StepList {
 }
 
 func init() {
-	newPullRequestCommand.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	newPullRequestCommand.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	newPullRequestCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
+	newPullRequestCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	RootCmd.AddCommand(newPullRequestCommand)
 }
