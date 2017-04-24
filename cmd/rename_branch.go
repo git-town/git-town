@@ -22,6 +22,7 @@ var renameBranchCommand = &cobra.Command{
 	Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 	Short: "Renames a branch both locally and remotely",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "rename-branch",

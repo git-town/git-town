@@ -17,6 +17,7 @@ var newPullRequestCommand = &cobra.Command{
 	Use:   "new-pull-request",
 	Short: "Creates a new pull request",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "new-pull-request",

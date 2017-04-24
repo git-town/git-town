@@ -14,6 +14,7 @@ var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
 	Short: "Creates a new feature branch off the main development branch",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
