@@ -6,18 +6,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/Originate/git-town/lib/util"
 )
 
 func hasSavedState(command string) bool {
 	filename := getRunResultFilename(command)
-	_, err := os.Stat(filename)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-		log.Fatal("Error getting stat for run result file:", err)
-	}
-	return true
+	return util.DoesFileExist(filename)
 }
 
 func clearSavedState(command string) {

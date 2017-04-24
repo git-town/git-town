@@ -59,6 +59,6 @@ func getPruneBranchesList() (result steps.StepList) {
 }
 
 func init() {
-	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(pruneBranchesCommand)
 }

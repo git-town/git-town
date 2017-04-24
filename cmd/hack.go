@@ -57,7 +57,7 @@ func getHackStepList(targetBranchName string) (result steps.StepList) {
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
-	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
+	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
+	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	RootCmd.AddCommand(hackCmd)
 }

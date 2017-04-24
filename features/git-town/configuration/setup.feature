@@ -11,7 +11,7 @@ Feature: Initial configuration
 
 
   Scenario: succeeds on valid main branch and perennial branch names
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | main       |
       | production |
       | dev        |
@@ -21,7 +21,7 @@ Feature: Initial configuration
 
 
   Scenario: succeeds on valid main branch and perennial branch numbers
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | 2 |
       | 1 |
       | 3 |
@@ -31,7 +31,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on empty main branch
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       |      |
       | main |
       |      |
@@ -41,7 +41,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on invalid main branch number
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | 4    |
       | main |
       |      |
@@ -51,7 +51,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on non-existent main branch
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | non-existent |
       | main         |
       |              |
@@ -61,7 +61,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on main branch as perennial branch
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | main |
       | main |
       | dev  |
@@ -72,7 +72,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on invalid perennial branch number
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | main |
       | 4    |
       | 3    |
@@ -83,7 +83,7 @@ Feature: Initial configuration
 
 
   Scenario: shows error and re-prompts on non-existent perennial branch
-    When I run `git town config --setup` and enter:
+    When I run `gt config --setup` and enter:
       | main         |
       | non-existent |
       | dev          |

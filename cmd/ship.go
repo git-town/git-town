@@ -106,9 +106,9 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 }
 
 func init() {
-	shipCmd.Flags().BoolVar(&abortFlag, "abort", false, "Abort a previous command that resulted in a conflict")
+	shipCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	shipCmd.Flags().BoolVar(&continueFlag, "continue", false, "Continue a previous command that resulted in a conflict")
-	shipCmd.Flags().BoolVar(&undoFlag, "undo", false, "Undo a previous command")
+	shipCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	shipCmd.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(shipCmd)
 }
