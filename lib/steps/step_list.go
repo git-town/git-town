@@ -62,7 +62,7 @@ type WrapOptions struct {
 	StashOpenChanges bool
 }
 
-// Wrap wraps the given StepList in steps that
+// Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions) {
 	stepList.Append(PreserveCheckoutHistoryStep{
