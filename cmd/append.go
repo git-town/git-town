@@ -68,7 +68,7 @@ func getAppendStepList(config appendConfig) steps.StepList {
 }
 
 func init() {
-	appendCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlag)
+	appendCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	appendCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	appendCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(appendCommand)
