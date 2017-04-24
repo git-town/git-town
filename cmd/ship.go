@@ -75,34 +75,34 @@ func ensureParentBranchIsMainBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) steps.StepList {
+func getShipStepList(config shipConfig) (result steps.StepList) {
 	mainBranch := git.GetMainBranch()
 	areInitialAndTargetDifferent := config.TargetBranch != config.InitialBranch
-	stepList := steps.StepList{}
-	stepList.AppendList(steps.GetSyncBranchSteps(mainBranch))
-	stepList.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	stepList.Append(steps.MergeTrackingBranchStep{})
-	stepList.Append(steps.MergeBranchStep{BranchName: mainBranch})
-	stepList.Append(steps.EnsureHasShippableChangesStep{BranchName: config.TargetBranch})
-	stepList.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
-	stepList.Append(steps.SquashMergeBranchStep{BranchName: config.TargetBranch, CommitMessage: commitMessage})
+	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
+	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(steps.MergeTrackingBranchStep{})
+	result.Append(steps.MergeBranchStep{BranchName: mainBranch})
+	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.TargetBranch})
+	result.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
+	result.Append(steps.SquashMergeBranchStep{BranchName: config.TargetBranch, CommitMessage: commitMessage})
 	if git.HasRemote("origin") {
-		stepList.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
+		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.TargetBranch)
 	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 {
-		stepList.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
+		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 	}
-	stepList.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch})
-	stepList.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
+	result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch})
+	result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
 	for _, child := range childBranches {
-		stepList.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
+		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
 	}
-	stepList.Append(steps.DeleteAncestorBranchesStep{})
+	result.Append(steps.DeleteAncestorBranchesStep{})
 	if areInitialAndTargetDifferent {
-		stepList.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+		result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
-	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: areInitialAndTargetDifferent})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: areInitialAndTargetDifferent})
+	return
 }
 
 func init() {

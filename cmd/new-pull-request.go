@@ -46,14 +46,13 @@ func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig) steps.StepList {
-	stepList := steps.StepList{}
+func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
+		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	stepList = steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	stepList.Append(steps.CreatePullRequestStep{BranchName: config.InitialBranch})
-	return stepList
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	result.Append(steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	return
 }
 
 func init() {

@@ -87,6 +87,7 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
 	}
 	result.Append(steps.DeleteLocalBranchStep{BranchName: config.OldBranchName})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
 	return
 }
 

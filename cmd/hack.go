@@ -45,15 +45,15 @@ func checkHackPreconditions(args []string) string {
 	return targetBranchName
 }
 
-func getHackStepList(targetBranchName string) steps.StepList {
+func getHackStepList(targetBranchName string) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
-	stepList := steps.StepList{}
-	stepList.AppendList(steps.GetSyncBranchSteps(mainBranchName))
-	stepList.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
+	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
+	result.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
 	if git.HasRemote("origin") && git.ShouldHackPush() {
-		stepList.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
+		result.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
 	}
-	return steps.Wrap(stepList, steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	return
 }
 
 func init() {
