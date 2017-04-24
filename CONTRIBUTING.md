@@ -29,7 +29,6 @@ This guide will help you get started and outline some things you should know whe
 
 * install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
-* install [ShellCheck](https://github.com/koalaman/shellcheck) for linting the bash scripts
 * run `bundle` to install ruby gems
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
@@ -84,7 +83,6 @@ Every Git Town command
 ## Code style
 
 Please follow the existing code style.
-For reference, please take a look at our [Bash cheatsheet](documentation/development/bash_cheatsheet.md).
 
 
 ## Pull Requests

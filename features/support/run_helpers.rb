@@ -67,13 +67,6 @@ def run command, inputs: [], ignore_errors: false
 end
 
 
-def result_has_shell_error? result
-  # Shell errors have the format
-  #   <filename>: line <line number>: <error message>
-  result.out.include? File.expand_path('../../../src/', __FILE__)
-end
-
-
 def run_shell_command command, inputs = []
   result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
   command = "#{shell_overrides}; #{command} 2>&1"
@@ -91,7 +84,7 @@ end
 
 
 def shell_overrides
-  "PATH=#{SOURCE_DIRECTORY}:#{SHELL_OVERRIDE_DIRECTORY}:$PATH;"\
+  "PATH=#{SHELL_OVERRIDE_DIRECTORY}:$PATH;"\
   "HOME=#{REPOSITORY_BASE};"\
   "export WHICH_SOURCE=#{TOOLS_INSTALLED_FILENAME};"\
   'export GIT_TOWN_ENV=test'
@@ -105,7 +98,7 @@ end
 
 # Returns whether a test should raise an error in the given situation
 def should_raise_error? is_git_town_command:, result:, ignore_errors:
-  ((!is_git_town_command && result.error) || result_has_shell_error?(result)) && !ignore_errors
+  !is_git_town_command && result.error && !ignore_errors
 end
 
 

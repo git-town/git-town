@@ -5,15 +5,10 @@ machine:
     # but 8 processors yields the fastest results
     PARALLEL_TEST_PROCESSORS: 8
 
-    PATH: $HOME/.cabal/bin/:$PATH
     GO_PROJECT: "$HOME/.go_workspace/src/github.com/Originate/git-town"
 
 
 dependencies:
-
-  # Cache ShellCheck for subsequent builds
-  cache_directories:
-    - "~/.cabal"
 
   pre:
     - rm -rf "$GO_PROJECT"
@@ -23,7 +18,6 @@ dependencies:
 
   override:
     - bin/setup
-    - bin/circleci-install-shellcheck
     - bundle install
 
 
@@ -34,7 +28,6 @@ notify:
 
 test:
   override:
-    - bundle exec rake lint:bash
     - bin/lint_go
     - bundle exec rake lint:ruby
     - bundle exec rake lint:cucumber
