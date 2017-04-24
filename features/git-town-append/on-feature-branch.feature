@@ -15,7 +15,7 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: inserting a branch into the branch ancestry
-    When I run `git town-append new-child`
+    When I run `gt append new-child`
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git fetch --prune                           |
@@ -26,7 +26,8 @@ Feature: Appending a branch to a feature branch
       |                  | git checkout existing-feature               |
       | existing-feature | git merge --no-edit origin/existing-feature |
       |                  | git merge --no-edit main                    |
-      |                  | git checkout -b new-child existing-feature  |
+      |                  | git branch new-child existing-feature       |
+      |                  | git checkout new-child                      |
       | new-child        | git push -u origin new-child                |
       |                  | git stash pop                               |
     And I end up on the "new-child" branch
@@ -42,15 +43,15 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I run `git town-append new-child`
-    When I run `git town-append --undo`
+    Given I run `gt append new-child`
+    When I run `gt append --undo`
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | new-child        | git add -A                    |
       |                  | git stash                     |
       |                  | git push origin :new-child    |
       |                  | git checkout existing-feature |
-      | existing-feature | git branch -d new-child       |
+      | existing-feature | git branch -D new-child       |
       |                  | git checkout main             |
       | main             | git checkout existing-feature |
       | existing-feature | git stash pop                 |
