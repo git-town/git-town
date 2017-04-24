@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# vi:ft=sh:
+# Usage: script/build [-o <EXE>]
+#        script/build test
+#
+# Sets up GOPATH and compiles hub to <EXE> (default: `bin/hub`).
+#
+# With `test`, runs tests instead.
+
+set -e
+
+windows=
+[[ $OS == Windows* ]] && windows=1
+
+setup_gopath() {
+  TMPDIR="${LOCALAPPDATA:-$TMPDIR}"
+  TMP_GOPATH="${TMPDIR:-/tmp}/go"
+  TMP_SELF="${TMP_GOPATH}/src/github.com/github/hub"
+
+  if [ -n "$windows" ]; then
+    export GOPATH="${TMP_GOPATH//\//\\}"
+  else
+    export GOPATH="$TMP_GOPATH"
+  fi
+
+  mkdir -p "${TMP_SELF%/*}"
+  ln -snf "$PWD" "$TMP_SELF" 2>/dev/null || {
+    rm -rf "$TMP_SELF"
+    mkdir "$TMP_SELF"
+    cp -R "$PWD"/* "${TMP_SELF}/"
+  }
+}
+
+find_source_files() {
+  find . -maxdepth 2 -name '*.go' '!' -name '*_test.go' "$@"
+}
+
+find_packages() {
+  find_source_files | cut -d/ -f2 | sort -u | grep -v '.go$' | sed 's!^!github.com/github/hub/!'
+}
+
+build_hub() {
+  setup_gopath
+  mkdir -p "$(dirname "$1")"
+  go build -ldflags "-X github.com/github/hub/version.Version=`./script/version`" -o "$1"
+}
+
+test_hub() {
+  setup_gopath
+  find_packages | xargs go test
+}
+
+[ $# -gt 0 ] || set -- -o "bin/hub${windows:+.exe}"
+
+case "$1" in
+-o )
+  shift
+  if [ -z "$1" ]; then
+    echo "error: argument needed for \`-o'" >&2
+    exit 1
+  fi
+  build_hub "$1"
+  ;;
+test )
+  test_hub
+  ;;
+files )
+  find_source_files
+  ;;
+-h | --help )
+  sed -ne '/^#/!q;s/.\{1,2\}//;1,2d;p' < "$0"
+  exit
+  ;;
+* )
+  "$0" --help >&2
+  exit 1
+esac

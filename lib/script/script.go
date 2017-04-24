@@ -8,15 +8,21 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/lib/git"
-	"github.com/Originate/git-town/lib/util"
 
 	"github.com/fatih/color"
+	hub "github.com/github/hub/utils"
 )
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
-	command := util.GetOpenBrowserCommand()
-	err := RunCommand(command, url)
+	command, err := hub.BrowserLauncher()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// command := util.GetOpenBrowserCommand()
+	command = append(command, url)
+	err = RunCommand(command...)
+
 	if err != nil {
 		log.Fatal(err)
 	}

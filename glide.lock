@@ -1,8 +1,13 @@
-hash: 7c4f5f6e83596d5a72c3f07356058737222f4973cb42816182ba0dbe5bc14c71
-updated: 2017-04-16T09:00:01.136336589-07:00
+hash: 6cdf3b05fc464bd6f9a7d22a9819147136f24bde434b52aadafe29fc9bddf0fc
+updated: 2017-04-23T17:31:39.516777667-07:00
 imports:
 - name: github.com/fatih/color
   version: 7824417a424b65227be8ac9b14d545a7f3e6c3f0
+- name: github.com/github/hub
+  version: 76631ce5519fedd02bee24fc95114565e5d6a03c
+  subpackages:
+  - ui
+  - utils
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/mattn/go-colorable
@@ -24,7 +29,7 @@ imports:
   - unix
 testImports:
 - name: github.com/onsi/ginkgo
-  version: f40a49d81e5c12e90400620b6242fb29a8e7c9d9
+  version: 6adbc2648389a46e8ff0e96d07a07a9a9eb432de
   subpackages:
   - ginkgo
 - name: github.com/onsi/gomega
