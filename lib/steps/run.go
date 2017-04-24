@@ -24,6 +24,7 @@ type RunOptions struct {
 
 // Run runs the Git Town command described by the given RunOptions.
 func Run(options RunOptions) {
+	git.EnsureIsRepository()
 	if options.IsAbort {
 		runState := loadState(options.Command)
 		abortRunState := runState.CreateAbortRunState()

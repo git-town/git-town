@@ -11,6 +11,7 @@ var repoCommand = &cobra.Command{
 	Use:   "repo",
 	Short: "Opens the repository homepage",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		driver := drivers.GetCodeHostingDriver()
 		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 		script.OpenBrowser(driver.GetRepositoryURL(repository))

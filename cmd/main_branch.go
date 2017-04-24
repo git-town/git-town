@@ -11,6 +11,7 @@ var mainBranchCommand = &cobra.Command{
 	Use:   "main-branch [<branch>]",
 	Short: "Displays or sets your main branch",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printMainBranch()
 		} else {

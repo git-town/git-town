@@ -17,6 +17,7 @@ var setParentBranchCommand = &cobra.Command{
 }
 
 func setParentBranch(childBranch, parentBranch string) {
+	git.EnsureIsRepository()
 	git.EnsureHasBranch(childBranch)
 	git.EnsureHasBranch(parentBranch)
 	git.SetParentBranch(childBranch, parentBranch)
