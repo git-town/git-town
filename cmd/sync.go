@@ -21,6 +21,7 @@ var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Updates the current branch with all relevant changes",
 	Run: func(cmd *cobra.Command, args []string) {
+		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
 				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))

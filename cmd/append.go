@@ -20,6 +20,7 @@ var appendCommand = &cobra.Command{
 	Use:   "append <branch>",
 	Short: "Creates a new feature branch as a child of the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
+		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "append",

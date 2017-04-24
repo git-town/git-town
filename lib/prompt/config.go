@@ -9,6 +9,15 @@ import (
 	"github.com/fatih/color"
 )
 
+func EnsureIsConfigured() {
+	if git.GetMainBranch() == "" {
+		fmt.Println("Git Town needs to be configured")
+		fmt.Println()
+		UpdateMainBranch()
+		UpdatePerennialBranches()
+	}
+}
+
 // UpdateMainBranch has the user to confgure the main branch
 func UpdateMainBranch() {
 	printConfigurationHeader()
