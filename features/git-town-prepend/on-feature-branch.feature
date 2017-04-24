@@ -15,17 +15,18 @@ Feature: Prepending a branch to a feature branch
 
 
   Scenario: inserting a branch into the branch ancestry
-    When I run `git town-prepend new-parent`
+    When I run `gt prepend new-parent`
     Then it runs the commands
-      | BRANCH           | COMMAND                         |
-      | existing-feature | git fetch --prune               |
-      |                  | git add -A                      |
-      |                  | git stash                       |
-      |                  | git checkout main               |
-      | main             | git rebase origin/main          |
-      |                  | git checkout -b new-parent main |
-      | new-parent       | git push -u origin new-parent   |
-      |                  | git stash pop                   |
+      | BRANCH           | COMMAND                       |
+      | existing-feature | git fetch --prune             |
+      |                  | git add -A                    |
+      |                  | git stash                     |
+      |                  | git checkout main             |
+      | main             | git rebase origin/main        |
+      |                  | git branch new-parent main    |
+      |                  | git checkout new-parent       |
+      | new-parent       | git push -u origin new-parent |
+      |                  | git stash pop                 |
     And I end up on the "new-parent" branch
     And I still have my uncommitted file
     And I have the following commits
@@ -38,8 +39,8 @@ Feature: Prepending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I run `git town-prepend new-parent`
-    When I run `git town-prepend --undo`
+    Given I run `gt prepend new-parent`
+    When I run `gt prepend --undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |
