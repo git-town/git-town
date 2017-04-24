@@ -15,13 +15,13 @@ import (
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
+	// Uses https://github.com/github/hub/blob/master/utils/utils.go#L28
 	command, err := hub.BrowserLauncher()
 	if err != nil {
 		log.Fatal(err)
 	}
 	command = append(command, url)
 	err = RunCommand(command...)
-
 	if err != nil {
 		log.Fatal(err)
 	}
