@@ -19,7 +19,6 @@ func OpenBrowser(url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// command := util.GetOpenBrowserCommand()
 	command = append(command, url)
 	err = RunCommand(command...)
 

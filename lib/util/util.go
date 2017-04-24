@@ -51,25 +51,6 @@ func GetCommandOutput(cmd ...string) string {
 	return strings.TrimSpace(string(output))
 }
 
-var openBrowserCommands = []string{"xdg-open", "open"}
-var missingOpenBrowserCommandMessages = []string{
-	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
-	"If you would like another command to be supported,",
-	"please open an issue at https://github.com/Originate/git-town/issues",
-}
-
-// GetOpenBrowserCommand returns the command to run on the console
-// to open the default browser.
-func GetOpenBrowserCommand() string {
-	for _, command := range openBrowserCommands {
-		if GetCommandOutput("which", command) != "" {
-			return command
-		}
-	}
-	ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
-	return ""
-}
-
 var inputReader = bufio.NewReader(os.Stdin)
 
 // GetUserInput reads input from the user and returns it.
