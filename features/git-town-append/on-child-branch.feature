@@ -42,7 +42,7 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I had run `git town-append new-child`
+    Given I have run `git town-append new-child`
     When I run `git town-append --undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |

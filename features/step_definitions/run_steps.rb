@@ -1,4 +1,4 @@
-When(/^(I|my coworker) (?:run|runs|had run) `([^`]+)`$/) do |who, commands|
+When(/^(I|my coworker) (?:run|runs|have run) `([^`]+)`$/) do |who, commands|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do
     commands.split(';').each { |command| run command.strip }
