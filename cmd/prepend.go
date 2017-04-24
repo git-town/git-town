@@ -23,7 +23,7 @@ var prependCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
-			Command:              "hack",
+			Command:              "prepend",
 			IsAbort:              abortFlag,
 			IsContinue:           continueFlag,
 			IsSkip:               false,
