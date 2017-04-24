@@ -11,26 +11,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type appendConfig struct {
+type prependConfig struct {
 	InitialBranch string
+	ParentBranch  string
 	TargetBranch  string
 }
 
-var appendCommand = &cobra.Command{
-	Use:   "append <branch>",
-	Short: "Creates a new feature branch as a child of the current branch",
+var prependCommand = &cobra.Command{
+	Use:   "prepend <branch>",
+	Short: "Creates a new feature branch as the parent of the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
-			Command:              "append",
+			Command:              "prepend",
 			IsAbort:              abortFlag,
 			IsContinue:           continueFlag,
 			IsSkip:               false,
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkAppendPreconditions(args)
-				return getAppendStepList(config)
+				config := checkPrependPreconditions(args)
+				return getPrependStepList(config)
 			},
 		})
 	},
@@ -42,24 +43,27 @@ var appendCommand = &cobra.Command{
 	},
 }
 
-func checkAppendPreconditions(args []string) (result appendConfig) {
+func checkPrependPreconditions(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
+	git.EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+	result.ParentBranch = git.GetParentBranch(result.InitialBranch)
 	return
 }
 
-func getAppendStepList(config appendConfig) steps.StepList {
+func getPrependStepList(config prependConfig) steps.StepList {
 	stepList := steps.StepList{}
-	for _, branchName := range append(git.GetAncestorBranches(config.InitialBranch), config.InitialBranch) {
+	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
 		stepList.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	stepList.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
-	stepList.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
+	stepList.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
+	stepList.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
+	stepList.Append(steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
 	stepList.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
 	if git.HasRemote("origin") && git.ShouldHackPush() {
 		stepList.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
@@ -68,8 +72,8 @@ func getAppendStepList(config appendConfig) steps.StepList {
 }
 
 func init() {
-	appendCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	appendCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
-	appendCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
-	RootCmd.AddCommand(appendCommand)
+	prependCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
+	prependCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	prependCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
+	RootCmd.AddCommand(prependCommand)
 }
