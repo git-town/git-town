@@ -7,6 +7,11 @@
 function open_browser {
   local url=$1
 
+  if [[ "$(uname)" == *"MINGW"* ]]; then
+      eval "start $url"
+      return
+  fi
+
   # Try xdg-open first, because on Linux "open" does not do what we want it to do here
   local tools=(xdg-open open)
   for tool in "${tools[@]}"; do
