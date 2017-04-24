@@ -8,7 +8,7 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git town-append
     Given I have a feature branch named "feature-1" with no parent
     And I am on the "feature-1" branch
-    When I run `git town-append feature-2` and press ENTER
+    When I run `gt append feature-2` and press ENTER
     Then I end up on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
