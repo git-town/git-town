@@ -49,7 +49,7 @@ func resetConfig() {
 
 func setupConfig() {
 	prompt.ConfigureMainBranch()
-	prompt.UpdatePerennialBranches()
+	prompt.ConfigurePerennialBranches()
 }
 
 func init() {

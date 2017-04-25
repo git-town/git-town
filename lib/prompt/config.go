@@ -25,8 +25,8 @@ func ConfigureMainBranch() {
 	git.SetMainBranch(newMainBranch)
 }
 
-// UpdatePerennialBranches has the user to confgure the perennial branches
-func UpdatePerennialBranches() {
+// ConfigurePerennialBranches has the user to confgure the perennial branches
+func ConfigurePerennialBranches() {
 	printConfigurationHeader()
 	var newPerennialBranches []string
 	for {
