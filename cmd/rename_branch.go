@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 	"github.com/Originate/git-town/lib/util"
@@ -22,6 +23,7 @@ var renameBranchCommand = &cobra.Command{
 	Use:   "rename-branch [<old_branch_name>] <new_branch_name>",
 	Short: "Renames a branch both locally and remotely",
 	Run: func(cmd *cobra.Command, args []string) {
+		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "rename-branch",
