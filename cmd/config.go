@@ -16,6 +16,7 @@ var configCommand = &cobra.Command{
 	Use:   "config",
 	Short: "Displays or updates your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		if resetFlag {
 			resetConfig()
 		} else if setupFlag {
@@ -48,8 +49,8 @@ func resetConfig() {
 }
 
 func setupConfig() {
-	prompt.UpdateMainBranch()
-	prompt.UpdatePerennialBranches()
+	prompt.ConfigureMainBranch()
+	prompt.ConfigurePerennialBranches()
 }
 
 func init() {

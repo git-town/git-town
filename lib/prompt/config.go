@@ -9,8 +9,18 @@ import (
 	"github.com/fatih/color"
 )
 
-// UpdateMainBranch has the user to confgure the main branch
-func UpdateMainBranch() {
+// EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
+func EnsureIsConfigured() {
+	if git.GetMainBranch() == "" {
+		fmt.Println("Git Town needs to be configured")
+		fmt.Println()
+		ConfigureMainBranch()
+		ConfigurePerennialBranches()
+	}
+}
+
+// ConfigureMainBranch has the user to confgure the main branch
+func ConfigureMainBranch() {
 	printConfigurationHeader()
 	newMainBranch := askForBranch(branchPromptConfig{
 		branchNames: git.GetLocalBranches(),
@@ -25,8 +35,8 @@ func UpdateMainBranch() {
 	git.SetMainBranch(newMainBranch)
 }
 
-// UpdatePerennialBranches has the user to confgure the perennial branches
-func UpdatePerennialBranches() {
+// ConfigurePerennialBranches has the user to confgure the perennial branches
+func ConfigurePerennialBranches() {
 	printConfigurationHeader()
 	var newPerennialBranches []string
 	for {

@@ -11,6 +11,7 @@ var pullBranchStrategyCommand = &cobra.Command{
 	Use:   "pull-branch-strategy [(rebase | merge)]",
 	Short: "Displays or sets your pull branch strategy",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printPullBranchStrategy()
 		} else {
