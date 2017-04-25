@@ -24,6 +24,7 @@ var shipCmd = &cobra.Command{
 	Use:   "ship",
 	Short: "Deliver a completed feature branch",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },

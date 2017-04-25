@@ -14,6 +14,7 @@ var perennialBranchesCommand = &cobra.Command{
 	Use:   "perennial-branches",
 	Short: "Displays or updates your perennial branches",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		if branchToAdd != "" {
 			addPerennialBranch(branchToAdd)
 		} else if branchToRemove != "" {

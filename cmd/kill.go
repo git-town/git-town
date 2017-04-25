@@ -18,6 +18,7 @@ var killCommand = &cobra.Command{
 	Use:   "kill [<branch>]",
 	Short: "Removes an obsolete feature branch",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },

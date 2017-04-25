@@ -11,6 +11,7 @@ var hackPushFlagCommand = &cobra.Command{
 	Use:   "hack-push-flag [(true | false)]",
 	Short: "Displays or sets your hack push flag",
 	Run: func(cmd *cobra.Command, args []string) {
+		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
