@@ -4,7 +4,7 @@ import "github.com/Originate/git-town/lib/util"
 
 // EnsureIsRepository asserts that the current directory is in a repository
 func EnsureIsRepository() {
-	util.Ensure(isRepository(), "This is not a git repository.")
+	util.Ensure(isRepository(), "This is not a Git repository.")
 }
 
 // Helpers
