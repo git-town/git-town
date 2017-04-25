@@ -19,8 +19,8 @@ func EnsureIsConfigured() {
 	}
 }
 
-// UpdateMainBranch has the user to confgure the main branch
-func UpdateMainBranch() {
+// ConfigureMainBranch has the user to confgure the main branch
+func ConfigureMainBranch() {
 	printConfigurationHeader()
 	newMainBranch := askForBranch(branchPromptConfig{
 		branchNames: git.GetLocalBranches(),
@@ -35,8 +35,8 @@ func UpdateMainBranch() {
 	git.SetMainBranch(newMainBranch)
 }
 
-// UpdatePerennialBranches has the user to confgure the perennial branches
-func UpdatePerennialBranches() {
+// ConfigurePerennialBranches has the user to confgure the perennial branches
+func ConfigurePerennialBranches() {
 	printConfigurationHeader()
 	var newPerennialBranches []string
 	for {
