@@ -7,13 +7,13 @@ Feature: display the perennial branches configuration
 
   Scenario: perennial branches are not configured
     Given my perennial branches are not configured
-    When I run `gt perennial-branches`
+    When I run `git-town perennial-branches`
     Then I see "[none]"
 
 
   Scenario: perennial branches are configured
     Given my perennial branches are configured as "qa" and "production"
-    When I run `gt perennial-branches`
+    When I run `git-town perennial-branches`
     Then I see
       """
       qa

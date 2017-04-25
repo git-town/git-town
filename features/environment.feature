@@ -6,14 +6,14 @@ Feature: Git Town performs correctly depending on the environment
     Then I get the error "This is not a Git repository."
 
     Examples:
-      | COMMAND               |
-      | gt config             |
-      | gt main-branch        |
-      | gt perennial-branches |
-      | gt hack feature       |
-      | gt kill               |
-      | gt new-pull-request   |
-      | gt prune-branches     |
-      | gt repo               |
-      | gt ship               |
-      | gt sync               |
+      | COMMAND                     |
+      | git-town config             |
+      | git-town main-branch        |
+      | git-town perennial-branches |
+      | git-town hack feature       |
+      | git-town kill               |
+      | git-town new-pull-request   |
+      | git-town prune-branches     |
+      | git-town repo               |
+      | git-town ship               |
+      | git-town sync               |

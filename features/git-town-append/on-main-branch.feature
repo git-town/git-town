@@ -11,7 +11,7 @@ Feature: Appending a branch to a feature branch
       | main   | remote   | main_commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt append new-child`
+    When I run `git-town append new-child`
 
 
   Scenario: inserting a branch into the branch ancestry
@@ -37,7 +37,7 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: Undo
-    When I run `gt append --undo`
+    When I run `git-town append --undo`
     Then it runs the commands
         | BRANCH    | COMMAND                    |
         | new-child | git add -A                 |

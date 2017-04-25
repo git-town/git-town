@@ -12,10 +12,10 @@ Feature: show help screen when Git Town is not configured
     Then I see
       """
       Usage:
-        gt [command]
+        git-town [command]
       """
 
     Examples:
-      | COMMAND |
-      | gt      |
-      | gt help |
+      | COMMAND       |
+      | git-town      |
+      | git-town help |

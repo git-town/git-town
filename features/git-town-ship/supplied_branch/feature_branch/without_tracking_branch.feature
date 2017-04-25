@@ -10,7 +10,7 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
-    When I run `gt ship feature -m "feature done"`
+    When I run `git-town ship feature -m "feature done"`
 
 
   Scenario: result

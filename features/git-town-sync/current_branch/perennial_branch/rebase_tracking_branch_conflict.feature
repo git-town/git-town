@@ -1,4 +1,4 @@
-Feature: gt sync: resolving conflicts between the current perennial branch and its tracking branch
+Feature: git-town sync: resolving conflicts between the current perennial branch and its tracking branch
 
   As a developer syncing a perennial branch that conflicts with its tracking branch
   I want to be given the choice to resolve the conflicts or abort
@@ -13,7 +13,7 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
       | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result
@@ -25,16 +25,16 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
       |        | git rebase origin/qa |
     And I get the error
       """
-      To abort, run "gt sync --abort".
-      To continue after you have resolved the conflicts, run "gt sync --continue".
-      To skip the sync of the 'qa' branch, run "gt sync --skip".
+      To abort, run "git-town sync --abort".
+      To continue after you have resolved the conflicts, run "git-town sync --continue".
+      To skip the sync of the 'qa' branch, run "git-town sync --skip".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `gt sync --abort`
+    When I run `git-town sync --abort`
     Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
@@ -46,7 +46,7 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
@@ -55,7 +55,7 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
@@ -75,7 +75,7 @@ Feature: gt sync: resolving conflicts between the current perennial branch and i
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; gt sync --continue`
+    When I run `git rebase --continue; git-town sync --continue`
     Then it runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |

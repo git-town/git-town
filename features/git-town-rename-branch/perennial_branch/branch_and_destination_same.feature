@@ -12,7 +12,7 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
       | production | local and remote | production commit |
     And I am on the "production" branch
     And I have an uncommitted file
-    When I run `gt rename-branch --force production production`
+    When I run `git-town rename-branch --force production production`
 
 
   Scenario: result
