@@ -1,6 +1,7 @@
 package prompt
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
@@ -41,10 +42,11 @@ Please choose an author for the squash commit.
 func askForAuthor(authors []branchAuthor) string {
 	for {
 		fmt.Print("Enter user's number or a custom author (default: 1): ")
-		author := parseAuthor(util.GetUserInput(), authors)
-		if author != "" {
+		author, err := parseAuthor(util.GetUserInput(), authors)
+		if err == nil {
 			return author
 		}
+		util.PrintError(err.Error())
 	}
 }
 
@@ -58,7 +60,7 @@ func getBranchAuthors(branchName string) (result []branchAuthor) {
 	return
 }
 
-func parseAuthor(userInput string, authors []branchAuthor) string {
+func parseAuthor(userInput string, authors []branchAuthor) (string, error) {
 	numericRegex, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
 		log.Fatal("Error compiling numeric regular expression: ", err)
@@ -68,21 +70,20 @@ func parseAuthor(userInput string, authors []branchAuthor) string {
 		return parseAuthorNumber(userInput, authors)
 	}
 	if userInput == "" {
-		return authors[0].NameAndEmail
+		return authors[0].NameAndEmail, nil
 	}
-	return userInput
+	return userInput, nil
 }
 
-func parseAuthorNumber(userInput string, authors []branchAuthor) string {
+func parseAuthorNumber(userInput string, authors []branchAuthor) (string, error) {
 	index, err := strconv.Atoi(userInput)
 	if err != nil {
 		log.Fatal("Error parsing string to integer: ", err)
 	}
 	if index >= 1 && index <= len(authors) {
-		return authors[index-1].NameAndEmail
+		return authors[index-1].NameAndEmail, nil
 	}
-	util.PrintError("Invalid author number")
-	return ""
+	return "", errors.New("Invalid author number")
 }
 
 func printNumberedAuthors(authors []branchAuthor) {
