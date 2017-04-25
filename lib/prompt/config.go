@@ -14,8 +14,8 @@ func EnsureIsConfigured() {
 	if git.GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
-		UpdateMainBranch()
-		UpdatePerennialBranches()
+		ConfigureMainBranch()
+		ConfigurePerennialBranches()
 	}
 }
 
