@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/lib/prompt"
 	"github.com/Originate/git-town/lib/script"
 	"github.com/Originate/git-town/lib/steps"
 
@@ -15,6 +16,7 @@ var hackCmd = &cobra.Command{
 	Short: "Creates a new feature branch off the main development branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
+		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
