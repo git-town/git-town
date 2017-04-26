@@ -4,10 +4,10 @@ Feature: syncing with ignored files
   I want "gt sync" to leave those ignored files alone
   So that my IDE settings are not deleted while developing.
 
-  - all files ignored by Git survive a "git sync" process unchanged
+  - all files ignored by Git survive a "gt sync" process unchanged
 
 
-  Scenario: running "git sync" with ignored files
+  Scenario: running "gt sync" with ignored files
     Given my repo ignores files named "ignored"
     And I have a feature branch named "feature"
     And I am on the "feature" branch
