@@ -9,11 +9,11 @@ Feature: show help screen even outside of a Git repository
     Then I see
       """
       Usage:
-        gt [command]
+        git-town [command]
       """
     And I don't see "fatal: Not a Git repository"
 
     Examples:
-      | COMMAND |
-      | gt      |
-      | gt help |
+      | COMMAND       |
+      | git-town      |
+      | git-town help |

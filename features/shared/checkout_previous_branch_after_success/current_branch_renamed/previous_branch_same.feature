@@ -6,6 +6,6 @@ Feature: Git checkout history is preserved when renaming the current branch
   Scenario: rename-branch
     Given I have feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `gt rename-branch current current-new`
+    When I run `git-town rename-branch current current-new`
     Then I end up on the "current-new" branch
     And my previous Git branch is still "previous"

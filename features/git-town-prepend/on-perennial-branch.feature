@@ -8,7 +8,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
   Background:
     Given I have perennial branches named "qa" and "production"
     And I am on the "production" branch
-    When I run `gt prepend new-parent`
+    When I run `git-town prepend new-parent`
 
 
   Scenario: result

@@ -15,7 +15,7 @@ Feature: Prepending a branch to a feature branch
 
 
   Scenario: inserting a branch into the branch ancestry
-    When I run `gt prepend new-parent`
+    When I run `git-town prepend new-parent`
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | existing-feature | git fetch --prune             |
@@ -39,8 +39,8 @@ Feature: Prepending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I run `gt prepend new-parent`
-    When I run `gt prepend --undo`
+    Given I run `git-town prepend new-parent`
+    When I run `git-town prepend --undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |

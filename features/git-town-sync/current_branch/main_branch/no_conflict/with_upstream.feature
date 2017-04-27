@@ -7,7 +7,7 @@ Feature: git-sync: on the main branch with a upstream remote
       | main   | upstream | upstream commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

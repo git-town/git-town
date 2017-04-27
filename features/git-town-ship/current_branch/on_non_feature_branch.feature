@@ -8,7 +8,7 @@ Feature: git town-ship: errors when trying to ship a perennial branch
   Background:
     Given I have perennial branches named "qa" and "production"
     And I am on the "production" branch
-    When I run `gt ship`
+    When I run `git-town ship`
 
 
   Scenario: result

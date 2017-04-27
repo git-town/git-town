@@ -12,7 +12,7 @@ Feature: Appending a branch to a perennial branch
       | production | remote   | production_commit |
     And I am on the "production" branch
     And I have an uncommitted file
-    When I run `gt append new-child`
+    When I run `git-town append new-child`
 
 
   Scenario: result
@@ -38,7 +38,7 @@ Feature: Appending a branch to a perennial branch
 
 
   Scenario: Undo
-    When I run `gt append --undo`
+    When I run `git-town append --undo`
     Then it runs the commands
         | BRANCH     | COMMAND                    |
         | new-child  | git add -A                 |

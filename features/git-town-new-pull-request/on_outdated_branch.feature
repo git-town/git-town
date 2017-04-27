@@ -20,7 +20,7 @@ Feature: Syncing before creating the pull request
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
     And I have an uncommitted file
-    When I run `gt new-pull-request`
+    When I run `git-town new-pull-request`
 
 
   Scenario: result

@@ -13,7 +13,7 @@ Feature: git-new-pull-request when origin is on GitHub
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
-    When I run `gt new-pull-request`
+    When I run `git-town new-pull-request`
     Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:
@@ -40,7 +40,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And I have a feature branch named "child-feature" as a child of "parent-feature"
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
-    When I run `gt new-pull-request`
+    When I run `git-town new-pull-request`
     Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
 
 
@@ -49,7 +49,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And Git Town has no branch hierarchy information for "feature"
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
-    When I run `gt new-pull-request` and enter "main"
+    When I run `git-town new-pull-request` and enter "main"
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
 
@@ -58,5 +58,5 @@ Feature: git-new-pull-request when origin is on GitHub
     And Git Town has no branch hierarchy information for "feature"
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
-    When I run `gt new-pull-request` and press ENTER
+    When I run `git-town new-pull-request` and press ENTER
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser

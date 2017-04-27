@@ -1,4 +1,4 @@
-Feature: gt sync: syncing the current perennial branch
+Feature: git-town sync: syncing the current perennial branch
 
   As a developer syncing a perennial branch
   I want to be able update my ongoing work to include the latest finished features from the rest of the team
@@ -14,7 +14,7 @@ Feature: gt sync: syncing the current perennial branch
       |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: no conflict
