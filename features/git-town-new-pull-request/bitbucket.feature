@@ -10,7 +10,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     And my remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
-    When I run `gt new-pull-request`
+    When I run `git-town new-pull-request`
     Then I see a new Bitbucket pull request for the "feature" branch against the "main" branch in the "<REPOSITORY>" repo in my browser
 
     Examples:

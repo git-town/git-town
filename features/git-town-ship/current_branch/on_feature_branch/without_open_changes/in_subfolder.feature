@@ -11,7 +11,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME               | FILE CONTENT    |
       | feature | local and remote | feature commit | new_folder/feature_file | feature content |
     And I am on the "feature" branch
-    When I run `gt ship -m "feature done"` in the "new_folder" folder
+    When I run `git-town ship -m "feature done"` in the "new_folder" folder
 
 
   Scenario: result
@@ -39,7 +39,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | <none>  | cd <%= git_root_folder %>                      |

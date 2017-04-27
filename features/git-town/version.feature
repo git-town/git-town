@@ -6,11 +6,11 @@ Feature: git town: show the current Git Town version
 
 
   Scenario: Using "version" flag
-    When I run `gt version`
+    When I run `git-town version`
     Then I see "Git Town 4.0.0"
 
 
   Scenario: Running outside of a Git repository
     Given I'm currently not in a git repository
-    When I run `gt version`
+    When I run `git-town version`
     Then I see "Git Town 4.0.0"

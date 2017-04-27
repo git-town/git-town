@@ -10,7 +10,7 @@ import (
 
 // RootCmd is the main Cobra object
 var RootCmd = &cobra.Command{
-	Use:   "gt",
+	Use:   "git-town",
 	Short: "Generic, high-level Git workflow support",
 	Long: `Git Town makes software development teams who use Git even more productive and happy.
 

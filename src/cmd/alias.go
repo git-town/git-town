@@ -50,7 +50,7 @@ func getAliasKey(command string) string {
 }
 
 func getAliasValue(command string) string {
-	return "!gt " + command
+	return "town " + command
 }
 
 func removeAlias(command string) {

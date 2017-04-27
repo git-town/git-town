@@ -11,7 +11,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `gt ship` and don't change the default commit message
+    When I run `git-town ship` and don't change the default commit message
 
 
   Scenario: result
@@ -38,7 +38,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And I am still on the "feature" branch
     And I still have the following commits

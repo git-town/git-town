@@ -13,7 +13,7 @@ Feature: git town-ship: shipping a parent branch
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
     And I am on the "parent-feature" branch
-    When I run `gt ship -m "parent feature done"`
+    When I run `git-town ship -m "parent feature done"`
 
 
   Scenario: result
@@ -42,7 +42,7 @@ Feature: git town-ship: shipping a parent branch
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then it runs the commands
       | BRANCH         | COMMAND                                                      |
       | main           | git branch parent-feature <%= sha 'parent feature commit' %> |

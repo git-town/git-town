@@ -104,12 +104,12 @@ func runSteps(runState *RunState, options RunOptions) {
 func exitWithMessages(command string, skipMessage string) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	messageFmt.Printf("To abort, run \"gt %s --abort\".", command)
+	messageFmt.Printf("To abort, run \"git-town %s --abort\".", command)
 	fmt.Println()
-	messageFmt.Printf("To continue after you have resolved the conflicts, run \"gt %s --continue\".", command)
+	messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".", command)
 	fmt.Println()
 	if skipMessage != "" {
-		messageFmt.Printf("To skip %s, run \"gt %s --skip\".", skipMessage, command)
+		messageFmt.Printf("To skip %s, run \"git-town %s --skip\".", skipMessage, command)
 		fmt.Println()
 	}
 	fmt.Println()

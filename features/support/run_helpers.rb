@@ -34,9 +34,7 @@ end
 
 
 def git_town_command? command
-  command.starts_with?('gt') || %w(hack kill new-pull-request prune-branches rename-branch repo ship sync town).any? do |subcommand|
-    command.starts_with?("gt #{subcommand}") || command.starts_with?("git #{subcommand}")
-  end
+  command.starts_with? 'git-town'
 end
 
 

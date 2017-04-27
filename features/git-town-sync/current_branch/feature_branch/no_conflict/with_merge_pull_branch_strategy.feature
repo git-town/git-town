@@ -16,7 +16,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

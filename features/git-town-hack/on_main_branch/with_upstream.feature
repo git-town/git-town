@@ -7,7 +7,7 @@ Feature: git-hack: on the main branch with a upstream remote
       | main   | upstream | upstream commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt hack new-feature`
+    When I run `git-town hack new-feature`
 
 
   Scenario: result
