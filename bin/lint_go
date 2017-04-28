@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if [ -n "$(gofmt -d cmd lib 2>&1)" ]; then
-  echo "Code is not formatted. Run 'gofmt -w cmd lib'"
+if [ -n "$(gofmt -d src 2>&1)" ]; then
+  echo "Code is not formatted. Run 'gofmt -w src'"
   exit 1
 fi
 
@@ -10,5 +10,4 @@ fi
 # - https://github.com/GoASTScanner/gas: not production-ready at this point
 # - gocyclo: will be enabled and the code refactored later
 # - goconst: let's enable this after more generic refactorings
-gometalinter.v1 -D gas -D gocyclo -D goconst lib/...
-gometalinter.v1 cmd
+gometalinter.v1 -D gas -D gocyclo -D goconst src/...
