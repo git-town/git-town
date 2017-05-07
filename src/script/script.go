@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Originate/git-town/lib/git"
+	"github.com/Originate/git-town/src/git"
 
 	"github.com/fatih/color"
 	hub "github.com/github/hub/utils"
