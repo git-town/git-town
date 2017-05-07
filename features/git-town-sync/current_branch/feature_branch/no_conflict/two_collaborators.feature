@@ -1,4 +1,4 @@
-Feature: gt sync: collaborative feature branch syncing
+Feature: git-town sync: collaborative feature branch syncing
 
   As a developer collaborating with others on a feature
   I want each person to be able to sync their changes with the rest of the team
@@ -19,7 +19,7 @@ Feature: gt sync: collaborative feature branch syncing
 
   Scenario: result
     And I am on the "feature" branch
-    When I run `gt sync`
+    When I run `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
@@ -34,7 +34,7 @@ Feature: gt sync: collaborative feature branch syncing
       | feature | local and remote | my commit | my_file   |
 
     Given my coworker is on the "feature" branch
-    When my coworker runs `gt sync`
+    When my coworker runs `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
@@ -51,7 +51,7 @@ Feature: gt sync: collaborative feature branch syncing
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
 
     Given I am on the "feature" branch
-    When I run `gt sync`
+    When I run `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |

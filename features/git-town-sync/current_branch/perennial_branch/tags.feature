@@ -1,4 +1,4 @@
-Feature: gt sync: syncing the current perennial branch syncs the tags
+Feature: git-town sync: syncing the current perennial branch syncs the tags
 
   As a developer using Git tags for release management
   I want my tags to be published whenever I sync a perennial branch
@@ -12,7 +12,7 @@ Feature: gt sync: syncing the current perennial branch syncs the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | remote-tag | remote   |
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

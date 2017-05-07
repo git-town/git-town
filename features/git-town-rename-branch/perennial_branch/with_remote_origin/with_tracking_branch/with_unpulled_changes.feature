@@ -14,7 +14,7 @@ Feature: git town-rename-branch: errors if renaming a perennial branch that has 
       |            | remote           | remote production commit |
     And I am on the "production" branch
     And I have an uncommitted file
-    When I run `gt rename-branch --force production renamed-production`
+    When I run `git-town rename-branch --force production renamed-production`
 
 
   Scenario: result

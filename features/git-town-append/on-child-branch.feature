@@ -15,7 +15,7 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: inserting a branch into the branch ancestry
-    When I run `gt append new-child`
+    When I run `git-town append new-child`
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git fetch --prune                           |
@@ -43,8 +43,8 @@ Feature: Appending a branch to a feature branch
 
 
   Scenario: Undo
-    Given I run `gt append new-child`
-    When I run `gt append --undo`
+    Given I run `git-town append new-child`
+    When I run `git-town append --undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-child        | git add -A                    |

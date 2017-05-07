@@ -12,7 +12,7 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
       | main   | local    | main_commit | main_file |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt hack new-feature`
+    When I run `git-town hack new-feature`
 
 
   Scenario: result

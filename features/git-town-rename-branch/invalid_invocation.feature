@@ -14,7 +14,7 @@ Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional f
 
 
   Scenario: no branch names given
-    When I run `gt rename-branch`
+    When I run `git-town rename-branch`
     Then it runs no commands
     And I get the error "Too few arguments"
     And I am still on the "current-feature" branch
@@ -22,7 +22,7 @@ Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional f
 
 
   Scenario: three branch names given
-    When I run `gt rename-branch one two three`
+    When I run `git-town rename-branch one two three`
     Then it runs no commands
     And I get the error "Too many arguments"
     And I am still on the "current-feature" branch

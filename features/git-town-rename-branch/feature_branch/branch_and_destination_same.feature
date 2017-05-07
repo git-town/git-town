@@ -12,7 +12,7 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
       | current-feature | local and remote | current-feature commit |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt rename-branch current-feature current-feature`
+    When I run `git-town rename-branch current-feature current-feature`
 
 
   Scenario: result

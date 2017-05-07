@@ -13,7 +13,7 @@ Feature: git town-ship: shipping a coworker's feature branch
     And I fetch updates
     And I set the parent branch of "feature" as "main"
     And I am on the "feature" branch
-    When I run `gt ship -m 'feature done'`
+    When I run `git-town ship -m 'feature done'`
 
 
   Scenario: result
