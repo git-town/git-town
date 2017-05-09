@@ -5,6 +5,9 @@ language: go
 go:
   - 1.7
 
+rvm:
+  - 2.3.1
+
 
 before_install:
   - git config --global user.email "you@example.com"
