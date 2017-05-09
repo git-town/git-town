@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -ex
+
+# skip if not currently testing a Git tag
+if [ "$TRAVIS_TAG" == "" ]; then
+  echo "no tag, skipping release"
+  exit
+fi
+
+# install the cross-compiler
+go get github.com/mitchellh/gox
+
+# build the binaries
+timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
+sha=$(git rev-parse HEAD)
+gox -ldflags "-X github.com/Originate/morula/cmd.Version=$TRAVIS_TAG -X github.com/Originate/morula/cmd.BuildTime=$timestamp) -X github.com/Originate/morula/cmd.GitHash=$sha" \
+    -output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
+
+# the release happens via the "deploy" section in travis.yml

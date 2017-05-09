@@ -27,3 +27,17 @@ script:
 
 notifications:
   email: false
+
+
+after_success:
+  - bin/xcompile
+
+
+deploy:
+  provider: releases
+  file_glob: true
+  api_key: "$GITHUB_TOKEN"
+  file: "dist/*"
+  skip_cleanup: true
+  on:
+    tags: true
