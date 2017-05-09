@@ -3,6 +3,3 @@ import:
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
 - package: github.com/fatih/color
-testImport:
-- package: github.com/onsi/ginkgo/ginkgo
-- package: github.com/onsi/gomega
