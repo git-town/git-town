@@ -1,5 +1,5 @@
-hash: 7c4f5f6e83596d5a72c3f07356058737222f4973cb42816182ba0dbe5bc14c71
-updated: 2017-04-16T09:00:01.136336589-07:00
+hash: 41331d3a93dad5eea422f8927dd37c0daf4eb0581e266c9cab4158971f7b22bb
+updated: 2017-05-08T17:02:16.102991-07:00
 imports:
 - name: github.com/fatih/color
   version: 7824417a424b65227be8ac9b14d545a7f3e6c3f0
@@ -22,10 +22,4 @@ imports:
   repo: https://go.googlesource.com/sys
   subpackages:
   - unix
-testImports:
-- name: github.com/onsi/ginkgo
-  version: f40a49d81e5c12e90400620b6242fb29a8e7c9d9
-  subpackages:
-  - ginkgo
-- name: github.com/onsi/gomega
-  version: 9b8c753e8dfb382618ba8fa19b4197b5dcb0434c
+testImports: []

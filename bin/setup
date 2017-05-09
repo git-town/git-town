@@ -4,3 +4,5 @@ set -e
 bin/build
 go get gopkg.in/alecthomas/gometalinter.v1
 gometalinter.v1 --install
+go get github.com/onsi/ginkgo/ginkgo
+go get github.com/onsi/gomega
