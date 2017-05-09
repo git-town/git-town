@@ -15,6 +15,7 @@ install:
   - go get github.com/Masterminds/glide github.com/golang/lint/golint
   - glide install
   - go install
+  - bundle install
 
 
 script:
