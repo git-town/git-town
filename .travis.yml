@@ -16,11 +16,8 @@ before_install:
 
 
 install:
-  - go get github.com/Masterminds/glide github.com/golang/lint/golint
-  - glide install
-  - go install
   - rvm install 2.3.1
-  - bundle install
+  - bin/setup
 
 
 script:
