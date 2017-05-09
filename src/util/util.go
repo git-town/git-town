@@ -69,7 +69,8 @@ var missingOpenBrowserCommandMessages = []string{
 // to open the default browser.
 func GetOpenBrowserCommand() string {
 	for _, command := range openBrowserCommands {
-		if GetCommandOutput("which", command) != "" {
+		output, err := GetFullCommandOutput("which", command)
+		if err == nil && output != "" {
 			return command
 		}
 	}

@@ -8,4 +8,6 @@
 
 if [ "$(cat "$WHICH_SOURCE" | grep -c "^$1\$")" != 0 ]; then
   echo "$1"
+else
+  exit 1
 fi
