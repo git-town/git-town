@@ -1,7 +1,7 @@
-sudo: false
+sudo: required
 
 
-language: go
+language: ruby
 
 go:
   - 1.7
