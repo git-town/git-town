@@ -1,0 +1,23 @@
+language: go
+
+go:
+  - 1.7
+
+
+before_install:
+  - git config --global user.email "you@example.com"
+  - git config --global user.name "Your Name"
+
+
+install:
+  - go get github.com/Masterminds/glide github.com/golang/lint/golint
+  - glide install
+  - go install
+
+
+script:
+  - bin/spec
+
+
+notifications:
+  email: false
