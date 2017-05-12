@@ -22,7 +22,8 @@ notifications:
 
 
 after_success:
-  - [$TRAVIS_TAG != ""] && bin/xcompile
+  - |-
+    [ "$TRAVIS_TAG" != "" ] && bin/xcompile
 
 
 deploy:
