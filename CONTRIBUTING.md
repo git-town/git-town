@@ -117,7 +117,10 @@ Implements #123
   * the version in `src/git-town` and the related features
   * the version and date in `man/man1/*.1`
 * Get the feature branch reviewed and merged
-* Draft a new [release](https://github.com/Originate/git-town/releases/new) against `master`
+* Create and push a new Git Tag for the release
+  * `git tag -m release -a v4.0`
+  * `git push --tags`
+* Travis-CI creates a new release on Github and attaches the GT binaries to it
 
 #### Homebrew/homebrew
 * Fork [Homebrew](https://github.com/Homebrew/homebrew)

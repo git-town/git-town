@@ -22,3 +22,17 @@ script:
 
 notifications:
   email: false
+
+
+before_deploy: bin/cross-compile
+
+
+deploy:
+  api_key:
+    secure: lxzr1xWsRnWueR8JCUGV2+9hOxbb6gL9AVR64HIJ1foIPz8eGUXtQUP1mG/NPOtbDq0Dx+dTVV6W5RxiXzkzBvDkK6ygtNmax9ZkAbQv/zNFaJiwtkXJrzwCBSQfeSH/Go7NwpnsJw+ucZ7oj68G4g99PsX2XNbTTJHzfVWmteg=
+  file: "dist/*"
+  file_glob: true
+  on:
+    tags: true
+  provider: releases
+  skip_cleanup: true
