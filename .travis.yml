@@ -8,6 +8,10 @@ go:
   - 1.7
 
 
+rvm:
+  - 2.3.1
+
+
 install:
   - rvm install 2.3.1
   - bin/setup
