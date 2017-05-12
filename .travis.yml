@@ -11,11 +11,6 @@ rvm:
   - 2.3.1
 
 
-before_install:
-  - git config --global user.email "you@example.com"
-  - git config --global user.name "Your Name"
-
-
 install:
   - rvm install 2.3.1
   - bin/setup
