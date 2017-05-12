@@ -118,7 +118,7 @@ Implements #123
   * the version and date in `man/man1/*.1`
 * Get the feature branch reviewed and merged
 * Create and push a new Git Tag for the release
-  * `git tag -a 'v4.0' -m 'release'`
+  * `git tag -m release -a v4.0`
   * `git push --tags`
 * Travis-CI creates a new release on Github and attaches the GT binaries to it
 
