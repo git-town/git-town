@@ -120,7 +120,7 @@ Implements #123
 * Create and push a new Git Tag for the release
   * `git tag -a 'v4.0' -m 'release'`
   * `git push --tags`
-* Travis creates a new release on Github and attaches the GT binaries to it
+* Travis-CI creates a new release on Github and attaches the GT binaries to it
 
 #### Homebrew/homebrew
 * Fork [Homebrew](https://github.com/Homebrew/homebrew)
