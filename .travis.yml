@@ -7,7 +7,6 @@ language: go
 go:
   - 1.7
 
-
 rvm:
   - 2.3.1
 
