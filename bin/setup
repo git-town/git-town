@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-bin/build
-go get gopkg.in/alecthomas/gometalinter.v1
+go get github.com/Masterminds/glide gopkg.in/alecthomas/gometalinter.v1 github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega
+glide install
 gometalinter.v1 --install
-go get github.com/onsi/ginkgo/ginkgo
-go get github.com/onsi/gomega
+bin/build
+bundle install
