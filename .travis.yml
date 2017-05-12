@@ -21,9 +21,7 @@ notifications:
   email: false
 
 
-after_success:
-  - |-
-    [ "$TRAVIS_TAG" != "" ] && bin/xcompile
+before_deploy: bin/cross-compile
 
 
 deploy:
