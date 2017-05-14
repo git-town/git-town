@@ -49,7 +49,6 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
-
 	} else {
 		result.TargetBranch = args[0]
 	}
