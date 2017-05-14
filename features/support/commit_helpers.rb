@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 def array_output_of command, ignore_errors: false
   output_of(command, ignore_errors: ignore_errors).split("\n").map(&:strip)
 end

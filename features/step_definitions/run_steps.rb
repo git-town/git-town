@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 When(/^(I|my coworker) (?:run|runs|have run) `([^`]+)`$/) do |who, commands|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do

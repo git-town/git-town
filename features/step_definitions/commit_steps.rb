@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^the following commits? exists? in (my|my coworker's) repository( on another machine)?$/) do |who, remote, commits_table|
   user = (who == 'my') ? 'developer' : 'coworker'
   user += '_secondary' if remote

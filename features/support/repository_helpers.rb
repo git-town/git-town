@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Execute the block at the given path
 def at_path path
   cwd = Dir.pwd
