@@ -106,7 +106,6 @@ func GetPerennialBranches() []string {
 }
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.
-// See https://github.com/Originate/git-town/blob/master/documentation/commands/git-town.md
 func GetPullBranchStrategy() string {
 	return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
 }
@@ -231,7 +230,6 @@ func SetPerennialBranches(branchNames []string) {
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-// See https://github.com/Originate/git-town/blob/master/documentation/commands/git-town.md
 func SetPullBranchStrategy(strategy string) {
 	setConfigurationValue("git-town.pull-branch-strategy", strategy)
 }

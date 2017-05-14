@@ -1,13 +1,13 @@
 #### NAME
 
-git-town-sync - updates the current branch with all relevant changes
+sync - updates the current branch with all relevant changes
 
 
 #### SYNOPSIS
 
 ```
-git town-sync [--all]
-git town-sync (--abort | --continue | --skip)
+git town sync [--all]
+git town sync (--abort | --continue | --skip)
 ```
 
 #### DESCRIPTION

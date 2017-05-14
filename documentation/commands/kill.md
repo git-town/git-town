@@ -1,13 +1,13 @@
 #### NAME
 
-git-town-kill - remove an obsolete feature branch
+kill - remove an obsolete feature branch
 
 
 #### SYNOPSIS
 
 ```
-git town-kill [<branch_name>]
-git town-kill --undo
+git town kill [<branch_name>]
+git town kill --undo
 ```
 
 

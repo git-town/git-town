@@ -1,12 +1,12 @@
 #### NAME
 
-git-town-prune-branches - delete merged branches
+prune-branches - delete merged branches
 
 
 #### SYNOPSIS
 
 ```
-git town-prune-branches
+git town prune-branches
 ```
 
 
