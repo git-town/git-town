@@ -49,9 +49,11 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
-		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	} else {
 		result.TargetBranch = args[0]
+	}
+	if result.TargetBranch == result.InitialBranch {
+		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
 	if git.HasRemote("origin") {
 		script.Fetch()
