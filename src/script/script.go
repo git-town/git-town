@@ -34,7 +34,7 @@ func PrintCommand(cmd ...string) {
 		}
 		header = header + part
 	}
-	if strings.HasPrefix(header, "git") {
+	if strings.HasPrefix(header, "git") && git.IsRepository() {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}
 	fmt.Println()

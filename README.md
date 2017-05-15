@@ -1,6 +1,7 @@
 ![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
 [![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Originate/git-town)](https://goreportcard.com/report/github.com/Originate/git-town)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.

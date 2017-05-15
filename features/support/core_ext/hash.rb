@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Monkey patches to the Hash class that make testing easier
 class Hash
 

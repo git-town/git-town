@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Returns the content of the file with the given name on the given branch
 def content_of file:, for_sha:
   result = output_of "git show #{for_sha}:#{file}"
