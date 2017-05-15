@@ -22,25 +22,20 @@ Git Town provides these additional Git commands:
 
 __Development Workflow__
 
-* [git town-hack](/documentation/commands/git-town-hack.md) - cuts a new up-to-date feature branch off the main branch
-* [git town-sync](/documentation/commands/git-town-sync.md) - updates the current branch with all ongoing changes
-* [git town-new-pull-request](/documentation/commands/git-town-new-pull-request.md) - create a new pull request
-* [git town-ship](/documentation/commands/git-town-ship.md) - delivers a completed feature branch and removes it
+* [git town hack](/documentation/commands/hack.md) - cuts a new up-to-date feature branch off the main branch
+* [git town sync](/documentation/commands/sync.md) - updates the current branch with all ongoing changes
+* [git town new-pull-request](/documentation/commands/new-pull-request.md) - create a new pull request
+* [git town ship](/documentation/commands/ship.md) - delivers a completed feature branch and removes it
 
 
 __Repository Maintenance__
 
-* [git town-kill](/documentation/commands/git-town-kill.md) - removes a feature branch
-* [git town-prune-branches](/documentation/commands/git-town-prune-branches.md) - delete all merged branches
-* [git town-rename-branch](/documentation/commands/git-town-rename-branch.md) - rename a branch
-* [git town-append](/documentation/commands/git-town-append.md) - insert a new branch as a child of the current branch
-* [git town-prepend](/documentation/commands/git-town-prepend.md) - insert a new branch between the current branch and its parent
-* [git town-repo](/documentation/commands/git-town-repo.md) - view the repository homepage
-
-
-__Configuration and Help__
-
-* [git town](/documentation/commands/git-town.md) - general Git Town help, view and change Git Town configuration
+* [git town kill](/documentation/commands/kill.md) - removes a feature branch
+* [git town prune-branches](/documentation/commands/prune-branches.md) - delete all merged branches
+* [git town rename-branch](/documentation/commands/rename-branch.md) - rename a branch
+* [git town append](/documentation/commands/append.md) - insert a new branch as a child of the current branch
+* [git town prepend](/documentation/commands/prepend.md) - insert a new branch between the current branch and its parent
+* [git town repo](/documentation/commands/repo.md) - view the repository homepage
 
 
 ## Installation
@@ -50,7 +45,7 @@ Check out our [installation instructions](http://www.git-town.com/install.html) 
 
 ### Aliasing
 
-Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to remove the `town-` prefix with:
+Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to remove the `town` prefix with:
 ```
 git config --global alias.hack town-hack
 ```
@@ -64,7 +59,7 @@ git town alias <true | false>
 
 Git Town is configured on a per-repository basis.
 Upon first use in a repository, you will be prompted for the required configuration.
-Use the [git town](/documentation/commands/git-town.md) command to view or update your configuration at any time.
+Use the [git town config](/documentation/commands/config.md) command to view or update your configuration at any time.
 
 #### Required configuration
 

@@ -1,13 +1,13 @@
 #### NAME
 
-git-town-prepend - create a new feature branch between the current branch and its parent
+prepend - create a new feature branch between the current branch and its parent
 
 
 #### SYNOPSIS
 
 ```
-git town-prepend <branch_name>
-git town-prepend (--abort | --continue)
+git town prepend <branch_name>
+git town prepend (--abort | --continue)
 ```
 
 
@@ -43,5 +43,5 @@ git town hack-push-flag false
 
 
 #### SEE ALSO
-* [git append](git-town-append.md) to create a new feature branch as a child of the current branch
-* [git hack](git-town-hack.md) to create a new top-level feature branch
+* [git append](append.md) to create a new feature branch as a child of the current branch
+* [git hack](hack.md) to create a new top-level feature branch

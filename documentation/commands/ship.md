@@ -1,13 +1,13 @@
 #### NAME
 
-git-town-ship - deliver a completed feature branch
+ship - deliver a completed feature branch
 
 
 #### SYNOPSIS
 
 ```
-git town-ship [<branch_name>] [<commit_options>]
-git town-ship (--abort | --continue)
+git town ship [<branch_name>] [<commit_options>]
+git town ship (--abort | --continue)
 ```
 
 

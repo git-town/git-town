@@ -1,12 +1,12 @@
 #### NAME
 
-git-town-rename-branch - rename a branch both locally and remotely
+rename-branch - rename a branch both locally and remotely
 
 
 #### SYNOPSIS
 
 ```
-git town-rename-branch [<old_branch_name>] <new_branch_name> [-f]
+git town rename-branch [<old_branch_name>] <new_branch_name> [-f]
 ```
 
 
@@ -28,7 +28,7 @@ When there is a tracking branch
 
 When run on a perennial branch
 * Requires the use of the `-f` option
-* Reconfigures git-town locally for the perennial branch
+* Reconfigures git town locally for the perennial branch
 
 
 #### OPTIONS

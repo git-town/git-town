@@ -1,21 +1,20 @@
 #### NAME
 
-git-town-append - create a new feature branch as a direct child of the current branch
+hack - create a new feature branch off the main development branch
 
 
 #### SYNOPSIS
 
 ```
-git town-append <branch_name>
-git town-append (--abort | --continue)
+git town hack <branch_name>
+git town hack (--abort | --continue)
 ```
 
 
 #### DESCRIPTION
 
-Syncs the current branch,
-forks a new feature branch with the given name off the current branch,
-makes the new branch a child of the current branch,
+Syncs the main branch,
+forks a new feature branch with the given name off it,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.
 
