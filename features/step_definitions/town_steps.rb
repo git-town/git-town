@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^I don't have a main branch name configured$/) do
   delete_main_branch_configuration
 end
