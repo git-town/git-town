@@ -5,7 +5,7 @@ language: go
 go: 1.8
 
 install:
-  - rvm install 2.3.1
+  - rvm install 2.3.3
   - bin/setup
 
 script:
