@@ -32,7 +32,7 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 * Uninstall:
   * remove Git Town's aliases: `git town alias false`
   * remove the Git Town configuration from your repositories:
-    in all repos, run `git town config --reset`
+    in each repo, run `git town config --reset`
   * delete the `git-town` binary from your hard drive
 
 ---
