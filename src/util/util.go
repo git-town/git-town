@@ -58,7 +58,8 @@ func GetFullCommandOutput(cmd ...string) (string, error) {
 	return strings.TrimSpace(string(output)), err
 }
 
-var openBrowserCommands = []string{"xdg-open", "open"}
+var openBrowserCommands = []string{"xdg-open", "open", "cygstart",
+	"x-www-browser", "firefox", "opera", "mozilla", "netscape"}
 var missingOpenBrowserCommandMessages = []string{
 	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
 	"If you would like another command to be supported,",
