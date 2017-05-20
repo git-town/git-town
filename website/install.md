@@ -5,8 +5,10 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 * Update: run `brew update` and then run `brew upgrade git-town`
 * Uninstall: run `brew uninstall git-town`
 
-*Note: `4.0.0` dropped support for Yosemite because we now specify a minimum Git version of 2.6.0.
-If you would like to use Git Town on Yosemite please use the manual install and ensure your Git version is 2.6.0 or higher.*
+*Note: `4.0.0` dropped support for Yosemite because we now specify a minimum Git version of 2.6.0,
+which is higher than the default version installed on that OS.
+If you would like to use Git Town on Yosemite, 
+please use the manual install and ensure your Git version is 2.6.0 or higher.*
 
 ---
 # Arch Linux
