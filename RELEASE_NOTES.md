@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 4.0.0 (2017-05-12)
+
+#### BREAKING CHANGES
+* rewrite in go, Git Town is now a single, stand-alone binary
+  * first-class Windows support
+  * This breaks existing aliases. If you have the default aliases setup,
+    reconfigure them with `git town alias true`
+
 ## 3.1.0 (2017-03-27)
 
 #### New Features
