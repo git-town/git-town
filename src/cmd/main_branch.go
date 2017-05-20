@@ -10,6 +10,9 @@ import (
 var mainBranchCommand = &cobra.Command{
 	Use:   "main-branch [<branch>]",
 	Short: "Displays or sets your main branch",
+	Long: `Displays or sets your main development branch
+
+The main branch is the Git branch from which new feature branches are cut. `,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if len(args) == 0 {

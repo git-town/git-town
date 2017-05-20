@@ -8,6 +8,9 @@ import (
 var setParentBranchCommand = &cobra.Command{
 	Use:   "set-parent-branch <child_branch> <parent_branch>",
 	Short: "Updates a branch's parent",
+	Long: `Updates a branch's parent
+
+Updates the parent branch of a feature branch in Git Town's configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		setParentBranch(args[0], args[1])

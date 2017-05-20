@@ -13,6 +13,10 @@ var branchToRemove string
 var perennialBranchesCommand = &cobra.Command{
 	Use:   "perennial-branches",
 	Short: "Displays or updates your perennial branches",
+	Long: `Displays or updates your perennial branches
+
+Perennial branches are long-lived branches.
+They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if branchToAdd != "" {

@@ -20,6 +20,19 @@ type prependConfig struct {
 var prependCommand = &cobra.Command{
 	Use:   "prepend <branch>",
 	Short: "Creates a new feature branch as the parent of the current branch",
+	Long: `Creates a new feature branch as the parent of the current branch
+
+Syncs the parent branch (prompts if unknown),
+forks a new feature branch with the given name off the parent branch,
+makes the new branch the parent of the current branch,
+pushes the new feature branch to the remote repository,
+and brings over all uncommitted changes to the new feature branch.
+
+Additionally, when there is a remote upstream,
+the main branch is synced with its upstream counterpart.
+This can be disabled by toggling the "hack-push-flag" configuration:
+
+	git town hack-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()

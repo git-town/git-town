@@ -14,6 +14,17 @@ import (
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
 	Short: "Creates a new feature branch off the main development branch",
+	Long: `Creates a new feature branch off the main development branch
+
+Syncs the main branch,
+forks a new feature branch with the given name off it,
+pushes the new feature branch to the remote repository,
+and brings over all uncommitted changes to the new feature branch.
+
+Additionally, when there is a remote upstream,
+the main branch is synced with its upstream counterpart.
+This can be disabled by toggling the "hack-push-flag" configuration:
+$ git town hack-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
