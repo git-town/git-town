@@ -13,10 +13,10 @@ import (
 )
 
 type branchPromptConfig struct {
-	branchNames []string
-	prompt      string
-	transform   func(branchName string) string
-	validate    func(branchName string) error
+	branchNames       []string
+	defaultBranchName string
+	prompt            string
+	validate          func(branchName string) error
 }
 
 func askForBranch(config branchPromptConfig) string {
@@ -24,7 +24,6 @@ func askForBranch(config branchPromptConfig) string {
 		fmt.Print(config.prompt)
 		branchName, err := parseBranch(config, util.GetUserInput())
 		if err == nil {
-			branchName = config.transform(branchName)
 			err = config.validate(branchName)
 			if err == nil {
 				return branchName
@@ -44,7 +43,7 @@ func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 		return parseBranchNumber(config.branchNames, userInput)
 	}
 	if userInput == "" {
-		return "", nil
+		return config.defaultBranchName, nil
 	}
 	if git.HasBranch(userInput) {
 		return userInput, nil

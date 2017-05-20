@@ -45,14 +45,9 @@ func askForBranchAncestry(branchName string) {
 		if parent == "" {
 			printParentBranchHeader()
 			parent = askForBranch(branchPromptConfig{
-				branchNames: git.GetLocalBranchesWithMainBranchFirst(),
-				prompt:      getParentBranchPrompt(current),
-				transform: func(branchName string) string {
-					if branchName == "" {
-						return git.GetMainBranch()
-					}
-					return branchName
-				},
+				branchNames:       git.GetLocalBranchesWithMainBranchFirst(),
+				defaultBranchName: git.GetMainBranch(),
+				prompt:            getParentBranchPrompt(current),
 				validate: func(branchName string) error {
 					return validateParentBranch(current, branchName)
 				},
