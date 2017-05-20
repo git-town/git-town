@@ -6,12 +6,12 @@ end
 
 
 Given(/^I have Git "(\d+)\.(\d+)\.(\d+)" installed$/) do |major, minor, patch|
-  gitPath = File.join(@temporary_shell_overrides_directory, 'git')
-  IO.write gitPath, <<~HEREDOC
+  git_path = File.join(@temporary_shell_overrides_directory, 'git')
+  IO.write git_path, <<~HEREDOC
     #!/usr/bin/env bash
     echo "git version #{major}.#{minor}.#{patch}"
   HEREDOC
-  FileUtils.chmod "u+x", gitPath, :verbose => true
+  FileUtils.chmod 'u+x', git_path
 end
 
 
