@@ -15,6 +15,7 @@ import (
 type branchPromptConfig struct {
 	branchNames []string
 	prompt      string
+	transform   func(branchName string) string
 	validate    func(branchName string) error
 }
 
@@ -23,6 +24,7 @@ func askForBranch(config branchPromptConfig) string {
 		fmt.Print(config.prompt)
 		branchName, err := parseBranch(config, util.GetUserInput())
 		if err == nil {
+			branchName = config.transform(branchName)
 			err = config.validate(branchName)
 			if err == nil {
 				return branchName

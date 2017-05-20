@@ -29,11 +29,11 @@ func AddToPerennialBranches(branchName string) {
 func CompileAncestorBranches(branchName string) (result []string) {
 	current := branchName
 	for {
-		parent := GetParentBranch(current)
-		result = append([]string{parent}, result...)
-		if IsMainBranch(parent) || IsPerennialBranch(parent) {
+		if IsMainBranch(current) || IsPerennialBranch(current) {
 			return
 		}
+		parent := GetParentBranch(current)
+		result = append([]string{parent}, result...)
 		current = parent
 	}
 }
@@ -102,7 +102,11 @@ func GetParentBranch(branchName string) string {
 
 // GetPerennialBranches returns all branches that are marked as perennial.
 func GetPerennialBranches() []string {
-	return strings.Split(getConfigurationValue("git-town.perennial-branch-names"), " ")
+	result := getConfigurationValue("git-town.perennial-branch-names")
+	if result == "" {
+		return []string{}
+	}
+	return strings.Split(result, " ")
 }
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.

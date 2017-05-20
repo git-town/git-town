@@ -47,13 +47,16 @@ func askForBranchAncestry(branchName string) {
 			parent = askForBranch(branchPromptConfig{
 				branchNames: git.GetLocalBranchesWithMainBranchFirst(),
 				prompt:      getParentBranchPrompt(current),
+				transform: func(branchName string) string {
+					if branchName == "" {
+						return git.GetMainBranch()
+					}
+					return branchName
+				},
 				validate: func(branchName string) error {
 					return validateParentBranch(current, branchName)
 				},
 			})
-			if parent == "" {
-				parent = git.GetMainBranch()
-			}
 			git.SetParentBranch(current, parent)
 		}
 		if parent == git.GetMainBranch() || git.IsPerennialBranch(parent) {

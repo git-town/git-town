@@ -23,6 +23,9 @@ func ConfigureMainBranch() {
 	newMainBranch := askForBranch(branchPromptConfig{
 		branchNames: git.GetLocalBranches(),
 		prompt:      getMainBranchPrompt(),
+		transform: func(branchName string) string {
+			return branchName
+		},
 		validate: func(branchName string) error {
 			if branchName == "" {
 				return errors.New("A main development branch is required to enable the features provided by Git Town")
