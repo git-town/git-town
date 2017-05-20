@@ -44,6 +44,9 @@ func ConfigurePerennialBranches() {
 		newPerennialBranch := askForBranch(branchPromptConfig{
 			branchNames: git.GetLocalBranches(),
 			prompt:      getPerennialBranchesPrompt(),
+			transform: func(branchName string) string {
+				return branchName
+			},
 			validate: func(branchName string) error {
 				if branchName == git.GetMainBranch() {
 					return fmt.Errorf("'%s' is already set as the main branch", branchName)
