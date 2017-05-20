@@ -21,11 +21,8 @@ func AddToPerennialBranches(branchName string) {
 	SetPerennialBranches(append(GetPerennialBranches(), branchName))
 }
 
-// CompileAncestorBranches re-calculates and returns the list of ancestor branches
-// of the given branch
-// based off the "git-town-branch.XXX.ancestors" configuration values.
-// The result starts with but does not include the perennial branch
-// from which this branch hierarchy was cut initially.
+// CompileAncestorBranches calculates and returns the list of ancestor branches
+// of the given branch based off the "git-town-branch.XXX.parent" configuration values.
 func CompileAncestorBranches(branchName string) (result []string) {
 	current := branchName
 	for {
@@ -33,10 +30,10 @@ func CompileAncestorBranches(branchName string) (result []string) {
 			return
 		}
 		parent := GetParentBranch(current)
-		result = append([]string{parent}, result...)
-		if parent == current {
-			log.Fatal(fmt.Sprintf("Infinite loop in CompileAncestorBranches with input: %s", branchName))
+		if parent == "" {
+			return
 		}
+		result = append([]string{parent}, result...)
 		current = parent
 	}
 }
