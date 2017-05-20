@@ -1,4 +1,4 @@
-Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
+Git Town runs anywhere Git runs.
 
 # Mac (using [Homebrew](http://brew.sh))
 * Install: run `brew install git-town`
