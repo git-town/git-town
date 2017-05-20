@@ -34,6 +34,9 @@ func CompileAncestorBranches(branchName string) (result []string) {
 		}
 		parent := GetParentBranch(current)
 		result = append([]string{parent}, result...)
+		if parent == current {
+			log.Fatal(fmt.Sprintf("Infinite loop in CompileAncestorBranches with input: %s", branchName))
+		}
 		current = parent
 	}
 }
