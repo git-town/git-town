@@ -24,15 +24,16 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 
 ---
 # Manual
-* Install
-  * clone the repo to your machine (into DIR)
-  * add DIR/src to your `$PATH`
-  * add DIR/man to your `$MANPATH`
-* Update: run `git pull` in DIR
+* Install: download the Git Town binary for your platform from the
+  [releases page](https://github.com/Originate/git-town/releases),
+  rename it to `git-town`,
+  and put it somewhere in your `$PATH`
+* Update: install the new version over the old version
 * Uninstall:
-  * remove DIR
-  * remove DIR/src from your `$PATH`
-  * remove DIR/man from your `$MANPATH`
+  * remove Git Town's aliases: `git town alias false`
+  * remove the Git Town configuration from your repositories:
+    in each repo, run `git town config --reset`
+  * delete the `git-town` binary from your hard drive
 
 ---
 
