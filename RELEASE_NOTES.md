@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 4.0.1 (2017-05-21)
+
+#### Bug Fixes
+* fix infinite loop when prompting for parent branch and there are perennial branches configured
+* enforce a minimum Git version of 2.6.0
+* fix `ship` when the supplied branch is equal to the current branch and there are open changes
+* allow `alias` to be run in a non-git directory
+
 ## 4.0.0 (2017-05-12)
 
 #### BREAKING CHANGES

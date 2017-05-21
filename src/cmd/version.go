@@ -11,7 +11,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Displays the version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Git Town 4.0.0")
+		fmt.Println("Git Town 4.0.1")
 	},
 }
 
