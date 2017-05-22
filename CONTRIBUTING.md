@@ -32,6 +32,7 @@ This guide will help you get started and outline some things you should know whe
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
 
+
 ## Building
 
 * run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
