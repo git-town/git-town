@@ -16,7 +16,7 @@ This guide will help you get started and outline some things you should know whe
   * on macOS via `brew install go`
 * install [Glide](https://github.com/Masterminds/glide) (package manager for Go)
   * on macOS: `brew install glide`
-* install [Ruby 2.2.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
+* install [Ruby 2.3.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
 * run `gem install bundler`
 * set up the Go directory structure on your machine
