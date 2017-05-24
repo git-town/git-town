@@ -2,7 +2,8 @@ package steps
 
 import (
 	"fmt"
-	"strings"
+	"log"
+	"regexp"
 
 	"github.com/Originate/git-town/src/git"
 )
@@ -33,5 +34,10 @@ type SerializedRunState struct {
 }
 
 func getRunResultFilename(command string) string {
-	return fmt.Sprintf("/tmp/%s_%s", command, strings.Replace(git.GetRootDirectory(), "/", "_", -1))
+	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
+	if err != nil {
+		log.Fatal("Error compiling replace character expression: ", err)
+	}
+	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
+	return fmt.Sprintf("/tmp/%s_%s", command, directory)
 }
