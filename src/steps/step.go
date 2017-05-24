@@ -34,7 +34,7 @@ type SerializedRunState struct {
 }
 
 func getRunResultFilename(command string) string {
-	replaceCharacterRegexp, err := regexp.Compile("[^A-Za-z0-9]")
+	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
 	if err != nil {
 		log.Fatal("Error compiling replace character expression: ", err)
 	}
