@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Returns the branch name for the given location
 def branch_name_for_location location, branch
   case location

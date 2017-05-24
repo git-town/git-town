@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 def add_perennial_branch branch
   old_value = perennial_branch_configuration
   new_value = [old_value, branch].reject(&:blank?).join(' ')

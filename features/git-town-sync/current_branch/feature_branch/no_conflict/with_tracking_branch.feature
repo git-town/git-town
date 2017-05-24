@@ -1,4 +1,4 @@
-Feature: gt sync: syncing the current feature branch with a tracking branch
+Feature: git-town sync: syncing the current feature branch with a tracking branch
 
   As a developer syncing a feature branch
   I want my branch to be updated with changes from the tracking branch and the main branch
@@ -15,7 +15,7 @@ Feature: gt sync: syncing the current feature branch with a tracking branch
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

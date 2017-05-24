@@ -1,4 +1,4 @@
-Feature: gt sync --all: syncs all feature branches
+Feature: git-town sync --all: syncs all feature branches
 
   Background:
     Given I have feature branches named "feature-1" and "feature-2"
@@ -9,7 +9,7 @@ Feature: gt sync --all: syncs all feature branches
       | feature-2 | local and remote | feature-2 commit | feature2_file |
     And I am on the "feature-1" branch
     And I have an uncommitted file
-    When I run `gt sync --all`
+    When I run `git-town sync --all`
 
 
   Scenario: result

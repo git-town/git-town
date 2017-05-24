@@ -9,7 +9,7 @@ Feature: git town-ship: errors if there are open changes
     Given I have a feature branch named "feature"
     And I have an uncommitted file
     And I am on the "feature" branch
-    When I run `gt ship`
+    When I run `git-town ship`
 
 
   Scenario: result
@@ -21,7 +21,7 @@ Feature: git town-ship: errors if there are open changes
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no commands
     And I am still on the "feature" branch

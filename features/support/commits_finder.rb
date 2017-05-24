@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encapsulates finding Git commits in flexible ways
 #
 # After initializing with the desired attributes for the commit list,

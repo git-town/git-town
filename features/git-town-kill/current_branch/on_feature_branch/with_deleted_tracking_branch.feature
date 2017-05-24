@@ -14,7 +14,7 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
     And the "current-feature" branch gets deleted on the remote
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt kill`
+    When I run `git-town kill`
 
 
   Scenario: result
@@ -37,7 +37,7 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
 
 
   Scenario: undoing the kill
-    When I run `gt kill --undo`
+    When I run `git-town kill --undo`
     Then it runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |

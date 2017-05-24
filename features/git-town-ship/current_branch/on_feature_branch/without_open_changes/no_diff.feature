@@ -12,7 +12,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
     And I am on the "empty-feature" branch
-    When I run `gt ship`
+    When I run `git-town ship`
 
 
   Scenario: result
@@ -32,7 +32,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no commands
     And I am still on the "empty-feature" branch

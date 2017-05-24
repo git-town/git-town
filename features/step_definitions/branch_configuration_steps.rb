@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^Git Town is aware of this branch hierarchy$/) do |table|
   table.hashes.each do |row|
     set_parent_branch branch: row['BRANCH'], parent: row['PARENT']

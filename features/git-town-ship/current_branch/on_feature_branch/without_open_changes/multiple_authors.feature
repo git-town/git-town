@@ -16,7 +16,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario Outline: prompt for squashed commit author
-    When I run `gt ship -m 'feature done'` and <ACTION>
+    When I run `git-town ship -m 'feature done'` and <ACTION>
     Then I see
       """
       Multiple people authored the 'feature' branch.
@@ -40,7 +40,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario Outline: enter invalid number then valid number
-    When I run `gt ship -m 'feature done'` and enter "<NUMBER>" and "1"
+    When I run `git-town ship -m 'feature done'` and enter "<NUMBER>" and "1"
     Then I see "Invalid author number"
     And I have the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR                            |
@@ -53,6 +53,6 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario: enter invalid custom author
-    When I run `gt ship -m 'feature done'` and enter "invalid"
+    When I run `git-town ship -m 'feature done'` and enter "invalid"
     Then I get the error "Aborted because commit exited with error"
     And I am left with my original commits

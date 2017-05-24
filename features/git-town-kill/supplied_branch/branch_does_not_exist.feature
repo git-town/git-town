@@ -10,7 +10,7 @@ Feature: git town-kill: errors if supplied branch does not exist
 
 
   Scenario: result
-    When I run `gt kill non-existing-feature`
+    When I run `git-town kill non-existing-feature`
     Given I have an uncommitted file
     Then it runs the commands
       | BRANCH | COMMAND           |

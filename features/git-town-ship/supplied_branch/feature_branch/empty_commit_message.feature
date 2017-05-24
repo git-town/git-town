@@ -11,7 +11,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       | feature | local            | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
-    When I run `gt ship feature` and enter an empty commit message
+    When I run `git-town ship feature` and enter an empty commit message
 
 
   Scenario: result

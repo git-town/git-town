@@ -18,10 +18,10 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
 
     Examples:
       | COMMAND                   |
-      | git town-hack             |
-      | git town-kill             |
-      | git town-new-pull-request |
-      | git town-prune-branches   |
-      | git town-repo             |
-      | git town-ship             |
-      | git town-sync             |
+      | git-town hack feature     |
+      | git-town kill             |
+      | git-town new-pull-request |
+      | git-town prune-branches   |
+      | git-town repo             |
+      | git-town ship             |
+      | git-town sync             |

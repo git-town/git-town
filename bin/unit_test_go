@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-ginkgo lib/drivers
+ginkgo src/drivers

@@ -13,7 +13,7 @@ Feature: git town-rename-branch: errors when the destination branch exists local
       | existing-feature | local and remote | existing-feature commit |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt rename-branch current-feature existing-feature`
+    When I run `git-town rename-branch current-feature existing-feature`
 
 
   Scenario: result

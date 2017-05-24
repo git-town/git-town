@@ -13,7 +13,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
     And I am on the "parent-feature" branch
-    When I run `gt rename-branch parent-feature renamed-parent-feature`
+    When I run `git-town rename-branch parent-feature renamed-parent-feature`
 
 
   Scenario: result
@@ -37,7 +37,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
   Scenario: undo
-    When I run `gt rename-branch --undo`
+    When I run `git-town rename-branch --undo`
     Then it runs the commands
       | BRANCH                 | COMMAND                                                      |
       | renamed-parent-feature | git branch parent-feature <%= sha 'parent feature commit' %> |

@@ -13,7 +13,7 @@ Feature: git town-hack: starting a new feature from a feature branch (with remot
       | existing-feature | local    | existing feature commit |
     And I am on the "existing-feature" branch
     And I have an uncommitted file
-    When I run `gt hack new-feature`
+    When I run `git-town hack new-feature`
 
 
   Scenario: result

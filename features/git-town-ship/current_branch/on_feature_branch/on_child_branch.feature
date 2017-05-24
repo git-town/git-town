@@ -15,7 +15,7 @@ Feature: git town-ship: shipping a child branch
       | feature-2 | local and remote | feature 2 commit | feature_2_file | feature 2 content |
       | feature-3 | local and remote | feature 3 commit | feature_3_file | feature 3 content |
     And I am on the "feature-3" branch
-    When I run `gt ship`
+    When I run `git-town ship`
 
 
   Scenario: result
@@ -30,7 +30,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: undo
-    When I run `gt ship --undo`
+    When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no commands
     And I am still on the "feature-3" branch

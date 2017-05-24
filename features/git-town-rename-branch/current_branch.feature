@@ -17,7 +17,7 @@ Feature: git town-rename-branch: rename current branch implicitly
 
   Scenario: rename feature branch
     Given I am on the "feature" branch
-    When I run `gt rename-branch renamed-feature`
+    When I run `git-town rename-branch renamed-feature`
     Then it runs the commands
       | BRANCH          | COMMAND                            |
       | feature         | git fetch --prune                  |
@@ -37,7 +37,7 @@ Feature: git town-rename-branch: rename current branch implicitly
 
   Scenario: rename branch to itself
     Given I am on the "feature" branch
-    When I run `gt rename-branch feature`
+    When I run `git-town rename-branch feature`
     Then it runs no commands
     And I get the error "Cannot rename branch to current name."
     And I end up on the "feature" branch
@@ -46,14 +46,14 @@ Feature: git town-rename-branch: rename current branch implicitly
 
   Scenario: rename perennial branch
     Given I am on the "production" branch
-    When I run `gt rename-branch renamed-production`
+    When I run `git-town rename-branch renamed-production`
     Then it runs no commands
     And I get the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: rename perennial branch (forced)
     Given I am on the "production" branch
-    When I run `gt rename-branch renamed-production --force`
+    When I run `git-town rename-branch renamed-production --force`
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune                        |
@@ -73,8 +73,8 @@ Feature: git town-rename-branch: rename current branch implicitly
 
   Scenario: undo rename branch
     Given I am on the "feature" branch
-    And I run `gt rename-branch renamed-feature`
-    When I run `gt rename-branch --undo`
+    And I run `git-town rename-branch renamed-feature`
+    When I run `git-town rename-branch --undo`
     Then it runs the commands
         | BRANCH          | COMMAND                                     |
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |

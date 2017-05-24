@@ -13,7 +13,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | child-feature | local and remote | child feature commit | child_feature_file | child feature content |
       | production    | local and remote | production commit    | production_file    | production content    |
     And I am on the "production" branch
-    When I run `gt rename-branch --force production renamed-production`
+    When I run `git-town rename-branch --force production renamed-production`
 
 
   Scenario: result
@@ -37,7 +37,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
   Scenario: undo
-    When I run `gt rename-branch --undo`
+    When I run `git-town rename-branch --undo`
     Then it runs the commands
       | BRANCH             | COMMAND                                              |
       | renamed-production | git branch production <%= sha 'production commit' %> |

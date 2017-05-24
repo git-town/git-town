@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Given(/^my repo ignores files named "([^"]*)"$/) do |filename|
   create_local_commit branch: current_branch_name,
                       file_name: '.gitignore',

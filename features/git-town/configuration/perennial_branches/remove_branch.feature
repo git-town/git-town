@@ -10,21 +10,21 @@ Feature: remove a branch from the perennial branches configuration
 
 
   Scenario: removing a branch that is a perennial branch
-    When I run `gt perennial-branches --remove staging`
+    When I run `git-town perennial-branches --remove staging`
     Then I see no output
     And my repo is configured with perennial branches as "qa"
 
 
   Scenario: removing a branch that is not a perennial branch
-    When I run `gt perennial-branches --remove feature`
+    When I run `git-town perennial-branches --remove feature`
     Then I get the error "'feature' is not a perennial branch"
 
 
   Scenario: not providing a branch name
-    When I run `gt perennial-branches --remove`
+    When I run `git-town perennial-branches --remove`
     Then I get the error "Error: flag needs an argument: --remove"
     And I get the error
       """
       Usage:
-        gt perennial-branches [flags]
+        git-town perennial-branches [flags]
       """

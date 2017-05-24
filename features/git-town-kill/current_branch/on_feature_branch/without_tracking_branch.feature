@@ -14,7 +14,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | other-feature   | local and remote | other feature commit   |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt kill`
+    When I run `git-town kill`
 
 
   Scenario: result
@@ -36,7 +36,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
 
   Scenario: Undoing a kill of a local feature branch
-    When I run `gt kill --undo`
+    When I run `git-town kill --undo`
     Then it runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |

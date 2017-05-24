@@ -1,4 +1,4 @@
-Feature: gt sync: resolving conflicts between the current feature branch and the main branch
+Feature: git-town sync: resolving conflicts between the current feature branch and the main branch
 
   Background:
     Given I have a feature branch named "feature"
@@ -8,7 +8,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result
@@ -25,9 +25,9 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
       |         | git merge --no-edit main           |
     And I get the error
       """
-      To abort, run "gt sync --abort".
-      To continue after you have resolved the conflicts, run "gt sync --continue".
-      To skip the sync of the 'feature' branch, run "gt sync --skip".
+      To abort, run "git-town sync --abort".
+      To continue after you have resolved the conflicts, run "git-town sync --continue".
+      To skip the sync of the 'feature' branch, run "git-town sync --skip".
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -35,7 +35,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
 
 
   Scenario: aborting
-    When I run `gt sync --abort`
+    When I run `git-town sync --abort`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -52,7 +52,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
@@ -62,7 +62,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
@@ -84,7 +84,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
 
   Scenario: continuing after resolving the conflicts resulting in no changes
     Given I resolve the conflict in "conflicting_file" with "feature content"
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
@@ -106,7 +106,7 @@ Feature: gt sync: resolving conflicts between the current feature branch and the
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; gt sync --continue`
+    When I run `git commit --no-edit; git-town sync --continue`
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |

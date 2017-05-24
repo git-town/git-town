@@ -1,4 +1,4 @@
-Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
+Feature: git-town sync: syncing inside a folder that doesn't exist on the main branch
 
   (see ./no_conflict.feature)
 
@@ -13,7 +13,7 @@ Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local and remote | other feature commit       | file2            |                 |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt sync --all` in the "new_folder" folder
+    When I run `git-town sync --all` in the "new_folder" folder
 
 
   @finishes-with-non-empty-stash
@@ -37,7 +37,7 @@ Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
 
 
   Scenario: aborting
-    When I run `gt sync --abort`
+    When I run `git-town sync --abort`
     Then it runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
@@ -53,7 +53,7 @@ Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And I am still on the "current-feature" branch
@@ -63,7 +63,7 @@ Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `gt sync --continue`
+    When I run `git-town sync --continue`
     Then it runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |

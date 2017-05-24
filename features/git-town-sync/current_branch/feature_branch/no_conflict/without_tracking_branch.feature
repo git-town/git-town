@@ -1,4 +1,4 @@
-Feature: gt sync: syncing the current feature branch without a tracking branch
+Feature: git-town sync: syncing the current feature branch without a tracking branch
 
   (see ./with_a_tracking_branch.feature)
 
@@ -12,7 +12,7 @@ Feature: gt sync: syncing the current feature branch without a tracking branch
       | feature | local    | local feature commit | local_feature_file |
     And I am on the "feature" branch
     And I have an uncommitted file
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

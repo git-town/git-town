@@ -1,4 +1,4 @@
-Feature: gt sync: syncing all branches syncs the tags
+Feature: git-town sync: syncing all branches syncs the tags
 
   As a developer using Git tags for release management
   I want my tags to be published whenever I sync all my branches
@@ -11,7 +11,7 @@ Feature: gt sync: syncing all branches syncs the tags
       | local-tag  | local    |
       | remote-tag | remote   |
     And I am on the "main" branch
-    When I run `gt sync --all`
+    When I run `git-town sync --all`
 
 
   Scenario: result

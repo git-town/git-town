@@ -1,4 +1,4 @@
-Feature: gt sync: restores deleted tracking branch
+Feature: git-town sync: restores deleted tracking branch
 
   As a developer syncing a feature branch whose tracking branch has been deleted
   I want a new tracking branch to be created
@@ -12,7 +12,7 @@ Feature: gt sync: restores deleted tracking branch
       | feature | local and remote | feature commit | feature_file |
     And the "feature" branch gets deleted on the remote
     And I am on the "feature" branch
-    When I run `gt sync`
+    When I run `git-town sync`
 
 
   Scenario: result

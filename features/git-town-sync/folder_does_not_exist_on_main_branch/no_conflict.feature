@@ -1,4 +1,4 @@
-Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
+Feature: git-town sync: syncing inside a folder that doesn't exist on the main branch
 
   As a developer syncing inside a committed folder that doesn't exist on the main branch
   I want the command to finish properly
@@ -14,7 +14,7 @@ Feature: gt sync: syncing inside a folder that doesn't exist on the main branch
       | other-feature   | local and remote | other feature commit | file2            |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt sync --all` in the "new_folder" folder
+    When I run `git-town sync --all` in the "new_folder" folder
 
 
   Scenario: result

@@ -1,4 +1,4 @@
-Feature: gt sync --all: syncs all perennial branches
+Feature: git-town sync --all: syncs all perennial branches
 
   Background:
     Given I have perennial branches named "production" and "qa"
@@ -11,7 +11,7 @@ Feature: gt sync --all: syncs all perennial branches
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt sync --all`
+    When I run `git-town sync --all`
 
 
   Scenario: result

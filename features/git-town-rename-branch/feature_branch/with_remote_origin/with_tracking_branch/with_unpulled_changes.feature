@@ -14,7 +14,7 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
       |                 | remote           | remote feature commit |
     And I am on the "current-feature" branch
     And I have an uncommitted file
-    When I run `gt rename-branch current-feature renamed-feature`
+    When I run `git-town rename-branch current-feature renamed-feature`
 
 
   Scenario: result

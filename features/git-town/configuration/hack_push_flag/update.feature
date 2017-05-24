@@ -6,20 +6,20 @@ Feature: set the hack-push flag
 
 
   Scenario: update to "true"
-    When I run `gt hack-push-flag true`
+    When I run `git-town hack-push-flag true`
     Then my repo is now configured with "hack-push-flag" set to "true"
 
 
   Scenario: update to "false"
-    When I run `gt hack-push-flag false`
+    When I run `git-town hack-push-flag false`
     Then my repo is now configured with "hack-push-flag" set to "false"
 
 
   Scenario: invalid flag
-    When I run `gt hack-push-flag woof`
+    When I run `git-town hack-push-flag woof`
     Then I get the error "Invalid value: 'woof'"
     And I get the error
       """
       Usage:
-        gt hack-push-flag [(true | false)] [flags]
+        git-town hack-push-flag [(true | false)] [flags]
       """

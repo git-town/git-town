@@ -11,7 +11,7 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
       | main   | local and remote | main commit |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt rename-branch non-existing-feature renamed-feature`
+    When I run `git-town rename-branch non-existing-feature renamed-feature`
 
 
   Scenario: result

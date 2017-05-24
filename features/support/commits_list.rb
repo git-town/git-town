@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encapsulates building up a list of commits
 #
 # Commit lists contain very specific data about commits.

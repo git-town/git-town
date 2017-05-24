@@ -1,4 +1,4 @@
-Feature: gt sync --all: does not sync remote only branches
+Feature: git-town sync --all: does not sync remote only branches
 
   Background:
     Given I have a feature branch named "my-feature"
@@ -10,7 +10,7 @@ Feature: gt sync --all: does not sync remote only branches
       | co-feature | remote           | coworker commit | coworker_file |
     And I am on the "main" branch
     And I have an uncommitted file
-    When I run `gt sync --all`
+    When I run `git-town sync --all`
 
 
   Scenario: result

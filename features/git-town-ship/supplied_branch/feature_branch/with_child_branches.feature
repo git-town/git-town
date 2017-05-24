@@ -11,7 +11,7 @@ Feature: git town-ship: shipping a parent branch
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |
     And I am on the "child-feature" branch
-    When I run `gt ship parent-feature -m "parent feature done"`
+    When I run `git-town ship parent-feature -m "parent feature done"`
 
 
   Scenario: result
