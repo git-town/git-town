@@ -28,14 +28,13 @@ Feature: Appending a branch to a feature branch
       |                  | git merge --no-edit main                    |
       |                  | git branch new-child existing-feature       |
       |                  | git checkout new-child                      |
-      | new-child        | git push -u origin new-child                |
-      |                  | git stash pop                               |
+      | new-child        | git stash pop                               |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing_feature_commit |
-      | new-child        | local and remote | existing_feature_commit |
+      | new-child        | local            | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT           |
       | existing-feature | main             |
@@ -49,7 +48,6 @@ Feature: Appending a branch to a feature branch
       | BRANCH           | COMMAND                       |
       | new-child        | git add -A                    |
       |                  | git stash                     |
-      |                  | git push origin :new-child    |
       |                  | git checkout existing-feature |
       | existing-feature | git branch -D new-child       |
       |                  | git checkout main             |

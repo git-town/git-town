@@ -32,4 +32,4 @@ Feature: git town-hack: starting a new feature from a feature branch (with remot
       | BRANCH           | LOCATION         | MESSAGE                 |
       | main             | local and remote | main commit             |
       | existing-feature | local            | existing feature commit |
-      | new-feature      | local | main commit             |
+      | new-feature      | local            | main commit             |

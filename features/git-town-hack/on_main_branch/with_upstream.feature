@@ -27,4 +27,4 @@ Feature: git-hack: on the main branch with a upstream remote
     And I have the following commits
       | BRANCH      | LOCATION                    | MESSAGE         |
       | main        | local, remote, and upstream | upstream commit |
-      | new-feature | local            | upstream commit |
+      | new-feature | local                       | upstream commit |

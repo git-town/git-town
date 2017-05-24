@@ -28,4 +28,4 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main_commit |
-      | new-feature | local | main_commit |
+      | new-feature | local            | main_commit |

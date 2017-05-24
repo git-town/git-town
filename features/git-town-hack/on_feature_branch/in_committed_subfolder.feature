@@ -34,4 +34,4 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       | BRANCH      | LOCATION         | MESSAGE       |
       | main        | local and remote | main commit   |
       | feature     | local and remote | folder commit |
-      | new-feature | local | main commit   |
+      | new-feature | local            | main commit   |

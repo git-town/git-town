@@ -17,16 +17,15 @@ Feature: Prepending a branch to a feature branch
   Scenario: inserting a branch into the branch ancestry
     When I run `git-town prepend new-parent`
     Then it runs the commands
-      | BRANCH           | COMMAND                       |
-      | existing-feature | git fetch --prune             |
-      |                  | git add -A                    |
-      |                  | git stash                     |
-      |                  | git checkout main             |
-      | main             | git rebase origin/main        |
-      |                  | git branch new-parent main    |
-      |                  | git checkout new-parent       |
-      | new-parent       | git push -u origin new-parent |
-      |                  | git stash pop                 |
+      | BRANCH           | COMMAND                    |
+      | existing-feature | git fetch --prune          |
+      |                  | git add -A                 |
+      |                  | git stash                  |
+      |                  | git checkout main          |
+      | main             | git rebase origin/main     |
+      |                  | git branch new-parent main |
+      |                  | git checkout new-parent    |
+      | new-parent       | git stash pop              |
     And I end up on the "new-parent" branch
     And I still have my uncommitted file
     And I have the following commits
@@ -45,7 +44,6 @@ Feature: Prepending a branch to a feature branch
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |
         |                  | git stash                     |
-        |                  | git push origin :new-parent   |
         |                  | git checkout main             |
         | main             | git branch -d new-parent      |
         |                  | git checkout existing-feature |

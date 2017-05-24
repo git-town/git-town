@@ -24,13 +24,12 @@ Feature: Appending a branch to a perennial branch
       |            | git rebase origin/production    |
       |            | git branch new-child production |
       |            | git checkout new-child          |
-      | new-child  | git push -u origin new-child    |
-      |            | git stash pop                   |
+      | new-child  | git stash pop                   |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
-      | new-child  | local and remote | production_commit |
+      | new-child  | local            | production_commit |
       | production | local and remote | production_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT     |
@@ -40,13 +39,12 @@ Feature: Appending a branch to a perennial branch
   Scenario: Undo
     When I run `git-town append --undo`
     Then it runs the commands
-        | BRANCH     | COMMAND                    |
-        | new-child  | git add -A                 |
-        |            | git stash                  |
-        |            | git push origin :new-child |
-        |            | git checkout production    |
-        | production | git branch -D new-child    |
-        |            | git stash pop              |
+        | BRANCH     | COMMAND                 |
+        | new-child  | git add -A              |
+        |            | git stash               |
+        |            | git checkout production |
+        | production | git branch -D new-child |
+        |            | git stash pop           |
     And I end up on the "production" branch
     And I still have my uncommitted file
     And I have the following commits
