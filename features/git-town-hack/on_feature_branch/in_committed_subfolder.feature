@@ -26,8 +26,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       |             | git checkout main                |
       | main        | git rebase origin/main           |
       |             | git checkout -b new-feature main |
-      | new-feature | git push -u origin new-feature   |
-      |             | git stash pop                    |
+      | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
     And I am in the project root folder
     And I still have my uncommitted file
@@ -35,4 +34,4 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       | BRANCH      | LOCATION         | MESSAGE       |
       | main        | local and remote | main commit   |
       | feature     | local and remote | folder commit |
-      | new-feature | local and remote | main commit   |
+      | new-feature | local | main commit   |

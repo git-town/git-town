@@ -21,11 +21,10 @@ Feature: git-hack: on the main branch with a upstream remote
       |             | git rebase upstream/main         |
       |             | git push                         |
       |             | git checkout -b new-feature main |
-      | new-feature | git push -u origin new-feature   |
-      |             | git stash pop                    |
+      | new-feature | git stash pop                    |
     And I am still on the "new-feature" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH      | LOCATION                    | MESSAGE         |
       | main        | local, remote, and upstream | upstream commit |
-      | new-feature | local and remote            | upstream commit |
+      | new-feature | local            | upstream commit |

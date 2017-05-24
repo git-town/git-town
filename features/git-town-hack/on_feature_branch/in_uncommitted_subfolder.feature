@@ -25,8 +25,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       |             | git checkout main                    |
       | main        | git rebase origin/main               |
       |             | git checkout -b new-feature main     |
-      | new-feature | git push -u origin new-feature       |
-      |             | git stash pop                        |
+      | new-feature | git stash pop                        |
       | <none>      | cd <%= git_root_folder %>/new_folder |
     And I end up on the "new-feature" branch
     And I am in the project root folder
@@ -34,4 +33,4 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main commit |
-      | new-feature | local and remote | main commit |
+      | new-feature | local | main commit |

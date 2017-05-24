@@ -16,16 +16,8 @@ git town append (--abort | --continue)
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
-pushes the new feature branch to the remote repository,
+pushes the new feature branch to the remote repository if and only if "hack-push-flag" is true,
 and brings over all uncommitted changes to the new feature branch.
-
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "hack-push-flag" configuration:
-
-```
-git town hack-push-flag false
-```
 
 
 #### OPTIONS

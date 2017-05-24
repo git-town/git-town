@@ -241,7 +241,7 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
-	return getConfigurationValueWithDefault("git-town.hack-push-flag", "true") == "true"
+	return getConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
 }
 
 // UpdateShouldHackPush updates whether the current repository is configured to push
