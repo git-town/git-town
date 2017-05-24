@@ -82,19 +82,19 @@ type autocompleteDefinition struct {
 
 func buildAutocompletionDefinition() string {
 	commands := []autocompleteDefinition{
-		autocompleteDefinition{name: "hack", description: hackCmd.Short},
-		autocompleteDefinition{name: "kill", description: killCommand.Short},
-		autocompleteDefinition{name: "new-pull-request", description: newPullRequestCommand.Short},
-		autocompleteDefinition{name: "prune-branches", description: pruneBranchesCommand.Short},
-		autocompleteDefinition{name: "rename-branch", description: renameBranchCommand.Short},
-		autocompleteDefinition{name: "repo", description: repoCommand.Short},
-		autocompleteDefinition{name: "ship", description: shipCmd.Short},
-		autocompleteDefinition{name: "sync", description: syncCmd.Short},
+		{name: "hack", description: hackCmd.Short},
+		{name: "kill", description: killCommand.Short},
+		{name: "new-pull-request", description: newPullRequestCommand.Short},
+		{name: "prune-branches", description: pruneBranchesCommand.Short},
+		{name: "rename-branch", description: renameBranchCommand.Short},
+		{name: "repo", description: repoCommand.Short},
+		{name: "ship", description: shipCmd.Short},
+		{name: "sync", description: syncCmd.Short},
 	}
 	options := []autocompleteDefinition{
-		autocompleteDefinition{name: "abort", description: abortFlagDescription},
-		autocompleteDefinition{name: "continue", description: continueFlagDescription},
-		autocompleteDefinition{name: "undo", description: undoFlagDescription},
+		{name: "abort", description: abortFlagDescription},
+		{name: "continue", description: continueFlagDescription},
+		{name: "undo", description: undoFlagDescription},
 	}
 
 	commandsSpaceSeparated := ""

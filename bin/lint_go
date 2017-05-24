@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if [ -n "$(gofmt -d src 2>&1)" ]; then
-  echo "Code is not formatted. Run 'gofmt -w src'"
+if [ -n "$(gofmt -d -s src 2>&1)" ]; then
+  echo "Code is not formatted. Run 'gofmt -s -w src'"
   exit 1
 fi
 
