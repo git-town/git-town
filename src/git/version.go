@@ -10,7 +10,7 @@ import (
 
 // EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher
 func EnsureVersionRequirementSatisfied() {
-	util.Ensure(isVersionRequirementSatisfied(), "Git Town requires Git 2.6.0 or higher")
+	util.Ensure(isVersionRequirementSatisfied(), "Git Town requires Git 2.7.0 or higher")
 }
 
 // Helpers
@@ -32,5 +32,5 @@ func isVersionRequirementSatisfied() bool {
 	if err != nil {
 		log.Fatal("Error convering minor version to int:", err)
 	}
-	return majorVersion == 2 && minorVersion >= 6
+	return majorVersion == 2 && minorVersion >= 7
 }
