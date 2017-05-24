@@ -12,21 +12,21 @@ Feature: push branch to remote upon creation
 
   Scenario: inserting a branch into the branch ancestry
     Then it runs the commands
-      | BRANCH    | COMMAND                   |
-      | main      | git fetch --prune         |
-      |           | git add -A                |
-      |           | git stash                 |
-      |           | git rebase origin/main    |
-      |           | git branch new-child main |
-      |           | git checkout new-child    |
+      | BRANCH    | COMMAND                      |
+      | main      | git fetch --prune            |
+      |           | git add -A                   |
+      |           | git stash                    |
+      |           | git rebase origin/main       |
+      |           | git branch new-child main    |
+      |           | git checkout new-child       |
       | new-child | git push -u origin new-child |
-      |           | git stash pop             |
+      |           | git stash pop                |
     And I end up on the "new-child" branch
     And I still have my uncommitted file
     And I have the following commits
       | BRANCH    | LOCATION         | MESSAGE     |
       | main      | local and remote | main_commit |
-      | new-child | local and remote            | main_commit |
+      | new-child | local and remote | main_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | new-child | main   |
@@ -35,13 +35,13 @@ Feature: push branch to remote upon creation
   Scenario: Undo
     When I run `git-town append --undo`
     Then it runs the commands
-        | BRANCH    | COMMAND                 |
-        | new-child | git add -A              |
-        |           | git stash               |
+        | BRANCH    | COMMAND                    |
+        | new-child | git add -A                 |
+        |           | git stash                  |
         |           | git push origin :new-child |
-        |           | git checkout main       |
-        | main      | git branch -d new-child |
-        |           | git stash pop           |
+        |           | git checkout main          |
+        | main      | git branch -d new-child    |
+        |           | git stash pop              |
     And I end up on the "main" branch
     And I still have my uncommitted file
     And I have the following commits
