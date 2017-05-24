@@ -1,6 +1,6 @@
 Feature: git town-hack: push branch to remote upon creation
 
-  As a developer starting work on a new private feature
+  As a developer starting work on a new feature
   I want to be able to configure git-hack to push my branch to the remote repo
   So that ...
 
