@@ -28,6 +28,7 @@ func (driver BitbucketCodeHostingDriver) GetRepositoryURL(repository string) str
 	return "https://bitbucket.org/" + repository
 }
 
+// MergePullRequest is unimplemented
 func (driver BitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
-	return errors.New("Unimplemented")
+	return errors.New("unimplemented")
 }

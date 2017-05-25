@@ -24,6 +24,7 @@ func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string
 	return "https://gitlab.com/" + repository
 }
 
+// MergePullRequest is unimplemented
 func (driver GitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
-	return errors.New("Unimplemented")
+	return errors.New("unimplemented")
 }

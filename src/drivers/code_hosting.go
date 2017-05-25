@@ -7,7 +7,7 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-// MergeOptions defines the options to MergePullRequest function
+// MergePullRequestOptions defines the options to the MergePullRequest function
 type MergePullRequestOptions struct {
 	CommitMessage string
 	CommitTitle   string
