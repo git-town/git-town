@@ -43,7 +43,7 @@ end
 
 # Feature tests
 desc 'Run feature tests'
-task 'test' do
+task 'feature-test' do
   sh 'bin/cuke'
 end
 
