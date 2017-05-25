@@ -9,13 +9,13 @@ import (
 
 // MergePullRequestOptions defines the options to the MergePullRequest function
 type MergePullRequestOptions struct {
+	Branch        string
 	CommitMessage string
 	CommitTitle   string
 	MergeMethod   string
-	Sha           string
-	Branch        string
 	ParentBranch  string
 	Repository    string
+	Sha           string
 }
 
 // CodeHostingDriver defines the interface
