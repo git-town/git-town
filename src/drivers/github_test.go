@@ -64,7 +64,7 @@ var _ = Describe("Github", func() {
 			Expect(err.Error()).To(Equal("No pull request found"))
 		})
 
-		It("returns an error if multiple request numbers not found", func() {
+		It("returns an error if multiple pull request numbers not found", func() {
 			httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 			httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[{\"number\": 1}, {\"number\": 2}]"))
 			err := driver.MergePullRequest(options)
