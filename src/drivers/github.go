@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -88,10 +87,7 @@ func (driver GithubCodeHostingDriver) getPullRequestNumberFor(repository string,
 	if err != nil {
 		return -1, err
 	}
-	if response.StatusCode >= 400 {
-		return -1, fmt.Errorf("Request was not successful: %v", response)
-	}
-	numbers, err := driver.parsePullRequestsResponseBody(response.Body)
+	numbers, err := driver.parsePullRequestsResponse(response)
 	if err != nil {
 		return -1, err
 	}
@@ -114,13 +110,32 @@ func (driver GithubCodeHostingDriver) getPullRequestNumbersAgainst(repository st
 	if err != nil {
 		return []int{}, err
 	}
+	return driver.parsePullRequestsResponse(response)
+}
+
+func (driver GithubCodeHostingDriver) parsePullRequestsResponse(response *http.Response) ([]int, error) {
 	if response.StatusCode >= 400 {
 		return []int{}, fmt.Errorf("Request was not successful: %v", response)
 	}
 	if response.Body == nil {
 		return []int{}, errors.New("Missing response body")
 	}
-	return driver.parsePullRequestsResponseBody(response.Body)
+	decoder := json.NewDecoder(response.Body)
+	defer response.Body.Close()
+	_, err := decoder.Token()
+	if err != nil {
+		return []int{}, fmt.Errorf("error decoding open bracket: %v", err)
+	}
+	result := []int{}
+	for decoder.More() {
+		pullRequest := githubAPIPullRequest{}
+		err := decoder.Decode(&pullRequest)
+		if err != nil {
+			return []int{}, fmt.Errorf("error decoding pull request object: %v", err)
+		}
+		result = append(result, pullRequest.Number)
+	}
+	return result, nil
 }
 
 func (driver GithubCodeHostingDriver) updatePullRequestBase(repository string, pullRequestNumber int, base string) error {
@@ -141,26 +156,4 @@ func (driver GithubCodeHostingDriver) updatePullRequestBase(repository string, p
 		return fmt.Errorf("Request was not successful: %v", err)
 	}
 	return nil
-}
-
-func (driver GithubCodeHostingDriver) parsePullRequestsResponseBody(body io.ReadCloser) ([]int, error) {
-	if body == nil {
-		return []int{}, errors.New("Missing response body")
-	}
-	decoder := json.NewDecoder(body)
-	defer body.Close()
-	_, err := decoder.Token()
-	if err != nil {
-		return []int{}, fmt.Errorf("error decoding open bracket: %v", err)
-	}
-	result := []int{}
-	for decoder.More() {
-		pullRequest := githubAPIPullRequest{}
-		err := decoder.Decode(&pullRequest)
-		if err != nil {
-			return []int{}, fmt.Errorf("error decoding pull request object: %v", err)
-		}
-		result = append(result, pullRequest.Number)
-	}
-	return result, nil
 }
