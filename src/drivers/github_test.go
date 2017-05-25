@@ -34,7 +34,7 @@ var _ = Describe("Github", func() {
 				MergeMethod:   "squash",
 				ParentBranch:  "main",
 				Repository:    "Originate/git-town",
-				Sha:           "sha",
+				Sha:           "123abc",
 			}
 			os.Setenv("GITHUB_TOKEN", "TOKEN")
 		})
@@ -93,7 +93,7 @@ var _ = Describe("Github", func() {
 			Expect(mergeReq.FormValue("commit_message")).To(Equal("message"))
 			Expect(mergeReq.FormValue("commit_title")).To(Equal("title"))
 			Expect(mergeReq.FormValue("merge_method")).To(Equal("squash"))
-			Expect(mergeReq.FormValue("sha")).To(Equal("sha"))
+			Expect(mergeReq.FormValue("sha")).To(Equal("123abc"))
 		})
 
 		It("updates the base of child pull requests", func() {
