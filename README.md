@@ -38,6 +38,23 @@ __Repository Maintenance__
 * [git town repo](/documentation/commands/repo.md) - view the repository homepage
 
 
+__Git Town Configuration__
+
+* [git town config](/documentation/commands/config.md) - displays or updates your Git Town configuration
+* [git town hack-push-flag](/documentation/commands/hack-push-flag.md) - configures whether new empty branches are pushed to origin
+* [git town main-branch](/documentation/commands/main-branch.md) - displays or sets the main development branch for the current repo
+* [git town perennial-branches](/documentation/commands/perennial-branches.md) - displays or updates the perennial branches for the current repo
+* [git town pull-branch-strategy](/documentation/commands/pull-branch-strategy.md) - displays or sets the strategy with which perennial branches are updated
+* [git town set-parent-branch](/documentation/commands/set-parent-branch.md) - updates a branch's parent
+
+
+__Other Commands__
+
+* [git town alias](/documentation/commands/alias.md) - adds or removes shorter aliases for Git Town commands
+* [git town install-fish-autocompletion](/documentation/commands/install-fish-autocompletion.md) - installs the autocompletion definition for [Fish shell](http://fishshell.com)
+* [git town version](/documentation/commands/version.md) - displays the installed version of Git Town
+
+
 ## Installation
 
 Since version 4.0, Git Town runs natively on all platforms.
@@ -47,7 +64,7 @@ Check out our [installation instructions](http://www.git-town.com/install.html) 
 
 Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to remove the `town` prefix with:
 ```
-git config --global alias.hack town-hack
+git config --global alias.hack 'town hack'
 ```
 
 As a convenience, you can add or remove global aliases for all `git-town` commands with:

@@ -1,8 +1,12 @@
-hash: 41331d3a93dad5eea422f8927dd37c0daf4eb0581e266c9cab4158971f7b22bb
-updated: 2017-05-08T17:02:16.102991-07:00
+hash: 435033ea2b41c808a4c6aff9c4b93fc4fd699f5a35322434040d9960876d55a7
+updated: 2017-05-26T11:04:59.11164216-07:00
 imports:
 - name: github.com/fatih/color
   version: 7824417a424b65227be8ac9b14d545a7f3e6c3f0
+- name: github.com/google/go-github
+  version: ebfec748347a9af6793c723f8859afcd906860fb
+  subpackages:
+  - github
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/mattn/go-colorable
@@ -17,6 +21,8 @@ imports:
   version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/spf13/viper
   version: 7538d73b4eb9511d85a9f1dfef202eeb8ac260f4
+- name: golang.org/x/oauth2
+  version: f047394b6d14284165300fd82dad67edb3a4d7f6
 - name: golang.org/x/sys
   version: e24f485414aeafb646f6fca458b0bf869c0880a1
   repo: https://go.googlesource.com/sys

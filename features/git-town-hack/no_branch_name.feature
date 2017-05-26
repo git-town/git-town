@@ -15,7 +15,7 @@ Feature: git town-hack: requires a branch name
   Scenario: result
     Then it runs no commands
     And I get the error "no branch name provided"
-    And I get the error
+    And I get the error:
       """
       Usage:
         git-town hack <branch> [flags]

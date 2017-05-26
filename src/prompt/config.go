@@ -69,7 +69,7 @@ func getMainBranchPrompt() (result string) {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
 	}
-	result += ":"
+	result += ": "
 	return
 }
 
@@ -80,7 +80,7 @@ func getPerennialBranchesPrompt() (result string) {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
 	}
-	result += ":"
+	result += ": "
 	return
 }
 
