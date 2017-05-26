@@ -30,5 +30,5 @@ func (driver BitbucketCodeHostingDriver) GetRepositoryURL(repository string) str
 
 // MergePullRequest is unimplemented
 func (driver BitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
-	return errors.New("Shipping pull requests via the BitBucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues.")
+	return errors.New("shipping pull requests via the BitBucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
 }
