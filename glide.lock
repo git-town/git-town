@@ -1,5 +1,5 @@
-hash: 1808e93b52867c308ac4c8abd4e618cf7f3f0e0ba0fdb45fdd27e495a1431c11
-updated: 2017-05-26T10:52:01.647663184-07:00
+hash: 435033ea2b41c808a4c6aff9c4b93fc4fd699f5a35322434040d9960876d55a7
+updated: 2017-05-26T11:04:59.11164216-07:00
 imports:
 - name: github.com/fatih/color
   version: 7824417a424b65227be8ac9b14d545a7f3e6c3f0
@@ -21,6 +21,8 @@ imports:
   version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/spf13/viper
   version: 7538d73b4eb9511d85a9f1dfef202eeb8ac260f4
+- name: golang.org/x/oauth2
+  version: f047394b6d14284165300fd82dad67edb3a4d7f6
 - name: golang.org/x/sys
   version: e24f485414aeafb646f6fca458b0bf869c0880a1
   repo: https://go.googlesource.com/sys
