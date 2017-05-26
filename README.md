@@ -47,8 +47,7 @@ Check out our [installation instructions](http://www.git-town.com/install.html) 
 
 Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to remove the `town` prefix with:
 ```
-git config --global alias.hack 'town hack' # For Git-Town versions >= 4
-git config --global alias.hack town-hack # For Git-Town version < 4
+git config --global alias.hack 'town hack'
 ```
 
 As a convenience, you can add or remove global aliases for all `git-town` commands with:
