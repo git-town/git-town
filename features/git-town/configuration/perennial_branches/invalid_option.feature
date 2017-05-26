@@ -8,7 +8,7 @@ Feature: passing an invalid option to the perennial branch configuration
   Scenario: using invalid option
     When I run `git-town perennial-branches --invalid-option`
     Then I get the error "Error: unknown flag: --invalid-option"
-    And I get the error
+    And I get the error:
       """
       Usage:
         git-town perennial-branches [flags]

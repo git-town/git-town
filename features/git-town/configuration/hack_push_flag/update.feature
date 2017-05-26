@@ -18,7 +18,7 @@ Feature: set the hack-push flag
   Scenario: invalid flag
     When I run `git-town hack-push-flag woof`
     Then I get the error "Invalid value: 'woof'"
-    And I get the error
+    And I get the error:
       """
       Usage:
         git-town hack-push-flag [(true | false)] [flags]
