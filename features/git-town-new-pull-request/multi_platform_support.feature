@@ -9,9 +9,15 @@ Feature: git-new-pull-request: multi-platform support
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
     Examples:
-      | TOOL     |
-      | open     |
-      | xdg-open |
+      | TOOL          |
+      | open          |
+      | xdg-open      |
+      | cygstart      |
+      | x-www-browser |
+      | firefox       |
+      | opera         |
+      | mozilla       |
+      | netscape      |
 
 
   Scenario: no supported tool installed
@@ -20,4 +26,10 @@ Feature: git-new-pull-request: multi-platform support
     And I have no command that opens browsers installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I get the error "Opening a browser requires 'open' on Mac or 'xdg-open' on Linux."
+    Then I get the error:
+      """
+      Cannot open a browser.
+      If you think this is a bug,
+      please open an issue at https://github.com/Originate/git-town/issues
+      and mention your OS and browser.
+      """
