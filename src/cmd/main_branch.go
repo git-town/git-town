@@ -12,7 +12,7 @@ var mainBranchCommand = &cobra.Command{
 	Short: "Displays or sets your main branch",
 	Long: `Displays or sets your main development branch
 
-The main branch is the Git branch from which new feature branches are cut. `,
+The main branch is the Git branch from which new feature branches are cut.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if len(args) == 0 {
