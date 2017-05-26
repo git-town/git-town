@@ -38,7 +38,7 @@ end
 # Unit tests
 desc 'Run unit tests'
 task 'unit-test' do
-  sh 'bin/unit_test_go'
+  sh 'bin/tests'
 end
 
 # Feature tests

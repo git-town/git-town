@@ -24,7 +24,7 @@ type GithubCodeHostingDriver struct{}
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Github
-func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch, parentBranch string) string {
+func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
