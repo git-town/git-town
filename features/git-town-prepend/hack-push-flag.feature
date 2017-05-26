@@ -2,6 +2,7 @@ Feature: push branch to remote upon creation
 
   (see ../git-town-hack/hack_push_flag.feature)
 
+
   Background:
     Given my repository has the "hack-push-flag" configuration set to "true"
     And I have a feature branch named "existing-feature"
