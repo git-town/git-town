@@ -26,7 +26,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git push                             |
       |           | git checkout feature-2               |
       | feature-2 | git merge --no-edit origin/feature-2 |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".

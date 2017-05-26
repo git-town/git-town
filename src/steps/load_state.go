@@ -43,6 +43,7 @@ func loadState(command string) RunState {
 	}
 }
 
+// nolint: gocyclo
 func deserializeStep(serializedStep SerializedStep) Step {
 	switch serializedStep.Type {
 	case "AbortMergeBranchStep":

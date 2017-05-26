@@ -20,7 +20,7 @@ Feature: update the parent of a nested feature branch
 
   Scenario: invalid child branch name
     When I run `git-town set-parent-branch non-existing parent-feature`
-    Then I get the error
+    Then I get the error:
       """
       There is no branch named 'non-existing'
       """
@@ -28,7 +28,7 @@ Feature: update the parent of a nested feature branch
 
   Scenario: invalid parent branch name
     When I run `git-town set-parent-branch child-feature non-existing`
-    Then I get the error
+    Then I get the error:
       """
       There is no branch named 'non-existing'
       """

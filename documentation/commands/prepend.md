@@ -13,7 +13,7 @@ git town prepend (--abort | --continue)
 
 #### DESCRIPTION
 
-Syncs the parent branch (prompts if unknown),
+Syncs the parent branch,
 forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository

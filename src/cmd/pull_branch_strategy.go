@@ -10,6 +10,11 @@ import (
 var pullBranchStrategyCommand = &cobra.Command{
 	Use:   "pull-branch-strategy [(rebase | merge)]",
 	Short: "Displays or sets your pull branch strategy",
+	Long: `Displays or sets your pull branch strategy
+
+The pull branch strategy specifies what strategy to use
+when merging remote tracking branches into local branches
+for the main branch and perennial branches.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if len(args) == 0 {

@@ -22,7 +22,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | feature | git fetch --prune      |
       |         | git checkout main      |
       | main    | git rebase origin/main |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
