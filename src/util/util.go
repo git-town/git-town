@@ -18,7 +18,7 @@ func DoesCommandOuputContain(cmd []string, value string) bool {
 }
 
 // DoesCommandOuputContainLine runs the given command
-// and returns whether its output contains teh given string as an entire line.
+// and returns whether its output contains the given string as an entire line.
 func DoesCommandOuputContainLine(cmd []string, value string) bool {
 	list := strings.Split(GetCommandOutput(cmd...), "\n")
 	return DoesStringArrayContain(list, value)

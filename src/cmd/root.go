@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Originate/git-town/src/git"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -20,6 +21,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 
 // Execute runs the Cobra stack
 func Execute() {
+	git.EnsureVersionRequirementSatisfied()
 	color.NoColor = false // Prevent color from auto disable
 
 	if err := RootCmd.Execute(); err != nil {

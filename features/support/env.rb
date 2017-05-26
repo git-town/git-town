@@ -62,6 +62,7 @@ Before do
   @non_empty_stash_expected = false
   @debug = ENV['DEBUG']
   @debug_commands = ENV['DEBUG_COMMANDS']
+  @temporary_shell_overrides_directory = Dir.mktmpdir 'temp_shell_overrides'
 end
 
 
@@ -87,6 +88,11 @@ After '~@ignore-run-error' do
     puts unformatted_last_run_output if @last_run_result.error
     expect(@last_run_result.error).to be_falsy, 'Expected no runtime error'
   end
+end
+
+
+After do
+  FileUtils.rm_rf @temporary_shell_overrides_directory
 end
 
 

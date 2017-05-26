@@ -40,14 +40,14 @@ __Repository Maintenance__
 
 ## Installation
 
-Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
+Since version 4.0, Git Town runs natively on all platforms.
 Check out our [installation instructions](http://www.git-town.com/install.html) for more details.
 
 ### Aliasing
 
 Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to remove the `town` prefix with:
 ```
-git config --global alias.hack town-hack
+git config --global alias.hack 'town hack'
 ```
 
 As a convenience, you can add or remove global aliases for all `git-town` commands with:
