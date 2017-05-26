@@ -40,7 +40,7 @@ __Repository Maintenance__
 
 ## Installation
 
-Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
+Since version 4.0, Git Town runs natively on all platforms.
 Check out our [installation instructions](http://www.git-town.com/install.html) for more details.
 
 ### Aliasing

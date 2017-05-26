@@ -1,9 +1,14 @@
-Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.html) run.
+Git Town runs anywhere Git runs.
 
 # Mac (using [Homebrew](http://brew.sh))
 * Install: run `brew install git-town`
 * Update: run `brew update` and then run `brew upgrade git-town`
 * Uninstall: run `brew uninstall git-town`
+
+*Note: `4.0.0` dropped support for Yosemite because we now specify a minimum Git version of 2.7.0,
+which is higher than the default version installed on that OS.
+If you would like to use Git Town on Yosemite,
+please use the manual install and ensure your Git version is 2.7.0 or higher.*
 
 ---
 # Arch Linux
@@ -24,15 +29,16 @@ Git Town runs anywhere Git and [Bash](https://www.gnu.org/software/bash/bash.htm
 
 ---
 # Manual
-* Install
-  * clone the repo to your machine (into DIR)
-  * add DIR/src to your `$PATH`
-  * add DIR/man to your `$MANPATH`
-* Update: run `git pull` in DIR
+* Install: download the Git Town binary for your platform from the
+  [releases page](https://github.com/Originate/git-town/releases),
+  rename it to `git-town`,
+  and put it somewhere in your `$PATH`
+* Update: install the new version over the old version
 * Uninstall:
-  * remove DIR
-  * remove DIR/src from your `$PATH`
-  * remove DIR/man from your `$MANPATH`
+  * remove Git Town's aliases: `git town alias false`
+  * remove the Git Town configuration from your repositories:
+    in each repo, run `git town config --reset`
+  * delete the `git-town` binary from your hard drive
 
 ---
 

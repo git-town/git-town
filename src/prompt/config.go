@@ -21,8 +21,9 @@ func EnsureIsConfigured() {
 func ConfigureMainBranch() {
 	printConfigurationHeader()
 	newMainBranch := askForBranch(branchPromptConfig{
-		branchNames: git.GetLocalBranches(),
-		prompt:      getMainBranchPrompt(),
+		branchNames:       git.GetLocalBranches(),
+		defaultBranchName: "",
+		prompt:            getMainBranchPrompt(),
 		validate: func(branchName string) error {
 			if branchName == "" {
 				return errors.New("A main development branch is required to enable the features provided by Git Town")
@@ -39,8 +40,9 @@ func ConfigurePerennialBranches() {
 	var newPerennialBranches []string
 	for {
 		newPerennialBranch := askForBranch(branchPromptConfig{
-			branchNames: git.GetLocalBranches(),
-			prompt:      getPerennialBranchesPrompt(),
+			branchNames:       git.GetLocalBranches(),
+			defaultBranchName: "",
+			prompt:            getPerennialBranchesPrompt(),
 			validate: func(branchName string) error {
 				if branchName == git.GetMainBranch() {
 					return fmt.Errorf("'%s' is already set as the main branch", branchName)
@@ -67,7 +69,7 @@ func getMainBranchPrompt() (result string) {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
 	}
-	result += ":"
+	result += ": "
 	return
 }
 
@@ -78,7 +80,7 @@ func getPerennialBranchesPrompt() (result string) {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
 	}
-	result += ":"
+	result += ": "
 	return
 }
 
