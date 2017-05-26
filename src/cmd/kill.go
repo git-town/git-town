@@ -17,6 +17,12 @@ type killConfig struct {
 var killCommand = &cobra.Command{
 	Use:   "kill [<branch>]",
 	Short: "Removes an obsolete feature branch",
+	Long: `Removes an obsolete feature branch
+
+Deletes the current branch, or "<branch_name>" if given,
+from the local and remote repositories.
+
+Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
