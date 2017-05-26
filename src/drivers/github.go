@@ -14,10 +14,6 @@ import (
 	"github.com/google/go-github/github"
 )
 
-type githubAPIPullRequest struct {
-	Number int `json:"number"`
-}
-
 // GithubCodeHostingDriver provides tools for working with repositories
 // hosted on Github
 type GithubCodeHostingDriver struct{}
