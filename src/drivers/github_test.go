@@ -36,7 +36,7 @@ var _ = Describe("Github", func() {
 	Describe("MergePullRequest", func() {
 		pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 		childPullRequestsURL := pullRequestBaseURL + "?base=feature&state=open"
-		currentPullRequestURL := pullRequestBaseURL + "base=main&head=Originate%3Afeature&state=open"
+		currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 		mergePullRequestURL := pullRequestBaseURL + "/1/merge"
 		updatePullRequestBaseURL1 := pullRequestBaseURL + "/2"
 		updatePullRequestBaseURL2 := pullRequestBaseURL + "/3"
