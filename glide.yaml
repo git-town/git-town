@@ -7,3 +7,6 @@ import:
   subpackages:
   - github
 - package: golang.org/x/oauth2
+- package: github.com/google/go-querystring
+  subpackages:
+  - query
