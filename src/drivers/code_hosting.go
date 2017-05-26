@@ -11,17 +11,15 @@ import (
 type MergePullRequestOptions struct {
 	Branch        string
 	CommitMessage string
-	CommitTitle   string
-	MergeMethod   string
 	ParentBranch  string
+	Owner         string
 	Repository    string
-	Sha           string
 }
 
 // CodeHostingDriver defines the interface
 // of drivers for the different code hosting services
 type CodeHostingDriver interface {
-	GetRepositoryURL(repository string) string
+	GetRepositoryURL(orepository string) string
 	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
 	MergePullRequest(options MergePullRequestOptions) error
 }
