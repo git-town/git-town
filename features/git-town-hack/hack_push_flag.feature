@@ -1,8 +1,8 @@
 Feature: git town-hack: push branch to remote upon creation
 
-  As a developer starting work on a new feature
-  I want to be able to configure git-hack to push my branch to the remote repo
-  So that ...
+  When creating a new feature branch and having enough CI server bandwidth for an extra CI run
+  I want it to be pushed to the CI server right away
+  So that I can push and pull from the remote branch right away without having to run "git sync" first
 
 
   Background:
