@@ -14,7 +14,7 @@ var setupFlag bool
 
 var configCommand = &cobra.Command{
 	Use:   "config",
-	Short: "Displays or updates your Git Town configuration",
+	Short: "Displays or resets your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if resetFlag {

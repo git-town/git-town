@@ -11,6 +11,10 @@ import (
 var pruneBranchesCommand = &cobra.Command{
 	Use:   "prune-branches",
 	Short: "Deletes local branches whose tracking branch no longer exists",
+	Long: `Deletes local branches whose tracking branch no longer exists
+
+Deletes branches whose tracking branch no longer exists from the local repository.
+This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()

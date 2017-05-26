@@ -10,6 +10,11 @@ import (
 var hackPushFlagCommand = &cobra.Command{
 	Use:   "hack-push-flag [(true | false)]",
 	Short: "Displays or sets your hack push flag",
+	Long: `Displays or sets your hack push flag
+
+Newly hacked branches will be pushed upon creation
+if and only if "hack-push-flag" is true.
+The default value is true.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if len(args) == 0 {
