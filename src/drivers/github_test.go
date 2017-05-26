@@ -34,11 +34,12 @@ var _ = Describe("Github", func() {
 	})
 
 	Describe("MergePullRequest", func() {
-		childPullRequestsURL := "https://api.github.com/repos/Originate/git-town/pulls?base=feature&state=open"
-		currentPullRequestURL := "https://api.github.com/repos/Originate/git-town/pulls?base=main&head=Originate%3Afeature&state=open"
-		mergePullRequestURL := "https://api.github.com/repos/Originate/git-town/pulls/1/merge"
-		updatePullRequestBaseURL1 := "https://api.github.com/repos/Originate/git-town/pulls/2"
-		updatePullRequestBaseURL2 := "https://api.github.com/repos/Originate/git-town/pulls/3"
+		pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
+		childPullRequestsURL := pullRequestBaseURL + "?base=feature&state=open"
+		currentPullRequestURL := pullRequestBaseURL + "base=main&head=Originate%3Afeature&state=open"
+		mergePullRequestURL := pullRequestBaseURL + "/1/merge"
+		updatePullRequestBaseURL1 := pullRequestBaseURL + "/2"
+		updatePullRequestBaseURL2 := pullRequestBaseURL + "/3"
 		var options MergePullRequestOptions
 
 		BeforeEach(func() {
