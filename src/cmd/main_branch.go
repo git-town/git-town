@@ -9,7 +9,7 @@ import (
 
 var mainBranchCommand = &cobra.Command{
 	Use:   "main-branch [<branch>]",
-	Short: "Displays or sets your main branch",
+	Short: "Displays or sets your main development branch",
 	Long: `Displays or sets your main development branch
 
 The main branch is the Git branch from which new feature branches are cut.`,
