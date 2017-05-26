@@ -24,7 +24,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |                  | git stash              |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town hack --abort".
       To continue after you have resolved the conflicts, run "git-town hack --continue".

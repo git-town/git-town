@@ -47,7 +47,7 @@ end
 
 
 
-Then(/^I get the error$/) do |error_message|
+Then(/^I get the error:$/) do |error_message|
   @error_expected = true
   expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
   expect(@last_run_result.error).to be_truthy
@@ -66,7 +66,7 @@ end
 
 
 Then(/^I get the error "(.+?)"$/) do |error_message|
-  step 'I get the error', error_message
+  step 'I get the error:', error_message
 end
 
 

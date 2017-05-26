@@ -25,7 +25,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | production | git rebase origin/production |
       |            | git checkout qa              |
       | qa         | git rebase origin/qa         |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
