@@ -35,7 +35,7 @@ Feature: add a branch to the perennial branches configuration
   Scenario: not providing a branch name
     When I run `git-town perennial-branches --add`
     Then I get the error "Error: flag needs an argument: --add"
-    And I get the error
+    And I get the error:
       """
       Usage:
         git-town perennial-branches [flags]

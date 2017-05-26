@@ -23,7 +23,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git add -A           |
       |        | git stash            |
       |        | git rebase origin/qa |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".

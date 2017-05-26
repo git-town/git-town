@@ -23,7 +23,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And I get the error
+    And I get the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
