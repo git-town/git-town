@@ -52,7 +52,6 @@ This guide will help you get started and outline some things you should know whe
   which is checked into Git
 * update dependencies: `glide up`
 * adding a new Go library:
-  * update dependencies in a separate PR
   * `glide get <package name>`
   * your pull request for the feature that requires the new library
     should contain the updated glide files and vendor folder
