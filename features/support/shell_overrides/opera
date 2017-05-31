@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# A test mock for "open" (opens browsers on Linux)
+# A test mock for "opera"
 
 echo "opera called with: $@"

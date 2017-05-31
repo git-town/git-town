@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# A test mock for "open" (opens browsers on Linux)
+# A test mock for "x-www-browser" (opens browsers on Linux)
 
 echo "x-www-browser called with: $@"
