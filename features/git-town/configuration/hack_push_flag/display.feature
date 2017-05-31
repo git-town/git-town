@@ -9,7 +9,7 @@ Feature: passing an invalid option to the hack push flag configuration
     When I run `git-town hack-push-flag`
     Then I see
       """
-      true
+      false
       """
 
 
