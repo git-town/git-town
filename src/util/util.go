@@ -58,11 +58,21 @@ func GetFullCommandOutput(cmd ...string) (string, error) {
 	return strings.TrimSpace(string(output)), err
 }
 
-var openBrowserCommands = []string{"xdg-open", "open"}
+var openBrowserCommands = []string{
+	"xdg-open",
+	"open",
+	"cygstart",
+	"x-www-browser",
+	"firefox",
+	"opera",
+	"mozilla",
+	"netscape",
+}
 var missingOpenBrowserCommandMessages = []string{
-	"Opening a browser requires 'open' on Mac or 'xdg-open' on Linux.",
-	"If you would like another command to be supported,",
+	"Cannot open a browser.",
+	"If you think this is a bug,",
 	"please open an issue at https://github.com/Originate/git-town/issues",
+	"and mention your OS and browser.",
 }
 
 // GetOpenBrowserCommand returns the command to run on the console

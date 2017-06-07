@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# A test mock for "mozilla"
+
+echo "mozilla called with: $@"
