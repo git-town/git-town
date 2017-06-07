@@ -21,7 +21,7 @@ If the user aborts then `step.CreateAbortStep()` is called and the undo steps ar
 If the user resolves the issue and continues then `step.CreateContinueStep()` is called
 and we resume executing steps.
 
-`git town-sync` also allows the user to skip the current branch,
+`git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
 
 
