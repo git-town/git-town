@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# A test mock for "cygstart" (opens browsers on Linux)
+
+echo "cygstart called with: $@"

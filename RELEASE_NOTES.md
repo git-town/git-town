@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 4.1.0 (2017-06-01)
+
+#### New Features
+* `git new-pull-request`, `git repo`: support more commands to open browsers (`cygstart`, `x-www-browser`, `firefox`, `opera`, `mozilla`, `netscape`)
+* Add longer descriptions for commands which appear when running `git town help <command>` or `git town <command> --help`
+
+#### Changes
+* make `hack-push-flag` false by default (previously was true)
+([#929](https://github.com/Originate/git-town/issues/929))
+
+#### Bug Fixes
+* replace all non-alpha numeric characters in temporary filename ([#925](https://github.com/Originate/git-town/issues/925))
+* fix spacing in parent branch prompts
+* enforce a minimum Git version of 2.7.0
+
 ## 4.0.1 (2017-05-21)
 
 #### Bug Fixes

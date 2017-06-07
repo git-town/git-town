@@ -67,6 +67,7 @@ Each command can be [aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Alia
 git config --global alias.hack 'town hack'
 ```
 
+Now you can run `git hack` instead of `git town hack`.
 As a convenience, you can add or remove global aliases for all `git-town` commands with:
 ```
 git town alias <true | false>
