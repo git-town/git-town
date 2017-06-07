@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 4.1.1 (2017-06-07)
+
+#### Bug Fixes
+* temporary file: make parent directories if needed  ([#955 comment](https://github.com/Originate/git-town/issues/955#issuecomment-306041043))
+
 ## 4.1.0 (2017-06-01)
 
 #### New Features
