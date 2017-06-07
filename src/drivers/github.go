@@ -16,7 +16,9 @@ import (
 
 // GithubCodeHostingDriver provides tools for working with repositories
 // hosted on Github
-type GithubCodeHostingDriver struct{}
+type GithubCodeHostingDriver struct {
+	client *github.Client
+}
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Github
@@ -35,47 +37,59 @@ func (driver GithubCodeHostingDriver) GetRepositoryURL(repository string) string
 
 // MergePullRequest merges the pull request through the Github API
 func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
-	)
-	tc := oauth2.NewClient(context.Background(), ts)
-	client := github.NewClient(tc)
-	err := driver.updatePullRequestsAgainst(client, options)
+	driver.connect()
+	err := driver.updatePullRequestsAgainst(options)
 	if err != nil {
 		return err
 	}
-	return driver.mergePullRequest(client, options)
+	return driver.mergePullRequest(options)
 }
 
 // Helper
 
-func (driver GithubCodeHostingDriver) mergePullRequest(client *github.Client, options MergePullRequestOptions) error {
-	pullRequests, _, err := client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
+func (driver *GithubCodeHostingDriver) connect() {
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+	)
+	tc := oauth2.NewClient(context.Background(), ts)
+	driver.client = github.NewClient(tc)
+}
+
+func (driver *GithubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
+	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
 		Base:  options.ParentBranch,
 		Head:  options.Owner + ":" + options.Branch,
 		State: "open",
 	})
 	if err != nil {
-		return err
+		return -1, err
 	}
 	if len(pullRequests) == 0 {
-		return errors.New("No pull request found")
+		return -1, errors.New("No pull request found")
 	}
 	if len(pullRequests) > 1 {
 		pullRequestNumbers := make([]string, len(pullRequests))
 		for i, pullRequest := range pullRequests {
 			pullRequestNumbers[i] = strconv.Itoa(*pullRequest.Number)
 		}
-		return fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbers, ", "))
+		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbers, ", "))
 	}
-	_, _, err = client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, *pullRequests[0].Number, options.CommitMessage, &github.PullRequestOptions{
+	return *pullRequests[0].Number, nil
+}
+
+func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) error {
+	pullRequestNumber, err := driver.getPullRequestNumber(options)
+	if err != nil {
+		return err
+	}
+	_, _, err = driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, options.CommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 	})
 	return err
 }
 
-func (driver GithubCodeHostingDriver) updatePullRequestsAgainst(client *github.Client, options MergePullRequestOptions) error {
-	pullRequests, _, err := client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
+func (driver *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
+	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
 		Base:  options.Branch,
 		State: "open",
 	})
@@ -83,7 +97,7 @@ func (driver GithubCodeHostingDriver) updatePullRequestsAgainst(client *github.C
 		return err
 	}
 	for _, pullRequest := range pullRequests {
-		_, _, err = client.PullRequests.Edit(context.Background(), options.Owner, options.Repository, *pullRequest.Number, &github.PullRequest{
+		_, _, err = driver.client.PullRequests.Edit(context.Background(), options.Owner, options.Repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{
 				Ref: &options.ParentBranch,
 			},
