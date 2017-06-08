@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 4.1.2 (2017-06-08)
+
+#### Bug Fixes
+* temporary file: use operating system temporary directory instead of hardcoding `/tmp`
+
 ## 4.1.1 (2017-06-07)
 
 #### Bug Fixes
