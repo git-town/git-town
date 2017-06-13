@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"os"
-	"path"
 	"reflect"
 )
 
@@ -20,10 +18,6 @@ func saveState(runState *RunState) {
 		log.Fatal(err)
 	}
 	filename := getRunResultFilename(runState.Command)
-	err = os.MkdirAll(path.Dir(filename), 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
 	err = ioutil.WriteFile(filename, content, 0644)
 	if err != nil {
 		log.Fatal(err)
