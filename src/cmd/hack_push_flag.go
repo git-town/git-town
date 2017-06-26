@@ -14,7 +14,7 @@ var hackPushFlagCommand = &cobra.Command{
 
 Newly hacked branches will be pushed upon creation
 if and only if "hack-push-flag" is true.
-The default value is true.`,
+The default value is false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		if len(args) == 0 {
