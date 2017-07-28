@@ -3,6 +3,7 @@ package drivers
 import (
 	"fmt"
 	"net/url"
+	"strings"
 )
 
 // GitlabCodeHostingDriver provides tools for working with repositories
@@ -21,4 +22,9 @@ func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, br
 // GetRepositoryURL returns the URL of the given repository on Gitlab
 func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://gitlab.com/" + repository
+}
+
+// isGitlab returns whether the given hostname is a Gitlab server
+func isGitlab(hostname string) bool {
+	return hostname == "gitlab.com" || strings.Contains(hostname, "gitlab")
 }

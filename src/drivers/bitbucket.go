@@ -26,3 +26,8 @@ func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string,
 func (driver BitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://bitbucket.org/" + repository
 }
+
+// isBitbucket returns whether the given host is a BitBucket server
+func isBitbucket(hostname string) bool {
+	return hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket")
+}

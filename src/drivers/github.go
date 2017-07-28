@@ -2,6 +2,7 @@ package drivers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Originate/git-town/src/git"
 )
@@ -23,4 +24,9 @@ func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, br
 // GetRepositoryURL returns the URL of the given repository on github.com
 func (driver GithubCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://github.com/" + repository
+}
+
+// isGithub returns whether the given host is a Github server
+func isGithub(hostname string) bool {
+	return hostname == "github.com" || strings.Contains(hostname, "github")
 }
