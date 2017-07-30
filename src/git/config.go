@@ -195,7 +195,7 @@ func IsMainBranch(branchName string) bool {
 
 // IsOffline returns whether Git Town is currently in offline mode
 func IsOffline() bool {
-	return util.StringToBool(getGlobalConfigurationValueWithDefault("git-town.offline", "false"))
+	return util.StringToBool(getConfigurationValueWithDefault("git-town.offline", "false"))
 }
 
 // IsPerennialBranch returns whether the branch with the given name is
@@ -262,7 +262,16 @@ func UpdateShouldHackPush(value bool) {
 
 // Helpers
 
+// getConfigurationValue returns the given configuration value,
+// from either global or local Git configuration
 func getConfigurationValue(key string) (result string) {
+	result, _ = util.GetFullCommandOutput("git", "config", key)
+	return
+}
+
+// getLocalConfigurationValue returns the given configuration value
+// only from the local Git configuration
+func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
 		result = util.GetCommandOutput("git", "config", key)
 	}
@@ -289,14 +298,6 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 		}
 	}
 	return
-}
-
-func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := GetGlobalConfigurationValue(key)
-	if value == "" {
-		value = defaultValue
-	}
-	return value
 }
 
 func hasConfigurationValue(location, key string) bool {
