@@ -62,7 +62,7 @@ func EnsureIsFeatureBranch(branchName, errorSuffix string) {
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func GetAncestorBranches(branchName string) []string {
-	value := getConfigurationValue("git-town-branch." + branchName + ".ancestors")
+	value := getLocalConfigurationValue("git-town-branch." + branchName + ".ancestors")
 	if value == "" {
 		return []string{}
 	}
@@ -73,7 +73,7 @@ func GetAncestorBranches(branchName string) []string {
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := getConfigurationValue(key)
+		parent := getLocalConfigurationValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -92,17 +92,17 @@ func GetGlobalConfigurationValue(key string) (result string) {
 
 // GetMainBranch returns the name of the main branch.
 func GetMainBranch() string {
-	return getConfigurationValue("git-town.main-branch-name")
+	return getLocalConfigurationValue("git-town.main-branch-name")
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
 func GetParentBranch(branchName string) string {
-	return getConfigurationValue("git-town-branch." + branchName + ".parent")
+	return getLocalConfigurationValue("git-town-branch." + branchName + ".parent")
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
 func GetPerennialBranches() []string {
-	result := getConfigurationValue("git-town.perennial-branch-names")
+	result := getLocalConfigurationValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -118,7 +118,7 @@ func GetPullBranchStrategy() string {
 // In tests this value can be stubbed.
 func GetRemoteOriginURL() string {
 	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := getConfigurationValue("git-town.testing.remote-url")
+		mockRemoteURL := getLocalConfigurationValue("git-town.testing.remote-url")
 		if mockRemoteURL != "" {
 			return mockRemoteURL
 		}
@@ -279,7 +279,7 @@ func getLocalConfigurationValue(key string) (result string) {
 }
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := getConfigurationValue(key)
+	value := getLocalConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}
