@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -38,6 +41,12 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func checkPruneBranchesPreconditions() {
+	if git.IsOffline() {
+		fmt.Println(`Error: cannot prune branches in offline mode
+
+Pruning branches requires an active internet connection.`)
+		os.Exit(1)
+	}
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
