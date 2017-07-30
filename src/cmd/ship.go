@@ -70,7 +70,7 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	if result.TargetBranch == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	if result.TargetBranch != result.InitialBranch {
@@ -95,6 +95,7 @@ func ensureParentBranchIsMainBranch(branchName string) {
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
+	var isOffline = git.IsOffline()
 	mainBranch := git.GetMainBranch()
 	areInitialAndTargetDifferent := config.TargetBranch != config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
@@ -104,11 +105,11 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.TargetBranch})
 	result.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
 	result.Append(steps.SquashMergeBranchStep{BranchName: config.TargetBranch, CommitMessage: commitMessage})
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !isOffline {
 		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.TargetBranch)
-	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 {
+	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 && !isOffline {
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 	}
 	result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch})
