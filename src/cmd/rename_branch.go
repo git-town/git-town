@@ -82,7 +82,9 @@ func checkRenameBranchPreconditions(args []string) (result renameBranchConfig) {
 	if result.OldBranchName == result.NewBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
-	script.Fetch()
+	if !git.IsOffline() {
+		script.Fetch()
+	}
 	git.EnsureHasBranch(result.OldBranchName)
 	git.EnsureBranchInSync(result.OldBranchName, "Please sync the branches before renaming.")
 	git.EnsureDoesNotHaveBranch(result.NewBranchName)
@@ -105,7 +107,7 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
 	}
 	result.Append(steps.DeleteAncestorBranchesStep{})
-	if git.HasTrackingBranch(config.OldBranchName) {
+	if git.HasTrackingBranch(config.OldBranchName) && !git.IsOffline() {
 		result.Append(steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
 	}
