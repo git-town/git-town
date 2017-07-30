@@ -262,11 +262,15 @@ func UpdateShouldHackPush(value bool) {
 
 // Helpers
 
+// getConfigurationValue returns the given configuration value,
+// from either global or local Git configuration
 func getConfigurationValue(key string) (result string) {
 	result, _ = util.GetFullCommandOutput("git", "config", key)
 	return
 }
 
+// getLocalConfigurationValue returns the given configuration value
+// only from the local Git configuration
 func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
 		result = util.GetCommandOutput("git", "config", key)
