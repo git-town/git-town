@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
@@ -22,6 +25,11 @@ Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
+		if git.IsOffline() {
+			fmt.Println("Error: cannot display the repository homepage in offline mode")
+			os.Exit(1)
+		}
+
 		prompt.EnsureIsConfigured()
 		driver := drivers.GetCodeHostingDriver()
 		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
