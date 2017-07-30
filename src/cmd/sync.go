@@ -62,7 +62,7 @@ the main branch is synced with its upstream counterpart.`,
 }
 
 func checkSyncPreconditions() (result syncConfig) {
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
@@ -86,7 +86,7 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.HasRemote("origin") && config.ShouldPushTags {
+	if git.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
 		result.Append(steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
