@@ -61,7 +61,7 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 func checkPrependPreconditions(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
@@ -79,7 +79,7 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	result.Append(steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
 	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.ShouldHackPush() {
+	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
 		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
