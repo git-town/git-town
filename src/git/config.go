@@ -82,7 +82,7 @@ func GetChildBranches(branchName string) (result []string) {
 	return
 }
 
-// GetGlobalConfigurationValue returns the global git configuration value for the given key
+// GetGlobalConfigurationValue returns the global Git configuration value for the given key
 func GetGlobalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("global", key) {
 		result = util.GetCommandOutput("git", "config", "--global", key)
