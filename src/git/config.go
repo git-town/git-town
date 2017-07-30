@@ -300,14 +300,6 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 	return
 }
 
-func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := GetGlobalConfigurationValue(key)
-	if value == "" {
-		value = defaultValue
-	}
-	return value
-}
-
 func hasConfigurationValue(location, key string) bool {
 	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--" + location, "--name"}, key)
 }
