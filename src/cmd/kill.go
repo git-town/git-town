@@ -60,7 +60,7 @@ func checkKillPreconditions(args []string) (result killConfig) {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 
@@ -74,7 +74,7 @@ func checkKillPreconditions(args []string) (result killConfig) {
 func getKillStepList(config killConfig) (result steps.StepList) {
 	if config.IsTargetBranchLocal {
 		targetBranchParent := git.GetParentBranch(config.TargetBranch)
-		if git.HasTrackingBranch(config.TargetBranch) {
+		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
 			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
@@ -90,7 +90,9 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
 		result.Append(steps.DeleteAncestorBranchesStep{})
 	} else {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
+		if !git.IsOffline() {
+			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
+		}
 	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
