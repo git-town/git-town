@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type hackConfig struct {
+	TargetBranch string
+}
+
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
 	Short: "Creates a new feature branch off the main development branch",
@@ -37,8 +41,8 @@ $ git town hack-push-flag false`,
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				targetBranchName := checkHackPreconditions(args)
-				return getHackStepList(targetBranchName)
+				config := getHackConfig(args)
+				return getHackStepList(config)
 			},
 		})
 	},
@@ -50,21 +54,21 @@ $ git town hack-push-flag false`,
 	},
 }
 
-func checkHackPreconditions(args []string) string {
-	targetBranchName := args[0]
+func getHackConfig(args []string) (result hackConfig) {
+	result.TargetBranch = args[0]
 	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
-	git.EnsureDoesNotHaveBranch(targetBranchName)
-	return targetBranchName
+	git.EnsureDoesNotHaveBranch(result.TargetBranch)
+	return
 }
 
-func getHackStepList(targetBranchName string) (result steps.StepList) {
+func getHackStepList(config hackConfig) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
 	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
-	result.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
+	result.Append(steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: mainBranchName})
 	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
+		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

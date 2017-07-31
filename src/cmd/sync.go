@@ -52,7 +52,7 @@ the main branch is synced with its upstream counterpart.`,
 				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
 			},
 			StepListGenerator: func() steps.StepList {
-				return getSyncStepList(checkSyncPreconditions())
+				return getSyncStepList(getSyncConfig())
 			},
 		})
 	},
@@ -61,7 +61,7 @@ the main branch is synced with its upstream counterpart.`,
 	},
 }
 
-func checkSyncPreconditions() (result syncConfig) {
+func getSyncConfig() (result syncConfig) {
 	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}

@@ -54,7 +54,7 @@ When run on a perennial branch
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkRenameBranchPreconditions(args)
+				config := getRenameBranchConfig(args)
 				return getRenameBranchStepList(config)
 			},
 		})
@@ -67,7 +67,7 @@ When run on a perennial branch
 	},
 }
 
-func checkRenameBranchPreconditions(args []string) (result renameBranchConfig) {
+func getRenameBranchConfig(args []string) (result renameBranchConfig) {
 	if len(args) == 1 {
 		result.OldBranchName = git.GetCurrentBranchName()
 		result.NewBranchName = args[0]

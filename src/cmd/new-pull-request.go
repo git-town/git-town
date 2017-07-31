@@ -47,7 +47,7 @@ Example: your SSH identity should be something like
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkNewPullRequestPreconditions()
+				config := getNewPullRequestConfig()
 				return getNewPullRequestStepList(config)
 			},
 		})
@@ -57,7 +57,7 @@ Example: your SSH identity should be something like
 	},
 }
 
-func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
+func getNewPullRequestConfig() (result newPullRequestConfig) {
 	if git.IsOffline() {
 		fmt.Println("Error: cannot ship in offline mode.")
 		os.Exit(1)

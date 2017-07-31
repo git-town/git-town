@@ -45,7 +45,7 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkPrependPreconditions(args)
+				config := getPrependConfig(args)
 				return getPrependStepList(config)
 			},
 		})
@@ -58,7 +58,7 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 	},
 }
 
-func checkPrependPreconditions(args []string) (result prependConfig) {
+func getPrependConfig(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
 	if git.HasRemote("origin") && !git.IsOffline() {
