@@ -95,7 +95,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
-	targetBranch := git.GetMainBranch()
+	targetBranch := git.GetParentBranch(config.BranchToShip)
 	areInitialAndBranchToShipDifferent := config.BranchToShip != config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(targetBranch))
 	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
