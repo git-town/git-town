@@ -13,9 +13,9 @@ import (
 )
 
 type shipConfig struct {
+	BranchToShip        string
 	InitialBranch       string
 	IsTargetBranchLocal bool
-	BranchToShip        string
 }
 
 var commitMessage string
