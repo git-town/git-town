@@ -17,19 +17,19 @@ Feature: git town-ship: shipping hotfixes
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                           |
-      | hotfix | git fetch --prune                 |
-      |        | git checkout production           |
-      | main   | git rebase origin/production      |
-      |        | git checkout hotfix               |
-      | hotfix | git merge --no-edit origin/hotfix |
-      |        | git merge --no-edit production    |
-      |        | git checkout production           |
-      | main   | git merge --squash hotfix         |
-      |        | git commit -m "hotfix done"       |
-      |        | git push                          |
-      |        | git push origin :hotfix           |
-      |        | git branch -D hotfix              |
+      | BRANCH     | COMMAND                           |
+      | hotfix     | git fetch --prune                 |
+      |            | git checkout production           |
+      | production | git rebase origin/production      |
+      |            | git checkout hotfix               |
+      | hotfix     | git merge --no-edit origin/hotfix |
+      |            | git merge --no-edit production    |
+      |            | git checkout production           |
+      | production | git merge --squash hotfix         |
+      |            | git commit -m "hotfix done"       |
+      |            | git push                          |
+      |            | git push origin :hotfix           |
+      |            | git branch -D hotfix              |
     And I end up on the "production" branch
     And there are no more feature branches
     And I have the following commits
