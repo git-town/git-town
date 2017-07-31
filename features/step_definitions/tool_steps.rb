@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given(/^I have "(.+?)" installed$/) do |tool|
   @tool = tool
   update_installed_tools [tool]
