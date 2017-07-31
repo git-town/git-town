@@ -9,8 +9,8 @@ Feature: git town-ship: offline mode
     Given Git Town is in offline mode
     And I have a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION         | MESSAGE        |
-      | feature | local and remote | feature commit |
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME           | FILE CONTENT    |
+      | feature | local and remote | feature commit | parent_feature_file | feature content |
     And I am on the "feature" branch
     When I run `git-town ship -m "feature done"`
 
@@ -29,9 +29,9 @@ Feature: git town-ship: offline mode
       |         | git branch -D feature              |
     And I end up on the "main" branch
     And I have the following commits
-      | BRANCH  | LOCATION | MESSAGE        |
-      | main    | local    | feature done   |
-      | feature | remote   | feature commit |
+      | BRANCH  | LOCATION | MESSAGE        | FILE NAME           | FILE CONTENT    |
+      | main    | local    | feature done   | parent_feature_file | feature content |
+      | feature | remote   | feature commit | parent_feature_file | feature content |
 
 
   Scenario: undo
@@ -42,13 +42,12 @@ Feature: git town-ship: offline mode
       |         | git revert <%= sha 'feature done' %>           |
       |         | git checkout feature                           |
       | feature | git checkout main                              |
-      | main    | git checkout feature                           |
+      | main    | git reset --hard <%= sha 'Initial commit' %>   |
+      |         | git checkout feature                           |
     And I end up on the "feature" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE               |
-      | main    | local            | feature done          |
-      |         |                  | Revert "feature done" |
-      | feature | local and remote | feature commit        |
+      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME           |
+      | feature | local and remote | feature commit | parent_feature_file |
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
