@@ -106,7 +106,7 @@ end
 
 # Returns the names of the existing perennial branches
 def perennial_branches
-  array_output_of "git-town perennial-branches"
+  array_output_of 'git-town perennial-branches'
 end
 
 
