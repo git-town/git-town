@@ -13,9 +13,8 @@ import (
 )
 
 type shipConfig struct {
-	InitialBranch       string
-	IsTargetBranchLocal bool
-	TargetBranch        string
+	BranchToShip  string
+	InitialBranch string
 }
 
 var commitMessage string
@@ -63,22 +62,22 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 func checkShipPreconditions(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
-		result.TargetBranch = result.InitialBranch
+		result.BranchToShip = result.InitialBranch
 	} else {
-		result.TargetBranch = args[0]
+		result.BranchToShip = args[0]
 	}
-	if result.TargetBranch == result.InitialBranch {
+	if result.BranchToShip == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
-	if result.TargetBranch != result.InitialBranch {
-		git.EnsureHasBranch(result.TargetBranch)
+	if result.BranchToShip != result.InitialBranch {
+		git.EnsureHasBranch(result.BranchToShip)
 	}
-	git.EnsureIsFeatureBranch(result.TargetBranch, "Only feature branches can be shipped.")
-	prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
-	ensureParentBranchIsMainOrPerennialBranch(result.TargetBranch)
+	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
+	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
+	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
 }
 
@@ -97,23 +96,23 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
 	mainBranch := git.GetMainBranch()
-	areInitialAndTargetDifferent := config.TargetBranch != config.InitialBranch
+	areInitialAndTargetDifferent := config.BranchToShip != config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
 	result.Append(steps.MergeTrackingBranchStep{})
 	result.Append(steps.MergeBranchStep{BranchName: mainBranch})
-	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.TargetBranch})
+	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
-	result.Append(steps.SquashMergeBranchStep{BranchName: config.TargetBranch, CommitMessage: commitMessage})
+	result.Append(steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	if git.HasRemote("origin") {
 		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
 	}
-	childBranches := git.GetChildBranches(config.TargetBranch)
-	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
+	childBranches := git.GetChildBranches(config.BranchToShip)
+	if git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 {
+		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
-	result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch})
-	result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
+	result.Append(steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
+	result.Append(steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
 	for _, child := range childBranches {
 		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
 	}
