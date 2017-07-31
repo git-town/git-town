@@ -104,6 +104,12 @@ def on_branch branch_name
 end
 
 
+# Returns the names of the existing perennial branches
+def perennial_branches
+  array_output_of "git-town perennial-branches"
+end
+
+
 def set_parent_branch branch:, parent:, ancestors: nil
   run "git config git-town-branch.#{branch}.parent #{parent}"
   run "git config git-town-branch.#{branch}.ancestors #{ancestors}" if ancestors
