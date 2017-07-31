@@ -4,9 +4,11 @@ Given(/^Git Town is in offline mode$/) do
   set_global_configuration 'offline', true
 end
 
+
 Given(/^Git Town is not in offline mode$/) do
   set_global_configuration 'offline', false
 end
+
 
 Given(/^I don't have a main branch name configured$/) do
   delete_main_branch_configuration
