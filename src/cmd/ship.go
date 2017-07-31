@@ -78,17 +78,18 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	}
 	git.EnsureIsFeatureBranch(result.TargetBranch, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
-	ensureParentBranchIsMainBranch(result.TargetBranch)
+	ensureParentBranchIsMainOrPerennialBranch(result.TargetBranch)
 	return
 }
 
-func ensureParentBranchIsMainBranch(branchName string) {
-	if git.GetParentBranch(branchName) != git.GetMainBranch() {
+func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
+	parentBranch := git.GetParentBranch(branchName)
+	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
 		ancestors := git.GetAncestorBranches(branchName)
-		ancestorsWithoutMain := ancestors[1:]
-		oldestAncestor := ancestorsWithoutMain[0]
+		ancestorsWithoutMainOrPerennial := ancestors[1:]
+		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(
-			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMain, ", ")+" as well.",
+			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
 	}
