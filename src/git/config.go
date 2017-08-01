@@ -269,6 +269,14 @@ func getConfigurationValue(key string) (result string) {
 	return
 }
 
+func getConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 // getLocalConfigurationValue returns the given configuration value
 // only from the local Git configuration
 func getLocalConfigurationValue(key string) (result string) {
@@ -276,14 +284,6 @@ func getLocalConfigurationValue(key string) (result string) {
 		result = util.GetCommandOutput("git", "config", "--local", key)
 	}
 	return
-}
-
-func getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := getConfigurationValue(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
 }
 
 func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
