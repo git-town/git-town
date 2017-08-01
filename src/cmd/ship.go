@@ -108,8 +108,8 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	if git.HasRemote("origin") && !isOffline {
 		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
 	}
-	childBranches := git.GetChildBranches(config.TargetBranch)
-	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 && !isOffline {
+	childBranches := git.GetChildBranches(config.BranchToShip)
+	if git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline {
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
