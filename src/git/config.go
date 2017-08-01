@@ -111,7 +111,7 @@ func GetPerennialBranches() []string {
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.
 func GetPullBranchStrategy() string {
-	return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
+	return getLocalConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
 }
 
 // GetRemoteOriginURL returns the URL for the "origin" remote.
@@ -246,7 +246,7 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
-	return getConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
+	return getLocalConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
@@ -273,13 +273,21 @@ func getConfigurationValue(key string) (result string) {
 // only from the local Git configuration
 func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
-		result = util.GetCommandOutput("git", "config", key)
+		result = util.GetCommandOutput("git", "config", "--local", key)
 	}
 	return
 }
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
 	value := getConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
+func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getLocalConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}
