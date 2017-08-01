@@ -62,7 +62,7 @@ func EnsureIsFeatureBranch(branchName, errorSuffix string) {
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func GetAncestorBranches(branchName string) []string {
-	value := getConfigurationValue("git-town-branch." + branchName + ".ancestors")
+	value := getLocalConfigurationValue("git-town-branch." + branchName + ".ancestors")
 	if value == "" {
 		return []string{}
 	}
@@ -73,7 +73,7 @@ func GetAncestorBranches(branchName string) []string {
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := getConfigurationValue(key)
+		parent := getLocalConfigurationValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -92,17 +92,17 @@ func GetGlobalConfigurationValue(key string) (result string) {
 
 // GetMainBranch returns the name of the main branch.
 func GetMainBranch() string {
-	return getConfigurationValue("git-town.main-branch-name")
+	return getLocalConfigurationValue("git-town.main-branch-name")
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
 func GetParentBranch(branchName string) string {
-	return getConfigurationValue("git-town-branch." + branchName + ".parent")
+	return getLocalConfigurationValue("git-town-branch." + branchName + ".parent")
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
 func GetPerennialBranches() []string {
-	result := getConfigurationValue("git-town.perennial-branch-names")
+	result := getLocalConfigurationValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -111,14 +111,14 @@ func GetPerennialBranches() []string {
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.
 func GetPullBranchStrategy() string {
-	return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
+	return getLocalConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
 }
 
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func GetRemoteOriginURL() string {
 	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := getConfigurationValue("git-town.testing.remote-url")
+		mockRemoteURL := getLocalConfigurationValue("git-town.testing.remote-url")
 		if mockRemoteURL != "" {
 			return mockRemoteURL
 		}
@@ -241,7 +241,7 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
-	return getConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
+	return getLocalConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
 }
 
 // UpdateShouldHackPush updates whether the current repository is configured to push
@@ -252,15 +252,15 @@ func UpdateShouldHackPush(value bool) {
 
 // Helpers
 
-func getConfigurationValue(key string) (result string) {
+func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
-		result = util.GetCommandOutput("git", "config", key)
+		result = util.GetCommandOutput("git", "config", "--local", key)
 	}
 	return
 }
 
-func getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := getConfigurationValue(key)
+func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getLocalConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}
