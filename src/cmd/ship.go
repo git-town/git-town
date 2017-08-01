@@ -13,8 +13,14 @@ import (
 )
 
 type shipConfig struct {
+<<<<<<< HEAD
 	BranchToShip  string
 	InitialBranch string
+=======
+	BranchToShip        string
+	InitialBranch       string
+	IsTargetBranchLocal bool
+>>>>>>> master
 }
 
 var commitMessage string
@@ -95,7 +101,7 @@ func ensureParentBranchIsMainBranch(branchName string) {
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
 	mainBranch := git.GetMainBranch()
-	areInitialAndBranchToShipDifferent := config.BranchToShip != config.InitialBranch
+	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
 	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
 	result.Append(steps.MergeTrackingBranchStep{})
@@ -116,10 +122,10 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
 	}
 	result.Append(steps.DeleteAncestorBranchesStep{})
-	if areInitialAndBranchToShipDifferent {
+	if !isShippingInitialBranch {
 		result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: areInitialAndBranchToShipDifferent})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
 	return
 }
 
