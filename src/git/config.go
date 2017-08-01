@@ -254,7 +254,7 @@ func UpdateShouldHackPush(value bool) {
 
 func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
-		result = util.GetCommandOutput("git", "config", key)
+		result = util.GetCommandOutput("git", "config", "--local", key)
 	}
 	return
 }
