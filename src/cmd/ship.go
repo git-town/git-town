@@ -13,14 +13,8 @@ import (
 )
 
 type shipConfig struct {
-<<<<<<< HEAD
 	BranchToShip  string
 	InitialBranch string
-=======
-	BranchToShip        string
-	InitialBranch       string
-	IsTargetBranchLocal bool
->>>>>>> master
 }
 
 var commitMessage string
