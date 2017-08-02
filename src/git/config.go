@@ -254,11 +254,6 @@ func UpdateOffline(value bool) {
 	setGlobalConfigurationValue("git-town.offline", strconv.FormatBool(value))
 }
 
-// UpdateOffline updates whether Git Town is in offline mode
-func UpdateOffline(value bool) {
-	setGlobalConfigurationValue("git-town.offline", strconv.FormatBool(value))
-}
-
 // UpdateShouldHackPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func UpdateShouldHackPush(value bool) {
