@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,7 @@ The default value is false.`,
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
-			setHackPushFlag(stringToBool(args[0]))
+			setHackPushFlag(util.StringToBool(args[0]))
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
