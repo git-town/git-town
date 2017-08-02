@@ -38,3 +38,8 @@ func GetPrintableBranchTree(branchName string) (result string) {
 	}
 	return
 }
+
+// GetPrintableOfflineFlag returns a user printable offline flag
+func GetPrintableOfflineFlag() string {
+	return strconv.FormatBool(IsOffline())
+}
