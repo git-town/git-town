@@ -12,7 +12,6 @@ var offlineCommand = &cobra.Command{
 	Use:   "offline [(true | false)]",
 	Short: "Displays or sets offline mode",
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printOfflineFlag()
 		} else {
