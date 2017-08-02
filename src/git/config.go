@@ -193,6 +193,11 @@ func IsMainBranch(branchName string) bool {
 	return branchName == GetMainBranch()
 }
 
+// IsOffline returns whether Git Town is currently in offline mode
+func IsOffline() bool {
+	return util.StringToBool(getConfigurationValueWithDefault("git-town.offline", "false"))
+}
+
 // IsPerennialBranch returns whether the branch with the given name is
 // a perennial branch.
 func IsPerennialBranch(branchName string) bool {
@@ -241,7 +246,12 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldHackPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldHackPush() bool {
-	return getLocalConfigurationValueWithDefault("git-town.hack-push-flag", "false") == "true"
+	return util.StringToBool(getLocalConfigurationValueWithDefault("git-town.hack-push-flag", "false"))
+}
+
+// UpdateOffline updates whether Git Town is in offline mode
+func UpdateOffline(value bool) {
+	setGlobalConfigurationValue("git-town.offline", strconv.FormatBool(value))
 }
 
 // UpdateShouldHackPush updates whether the current repository is configured to push
@@ -252,6 +262,23 @@ func UpdateShouldHackPush(value bool) {
 
 // Helpers
 
+// getConfigurationValue returns the given configuration value,
+// from either global or local Git configuration
+func getConfigurationValue(key string) (result string) {
+	result, _ = util.GetFullCommandOutput("git", "config", key)
+	return
+}
+
+func getConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
+// getLocalConfigurationValue returns the given configuration value
+// only from the local Git configuration
 func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
 		result = util.GetCommandOutput("git", "config", "--local", key)
@@ -287,6 +314,10 @@ func hasConfigurationValue(location, key string) bool {
 
 func setConfigurationValue(key, value string) {
 	util.GetCommandOutput("git", "config", key, value)
+}
+
+func setGlobalConfigurationValue(key, value string) {
+	util.GetCommandOutput("git", "config", "--global", key, value)
 }
 
 func removeConfigurationValue(key string) {

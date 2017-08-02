@@ -50,3 +50,8 @@ end
 def set_configuration configuration, value
   run "git config git-town.#{configuration} '#{value}'"
 end
+
+
+def set_global_configuration configuration, value
+  run "git config --global git-town.#{configuration} '#{value}'"
+end

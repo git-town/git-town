@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+Given(/^Git Town is in offline mode$/) do
+  set_global_configuration 'offline', true
+end
+
+
+Given(/^Git Town is not in offline mode$/) do
+  set_global_configuration 'offline', false
+end
+
+
 Given(/^I don't have a main branch name configured$/) do
   delete_main_branch_configuration
 end
@@ -72,4 +82,14 @@ end
 
 Then(/^I see the initial configuration prompt$/) do
   step %(I see "Git Town needs to be configured")
+end
+
+
+Then(/^offline mode is enabled$/) do
+  expect(get_configuration('offline')).to eql 'true'
+end
+
+
+Then(/^offline mode is disabled$/) do
+  expect(get_configuration('offline')).to eql 'false'
 end
