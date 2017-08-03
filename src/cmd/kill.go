@@ -89,10 +89,8 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 		}
 		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
 		result.Append(steps.DeleteAncestorBranchesStep{})
-	} else {
-		if !git.IsOffline() {
-			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
-		}
+	} else if !git.IsOffline() {
+		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
