@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Returns the array of the file names committed for the supplied sha
 def committed_files sha
   array_output_of "git diff-tree --no-commit-id --name-only -r #{sha}"
@@ -46,10 +47,10 @@ def create_commit commit_data
   location = Kappamaki.from_sentence commit_data.delete(:location)
 
   case location
-  when %w(local) then create_local_commit commit_data
-  when %w(remote) then create_remote_commit commit_data
-  when %w(local remote) then create_local_commit commit_data.merge(push: true)
-  when %w(upstream) then create_upstream_commit commit_data
+  when %w[local] then create_local_commit commit_data
+  when %w[remote] then create_remote_commit commit_data
+  when %w[local remote] then create_local_commit commit_data.merge(push: true)
+  when %w[upstream] then create_upstream_commit commit_data
   else fail "Unknown commit location: #{location}"
   end
 end
@@ -151,7 +152,7 @@ def sha commit_message
   cmd += ' (initial)' if commit_message == 'Initial commit'
   cmd += ": #{commit_message.strip}' --format='%H'"
   result = ''
-  %w(developer developer_secondary).each do |user|
+  %w[developer developer_secondary].each do |user|
     next unless result.empty?
     in_repository(user) { result = output_of cmd }
   end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Represents a sorted list of Git tags and their locations
 class TagList
 
@@ -27,7 +28,7 @@ class TagList
 
   # Returns this tag list as a Cucumber-compatible table
   def to_table
-    mortadella = Mortadella::Horizontal.new headers: %w(NAME LOCATION)
+    mortadella = Mortadella::Horizontal.new headers: %w[NAME LOCATION]
     @tags.keys.sort.each do |tag_name|
       mortadella << [tag_name, @tags[tag_name].to_sentence]
     end

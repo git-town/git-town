@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def commits_diff actual, expected
   out = ''
 
