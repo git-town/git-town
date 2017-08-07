@@ -52,7 +52,7 @@ $ git town hack-push-flag false`,
 
 func checkHackPreconditions(args []string) string {
 	targetBranchName := args[0]
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(targetBranchName)
@@ -63,7 +63,7 @@ func getHackStepList(targetBranchName string) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
 	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
 	result.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
-	if git.HasRemote("origin") && git.ShouldHackPush() {
+	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
 		result.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

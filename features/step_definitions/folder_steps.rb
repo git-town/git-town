@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Given(/^I have an existing Git autocompletion symlink$/) do
   symlinked_file = File.join(REPOSITORY_BASE, '.config/completions/custom')
   FileUtils.mkdir_p File.dirname(FISH_AUTOCOMPLETIONS_PATH)

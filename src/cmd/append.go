@@ -54,7 +54,7 @@ and brings over all uncommitted changes to the new feature branch.`,
 func checkAppendPreconditions(args []string) (result appendConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
@@ -69,7 +69,7 @@ func getAppendStepList(config appendConfig) (result steps.StepList) {
 	result.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
 	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
 	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.ShouldHackPush() {
+	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
 		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
