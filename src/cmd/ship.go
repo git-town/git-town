@@ -77,24 +77,25 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	}
 	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
-	ensureParentBranchIsMainBranch(result.BranchToShip)
+	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
 }
 
-func ensureParentBranchIsMainBranch(branchName string) {
-	if git.GetParentBranch(branchName) != git.GetMainBranch() {
+func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
+	parentBranch := git.GetParentBranch(branchName)
+	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
 		ancestors := git.GetAncestorBranches(branchName)
-		ancestorsWithoutMain := ancestors[1:]
-		oldestAncestor := ancestorsWithoutMain[0]
+		ancestorsWithoutMainOrPerennial := ancestors[1:]
+		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(
-			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMain, ", ")+" as well.",
+			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
 	}
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
-	branchToMergeInto := git.GetMainBranch()
+	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
 	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
