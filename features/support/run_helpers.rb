@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def array_output_of command, ignore_errors: false
   output_of(command, ignore_errors: ignore_errors).split("\n").map(&:strip)
 end
@@ -16,7 +17,7 @@ COMMAND_REGEX = /
 
 # Returns an array of the commands that were run in the last invocation of "run"
 def commands_of_last_run with_branch: true
-  options = with_branch ? { headers: %w(BRANCH COMMAND), dry: 'BRANCH' } : { headers: %w(COMMAND) }
+  options = with_branch ? { headers: %w[BRANCH COMMAND], dry: 'BRANCH' } : { headers: %w[COMMAND] }
   result = Mortadella::Horizontal.new options
   @last_run_result.out.split("\n").each do |line|
     match = line.match COMMAND_REGEX

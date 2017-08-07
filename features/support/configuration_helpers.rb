@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def configure_git user
   run "git config user.name #{user}"
   run "git config user.email #{user}@example.com"
