@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -91,6 +94,9 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 		result.Append(steps.DeleteAncestorBranchesStep{})
 	} else if !git.IsOffline() {
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
+	} else {
+		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
+		os.Exit(1)
 	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
