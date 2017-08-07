@@ -121,7 +121,12 @@ end
 
 
 Then(/^there are no more feature branches$/) do
-  expect(existing_branches).to match_array ['main', 'origin/main']
+  expected_branches = ['main', 'origin/main']
+  perennial_branches.each do |perennial_branch|
+    expected_branches << perennial_branch
+    expected_branches << "origin/#{perennial_branch}"
+  end
+  expect(existing_branches).to match_array expected_branches
 end
 
 
