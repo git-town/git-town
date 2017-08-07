@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # These steps are for debugging purposes only.
 # Please keep them around.
 
