@@ -65,6 +65,11 @@ Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main
 end
 
 
+Given(/^my repository knows about the remote branch$/) do
+  run "git fetch"
+end
+
+
 Given(/the "(.+?)" branch gets deleted on the remote/) do |branch_name|
   in_repository :coworker do
     run "git push origin :#{branch_name}"
