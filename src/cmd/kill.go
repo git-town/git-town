@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -60,7 +63,7 @@ func checkKillPreconditions(args []string) (result killConfig) {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 
@@ -74,7 +77,7 @@ func checkKillPreconditions(args []string) (result killConfig) {
 func getKillStepList(config killConfig) (result steps.StepList) {
 	if config.IsTargetBranchLocal {
 		targetBranchParent := git.GetParentBranch(config.TargetBranch)
-		if git.HasTrackingBranch(config.TargetBranch) {
+		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
 			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
@@ -89,8 +92,11 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 		}
 		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
 		result.Append(steps.DeleteAncestorBranchesStep{})
-	} else {
+	} else if !git.IsOffline() {
 		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
+	} else {
+		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
+		os.Exit(1)
 	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
