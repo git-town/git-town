@@ -66,7 +66,7 @@ end
 
 
 Given(/^my repository knows about the remote branch$/) do
-  run "git fetch"
+  run 'git fetch'
 end
 
 
