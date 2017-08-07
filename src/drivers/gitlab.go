@@ -6,25 +6,26 @@ import (
 	"strings"
 )
 
-// GitlabCodeHostingDriver provides tools for working with repositories
-// on Gitlab.
-type GitlabCodeHostingDriver struct{}
+var gitlabCodeHostingDriver = &CodeHostingDriver{
 
-// GetNewPullRequestURL returns the URL of the page
-// to create a new pull request on Gitlab
-func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
-	query := url.Values{}
-	query.Add("merge_request[source_branch]", branch)
-	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("https://gitlab.com/%s/merge_requests/new?%s", repository, query.Encode())
+	CanBeUsed: func(hostname string) bool {
+		return hostname == "gitlab.com" || strings.Contains(hostname, "gitlab")
+	},
+
+	GetNewPullRequestURL: func(repository string, branch string, parentBranch string) string {
+		query := url.Values{}
+		query.Add("merge_request[source_branch]", branch)
+		query.Add("merge_request[target_branch]", parentBranch)
+		return fmt.Sprintf("https://gitlab.com/%s/merge_requests/new?%s", repository, query.Encode())
+	},
+
+	GetRepositoryURL: func(repository string) string {
+		return "https://gitlab.com/" + repository
+	},
+
+	HostingServiceName: "Gitlab",
 }
 
-// GetRepositoryURL returns the URL of the given repository on Gitlab
-func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
-	return "https://gitlab.com/" + repository
-}
-
-// isGitlab returns whether the given hostname is a Gitlab server
-func isGitlab(hostname string) bool {
-	return hostname == "gitlab.com" || strings.Contains(hostname, "gitlab")
+func init() {
+	registry.RegisterDriver(gitlabCodeHostingDriver)
 }

@@ -23,7 +23,7 @@ Example: your SSH identity should be something like
 	Run: func(cmd *cobra.Command, args []string) {
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
-		driver := drivers.GetCodeHostingDriver()
+		driver := drivers.GetActiveDriver()
 		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 		script.OpenBrowser(driver.GetRepositoryURL(repository))
 	},
