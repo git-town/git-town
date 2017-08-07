@@ -117,7 +117,7 @@ end
 
 Then(/^there are no more feature branches$/) do
   expected_branches = ['main', 'origin/main']
-  perennial_branches.delete_if { |b| b == '[none]' }.each do |perennial_branch|
+  perennial_branches.each do |perennial_branch|
     expected_branches << perennial_branch
     expected_branches << "origin/#{perennial_branch}"
   end
