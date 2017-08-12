@@ -3,6 +3,7 @@ package cmd
 import (
 	"strings"
 
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -103,7 +104,12 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	result.Append(steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+	if drivers.GetCodeHostingDriver().CanMergePullRequest() {
+		result.Append(steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+		result.Append(steps.PullBranchStep{})
+	} else {
+		result.Append(steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+	}
 	if git.HasRemote("origin") {
 		result.Append(steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}

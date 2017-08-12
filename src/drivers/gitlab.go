@@ -10,6 +10,11 @@ import (
 // on Gitlab.
 type GitlabCodeHostingDriver struct{}
 
+// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
+func (driver GitlabCodeHostingDriver) CanMergePullRequest() bool {
+	return false
+}
+
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Gitlab
 func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
