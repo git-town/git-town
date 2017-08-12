@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,7 @@ When aliases are set, you can run "git hack" instead of having to run "git town 
 
 Note that this can conflict with other tools that also define additional Git commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		toggle := stringToBool(args[0])
+		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
 				addAlias(command)

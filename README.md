@@ -95,7 +95,7 @@ The following configuration options have defaults, so the configuration wizard d
 
 * the git-hack push flag
   * whether or not newly-hacked branches should be pushed to remote repo
-  * default: `true`
+  * default: `false`
   * possible values: `true`, `false`
 
 

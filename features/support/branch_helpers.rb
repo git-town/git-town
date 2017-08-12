@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Returns the branch name for the given location
 def branch_name_for_location location, branch
   case location
@@ -101,6 +102,12 @@ def on_branch branch_name
   result = yield
   run "git checkout #{original_branch}"
   result
+end
+
+
+# Returns the names of the existing perennial branches
+def perennial_branches
+  array_output_of('git-town perennial-branches').delete_if { |b| b == '[none]' }
 end
 
 
