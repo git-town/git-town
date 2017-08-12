@@ -33,7 +33,7 @@ func loadState(command string) RunState {
 			log.Fatal(err)
 		}
 	} else {
-		serializedRunState.AbortStep = SerializedStep{Type: "NoOpStep"}
+		serializedRunState.AbortStep = SerializedStep{Type: "*NoOpStep"}
 	}
 	return RunState{
 		AbortStep:    deserializeStep(serializedRunState.AbortStep),
