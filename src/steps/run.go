@@ -63,7 +63,7 @@ func runSteps(runState *RunState, options RunOptions) {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			if !runState.IsAbort && !runState.isUndo {
-				runState.AbortStep = NoOpStep{}
+				runState.AbortStep = &NoOpStep{}
 				saveState(runState)
 			}
 			fmt.Println()

@@ -13,7 +13,7 @@ type CreatePullRequestStep struct {
 }
 
 // Run executes this step.
-func (step CreatePullRequestStep) Run() error {
+func (step *CreatePullRequestStep) Run() error {
 	driver := drivers.GetCodeHostingDriver()
 	repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 	parentBranch := git.GetParentBranch(step.BranchName)
