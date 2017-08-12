@@ -69,11 +69,11 @@ func runSteps(runState *RunState, options RunOptions) {
 			fmt.Println()
 			return
 		}
-		if getTypeName(step) == "SkipCurrentBranchSteps" {
+		if getTypeName(step) == "*SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
 			continue
 		}
-		if getTypeName(step) == "PushBranchAfterCurrentBranchSteps" {
+		if getTypeName(step) == "*PushBranchAfterCurrentBranchSteps" {
 			runState.AddPushBranchStepAfterCurrentBranchSteps()
 			continue
 		}

@@ -88,5 +88,5 @@ func (runState *RunState) SkipCurrentBranchSteps() {
 }
 
 func isCheckoutBranchStep(step Step) bool {
-	return getTypeName(step) == "CheckoutBranchStep"
+	return getTypeName(step) == "*CheckoutBranchStep"
 }
