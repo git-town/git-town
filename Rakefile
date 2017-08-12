@@ -5,7 +5,7 @@ require 'rubocop/rake_task'
 
 
 desc 'Run linters and feature tests'
-task default: %w(lint unit-test feature-test)
+task default: %w[lint unit-test feature-test]
 
 
 # Formatters
