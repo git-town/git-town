@@ -90,26 +90,26 @@ func checkRenameBranchPreconditions(args []string) (result renameBranchConfig) {
 }
 
 func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {
-	result.Append(steps.CreateBranchStep{BranchName: config.NewBranchName, StartingPoint: config.OldBranchName})
+	result.Append(&steps.CreateBranchStep{BranchName: config.NewBranchName, StartingPoint: config.OldBranchName})
 	if git.GetCurrentBranchName() == config.OldBranchName {
-		result.Append(steps.CheckoutBranchStep{BranchName: config.NewBranchName})
+		result.Append(&steps.CheckoutBranchStep{BranchName: config.NewBranchName})
 	}
 	if git.IsPerennialBranch(config.OldBranchName) {
-		result.Append(steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
-		result.Append(steps.AddToPerennialBranches{BranchName: config.NewBranchName})
+		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
+		result.Append(&steps.AddToPerennialBranches{BranchName: config.NewBranchName})
 	} else {
-		result.Append(steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
-		result.Append(steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.GetParentBranch(config.OldBranchName)})
+		result.Append(&steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.GetParentBranch(config.OldBranchName)})
 	}
 	for _, child := range git.GetChildBranches(config.OldBranchName) {
-		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
+		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
 	}
-	result.Append(steps.DeleteAncestorBranchesStep{})
+	result.Append(&steps.DeleteAncestorBranchesStep{})
 	if git.HasTrackingBranch(config.OldBranchName) {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
+		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
 	}
-	result.Append(steps.DeleteLocalBranchStep{BranchName: config.OldBranchName})
+	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.OldBranchName})
 	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
 	return
 }

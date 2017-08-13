@@ -75,12 +75,12 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
 	if git.HasRemote("origin") && git.ShouldHackPush() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

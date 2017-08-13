@@ -11,6 +11,6 @@ type FetchUpstreamStep struct {
 }
 
 // Run executes this step.
-func (step FetchUpstreamStep) Run() error {
+func (step *FetchUpstreamStep) Run() error {
 	return script.RunCommand("git", "fetch", "upstream")
 }
