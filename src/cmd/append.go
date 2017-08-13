@@ -66,11 +66,11 @@ func getAppendStepList(config appendConfig) (result steps.StepList) {
 	for _, branchName := range append(git.GetAncestorBranches(config.InitialBranch), config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
 	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

@@ -8,6 +8,6 @@ type AbortMergeBranchStep struct {
 }
 
 // Run executes this step.
-func (step AbortMergeBranchStep) Run() error {
+func (step *AbortMergeBranchStep) Run() error {
 	return script.RunCommand("git", "merge", "--abort")
 }

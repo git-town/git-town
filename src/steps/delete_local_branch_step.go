@@ -14,13 +14,13 @@ type DeleteLocalBranchStep struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step DeleteLocalBranchStep) CreateUndoStepBeforeRun() Step {
+func (step *DeleteLocalBranchStep) CreateUndoStepBeforeRun() Step {
 	sha := git.GetBranchSha(step.BranchName)
-	return CreateBranchStep{BranchName: step.BranchName, StartingPoint: sha}
+	return &CreateBranchStep{BranchName: step.BranchName, StartingPoint: sha}
 }
 
 // Run executes this step.
-func (step DeleteLocalBranchStep) Run() error {
+func (step *DeleteLocalBranchStep) Run() error {
 	op := "-d"
 	if step.Force || git.DoesBranchHaveUnmergedCommits(step.BranchName) {
 		op = "-D"
