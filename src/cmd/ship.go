@@ -99,7 +99,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
-	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.MergeTrackingBranchStep{})
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
