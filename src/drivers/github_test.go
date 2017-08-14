@@ -50,11 +50,11 @@ var _ = Describe("Github", func() {
 				Owner:         "Originate",
 				Repository:    "git-town",
 			}
-			os.Setenv("GITHUB_TOKEN", "TOKEN")
+			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 		})
 
 		AfterEach(func() {
-			os.Unsetenv("GITHUB_TOKEN")
+			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
 		})
 
 		It("returns request errors (getting the pull request numbers against the shipped branch)", func() {

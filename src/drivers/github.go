@@ -49,7 +49,7 @@ func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestO
 
 func (driver *GithubCodeHostingDriver) connect() {
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+		&oauth2.Token{AccessToken: os.Getenv("GIT_TOWN_GITHUB_TOKEN")},
 	)
 	tc := oauth2.NewClient(context.Background(), ts)
 	driver.client = github.NewClient(tc)
