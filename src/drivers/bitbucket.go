@@ -11,26 +11,33 @@ import (
 
 // BitbucketCodeHostingDriver provides functionality for working with
 // repositories hosted on Bitbucket
-type BitbucketCodeHostingDriver struct{}
+type BitbucketCodeHostingDriver struct {
+	repository string
+}
+
+// NewBitbucketCodeHostingDriver returns a new BitbucketCodeHostingDriver instance
+func NewBitbucketCodeHostingDriver(repository string) *BitbucketCodeHostingDriver {
+	return &BitbucketCodeHostingDriver{repository: repository}
+}
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver *BitbucketCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+func (driver *BitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
 	return false, nil
 }
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Bitbucket
-func (driver *BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+func (driver *BitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
-	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", repository, query.Encode())
+	query.Add("source", strings.Join([]string{driver.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{driver.repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", driver.repository, query.Encode())
 }
 
 // GetRepositoryURL returns the URL where the given repository can be found
 // on Bitbucket.com
-func (driver *BitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
-	return "https://bitbucket.org/" + repository
+func (driver *BitbucketCodeHostingDriver) GetRepositoryURL() string {
+	return "https://bitbucket.org/" + driver.repository
 }
 
 // MergePullRequest is unimplemented

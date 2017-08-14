@@ -8,25 +8,32 @@ import (
 
 // GitlabCodeHostingDriver provides tools for working with repositories
 // on Gitlab.
-type GitlabCodeHostingDriver struct{}
+type GitlabCodeHostingDriver struct {
+	repository string
+}
+
+// NewGitlabCodeHostingDriver returns a new GitlabCodeHostingDriver instance
+func NewGitlabCodeHostingDriver(repository string) *GitlabCodeHostingDriver {
+	return &GitlabCodeHostingDriver{repository: repository}
+}
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver *GitlabCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+func (driver *GitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
 	return false, nil
 }
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Gitlab
-func (driver *GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+func (driver *GitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("https://gitlab.com/%s/merge_requests/new?%s", repository, query.Encode())
+	return fmt.Sprintf("https://gitlab.com/%s/merge_requests/new?%s", driver.repository, query.Encode())
 }
 
 // GetRepositoryURL returns the URL of the given repository on Gitlab
-func (driver *GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
-	return "https://gitlab.com/" + repository
+func (driver *GitlabCodeHostingDriver) GetRepositoryURL() string {
+	return "https://gitlab.com/" + driver.repository
 }
 
 // MergePullRequest is unimplemented

@@ -29,32 +29,21 @@ func GetRequestData(request *http.Request) map[string]interface{} {
 var _ = Describe("Github", func() {
 	pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 	currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
-	var driver GithubCodeHostingDriver
+	var driver *GithubCodeHostingDriver
 
 	BeforeEach(func() {
-		driver = GithubCodeHostingDriver{}
+		driver = NewGithubCodeHostingDriver("Originate/git-town")
 		os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 	})
 
 	Describe("CanMergePullRequest", func() {
-		var options MergePullRequestOptions
-
-		BeforeEach(func() {
-			options = MergePullRequestOptions{
-				Branch:       "feature",
-				ParentBranch: "main",
-				Owner:        "Originate",
-				Repository:   "git-town",
-			}
-		})
-
 		AfterEach(func() {
 			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
 		})
 
 		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
 			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "")
-			canMerge, err := driver.CanMergePullRequest(options)
+			canMerge, err := driver.CanMergePullRequest("feature", "main")
 			Expect(err).To(BeNil())
 			Expect(canMerge).To(BeFalse())
 		})
@@ -66,27 +55,27 @@ var _ = Describe("Github", func() {
 
 			It("returns request errors (getting the pull request number to merge)", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-				_, err := driver.CanMergePullRequest(options)
+				_, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(HaveOccurred())
 			})
 
 			It("returns false if there is no pull request for the branch", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-				canMerge, err := driver.CanMergePullRequest(options)
+				canMerge, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeFalse())
 			})
 
 			It("returns false if there are multiple pull requests for the branch", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-				canMerge, err := driver.CanMergePullRequest(options)
+				canMerge, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeFalse())
 			})
 
 			It("returns true if there is one pull request for the branch", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
-				canMerge, err := driver.CanMergePullRequest(options)
+				canMerge, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeTrue())
 			})
@@ -105,8 +94,6 @@ var _ = Describe("Github", func() {
 				Branch:        "feature",
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
-				Owner:         "Originate",
-				Repository:    "git-town",
 			}
 			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 		})

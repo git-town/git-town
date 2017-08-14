@@ -24,8 +24,7 @@ Example: your SSH identity should be something like
 		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		driver := drivers.GetCodeHostingDriver()
-		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
-		script.OpenBrowser(driver.GetRepositoryURL(repository))
+		script.OpenBrowser(driver.GetRepositoryURL())
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return validateMaxArgs(args, 0)
