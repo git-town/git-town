@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
@@ -104,9 +105,8 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	driver := drivers.GetCodeHostingDriver()
-	useDriver := driver != nil && driver.CanMergePullRequest()
-	if git.HasRemote("origin") && useDriver {
+	driver := getDriver(config.BranchToShip, branchToMergeInto)
+	if driver != nil {
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, Driver: driver})
 		result.Append(&steps.PullBranchStep{})
 	} else {
@@ -116,7 +116,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if useDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
+	if driver != nil || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
@@ -130,6 +130,27 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
 	return
+}
+
+func getDriver(branch, parentBranch string) drivers.CodeHostingDriver {
+	if git.HasRemote("origin") {
+		driver := drivers.GetCodeHostingDriver()
+		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
+		repositoryParts := strings.SplitN(repository, "/", 2)
+		canMerge, err := driver.CanMergePullRequest(drivers.MergePullRequestOptions{
+			Branch:       branch,
+			Owner:        repositoryParts[0],
+			ParentBranch: parentBranch,
+			Repository:   repositoryParts[1],
+		})
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if canMerge {
+			return driver
+		}
+	}
+	return nil
 }
 
 func init() {
