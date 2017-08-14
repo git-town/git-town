@@ -9,10 +9,10 @@ import (
 // Core provides the public API for the drivers subsystem
 
 var registry = &Registry{}
-var activeDriver *CodeHostingDriver
+var activeDriver CodeHostingDriver
 
 // GetActiveDriver returns the code hosting driver to use
-func GetActiveDriver() *CodeHostingDriver {
+func GetActiveDriver() CodeHostingDriver {
 	if activeDriver == nil {
 		var err error
 		activeDriver, err = registry.DetermineActiveDriver(git.GetURLHostname(git.GetRemoteOriginURL()))

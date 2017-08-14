@@ -8,27 +8,28 @@ import (
 	"github.com/Originate/git-town/src/git"
 )
 
-// BitbucketCodeHostingDriver provides functionality for working with
-// repositories hosted on Bitbucket
-var bitbucketCodeHostingDriver = &CodeHostingDriver{
+type bitbucketCodeHostingDriver struct {
+}
 
-	CanBeUsed: func(hostname string) bool {
-		return hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket")
-	},
-	GetNewPullRequestURL: func(repository string, branch string, parentBranch string) string {
-		query := url.Values{}
-		query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
-		query.Add("dest", strings.Join([]string{repository, "", parentBranch}, ":"))
-		return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", repository, query.Encode())
-	},
+func (d bitbucketCodeHostingDriver) CanBeUsed(hostname string) bool {
+	return hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket")
+}
+func (d bitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+	query := url.Values{}
+	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", repository, query.Encode())
+}
 
-	GetRepositoryURL: func(repository string) string {
-		return "https://bitbucket.org/" + repository
-	},
+func (d bitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
+	return "https://bitbucket.org/" + repository
+}
 
-	HostingServiceName: "Bitbucket",
+func (d bitbucketCodeHostingDriver) HostingServiceName() string {
+	return "Bitbucket"
+
 }
 
 func init() {
-	registry.RegisterDriver(bitbucketCodeHostingDriver)
+	registry.RegisterDriver(bitbucketCodeHostingDriver{})
 }
