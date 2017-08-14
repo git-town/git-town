@@ -10,11 +10,11 @@ type RestoreOpenChangesStep struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step RestoreOpenChangesStep) CreateUndoStepBeforeRun() Step {
-	return StashOpenChangesStep{}
+func (step *RestoreOpenChangesStep) CreateUndoStepBeforeRun() Step {
+	return &StashOpenChangesStep{}
 }
 
 // Run executes this step.
-func (step RestoreOpenChangesStep) Run() error {
+func (step *RestoreOpenChangesStep) Run() error {
 	return script.RunCommand("git", "stash", "pop")
 }

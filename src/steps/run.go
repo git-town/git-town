@@ -63,17 +63,17 @@ func runSteps(runState *RunState, options RunOptions) {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			if !runState.IsAbort && !runState.isUndo {
-				runState.AbortStep = NoOpStep{}
+				runState.AbortStep = &NoOpStep{}
 				saveState(runState)
 			}
 			fmt.Println()
 			return
 		}
-		if getTypeName(step) == "SkipCurrentBranchSteps" {
+		if getTypeName(step) == "*SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
 			continue
 		}
-		if getTypeName(step) == "PushBranchAfterCurrentBranchSteps" {
+		if getTypeName(step) == "*PushBranchAfterCurrentBranchSteps" {
 			runState.AddPushBranchStepAfterCurrentBranchSteps()
 			continue
 		}
