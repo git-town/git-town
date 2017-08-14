@@ -41,11 +41,11 @@ func (driver GithubCodeHostingDriver) GetRepositoryURL(repository string) string
 }
 
 // MergePullRequest merges the pull request through the Github API
-func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
+func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
 	driver.connect()
 	err := driver.updatePullRequestsAgainst(options)
 	if err != nil {
-		return err
+		return "", err
 	}
 	return driver.mergePullRequest(options)
 }
@@ -82,15 +82,18 @@ func (driver *GithubCodeHostingDriver) getPullRequestNumber(options MergePullReq
 	return *pullRequests[0].Number, nil
 }
 
-func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) error {
+func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (string, error) {
 	pullRequestNumber, err := driver.getPullRequestNumber(options)
 	if err != nil {
-		return err
+		return "", err
 	}
-	_, _, err = driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, options.CommitMessage, &github.PullRequestOptions{
+	result, _, err := driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, options.CommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 	})
-	return err
+	if err != nil {
+		return "", err
+	}
+	return *result.SHA, nil
 }
 
 func (driver *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
