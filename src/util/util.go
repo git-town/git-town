@@ -35,10 +35,29 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
+// ExitBecauseOffline prints an error message
+// explaining the given command doesn't run in offline mode.
+func ExitBecauseOffline(command string) {
+	calledCommand := GetCalledBinary(command)
+	ExitWithErrorMessage(calledCommand + " requires an active internet connection.")
+}
+
 // ExitWithErrorMessage prints the given error message and terminates the application.
 func ExitWithErrorMessage(messages ...string) {
 	PrintError(messages...)
 	os.Exit(1)
+}
+
+// GetCalledBinary returns how the user called the binary
+func GetCalledBinary(command string) string {
+	words := []string{}
+	for _, word := range os.Args {
+		words = append(words, word)
+		if word == command {
+			break
+		}
+	}
+	return strings.Join(words, " ")
 }
 
 // GetCommandOutput runs the given command and returns its output.
