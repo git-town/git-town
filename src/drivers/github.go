@@ -21,7 +21,7 @@ type GithubCodeHostingDriver struct {
 }
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver GithubCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+func (driver *GithubCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
 	if os.Getenv("GIT_TOWN_GITHUB_TOKEN") == "" {
 		return false, nil
 	}
@@ -49,7 +49,7 @@ func (driver *GithubCodeHostingDriver) GetRepositoryURL(repository string) strin
 }
 
 // MergePullRequest merges the pull request through the Github API
-func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (driver *GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
 	driver.connect()
 	err := driver.updatePullRequestsAgainst(options)
 	if err != nil {

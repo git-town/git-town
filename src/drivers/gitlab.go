@@ -11,7 +11,7 @@ import (
 type GitlabCodeHostingDriver struct{}
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver GitlabCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+func (driver *GitlabCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
 	return false, nil
 }
 
@@ -30,6 +30,6 @@ func (driver *GitlabCodeHostingDriver) GetRepositoryURL(repository string) strin
 }
 
 // MergePullRequest is unimplemented
-func (driver GitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (driver *GitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
 	return "", errors.New("shipping pull requests via the Gitlab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
 }
