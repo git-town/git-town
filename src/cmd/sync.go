@@ -37,7 +37,6 @@ When run on the main branch or a perennial branch
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
@@ -57,7 +56,11 @@ the main branch is synced with its upstream counterpart.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 

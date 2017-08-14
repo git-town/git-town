@@ -43,7 +43,6 @@ When run on a perennial branch
 - Requires the use of the "-f" option
 - Reconfigures git town locally for the perennial branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
@@ -63,7 +62,11 @@ When run on a perennial branch
 		if len(args) == 0 && !undoFlag {
 			return errors.New("Too few arguments")
 		}
-		return validateMaxArgs(args, 2)
+		err := validateMaxArgs(args, 2)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
