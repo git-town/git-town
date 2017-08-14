@@ -35,9 +35,9 @@ var _ = Describe("Github", func() {
 
 	Describe("CanMergePullRequest", func() {
 		It("returns true if the environment variable GITHUB_TOKEN is a non-empty string", func() {
-			os.Setenv("GITHUB_TOKEN", "TOKEN")
+			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 			Expect(driver.CanMergePullRequest()).To(BeTrue())
-			os.Unsetenv("GITHUB_TOKEN")
+			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
 		})
 
 		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
@@ -62,11 +62,11 @@ var _ = Describe("Github", func() {
 				Owner:         "Originate",
 				Repository:    "git-town",
 			}
-			os.Setenv("GITHUB_TOKEN", "TOKEN")
+			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 		})
 
 		AfterEach(func() {
-			os.Unsetenv("GITHUB_TOKEN")
+			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
 		})
 
 		It("returns request errors (getting the pull request numbers against the shipped branch)", func() {

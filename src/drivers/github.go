@@ -22,7 +22,7 @@ type GithubCodeHostingDriver struct {
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
 func (driver GithubCodeHostingDriver) CanMergePullRequest() bool {
-	return os.Getenv("GITHUB_TOKEN") != ""
+	return os.Getenv("GIT_TOWN_GITHUB_TOKEN") != ""
 }
 
 // GetNewPullRequestURL returns the URL of the page
@@ -54,7 +54,7 @@ func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestO
 
 func (driver *GithubCodeHostingDriver) connect() {
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
+		&oauth2.Token{AccessToken: os.Getenv("GIT_TOWN_GITHUB_TOKEN")},
 	)
 	tc := oauth2.NewClient(context.Background(), ts)
 	driver.client = github.NewClient(tc)
