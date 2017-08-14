@@ -26,7 +26,6 @@ the main branch is synced with its upstream counterpart.
 This can be disabled by toggling the "hack-push-flag" configuration:
 $ git town hack-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
@@ -49,7 +48,12 @@ $ git town hack-push-flag false`,
 		if err != nil {
 			return err
 		}
-		return git.ValidateIsRepository()
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
