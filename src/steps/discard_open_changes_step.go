@@ -10,6 +10,6 @@ type DiscardOpenChangesStep struct {
 }
 
 // Run executes this step.
-func (step DiscardOpenChangesStep) Run() error {
+func (step *DiscardOpenChangesStep) Run() error {
 	return script.RunCommand("git", "reset", "--hard")
 }

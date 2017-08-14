@@ -12,11 +12,14 @@ var setParentBranchCommand = &cobra.Command{
 
 Updates the parent branch of a feature branch in Git Town's configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		setParentBranch(args[0], args[1])
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateArgsCount(args, 2)
+		err := validateMaxArgs(args, 2)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 

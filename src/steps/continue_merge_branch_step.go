@@ -12,17 +12,17 @@ type ContinueMergeBranchStep struct {
 }
 
 // CreateAbortStep returns the abort step for this step.
-func (step ContinueMergeBranchStep) CreateAbortStep() Step {
-	return NoOpStep{}
+func (step *ContinueMergeBranchStep) CreateAbortStep() Step {
+	return &NoOpStep{}
 }
 
 // CreateContinueStep returns the continue step for this step.
-func (step ContinueMergeBranchStep) CreateContinueStep() Step {
+func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 	return step
 }
 
 // Run executes this step.
-func (step ContinueMergeBranchStep) Run() error {
+func (step *ContinueMergeBranchStep) Run() error {
 	if git.IsMergeInProgress() {
 		return script.RunCommand("git", "commit", "--no-edit")
 	}
