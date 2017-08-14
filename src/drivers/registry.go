@@ -7,12 +7,6 @@ type Registry struct {
 	drivers []*CodeHostingDriver
 }
 
-// RegisterDriver allows driver implementations to register themselves
-// with the registry
-func (r *Registry) RegisterDriver(driver *CodeHostingDriver) {
-	r.drivers = append(r.drivers, driver)
-}
-
 // DetermineActiveDriver determines the driver to use for the given hostname
 func (r *Registry) DetermineActiveDriver(hostname string) (*CodeHostingDriver, error) {
 	for _, driver := range r.drivers {
@@ -30,4 +24,10 @@ func (r *Registry) DriverNames() (result []string) {
 	}
 	sort.Strings(result)
 	return
+}
+
+// RegisterDriver allows driver implementations to register themselves
+// with the registry
+func (r *Registry) RegisterDriver(driver *CodeHostingDriver) {
+	r.drivers = append(r.drivers, driver)
 }
