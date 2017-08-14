@@ -87,8 +87,18 @@ func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequest
 	if err != nil {
 		return "", err
 	}
-	result, _, err := driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, options.CommitMessage, &github.PullRequestOptions{
+	if options.LogRequests {
+		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", pullRequestNumber))
+	}
+	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
+	githubCommitTitle := commitMessageParts[0]
+	githubCommitMessage := ""
+	if len(commitMessageParts) == 2 {
+		githubCommitMessage = commitMessageParts[1]
+	}
+	result, _, err := driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
+		CommitTitle: githubCommitTitle,
 	})
 	if err != nil {
 		return "", err
@@ -105,6 +115,9 @@ func (driver *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePu
 		return err
 	}
 	for _, pullRequest := range pullRequests {
+		if options.LogRequests {
+			printLog(fmt.Sprintf("GitHub API: Updating base branch for PR #%d", *pullRequest.Number))
+		}
 		_, _, err = driver.client.PullRequests.Edit(context.Background(), options.Owner, options.Repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{
 				Ref: &options.ParentBranch,

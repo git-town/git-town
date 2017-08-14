@@ -57,7 +57,7 @@ var _ = Describe("Github", func() {
 		BeforeEach(func() {
 			options = MergePullRequestOptions{
 				Branch:        "feature",
-				CommitMessage: "message",
+				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
 				Owner:         "Originate",
 				Repository:    "git-town",
@@ -118,7 +118,8 @@ var _ = Describe("Github", func() {
 			Expect(err).To(BeNil())
 			Expect(sha).To(Equal("abc123"))
 			mergeParameters := GetRequestData(mergeRequest)
-			Expect(mergeParameters["commit_message"]).To(Equal("message"))
+			Expect(mergeParameters["commit_title"]).To(Equal("title"))
+			Expect(mergeParameters["commit_message"]).To(Equal("extra detail1\nextra detail2"))
 			Expect(mergeParameters["merge_method"]).To(Equal("squash"))
 		})
 
