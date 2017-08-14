@@ -11,6 +11,6 @@ type AbortRebaseBranchStep struct {
 }
 
 // Run executes this step.
-func (step AbortRebaseBranchStep) Run() error {
+func (step *AbortRebaseBranchStep) Run() error {
 	return script.RunCommand("git", "rebase", "--abort")
 }

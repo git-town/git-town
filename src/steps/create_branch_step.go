@@ -11,11 +11,11 @@ type CreateBranchStep struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step CreateBranchStep) CreateUndoStepBeforeRun() Step {
-	return DeleteLocalBranchStep{BranchName: step.BranchName}
+func (step *CreateBranchStep) CreateUndoStepBeforeRun() Step {
+	return &DeleteLocalBranchStep{BranchName: step.BranchName}
 }
 
 // Run executes this step.
-func (step CreateBranchStep) Run() error {
+func (step *CreateBranchStep) Run() error {
 	return script.RunCommand("git", "branch", step.BranchName, step.StartingPoint)
 }

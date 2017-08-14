@@ -85,9 +85,9 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	if git.HasRemote("origin") && config.ShouldPushTags {
-		result.Append(steps.PushTagsStep{})
+		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return
