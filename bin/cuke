@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+bin/build
+
 if [ "$#" == 0 ]; then
   bundle exec parallel_cucumber features
 else
