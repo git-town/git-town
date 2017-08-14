@@ -133,22 +133,19 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 }
 
 func getDriver(branch, parentBranch string) drivers.CodeHostingDriver {
-	if git.HasRemote("origin") {
-		driver := drivers.GetCodeHostingDriver()
-		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
-		repositoryParts := strings.SplitN(repository, "/", 2)
-		canMerge, err := driver.CanMergePullRequest(drivers.MergePullRequestOptions{
-			Branch:       branch,
-			Owner:        repositoryParts[0],
-			ParentBranch: parentBranch,
-			Repository:   repositoryParts[1],
-		})
-		if err != nil {
-			log.Fatalln(err)
-		}
-		if canMerge {
-			return driver
-		}
+	if !git.HasRemote("origin") {
+		return nil
+	}
+	driver := drivers.GetCodeHostingDriver()
+	if driver == nil {
+		return nil
+	}
+	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if canMerge {
+		return driver
 	}
 	return nil
 }

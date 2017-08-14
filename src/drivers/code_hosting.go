@@ -14,31 +14,31 @@ type MergePullRequestOptions struct {
 	Branch        string
 	CommitMessage string
 	LogRequests   bool
-	Owner         string
 	ParentBranch  string
-	Repository    string
 }
 
 // CodeHostingDriver defines the interface
 // of drivers for the different code hosting services
 type CodeHostingDriver interface {
-	CanMergePullRequest(options MergePullRequestOptions) (bool, error)
-	GetRepositoryURL(repository string) string
-	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
+	CanMergePullRequest(branch, parentBranch string) (bool, error)
+	GetRepositoryURL() string
+	GetNewPullRequestURL(branch, parentBranch string) string
 	MergePullRequest(options MergePullRequestOptions) (string, error)
 }
 
 // GetCodeHostingDriver returns an instance of the code hosting driver
 // to use for the repository in the current working directory
 func GetCodeHostingDriver() CodeHostingDriver {
-	hostname := git.GetURLHostname(git.GetRemoteOriginURL())
+	originURL := git.GetRemoteOriginURL()
+	hostname := git.GetURLHostname(originURL)
+	repository := git.GetURLRepositoryName(originURL)
 	switch {
 	case hostname == "github.com" || strings.Contains(hostname, "github"):
-		return &GithubCodeHostingDriver{}
+		return NewGithubCodeHostingDriver(repository)
 	case hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket"):
-		return &BitbucketCodeHostingDriver{}
+		return NewBitbucketCodeHostingDriver(repository)
 	case hostname == "gitlab.com" || strings.Contains(hostname, "gitlab"):
-		return &GitlabCodeHostingDriver{}
+		return NewGitlabCodeHostingDriver(repository)
 	default:
 		return nil
 	}

@@ -2,7 +2,6 @@ package steps
 
 import (
 	"log"
-	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
@@ -64,15 +63,11 @@ func (step *DriverMergePullRequestStep) Run() error {
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
-	repositoryParts := strings.SplitN(repository, "/", 2)
 	step.mergeSha, step.mergeError = step.Driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:        step.BranchName,
 		CommitMessage: commitMessage,
 		LogRequests:   true,
-		Owner:         repositoryParts[0],
 		ParentBranch:  git.GetCurrentBranchName(),
-		Repository:    repositoryParts[1],
 	})
 	return step.mergeError
 }

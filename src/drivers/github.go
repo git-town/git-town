@@ -17,16 +17,27 @@ import (
 // GithubCodeHostingDriver provides tools for working with repositories
 // hosted on Github
 type GithubCodeHostingDriver struct {
-	client *github.Client
+	client     *github.Client
+	owner      string
+	repository string
+}
+
+// NewGithubCodeHostingDriver returns a new GithubCodeHostingDriver instance
+func NewGithubCodeHostingDriver(fullRepository string) *GithubCodeHostingDriver {
+	repositoryParts := strings.SplitN(fullRepository, "/", 2)
+	return &GithubCodeHostingDriver{
+		owner:      repositoryParts[0],
+		repository: repositoryParts[1],
+	}
 }
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver *GithubCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+func (driver *GithubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
 	if os.Getenv("GIT_TOWN_GITHUB_TOKEN") == "" {
 		return false, nil
 	}
 	driver.connect()
-	pullRequestNumbers, err := driver.getPullRequestNumbers(options)
+	pullRequestNumbers, err := driver.getPullRequestNumbers(branch, parentBranch)
 	if err != nil {
 		return false, err
 	}
@@ -35,17 +46,17 @@ func (driver *GithubCodeHostingDriver) CanMergePullRequest(options MergePullRequ
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Github
-func (driver *GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+func (driver *GithubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("https://github.com/%s/compare/%s?expand=1", repository, toCompare)
+	return fmt.Sprintf("%s/compare/%s?expand=1", driver.GetRepositoryURL(), toCompare)
 }
 
 // GetRepositoryURL returns the URL of the given repository on github.com
-func (driver *GithubCodeHostingDriver) GetRepositoryURL(repository string) string {
-	return "https://github.com/" + repository
+func (driver *GithubCodeHostingDriver) GetRepositoryURL() string {
+	return fmt.Sprintf("https://github.com/%s/%s", driver.owner, driver.repository)
 }
 
 // MergePullRequest merges the pull request through the Github API
@@ -71,7 +82,7 @@ func (driver *GithubCodeHostingDriver) connect() {
 }
 
 func (driver *GithubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
-	pullRequestNumbers, err := driver.getPullRequestNumbers(options)
+	pullRequestNumbers, err := driver.getPullRequestNumbers(options.Branch, options.ParentBranch)
 	if err != nil {
 		return -1, err
 	}
@@ -88,10 +99,10 @@ func (driver *GithubCodeHostingDriver) getPullRequestNumber(options MergePullReq
 	return pullRequestNumbers[0], nil
 }
 
-func (driver *GithubCodeHostingDriver) getPullRequestNumbers(options MergePullRequestOptions) ([]int, error) {
-	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
-		Base:  options.ParentBranch,
-		Head:  options.Owner + ":" + options.Branch,
+func (driver *GithubCodeHostingDriver) getPullRequestNumbers(branch, parentBranch string) ([]int, error) {
+	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), driver.owner, driver.repository, &github.PullRequestListOptions{
+		Base:  parentBranch,
+		Head:  driver.owner + ":" + branch,
 		State: "open",
 	})
 	if err != nil {
@@ -118,7 +129,7 @@ func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequest
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := driver.client.PullRequests.Merge(context.Background(), options.Owner, options.Repository, pullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := driver.client.PullRequests.Merge(context.Background(), driver.owner, driver.repository, pullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})
@@ -129,7 +140,7 @@ func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequest
 }
 
 func (driver *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
-	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
+	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), driver.owner, driver.repository, &github.PullRequestListOptions{
 		Base:  options.Branch,
 		State: "open",
 	})
@@ -140,7 +151,7 @@ func (driver *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePu
 		if options.LogRequests {
 			printLog(fmt.Sprintf("GitHub API: Updating base branch for PR #%d", *pullRequest.Number))
 		}
-		_, _, err = driver.client.PullRequests.Edit(context.Background(), options.Owner, options.Repository, *pullRequest.Number, &github.PullRequest{
+		_, _, err = driver.client.PullRequests.Edit(context.Background(), driver.owner, driver.repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{
 				Ref: &options.ParentBranch,
 			},
