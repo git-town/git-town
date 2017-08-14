@@ -1,41 +1,33 @@
 package drivers
 
-import (
-	"fmt"
-	"os"
-	"sort"
-)
+import "sort"
 
-// Registry is the micro-co
+// Registry collects and manages all CodeHostingDriver instances
 type Registry struct {
 	drivers []*CodeHostingDriver
 }
 
 // RegisterDriver allows driver implementations to register themselves
 // with the registry
-func (c *Registry) RegisterDriver(driver *CodeHostingDriver) {
-	c.drivers = append(c.drivers, driver)
+func (r *Registry) RegisterDriver(driver *CodeHostingDriver) {
+	r.drivers = append(r.drivers, driver)
 }
 
-// DetermineActiveDriver determines the driver to use for the current repository
-func (c *Registry) DetermineActiveDriver(hostname string) *CodeHostingDriver {
-	for _, driver := range c.drivers {
+// DetermineActiveDriver determines the driver to use for the given hostname
+func (r *Registry) DetermineActiveDriver(hostname string) (*CodeHostingDriver, error) {
+	for _, driver := range r.drivers {
 		if driver.CanBeUsed(hostname) {
-			return driver
+			return driver, nil
 		}
 	}
+	return nil, UnsupportedHostingServiceError{r}
+}
 
-	fmt.Println("Unsupported hosting service")
-	fmt.Println()
-	fmt.Println("This command requires hosting on one of these services:")
-	driverNames := []string{}
-	for _, driver := range c.drivers {
-		driverNames = append(driverNames, driver.HostingServiceName)
+// DriverNames returns the names of all drivers, sorted alphabetically
+func (r *Registry) DriverNames() (result []string) {
+	for _, driver := range r.drivers {
+		result = append(result, driver.HostingServiceName)
 	}
-	sort.Strings(driverNames)
-	for _, driverName := range driverNames {
-		fmt.Printf("* %s\n", driverName)
-	}
-	os.Exit(1)
-	return nil
+	sort.Strings(result)
+	return
 }

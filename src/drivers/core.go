@@ -1,6 +1,10 @@
 package drivers
 
-import "github.com/Originate/git-town/src/git"
+import (
+	"log"
+
+	"github.com/Originate/git-town/src/git"
+)
 
 // Core provides the public API for the drivers subsystem
 
@@ -10,7 +14,11 @@ var activeDriver *CodeHostingDriver
 // GetActiveDriver returns the code hosting driver to use
 func GetActiveDriver() *CodeHostingDriver {
 	if activeDriver == nil {
-		activeDriver = registry.DetermineActiveDriver(git.GetURLHostname(git.GetRemoteOriginURL()))
+		var err error
+		activeDriver, err = registry.DetermineActiveDriver(git.GetURLHostname(git.GetRemoteOriginURL()))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return activeDriver
 }
