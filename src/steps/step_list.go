@@ -65,14 +65,14 @@ type WrapOptions struct {
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
 func (stepList *StepList) Wrap(options WrapOptions) {
-	stepList.Append(PreserveCheckoutHistoryStep{
+	stepList.Append(&PreserveCheckoutHistoryStep{
 		InitialBranch:                     git.GetCurrentBranchName(),
 		InitialPreviouslyCheckedOutBranch: git.GetPreviouslyCheckedOutBranch(),
 	})
 
 	if options.StashOpenChanges && git.HasOpenChanges() {
-		stepList.Prepend(StashOpenChangesStep{})
-		stepList.Append(RestoreOpenChangesStep{})
+		stepList.Prepend(&StashOpenChangesStep{})
+		stepList.Append(&RestoreOpenChangesStep{})
 	}
 
 	initialDirectory, err := os.Getwd()
@@ -82,7 +82,7 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 	gitRootDirectory := git.GetRootDirectory()
 
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
-		stepList.Prepend(ChangeDirectoryStep{Directory: gitRootDirectory})
-		stepList.Append(ChangeDirectoryStep{Directory: initialDirectory})
+		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
+		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
 }

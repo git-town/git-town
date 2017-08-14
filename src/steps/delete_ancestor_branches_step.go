@@ -10,7 +10,7 @@ type DeleteAncestorBranchesStep struct {
 }
 
 // Run executes this step.
-func (step DeleteAncestorBranchesStep) Run() error {
+func (step *DeleteAncestorBranchesStep) Run() error {
 	git.DeleteAllAncestorBranches()
 	return nil
 }
