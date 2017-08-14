@@ -1,10 +1,10 @@
 package drivers
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 )
 
 // MergePullRequestOptions defines the options to the MergePullRequest function
@@ -37,7 +37,15 @@ func GetCodeHostingDriver() CodeHostingDriver {
 	case hostname == "gitlab.com" || strings.Contains(hostname, "gitlab"):
 		return GitlabCodeHostingDriver{}
 	default:
-		util.ExitWithErrorMessage("Unsupported hosting service.", "This command requires hosting on GitHub, GitLab, or Bitbucket")
 		return nil
 	}
+}
+
+// ValidateHasCodeHostingDriver returns an error if there is no code hosting driver
+func ValidateHasCodeHostingDriver() error {
+	driver := GetCodeHostingDriver()
+	if driver == nil {
+		return errors.New("Unsupported hosting service. This command requires hosting on GitHub, GitLab, or Bitbucket")
+	}
+	return nil
 }

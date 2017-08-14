@@ -28,7 +28,11 @@ Example: your SSH identity should be something like
 		script.OpenBrowser(driver.GetRepositoryURL(repository))
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		return drivers.ValidateHasCodeHostingDriver()
 	},
 }
 

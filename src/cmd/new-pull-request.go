@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -50,7 +51,11 @@ Example: your SSH identity should be something like
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		return drivers.ValidateHasCodeHostingDriver()
 	},
 }
 
@@ -69,7 +74,8 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	driver := drivers.GetCodeHostingDriver()
+	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch, Driver: driver})
 	return
 }
 

@@ -15,10 +15,11 @@ type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName    string
 	CommitMessage string
+	Driver        drivers.CodeHostingDriver
 }
 
 // Run executes this step.
-func (step DriverMergePullRequestStep) Run() error {
+func (step *DriverMergePullRequestStep) Run() error {
 	commitMessage := step.CommitMessage
 	if commitMessage != "" {
 		err := script.RunCommand("git", "merge", "--squash", step.BranchName)
@@ -36,14 +37,19 @@ func (step DriverMergePullRequestStep) Run() error {
 			log.Fatal("Error resetting the main branch", err)
 		}
 	}
-	driver := drivers.GetCodeHostingDriver()
 	repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
 	repositoryParts := strings.SplitN(repository, "/", 2)
-	return driver.MergePullRequest(drivers.MergePullRequestOptions{
+	return step.Driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:        step.BranchName,
 		CommitMessage: commitMessage,
 		ParentBranch:  git.GetCurrentBranchName(),
 		Owner:         repositoryParts[0],
 		Repository:    repositoryParts[1],
 	})
+}
+
+// ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
+// automatically abort if it errors.
+func (step *DriverMergePullRequestStep) ShouldAutomaticallyAbortOnError() bool {
+	return true
 }
