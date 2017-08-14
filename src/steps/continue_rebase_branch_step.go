@@ -12,17 +12,17 @@ type ContinueRebaseBranchStep struct {
 }
 
 // CreateAbortStep returns the abort step for this step.
-func (step ContinueRebaseBranchStep) CreateAbortStep() Step {
-	return AbortRebaseBranchStep{}
+func (step *ContinueRebaseBranchStep) CreateAbortStep() Step {
+	return &AbortRebaseBranchStep{}
 }
 
 // CreateContinueStep returns the continue step for this step.
-func (step ContinueRebaseBranchStep) CreateContinueStep() Step {
+func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 	return step
 }
 
 // Run executes this step.
-func (step ContinueRebaseBranchStep) Run() error {
+func (step *ContinueRebaseBranchStep) Run() error {
 	if git.IsRebaseInProgress() {
 		return script.RunCommand("git", "rebase", "--continue")
 	}

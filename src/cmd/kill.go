@@ -27,8 +27,6 @@ from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "kill",
@@ -43,7 +41,16 @@ Does not delete perennial branches nor the main branch.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -78,22 +85,22 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 	if config.IsTargetBranchLocal {
 		targetBranchParent := git.GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
-			result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
+			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
 			if git.HasOpenChanges() {
-				result.Append(steps.CommitOpenChangesStep{})
+				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(steps.CheckoutBranchStep{BranchName: targetBranchParent})
+			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
-		result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
+		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
 		for _, child := range git.GetChildBranches(config.TargetBranch) {
-			result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
+			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
-		result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-		result.Append(steps.DeleteAncestorBranchesStep{})
+		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
+		result.Append(&steps.DeleteAncestorBranchesStep{})
 	} else if !git.IsOffline() {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
+		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	} else {
 		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
 		os.Exit(1)

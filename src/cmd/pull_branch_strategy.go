@@ -16,7 +16,6 @@ The pull branch strategy specifies what strategy to use
 when merging remote tracking branches into local branches
 for the main branch and perennial branches.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printPullBranchStrategy()
 		} else {
@@ -27,7 +26,11 @@ for the main branch and perennial branches.`,
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
 			return fmt.Errorf("Invalid value: '%s'", args[0])
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
