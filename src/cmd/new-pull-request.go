@@ -59,7 +59,7 @@ Example: your SSH identity should be something like
 
 func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
 	if git.IsOffline() {
-		fmt.Println("Error: cannot ship in offline mode.")
+		fmt.Println("Error: cannot create new pull requests in offline mode.")
 		os.Exit(1)
 	}
 	if git.HasRemote("origin") {
