@@ -21,7 +21,7 @@ type MergePullRequestOptions struct {
 type CodeHostingDriver interface {
 	GetRepositoryURL(repository string) string
 	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
-	MergePullRequest(options MergePullRequestOptions) error
+	MergePullRequest(options MergePullRequestOptions) (string, error)
 }
 
 // GetCodeHostingDriver returns an instance of the code hosting driver

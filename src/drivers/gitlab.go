@@ -25,6 +25,6 @@ func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string
 }
 
 // MergePullRequest is unimplemented
-func (driver GitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) error {
-	return errors.New("shipping pull requests via the Gitlab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
+func (driver GitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+	return "", errors.New("shipping pull requests via the Gitlab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
 }
