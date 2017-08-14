@@ -10,12 +10,12 @@ import (
 type CreatePullRequestStep struct {
 	NoOpStep
 	BranchName string
-	Driver     drivers.CodeHostingDriver
 }
 
 // Run executes this step.
 func (step *CreatePullRequestStep) Run() error {
+	driver := drivers.GetCodeHostingDriver()
 	parentBranch := git.GetParentBranch(step.BranchName)
-	script.OpenBrowser(step.Driver.GetNewPullRequestURL(step.BranchName, parentBranch))
+	script.OpenBrowser(driver.GetNewPullRequestURL(step.BranchName, parentBranch))
 	return nil
 }

@@ -108,9 +108,9 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	driver := getDriver(config.BranchToShip, branchToMergeInto)
-	if driver != nil {
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, Driver: driver})
+	canUseDriver := canUseDriver(config.BranchToShip, branchToMergeInto)
+	if canUseDriver {
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
@@ -119,7 +119,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if driver != nil || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
+	if canUseDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
@@ -135,22 +135,19 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	return
 }
 
-func getDriver(branch, parentBranch string) drivers.CodeHostingDriver {
+func canUseDriver(branch, parentBranch string) bool {
 	if !git.HasRemote("origin") {
-		return nil
+		return false
 	}
 	driver := drivers.GetCodeHostingDriver()
 	if driver == nil {
-		return nil
+		return false
 	}
 	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	if canMerge {
-		return driver
-	}
-	return nil
+	return canMerge
 }
 
 func init() {

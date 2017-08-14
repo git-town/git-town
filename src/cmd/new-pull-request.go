@@ -77,7 +77,7 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch, Driver: drivers.GetCodeHostingDriver()})
+	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return
 }
 

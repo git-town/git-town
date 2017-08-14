@@ -14,7 +14,6 @@ type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
 	CommitMessage             string
-	Driver                    drivers.CodeHostingDriver
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
@@ -63,7 +62,8 @@ func (step *DriverMergePullRequestStep) Run() error {
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	step.mergeSha, step.mergeError = step.Driver.MergePullRequest(drivers.MergePullRequestOptions{
+	driver := drivers.GetCodeHostingDriver()
+	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:        step.BranchName,
 		CommitMessage: commitMessage,
 		LogRequests:   true,
