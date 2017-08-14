@@ -50,7 +50,7 @@ Example: your SSH identity should be something like
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if git.IsOffline() {
-			util.ExitWithErrorMessage("Error: cannot create new pull requests in offline mode.")
+			util.ExitBecauseOffline("new-pull-request")
 		}
 		err := validateMaxArgs(args, 0)
 		if err != nil {
