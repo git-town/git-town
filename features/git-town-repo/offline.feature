@@ -10,5 +10,5 @@ Feature: git town-repo: offline mode
     When I run `git-town repo`
     Then I get the error:
       """
-      Error: cannot display the repository homepage in offline mode
+      git-town repo requires an active internet connection
       """
