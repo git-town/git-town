@@ -8,9 +8,10 @@ type Registry struct {
 }
 
 // DetermineActiveDriver determines the driver to use for the given hostname
-func (r *Registry) DetermineActiveDriver(hostname string) (CodeHostingDriver, error) {
+func (r *Registry) DetermineActiveDriver(originURL string) (CodeHostingDriver, error) {
 	for _, driver := range r.drivers {
-		if driver.CanBeUsed(hostname) {
+		driver.SetOriginURL(originURL)
+		if driver.CanBeUsed() {
 			return driver, nil
 		}
 	}

@@ -6,7 +6,7 @@ type CodeHostingDriver interface {
 
 	// CanBeUsed returns whether this driver can manage
 	// a repository with the given hostname
-	CanBeUsed(hostname string) bool
+	CanBeUsed() bool
 
 	// GetNewPullRequestURL returns the URL of the page
 	// to create a new pull request online
@@ -18,4 +18,7 @@ type CodeHostingDriver interface {
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string
+
+	// SetOriginURL configures the driver with the origin URL of the Git repo
+	SetOriginURL(originURL string)
 }
