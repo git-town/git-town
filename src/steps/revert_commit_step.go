@@ -9,6 +9,6 @@ type RevertCommitStep struct {
 }
 
 // Run executes this step.
-func (step RevertCommitStep) Run() error {
+func (step *RevertCommitStep) Run() error {
 	return script.RunCommand("git", "revert", step.Sha)
 }

@@ -26,8 +26,6 @@ the main branch is synced with its upstream counterpart.
 This can be disabled by toggling the "hack-push-flag" configuration:
 $ git town hack-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "hack",
@@ -46,7 +44,16 @@ $ git town hack-push-flag false`,
 		if len(args) == 0 && !abortFlag && !continueFlag {
 			return errors.New("no branch name provided")
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -62,9 +69,9 @@ func checkHackPreconditions(args []string) string {
 func getHackStepList(targetBranchName string) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
 	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
-	result.Append(steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
+	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: targetBranchName, ParentBranchName: mainBranchName})
 	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: targetBranchName})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: targetBranchName})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

@@ -12,21 +12,21 @@ type MergeBranchStep struct {
 }
 
 // CreateAbortStep returns the abort step for this step.
-func (step MergeBranchStep) CreateAbortStep() Step {
-	return AbortMergeBranchStep{}
+func (step *MergeBranchStep) CreateAbortStep() Step {
+	return &AbortMergeBranchStep{}
 }
 
 // CreateContinueStep returns the continue step for this step.
-func (step MergeBranchStep) CreateContinueStep() Step {
-	return ContinueMergeBranchStep{}
+func (step *MergeBranchStep) CreateContinueStep() Step {
+	return &ContinueMergeBranchStep{}
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step MergeBranchStep) CreateUndoStepBeforeRun() Step {
-	return ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
+func (step *MergeBranchStep) CreateUndoStepBeforeRun() Step {
+	return &ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
 }
 
 // Run executes this step.
-func (step MergeBranchStep) Run() error {
+func (step *MergeBranchStep) Run() error {
 	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
 }
