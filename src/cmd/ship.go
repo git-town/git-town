@@ -112,8 +112,8 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canUseDriver := canUseDriver(config.BranchToShip, branchToMergeInto)
-	if canUseDriver {
+	canShipWithDriver := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	if canShipWithDriver {
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
@@ -123,7 +123,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if canUseDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
+	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
@@ -139,7 +139,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	return
 }
 
-func canUseDriver(branch, parentBranch string) bool {
+func getCanShipWithDriver(branch, parentBranch string) bool {
 	if !git.HasRemote("origin") {
 		return false
 	}
