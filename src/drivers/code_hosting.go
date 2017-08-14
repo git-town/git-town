@@ -22,7 +22,7 @@ type MergePullRequestOptions struct {
 // CodeHostingDriver defines the interface
 // of drivers for the different code hosting services
 type CodeHostingDriver interface {
-	CanMergePullRequest() bool
+	CanMergePullRequest(options MergePullRequestOptions) (bool, error)
 	GetRepositoryURL(repository string) string
 	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
 	MergePullRequest(options MergePullRequestOptions) (string, error)

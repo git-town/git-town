@@ -11,8 +11,8 @@ import (
 type GitlabCodeHostingDriver struct{}
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver GitlabCodeHostingDriver) CanMergePullRequest() bool {
-	return false
+func (driver GitlabCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+	return false, nil
 }
 
 // GetNewPullRequestURL returns the URL of the page

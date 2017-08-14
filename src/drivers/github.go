@@ -21,8 +21,16 @@ type GithubCodeHostingDriver struct {
 }
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver GithubCodeHostingDriver) CanMergePullRequest() bool {
-	return os.Getenv("GIT_TOWN_GITHUB_TOKEN") != ""
+func (driver GithubCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+	if os.Getenv("GIT_TOWN_GITHUB_TOKEN") == "" {
+		return false, nil
+	}
+	driver.connect()
+	pullRequestNumbers, err := driver.getPullRequestNumbers(options)
+	if err != nil {
+		return false, err
+	}
+	return len(pullRequestNumbers) == 1, nil
 }
 
 // GetNewPullRequestURL returns the URL of the page
@@ -53,33 +61,47 @@ func (driver GithubCodeHostingDriver) MergePullRequest(options MergePullRequestO
 // Helper
 
 func (driver *GithubCodeHostingDriver) connect() {
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GIT_TOWN_GITHUB_TOKEN")},
-	)
-	tc := oauth2.NewClient(context.Background(), ts)
-	driver.client = github.NewClient(tc)
+	if driver.client == nil {
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: os.Getenv("GIT_TOWN_GITHUB_TOKEN")},
+		)
+		tc := oauth2.NewClient(context.Background(), ts)
+		driver.client = github.NewClient(tc)
+	}
 }
 
 func (driver *GithubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
+	pullRequestNumbers, err := driver.getPullRequestNumbers(options)
+	if err != nil {
+		return -1, err
+	}
+	if len(pullRequestNumbers) == 0 {
+		return -1, errors.New("No pull request found")
+	}
+	if len(pullRequestNumbers) > 1 {
+		pullRequestNumbersAsStrings := make([]string, len(pullRequestNumbers))
+		for i, number := range pullRequestNumbers {
+			pullRequestNumbersAsStrings[i] = strconv.Itoa(number)
+		}
+		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
+	}
+	return pullRequestNumbers[0], nil
+}
+
+func (driver *GithubCodeHostingDriver) getPullRequestNumbers(options MergePullRequestOptions) ([]int, error) {
 	pullRequests, _, err := driver.client.PullRequests.List(context.Background(), options.Owner, options.Repository, &github.PullRequestListOptions{
 		Base:  options.ParentBranch,
 		Head:  options.Owner + ":" + options.Branch,
 		State: "open",
 	})
 	if err != nil {
-		return -1, err
+		return []int{}, err
 	}
-	if len(pullRequests) == 0 {
-		return -1, errors.New("No pull request found")
+	result := make([]int, len(pullRequests))
+	for i, pullRequest := range pullRequests {
+		result[i] = *pullRequest.Number
 	}
-	if len(pullRequests) > 1 {
-		pullRequestNumbers := make([]string, len(pullRequests))
-		for i, pullRequest := range pullRequests {
-			pullRequestNumbers[i] = strconv.Itoa(*pullRequest.Number)
-		}
-		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbers, ", "))
-	}
-	return *pullRequests[0].Number, nil
+	return result, nil
 }
 
 func (driver *GithubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (string, error) {

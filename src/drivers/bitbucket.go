@@ -14,8 +14,8 @@ import (
 type BitbucketCodeHostingDriver struct{}
 
 // CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver BitbucketCodeHostingDriver) CanMergePullRequest() bool {
-	return false
+func (driver BitbucketCodeHostingDriver) CanMergePullRequest(options MergePullRequestOptions) (bool, error) {
+	return false, nil
 }
 
 // GetNewPullRequestURL returns the URL of the page

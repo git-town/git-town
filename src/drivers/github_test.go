@@ -27,28 +27,74 @@ func GetRequestData(request *http.Request) map[string]interface{} {
 }
 
 var _ = Describe("Github", func() {
+	pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
+	currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 	var driver GithubCodeHostingDriver
 
 	BeforeEach(func() {
 		driver = GithubCodeHostingDriver{}
+		os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 	})
 
 	Describe("CanMergePullRequest", func() {
-		It("returns true if the environment variable GITHUB_TOKEN is a non-empty string", func() {
-			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
-			Expect(driver.CanMergePullRequest()).To(BeTrue())
+		var options MergePullRequestOptions
+
+		BeforeEach(func() {
+			options = MergePullRequestOptions{
+				Branch:       "feature",
+				ParentBranch: "main",
+				Owner:        "Originate",
+				Repository:   "git-town",
+			}
+		})
+
+		AfterEach(func() {
 			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
 		})
 
 		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
-			Expect(driver.CanMergePullRequest()).To(BeFalse())
+			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "")
+			canMerge, err := driver.CanMergePullRequest(options)
+			Expect(err).To(BeNil())
+			Expect(canMerge).To(BeFalse())
+		})
+
+		Describe("environment variable GITHUB_TOKEN is a non-empty string", func() {
+			BeforeEach(func() {
+				os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
+			})
+
+			It("returns request errors (getting the pull request number to merge)", func() {
+				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
+				_, err := driver.CanMergePullRequest(options)
+				Expect(err).To(HaveOccurred())
+			})
+
+			It("returns false if there is no pull request for the branch", func() {
+				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
+				canMerge, err := driver.CanMergePullRequest(options)
+				Expect(err).To(BeNil())
+				Expect(canMerge).To(BeFalse())
+			})
+
+			It("returns false if there are multiple pull requests for the branch", func() {
+				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
+				canMerge, err := driver.CanMergePullRequest(options)
+				Expect(err).To(BeNil())
+				Expect(canMerge).To(BeFalse())
+			})
+
+			It("returns true if there is one pull request for the branch", func() {
+				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
+				canMerge, err := driver.CanMergePullRequest(options)
+				Expect(err).To(BeNil())
+				Expect(canMerge).To(BeTrue())
+			})
 		})
 	})
 
 	Describe("MergePullRequest", func() {
-		pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 		childPullRequestsURL := pullRequestBaseURL + "?base=feature&state=open"
-		currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 		mergePullRequestURL := pullRequestBaseURL + "/1/merge"
 		updatePullRequestBaseURL1 := pullRequestBaseURL + "/2"
 		updatePullRequestBaseURL2 := pullRequestBaseURL + "/3"
