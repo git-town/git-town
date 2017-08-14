@@ -37,8 +37,6 @@ When run on the main branch or a perennial branch
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
 				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
@@ -57,7 +55,16 @@ the main branch is synced with its upstream counterpart.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -85,9 +92,9 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	if git.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
-		result.Append(steps.PushTagsStep{})
+		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

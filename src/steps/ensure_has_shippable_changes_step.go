@@ -15,12 +15,12 @@ type EnsureHasShippableChangesStep struct {
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step
 // cause the command to automatically abort.
-func (step EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() string {
+func (step *EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() string {
 	return fmt.Sprintf("The branch '%s' has no shippable changes.", step.BranchName)
 }
 
 // Run executes this step.
-func (step EnsureHasShippableChangesStep) Run() error {
+func (step *EnsureHasShippableChangesStep) Run() error {
 	if !git.HasShippableChanges(step.BranchName) {
 		return errors.New("no shippable changes")
 	}
@@ -29,6 +29,6 @@ func (step EnsureHasShippableChangesStep) Run() error {
 
 // ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
 // automatically abort if it errors.
-func (step EnsureHasShippableChangesStep) ShouldAutomaticallyAbortOnError() bool {
+func (step *EnsureHasShippableChangesStep) ShouldAutomaticallyAbortOnError() bool {
 	return true
 }

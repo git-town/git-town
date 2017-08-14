@@ -38,8 +38,6 @@ into the main branch, resulting in linear history on the main branch.
 Only shipping of direct children of the main branch is allowed.
 To ship a nested child branch, all ancestor branches have to be shipped or killed.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "ship",
@@ -55,7 +53,16 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -99,27 +106,27 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
-	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
-	result.Append(steps.MergeTrackingBranchStep{})
-	result.Append(steps.MergeBranchStep{BranchName: branchToMergeInto})
-	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
-	result.Append(steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	result.Append(steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.MergeTrackingBranchStep{})
+	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
+	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
+	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
+	result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	if git.HasRemote("origin") && !isOffline {
-		result.Append(steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
+		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
 	if git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
-	result.Append(steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
-	result.Append(steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
 	for _, child := range childBranches {
-		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
+		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
 	}
-	result.Append(steps.DeleteAncestorBranchesStep{})
+	result.Append(&steps.DeleteAncestorBranchesStep{})
 	if !isShippingInitialBranch {
-		result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
 	return
