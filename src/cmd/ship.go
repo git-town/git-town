@@ -77,34 +77,35 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	}
 	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
-	ensureParentBranchIsMainBranch(result.BranchToShip)
+	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
 }
 
-func ensureParentBranchIsMainBranch(branchName string) {
-	if git.GetParentBranch(branchName) != git.GetMainBranch() {
+func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
+	parentBranch := git.GetParentBranch(branchName)
+	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
 		ancestors := git.GetAncestorBranches(branchName)
-		ancestorsWithoutMain := ancestors[1:]
-		oldestAncestor := ancestorsWithoutMain[0]
+		ancestorsWithoutMainOrPerennial := ancestors[1:]
+		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(
-			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMain, ", ")+" as well.",
+			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
 	}
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
-	mainBranch := git.GetMainBranch()
+	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
-	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
+	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
 	result.Append(steps.CheckoutBranchStep{BranchName: config.BranchToShip})
 	result.Append(steps.MergeTrackingBranchStep{})
-	result.Append(steps.MergeBranchStep{BranchName: mainBranch})
+	result.Append(steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
-	result.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
+	result.Append(steps.CheckoutBranchStep{BranchName: branchToMergeInto})
 	result.Append(steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	if git.HasRemote("origin") {
-		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
+		result.Append(steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
 	if git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 {
@@ -113,7 +114,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
 	for _, child := range childBranches {
-		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
+		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
 	}
 	result.Append(steps.DeleteAncestorBranchesStep{})
 	if !isShippingInitialBranch {
