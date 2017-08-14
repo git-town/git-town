@@ -14,6 +14,7 @@ type bitbucketCodeHostingDriver struct {
 func (d bitbucketCodeHostingDriver) CanBeUsed(hostname string) bool {
 	return hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket")
 }
+
 func (d bitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))

@@ -16,7 +16,6 @@ var configCommand = &cobra.Command{
 	Use:   "config",
 	Short: "Displays or resets your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if resetFlag {
 			resetConfig()
 		} else if setupFlag {
@@ -26,7 +25,11 @@ var configCommand = &cobra.Command{
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
