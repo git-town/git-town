@@ -15,15 +15,15 @@ type PushBranchStep struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step PushBranchStep) CreateUndoStepBeforeRun() Step {
+func (step *PushBranchStep) CreateUndoStepBeforeRun() Step {
 	if step.Undoable {
-		return PushBranchAfterCurrentBranchSteps{}
+		return &PushBranchAfterCurrentBranchSteps{}
 	}
-	return SkipCurrentBranchSteps{}
+	return &SkipCurrentBranchSteps{}
 }
 
 // Run executes this step.
-func (step PushBranchStep) Run() error {
+func (step *PushBranchStep) Run() error {
 	if !git.ShouldBranchBePushed(step.BranchName) {
 		return nil
 	}

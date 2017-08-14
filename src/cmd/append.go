@@ -27,8 +27,7 @@ makes the new branch a child of the current branch,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
+
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "append",
@@ -47,7 +46,16 @@ and brings over all uncommitted changes to the new feature branch.`,
 		if len(args) == 0 && !abortFlag && !continueFlag && !undoFlag {
 			return errors.New("no branch name provided")
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -66,11 +74,11 @@ func getAppendStepList(config appendConfig) (result steps.StepList) {
 	for _, branchName := range append(git.GetAncestorBranches(config.InitialBranch), config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
 	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return
