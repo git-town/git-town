@@ -30,7 +30,6 @@ func (d *bitbucketCodeHostingDriver) GetRepositoryURL(repository string) string 
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
-
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {

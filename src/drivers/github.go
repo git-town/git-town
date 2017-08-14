@@ -13,7 +13,6 @@ type githubCodeHostingDriver struct {
 }
 
 func (d *githubCodeHostingDriver) CanBeUsed() bool {
-	fmt.Println(d.hostname)
 	return d.hostname == "github.com" || strings.Contains(d.hostname, "github")
 }
 
