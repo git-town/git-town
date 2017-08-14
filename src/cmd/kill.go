@@ -27,7 +27,6 @@ from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "kill",
@@ -46,7 +45,12 @@ Does not delete perennial branches nor the main branch.`,
 		if err != nil {
 			return err
 		}
-		return git.ValidateIsRepository()
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
