@@ -14,7 +14,7 @@ type BitbucketCodeHostingDriver struct{}
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Bitbucket
-func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+func (driver *BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{repository, "", parentBranch}, ":"))
@@ -23,6 +23,6 @@ func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string,
 
 // GetRepositoryURL returns the URL where the given repository can be found
 // on Bitbucket.com
-func (driver BitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
+func (driver *BitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://bitbucket.org/" + repository
 }

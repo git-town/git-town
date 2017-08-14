@@ -20,11 +20,11 @@ func GetCodeHostingDriver() CodeHostingDriver {
 	hostname := git.GetURLHostname(git.GetRemoteOriginURL())
 	switch {
 	case hostname == "github.com" || strings.Contains(hostname, "github"):
-		return GithubCodeHostingDriver{}
+		return &GithubCodeHostingDriver{}
 	case hostname == "bitbucket.org" || strings.Contains(hostname, "bitbucket"):
-		return BitbucketCodeHostingDriver{}
+		return &BitbucketCodeHostingDriver{}
 	case hostname == "gitlab.com" || strings.Contains(hostname, "gitlab"):
-		return GitlabCodeHostingDriver{}
+		return &GitlabCodeHostingDriver{}
 	default:
 		util.ExitWithErrorMessage("Unsupported hosting service.", "This command requires hosting on GitHub, GitLab, or Bitbucket")
 		return nil
