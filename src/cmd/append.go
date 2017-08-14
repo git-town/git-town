@@ -27,8 +27,7 @@ makes the new branch a child of the current branch,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
+
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "append",
@@ -47,7 +46,16 @@ and brings over all uncommitted changes to the new feature branch.`,
 		if len(args) == 0 && !abortFlag && !continueFlag && !undoFlag {
 			return errors.New("no branch name provided")
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 

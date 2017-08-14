@@ -17,7 +17,6 @@ Newly hacked branches will be pushed upon creation
 if and only if "hack-push-flag" is true.
 The default value is false.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
@@ -31,7 +30,11 @@ The default value is false.`,
 				return err
 			}
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
