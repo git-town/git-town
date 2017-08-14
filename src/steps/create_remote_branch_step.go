@@ -12,6 +12,6 @@ type CreateRemoteBranchStep struct {
 }
 
 // Run executes this step.
-func (step CreateRemoteBranchStep) Run() error {
+func (step *CreateRemoteBranchStep) Run() error {
 	return script.RunCommand("git", "push", "origin", step.Sha+":refs/heads/"+step.BranchName)
 }
