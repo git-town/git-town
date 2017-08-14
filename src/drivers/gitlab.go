@@ -17,7 +17,7 @@ func (driver GitlabCodeHostingDriver) CanMergePullRequest(options MergePullReque
 
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Gitlab
-func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
+func (driver *GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
@@ -25,7 +25,7 @@ func (driver GitlabCodeHostingDriver) GetNewPullRequestURL(repository string, br
 }
 
 // GetRepositoryURL returns the URL of the given repository on Gitlab
-func (driver GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
+func (driver *GitlabCodeHostingDriver) GetRepositoryURL(repository string) string {
 	return "https://gitlab.com/" + repository
 }
 
