@@ -14,13 +14,13 @@ type CommitOpenChangesStep struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step CommitOpenChangesStep) CreateUndoStepBeforeRun() Step {
+func (step *CommitOpenChangesStep) CreateUndoStepBeforeRun() Step {
 	branchName := git.GetCurrentBranchName()
-	return ResetToShaStep{Sha: git.GetBranchSha(branchName)}
+	return &ResetToShaStep{Sha: git.GetBranchSha(branchName)}
 }
 
 // Run executes this step.
-func (step CommitOpenChangesStep) Run() error {
+func (step *CommitOpenChangesStep) Run() error {
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err
