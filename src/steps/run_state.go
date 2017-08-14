@@ -23,7 +23,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 		if !isCheckoutBranchStep(step) {
 			popped.Append(runState.RunStepList.Pop())
 		} else {
-			runState.RunStepList.Prepend(PushBranchStep{BranchName: git.GetCurrentBranchName()})
+			runState.RunStepList.Prepend(&PushBranchStep{BranchName: git.GetCurrentBranchName()})
 			runState.RunStepList.PrependList(popped)
 			break
 		}
@@ -88,5 +88,5 @@ func (runState *RunState) SkipCurrentBranchSteps() {
 }
 
 func isCheckoutBranchStep(step Step) bool {
-	return getTypeName(step) == "CheckoutBranchStep"
+	return getTypeName(step) == "*CheckoutBranchStep"
 }

@@ -9,12 +9,12 @@ type AddToPerennialBranches struct {
 }
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step AddToPerennialBranches) CreateUndoStepBeforeRun() Step {
-	return RemoveFromPerennialBranches{BranchName: step.BranchName}
+func (step *AddToPerennialBranches) CreateUndoStepBeforeRun() Step {
+	return &RemoveFromPerennialBranches{BranchName: step.BranchName}
 }
 
 // Run executes this step.
-func (step AddToPerennialBranches) Run() error {
+func (step *AddToPerennialBranches) Run() error {
 	git.AddToPerennialBranches(step.BranchName)
 	return nil
 }
