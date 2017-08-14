@@ -13,6 +13,11 @@ import (
 // repositories hosted on Bitbucket
 type BitbucketCodeHostingDriver struct{}
 
+// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
+func (driver BitbucketCodeHostingDriver) CanMergePullRequest() bool {
+	return false
+}
+
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Bitbucket
 func (driver BitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {

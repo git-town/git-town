@@ -20,6 +20,11 @@ type GithubCodeHostingDriver struct {
 	client *github.Client
 }
 
+// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
+func (driver GithubCodeHostingDriver) CanMergePullRequest() bool {
+	return os.Getenv("GIT_TOWN_GITHUB_TOKEN") != ""
+}
+
 // GetNewPullRequestURL returns the URL of the page
 // to create a new pull request on Github
 func (driver GithubCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {

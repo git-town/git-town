@@ -33,6 +33,18 @@ var _ = Describe("Github", func() {
 		driver = GithubCodeHostingDriver{}
 	})
 
+	Describe("CanMergePullRequest", func() {
+		It("returns true if the environment variable GITHUB_TOKEN is a non-empty string", func() {
+			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
+			Expect(driver.CanMergePullRequest()).To(BeTrue())
+			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
+		})
+
+		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
+			Expect(driver.CanMergePullRequest()).To(BeFalse())
+		})
+	})
+
 	Describe("MergePullRequest", func() {
 		pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 		childPullRequestsURL := pullRequestBaseURL + "?base=feature&state=open"
