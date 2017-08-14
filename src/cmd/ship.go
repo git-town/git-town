@@ -116,7 +116,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if !useDriver && git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 {
+	if useDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})

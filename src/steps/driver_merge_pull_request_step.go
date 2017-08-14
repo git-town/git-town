@@ -46,7 +46,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortErrorMessage() string {
 // Run executes this step.
 func (step *DriverMergePullRequestStep) Run() error {
 	commitMessage := step.CommitMessage
-	if commitMessage != "" {
+	if commitMessage == "" {
 		step.enteredEmptyCommitMessage = true
 		err := script.RunCommand("git", "merge", "--squash", step.BranchName)
 		if err != nil {
@@ -69,8 +69,9 @@ func (step *DriverMergePullRequestStep) Run() error {
 	step.mergeSha, step.mergeError = step.Driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:        step.BranchName,
 		CommitMessage: commitMessage,
-		ParentBranch:  git.GetCurrentBranchName(),
+		LogRequests:   true,
 		Owner:         repositoryParts[0],
+		ParentBranch:  git.GetCurrentBranchName(),
 		Repository:    repositoryParts[1],
 	})
 	return step.mergeError

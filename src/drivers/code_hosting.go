@@ -2,17 +2,20 @@ package drivers
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/fatih/color"
 )
 
 // MergePullRequestOptions defines the options to the MergePullRequest function
 type MergePullRequestOptions struct {
 	Branch        string
 	CommitMessage string
-	ParentBranch  string
+	LogRequests   bool
 	Owner         string
+	ParentBranch  string
 	Repository    string
 }
 
@@ -48,4 +51,9 @@ func ValidateHasCodeHostingDriver() error {
 		return errors.New("Unsupported hosting service. This command requires hosting on GitHub, GitLab, or Bitbucket")
 	}
 	return nil
+}
+
+func printLog(message string) {
+	fmt.Println()
+	color.New(color.Bold).Println(message)
 }
