@@ -38,7 +38,6 @@ into the main branch, resulting in linear history on the main branch.
 Only shipping of direct children of the main branch is allowed.
 To ship a nested child branch, all ancestor branches have to be shipped or killed.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
@@ -55,7 +54,11 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
