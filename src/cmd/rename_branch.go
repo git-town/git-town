@@ -43,7 +43,6 @@ When run on a perennial branch
 - Requires the use of the "-f" option
 - Reconfigures git town locally for the perennial branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "rename-branch",
@@ -66,7 +65,12 @@ When run on a perennial branch
 		if err != nil {
 			return err
 		}
-		return git.ValidateIsRepository()
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 

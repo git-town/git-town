@@ -34,7 +34,6 @@ make sure that your SSH identity contains the phrase "github", "gitlab" or
 Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "new-pull-request",
@@ -58,6 +57,7 @@ Example: your SSH identity should be something like
 		if err != nil {
 			return err
 		}
+		prompt.EnsureIsConfigured()
 		return drivers.ValidateHasCodeHostingDriver()
 	},
 }
