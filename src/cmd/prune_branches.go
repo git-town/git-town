@@ -40,7 +40,7 @@ This usually means the branch was shipped or killed on another machine.`,
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return nil
+		return git.ValidateIsOnline()
 	},
 }
 
