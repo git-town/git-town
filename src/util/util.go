@@ -35,13 +35,6 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
-// ExitBecauseOffline prints an error message
-// explaining the given command doesn't run in offline mode.
-func ExitBecauseOffline(command string) {
-	calledCommand := GetCalledBinary(command)
-	ExitWithErrorMessage(calledCommand + " requires an active internet connection.")
-}
-
 // ExitWithErrorMessage prints the given error message and terminates the application.
 func ExitWithErrorMessage(messages ...string) {
 	PrintError(messages...)
