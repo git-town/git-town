@@ -25,11 +25,10 @@ var configCommand = &cobra.Command{
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgs(args, 0),
+			git.ValidateIsRepository(),
+		)
 	},
 }
 

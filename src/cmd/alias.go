@@ -40,11 +40,10 @@ Note that this can conflict with other tools that also define additional Git com
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateArgsCount(args, 1)
-		if err != nil {
-			return err
-		}
-		return validateBooleanArgument(args[0])
+		return util.FirstError(
+			validateArgsCount(args, 1),
+			validateBooleanArgument(args[0]),
+		)
 	},
 }
 
