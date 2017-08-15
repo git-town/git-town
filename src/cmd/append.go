@@ -37,7 +37,7 @@ and brings over all uncommitted changes to the new feature branch.`,
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkAppendPreconditions(args)
+				config := getAppendConfig(args)
 				return getAppendStepList(config)
 			},
 		})
@@ -59,7 +59,7 @@ and brings over all uncommitted changes to the new feature branch.`,
 	},
 }
 
-func checkAppendPreconditions(args []string) (result appendConfig) {
+func getAppendConfig(args []string) (result appendConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
 	if git.HasRemote("origin") && !git.IsOffline() {
