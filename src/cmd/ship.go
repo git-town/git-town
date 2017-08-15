@@ -38,7 +38,11 @@ into the main branch, resulting in linear history on the main branch.
 - deletes <branch_name> from the local and remote repositories
 
 Only shipping of direct children of the main branch is allowed.
-To ship a nested child branch, all ancestor branches have to be shipped or killed.`,
+To ship a nested child branch, all ancestor branches have to be shipped or killed.
+
+If you have a pull request for your branch on GitHub and the environment variable
+'GIT_TOWN_GITHUB_TOKEN' set to a GitHub personal access token with access to your repositories,
+it will squash merge the pull request through the Github API.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
