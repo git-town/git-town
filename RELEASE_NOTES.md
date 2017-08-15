@@ -9,7 +9,7 @@
   * Display / update offline mode with `git town offline [(true | false)]`
 * `git ship`
   * add ability to ship hotfixes to perennial branches
-  * add ability to merge via GitHub API when applicable. See [documentation](/documentation/commands/ship.md) for more info.
+  * add ability to merge via GitHub API when applicable. See [documentation](/documentation/commands/ship.md#github) for more info.
 
 #### Bug Fixes
 * temporary file: use operating system temporary directory instead of hardcoding `/tmp`
