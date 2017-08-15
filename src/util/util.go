@@ -41,18 +41,6 @@ func ExitWithErrorMessage(messages ...string) {
 	os.Exit(1)
 }
 
-// GetCalledBinary returns how the user called the binary
-func GetCalledBinary(command string) string {
-	words := []string{}
-	for _, word := range os.Args {
-		words = append(words, word)
-		if word == command {
-			break
-		}
-	}
-	return strings.Join(words, " ")
-}
-
 // GetCommandOutput runs the given command and returns its output.
 func GetCommandOutput(cmd ...string) string {
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
