@@ -55,16 +55,11 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgs(args, 1),
+			git.ValidateIsRepository(),
+			prompt.EnsureIsConfigured(),
+		)
 	},
 }
 

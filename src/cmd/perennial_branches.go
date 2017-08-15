@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -27,11 +28,10 @@ They cannot be shipped.`,
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgs(args, 0),
+			git.ValidateIsRepository(),
+		)
 	},
 }
 

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -15,11 +16,10 @@ Updates the parent branch of a feature branch in Git Town's configuration.`,
 		setParentBranch(args[0], args[1])
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 2)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgs(args, 2),
+			git.ValidateIsRepository(),
+		)
 	},
 }
 

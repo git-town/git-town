@@ -5,6 +5,7 @@ import (
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -25,20 +26,13 @@ Example: your SSH identity should be something like
 		script.OpenBrowser(driver.GetRepositoryURL())
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		err = git.ValidateIsOnline()
-		if err != nil {
-			return err
-		}
-		return drivers.ValidateHasDriver()
+		return util.FirstError(
+			validateMaxArgs(args, 0),
+			git.ValidateIsRepository(),
+			prompt.EnsureIsConfigured(),
+			git.ValidateIsOnline(),
+			drivers.ValidateHasDriver(),
+		)
 	},
 }
 
