@@ -49,7 +49,7 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkShipPreconditions(args)
+				config := gitShipConfig(args)
 				return getShipStepList(config)
 			},
 		})
@@ -63,7 +63,7 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 	},
 }
 
-func checkShipPreconditions(args []string) (result shipConfig) {
+func gitShipConfig(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.BranchToShip = result.InitialBranch

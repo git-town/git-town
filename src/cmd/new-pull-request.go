@@ -44,7 +44,7 @@ Example: your SSH identity should be something like
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkNewPullRequestPreconditions()
+				config := getNewPullRequestConfig()
 				return getNewPullRequestStepList(config)
 			},
 		})
@@ -60,7 +60,7 @@ Example: your SSH identity should be something like
 	},
 }
 
-func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
+func getNewPullRequestConfig() (result newPullRequestConfig) {
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
