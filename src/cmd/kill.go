@@ -36,7 +36,7 @@ Does not delete perennial branches nor the main branch.`,
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				return getKillStepList(checkKillPreconditions(args))
+				return getKillStepList(getKillConfig(args))
 			},
 		})
 	},
@@ -54,7 +54,7 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func checkKillPreconditions(args []string) (result killConfig) {
+func getKillConfig(args []string) (result killConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 
 	if len(args) == 0 {

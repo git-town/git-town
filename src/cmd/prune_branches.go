@@ -26,7 +26,7 @@ This usually means the branch was shipped or killed on another machine.`,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				checkPruneBranchesPreconditions()
-				return getPruneBranchesList()
+				return getPruneBranchesStepList()
 			},
 		})
 	},
@@ -50,7 +50,7 @@ func checkPruneBranchesPreconditions() {
 	}
 }
 
-func getPruneBranchesList() (result steps.StepList) {
+func getPruneBranchesStepList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
