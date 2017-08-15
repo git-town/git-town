@@ -1,12 +1,9 @@
 package steps
 
 import (
-	"log"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/util"
 )
 
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch
@@ -34,10 +31,7 @@ func (step *SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
 
 // Run executes this step.
 func (step *SquashMergeBranchStep) Run() error {
-	err := script.RunCommand("git", "merge", "--squash", step.BranchName)
-	if err != nil {
-		log.Fatal("Error squash merging:", err)
-	}
+	script.SquashMerge(step.BranchName)
 	commitCmd := []string{"git", "commit"}
 	if step.CommitMessage != "" {
 		commitCmd = append(commitCmd, "-m", step.CommitMessage)
@@ -46,7 +40,7 @@ func (step *SquashMergeBranchStep) Run() error {
 	if author != git.GetLocalAuthor() {
 		commitCmd = append(commitCmd, "--author", author)
 	}
-	util.GetCommandOutput("sed", "-i", "-e", "s/^/# /g", ".git/SQUASH_MSG")
+	git.CommentOutDefaultSquashCommitMessage()
 	return script.RunCommand(commitCmd...)
 }
 
