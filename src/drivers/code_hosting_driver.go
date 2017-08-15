@@ -28,4 +28,10 @@ type CodeHostingDriver interface {
 
 	// SetOriginURL configures the driver with the origin URL of the Git repo
 	SetOriginURL(originURL string)
+
+	// GetAPITokenKey returns the git config key value that the API token is stored under
+	GetAPITokenKey() string
+
+	// SetAPIToken configures the driver with API token
+	SetAPIToken(apiToken string)
 }

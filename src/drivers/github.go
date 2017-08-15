@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
@@ -17,6 +16,7 @@ import (
 type githubCodeHostingDriver struct {
 	originURL  string
 	hostname   string
+	apiToken   string
 	client     *github.Client
 	owner      string
 	repository string
@@ -27,7 +27,7 @@ func (d *githubCodeHostingDriver) CanBeUsed() bool {
 }
 
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
-	if os.Getenv("GIT_TOWN_GITHUB_TOKEN") == "" {
+	if d.apiToken == "" {
 		return false, nil
 	}
 	d.connect()
@@ -77,6 +77,14 @@ func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	}
 }
 
+func (d *githubCodeHostingDriver) GetAPITokenKey() string {
+	return "git-town.github-token"
+}
+
+func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
+	d.apiToken = apiToken
+}
+
 func init() {
 	registry.RegisterDriver(&githubCodeHostingDriver{})
 }
@@ -86,7 +94,7 @@ func init() {
 func (d *githubCodeHostingDriver) connect() {
 	if d.client == nil {
 		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: os.Getenv("GIT_TOWN_GITHUB_TOKEN")},
+			&oauth2.Token{AccessToken: d.apiToken},
 		)
 		tc := oauth2.NewClient(context.Background(), ts)
 		d.client = github.NewClient(tc)
