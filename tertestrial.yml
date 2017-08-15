@@ -8,3 +8,7 @@ actions:
       filename: '\.feature$'
       line: '\d+'
     command: 'bin/build && bundle exec cucumber {{filename}}:{{line}}'
+
+  - match:
+      filename: '\.go$'
+    command: 'bin/build ; bin/lint'
