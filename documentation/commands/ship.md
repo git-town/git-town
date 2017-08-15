@@ -28,6 +28,7 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 
 If you have a pull request for your branch on GitHub and the environment variable `GIT_TOWN_GITHUB_TOKEN` set to a GitHub personal access token with access to your repositories,
 it will squash merge the pull request through the Github API.
+It will also update the base branch for any pull requests against your branch.
 
 #### OPTIONS
 
