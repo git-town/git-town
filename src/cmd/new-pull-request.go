@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
@@ -70,10 +67,6 @@ Example: your SSH identity should be something like
 }
 
 func getNewPullRequestConfig() (result newPullRequestConfig) {
-	if git.IsOffline() {
-		fmt.Println("Error: cannot ship in offline mode.")
-		os.Exit(1)
-	}
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
