@@ -9,38 +9,45 @@ import (
 	"github.com/Originate/git-town/src/git"
 )
 
-// BitbucketCodeHostingDriver provides functionality for working with
-// repositories hosted on Bitbucket
-type BitbucketCodeHostingDriver struct {
+type bitbucketCodeHostingDriver struct {
+	originURL  string
+	hostname   string
 	repository string
 }
 
-// NewBitbucketCodeHostingDriver returns a new BitbucketCodeHostingDriver instance
-func NewBitbucketCodeHostingDriver(repository string) *BitbucketCodeHostingDriver {
-	return &BitbucketCodeHostingDriver{repository: repository}
+func (d *bitbucketCodeHostingDriver) CanBeUsed() bool {
+	return d.hostname == "bitbucket.org" || strings.Contains(d.hostname, "bitbucket")
 }
 
-// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
-func (driver *BitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
 	return false, nil
 }
 
-// GetNewPullRequestURL returns the URL of the page
-// to create a new pull request on Bitbucket
-func (driver *BitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
-	query.Add("source", strings.Join([]string{driver.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{driver.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", driver.repository, query.Encode())
+	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("%s/pull-request/new?%s", d.GetRepositoryURL(), query.Encode())
 }
 
-// GetRepositoryURL returns the URL where the given repository can be found
-// on Bitbucket.com
-func (driver *BitbucketCodeHostingDriver) GetRepositoryURL() string {
-	return "https://bitbucket.org/" + driver.repository
+func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
+	return "https://bitbucket.org/" + d.repository
 }
 
-// MergePullRequest is unimplemented
-func (driver *BitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
 	return "", errors.New("shipping pull requests via the BitBucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
+}
+
+func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
+	return "Bitbucket"
+}
+
+func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
+	d.originURL = originURL
+	d.hostname = git.GetURLHostname(originURL)
+	d.repository = git.GetURLRepositoryName(originURL)
+}
+
+func init() {
+	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }

@@ -5,5 +5,12 @@ Feature: git-repo when origin is unsupported
 
 
   Scenario: result
-    Then I get the error "Unsupported hosting service"
-    And I get the error "This command requires hosting on GitHub, GitLab, or Bitbucket"
+    Then I get the error:
+      """
+      Unsupported hosting service
+
+      This command requires hosting on one of these services:
+      * Bitbucket
+      * Github
+      * Gitlab
+      """

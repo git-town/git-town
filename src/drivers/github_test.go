@@ -26,13 +26,15 @@ func GetRequestData(request *http.Request) map[string]interface{} {
 	return data
 }
 
-var _ = Describe("Github", func() {
+var _ = Describe("CodeHostingDriver - Github", func() {
 	pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 	currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
-	var driver *GithubCodeHostingDriver
+	var driver CodeHostingDriver
 
 	BeforeEach(func() {
-		driver = NewGithubCodeHostingDriver("Originate/git-town")
+		var err error
+		driver, err = GetDriver("git@github.com:Originate/git-town.git")
+		Expect(err).To(BeNil())
 		os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 	})
 
