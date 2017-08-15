@@ -61,11 +61,11 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		err = drivers.ValidateHasDriver()
+		err = git.ValidateIsOnline()
 		if err != nil {
 			return err
 		}
-		return git.ValidateIsOnline()
+		return drivers.ValidateHasDriver()
 	},
 }
 
