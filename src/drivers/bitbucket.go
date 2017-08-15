@@ -1,6 +1,7 @@
 package drivers
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -9,23 +10,32 @@ import (
 )
 
 type bitbucketCodeHostingDriver struct {
-	originURL string
-	hostname  string
+	originURL  string
+	hostname   string
+	repository string
 }
 
 func (d *bitbucketCodeHostingDriver) CanBeUsed() bool {
 	return d.hostname == "bitbucket.org" || strings.Contains(d.hostname, "bitbucket")
 }
 
-func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(repository string, branch string, parentBranch string) string {
-	query := url.Values{}
-	query.Add("source", strings.Join([]string{repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
-	query.Add("dest", strings.Join([]string{repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("https://bitbucket.org/%s/pull-request/new?%s", repository, query.Encode())
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
+	return false, nil
 }
 
-func (d *bitbucketCodeHostingDriver) GetRepositoryURL(repository string) string {
-	return "https://bitbucket.org/" + repository
+func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+	query := url.Values{}
+	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
+	return fmt.Sprintf("%s/pull-request/new?%s", d.GetRepositoryURL(), query.Encode())
+}
+
+func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
+	return "https://bitbucket.org/" + d.repository
+}
+
+func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+	return "", errors.New("shipping pull requests via the BitBucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
 }
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
@@ -35,6 +45,7 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
 	d.hostname = git.GetURLHostname(originURL)
+	d.repository = git.GetURLRepositoryName(originURL)
 }
 
 func init() {
