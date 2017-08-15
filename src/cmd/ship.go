@@ -143,7 +143,7 @@ func getCanShipWithDriver(branch, parentBranch string) bool {
 	if !git.HasRemote("origin") {
 		return false
 	}
-	driver := drivers.GetCodeHostingDriver()
+	driver := drivers.GetActiveDriver()
 	if driver == nil {
 		return false
 	}

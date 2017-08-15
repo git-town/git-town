@@ -60,7 +60,7 @@ func (step *DriverMergePullRequestStep) Run() error {
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	driver := drivers.GetCodeHostingDriver()
+	driver := drivers.GetActiveDriver()
 	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:        step.BranchName,
 		CommitMessage: commitMessage,

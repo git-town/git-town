@@ -6,6 +6,7 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -49,6 +50,9 @@ Example: your SSH identity should be something like
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if git.IsOffline() {
+			util.ExitWithErrorMessage("Error: cannot create new pull requests in offline mode.")
+		}
 		err := validateMaxArgs(args, 0)
 		if err != nil {
 			return err
@@ -58,7 +62,7 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return drivers.ValidateHasCodeHostingDriver()
+		return drivers.ValidateHasDriver()
 	},
 }
 

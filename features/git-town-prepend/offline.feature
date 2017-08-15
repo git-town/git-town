@@ -1,12 +1,13 @@
-Feature: Prepending a branch to a feature branch
+Feature: git prepend: offline mode
 
-  As a developer working on a feature branch and coming across a number of changes I want to commit independently
-  I want to be able to insert a feature branch as the direct parent of my current feature branch
-  So that I can review and commit the changes separately without losing access to them in my current feature branch.
+  When having no internet connection
+  I want that new branches are created without attempting network accesses
+  So that I don't see unnecessary errors.
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given Git Town is in offline mode
+    And I have a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local and remote | existing_feature_commit | existing_feature_file | existing feature content |
@@ -18,8 +19,7 @@ Feature: Prepending a branch to a feature branch
     When I run `git-town prepend new-parent`
     Then it runs the commands
       | BRANCH           | COMMAND                    |
-      | existing-feature | git fetch --prune          |
-      |                  | git add -A                 |
+      | existing-feature | git add -A                 |
       |                  | git stash                  |
       |                  | git checkout main          |
       | main             | git rebase origin/main     |

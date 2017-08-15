@@ -21,7 +21,7 @@ make sure that your SSH identity contains the phrase "github", "gitlab", or
 Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.GetCodeHostingDriver()
+		driver := drivers.GetActiveDriver()
 		script.OpenBrowser(driver.GetRepositoryURL())
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -34,7 +34,7 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return drivers.ValidateHasCodeHostingDriver()
+		return drivers.ValidateHasDriver()
 	},
 }
 
