@@ -52,3 +52,4 @@ Feature: git town-ship: offline mode
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
+
