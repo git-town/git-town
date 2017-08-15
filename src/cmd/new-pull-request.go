@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
