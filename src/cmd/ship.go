@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"log"
 	"strings"
 
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -110,12 +112,18 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+	canShipWithDriver := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	if canShipWithDriver {
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+		result.Append(&steps.PullBranchStep{})
+	} else {
+		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+	}
 	if git.HasRemote("origin") {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 {
+	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
@@ -129,6 +137,21 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
 	return
+}
+
+func getCanShipWithDriver(branch, parentBranch string) bool {
+	if !git.HasRemote("origin") {
+		return false
+	}
+	driver := drivers.GetActiveDriver()
+	if driver == nil {
+		return false
+	}
+	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return canMerge
 }
 
 func init() {
