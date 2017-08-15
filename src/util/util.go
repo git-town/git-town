@@ -43,8 +43,7 @@ func ExitWithErrorMessage(messages ...string) {
 
 // GetCommandOutput runs the given command and returns its output.
 func GetCommandOutput(cmd ...string) string {
-	subProcess := exec.Command(cmd[0], cmd[1:]...)
-	output, err := subProcess.CombinedOutput()
+	output, err := GetFullCommandOutput(cmd...)
 	if err != nil {
 		log.Fatal("Command: ", strings.Join(cmd, " "), "\nOutput: "+string(output), "\nError: ", err)
 	}
