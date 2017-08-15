@@ -78,7 +78,7 @@ func checkShipPreconditions(args []string) (result shipConfig) {
 	if result.BranchToShip == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	if result.BranchToShip != result.InitialBranch {
@@ -104,6 +104,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
+	var isOffline = git.IsOffline()
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
@@ -119,11 +120,11 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.GetChildBranches(config.BranchToShip)
-	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0) {
+	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
@@ -141,6 +142,9 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 
 func getCanShipWithDriver(branch, parentBranch string) bool {
 	if !git.HasRemote("origin") {
+		return false
+	}
+	if git.IsOffline() {
 		return false
 	}
 	driver := drivers.GetActiveDriver()
