@@ -42,12 +42,11 @@ Feature: git town-ship: offline mode
       |         | git revert <%= sha 'feature done' %>           |
       |         | git checkout feature                           |
       | feature | git checkout main                              |
-      | main    | git checkout feature                           |
+      | main    | git reset --hard <%= sha 'Initial commit' %>   |
+      |         | git checkout feature                           |
     And I end up on the "feature" branch
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE               |
-      | main    | local            | feature done          |
-      |         |                  | Revert "feature done" |
       | feature | local and remote | feature commit        |
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
