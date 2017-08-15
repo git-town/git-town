@@ -23,8 +23,7 @@ Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
 		driver := drivers.GetActiveDriver()
-		repository := git.GetURLRepositoryName(git.GetRemoteOriginURL())
-		script.OpenBrowser(driver.GetRepositoryURL(repository))
+		script.OpenBrowser(driver.GetRepositoryURL())
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if git.IsOffline() {

@@ -3,3 +3,10 @@ import:
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
 - package: github.com/fatih/color
+- package: github.com/google/go-github
+  subpackages:
+  - github
+- package: golang.org/x/oauth2
+- package: github.com/google/go-querystring
+  subpackages:
+  - query

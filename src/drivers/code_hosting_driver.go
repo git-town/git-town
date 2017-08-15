@@ -8,13 +8,20 @@ type CodeHostingDriver interface {
 	// a repository with the given hostname
 	CanBeUsed() bool
 
+	// CanMergePullRequest returns whether or not MergePullRequest should be
+	// called when shipping
+	CanMergePullRequest(branch, parentBranch string) (bool, error)
+
 	// GetNewPullRequestURL returns the URL of the page
 	// to create a new pull request online
-	GetNewPullRequestURL(repository string, branch string, parentBranch string) string
+	GetNewPullRequestURL(branch, parentBranch string) string
+
+	// MergePullRequest merges the pull request through the hosting service api
+	MergePullRequest(MergePullRequestOptions) (string, error)
 
 	// GetRepositoryURL returns the URL where the given repository
 	// can be found online
-	GetRepositoryURL(repository string) string
+	GetRepositoryURL() string
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string
