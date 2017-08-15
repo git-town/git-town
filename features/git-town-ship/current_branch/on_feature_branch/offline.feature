@@ -46,8 +46,8 @@ Feature: git town-ship: offline mode
       |         | git checkout feature                           |
     And I end up on the "feature" branch
     And I have the following commits
-      | BRANCH  | LOCATION         | MESSAGE               |
-      | feature | local and remote | feature commit        |
+      | BRANCH  | LOCATION         | MESSAGE        |
+      | feature | local and remote | feature commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH  | PARENT |
       | feature | main   |
