@@ -19,7 +19,7 @@ func GetActiveDriver() CodeHostingDriver {
 	return activeDriver
 }
 
-// GetDriver returns the code hosting driver to use based on the git config
+// GetDriver returns the code hosting driver to use based on given origin url
 func GetDriver(originURL string) CodeHostingDriver {
 	return registry.DetermineActiveDriver(originURL)
 }
