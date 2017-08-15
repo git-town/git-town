@@ -32,9 +32,8 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 	var driver CodeHostingDriver
 
 	BeforeEach(func() {
-		var err error
-		driver, err = GetDriver("git@github.com:Originate/git-town.git")
-		Expect(err).To(BeNil())
+		driver = GetDriver("git@github.com:Originate/git-town.git")
+		Expect(driver).NotTo(BeNil())
 		os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 	})
 

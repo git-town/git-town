@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -61,7 +62,7 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return nil
+		return drivers.ValidateHasDriver()
 	},
 }
 
