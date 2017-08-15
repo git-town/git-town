@@ -7,6 +7,7 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -46,16 +47,11 @@ and brings over all uncommitted changes to the new feature branch.`,
 		if len(args) == 0 && !abortFlag && !continueFlag && !undoFlag {
 			return errors.New("no branch name provided")
 		}
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgs(args, 1),
+			git.ValidateIsRepository(),
+			prompt.EnsureIsConfigured(),
+		)
 	},
 }
 
