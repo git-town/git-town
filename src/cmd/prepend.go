@@ -34,8 +34,6 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 
 	git town hack-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "prepend",
@@ -54,14 +52,23 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 		if len(args) == 0 && !abortFlag && !continueFlag && !undoFlag {
 			return errors.New("no branch name provided")
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
 func checkPrependPreconditions(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
@@ -75,12 +82,12 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
-	result.Append(steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	result.Append(steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.ShouldHackPush() {
-		result.Append(steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return

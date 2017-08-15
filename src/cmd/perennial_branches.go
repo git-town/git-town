@@ -18,7 +18,6 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if branchToAdd != "" {
 			addPerennialBranch(branchToAdd)
 		} else if branchToRemove != "" {
@@ -28,7 +27,11 @@ They cannot be shipped.`,
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 

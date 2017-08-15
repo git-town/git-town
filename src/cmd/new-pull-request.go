@@ -5,6 +5,7 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +34,6 @@ make sure that your SSH identity contains the phrase "github", "gitlab" or
 Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "new-pull-request",
@@ -50,7 +49,19 @@ Example: your SSH identity should be something like
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		if git.IsOffline() {
+			util.ExitWithErrorMessage("Error: cannot create new pull requests in offline mode.")
+		}
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
@@ -69,7 +80,7 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	result.Append(steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return
 }
 
