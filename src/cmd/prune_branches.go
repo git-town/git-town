@@ -5,7 +5,6 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -41,14 +40,11 @@ This usually means the branch was shipped or killed on another machine.`,
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return nil
+		return git.ValidateIsOnline()
 	},
 }
 
 func checkPruneBranchesPreconditions() {
-	if git.IsOffline() {
-		util.ExitBecauseOffline("prune-branches")
-	}
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
