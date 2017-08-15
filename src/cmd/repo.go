@@ -38,7 +38,7 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
-		return nil
+		return drivers.ValidateHasDriver()
 	},
 }
 
