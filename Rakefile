@@ -5,7 +5,7 @@ require 'rubocop/rake_task'
 
 
 desc 'Run linters and feature tests'
-task default: %w[lint test]
+task default: %w[lint unit-test feature-test]
 
 
 # Formatters
@@ -36,9 +36,15 @@ task 'lint:cucumber' do
 end
 
 
+# Unit tests
+desc 'Run unit tests'
+task 'unit-test' do
+  sh 'bin/tests'
+end
+
 # Feature tests
 desc 'Run feature tests'
-task 'test' do
+task 'feature-test' do
   sh 'bin/cuke'
 end
 
