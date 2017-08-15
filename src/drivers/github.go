@@ -66,10 +66,14 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
 	d.hostname = git.GetURLHostname(originURL)
+	d.client = nil
 	if d.CanBeUsed() {
 		repositoryParts := strings.SplitN(git.GetURLRepositoryName(originURL), "/", 2)
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]
+	} else {
+		d.owner = ""
+		d.repository = ""
 	}
 }
 

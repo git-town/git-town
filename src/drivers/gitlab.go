@@ -19,7 +19,6 @@ func (d *gitlabCodeHostingDriver) CanBeUsed() bool {
 	return d.hostname == "gitlab.com" || strings.Contains(d.hostname, "gitlab")
 }
 
-// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
 	return false, nil
 }
