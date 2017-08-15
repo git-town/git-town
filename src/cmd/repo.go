@@ -34,6 +34,10 @@ Example: your SSH identity should be something like
 			return err
 		}
 		prompt.EnsureIsConfigured()
+		err = git.ValidateIsOnline()
+		if err != nil {
+			return err
+		}
 		return drivers.ValidateHasDriver()
 	},
 }

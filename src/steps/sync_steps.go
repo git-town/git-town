@@ -33,7 +33,7 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
 		}
 	}
 
-	if hasRemoteOrigin {
+	if hasRemoteOrigin && !git.IsOffline() {
 		if git.HasTrackingBranch(branchName) {
 			result.Append(&PushBranchStep{BranchName: branchName})
 		} else {

@@ -200,11 +200,6 @@ func IsMainBranch(branchName string) bool {
 	return branchName == GetMainBranch()
 }
 
-// IsOffline returns whether Git Town is currently in offline mode
-func IsOffline() bool {
-	return util.StringToBool(getConfigurationValueWithDefault("git-town.offline", "false"))
-}
-
 // IsPerennialBranch returns whether the branch with the given name is
 // a perennial branch.
 func IsPerennialBranch(branchName string) bool {
