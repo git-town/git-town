@@ -1,10 +1,9 @@
 package steps
 
 import (
-	"log"
-
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/logs"
 	"github.com/Originate/git-town/src/script"
 )
 
@@ -55,9 +54,7 @@ func (step *DriverMergePullRequestStep) Run() error {
 		}
 		commitMessage = git.GetLastCommitMessage()
 		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
-		if err != nil {
-			log.Fatal("Error resetting the main branch", err)
-		}
+		logs.FatalOn(err, "Error resetting the main branch", err)
 		step.enteredEmptyCommitMessage = false
 	}
 	driver := drivers.GetActiveDriver()

@@ -1,12 +1,12 @@
 package steps
 
 import (
-	"log"
 	"os"
 	"path"
 	"regexp"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/logs"
 )
 
 // Step represents a dedicated activity within a Git Town command.
@@ -36,9 +36,7 @@ type SerializedRunState struct {
 
 func getRunResultFilename(command string) string {
 	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
-	if err != nil {
-		log.Fatal("Error compiling replace character expression: ", err)
-	}
+	logs.FatalOn(err, "Error compiling replace character expression: ", err)
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
 	return path.Join(os.TempDir(), command+"_"+directory)
 }

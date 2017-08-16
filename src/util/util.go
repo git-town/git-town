@@ -3,11 +3,11 @@ package util
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
 
+	"github.com/Originate/git-town/src/logs"
 	"github.com/fatih/color"
 )
 
@@ -44,9 +44,7 @@ func ExitWithErrorMessage(messages ...string) {
 // GetCommandOutput runs the given command and returns its output.
 func GetCommandOutput(cmd ...string) string {
 	output, err := GetFullCommandOutput(cmd...)
-	if err != nil {
-		log.Fatal("Command: ", strings.Join(cmd, " "), "\nOutput: "+string(output), "\nError: ", err)
-	}
+	logs.FatalOn(err, "Command: ", strings.Join(cmd, " "), "\nOutput: "+string(output), "\nError: ", err)
 	return strings.TrimSpace(string(output))
 }
 
@@ -92,9 +90,7 @@ var inputReader = bufio.NewReader(os.Stdin)
 // GetUserInput reads input from the user and returns it.
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
-	if err != nil {
-		log.Fatal("Error getting user input:", err)
-	}
+	logs.FatalOn(err, "Error getting user input:", err)
 	return strings.TrimSpace(text)
 }
 
