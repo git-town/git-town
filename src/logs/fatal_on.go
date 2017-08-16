@@ -2,7 +2,7 @@ package logs
 
 import "log"
 
-// FatalOn runs log.Fatal when the given error is not nil
+// FatalOn runs log.Fatal with the given input when the given error exists
 func FatalOn(err error, v ...interface{}) {
 	if err != nil {
 		if len(v) == 0 {
@@ -13,7 +13,7 @@ func FatalOn(err error, v ...interface{}) {
 	}
 }
 
-// FatalfOn runs log.Fatalf when the given error is not nil
+// FatalfOn runs log.Fatalf with the given input when the given error exists
 func FatalfOn(err error, format string, v ...interface{}) {
 	if err != nil {
 		log.Fatalf(format, v...)
