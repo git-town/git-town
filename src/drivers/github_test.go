@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	. "github.com/Originate/git-town/src/drivers"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
@@ -34,16 +33,11 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 	BeforeEach(func() {
 		driver = GetDriver("git@github.com:Originate/git-town.git")
 		Expect(driver).NotTo(BeNil())
-		os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
 	})
 
 	Describe("CanMergePullRequest", func() {
-		AfterEach(func() {
-			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
-		})
-
 		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
-			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "")
+			driver.SetAPIToken("")
 			canMerge, err := driver.CanMergePullRequest("feature", "main")
 			Expect(err).To(BeNil())
 			Expect(canMerge).To(BeFalse())
@@ -51,7 +45,7 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 
 		Describe("environment variable GITHUB_TOKEN is a non-empty string", func() {
 			BeforeEach(func() {
-				os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
+				driver.SetAPIToken("TOKEN")
 			})
 
 			It("returns request errors (getting the pull request number to merge)", func() {
@@ -96,11 +90,7 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 				CommitMessage: "title\nextra detail1\nextra detail2",
 				ParentBranch:  "main",
 			}
-			os.Setenv("GIT_TOWN_GITHUB_TOKEN", "TOKEN")
-		})
-
-		AfterEach(func() {
-			os.Unsetenv("GIT_TOWN_GITHUB_TOKEN")
+			driver.SetAPIToken("TOKEN")
 		})
 
 		It("returns request errors (getting the pull request numbers against the shipped branch)", func() {

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 4.2.0 (2017-08-15)
+
+#### New Features
+* Update all commands to support offline mode (lack of an internet connection)
+  * Display / update offline mode with `git town offline [(true | false)]`
+* `git ship`
+  * add ability to ship hotfixes to perennial branches
+  * add ability to merge via GitHub API when applicable. See [documentation](/documentation/commands/ship.md#github-pull-request-integration) for more info.
+
 ## 4.1.2 (2017-06-08)
 
 #### Bug Fixes

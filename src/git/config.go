@@ -82,6 +82,13 @@ func GetChildBranches(branchName string) (result []string) {
 	return
 }
 
+// GetConfigurationValue returns the given configuration value,
+// from either global or local Git configuration
+func GetConfigurationValue(key string) (result string) {
+	result, _ = util.GetFullCommandOutput("git", "config", key)
+	return
+}
+
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
 func GetGlobalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("global", key) {
@@ -253,15 +260,8 @@ func UpdateShouldHackPush(value bool) {
 
 // Helpers
 
-// getConfigurationValue returns the given configuration value,
-// from either global or local Git configuration
-func getConfigurationValue(key string) (result string) {
-	result, _ = util.GetFullCommandOutput("git", "config", key)
-	return
-}
-
 func getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := getConfigurationValue(key)
+	value := GetConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}

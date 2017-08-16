@@ -48,6 +48,12 @@ func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.repository = git.GetURLRepositoryName(originURL)
 }
 
+func (d *bitbucketCodeHostingDriver) GetAPITokenKey() string {
+	return ""
+}
+
+func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
+
 func init() {
 	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }
