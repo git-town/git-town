@@ -42,10 +42,10 @@ Does not delete perennial branches nor the main branch.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		prompt.EnsureIsConfigured()
 		return util.FirstError(
 			validateMaxArgs(args, 1),
-			git.ValidateIsRepository(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
 		)
 	},
 }

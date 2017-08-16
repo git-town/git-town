@@ -34,9 +34,9 @@ This usually means the branch was shipped or killed on another machine.`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			validateMaxArgs(args, 0),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
-			git.ValidateIsOnline(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
+			git.ValidateIsOnline,
 		)
 	},
 }

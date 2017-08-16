@@ -63,8 +63,8 @@ When run on a perennial branch
 		}
 		return util.FirstError(
 			validateMaxArgs(args, 2),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
 		)
 	},
 }

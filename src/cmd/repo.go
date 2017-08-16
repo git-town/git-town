@@ -28,10 +28,10 @@ Example: your SSH identity should be something like
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			validateMaxArgs(args, 0),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
-			git.ValidateIsOnline(),
-			drivers.ValidateHasDriver(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
+			git.ValidateIsOnline,
+			drivers.ValidateHasDriver,
 		)
 	},
 }

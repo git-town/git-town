@@ -58,8 +58,8 @@ the main branch is synced with its upstream counterpart.`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			validateMaxArgs(args, 0),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
 		)
 	},
 }

@@ -18,7 +18,7 @@ Updates the parent branch of a feature branch in Git Town's configuration.`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			validateMaxArgs(args, 2),
-			git.ValidateIsRepository(),
+			git.ValidateIsRepository,
 		)
 	},
 }

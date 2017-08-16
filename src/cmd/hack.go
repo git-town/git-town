@@ -51,8 +51,8 @@ $ git town hack-push-flag false`,
 		}
 		return util.FirstError(
 			validateMaxArgs(args, 1),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
 		)
 	},
 }

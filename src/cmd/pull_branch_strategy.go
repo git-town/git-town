@@ -29,7 +29,7 @@ for the main branch and perennial branches.`,
 		}
 		return util.FirstError(
 			validateMaxArgs(args, 1),
-			git.ValidateIsRepository(),
+			git.ValidateIsRepository,
 		)
 	},
 }

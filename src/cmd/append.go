@@ -49,8 +49,8 @@ and brings over all uncommitted changes to the new feature branch.`,
 		}
 		return util.FirstError(
 			validateMaxArgs(args, 1),
-			git.ValidateIsRepository(),
-			prompt.EnsureIsConfigured(),
+			git.ValidateIsRepository,
+			prompt.EnsureIsConfigured,
 		)
 	},
 }
