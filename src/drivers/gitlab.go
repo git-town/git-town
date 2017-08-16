@@ -48,6 +48,12 @@ func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.repository = git.GetURLRepositoryName(originURL)
 }
 
+func (d *gitlabCodeHostingDriver) GetAPITokenKey() string {
+	return ""
+}
+
+func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {}
+
 func init() {
 	registry.RegisterDriver(&gitlabCodeHostingDriver{})
 }
