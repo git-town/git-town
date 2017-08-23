@@ -20,6 +20,6 @@ func GetCurrentBranchName() string {
 }
 
 // SetCurrentBranchName sets the current branch name for the dry run
-func SetCurrentBranchName(value string) {
-	currentBranchName = value
+func SetCurrentBranchName(branchName string) {
+	currentBranchName = branchName
 }
