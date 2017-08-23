@@ -28,7 +28,7 @@ func (step *ChangeDirectoryStep) Run() error {
 	_, err := os.Stat(step.Directory)
 	if err == nil {
 		script.PrintCommand("cd", step.Directory)
-		if dryrun.IsActive() {
+		if !dryrun.IsActive() {
 			return os.Chdir(step.Directory)
 		}
 	}
