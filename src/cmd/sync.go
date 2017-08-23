@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -38,10 +37,6 @@ When run on the main branch or a perennial branch
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if dryRunFlag {
-			dryrun.Activate()
-			dryrun.SetCurrentBranchName(git.GetCurrentBranchName())
-		}
 		steps.Run(steps.RunOptions{
 			CanSkip: func() bool {
 				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
@@ -67,6 +62,9 @@ the main branch is synced with its upstream counterpart.`,
 		err = git.ValidateIsRepository()
 		if err != nil {
 			return err
+		}
+		if dryRunFlag {
+			script.ActivateDryRun()
 		}
 		prompt.EnsureIsConfigured()
 		return nil

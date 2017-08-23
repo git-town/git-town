@@ -14,6 +14,11 @@ import (
 	"github.com/fatih/color"
 )
 
+// ActivateDryRun causes all commands to not be run
+func ActivateDryRun() {
+	dryrun.Activate(git.GetCurrentBranchName())
+}
+
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
@@ -25,16 +30,7 @@ func OpenBrowser(url string) {
 
 // PrintCommand prints the given command-line operation on the console.
 func PrintCommand(cmd ...string) {
-	header := ""
-	for index, part := range cmd {
-		if strings.Contains(part, " ") {
-			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
-		}
-		if index != 0 {
-			header = header + " "
-		}
-		header = header + part
-	}
+	header := formatCommand(cmd...)
 	if strings.HasPrefix(header, "git") && git.IsRepository() {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}
@@ -49,6 +45,7 @@ func RunCommand(cmd ...string) error {
 		if len(cmd) == 3 && cmd[0] == "git" && cmd[1] == "checkout" {
 			dryrun.SetCurrentBranchName(cmd[2])
 		}
+		fmt.Printf("< output of: %s >\n", formatCommand(cmd...))
 		return nil
 	}
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
@@ -64,4 +61,18 @@ func RunCommandSafe(cmd ...string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func formatCommand(cmd ...string) string {
+	result := ""
+	for index, part := range cmd {
+		if strings.Contains(part, " ") {
+			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
+		}
+		if index != 0 {
+			result = result + " "
+		}
+		result = result + part
+	}
+	return result
 }

@@ -1,4 +1,4 @@
-Feature: git-town sync: syncing the current feature branch with a tracking branch
+Feature: git-town sync: syncing the current feature branch with a tracking branch with dry run
 
   As a developer wanting to test out syncing a feature branch
   I want a dry run flag that doesn't run any commands
