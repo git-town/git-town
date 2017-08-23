@@ -2,7 +2,6 @@
 set -e
 
 go get github.com/Masterminds/glide gopkg.in/alecthomas/gometalinter.v1 github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega gopkg.in/jarcoal/httpmock.v1
-glide install
 gometalinter.v1 --install
 bin/build
 bundle install

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 4.2.1 (2017-08-16)
+
+#### Bug Fixes
+* add missing dependency to vendor folder (required for building on Homebrew)
+
 ## 4.2.0 (2017-08-15)
 
 #### New Features
