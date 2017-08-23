@@ -4,9 +4,9 @@ var currentBranchName = ""
 var isActive = false
 
 // Activate causes all commands to not be run
-func Activate(branch string) {
+func Activate(initialBranchName string) {
 	isActive = true
-	SetCurrentBranchName(branch)
+	SetCurrentBranchName(initialBranchName)
 }
 
 // IsActive returns whether of not dry run is active
