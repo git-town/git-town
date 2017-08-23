@@ -34,4 +34,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And I still have my uncommitted file
-    And I am left with my original commits
+    And I have the following commits
+      | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
+      | main    | local    | local main commit     | local_main_file     |
+      | feature | local    | local feature commit  | local_feature_file  |

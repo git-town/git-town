@@ -14,8 +14,16 @@ import (
 	"github.com/fatih/color"
 )
 
+var dryRunMessage = `
+In dry run mode. No commands will be run. When run in normal mode, the command
+output will appear beneath the command. Some commands will only be run if
+necessary. For example: 'git push' will run if and only if there are local
+commits not on the remote.
+`
+
 // ActivateDryRun causes all commands to not be run
 func ActivateDryRun() {
+	color.New(color.FgBlue).Print(dryRunMessage)
 	dryrun.Activate(git.GetCurrentBranchName())
 }
 
@@ -45,7 +53,6 @@ func RunCommand(cmd ...string) error {
 		if len(cmd) == 3 && cmd[0] == "git" && cmd[1] == "checkout" {
 			dryrun.SetCurrentBranchName(cmd[2])
 		}
-		fmt.Printf("< output of: %s >\n", formatCommand(cmd...))
 		return nil
 	}
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
