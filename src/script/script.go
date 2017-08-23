@@ -38,7 +38,16 @@ func OpenBrowser(url string) {
 
 // PrintCommand prints the given command-line operation on the console.
 func PrintCommand(cmd ...string) {
-	header := formatCommand(cmd...)
+	header := ""
+	for index, part := range cmd {
+		if strings.Contains(part, " ") {
+			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
+		}
+		if index != 0 {
+			header = header + " "
+		}
+		header = header + part
+	}
 	if strings.HasPrefix(header, "git") && git.IsRepository() {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}
@@ -68,18 +77,4 @@ func RunCommandSafe(cmd ...string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func formatCommand(cmd ...string) string {
-	result := ""
-	for index, part := range cmd {
-		if strings.Contains(part, " ") {
-			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
-		}
-		if index != 0 {
-			result = result + " "
-		}
-		result = result + part
-	}
-	return result
 }
