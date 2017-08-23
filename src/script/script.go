@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 
@@ -44,6 +45,12 @@ func PrintCommand(cmd ...string) {
 // RunCommand executes the given command-line operation.
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
+	if dryrun.IsActive() {
+		if len(cmd) == 3 && cmd[0] == "git" && cmd[1] == "checkout" {
+			dryrun.SetCurrentBranchName(cmd[2])
+		}
+		return nil
+	}
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
