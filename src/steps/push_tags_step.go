@@ -10,6 +10,6 @@ type PushTagsStep struct {
 }
 
 // Run executes this step.
-func (step PushTagsStep) Run() error {
+func (step *PushTagsStep) Run() error {
 	return script.RunCommand("git", "push", "--tags")
 }

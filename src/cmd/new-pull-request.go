@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -33,8 +34,6 @@ make sure that your SSH identity contains the phrase "github", "gitlab" or
 Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "new-pull-request",
@@ -44,17 +43,30 @@ Example: your SSH identity should be something like
 			IsUndo:               false,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkNewPullRequestPreconditions()
+				config := getNewPullRequestConfig()
 				return getNewPullRequestStepList(config)
 			},
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		err = git.ValidateIsOnline()
+		if err != nil {
+			return err
+		}
+		return drivers.ValidateHasDriver()
 	},
 }
 
-func checkNewPullRequestPreconditions() (result newPullRequestConfig) {
+func getNewPullRequestConfig() (result newPullRequestConfig) {
 	if git.HasRemote("origin") {
 		script.Fetch()
 	}
@@ -69,7 +81,7 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	result.Append(steps.CreatePullRequestStep{BranchName: config.InitialBranch})
+	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return
 }
 

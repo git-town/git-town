@@ -3,8 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"log"
-	"strconv"
 )
 
 // These variables represent command-line flags
@@ -19,14 +17,6 @@ var (
 var abortFlagDescription = "Abort a previous command that resulted in a conflict"
 var continueFlagDescription = "Continue a previous command that resulted in a conflict"
 var undoFlagDescription = "Undo a previous command"
-
-func stringToBool(arg string) bool {
-	value, err := strconv.ParseBool(arg)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return value
-}
 
 func validateArgsCount(args []string, count int) error {
 	err := validateMinArgs(args, count)

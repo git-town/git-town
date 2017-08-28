@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"log"
 	"strings"
 
+	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -13,9 +15,8 @@ import (
 )
 
 type shipConfig struct {
-	InitialBranch       string
-	IsTargetBranchLocal bool
-	TargetBranch        string
+	BranchToShip  string
+	InitialBranch string
 }
 
 var commitMessage string
@@ -37,10 +38,14 @@ into the main branch, resulting in linear history on the main branch.
 - deletes <branch_name> from the local and remote repositories
 
 Only shipping of direct children of the main branch is allowed.
-To ship a nested child branch, all ancestor branches have to be shipped or killed.`,
+To ship a nested child branch, all ancestor branches have to be shipped or killed.
+
+If you are using GitHub, this command can squash merge pull requests via the GitHub API. Setup:
+1. Get a GitHub personal access token
+2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
+Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
+It will also update the base branch for any pull requests against that branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "ship",
@@ -50,78 +55,113 @@ To ship a nested child branch, all ancestor branches have to be shipped or kille
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
-				config := checkShipPreconditions(args)
+				config := gitShipConfig(args)
 				return getShipStepList(config)
 			},
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return nil
 	},
 }
 
-func checkShipPreconditions(args []string) (result shipConfig) {
+func gitShipConfig(args []string) (result shipConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
-		result.TargetBranch = result.InitialBranch
+		result.BranchToShip = result.InitialBranch
 	} else {
-		result.TargetBranch = args[0]
+		result.BranchToShip = args[0]
 	}
-	if result.TargetBranch == result.InitialBranch {
+	if result.BranchToShip == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
-	if git.HasRemote("origin") {
+	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
-	if result.TargetBranch != result.InitialBranch {
-		git.EnsureHasBranch(result.TargetBranch)
+	if result.BranchToShip != result.InitialBranch {
+		git.EnsureHasBranch(result.BranchToShip)
 	}
-	git.EnsureIsFeatureBranch(result.TargetBranch, "Only feature branches can be shipped.")
-	prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
-	ensureParentBranchIsMainBranch(result.TargetBranch)
+	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
+	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
+	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
 }
 
-func ensureParentBranchIsMainBranch(branchName string) {
-	if git.GetParentBranch(branchName) != git.GetMainBranch() {
+func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
+	parentBranch := git.GetParentBranch(branchName)
+	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
 		ancestors := git.GetAncestorBranches(branchName)
-		ancestorsWithoutMain := ancestors[1:]
-		oldestAncestor := ancestorsWithoutMain[0]
+		ancestorsWithoutMainOrPerennial := ancestors[1:]
+		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(
-			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMain, ", ")+" as well.",
+			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
 	}
 }
 
 func getShipStepList(config shipConfig) (result steps.StepList) {
-	mainBranch := git.GetMainBranch()
-	areInitialAndTargetDifferent := config.TargetBranch != config.InitialBranch
-	result.AppendList(steps.GetSyncBranchSteps(mainBranch))
-	result.Append(steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	result.Append(steps.MergeTrackingBranchStep{})
-	result.Append(steps.MergeBranchStep{BranchName: mainBranch})
-	result.Append(steps.EnsureHasShippableChangesStep{BranchName: config.TargetBranch})
-	result.Append(steps.CheckoutBranchStep{BranchName: mainBranch})
-	result.Append(steps.SquashMergeBranchStep{BranchName: config.TargetBranch, CommitMessage: commitMessage})
-	if git.HasRemote("origin") {
-		result.Append(steps.PushBranchStep{BranchName: mainBranch, Undoable: true})
+	var isOffline = git.IsOffline()
+	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
+	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
+	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.MergeTrackingBranchStep{})
+	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
+	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
+	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
+	canShipWithDriver := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	if canShipWithDriver {
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+		result.Append(&steps.PullBranchStep{})
+	} else {
+		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
-	childBranches := git.GetChildBranches(config.TargetBranch)
-	if git.HasTrackingBranch(config.TargetBranch) && len(childBranches) == 0 {
-		result.Append(steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
+	if git.HasRemote("origin") && !isOffline {
+		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
-	result.Append(steps.DeleteLocalBranchStep{BranchName: config.TargetBranch})
-	result.Append(steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
+	childBranches := git.GetChildBranches(config.BranchToShip)
+	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
+		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+	}
+	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
 	for _, child := range childBranches {
-		result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: mainBranch})
+		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
 	}
-	result.Append(steps.DeleteAncestorBranchesStep{})
-	if areInitialAndTargetDifferent {
-		result.Append(steps.CheckoutBranchStep{BranchName: config.InitialBranch})
+	result.Append(&steps.DeleteAncestorBranchesStep{})
+	if !isShippingInitialBranch {
+		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: areInitialAndTargetDifferent})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
 	return
+}
+
+func getCanShipWithDriver(branch, parentBranch string) bool {
+	if !git.HasRemote("origin") {
+		return false
+	}
+	if git.IsOffline() {
+		return false
+	}
+	driver := drivers.GetActiveDriver()
+	if driver == nil {
+		return false
+	}
+	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return canMerge
 }
 
 func init() {

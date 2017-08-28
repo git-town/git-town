@@ -14,7 +14,7 @@ type ResetToShaStep struct {
 }
 
 // Run executes this step.
-func (step ResetToShaStep) Run() error {
+func (step *ResetToShaStep) Run() error {
 	if step.Sha == git.GetCurrentSha() {
 		return nil
 	}

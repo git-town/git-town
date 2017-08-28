@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -14,13 +15,12 @@ var hackPushFlagCommand = &cobra.Command{
 
 Newly hacked branches will be pushed upon creation
 if and only if "hack-push-flag" is true.
-The default value is true.`,
+The default value is false.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printHackPushFlag()
 		} else {
-			setHackPushFlag(stringToBool(args[0]))
+			setHackPushFlag(util.StringToBool(args[0]))
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -30,7 +30,11 @@ The default value is true.`,
 				return err
 			}
 		}
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 

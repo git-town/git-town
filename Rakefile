@@ -1,15 +1,16 @@
 # frozen_string_literal: true
+
 require 'active_support/all'
 require 'rubocop/rake_task'
 
 
 desc 'Run linters and feature tests'
-task default: %w(lint test)
+task default: %w[lint unit-test feature-test]
 
 
 # Formatters
 desc 'Run formatters'
-task format: %w(rubocop:auto_correct format:cucumber)
+task format: %w[rubocop:auto_correct format:cucumber]
 
 desc 'Run cucumber formatter'
 task 'format:cucumber' do
@@ -19,7 +20,7 @@ end
 
 # Linters
 desc 'Run linters'
-task lint: %w(lint:go lint:ruby lint:cucumber)
+task lint: %w[lint:go lint:ruby lint:cucumber]
 
 desc 'Run Go linter'
 task 'lint:go' do
@@ -35,9 +36,15 @@ task 'lint:cucumber' do
 end
 
 
+# Unit tests
+desc 'Run unit tests'
+task 'unit-test' do
+  sh 'bin/tests'
+end
+
 # Feature tests
 desc 'Run feature tests'
-task 'test' do
+task 'feature-test' do
   sh 'bin/cuke'
 end
 

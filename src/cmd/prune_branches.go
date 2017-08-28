@@ -16,8 +16,6 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
-		prompt.EnsureIsConfigured()
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
 			Command:              "prune-branches",
@@ -28,12 +26,21 @@ This usually means the branch was shipped or killed on another machine.`,
 			SkipMessageGenerator: func() string { return "" },
 			StepListGenerator: func() steps.StepList {
 				checkPruneBranchesPreconditions()
-				return getPruneBranchesList()
+				return getPruneBranchesStepList()
 			},
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
+		err := validateMaxArgs(args, 0)
+		if err != nil {
+			return err
+		}
+		err = git.ValidateIsRepository()
+		if err != nil {
+			return err
+		}
+		prompt.EnsureIsConfigured()
+		return git.ValidateIsOnline()
 	},
 }
 
@@ -43,23 +50,23 @@ func checkPruneBranchesPreconditions() {
 	}
 }
 
-func getPruneBranchesList() (result steps.StepList) {
+func getPruneBranchesStepList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
-			result.Append(steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
+			result.Append(&steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
 		}
 
 		parent := git.GetParentBranch(branchName)
 		if parent != "" {
 			for _, child := range git.GetChildBranches(branchName) {
-				result.Append(steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
+				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
-			result.Append(steps.DeleteParentBranchStep{BranchName: branchName})
-			result.Append(steps.DeleteAncestorBranchesStep{})
+			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
+			result.Append(&steps.DeleteAncestorBranchesStep{})
 		}
 
-		result.Append(steps.DeleteLocalBranchStep{BranchName: branchName})
+		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
 	return

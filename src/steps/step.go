@@ -1,8 +1,9 @@
 package steps
 
 import (
-	"fmt"
 	"log"
+	"os"
+	"path"
 	"regexp"
 
 	"github.com/Originate/git-town/src/git"
@@ -39,5 +40,5 @@ func getRunResultFilename(command string) string {
 		log.Fatal("Error compiling replace character expression: ", err)
 	}
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
-	return fmt.Sprintf("/tmp/%s_%s", command, directory)
+	return path.Join(os.TempDir(), command+"_"+directory)
 }

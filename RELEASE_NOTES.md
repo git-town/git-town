@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+## 4.2.1 (2017-08-16)
+
+#### Bug Fixes
+* add missing dependency to vendor folder (required for building on Homebrew)
+
+## 4.2.0 (2017-08-15)
+
+#### New Features
+* Update all commands to support offline mode (lack of an internet connection)
+  * Display / update offline mode with `git town offline [(true | false)]`
+* `git ship`
+  * add ability to ship hotfixes to perennial branches
+  * add ability to merge via GitHub API when applicable. See [documentation](/documentation/commands/ship.md#github-pull-request-integration) for more info.
+
+## 4.1.2 (2017-06-08)
+
+#### Bug Fixes
+* temporary file: use operating system temporary directory instead of hardcoding `/tmp`
+
+## 4.1.1 (2017-06-07)
+
+#### Bug Fixes
+* temporary file: make parent directories if needed  ([#955 comment](https://github.com/Originate/git-town/issues/955#issuecomment-306041043))
+
+## 4.1.0 (2017-06-01)
+
+#### New Features
+* `git new-pull-request`, `git repo`: support more commands to open browsers (`cygstart`, `x-www-browser`, `firefox`, `opera`, `mozilla`, `netscape`)
+* Add longer descriptions for commands which appear when running `git town help <command>` or `git town <command> --help`
+
+#### Changes
+* make `hack-push-flag` false by default (previously was true)
+([#929](https://github.com/Originate/git-town/issues/929))
+
+#### Bug Fixes
+* replace all non-alpha numeric characters in temporary filename ([#925](https://github.com/Originate/git-town/issues/925))
+* fix spacing in parent branch prompts
+* enforce a minimum Git version of 2.7.0
+
 ## 4.0.1 (2017-05-21)
 
 #### Bug Fixes

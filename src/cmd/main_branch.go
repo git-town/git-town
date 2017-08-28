@@ -14,7 +14,6 @@ var mainBranchCommand = &cobra.Command{
 
 The main branch is the Git branch from which new feature branches are cut.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		git.EnsureIsRepository()
 		if len(args) == 0 {
 			printMainBranch()
 		} else {
@@ -22,7 +21,11 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 1)
+		err := validateMaxArgs(args, 1)
+		if err != nil {
+			return err
+		}
+		return git.ValidateIsRepository()
 	},
 }
 
