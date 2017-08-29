@@ -141,7 +141,7 @@ func GetRemoteUpstreamURL() string {
 // GetURLHostname returns the hostname contained within the given Git URL.
 func GetURLHostname(url string) string {
 	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
-	logs.FatalOn(err, "Error compiling hostname regular expression: ", err)
+	logs.FatalOn(err, "Error compiling hostname regular expression")
 	matches := hostnameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
@@ -153,7 +153,7 @@ func GetURLHostname(url string) string {
 func GetURLRepositoryName(url string) string {
 	hostname := GetURLHostname(url)
 	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
-	logs.FatalOn(err, "Error compiling repository name regular expression: ", err)
+	logs.FatalOn(err, "Error compiling repository name regular expression")
 	matches := repositoryNameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
