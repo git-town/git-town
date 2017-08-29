@@ -11,6 +11,7 @@ gittown ($VER_NUM) RELEASED; urgency=low
  -- allonsy <alec.snyder@originate.com> $TIMESTAMP
 EOF
 
+cat debian/changelog
 cp dist/git-town-linux-amd64 package/debian/git-town
 cd package/debian
 sudo apt-get -qq update
