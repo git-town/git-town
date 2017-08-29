@@ -13,8 +13,6 @@ package route
 #include <net/if.h>
 #include <net/if_dl.h>
 #include <net/route.h>
-
-#include <netinet/in.h>
 */
 import "C"
 
@@ -24,8 +22,6 @@ const (
 	sysAF_ROUTE  = C.AF_ROUTE
 	sysAF_LINK   = C.AF_LINK
 	sysAF_INET6  = C.AF_INET6
-
-	sysSOCK_RAW = C.SOCK_RAW
 
 	sysNET_RT_DUMP   = C.NET_RT_DUMP
 	sysNET_RT_FLAGS  = C.NET_RT_FLAGS
@@ -106,8 +102,4 @@ const (
 
 	sizeofRtMsghdrDragonFlyBSD4  = C.sizeof_struct_rt_msghdr
 	sizeofRtMetricsDragonFlyBSD4 = C.sizeof_struct_rt_metrics
-
-	sizeofSockaddrStorage = C.sizeof_struct_sockaddr_storage
-	sizeofSockaddrInet    = C.sizeof_struct_sockaddr_in
-	sizeofSockaddrInet6   = C.sizeof_struct_sockaddr_in6
 )
