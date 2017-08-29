@@ -7,6 +7,9 @@
 package route
 
 // A Message represents a routing message.
+//
+// Note: This interface will be changed to support Marshal method in
+// future version.
 type Message interface {
 	// Sys returns operating system-specific information.
 	Sys() []Sys
@@ -49,10 +52,11 @@ func ParseRIB(typ RIBType, b []byte) ([]Message, error) {
 			b = b[l:]
 			continue
 		}
-		if w, ok := wireFormats[int(b[3])]; !ok {
+		mtyp := int(b[3])
+		if fn, ok := parseFns[mtyp]; !ok {
 			nskips++
 		} else {
-			m, err := w.parse(typ, b)
+			m, err := fn(typ, b)
 			if err != nil {
 				return nil, err
 			}

@@ -59,7 +59,6 @@ package unix
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
 #include <linux/can.h>
-#include <linux/if_alg.h>
 
 #ifdef TCSETS2
 // On systems that have "struct termios2" use this as type Termios.
@@ -127,7 +126,7 @@ typedef struct {} ptracePer;
 // The real epoll_event is a union, and godefs doesn't handle it well.
 struct my_epoll_event {
 	uint32_t events;
-#if defined(__ARM_EABI__) || defined(__aarch64__) || (defined(__mips__) && _MIPS_SIM == _ABIO32)
+#if defined(__ARM_EABI__) || defined(__aarch64__)
 	// padding is not specified in linux/eventpoll.h but added to conform to the
 	// alignment requirements of EABI
 	int32_t padFd;
@@ -222,8 +221,6 @@ type RawSockaddrHCI C.struct_sockaddr_hci
 
 type RawSockaddrCAN C.struct_sockaddr_can
 
-type RawSockaddrALG C.struct_sockaddr_alg
-
 type RawSockaddr C.struct_sockaddr
 
 type RawSockaddrAny C.struct_sockaddr_any
@@ -265,7 +262,6 @@ const (
 	SizeofSockaddrNetlink   = C.sizeof_struct_sockaddr_nl
 	SizeofSockaddrHCI       = C.sizeof_struct_sockaddr_hci
 	SizeofSockaddrCAN       = C.sizeof_struct_sockaddr_can
-	SizeofSockaddrALG       = C.sizeof_struct_sockaddr_alg
 	SizeofLinger            = C.sizeof_struct_linger
 	SizeofIPMreq            = C.sizeof_struct_ip_mreq
 	SizeofIPMreqn           = C.sizeof_struct_ip_mreqn

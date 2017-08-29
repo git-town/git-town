@@ -11,7 +11,7 @@ import "unsafe"
 var (
 	nativeEndian binaryByteOrder
 	kernelAlign  int
-	wireFormats  map[int]*wireFormat
+	parseFns     map[int]parseFn
 )
 
 func init() {
@@ -22,7 +22,7 @@ func init() {
 	} else {
 		nativeEndian = bigEndian
 	}
-	kernelAlign, wireFormats = probeRoutingStack()
+	kernelAlign, parseFns = probeRoutingStack()
 }
 
 func roundup(l int) int {
@@ -32,8 +32,9 @@ func roundup(l int) int {
 	return (l + kernelAlign - 1) & ^(kernelAlign - 1)
 }
 
+type parseFn func(RIBType, []byte) (Message, error)
+
 type wireFormat struct {
 	extOff  int // offset of header extension
 	bodyOff int // offset of message body
-	parse   func(RIBType, []byte) (Message, error)
 }

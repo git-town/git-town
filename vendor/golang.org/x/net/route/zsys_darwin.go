@@ -10,8 +10,6 @@ const (
 	sysAF_LINK   = 0x12
 	sysAF_INET6  = 0x1e
 
-	sysSOCK_RAW = 0x3
-
 	sysNET_RT_DUMP    = 0x1
 	sysNET_RT_FLAGS   = 0x2
 	sysNET_RT_IFLIST  = 0x3
@@ -92,8 +90,4 @@ const (
 	sizeofRtMsghdrDarwin15  = 0x5c
 	sizeofRtMsghdr2Darwin15 = 0x5c
 	sizeofRtMetricsDarwin15 = 0x38
-
-	sizeofSockaddrStorage = 0x80
-	sizeofSockaddrInet    = 0x10
-	sizeofSockaddrInet6   = 0x1c
 )

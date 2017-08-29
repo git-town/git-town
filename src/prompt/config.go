@@ -66,7 +66,7 @@ func getMainBranchPrompt() (result string) {
 	result += "Please specify the main development branch by name or number"
 	currentMainBranch := git.GetMainBranch()
 	if currentMainBranch != "" {
-		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
+		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).SprintfFunc()(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
 	}
 	result += ": "
@@ -77,7 +77,7 @@ func getPerennialBranchesPrompt() (result string) {
 	result += "Please specify a perennial branch by name or number. Leave it blank to finish"
 	currentPerennialBranches := git.GetPerennialBranches()
 	if len(currentPerennialBranches) > 0 {
-		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
+		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).SprintfFunc()(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
 	}
 	result += ": "

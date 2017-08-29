@@ -3,7 +3,6 @@ package color
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/mattn/go-colorable"
@@ -44,19 +43,6 @@ func TestColor(t *testing.T) {
 		New(c.code).Print(c.text)
 
 		line, _ := rb.ReadString('\n')
-		scannedLine := fmt.Sprintf("%q", line)
-		colored := fmt.Sprintf("\x1b[%dm%s\x1b[0m", c.code, c.text)
-		escapedForm := fmt.Sprintf("%q", colored)
-
-		fmt.Printf("%s\t: %s\n", c.text, line)
-
-		if scannedLine != escapedForm {
-			t.Errorf("Expecting %s, got '%s'\n", escapedForm, scannedLine)
-		}
-	}
-
-	for _, c := range testColors {
-		line := New(c.code).Sprintf("%s", c.text)
 		scannedLine := fmt.Sprintf("%q", line)
 		colored := fmt.Sprintf("\x1b[%dm%s\x1b[0m", c.code, c.text)
 		escapedForm := fmt.Sprintf("%q", colored)
@@ -225,9 +211,6 @@ func TestColorVisual(t *testing.T) {
 
 	info := New(FgWhite, BgGreen).SprintFunc()
 	fmt.Fprintf(Output, "this %s rocks!\n", info("package"))
-
-	notice := New(FgBlue).FprintFunc()
-	notice(os.Stderr, "just a blue notice to stderr")
 
 	// Fifth Visual Test
 	fmt.Println()
