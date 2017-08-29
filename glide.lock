@@ -1,5 +1,5 @@
-hash: 63281c10391554b29c894ea2e8efdf4cff0a947e7a819bd4e78b96d1d95775a0
-updated: 2017-08-29T11:29:24.767939963-07:00
+hash: 70e90f8239167348dcfc8098041c0d5e24982660a5168c05082f174ac758636f
+updated: 2017-08-29T11:36:44.738495685-07:00
 imports:
 - name: github.com/fatih/color
   version: dea9d3a26a087187530244679c1cfb3a42937794
@@ -21,6 +21,8 @@ imports:
   version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/mattn/go-isatty
   version: 30a891c33c7cde7b02a981314b4228ec99380cca
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
   version: 92ea23a837e66f46ac9e7d04fa826602b7b0a42d
 - name: github.com/spf13/pflag
