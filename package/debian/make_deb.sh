@@ -3,7 +3,7 @@
 VER_NUM=$(echo $TRAVIS_TAG | cut -d 'v' -f 2) # extract version number
 TIMESTAMP=$(date "+%a, %d %b %Y %H:%M:%S %z")
 
-cat << EOF > debian/changelog
+cat << EOF > package/debian/debian/changelog
 gittown ($VER_NUM) RELEASED; urgency=low
 
   * See https://github.com/Originate/git-town/releases for a complete changelog
@@ -11,7 +11,6 @@ gittown ($VER_NUM) RELEASED; urgency=low
  -- allonsy <alec.snyder@originate.com> $TIMESTAMP
 EOF
 
-cat debian/changelog
 cp dist/git-town-linux-amd64 package/debian/git-town
 cd package/debian
 sudo apt-get -qq update
