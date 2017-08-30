@@ -12,6 +12,6 @@ There is a button on the right hand side menu to flag the package.
 
 ### Debian Based Distributions
 The process is now automated from travisCI.
-Now, when a new release is made from github, a new deb file is made and automatically uploaded to the releases page.
+When a new release is made from github, a new deb file is made and automatically uploaded to the releases page.
 
 ### Coming soon: rpm files for redhat/fedora based distros
