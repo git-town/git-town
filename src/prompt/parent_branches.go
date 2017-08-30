@@ -81,6 +81,6 @@ func printParentBranchHeader() {
 }
 
 func getParentBranchPrompt(branchName string) string {
-	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).SprintfFunc()(branchName)
+	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(branchName)
 	return fmt.Sprintf(parentBranchPromptTemplate, coloredBranchName, git.GetMainBranch())
 }

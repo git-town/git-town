@@ -90,6 +90,6 @@ func printNumberedAuthors(authors []branchAuthor) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
 		stat := util.Pluralize(author.NumberOfCommits, "commit")
-		fmt.Printf("  %s: %s (%s)\n", boldFmt.SprintfFunc()("%d", index+1), author.NameAndEmail, stat)
+		fmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
 	}
 }
