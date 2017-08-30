@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bin/cross-compile
+package/debian/make_deb.sh
