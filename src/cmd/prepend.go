@@ -54,7 +54,7 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 			return errors.New("no branch name provided")
 		}
 		return util.FirstError(
-			validateMaxArgs(args, 1),
+			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			prompt.EnsureIsConfigured,
 		)

@@ -62,7 +62,7 @@ When run on a perennial branch
 			return errors.New("Too few arguments")
 		}
 		return util.FirstError(
-			validateMaxArgs(args, 2),
+			validateMaxArgsFunc(args, 2),
 			git.ValidateIsRepository,
 			prompt.EnsureIsConfigured,
 		)

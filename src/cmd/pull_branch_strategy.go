@@ -28,7 +28,7 @@ for the main branch and perennial branches.`,
 			return fmt.Errorf("Invalid value: '%s'", args[0])
 		}
 		return util.FirstError(
-			validateMaxArgs(args, 1),
+			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 		)
 	},

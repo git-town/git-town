@@ -29,7 +29,7 @@ They cannot be shipped.`,
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgs(args, 0),
+			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 		)
 	},
