@@ -11,7 +11,10 @@ func FirstError(errors ...interface{}) error {
 			return err.(error)
 		case func() error:
 			f := err.(func() error)
-			return f()
+			result := f()
+			if result != nil {
+				return result
+			}
 		case func():
 			f := err.(func())
 			f()
