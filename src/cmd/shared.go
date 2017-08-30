@@ -3,6 +3,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
+
+	"github.com/Originate/git-town/src/util"
 )
 
 // These variables represent command-line flags
@@ -20,11 +22,10 @@ var undoFlagDescription = "Undo a previous command"
 
 func validateArgsCountFunc(args []string, count int) func() error {
 	return func() error {
-		err := validateMinArgs(args, count)
-		if err != nil {
-			return err
-		}
-		return validateMaxArgs(args, count)
+		return util.FirstError(
+			validateMinArgsFunc(args, count),
+			validateMaxArgsFunc(args, count),
+		)
 	}
 }
 
