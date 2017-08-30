@@ -48,7 +48,7 @@ and brings over all uncommitted changes to the new feature branch.`,
 			return errors.New("no branch name provided")
 		}
 		return util.FirstError(
-			validateMaxArgs(args, 1),
+			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			prompt.EnsureIsConfigured,
 		)

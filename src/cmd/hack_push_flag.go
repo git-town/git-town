@@ -30,11 +30,10 @@ The default value is false.`,
 				return err
 			}
 		}
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+		)
 	},
 }
 

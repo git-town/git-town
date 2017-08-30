@@ -41,8 +41,8 @@ Note that this can conflict with other tools that also define additional Git com
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateArgsCount(args, 1),
-			validateBooleanArgument(args[0]),
+			validateArgsCountFunc(args, 1),
+			validateBooleanArgumentFunc(args[0]),
 		)
 	},
 }
