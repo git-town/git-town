@@ -3,6 +3,7 @@ dist: trusty
 
 language: go
 go: 1.8
+go_import_path: github.com/Originate/git-town
 
 install:
   - rvm install 2.4.1
@@ -14,10 +15,10 @@ script:
 notifications:
   email: false
 
-before_deploy: bin/cross-compile
+before_deploy: bin/build-release
 deploy:
   api_key:
-    secure: lxzr1xWsRnWueR8JCUGV2+9hOxbb6gL9AVR64HIJ1foIPz8eGUXtQUP1mG/NPOtbDq0Dx+dTVV6W5RxiXzkzBvDkK6ygtNmax9ZkAbQv/zNFaJiwtkXJrzwCBSQfeSH/Go7NwpnsJw+ucZ7oj68G4g99PsX2XNbTTJHzfVWmteg=
+    secure: MlzNG3UstgOIKG2Ao8TVTxBOg0rrckYVnjvCRz235ZO/oxQvfGKXK/Hw1M3Tuj8MehEcf2qqmG4k1GJ8TuYxuF2MEtnUjE6O6pR7Bjez6g5QisnHIuuO+Ydx9K+O4lcpsXA2L8NB+c4BRCZBJ3PUdpBo8UNoCXCXX/u476tjCq251zTGowdGqhj7s9DVKZS0coqWz4gU6dnyQkPrI7wmSKPwBUbLyESRTSm3T3kIKfl+jCvnLSH3YLzn/Srs3U/Czz1bxFZ7xIAHnm7NoiKf0N7aQzcLA7vdOCKeFgP+3sW0DP/90peFJ7cu6qDqk+r8dySnn6xFB3kPbeSGVUCGL17fcSOMkIGMCBCR7/ofbrblKP/tDHMsAcRJNqb4TdTNle6cotC460Am01dqoy+9rXndgEzrQ5xp6D86Yc9dRvzOb5vK8O8+0iNxVRZ6TvvbWAsHHwSvHLNJtrtTMfLuoLIt/YnDiB98cfJSoDXmxmEMYmYpJRuwjyRTr9sIO7W5rQIMcCoM5ihvXGtOss4EpPazG5/DRs1PfOQdTayFWJxg6c1z1xbPBtwRFTyBdFIKX4/oA6OmIM4yK75qwfbtb+aB5JwvhmZ9+dphudKof1+6lWUQP1sOLKG1bgkNxaoL8bt7QwfDnjIIpj8Wa0ErcFBJ2AlhCHOXzswYy8hheOk=
   file: "dist/*"
   file_glob: true
   on:
