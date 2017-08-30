@@ -17,4 +17,4 @@ sudo apt-get -qq update
 sudo apt-get install -y build-essential debhelper devscripts
 ./debian_build.sh
 cd ../..
-cp package/gittown_"$VER_NUM"_amd64.deb dist/git-town_amd64.deb
+cp package/gittown_"$VER_NUM"_amd64.deb dist/git-town-amd64.deb
