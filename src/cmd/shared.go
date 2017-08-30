@@ -49,6 +49,12 @@ func validateMinArgs(args []string, min int) error {
 	return nil
 }
 
+func validateMinArgsFunc(args []string, min int) func() error {
+	return func() error {
+		return validateMinArgs(args, min)
+	}
+}
+
 func validateMaxArgs(args []string, max int) error {
 	if len(args) > max {
 		return errors.New("Too many arguments")
