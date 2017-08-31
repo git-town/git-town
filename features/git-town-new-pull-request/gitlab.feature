@@ -14,12 +14,12 @@ Feature: git-new-pull-request when origin is on GitLab
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new GitLab pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
+    Then I see a new pull request with the url "<URL>" in my browser
 
     Examples:
-      | ORIGIN                           | REPOSITORY |
-      | https://gitlab.com/kadu/kadu.git | kadu/kadu  |
-      | git@gitlab.com:kadu/kadu.git     | kadu/kadu  |
+      | ORIGIN                           | URL                                                                                                                            |
+      | https://gitlab.com/kadu/kadu.git | https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
+      | git@gitlab.com:kadu/kadu.git     | https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main |
 
 
   Scenario: nested feature branch with known parent
