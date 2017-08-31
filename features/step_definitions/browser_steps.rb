@@ -13,7 +13,8 @@ end
 
 
 Then(/^I see a new pull request with the url "([^"]*)" in my browser$/) do |url|
-  expect(@last_run_result.out.strip).to include "#{@tool} called with: #{url}"
+  # Note: expected is a URL that can contain '?', we need to escape it
+  expect(@last_run_result.out.strip).to match "#{@tool} called with: #{url}".gsub('?', '\?')
 end
 
 
