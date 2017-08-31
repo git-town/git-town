@@ -43,17 +43,6 @@ end
 
 
 
-
-Then(/^I don't have an old configuration file anymore$/) do
-  expect(File.exist? '.main_branch_name').to be_falsy
-end
-
-
-Then(/^I have no non\-feature branch configuration$/) do
-  expect(non_feature_branch_configuration).to eql ''
-end
-
-
 Then(/^my repo is configured with perennial branches as "(.*)"$/) do |data|
   branch_names = Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names
