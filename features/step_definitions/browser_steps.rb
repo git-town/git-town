@@ -12,6 +12,11 @@ Then(/^I see a new (.+?) pull request for the "([^"]+)" branch against the "(.+?
 end
 
 
+Then(/^I see a new pull request with the url "([^"]*)" in my browser$/) do |url|
+  expect(@last_run_result.out.strip).to include "#{@tool} called with: #{url}"
+end
+
+
 Then(/^I see the (Bitbucket|GitHub|GitLab) homepage of the "(.+?)" repository in my browser$/) do |domain, repository|
   expect(@last_run_result.out.strip).to include "#{@tool} called with: #{repository_homepage_url domain, repository}"
 end

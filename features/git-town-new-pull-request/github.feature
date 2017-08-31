@@ -14,25 +14,25 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
+    Then I see a new pull request with the url "<URL>" in my browser
 
     Examples:
-      | ORIGIN                                                | REPOSITORY                     |
-      | http://github.com/Originate/git-town.git              | Originate/git-town             |
-      | http://github.com/Originate/git-town                  | Originate/git-town             |
-      | https://github.com/Originate/git-town.git             | Originate/git-town             |
-      | https://github.com/Originate/git-town                 | Originate/git-town             |
-      | git@github.com:Originate/git-town.git                 | Originate/git-town             |
-      | git@github.com:Originate/git-town                     | Originate/git-town             |
-      | git@github-as-account1:Originate/git-town.git         | Originate/git-town             |
-      | http://github.com/Originate/originate.github.com.git  | Originate/originate.github.com |
-      | http://github.com/Originate/originate.github.com      | Originate/originate.github.com |
-      | https://github.com/Originate/originate.github.com.git | Originate/originate.github.com |
-      | https://github.com/Originate/originate.github.com     | Originate/originate.github.com |
-      | git@github.com:Originate/originate.github.com.git     | Originate/originate.github.com |
-      | git@github.com:Originate/originate.github.com         | Originate/originate.github.com |
-      | ssh://git@github.com/Originate/git-town.git           | Originate/git-town             |
-      | ssh://git@github.com/Originate/git-town               | Originate/git-town             |
+      | ORIGIN                                                | URL                                                                        |
+      | http://github.com/Originate/git-town.git              | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | http://github.com/Originate/git-town                  | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | https://github.com/Originate/git-town.git             | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | https://github.com/Originate/git-town                 | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | git@github.com:Originate/git-town.git                 | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | git@github.com:Originate/git-town                     | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | git@github-as-account1:Originate/git-town.git         | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | http://github.com/Originate/originate.github.com.git  | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | http://github.com/Originate/originate.github.com      | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | https://github.com/Originate/originate.github.com.git | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | https://github.com/Originate/originate.github.com     | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | git@github.com:Originate/originate.github.com.git     | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | git@github.com:Originate/originate.github.com         | https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+      | ssh://git@github.com/Originate/git-town.git           | https://github.com/Originate/git-town/compare/feature?expand=1             |
+      | ssh://git@github.com/Originate/git-town               | https://github.com/Originate/git-town/compare/feature?expand=1             |
 
 
   Scenario: nested feature branch with known parent
