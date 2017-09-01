@@ -5,6 +5,8 @@ language: go
 go: 1.8
 
 install:
+  - echo $GOROOT
+  - which go
   - rvm install 2.4.1
   - bin/setup
 
