@@ -1,0 +1,7 @@
+sudo: false
+language: go
+install:
+    - go get -t -v . ./regressiontests
+    - gometalinter --install
+go: 1.7
+script: go test -v . ./regressiontests

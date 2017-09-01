@@ -1,5 +1,5 @@
-hash: d18ad3799ffe75ea33554fc0b3f3e43df0ffccd3b7397676efc1c9022e91d36f
-updated: 2017-09-01T10:03:29.427972218-07:00
+hash: 655c662ffaffbd753f0283121efea2669b7fe8d77c4dffc8439f24d30612aba5
+updated: 2017-09-01T10:14:30.449967173-07:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -58,8 +58,10 @@ imports:
   - internal/urlfetch
   - urlfetch
 testImports:
+- name: github.com/alecthomas/gometalinter
+  version: bae2f1293d092fd8167939d5108d1b025eaef9de
 - name: github.com/onsi/ginkgo
-  version: 11459a886d9cd66b319dac7ef1e917ee221372c9
+  version: 9eda700730cba42af70d53180f9dcce9266bc2bc
   subpackages:
   - config
   - internal/codelocation
@@ -79,7 +81,7 @@ testImports:
   - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: dcabb60a477c2b6f456df65037cb6708210fbb02
+  version: c893efa28eb45626cdaa76c9f653b62488858837
   subpackages:
   - format
   - internal/assertion
