@@ -52,8 +52,9 @@ This guide will help you get started and outline some things you should know whe
   which is checked into Git
 * update dependencies:
   - run `glide up`
-  - for each `testImport` in [glide.lock](glide.lock),
+  - for each dependency in the `testImports` section of [glide.lock](glide.lock),
     run `glide remove <dependency>`
+    until this section is empty
 * adding a new Go library:
   * `glide get <package name>`
   * your pull request for the feature that requires the new library
