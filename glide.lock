@@ -58,28 +58,6 @@ imports:
   - internal/urlfetch
   - urlfetch
 testImports:
-- name: github.com/alecthomas/gometalinter
-  version: bae2f1293d092fd8167939d5108d1b025eaef9de
-- name: github.com/onsi/ginkgo
-  version: 9eda700730cba42af70d53180f9dcce9266bc2bc
-  subpackages:
-  - config
-  - internal/codelocation
-  - internal/containernode
-  - internal/failer
-  - internal/leafnodes
-  - internal/remote
-  - internal/spec
-  - internal/spec_iterator
-  - internal/specrunner
-  - internal/suite
-  - internal/testingtproxy
-  - internal/writer
-  - reporters
-  - reporters/stenographer
-  - reporters/stenographer/support/go-colorable
-  - reporters/stenographer/support/go-isatty
-  - types
 - name: github.com/onsi/gomega
   version: c893efa28eb45626cdaa76c9f653b62488858837
   subpackages:
