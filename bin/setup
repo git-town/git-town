@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-go get github.com/Masterminds/glide github.com/roboll/go-vendorinstall
+go get github.com/Masterminds/glide github.com/roboll/go-vendorinstall gopkg.in/alecthomas/gometalinter.v1
 go-vendorinstall github.com/onsi/ginkgo
-go-vendorinstall github.com/alecthomas/gometalinter
-gometalinter --install
+gometalinter.v1 --install
 bin/build
 bundle install
