@@ -1,12 +1,8 @@
-hash: 63281c10391554b29c894ea2e8efdf4cff0a947e7a819bd4e78b96d1d95775a0
-updated: 2017-08-16T09:18:16.539077872-07:00
+hash: d18ad3799ffe75ea33554fc0b3f3e43df0ffccd3b7397676efc1c9022e91d36f
+updated: 2017-09-01T09:44:32.058168907-07:00
 imports:
 - name: github.com/fatih/color
-  version: 7824417a424b65227be8ac9b14d545a7f3e6c3f0
-- name: github.com/golang/protobuf
-  version: ab9f9a6dab164b7d1246e0e688b0ab7b94d8553e
-  subpackages:
-  - proto
+  version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
 - name: github.com/google/go-github
   version: ebfec748347a9af6793c723f8859afcd906860fb
   subpackages:
@@ -15,43 +11,14 @@ imports:
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
   subpackages:
   - query
-- name: github.com/inconshreveable/mousetrap
-  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
-- name: github.com/mattn/go-colorable
-  version: 5411d3eea5978e6cdc258b30de592b60df6aba96
-  repo: https://github.com/mattn/go-colorable
-- name: github.com/mattn/go-isatty
-  version: dda3de49cbfcec471bd7a70e6cc01fcc3ff90109
-  repo: https://github.com/mattn/go-isatty
 - name: github.com/spf13/cobra
   version: 92ea23a837e66f46ac9e7d04fa826602b7b0a42d
-- name: github.com/spf13/pflag
-  version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/spf13/viper
-  version: 7538d73b4eb9511d85a9f1dfef202eeb8ac260f4
+  version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: golang.org/x/net
   version: c9b681d35165f1995d6f3034e61f8761d4b90c99
   subpackages:
   - context
 - name: golang.org/x/oauth2
   version: f047394b6d14284165300fd82dad67edb3a4d7f6
-  subpackages:
-  - internal
-- name: golang.org/x/sys
-  version: e24f485414aeafb646f6fca458b0bf869c0880a1
-  repo: https://go.googlesource.com/sys
-  subpackages:
-  - unix
-- name: google.golang.org/appengine
-  version: d9a072cfa7b9736e44311ef77b3e09d804bfa599
-  subpackages:
-  - internal
-  - internal/app_identity
-  - internal/base
-  - internal/datastore
-  - internal/log
-  - internal/modules
-  - internal/remote_api
-  - internal/urlfetch
-  - urlfetch
 testImports: []
