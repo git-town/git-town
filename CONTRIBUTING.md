@@ -50,7 +50,10 @@ This guide will help you get started and outline some things you should know whe
 
 * all dependencies are located in the [vendor](vendor) folder,
   which is checked into Git
-* update dependencies: `glide up`
+* update dependencies:
+  - run `glide up`
+  - for each `testImport` in [glide.lock](glide.lock),
+    run `glide remove <dependency>`
 * adding a new Go library:
   * `glide get <package name>`
   * your pull request for the feature that requires the new library
