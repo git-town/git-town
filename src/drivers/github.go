@@ -47,7 +47,11 @@ func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBran
 }
 
 func (d *githubCodeHostingDriver) GetRepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
+	if (strings.HasPrefix(d.originURL, "http:")) || (strings.HasPrefix(d.originURL, "https:")) {
+		return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
+	} else {
+		return fmt.Sprintf("https://github.com/%s/%s", d.owner, d.repository)
+	}
 }
 
 func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
