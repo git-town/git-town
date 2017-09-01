@@ -1,5 +1,5 @@
-hash: 76c2964926256e3bcfdff8d0681bb43eba2e531075c64b29dd532e1e0ac86ae1
-updated: 2017-09-01T10:42:42.532728156-07:00
+hash: 6d19ad19ddb3d53cc6dd2999df79ceced1824a2ede766f6e4a11abc34eda7f31
+updated: 2017-09-01T12:24:36.809561041-07:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -18,7 +18,8 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/mattn/go-colorable
-  version: d228849504861217f796da67fae4f6e347643f15
+  version: 5411d3eea5978e6cdc258b30de592b60df6aba96
+  repo: https://github.com/mattn/go-colorable
 - name: github.com/mattn/go-isatty
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
   repo: https://github.com/mattn/go-isatty
@@ -33,6 +34,7 @@ imports:
 - name: golang.org/x/net
   version: 55a3084c9119aeb9ba2437d595b0a7e9cb635da9
   subpackages:
+  - context
   - context/ctxhttp
   - html
   - html/atom
@@ -42,7 +44,8 @@ imports:
   subpackages:
   - internal
 - name: golang.org/x/sys
-  version: 30237cf4eefd639b184d1f2cb77a581ea0be8947
+  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+  repo: https://go.googlesource.com/sys
   subpackages:
   - unix
 - name: google.golang.org/appengine
