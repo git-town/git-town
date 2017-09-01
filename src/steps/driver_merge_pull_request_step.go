@@ -54,7 +54,7 @@ func (step *DriverMergePullRequestStep) Run() error {
 		}
 		commitMessage = git.GetLastCommitMessage()
 		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
-		logs.FatalOn(err, "Error resetting the main branch")
+		logs.FatalOnWrap(err, "Error resetting the main branch")
 		step.enteredEmptyCommitMessage = false
 	}
 	driver := drivers.GetActiveDriver()

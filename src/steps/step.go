@@ -36,7 +36,7 @@ type SerializedRunState struct {
 
 func getRunResultFilename(command string) string {
 	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
-	logs.FatalOn(err, "Error compiling replace character expression")
+	logs.FatalOnWrap(err, "Error compiling replace character expression")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
 	return path.Join(os.TempDir(), command+"_"+directory)
 }
