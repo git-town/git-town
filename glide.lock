@@ -1,8 +1,8 @@
-hash: 63281c10391554b29c894ea2e8efdf4cff0a947e7a819bd4e78b96d1d95775a0
-updated: 2017-08-29T22:03:31.635911836-07:00
+hash: 76c2964926256e3bcfdff8d0681bb43eba2e531075c64b29dd532e1e0ac86ae1
+updated: 2017-09-01T10:42:42.532728156-07:00
 imports:
 - name: github.com/fatih/color
-  version: 67c513e5729f918f5e69786686770c27141a4490
+  version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
 - name: github.com/golang/protobuf
   version: ab9f9a6dab164b7d1246e0e688b0ab7b94d8553e
   subpackages:
@@ -20,7 +20,8 @@ imports:
 - name: github.com/mattn/go-colorable
   version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/mattn/go-isatty
-  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+  version: 57fdcb988a5c543893cc61bce354a6e24ab70022
+  repo: https://github.com/mattn/go-isatty
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
@@ -28,11 +29,10 @@ imports:
 - name: github.com/spf13/pflag
   version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/spf13/viper
-  version: 7538d73b4eb9511d85a9f1dfef202eeb8ac260f4
+  version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: golang.org/x/net
   version: 55a3084c9119aeb9ba2437d595b0a7e9cb635da9
   subpackages:
-  - context
   - context/ctxhttp
   - html
   - html/atom
@@ -55,4 +55,40 @@ imports:
   - internal/remote_api
   - internal/urlfetch
   - urlfetch
-testImports: []
+testImports:
+- name: github.com/onsi/gomega
+  version: c893efa28eb45626cdaa76c9f653b62488858837
+  subpackages:
+  - format
+  - internal/assertion
+  - internal/asyncassertion
+  - internal/oraclematcher
+  - internal/testingtsupport
+  - matchers
+  - matchers/support/goraph/bipartitegraph
+  - matchers/support/goraph/edge
+  - matchers/support/goraph/node
+  - matchers/support/goraph/util
+  - types
+- name: golang.org/x/text
+  version: bd91bbf73e9a4a801adbfb97133c992678533126
+  subpackages:
+  - encoding
+  - encoding/charmap
+  - encoding/htmlindex
+  - encoding/internal
+  - encoding/internal/identifier
+  - encoding/japanese
+  - encoding/korean
+  - encoding/simplifiedchinese
+  - encoding/traditionalchinese
+  - encoding/unicode
+  - internal/tag
+  - internal/utf8internal
+  - language
+  - runes
+  - transform
+- name: gopkg.in/jarcoal/httpmock.v1
+  version: cf52904a3cf0f78f199ecade6a6df8e245d5b25a
+- name: gopkg.in/yaml.v2
+  version: eb3733d160e74a9c7e442f435eb3bea458e1d19f

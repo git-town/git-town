@@ -5,6 +5,7 @@
 package traditionalchinese
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 	"testing"
@@ -28,7 +29,12 @@ func TestNonRepertoire(t *testing.T) {
 		e         encoding.Encoding
 		src, want string
 	}{
+		{dec, Big5, "\x80", "\ufffd"},
+		{dec, Big5, "\x81", "\ufffd"},
+		{dec, Big5, "\x81\x30", "\ufffd\x30"},
 		{dec, Big5, "\x81\x40", "\ufffd"},
+		{dec, Big5, "\x81\xa0", "\ufffd"},
+		{dec, Big5, "\xff", "\ufffd"},
 
 		{enc, Big5, "갂", ""},
 		{enc, Big5, "a갂", "a"},
@@ -36,14 +42,24 @@ func TestNonRepertoire(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		dir, tr, wantErr := tc.init(tc.e)
-
-		dst, _, err := transform.String(tr, tc.src)
-		if err != wantErr {
-			t.Errorf("%s %v(%q): got %v; want %v", dir, tc.e, tc.src, err, wantErr)
-		}
-		if got := string(dst); got != tc.want {
-			t.Errorf("%s %v(%q):\ngot  %q\nwant %q", dir, tc.e, tc.src, got, tc.want)
-		}
+		t.Run(fmt.Sprintf("%s/%v/%q", dir, tc.e, tc.src), func(t *testing.T) {
+			dst := make([]byte, 100)
+			src := []byte(tc.src)
+			for i := 0; i <= len(tc.src); i++ {
+				nDst, nSrc, err := tr.Transform(dst, src[:i], false)
+				if err != nil && err != transform.ErrShortSrc && err != wantErr {
+					t.Fatalf("error on first call to Transform: %v", err)
+				}
+				n, _, err := tr.Transform(dst[nDst:], src[nSrc:], true)
+				nDst += n
+				if err != wantErr {
+					t.Fatalf("(%q|%q): got %v; want %v", tc.src[:i], tc.src[i:], err, wantErr)
+				}
+				if got := string(dst[:nDst]); got != tc.want {
+					t.Errorf("(%q|%q):\ngot  %q\nwant %q", tc.src[:i], tc.src[i:], got, tc.want)
+				}
+			}
+		})
 	}
 }
 

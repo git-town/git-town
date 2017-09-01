@@ -5,6 +5,7 @@
 package japanese
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -23,16 +24,13 @@ func enc(e encoding.Encoding) (dir string, t transform.Transformer, err error) {
 
 func TestNonRepertoire(t *testing.T) {
 	// Pick n to cause the destination buffer in transform.String to overflow.
-	const n = 10000
+	const n = 100
+	long := strings.Repeat(".", n)
 	testCases := []struct {
 		init      func(e encoding.Encoding) (string, transform.Transformer, error)
 		e         encoding.Encoding
 		src, want string
 	}{
-		{dec, EUCJP, "\xfe\xfc", "\ufffd"},
-		{dec, ISO2022JP, "\x1b$B\x7e\x7e", "\ufffd"},
-		{dec, ShiftJIS, "\xef\xfc", "\ufffd"},
-
 		{enc, EUCJP, "갂", ""},
 		{enc, EUCJP, "a갂", "a"},
 		{enc, EUCJP, "丌갂", "\x8f\xb0\xa4"},
@@ -51,12 +49,13 @@ func TestNonRepertoire(t *testing.T) {
 		{dec, EUCJP, "\x8e\xff", "\ufffd\ufffd"},
 		{dec, EUCJP, "\x8ea", "\ufffda"},
 		{dec, EUCJP, "\x8f\xa0", "\ufffd\ufffd"},
-		{dec, EUCJP, "\x8f\xa1a", "\ufffda"},
-		{dec, EUCJP, "\x8f\xa1a", "\ufffda"},
 		{dec, EUCJP, "\x8f\xa1\xa0", "\ufffd\ufffd"},
+		{dec, EUCJP, "\x8f\xa1a", "\ufffda"},
+		{dec, EUCJP, "\x8f\xa1a", "\ufffda"},
 		{dec, EUCJP, "\x8f\xa1a", "\ufffda"},
 		{dec, EUCJP, "\x8f\xa2\xa2", "\ufffd"},
 		{dec, EUCJP, "\xfe", "\ufffd"},
+		{dec, EUCJP, "\xfe\xfc", "\ufffd"},
 		{dec, EUCJP, "\xfe\xff", "\ufffd\ufffd"},
 		// Correct handling of end of source
 		{dec, EUCJP, strings.Repeat("\x8e", n), strings.Repeat("\ufffd", n)},
@@ -64,17 +63,87 @@ func TestNonRepertoire(t *testing.T) {
 		{dec, EUCJP, strings.Repeat("\x8f\xa0", n), strings.Repeat("\ufffd", 2*n)},
 		{dec, EUCJP, "a" + strings.Repeat("\x8f\xa1", n), "a" + strings.Repeat("\ufffd", n)},
 		{dec, EUCJP, "a" + strings.Repeat("\x8f\xa1\xff", n), "a" + strings.Repeat("\ufffd", 2*n)},
+
+		// Continue correctly after errors
+		{dec, ShiftJIS, "\x80", "\u0080"}, // It's what the spec says.
+		{dec, ShiftJIS, "\x81", "\ufffd"},
+		{dec, ShiftJIS, "\x81\x7f", "\ufffd\u007f"},
+		{dec, ShiftJIS, "\xe0", "\ufffd"},
+		{dec, ShiftJIS, "\xe0\x39", "\ufffd\u0039"},
+		{dec, ShiftJIS, "\xe0\x9f", "燹"},
+		{dec, ShiftJIS, "\xe0\xfd", "\ufffd"},
+		{dec, ShiftJIS, "\xef\xfc", "\ufffd"},
+		{dec, ShiftJIS, "\xfc\xfc", "\ufffd"},
+		{dec, ShiftJIS, "\xfc\xfd", "\ufffd"},
+		{dec, ShiftJIS, "\xfdaa", "\ufffdaa"},
+
+		{dec, ShiftJIS, strings.Repeat("\x81\x81", n), strings.Repeat("＝", n)},
+		{dec, ShiftJIS, strings.Repeat("\xe0\xfd", n), strings.Repeat("\ufffd", n)},
+		{dec, ShiftJIS, "a" + strings.Repeat("\xe0\xfd", n), "a" + strings.Repeat("\ufffd", n)},
+
+		{dec, ISO2022JP, "\x1b$", "\ufffd$"},
+		{dec, ISO2022JP, "\x1b(", "\ufffd("},
+		{dec, ISO2022JP, "\x1b@", "\ufffd@"},
+		{dec, ISO2022JP, "\x1bZ", "\ufffdZ"},
+		// incomplete escapes
+		{dec, ISO2022JP, "\x1b$", "\ufffd$"},
+		{dec, ISO2022JP, "\x1b$J.", "\ufffd$J."},             // illegal
+		{dec, ISO2022JP, "\x1b$B.", "\ufffd"},                // JIS208
+		{dec, ISO2022JP, "\x1b$(", "\ufffd$("},               // JIS212
+		{dec, ISO2022JP, "\x1b$(..", "\ufffd$(.."},           // JIS212
+		{dec, ISO2022JP, "\x1b$(" + long, "\ufffd$(" + long}, // JIS212
+		{dec, ISO2022JP, "\x1b$(D.", "\ufffd"},               // JIS212
+		{dec, ISO2022JP, "\x1b$(D..", "\ufffd"},              // JIS212
+		{dec, ISO2022JP, "\x1b$(D...", "\ufffd\ufffd"},       // JIS212
+		{dec, ISO2022JP, "\x1b(B.", "."},                     // ascii
+		{dec, ISO2022JP, "\x1b(B..", ".."},                   // ascii
+		{dec, ISO2022JP, "\x1b(J.", "."},                     // roman
+		{dec, ISO2022JP, "\x1b(J..", ".."},                   // roman
+		{dec, ISO2022JP, "\x1b(I\x20", "\ufffd"},             // katakana
+		{dec, ISO2022JP, "\x1b(I\x20\x20", "\ufffd\ufffd"},   // katakana
+		// recover to same state
+		{dec, ISO2022JP, "\x1b(B\x1b.", "\ufffd."},
+		{dec, ISO2022JP, "\x1b(I\x1b.", "\ufffdｮ"},
+		{dec, ISO2022JP, "\x1b(I\x1b$.", "\ufffd､ｮ"},
+		{dec, ISO2022JP, "\x1b(I\x1b(.", "\ufffdｨｮ"},
+		{dec, ISO2022JP, "\x1b$B\x7e\x7e", "\ufffd"},
+		{dec, ISO2022JP, "\x1b$@\x0a.", "\x0a."},
+		{dec, ISO2022JP, "\x1b$B\x0a.", "\x0a."},
+		{dec, ISO2022JP, "\x1b$(D\x0a.", "\x0a."},
+		{dec, ISO2022JP, "\x1b$(D\x7e\x7e", "\ufffd"},
+		{dec, ISO2022JP, "\x80", "\ufffd"},
+
+		// TODO: according to https://encoding.spec.whatwg.org/#iso-2022-jp,
+		// these should all be correct.
+		// {dec, ISO2022JP, "\x1b(B\x0E", "\ufffd"},
+		// {dec, ISO2022JP, "\x1b(B\x0F", "\ufffd"},
+		{dec, ISO2022JP, "\x1b(B\x5C", "\u005C"},
+		{dec, ISO2022JP, "\x1b(B\x7E", "\u007E"},
+		// {dec, ISO2022JP, "\x1b(J\x0E", "\ufffd"},
+		// {dec, ISO2022JP, "\x1b(J\x0F", "\ufffd"},
+		// {dec, ISO2022JP, "\x1b(J\x5C", "\u00A5"},
+		// {dec, ISO2022JP, "\x1b(J\x7E", "\u203E"},
 	}
 	for _, tc := range testCases {
 		dir, tr, wantErr := tc.init(tc.e)
-
-		dst, _, err := transform.String(tr, tc.src)
-		if err != wantErr {
-			t.Errorf("%s %v(%q): got %v; want %v", dir, tc.e, tc.src, err, wantErr)
-		}
-		if got := string(dst); got != tc.want {
-			t.Errorf("%s %v(%q):\ngot  %q\nwant %q", dir, tc.e, tc.src, got, tc.want)
-		}
+		t.Run(fmt.Sprintf("%s/%v/%q", dir, tc.e, tc.src), func(t *testing.T) {
+			dst := make([]byte, 100000)
+			src := []byte(tc.src)
+			for i := 0; i <= len(tc.src); i++ {
+				nDst, nSrc, err := tr.Transform(dst, src[:i], false)
+				if err != nil && err != transform.ErrShortSrc && err != wantErr {
+					t.Fatalf("error on first call to Transform: %v", err)
+				}
+				n, _, err := tr.Transform(dst[nDst:], src[nSrc:], true)
+				nDst += n
+				if err != wantErr {
+					t.Fatalf("(%q|%q): got %v; want %v", tc.src[:i], tc.src[i:], err, wantErr)
+				}
+				if got := string(dst[:nDst]); got != tc.want {
+					t.Errorf("(%q|%q):\ngot  %q\nwant %q", tc.src[:i], tc.src[i:], got, tc.want)
+				}
+			}
+		})
 	}
 }
 

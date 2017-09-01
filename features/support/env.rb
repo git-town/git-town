@@ -6,6 +6,7 @@ require 'mortadella'
 require 'open4'
 require 'pathname'
 require 'rspec'
+require 'tmpdir'
 
 
 SOURCE_DIRECTORY = File.join(File.dirname(__FILE__), '..', '..', 'src')
