@@ -15,8 +15,4 @@ import:
 - package: golang.org/x/net
   subpackages:
   - context
-testImport:
-- package: github.com/alecthomas/gometalinter
-  version: v1.2.1
-- package: github.com/onsi/ginkgo
-  version: v1.4.0
+testImport: []
