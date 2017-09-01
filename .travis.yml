@@ -7,7 +7,7 @@ go: 1.8
 install:
   - echo $GOROOT
   - which go
-  - ln -s $GOROOT /usr/local/go
+  - sudo ln -s $GOROOT /usr/local/go
   - rvm install 2.4.1
   - bin/setup
 
