@@ -4,6 +4,6 @@ set -e
 go get github.com/Masterminds/glide github.com/roboll/go-vendorinstall
 go-vendorinstall github.com/onsi/ginkgo
 go-vendorinstall github.com/alecthomas/gometalinter
-gometalinter.v1 --install
+gometalinter --install
 bin/build
 bundle install
