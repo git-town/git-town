@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/script"
 )
 
@@ -28,9 +27,7 @@ func (step *ChangeDirectoryStep) Run() error {
 	_, err := os.Stat(step.Directory)
 	if err == nil {
 		script.PrintCommand("cd", step.Directory)
-		if !dryrun.IsActive() {
-			return os.Chdir(step.Directory)
-		}
+		return os.Chdir(step.Directory)
 	}
 	return nil
 }
