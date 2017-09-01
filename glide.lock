@@ -35,7 +35,6 @@ imports:
   version: 55a3084c9119aeb9ba2437d595b0a7e9cb635da9
   subpackages:
   - context
-  - context/ctxhttp
   - html
   - html/atom
   - html/charset
