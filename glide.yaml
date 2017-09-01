@@ -1,5 +1,6 @@
 package: github.com/Originate/git-town
 import:
+- package: github.com/spf13/cobra
 - package: github.com/spf13/viper
   version: v1.0.0
 - package: github.com/fatih/color
@@ -14,4 +15,8 @@ import:
 - package: golang.org/x/net
   subpackages:
   - context
-- package: github.com/spf13/cobra
+testImport:
+- package: github.com/alecthomas/gometalinter
+  version: v1.2.1
+- package: github.com/onsi/ginkgo
+  version: v1.4.0

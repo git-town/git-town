@@ -1,5 +1,5 @@
-hash: fe3dac99f98744bc516b3c3952d8b6f595856047d7ff8a101c7225a4d154bf9e
-updated: 2017-09-01T10:24:56.241693094-07:00
+hash: 76c2964926256e3bcfdff8d0681bb43eba2e531075c64b29dd532e1e0ac86ae1
+updated: 2017-09-01T10:42:42.532728156-07:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -58,6 +58,8 @@ imports:
   - internal/urlfetch
   - urlfetch
 testImports:
+- name: github.com/alecthomas/gometalinter
+  version: bae2f1293d092fd8167939d5108d1b025eaef9de
 - name: github.com/onsi/ginkgo
   version: 9eda700730cba42af70d53180f9dcce9266bc2bc
   subpackages:
