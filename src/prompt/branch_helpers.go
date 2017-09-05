@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/logs"
 	"github.com/Originate/git-town/src/util"
 	"github.com/fatih/color"
 )
@@ -35,7 +35,7 @@ func askForBranch(config branchPromptConfig) string {
 
 func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 	numericRegex, err := regexp.Compile("^[0-9]+$")
-	logs.FatalOnWrap(err, "Error compiling numeric regular expression")
+	exit.OnWrap(err, "Error compiling numeric regular expression")
 
 	if numericRegex.MatchString(userInput) {
 		return parseBranchNumber(config.branchNames, userInput)
@@ -52,7 +52,7 @@ func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 
 func parseBranchNumber(branchNames []string, userInput string) (string, error) {
 	index, err := strconv.Atoi(userInput)
-	logs.FatalOnWrap(err, "Error parsing string to integer")
+	exit.OnWrap(err, "Error parsing string to integer")
 	if index >= 1 && index <= len(branchNames) {
 		return branchNames[index-1], nil
 	}

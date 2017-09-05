@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/logs"
 	"github.com/Originate/git-town/src/util"
 
 	"github.com/fatih/color"
@@ -17,7 +17,7 @@ import (
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
-	logs.FatalOn(err)
+	exit.On(err)
 }
 
 // PrintCommand prints the given command-line operation on the console.
@@ -52,5 +52,5 @@ func RunCommand(cmd ...string) error {
 // RunCommandSafe executes the given command-line operation, exiting if the command errors
 func RunCommandSafe(cmd ...string) {
 	err := RunCommand(cmd...)
-	logs.FatalOn(err)
+	exit.On(err)
 }

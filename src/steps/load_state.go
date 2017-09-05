@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Originate/git-town/src/logs"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -26,9 +26,9 @@ func loadState(command string) RunState {
 	var serializedRunState SerializedRunState
 	if hasSavedState(command) {
 		content, err := ioutil.ReadFile(getRunResultFilename(command))
-		logs.FatalOn(err)
+		exit.On(err)
 		err = json.Unmarshal(content, &serializedRunState)
-		logs.FatalOn(err)
+		exit.On(err)
 	} else {
 		serializedRunState.AbortStep = SerializedStep{Type: "*NoOpStep"}
 	}

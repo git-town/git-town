@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/logs"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
@@ -158,7 +158,7 @@ func getCanShipWithDriver(branch, parentBranch string) bool {
 		return false
 	}
 	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
-	logs.FatallnOn(err)
+	exit.On(err)
 	return canMerge
 }
 
