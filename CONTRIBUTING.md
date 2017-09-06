@@ -27,7 +27,7 @@ This guide will help you get started and outline some things you should know whe
   * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
   * cd into `$GOPATH/src/github.com/Originate/git-town`
   * run `bin/setup`
-  * now you can run `gt` on the command line
+  * now you can run `git-town` on the command line
   * see https://golang.org/doc/install#testing for details on how to test
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
