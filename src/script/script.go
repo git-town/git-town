@@ -16,7 +16,7 @@ import (
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
-	err = RunCommand(command, url)
+	err := RunCommand(command, url)
 	if err != nil {
 		log.Fatal(err)
 	}
