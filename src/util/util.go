@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/fatih/color"
@@ -77,6 +78,9 @@ var missingOpenBrowserCommandMessages = []string{
 // GetOpenBrowserCommand returns the command to run on the console
 // to open the default browser.
 func GetOpenBrowserCommand() string {
+	if runtime.GOOS == "windows" {
+		return "explorer"
+	}
 	for _, command := range openBrowserCommands {
 		output, err := GetFullCommandOutput("which", command)
 		if err == nil && output != "" {
