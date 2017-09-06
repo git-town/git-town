@@ -14,11 +14,10 @@ This guide will help you get started and outline some things you should know whe
 
 * install [Go](https://golang.org)
   * on macOS via `brew install go`
-* install [Glide](https://github.com/Masterminds/glide) (package manager for Go)
-  * on macOS: `brew install glide`
+  * on Windows via the [official Go installer](https://golang.org/dl)
 * install [Ruby 2.3.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
-* run `gem install bundler`
+  * run `gem install bundler`
 * set up the Go directory structure on your machine
   * set the environment variable `$GOPATH` to your Go workspace
     (you can point it to any folder on your hard drive, let's assume `~/go` here)
@@ -26,9 +25,9 @@ This guide will help you get started and outline some things you should know whe
   * create the directory `~/go/src/github.com/Originate`
   * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
   * cd into `$GOPATH/src/github.com/Originate/git-town`
-  * run `bin/setup`
-  * now you can run `gt` on the command line
-  * see https://golang.org/doc/install#testing for details on how to test
+* run `bin/setup`
+* now you can run `git-town` on the command line
+* see https://golang.org/doc/install#testing for details on how to test
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
 
@@ -40,7 +39,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Testing
 
-* tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
+* tests are written in [Cucumber](http://cukes.info) and [RSpec](http://rspec.info).
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
 * See [here](./documentation/development/testing.md) for how to run the tests
