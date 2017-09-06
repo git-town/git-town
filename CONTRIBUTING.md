@@ -39,7 +39,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Testing
 
-* tests are written in [Cucumber](http://cukes.info/) and [RSpec](http://rspec.info/).
+* tests are written in [Cucumber](http://cukes.info) and [RSpec](http://rspec.info).
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
 * See [here](./documentation/development/testing.md) for how to run the tests
