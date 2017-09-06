@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 
 	"github.com/Originate/git-town/src/git"
@@ -16,13 +15,8 @@ import (
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
-	var err error
-	if runtime.GOOS == "windows" {
-		err = RunCommand("explorer", url)
-	} else {
-		command := util.GetOpenBrowserCommand()
-		err = RunCommand(command, url)
-	}
+	command := util.GetOpenBrowserCommand()
+	err = RunCommand(command, url)
 	if err != nil {
 		log.Fatal(err)
 	}
