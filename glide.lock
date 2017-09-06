@@ -1,5 +1,5 @@
-hash: 76c2964926256e3bcfdff8d0681bb43eba2e531075c64b29dd532e1e0ac86ae1
-updated: 2017-09-01T10:42:42.532728156-07:00
+hash: 6d19ad19ddb3d53cc6dd2999df79ceced1824a2ede766f6e4a11abc34eda7f31
+updated: 2017-09-01T12:24:36.809561041-07:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -8,7 +8,7 @@ imports:
   subpackages:
   - proto
 - name: github.com/google/go-github
-  version: ebfec748347a9af6793c723f8859afcd906860fb
+  version: 5f3187e17912ee2e3fbe2fa5bdada9d577d25e83
   subpackages:
   - github
 - name: github.com/google/go-querystring
@@ -23,6 +23,8 @@ imports:
 - name: github.com/mattn/go-isatty
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
   repo: https://github.com/mattn/go-isatty
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
   version: 92ea23a837e66f46ac9e7d04fa826602b7b0a42d
 - name: github.com/spf13/pflag
@@ -30,14 +32,14 @@ imports:
 - name: github.com/spf13/viper
   version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: golang.org/x/net
-  version: c9b681d35165f1995d6f3034e61f8761d4b90c99
+  version: 55a3084c9119aeb9ba2437d595b0a7e9cb635da9
   subpackages:
   - context
   - html
   - html/atom
   - html/charset
 - name: golang.org/x/oauth2
-  version: f047394b6d14284165300fd82dad67edb3a4d7f6
+  version: 9a379c6b3e95a790ffc43293c2a78dee0d7b6e20
   subpackages:
   - internal
 - name: golang.org/x/sys
@@ -49,11 +51,9 @@ imports:
   version: d9a072cfa7b9736e44311ef77b3e09d804bfa599
   subpackages:
   - internal
-  - internal/app_identity
   - internal/base
   - internal/datastore
   - internal/log
-  - internal/modules
   - internal/remote_api
   - internal/urlfetch
   - urlfetch

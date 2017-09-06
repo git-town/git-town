@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"log"
 	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -158,9 +158,7 @@ func getCanShipWithDriver(branch, parentBranch string) bool {
 		return false
 	}
 	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	exit.On(err)
 	return canMerge
 }
 

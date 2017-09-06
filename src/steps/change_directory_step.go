@@ -1,9 +1,9 @@
 package steps
 
 import (
-	"log"
 	"os"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/script"
 )
 
@@ -16,9 +16,7 @@ type ChangeDirectoryStep struct {
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
 func (step *ChangeDirectoryStep) CreateUndoStepBeforeRun() Step {
 	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 	return &ChangeDirectoryStep{Directory: dir}
 }
 

@@ -2,11 +2,11 @@ package script
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 
@@ -17,9 +17,7 @@ import (
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 }
 
 // PrintCommand prints the given command-line operation on the console.
@@ -54,7 +52,5 @@ func RunCommand(cmd ...string) error {
 // RunCommandSafe executes the given command-line operation, exiting if the command errors
 func RunCommandSafe(cmd ...string) {
 	err := RunCommand(cmd...)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 }

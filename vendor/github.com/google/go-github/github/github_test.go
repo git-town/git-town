@@ -43,7 +43,7 @@ func setup() {
 
 	// github client configured to use test server
 	client = NewClient(nil)
-	url, _ := url.Parse(server.URL)
+	url, _ := url.Parse(server.URL + "/")
 	client.BaseURL = url
 	client.UploadURL = url
 }
@@ -245,6 +245,52 @@ func TestNewRequest_emptyBody(t *testing.T) {
 	}
 	if req.Body != nil {
 		t.Fatalf("constructed request contains a non-nil Body")
+	}
+}
+
+func TestNewRequest_errorForNoTrailingSlash(t *testing.T) {
+	tests := []struct {
+		rawurl    string
+		wantError bool
+	}{
+		{rawurl: "https://example.com/api/v3", wantError: true},
+		{rawurl: "https://example.com/api/v3/", wantError: false},
+	}
+	c := NewClient(nil)
+	for _, test := range tests {
+		u, err := url.Parse(test.rawurl)
+		if err != nil {
+			t.Fatalf("url.Parse returned unexpected error: %v.", err)
+		}
+		c.BaseURL = u
+		if _, err := c.NewRequest(http.MethodGet, "test", nil); test.wantError && err == nil {
+			t.Fatalf("Expected error to be returned.")
+		} else if !test.wantError && err != nil {
+			t.Fatalf("NewRequest returned unexpected error: %v.", err)
+		}
+	}
+}
+
+func TestNewUploadRequest_errorForNoTrailingSlash(t *testing.T) {
+	tests := []struct {
+		rawurl    string
+		wantError bool
+	}{
+		{rawurl: "https://example.com/api/uploads", wantError: true},
+		{rawurl: "https://example.com/api/uploads/", wantError: false},
+	}
+	c := NewClient(nil)
+	for _, test := range tests {
+		u, err := url.Parse(test.rawurl)
+		if err != nil {
+			t.Fatalf("url.Parse returned unexpected error: %v.", err)
+		}
+		c.UploadURL = u
+		if _, err = c.NewUploadRequest("test", nil, 0, ""); test.wantError && err == nil {
+			t.Fatalf("Expected error to be returned.")
+		} else if !test.wantError && err != nil {
+			t.Fatalf("NewUploadRequest returned unexpected error: %v.", err)
+		}
 	}
 }
 
@@ -909,5 +955,42 @@ func TestBasicAuthTransport_transport(t *testing.T) {
 	}
 	if tp.transport() == http.DefaultTransport {
 		t.Errorf("Expected custom transport to be used.")
+	}
+}
+
+func TestFormatRateReset(t *testing.T) {
+	d := 120*time.Minute + 12*time.Second
+	got := formatRateReset(d)
+	want := "[rate reset in 120m12s]"
+	if got != want {
+		t.Errorf("Format is wrong. got: %v, want: %v", got, want)
+	}
+
+	d = 14*time.Minute + 2*time.Second
+	got = formatRateReset(d)
+	want = "[rate reset in 14m02s]"
+	if got != want {
+		t.Errorf("Format is wrong. got: %v, want: %v", got, want)
+	}
+
+	d = 2*time.Minute + 2*time.Second
+	got = formatRateReset(d)
+	want = "[rate reset in 2m02s]"
+	if got != want {
+		t.Errorf("Format is wrong. got: %v, want: %v", got, want)
+	}
+
+	d = 12 * time.Second
+	got = formatRateReset(d)
+	want = "[rate reset in 12s]"
+	if got != want {
+		t.Errorf("Format is wrong. got: %v, want: %v", got, want)
+	}
+
+	d = -1 * (2*time.Hour + 2*time.Second)
+	got = formatRateReset(d)
+	want = "[rate limit was reset 120m02s ago]"
+	if got != want {
+		t.Errorf("Format is wrong. got: %v, want: %v", got, want)
 	}
 }
