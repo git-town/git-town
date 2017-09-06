@@ -18,7 +18,7 @@ import (
 func OpenBrowser(url string) {
 	var err error
 	if runtime.GOOS == "windows" {
-		err = RunCommand("explorer", url)
+		err = RunCommand("explorer", fmt.Sprintf("\"%s\"", url))
 	} else {
 		command := util.GetOpenBrowserCommand()
 		err = RunCommand(command, url)
