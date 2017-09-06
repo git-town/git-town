@@ -16,11 +16,14 @@ import (
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
+	var err error
 	if runtime.GOOS == "windows" {
-		url = fmt.Sprintf("\"%s\"", url)
+		err = RunCommand("explorer", "http://google.com")
+		// url = fmt.Sprintf("\"%s\"", url)
+	} else {
+		command := util.GetOpenBrowserCommand()
+		err = RunCommand(command, url)
 	}
-	command := util.GetOpenBrowserCommand()
-	err := RunCommand(command, url)
 	if err != nil {
 		log.Fatal(err)
 	}
