@@ -21,7 +21,7 @@ type branchPromptConfig struct {
 
 func askForBranch(config branchPromptConfig) string {
 	for {
-		fmt.Print(config.prompt)
+		fmt.Fprint(color.Output, config.prompt)
 		branchName, err := parseBranch(config, util.GetUserInput())
 		if err == nil {
 			err = config.validate(branchName)
