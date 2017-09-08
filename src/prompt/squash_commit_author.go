@@ -20,7 +20,7 @@ func GetSquashCommitAuthor(branchName string) string {
 	if len(authors) == 1 {
 		return authors[0].NameAndEmail
 	}
-	fmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
+	fmt.Fprintf(color.Output, squashCommitAuthorHeaderTemplate, branchName)
 	printNumberedAuthors(authors)
 	fmt.Println()
 	return askForAuthor(authors)
@@ -86,6 +86,6 @@ func printNumberedAuthors(authors []branchAuthor) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
 		stat := util.Pluralize(author.NumberOfCommits, "commit")
-		fmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
+		fmt.Fprintf(color.Output, "  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
 	}
 }

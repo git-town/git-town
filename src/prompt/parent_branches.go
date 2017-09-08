@@ -74,7 +74,7 @@ func validateParentBranch(branchName string, parent string) error {
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		fmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
+		fmt.Fprintf(color.Output, parentBranchHeaderTemplate, git.GetMainBranch())
 		printNumberedBranches(git.GetLocalBranchesWithMainBranchFirst())
 		fmt.Println()
 	}

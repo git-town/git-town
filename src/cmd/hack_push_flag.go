@@ -5,6 +5,7 @@ import (
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,7 @@ The default value is false.`,
 }
 
 func printHackPushFlag() {
-	fmt.Println(git.GetPrintableHackPushFlag())
+	fmt.Fprintln(color.Output, git.GetPrintableHackPushFlag())
 }
 
 func setHackPushFlag(value bool) {

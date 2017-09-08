@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +44,7 @@ func addPerennialBranch(branchName string) {
 }
 
 func printPerennialBranches() {
-	fmt.Println(git.GetPrintablePerennialBranches())
+	fmt.Fprintln(color.Output, git.GetPrintablePerennialBranches())
 }
 
 func removePerennialBranch(branchName string) {

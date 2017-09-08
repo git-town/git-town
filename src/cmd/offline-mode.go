@@ -5,6 +5,7 @@ import (
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ var offlineCommand = &cobra.Command{
 }
 
 func printOfflineFlag() {
-	fmt.Println(git.GetPrintableOfflineFlag())
+	fmt.Fprintln(color.Output, git.GetPrintableOfflineFlag())
 }
 
 func setOfflineFlag(value bool) {

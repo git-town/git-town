@@ -129,7 +129,7 @@ func PrintError(messages ...string) {
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	labelFmt.Println(label + ":")
-	fmt.Println(Indent(value, 1))
+	fmt.Fprintln(color.Output, Indent(value, 1))
 	fmt.Println()
 }
 
