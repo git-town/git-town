@@ -7,12 +7,12 @@ package git
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -141,9 +141,7 @@ func GetRemoteUpstreamURL() string {
 // GetURLHostname returns the hostname contained within the given Git URL.
 func GetURLHostname(url string) string {
 	hostnameRegex, err := regexp.Compile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
-	if err != nil {
-		log.Fatal("Error compiling hostname regular expression: ", err)
-	}
+	exit.OnWrap(err, "Error compiling hostname regular expression")
 	matches := hostnameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
@@ -155,9 +153,7 @@ func GetURLHostname(url string) string {
 func GetURLRepositoryName(url string) string {
 	hostname := GetURLHostname(url)
 	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
-	if err != nil {
-		log.Fatal("Error compiling repository name regular expression: ", err)
-	}
+	exit.OnWrap(err, "Error compiling repository name regular expression")
 	matches := repositoryNameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
@@ -291,9 +287,7 @@ func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
 
 func getConfigurationKeysMatching(toMatch string) (result []string) {
 	configRegexp, err := regexp.Compile(toMatch)
-	if err != nil {
-		log.Fatalf("Error compiling configuration regular expression (%s): %v", toMatch, err)
-	}
+	exit.OnWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
 	lines := util.GetCommandOutput("git", "config", "-l", "--local", "--name")
 	for _, line := range strings.Split(lines, "\n") {
 		if configRegexp.MatchString(line) {

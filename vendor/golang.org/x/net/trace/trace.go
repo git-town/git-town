@@ -77,6 +77,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"golang.org/x/net/context"
 	"golang.org/x/net/internal/timeseries"
 )
 
@@ -237,7 +238,7 @@ func Render(w io.Writer, req *http.Request, sensitive bool) {
 
 	completedMu.RLock()
 	defer completedMu.RUnlock()
-	if err := pageTmpl().ExecuteTemplate(w, "Page", data); err != nil {
+	if err := pageTmpl.ExecuteTemplate(w, "Page", data); err != nil {
 		log.Printf("net/trace: Failed executing template: %v", err)
 	}
 }
@@ -269,6 +270,18 @@ func lookupBucket(fam string, b int) *traceBucket {
 type contextKeyT string
 
 var contextKey = contextKeyT("golang.org/x/net/trace.Trace")
+
+// NewContext returns a copy of the parent context
+// and associates it with a Trace.
+func NewContext(ctx context.Context, tr Trace) context.Context {
+	return context.WithValue(ctx, contextKey, tr)
+}
+
+// FromContext returns the Trace bound to the context, if any.
+func FromContext(ctx context.Context) (tr Trace, ok bool) {
+	tr, ok = ctx.Value(contextKey).(Trace)
+	return
+}
 
 // Trace represents an active request.
 type Trace interface {
@@ -739,7 +752,7 @@ func (tr *trace) addEvent(x interface{}, recyclable, sensitive bool) {
 		and very unlikely to be the fault of this code.
 
 		The most likely scenario is that some code elsewhere is using
-		a trace.Trace after its Finish method is called.
+		a requestz.Trace after its Finish method is called.
 		You can temporarily set the DebugUseAfterFinish var
 		to help discover where that is; do not leave that var set,
 		since it makes this package much less efficient.
@@ -889,18 +902,10 @@ func elapsed(d time.Duration) string {
 	return string(b)
 }
 
-var pageTmplCache *template.Template
-var pageTmplOnce sync.Once
-
-func pageTmpl() *template.Template {
-	pageTmplOnce.Do(func() {
-		pageTmplCache = template.Must(template.New("Page").Funcs(template.FuncMap{
-			"elapsed": elapsed,
-			"add":     func(a, b int) int { return a + b },
-		}).Parse(pageHTML))
-	})
-	return pageTmplCache
-}
+var pageTmpl = template.Must(template.New("Page").Funcs(template.FuncMap{
+	"elapsed": elapsed,
+	"add":     func(a, b int) int { return a + b },
+}).Parse(pageHTML))
 
 const pageHTML = `
 {{template "Prolog" .}}
