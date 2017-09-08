@@ -43,13 +43,11 @@ func PrintCommand(cmd ...string) {
 // RunCommand executes the given command-line operation.
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
-
-	// Running Windows commands inside CMD,
+	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	if runtime.GOOS == "windows" {
 		cmd = append([]string{"cmd", "/C"}, cmd...)
 	}
-
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
