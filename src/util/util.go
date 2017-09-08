@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/Originate/git-town/src/exit"
@@ -75,6 +76,12 @@ var missingOpenBrowserCommandMessages = []string{
 // GetOpenBrowserCommand returns the command to run on the console
 // to open the default browser.
 func GetOpenBrowserCommand() string {
+	if runtime.GOOS == "windows" {
+		// NOTE: the "explorer" command cannot handle special characters
+		//       like "?" and "=", so we are using "start" here.
+		//       "?" can be escaped via "\", but "=" cannot.
+		return "start"
+	}
 	for _, command := range openBrowserCommands {
 		output, err := GetFullCommandOutput("which", command)
 		if err == nil && output != "" {
