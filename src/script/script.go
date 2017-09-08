@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/Originate/git-town/src/exit"
@@ -42,6 +43,13 @@ func PrintCommand(cmd ...string) {
 // RunCommand executes the given command-line operation.
 func RunCommand(cmd ...string) error {
 	PrintCommand(cmd...)
+
+	// Running Windows commands inside CMD,
+	// because opening browsers is done via "start"
+	if runtime.GOOS == "windows" {
+		cmd = append([]string{"cmd", "/C"}, cmd...)
+	}
+
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin

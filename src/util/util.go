@@ -77,7 +77,7 @@ var missingOpenBrowserCommandMessages = []string{
 // to open the default browser.
 func GetOpenBrowserCommand() string {
 	if runtime.GOOS == "windows" {
-		return "explorer"
+		return "start"
 	}
 	for _, command := range openBrowserCommands {
 		output, err := GetFullCommandOutput("which", command)
