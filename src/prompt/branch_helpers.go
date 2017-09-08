@@ -63,6 +63,6 @@ func parseBranchNumber(branchNames []string, userInput string) (string, error) {
 func printNumberedBranches(branchNames []string) {
 	boldFmt := color.New(color.Bold)
 	for index, branchName := range branchNames {
-		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
+		fmt.Fprintf(color.Output, "  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
 	}
 }
