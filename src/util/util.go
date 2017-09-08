@@ -77,6 +77,9 @@ var missingOpenBrowserCommandMessages = []string{
 // to open the default browser.
 func GetOpenBrowserCommand() string {
 	if runtime.GOOS == "windows" {
+		// NOTE: the "explorer" command cannot handle special characters
+		//       like "?" and "=", so we are using "start" here.
+		//       "?" can be escaped via "\", but "=" cannot.
 		return "start"
 	}
 	for _, command := range openBrowserCommands {
