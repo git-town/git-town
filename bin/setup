@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-<<<<<<< Updated upstream
-go get github.com/Masterminds/glide gopkg.in/alecthomas/gometalinter.v1 github.com/onsi/ginkgo/ginkgo
-gometalinter.v1 --install
-=======
-go get github.com/Masterminds/glide github.com/alecthomas/gometalinter github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega gopkg.in/jarcoal/httpmock.v1
+go get github.com/Masterminds/glide github.com/alecthomas/gometalinter github.com/onsi/ginkgo/ginkgo
 gometalinter --install
->>>>>>> Stashed changes
 bin/build
 bundle install
