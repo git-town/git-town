@@ -6,6 +6,11 @@ if [ -n "$(goimports -d src 2>&1)" ]; then
   exit 1
 fi
 
-# Disabled linters:
-# - https://github.com/GoASTScanner/gas: not production-ready at this point
-gometalinter.v1 -D gas src/...
+gometalinter --debug src/... 2> lint_output.txt
+if [ -n "$(grep 'warning:' lint_output.txt)" ]; then
+  echo "There are linter warnings. Check 'lint_output.txt'."
+  echo ""
+  echo "Expected warnings:"
+  echo "gocyclo - deserializeStep (ignored with a nolint directive)"
+  echo "gotype - see https://github.com/alecthomas/gometalinter/issues/348"
+fi

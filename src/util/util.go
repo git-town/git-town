@@ -45,8 +45,8 @@ func ExitWithErrorMessage(messages ...string) {
 // GetCommandOutput runs the given command and returns its output.
 func GetCommandOutput(cmd ...string) string {
 	output, err := GetFullCommandOutput(cmd...)
-	exit.OnWrapf(err, "Command: %s\nOutput: %s", strings.Join(cmd, " "), string(output))
-	return strings.TrimSpace(string(output))
+	exit.OnWrapf(err, "Command: %s\nOutput: %s", strings.Join(cmd, " "), output)
+	return strings.TrimSpace(output)
 }
 
 // GetFullCommandOutput runs the given command and returns its output and error
@@ -123,9 +123,11 @@ func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	errHeaderFmt.Println("  Error")
+	_, err := errHeaderFmt.Println("  Error")
+	exit.On(err)
 	for _, message := range messages {
-		errMessageFmt.Println("  " + message)
+		_, err = errMessageFmt.Println("  " + message)
+		exit.On(err)
 	}
 	fmt.Println()
 }
@@ -135,7 +137,8 @@ func PrintError(messages ...string) {
 // followed by an empty line
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
-	labelFmt.Println(label + ":")
+	_, err := labelFmt.Println(label + ":")
+	exit.On(err)
 	fmt.Println(Indent(value, 1))
 	fmt.Println()
 }
