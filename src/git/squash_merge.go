@@ -10,7 +10,7 @@ import (
 var squashMessageFile = ".git/SQUASH_MSG"
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
-// Adds the given prefix
+// Adds the given prefix with the newline if provided
 func CommentOutSquashCommitMessage(prefix string) {
 	contentBytes, err := ioutil.ReadFile(squashMessageFile)
 	exit.On(err)
