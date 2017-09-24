@@ -131,14 +131,6 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 		State: "open",
 	})
 	return pullRequests, err
-	// if err != nil {
-	// 	return []int{}, err
-	// }
-	// result := make([]int, len(pullRequests))
-	// for i, pullRequest := range pullRequests {
-	// 	result[i] = *pullRequest.Number
-	// }
-	// return result, nil
 }
 
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (string, error) {
