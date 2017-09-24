@@ -26,18 +26,23 @@ func (d *githubCodeHostingDriver) CanBeUsed() bool {
 	return d.hostname == "github.com" || strings.Contains(d.hostname, "github")
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
+func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
 	if d.apiToken == "" {
-		return false, nil
+		return false, "", nil
 	}
 	d.connect()
-	pullRequestNumbers, err := d.getPullRequestNumbers(branch, parentBranch)
+	pullRequests, err := d.getPullRequests(branch, parentBranch)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
-	return len(pullRequestNumbers) == 1, nil
+	if len(pullRequests) != 1 {
+		return false, "", nil
+	}
+	defaultCommitMessage := fmt.Sprintf("%s (#%d)", *pullRequests[0].Title, *pullRequests[0].Number)
+	return true, defaultCommitMessage, nil
 }
 
+//
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
@@ -102,37 +107,38 @@ func (d *githubCodeHostingDriver) connect() {
 }
 
 func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
-	pullRequestNumbers, err := d.getPullRequestNumbers(options.Branch, options.ParentBranch)
+	pullRequests, err := d.getPullRequests(options.Branch, options.ParentBranch)
 	if err != nil {
 		return -1, err
 	}
-	if len(pullRequestNumbers) == 0 {
+	if len(pullRequests) == 0 {
 		return -1, errors.New("No pull request found")
 	}
-	if len(pullRequestNumbers) > 1 {
-		pullRequestNumbersAsStrings := make([]string, len(pullRequestNumbers))
-		for i, number := range pullRequestNumbers {
-			pullRequestNumbersAsStrings[i] = strconv.Itoa(number)
+	if len(pullRequests) > 1 {
+		pullRequestNumbersAsStrings := make([]string, len(pullRequests))
+		for i, pullRequest := range pullRequests {
+			pullRequestNumbersAsStrings[i] = strconv.Itoa(*pullRequest.Number)
 		}
 		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
 	}
-	return pullRequestNumbers[0], nil
+	return *pullRequests[0].Number, nil
 }
 
-func (d *githubCodeHostingDriver) getPullRequestNumbers(branch, parentBranch string) ([]int, error) {
+func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
 		Head:  d.owner + ":" + branch,
 		State: "open",
 	})
-	if err != nil {
-		return []int{}, err
-	}
-	result := make([]int, len(pullRequests))
-	for i, pullRequest := range pullRequests {
-		result[i] = *pullRequest.Number
-	}
-	return result, nil
+	return pullRequests, err
+	// if err != nil {
+	// 	return []int{}, err
+	// }
+	// result := make([]int, len(pullRequests))
+	// for i, pullRequest := range pullRequests {
+	// 	result[i] = *pullRequest.Number
+	// }
+	// return result, nil
 }
 
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (string, error) {
