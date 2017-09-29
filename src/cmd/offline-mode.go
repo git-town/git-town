@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +29,7 @@ var offlineCommand = &cobra.Command{
 }
 
 func printOfflineFlag() {
-	fmt.Fprintln(color.Output, git.GetPrintableOfflineFlag())
+	cfmt.Println(git.GetPrintableOfflineFlag())
 }
 
 func setOfflineFlag(value bool) {

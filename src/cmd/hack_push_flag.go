@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -40,7 +38,7 @@ The default value is false.`,
 }
 
 func printHackPushFlag() {
-	fmt.Fprintln(color.Output, git.GetPrintableHackPushFlag())
+	cfmt.Println(git.GetPrintableHackPushFlag())
 }
 
 func setHackPushFlag(value bool) {

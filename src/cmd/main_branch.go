@@ -1,10 +1,8 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +29,7 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	fmt.Fprintln(color.Output, git.GetPrintableMainBranch())
+	cfmt.Println(git.GetPrintableMainBranch())
 }
 
 func setMainBranch(branchName string) {

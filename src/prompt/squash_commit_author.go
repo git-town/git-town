@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
@@ -20,7 +21,7 @@ func GetSquashCommitAuthor(branchName string) string {
 	if len(authors) == 1 {
 		return authors[0].NameAndEmail
 	}
-	fmt.Fprintf(color.Output, squashCommitAuthorHeaderTemplate, branchName)
+	cfmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
 	printNumberedAuthors(authors)
 	fmt.Println()
 	return askForAuthor(authors)
@@ -86,6 +87,6 @@ func printNumberedAuthors(authors []branchAuthor) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
 		stat := util.Pluralize(author.NumberOfCommits, "commit")
-		fmt.Fprintf(color.Output, "  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
+		cfmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
 	}
 }

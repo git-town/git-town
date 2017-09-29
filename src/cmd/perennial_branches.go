@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +44,7 @@ func addPerennialBranch(branchName string) {
 }
 
 func printPerennialBranches() {
-	fmt.Fprintln(color.Output, git.GetPrintablePerennialBranches())
+	cfmt.Println(git.GetPrintablePerennialBranches())
 }
 
 func removePerennialBranch(branchName string) {
