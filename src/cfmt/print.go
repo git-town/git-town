@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// Print prints the given text using fmt.Printf
+// Print prints the given text using fmt.Print
 // in a way where colors work on Windows
 func Print(a ...interface{}) (int, error) {
 	return fmt.Fprint(color.Output, a...)
