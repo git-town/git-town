@@ -12,7 +12,7 @@ Then(/^I see a new (.+?) pull request for the "([^"]+)" branch against the "(.+?
 end
 
 
-Then(/^I see a new pull request with the url "([^"]*)" in my browser$/) do |url|
+Then(/^I see a new pull request with this url in my browser:$/) do |url|
   expect(@last_run_result.out.strip).to match "#{@tool} called with: #{url}".gsub('?', '\?')
 end
 
