@@ -40,15 +40,6 @@ Given(/^I have a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"
 end
 
 
-Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/) do |local, branch_name, relation|
-  create_branch branch_name, remote: !local
-  if relation
-    commit_to_branch = relation == 'behind' ? 'main' : branch_name
-    create_commits branch: commit_to_branch
-  end
-end
-
-
 Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   in_repository :coworker do
     create_branch branch_name
