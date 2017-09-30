@@ -2,13 +2,12 @@ Source: gittown
 Maintainer: allonsy <linuxbash8@gmail.com>
 Section: misc
 Priority: optional
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Build-Depends: debhelper (>=9)
 
 Package: gittown
-Architecture: all
-Depends: ${misc:Depends}, git, dialog
+Architecture: amd64
+Depends: ${misc:Depends}, ${shlibs:Depends}, git
 Description: Generic, high-level Git workflow support
  a git wrapper development tool for software development teams
  more info here: http://www.git-town.com
-
