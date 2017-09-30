@@ -2,7 +2,7 @@ package git
 
 import (
 	"io/ioutil"
-	"strings"
+	"regexp"
 
 	"github.com/Originate/git-town/src/exit"
 )
@@ -18,9 +18,6 @@ func CommentOutSquashCommitMessage(prefix string) {
 	if prefix != "" {
 		content = prefix + "\n" + content
 	}
-	lines := strings.Split(content, "\n")
-	for i := range lines {
-		lines[i] = "# " + lines[i]
-	}
-	ioutil.WriteFile(squashMessageFile, []byte(strings.Join(lines, "\n")), 0644)
+	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
+	ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
 }

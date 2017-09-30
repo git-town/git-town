@@ -38,11 +38,9 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	if len(pullRequests) != 1 {
 		return false, "", nil
 	}
-	defaultCommitMessage := fmt.Sprintf("%s (#%d)", *pullRequests[0].Title, *pullRequests[0].Number)
-	return true, defaultCommitMessage, nil
+	return true, d.getDefaultCommitMessage(pullRequests[0]), nil
 }
 
-//
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.GetMainBranch() {
@@ -104,6 +102,10 @@ func (d *githubCodeHostingDriver) connect() {
 		tc := oauth2.NewClient(context.Background(), ts)
 		d.client = github.NewClient(tc)
 	}
+}
+
+func (d *githubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {
+	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
 func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
