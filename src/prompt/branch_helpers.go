@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
@@ -21,7 +22,7 @@ type branchPromptConfig struct {
 
 func askForBranch(config branchPromptConfig) string {
 	for {
-		fmt.Print(config.prompt)
+		cfmt.Print(config.prompt)
 		branchName, err := parseBranch(config, util.GetUserInput())
 		if err == nil {
 			err = config.validate(branchName)
@@ -63,6 +64,6 @@ func parseBranchNumber(branchNames []string, userInput string) (string, error) {
 func printNumberedBranches(branchNames []string) {
 	boldFmt := color.New(color.Bold)
 	for index, branchName := range branchNames {
-		fmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
+		cfmt.Printf("  %s: %s\n", boldFmt.Sprintf("%d", index+1), branchName)
 	}
 }
