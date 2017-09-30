@@ -115,11 +115,3 @@ func TestFrameWriteRequestData(t *testing.T) {
 		t.Errorf("Consume(remainder):\n%v", err)
 	}
 }
-
-func TestFrameWriteRequest_StreamID(t *testing.T) {
-	const streamID = 123
-	wr := FrameWriteRequest{write: streamError(streamID, ErrCodeNo)}
-	if got := wr.StreamID(); got != streamID {
-		t.Errorf("FrameWriteRequest(StreamError) = %v; want %v", got, streamID)
-	}
-}

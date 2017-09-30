@@ -3,6 +3,7 @@ package prompt
 import (
 	"fmt"
 
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
 	"github.com/fatih/color"
 )
@@ -74,7 +75,7 @@ func validateParentBranch(branchName string, parent string) error {
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		fmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
+		cfmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
 		printNumberedBranches(git.GetLocalBranchesWithMainBranchFirst())
 		fmt.Println()
 	}

@@ -3,11 +3,12 @@ package prompt
 import (
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
 
+	"github.com/Originate/git-town/src/cfmt"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 	"github.com/fatih/color"
@@ -20,7 +21,7 @@ func GetSquashCommitAuthor(branchName string) string {
 	if len(authors) == 1 {
 		return authors[0].NameAndEmail
 	}
-	fmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
+	cfmt.Printf(squashCommitAuthorHeaderTemplate, branchName)
 	printNumberedAuthors(authors)
 	fmt.Println()
 	return askForAuthor(authors)
@@ -62,9 +63,7 @@ func getBranchAuthors(branchName string) (result []branchAuthor) {
 
 func parseAuthor(userInput string, authors []branchAuthor) (string, error) {
 	numericRegex, err := regexp.Compile("^[0-9]+$")
-	if err != nil {
-		log.Fatal("Error compiling numeric regular expression: ", err)
-	}
+	exit.OnWrap(err, "Error compiling numeric regular expression")
 
 	if numericRegex.MatchString(userInput) {
 		return parseAuthorNumber(userInput, authors)
@@ -77,9 +76,7 @@ func parseAuthor(userInput string, authors []branchAuthor) (string, error) {
 
 func parseAuthorNumber(userInput string, authors []branchAuthor) (string, error) {
 	index, err := strconv.Atoi(userInput)
-	if err != nil {
-		log.Fatal("Error parsing string to integer: ", err)
-	}
+	exit.OnWrap(err, "Error parsing string to integer")
 	if index >= 1 && index <= len(authors) {
 		return authors[index-1].NameAndEmail, nil
 	}
@@ -90,6 +87,6 @@ func printNumberedAuthors(authors []branchAuthor) {
 	boldFmt := color.New(color.Bold)
 	for index, author := range authors {
 		stat := util.Pluralize(author.NumberOfCommits, "commit")
-		fmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
+		cfmt.Printf("  %s: %s (%s)\n", boldFmt.Sprintf("%d", index+1), author.NameAndEmail, stat)
 	}
 }
