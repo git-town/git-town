@@ -107,19 +107,19 @@ var liveProps = map[xml.Name]struct {
 	// dir is true if the property applies to directories.
 	dir bool
 }{
-	{Space: "DAV:", Local: "resourcetype"}: {
+	xml.Name{Space: "DAV:", Local: "resourcetype"}: {
 		findFn: findResourceType,
 		dir:    true,
 	},
-	{Space: "DAV:", Local: "displayname"}: {
+	xml.Name{Space: "DAV:", Local: "displayname"}: {
 		findFn: findDisplayName,
 		dir:    true,
 	},
-	{Space: "DAV:", Local: "getcontentlength"}: {
+	xml.Name{Space: "DAV:", Local: "getcontentlength"}: {
 		findFn: findContentLength,
 		dir:    false,
 	},
-	{Space: "DAV:", Local: "getlastmodified"}: {
+	xml.Name{Space: "DAV:", Local: "getlastmodified"}: {
 		findFn: findLastModified,
 		// http://webdav.org/specs/rfc4918.html#PROPERTY_getlastmodified
 		// suggests that getlastmodified should only apply to GETable
@@ -130,19 +130,19 @@ var liveProps = map[xml.Name]struct {
 		// See golang.org/issue/15334.
 		dir: true,
 	},
-	{Space: "DAV:", Local: "creationdate"}: {
+	xml.Name{Space: "DAV:", Local: "creationdate"}: {
 		findFn: nil,
 		dir:    false,
 	},
-	{Space: "DAV:", Local: "getcontentlanguage"}: {
+	xml.Name{Space: "DAV:", Local: "getcontentlanguage"}: {
 		findFn: nil,
 		dir:    false,
 	},
-	{Space: "DAV:", Local: "getcontenttype"}: {
+	xml.Name{Space: "DAV:", Local: "getcontenttype"}: {
 		findFn: findContentType,
 		dir:    false,
 	},
-	{Space: "DAV:", Local: "getetag"}: {
+	xml.Name{Space: "DAV:", Local: "getetag"}: {
 		findFn: findETag,
 		// findETag implements ETag as the concatenated hex values of a file's
 		// modification time and size. This is not a reliable synchronization
@@ -153,8 +153,8 @@ var liveProps = map[xml.Name]struct {
 
 	// TODO: The lockdiscovery property requires LockSystem to list the
 	// active locks on a resource.
-	{Space: "DAV:", Local: "lockdiscovery"}: {},
-	{Space: "DAV:", Local: "supportedlock"}: {
+	xml.Name{Space: "DAV:", Local: "lockdiscovery"}: {},
+	xml.Name{Space: "DAV:", Local: "supportedlock"}: {
 		findFn: findSupportedLock,
 		dir:    true,
 	},

@@ -2,12 +2,13 @@ package script
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/Originate/git-town/src/dryrun"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 
@@ -31,9 +32,7 @@ func ActivateDryRun() {
 func OpenBrowser(url string) {
 	command := util.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 }
 
 // PrintCommand prints the given command-line operation on the console.
@@ -64,6 +63,11 @@ func RunCommand(cmd ...string) error {
 		}
 		return nil
 	}
+	// Windows commands run inside CMD
+	// because opening browsers is done via "start"
+	if runtime.GOOS == "windows" {
+		cmd = append([]string{"cmd", "/C"}, cmd...)
+	}
 	subProcess := exec.Command(cmd[0], cmd[1:]...)
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
@@ -74,7 +78,5 @@ func RunCommand(cmd ...string) error {
 // RunCommandSafe executes the given command-line operation, exiting if the command errors
 func RunCommandSafe(cmd ...string) {
 	err := RunCommand(cmd...)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 }

@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"log"
 	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -41,7 +41,7 @@ Only shipping of direct children of the main branch is allowed.
 To ship a nested child branch, all ancestor branches have to be shipped or killed.
 
 If you are using GitHub, this command can squash merge pull requests via the GitHub API. Setup:
-1. Get a GitHub personal access token
+1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.`,
@@ -158,9 +158,7 @@ func getCanShipWithDriver(branch, parentBranch string) bool {
 		return false
 	}
 	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	exit.On(err)
 	return canMerge
 }
 

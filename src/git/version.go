@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -17,20 +18,14 @@ func EnsureVersionRequirementSatisfied() {
 
 func isVersionRequirementSatisfied() bool {
 	versionRegexp, err := regexp.Compile("git version (\\d+).(\\d+).(\\d+)")
-	if err != nil {
-		log.Fatal("Error compiling version regular expression: ", err)
-	}
+	exit.OnWrap(err, "Error compiling version regular expression")
 	matches := versionRegexp.FindStringSubmatch(util.GetCommandOutput("git", "version"))
 	if matches == nil {
 		log.Fatal("'git version' returned unexpected output. Please open an issue and supply the output of running 'git version'.")
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
-	if err != nil {
-		log.Fatal("Error convering major version to int:", err)
-	}
+	exit.OnWrap(err, "Error convering major version to int")
 	minorVersion, err := strconv.Atoi(matches[2])
-	if err != nil {
-		log.Fatal("Error convering minor version to int:", err)
-	}
+	exit.OnWrap(err, "Error convering minor version to int")
 	return majorVersion == 2 && minorVersion >= 7
 }
