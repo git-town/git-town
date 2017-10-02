@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 )
@@ -24,7 +25,7 @@ func (step *PushBranchStep) CreateUndoStepBeforeRun() Step {
 
 // Run executes this step.
 func (step *PushBranchStep) Run() error {
-	if !git.ShouldBranchBePushed(step.BranchName) {
+	if !git.ShouldBranchBePushed(step.BranchName) && !dryrun.IsActive() {
 		return nil
 	}
 	if step.Force {
