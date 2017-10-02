@@ -38,7 +38,7 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 	Describe("CanMergePullRequest", func() {
 		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
 			driver.SetAPIToken("")
-			canMerge, err := driver.CanMergePullRequest("feature", "main")
+			canMerge, _, err := driver.CanMergePullRequest("feature", "main")
 			Expect(err).To(BeNil())
 			Expect(canMerge).To(BeFalse())
 		})
@@ -50,29 +50,30 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 
 			It("returns request errors (getting the pull request number to merge)", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-				_, err := driver.CanMergePullRequest("feature", "main")
+				_, _, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(HaveOccurred())
 			})
 
 			It("returns false if there is no pull request for the branch", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-				canMerge, err := driver.CanMergePullRequest("feature", "main")
+				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeFalse())
 			})
 
 			It("returns false if there are multiple pull requests for the branch", func() {
 				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-				canMerge, err := driver.CanMergePullRequest("feature", "main")
+				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeFalse())
 			})
 
-			It("returns true if there is one pull request for the branch", func() {
-				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
-				canMerge, err := driver.CanMergePullRequest("feature", "main")
+			It("returns true (and the default commit message) if there is one pull request for the branch", func() {
+				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
+				canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
 				Expect(err).To(BeNil())
 				Expect(canMerge).To(BeTrue())
+				Expect(defaultCommintMessage).To(Equal("my title (#1)"))
 			})
 		})
 	})

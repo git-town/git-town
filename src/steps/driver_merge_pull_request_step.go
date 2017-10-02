@@ -12,6 +12,7 @@ type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
 	CommitMessage             string
+	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
@@ -47,7 +48,7 @@ func (step *DriverMergePullRequestStep) Run() error {
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
 		script.SquashMerge(step.BranchName)
-		git.CommentOutDefaultSquashCommitMessage()
+		git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
 		err := script.RunCommand("git", "commit")
 		if err != nil {
 			return err

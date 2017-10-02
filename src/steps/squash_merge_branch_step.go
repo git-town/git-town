@@ -40,7 +40,7 @@ func (step *SquashMergeBranchStep) Run() error {
 	if author != git.GetLocalAuthor() {
 		commitCmd = append(commitCmd, "--author", author)
 	}
-	git.CommentOutDefaultSquashCommitMessage()
+	git.CommentOutSquashCommitMessage("")
 	return script.RunCommand(commitCmd...)
 }
 
