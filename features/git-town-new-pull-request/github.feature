@@ -9,30 +9,61 @@ Feature: git-new-pull-request when origin is on GitHub
     Given I have "open" installed
 
 
-  Scenario Outline: creating pull-requests
+  Scenario Outline: normal origin
     Given I have a feature branch named "feature"
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new GitHub pull request for the "feature" branch in the "<REPOSITORY>" repo in my browser
+		Then I see a new pull request with this url in my browser:
+		  """
+			https://github.com/Originate/git-town/compare/feature?expand=1
+			"""
 
     Examples:
-      | ORIGIN                                                | REPOSITORY                     |
-      | http://github.com/Originate/git-town.git              | Originate/git-town             |
-      | http://github.com/Originate/git-town                  | Originate/git-town             |
-      | https://github.com/Originate/git-town.git             | Originate/git-town             |
-      | https://github.com/Originate/git-town                 | Originate/git-town             |
-      | git@github.com:Originate/git-town.git                 | Originate/git-town             |
-      | git@github.com:Originate/git-town                     | Originate/git-town             |
-      | git@github-as-account1:Originate/git-town.git         | Originate/git-town             |
-      | http://github.com/Originate/originate.github.com.git  | Originate/originate.github.com |
-      | http://github.com/Originate/originate.github.com      | Originate/originate.github.com |
-      | https://github.com/Originate/originate.github.com.git | Originate/originate.github.com |
-      | https://github.com/Originate/originate.github.com     | Originate/originate.github.com |
-      | git@github.com:Originate/originate.github.com.git     | Originate/originate.github.com |
-      | git@github.com:Originate/originate.github.com         | Originate/originate.github.com |
-      | ssh://git@github.com/Originate/git-town.git           | Originate/git-town             |
-      | ssh://git@github.com/Originate/git-town               | Originate/git-town             |
+      | ORIGIN                                        |
+      | http://github.com/Originate/git-town.git      |
+      | http://github.com/Originate/git-town          |
+      | https://github.com/Originate/git-town.git     |
+      | https://github.com/Originate/git-town         |
+      | git@github.com:Originate/git-town.git         |
+      | git@github.com:Originate/git-town             |
+      | git@github-as-account1:Originate/git-town.git |
+
+
+  Scenario Outline: origin contains path that looks like a URL
+    Given I have a feature branch named "feature"
+    And my remote origin is <ORIGIN>
+    And I am on the "feature" branch
+    When I run `git-town new-pull-request`
+		Then I see a new pull request with this url in my browser:
+		  """
+			https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
+			"""
+
+		Examples:
+      | ORIGIN                                                |
+      | http://github.com/Originate/originate.github.com.git  |
+      | http://github.com/Originate/originate.github.com      |
+      | https://github.com/Originate/originate.github.com.git |
+      | https://github.com/Originate/originate.github.com     |
+      | git@github.com:Originate/originate.github.com.git     |
+      | git@github.com:Originate/originate.github.com         |
+
+
+  Scenario Outline: SSH style origin
+    Given I have a feature branch named "feature"
+    And my remote origin is <ORIGIN>
+    And I am on the "feature" branch
+    When I run `git-town new-pull-request`
+		Then I see a new pull request with this url in my browser:
+		  """
+			https://github.com/Originate/git-town/compare/feature?expand=1
+			"""
+
+		Examples:
+      | ORIGIN                                      |
+      | ssh://git@github.com/Originate/git-town.git |
+      | ssh://git@github.com/Originate/git-town     |
 
 
   Scenario: nested feature branch with known parent

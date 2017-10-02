@@ -10,6 +10,7 @@ var (
 	abortFlag,
 	allFlag,
 	continueFlag,
+	dryRunFlag,
 	skipFlag,
 	undoFlag bool
 )
@@ -17,6 +18,7 @@ var (
 var abortFlagDescription = "Abort a previous command that resulted in a conflict"
 var continueFlagDescription = "Continue a previous command that resulted in a conflict"
 var undoFlagDescription = "Undo a previous command"
+var dryRunFlagDescription = "Output the commands that would be run without them"
 
 func validateArgsCount(args []string, count int) error {
 	err := validateMinArgs(args, count)
