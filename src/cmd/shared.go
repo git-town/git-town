@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
 )
@@ -79,6 +80,6 @@ func validateMaxArgsFunc(args []string, max int) func() error {
 }
 
 func validateIsConfigured() error {
-	validateIsConfigured()
+	prompt.EnsureIsConfigured()
 	return nil
 }
