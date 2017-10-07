@@ -42,7 +42,12 @@ Given(/I haven't configured Git Town yet/) do
 end
 
 
+Given(/^I configure "([^"]*)" as "([^"]*)"$/) do |key, value|
+  run "git config '#{key}' '#{value}'"
+end
 
+
+p
 Then(/^my repo is configured with perennial branches as "(.*)"$/) do |data|
   branch_names = Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names

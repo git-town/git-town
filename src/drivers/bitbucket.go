@@ -15,8 +15,8 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed() bool {
-	return d.hostname == "bitbucket.org" || strings.Contains(d.hostname, "bitbucket")
+func (d *bitbucketCodeHostingDriver) CanBeUsed(driverOverride string) bool {
+	return driverOverride == "bitbucket" || d.hostname == "bitbucket.org"
 }
 
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
@@ -31,7 +31,7 @@ func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch s
 }
 
 func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
-	return "https://bitbucket.org/" + d.repository
+	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
 func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
@@ -46,6 +46,10 @@ func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
 	d.hostname = git.GetURLHostname(originURL)
 	d.repository = git.GetURLRepositoryName(originURL)
+}
+
+func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
+	d.hostname = originHostname
 }
 
 func (d *bitbucketCodeHostingDriver) GetAPITokenKey() string {

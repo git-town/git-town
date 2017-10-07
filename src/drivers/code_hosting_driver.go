@@ -6,7 +6,7 @@ type CodeHostingDriver interface {
 
 	// CanBeUsed returns whether this driver can manage
 	// a repository with the given hostname
-	CanBeUsed() bool
+	CanBeUsed(driverOverride string) bool
 
 	// CanMergePullRequest returns whether or not MergePullRequest should be
 	// called when shipping. If true, also returns the default commit message
@@ -28,6 +28,9 @@ type CodeHostingDriver interface {
 
 	// SetOriginURL configures the driver with the origin URL of the Git repo
 	SetOriginURL(originURL string)
+
+	// SetOriginHostname configures the driver with the origin hostname of the Git repo
+	SetOriginHostname(originHostname string)
 
 	// GetAPITokenKey returns the git config key value that the API token is stored under
 	GetAPITokenKey() string

@@ -27,7 +27,6 @@ Feature: git-new-pull-request when origin is on GitHub
       | https://github.com/Originate/git-town         |
       | git@github.com:Originate/git-town.git         |
       | git@github.com:Originate/git-town             |
-      | git@github-as-account1:Originate/git-town.git |
 
 
   Scenario Outline: origin contains path that looks like a URL
