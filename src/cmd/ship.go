@@ -64,7 +64,7 @@ It will also update the base branch for any pull requests against that branch.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 		)
 	},
 }

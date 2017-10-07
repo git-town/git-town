@@ -59,7 +59,7 @@ the main branch is synced with its upstream counterpart.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 		)
 	},
 }

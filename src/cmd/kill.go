@@ -45,7 +45,7 @@ Does not delete perennial branches nor the main branch.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 		)
 	},
 }

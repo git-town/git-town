@@ -53,7 +53,7 @@ Example: your SSH identity should be something like
 		return util.FirstError(
 			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 			git.ValidateIsOnline,
 			drivers.ValidateHasDriver,
 		)

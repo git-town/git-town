@@ -67,3 +67,8 @@ func validateMaxArgsFunc(args []string, max int) func() error {
 		return validateMaxArgs(args, max)
 	}
 }
+
+func validateIsConfigured() error {
+	validateIsConfigured()
+	return nil
+}

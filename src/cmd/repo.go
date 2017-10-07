@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -29,7 +28,7 @@ Example: your SSH identity should be something like
 		return util.FirstError(
 			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 			git.ValidateIsOnline,
 			drivers.ValidateHasDriver,
 		)

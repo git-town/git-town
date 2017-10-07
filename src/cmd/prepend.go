@@ -56,7 +56,7 @@ This can be disabled by toggling the "hack-push-flag" configuration:
 		return util.FirstError(
 			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 		)
 	},
 }

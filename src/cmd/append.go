@@ -50,7 +50,7 @@ and brings over all uncommitted changes to the new feature branch.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
-			prompt.EnsureIsConfigured,
+			validateIsConfigured,
 		)
 	},
 }
