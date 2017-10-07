@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"log"
 	"strings"
 
 	"github.com/Originate/git-town/src/drivers"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -41,7 +41,7 @@ Only shipping of direct children of the main branch is allowed.
 To ship a nested child branch, all ancestor branches have to be shipped or killed.
 
 If you are using GitHub, this command can squash merge pull requests via the GitHub API. Setup:
-1. Get a GitHub personal access token
+1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.`,
@@ -114,9 +114,9 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canShipWithDriver := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
 	if canShipWithDriver {
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
@@ -141,22 +141,20 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	return
 }
 
-func getCanShipWithDriver(branch, parentBranch string) bool {
+func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
 	if !git.HasRemote("origin") {
-		return false
+		return false, ""
 	}
 	if git.IsOffline() {
-		return false
+		return false, ""
 	}
 	driver := drivers.GetActiveDriver()
 	if driver == nil {
-		return false
+		return false, ""
 	}
-	canMerge, err := driver.CanMergePullRequest(branch, parentBranch)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return canMerge
+	canMerge, defaultCommitMessage, err := driver.CanMergePullRequest(branch, parentBranch)
+	exit.On(err)
+	return canMerge, defaultCommitMessage
 }
 
 func init() {

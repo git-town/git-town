@@ -40,20 +40,6 @@ Given(/^I have a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"
 end
 
 
-Given(/^I have a( local)? feature branch named "(.+?)" (behind|ahead of) main$/) do |local, branch_name, relation|
-  create_branch branch_name, remote: !local
-  if relation
-    commit_to_branch = relation == 'behind' ? 'main' : branch_name
-    create_commits branch: commit_to_branch
-  end
-end
-
-
-Given(/^I remove the "([^"]+)" branch from my machine$/) do |branch_name|
-  delete_local_branch branch_name
-end
-
-
 Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   in_repository :coworker do
     create_branch branch_name
@@ -107,11 +93,6 @@ end
 Then(/^there is no "(.+?)" branch$/) do |branch_name|
   expect(existing_local_branches).to_not include(branch_name)
   expect(existing_remote_branches).to_not include("origin/#{branch_name}")
-end
-
-
-Then(/^the branch "(.+?)" has not been pushed to the repository$/) do |branch_name|
-  expect(existing_remote_branches).to_not include(branch_name)
 end
 
 

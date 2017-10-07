@@ -3,8 +3,9 @@ package steps
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"reflect"
+
+	"github.com/Originate/git-town/src/exit"
 )
 
 func saveState(runState *RunState) {
@@ -14,21 +15,15 @@ func saveState(runState *RunState) {
 		UndoSteps: serializeSteps(runState.UndoStepList.List),
 	}
 	content, err := json.Marshal(serializedRunState)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 	filename := getRunResultFilename(runState.Command)
 	err = ioutil.WriteFile(filename, content, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 }
 
 func serializeStep(step Step) SerializedStep {
 	data, err := json.Marshal(step)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 	return SerializedStep{
 		Data: data,
 		Type: getTypeName(step),

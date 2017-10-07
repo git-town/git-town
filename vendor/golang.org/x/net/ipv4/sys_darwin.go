@@ -6,8 +6,6 @@ package ipv4
 
 import (
 	"net"
-	"strconv"
-	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -38,40 +36,41 @@ var (
 func init() {
 	// Seems like kern.osreldate is veiled on latest OS X. We use
 	// kern.osrelease instead.
-	s, err := syscall.Sysctl("kern.osrelease")
+	osver, err := syscall.Sysctl("kern.osrelease")
 	if err != nil {
 		return
 	}
-	ss := strings.Split(s, ".")
-	if len(ss) == 0 {
-		return
+	var i int
+	for i = range osver {
+		if osver[i] == '.' {
+			break
+		}
 	}
 	// The IP_PKTINFO and protocol-independent multicast API were
-	// introduced in OS X 10.7 (Darwin 11). But it looks like
-	// those features require OS X 10.8 (Darwin 12) or above.
+	// introduced in OS X 10.7 (Darwin 11.0.0). But it looks like
+	// those features require OS X 10.8 (Darwin 12.0.0) and above.
 	// See http://support.apple.com/kb/HT1633.
-	if mjver, err := strconv.Atoi(ss[0]); err != nil || mjver < 12 {
-		return
+	if i > 2 || i == 2 && osver[0] >= '1' && osver[1] >= '2' {
+		ctlOpts[ctlPacketInfo].name = sysIP_PKTINFO
+		ctlOpts[ctlPacketInfo].length = sizeofInetPktinfo
+		ctlOpts[ctlPacketInfo].marshal = marshalPacketInfo
+		ctlOpts[ctlPacketInfo].parse = parsePacketInfo
+		sockOpts[ssoPacketInfo].name = sysIP_RECVPKTINFO
+		sockOpts[ssoPacketInfo].typ = ssoTypeInt
+		sockOpts[ssoMulticastInterface].typ = ssoTypeIPMreqn
+		sockOpts[ssoJoinGroup].name = sysMCAST_JOIN_GROUP
+		sockOpts[ssoJoinGroup].typ = ssoTypeGroupReq
+		sockOpts[ssoLeaveGroup].name = sysMCAST_LEAVE_GROUP
+		sockOpts[ssoLeaveGroup].typ = ssoTypeGroupReq
+		sockOpts[ssoJoinSourceGroup].name = sysMCAST_JOIN_SOURCE_GROUP
+		sockOpts[ssoJoinSourceGroup].typ = ssoTypeGroupSourceReq
+		sockOpts[ssoLeaveSourceGroup].name = sysMCAST_LEAVE_SOURCE_GROUP
+		sockOpts[ssoLeaveSourceGroup].typ = ssoTypeGroupSourceReq
+		sockOpts[ssoBlockSourceGroup].name = sysMCAST_BLOCK_SOURCE
+		sockOpts[ssoBlockSourceGroup].typ = ssoTypeGroupSourceReq
+		sockOpts[ssoUnblockSourceGroup].name = sysMCAST_UNBLOCK_SOURCE
+		sockOpts[ssoUnblockSourceGroup].typ = ssoTypeGroupSourceReq
 	}
-	ctlOpts[ctlPacketInfo].name = sysIP_PKTINFO
-	ctlOpts[ctlPacketInfo].length = sizeofInetPktinfo
-	ctlOpts[ctlPacketInfo].marshal = marshalPacketInfo
-	ctlOpts[ctlPacketInfo].parse = parsePacketInfo
-	sockOpts[ssoPacketInfo].name = sysIP_RECVPKTINFO
-	sockOpts[ssoPacketInfo].typ = ssoTypeInt
-	sockOpts[ssoMulticastInterface].typ = ssoTypeIPMreqn
-	sockOpts[ssoJoinGroup].name = sysMCAST_JOIN_GROUP
-	sockOpts[ssoJoinGroup].typ = ssoTypeGroupReq
-	sockOpts[ssoLeaveGroup].name = sysMCAST_LEAVE_GROUP
-	sockOpts[ssoLeaveGroup].typ = ssoTypeGroupReq
-	sockOpts[ssoJoinSourceGroup].name = sysMCAST_JOIN_SOURCE_GROUP
-	sockOpts[ssoJoinSourceGroup].typ = ssoTypeGroupSourceReq
-	sockOpts[ssoLeaveSourceGroup].name = sysMCAST_LEAVE_SOURCE_GROUP
-	sockOpts[ssoLeaveSourceGroup].typ = ssoTypeGroupSourceReq
-	sockOpts[ssoBlockSourceGroup].name = sysMCAST_BLOCK_SOURCE
-	sockOpts[ssoBlockSourceGroup].typ = ssoTypeGroupSourceReq
-	sockOpts[ssoUnblockSourceGroup].name = sysMCAST_UNBLOCK_SOURCE
-	sockOpts[ssoUnblockSourceGroup].typ = ssoTypeGroupSourceReq
 }
 
 func (pi *inetPktinfo) setIfindex(i int) {

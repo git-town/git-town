@@ -1,9 +1,8 @@
 package steps
 
 import (
-	"log"
-
 	"github.com/Originate/git-town/src/drivers"
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 )
@@ -13,6 +12,7 @@ type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
 	CommitMessage             string
+	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
 	mergeError                error
 	mergeSha                  string
@@ -48,16 +48,14 @@ func (step *DriverMergePullRequestStep) Run() error {
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
 		script.SquashMerge(step.BranchName)
-		git.CommentOutDefaultSquashCommitMessage()
+		git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
 		err := script.RunCommand("git", "commit")
 		if err != nil {
 			return err
 		}
 		commitMessage = git.GetLastCommitMessage()
 		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
-		if err != nil {
-			log.Fatal("Error resetting the main branch", err)
-		}
+		exit.OnWrap(err, "Error resetting the main branch")
 		step.enteredEmptyCommitMessage = false
 	}
 	driver := drivers.GetActiveDriver()

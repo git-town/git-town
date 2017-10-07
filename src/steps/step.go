@@ -1,11 +1,11 @@
 package steps
 
 import (
-	"log"
 	"os"
 	"path"
 	"regexp"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 )
 
@@ -36,9 +36,7 @@ type SerializedRunState struct {
 
 func getRunResultFilename(command string) string {
 	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
-	if err != nil {
-		log.Fatal("Error compiling replace character expression: ", err)
-	}
+	exit.OnWrap(err, "Error compiling replace character expression")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
 	return path.Join(os.TempDir(), command+"_"+directory)
 }

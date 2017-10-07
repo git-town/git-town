@@ -59,6 +59,12 @@ the main branch is synced with its upstream counterpart.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
+			func() error {
+				if dryRunFlag {
+					script.ActivateDryRun()
+				}
+				return nil
+			},
 			validateIsConfigured,
 		)
 	},
@@ -100,6 +106,7 @@ func init() {
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
 	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
 	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }

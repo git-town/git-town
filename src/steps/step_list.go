@@ -1,9 +1,9 @@
 package steps
 
 import (
-	"log"
 	"os"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 )
 
@@ -76,9 +76,7 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 	}
 
 	initialDirectory, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.On(err)
 	gitRootDirectory := git.GetRootDirectory()
 
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {

@@ -2,7 +2,9 @@ package: github.com/Originate/git-town
 import:
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
+  version: v1.0.0
 - package: github.com/fatih/color
+  version: v1.5.0
 - package: github.com/google/go-github
   subpackages:
   - github
@@ -13,3 +15,5 @@ import:
 - package: golang.org/x/net
   subpackages:
   - context
+- package: github.com/pkg/errors
+  version: v0.8.0

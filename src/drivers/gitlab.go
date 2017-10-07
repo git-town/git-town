@@ -19,8 +19,8 @@ func (d *gitlabCodeHostingDriver) CanBeUsed() bool {
 	return d.hostname == "gitlab.com" || strings.Contains(d.hostname, "gitlab")
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
-	return false, nil
+func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
+	return false, "", nil
 }
 
 func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
