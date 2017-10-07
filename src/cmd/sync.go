@@ -59,12 +59,7 @@ the main branch is synced with its upstream counterpart.`,
 		return util.FirstError(
 			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
-			func() error {
-				if dryRunFlag {
-					script.ActivateDryRun()
-				}
-				return nil
-			},
+			conditionallyActivateDryRun,
 			validateIsConfigured,
 		)
 	},

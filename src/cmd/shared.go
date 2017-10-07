@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -21,6 +22,13 @@ var abortFlagDescription = "Abort a previous command that resulted in a conflict
 var continueFlagDescription = "Continue a previous command that resulted in a conflict"
 var undoFlagDescription = "Undo a previous command"
 var dryRunFlagDescription = "Output the commands that would be run without them"
+
+func conditionallyActivateDryRun() error {
+	if dryRunFlag {
+		script.ActivateDryRun()
+	}
+	return nil
+}
 
 func validateArgsCountFunc(args []string, count int) func() error {
 	return func() error {
