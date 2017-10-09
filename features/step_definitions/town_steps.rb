@@ -47,7 +47,7 @@ Given(/^I configure "([^"]*)" as "([^"]*)"$/) do |key, value|
 end
 
 
-p
+
 Then(/^my repo is configured with perennial branches as "(.*)"$/) do |data|
   branch_names = Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names
