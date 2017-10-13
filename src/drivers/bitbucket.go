@@ -15,8 +15,8 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed(driverOverride string) bool {
-	return driverOverride == "bitbucket" || d.hostname == "bitbucket.org"
+func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
+	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
 }
 
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {

@@ -6,7 +6,7 @@ type CodeHostingDriver interface {
 
 	// CanBeUsed returns whether this driver can manage
 	// a repository with the given hostname
-	CanBeUsed(driverOverride string) bool
+	CanBeUsed(driverType string) bool
 
 	// CanMergePullRequest returns whether or not MergePullRequest should be
 	// called when shipping. If true, also returns the default commit message

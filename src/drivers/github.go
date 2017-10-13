@@ -22,8 +22,8 @@ type githubCodeHostingDriver struct {
 	repository string
 }
 
-func (d *githubCodeHostingDriver) CanBeUsed(driverOverride string) bool {
-	return driverOverride == "github" || d.hostname == "github.com"
+func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
+	return driverType == "github" || d.hostname == "github.com"
 }
 
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {

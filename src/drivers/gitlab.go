@@ -14,8 +14,8 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-func (d *gitlabCodeHostingDriver) CanBeUsed(driverOverride string) bool {
-	return driverOverride == "gitlab" || d.hostname == "gitlab.com"
+func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
+	return driverType == "gitlab" || d.hostname == "gitlab.com"
 }
 
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
