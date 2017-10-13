@@ -18,7 +18,7 @@ func hasSavedState(command string) bool {
 
 func clearSavedState(command string) {
 	if hasSavedState(command) {
-		os.Remove(getRunResultFilename(command))
+		exit.On(os.Remove(getRunResultFilename(command)))
 	}
 }
 
@@ -49,15 +49,15 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return &AbortRebaseBranchStep{}
 	case "*AddToPerennialBranches":
 		step := AddToPerennialBranches{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*ChangeDirectoryStep":
 		step := ChangeDirectoryStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*CheckoutBranchStep":
 		step := CheckoutBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*ContinueMergeBranchStep":
 		return &ContinueMergeBranchStep{}
@@ -65,45 +65,45 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return &ContinueRebaseBranchStep{}
 	case "*CreateBranchStep":
 		step := CreateBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*CreateAndCheckoutBranchStep":
 		step := CreateAndCheckoutBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*CreatePullRequestStep":
 		step := CreatePullRequestStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*CreateRemoteBranchStep":
 		step := CreateRemoteBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*CreateTrackingBranchStep":
 		step := CreateTrackingBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*DeleteAncestorBranchesStep":
 		return &DeleteAncestorBranchesStep{}
 	case "*DeleteLocalBranchStep":
 		step := DeleteLocalBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*DeleteParentBranchStep":
 		step := DeleteParentBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*DeleteRemoteBranchStep":
 		step := DeleteRemoteBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*EnsureHasShippableChangesStep":
 		step := EnsureHasShippableChangesStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*MergeBranchStep":
 		step := MergeBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*MergeTrackingBranchStep":
 		return &MergeTrackingBranchStep{}
@@ -111,43 +111,43 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return &NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
 		step := PreserveCheckoutHistoryStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*PushBranchAfterCurrentBranchSteps":
 		return &PushBranchAfterCurrentBranchSteps{}
 	case "*PushBranchStep":
 		step := PushBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*PushTagsStep":
 		return &PushTagsStep{}
 	case "*RebaseBranchStep":
 		step := RebaseBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*RebaseTrackingBranchStep":
 		return &RebaseTrackingBranchStep{}
 	case "*RemoveFromPerennialBranches":
 		step := RemoveFromPerennialBranches{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*ResetToShaStep":
 		step := ResetToShaStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*RestoreOpenChangesStep":
 		return &RestoreOpenChangesStep{}
 	case "*RevertCommitStep":
 		step := RevertCommitStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*SetParentBranchStep":
 		step := SetParentBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*SquashMergeBranchStep":
 		step := SquashMergeBranchStep{}
-		json.Unmarshal(serializedStep.Data, &step)
+		exit.On(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*SkipCurrentBranchSteps":
 		return &SkipCurrentBranchSteps{}

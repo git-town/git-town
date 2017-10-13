@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 
@@ -104,13 +105,13 @@ func runSteps(runState *RunState, options RunOptions) {
 func exitWithMessages(command string, skipMessage string) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	messageFmt.Printf("To abort, run \"git-town %s --abort\".", command)
-	fmt.Println()
-	messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".", command)
-	fmt.Println()
+	_, err := messageFmt.Printf("To abort, run \"git-town %s --abort\".\n", command)
+	exit.On(err)
+	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".\n", command)
+	exit.On(err)
 	if skipMessage != "" {
-		messageFmt.Printf("To skip %s, run \"git-town %s --skip\".", skipMessage, command)
-		fmt.Println()
+		_, err = messageFmt.Printf("To skip %s, run \"git-town %s --skip\".\n", skipMessage, command)
+		exit.On(err)
 	}
 	fmt.Println()
 	os.Exit(1)

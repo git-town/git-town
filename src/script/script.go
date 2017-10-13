@@ -24,7 +24,8 @@ commits not on the remote.
 
 // ActivateDryRun causes all commands to not be run
 func ActivateDryRun() {
-	color.New(color.FgBlue).Print(dryRunMessage)
+	_, err := color.New(color.FgBlue).Print(dryRunMessage)
+	exit.On(err)
 	dryrun.Activate(git.GetCurrentBranchName())
 }
 
@@ -51,7 +52,8 @@ func PrintCommand(cmd ...string) {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}
 	fmt.Println()
-	color.New(color.Bold).Println(header)
+	_, err := color.New(color.Bold).Println(header)
+	exit.On(err)
 }
 
 // RunCommand executes the given command-line operation.
