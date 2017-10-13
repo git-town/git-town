@@ -23,7 +23,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git stash              |
       |               | git checkout main      |
       | main          | git rebase origin/main |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".

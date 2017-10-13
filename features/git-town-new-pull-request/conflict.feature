@@ -30,7 +30,7 @@ Feature: Syncing before creating the pull request
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town new-pull-request --abort".
       To continue after you have resolved the conflicts, run "git-town new-pull-request --continue".

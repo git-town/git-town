@@ -22,7 +22,7 @@ Feature: git town-ship: shipping a child branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND           |
       | feature-3 | git fetch --prune |
-    And Git Town prints the error "Shipping this branch would ship feature-1, feature-2 as well."
+    And it prints the error "Shipping this branch would ship feature-1, feature-2 as well."
     And it prints the error "Please ship "feature-1" first."
     And I end up on the "feature-3" branch
     And my repository is left with my original commits

@@ -34,7 +34,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       |               | git checkout main                            |
       | main          | git checkout other-feature                   |
       | other-feature | git stash pop                                |
-    And Git Town prints the error "Aborted because commit exited with error"
+    And it prints the error "Aborted because commit exited with error"
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And my repository is left with my original commits

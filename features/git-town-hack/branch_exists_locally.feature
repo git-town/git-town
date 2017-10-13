@@ -16,6 +16,6 @@ Feature: git town-hack: errors when the branch exists locally
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    And Git Town prints the error "A branch named 'existing-feature' already exists"
+    And it prints the error "A branch named 'existing-feature' already exists"
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file

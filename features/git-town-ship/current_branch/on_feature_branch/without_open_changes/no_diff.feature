@@ -27,7 +27,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       |               | git reset --hard <%= sha 'feature commit' %> |
       |               | git checkout main                            |
       | main          | git checkout empty-feature                   |
-    And Git Town prints the error "The branch 'empty-feature' has no shippable changes"
+    And it prints the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "empty-feature" branch
 
 

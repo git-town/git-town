@@ -14,7 +14,7 @@ Feature: git town-hack: requires a branch name
 
   Scenario: result
     Then Git Town runs no commands
-    And Git Town prints the error "no branch name provided"
+    And it prints the error "no branch name provided"
     And it prints the error:
       """
       Usage:

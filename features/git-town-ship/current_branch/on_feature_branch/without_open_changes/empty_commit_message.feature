@@ -30,7 +30,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And Git Town prints the error "Aborted because commit exited with error"
+    And it prints the error "Aborted because commit exited with error"
     And I am still on the "feature" branch
     And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

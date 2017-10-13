@@ -92,12 +92,12 @@ Then(/^(?:Git Town|it) prints no output$/) do
 end
 
 
-Then(/^Git Town does not print "(.*)"$/) do |string|
+Then(/^(?:Git Town|it) does not print "(.*)"$/) do |string|
   expect(unformatted_last_run_output).not_to include(string)
 end
 
 
-Then(/^Git Town prints$/) do |string|
+Then(/^(?:Git Town|it) prints$/) do |string|
   expect(unformatted_last_run_output).to include(string)
 end
 
