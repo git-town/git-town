@@ -59,7 +59,7 @@ Feature: listing the configuration
 
   Scenario: the main branch is not configured but the perennial branches are
     Given I don't have a main branch name configured
-    And its perennial branches are configured as "qa" and "staging"
+    And Git Town's perennial branches are configured as "qa" and "staging"
     When I run `git-town config`
     Then Git Town prints
       """
