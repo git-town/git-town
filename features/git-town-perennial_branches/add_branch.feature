@@ -22,7 +22,7 @@ Feature: add a branch to the perennial branches configuration
 
 
   Scenario: adding a branch that is already set as the main branch
-    Given Git Town has configured the main branch name as "staging"
+    Given Git Town's main branch is configured as "staging"
     When I run `git-town perennial-branches --add staging`
     Then Git Town prints the error "'staging' is already set as the main branch"
 

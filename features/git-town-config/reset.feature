@@ -6,14 +6,14 @@ Feature: resetting the configuration
 
 
   Scenario: everything is configured
-    Given Git Town has configured the main branch name as "main"
+    Given Git Town's main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"
     When I run `git-town config --reset`
     Then Git Town is no longer configured for this repository
 
 
   Scenario: the main branch is configured but the perennial branches are not
-    Given Git Town has configured the main branch name as "main"
+    Given Git Town's main branch is configured as "main"
     And my perennial branches are not configured
     When I run `git-town config --reset`
     Then Git Town is no longer configured for this repository

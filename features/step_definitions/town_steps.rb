@@ -25,7 +25,7 @@ Given(/^the "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, va
 end
 
 
-Given(/^Git Town has configured the main branch name as "(.*)"$/) do |main_branch_name|
+Given(/^Git Town's main branch is configured as "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
 end
 
