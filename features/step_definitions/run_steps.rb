@@ -71,7 +71,7 @@ Then(/^I get the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^it runs no commands$/) do
+Then(/^Git Town runs no commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 

@@ -11,7 +11,7 @@ Feature: git town-ship: errors if on supplied branch and there are open changes
 
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "You have uncommitted changes. Did you mean to commit them before shipping?"
     And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file

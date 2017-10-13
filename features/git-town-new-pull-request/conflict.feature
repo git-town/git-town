@@ -57,7 +57,7 @@ Feature: Syncing before creating the pull request
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town new-pull-request --continue`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And my repository is still on the "feature" branch
     And my uncommitted file is stashed

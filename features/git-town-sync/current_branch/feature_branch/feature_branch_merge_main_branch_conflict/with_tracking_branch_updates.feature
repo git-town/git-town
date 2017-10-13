@@ -56,7 +56,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And my repository is still on the "feature" branch
     And my uncommitted file is stashed

@@ -11,13 +11,13 @@ Feature: git town-rename-branch: errors when renaming the main branch
 
   Scenario: error when trying to rename
     When I run `git-town rename-branch main renamed-main`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "The main branch cannot be renamed."
     And my repository is still on the "main" branch
 
 
   Scenario: error when trying to force rename
     When I run `git-town rename-branch main renamed-main --force`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "The main branch cannot be renamed."
     And my repository is still on the "main" branch

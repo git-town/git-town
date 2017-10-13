@@ -36,7 +36,7 @@ Feature: git town: alias
   Scenario: remove alias does not remove unrelated aliases
     Given I run `git config --global alias.hack checkout`
     When I run `git-town alias false`
-    Then it runs no commands
+    Then Git Town runs no commands
 
 
   Scenario: invalid value

@@ -16,7 +16,7 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
 
 
   Scenario: result
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "Cannot rename branch to current name."
     And my repository ends up on the "production" branch
     And my workspace still has my uncommitted file

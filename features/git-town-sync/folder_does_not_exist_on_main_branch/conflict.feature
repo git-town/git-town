@@ -54,7 +54,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And my repository is still on the "current-feature" branch
     And my uncommitted file is stashed

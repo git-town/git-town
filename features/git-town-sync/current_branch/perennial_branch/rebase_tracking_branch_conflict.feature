@@ -47,7 +47,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then it runs no commands
+    Then Git Town runs no commands
     And I get the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
