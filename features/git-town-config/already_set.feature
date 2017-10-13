@@ -46,4 +46,4 @@ Feature: listing the configuration
       | production |
       |            |
     And Git Town's main branch is now configured as "main"
-    And my repo is configured with perennial branches as "production"
+    And Git Town's perennial branches are now configured as "production"
