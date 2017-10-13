@@ -61,16 +61,11 @@ It will also update the base branch for any pull requests against that branch.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+			validateIsConfigured,
+		)
 	},
 }
 

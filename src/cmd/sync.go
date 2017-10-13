@@ -7,6 +7,7 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -55,19 +56,12 @@ the main branch is synced with its upstream counterpart.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		if dryRunFlag {
-			script.ActivateDryRun()
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgsFunc(args, 0),
+			git.ValidateIsRepository,
+			conditionallyActivateDryRun,
+			validateIsConfigured,
+		)
 	},
 }
 

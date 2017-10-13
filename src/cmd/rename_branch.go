@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
 	"github.com/Originate/git-town/src/util"
@@ -61,16 +60,11 @@ When run on a perennial branch
 		if len(args) == 0 && !undoFlag {
 			return errors.New("Too few arguments")
 		}
-		err := validateMaxArgs(args, 2)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgsFunc(args, 2),
+			git.ValidateIsRepository,
+			validateIsConfigured,
+		)
 	},
 }
 

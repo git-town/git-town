@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -31,16 +31,12 @@ This usually means the branch was shipped or killed on another machine.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return git.ValidateIsOnline()
+		return util.FirstError(
+			validateMaxArgsFunc(args, 0),
+			git.ValidateIsRepository,
+			validateIsConfigured,
+			git.ValidateIsOnline,
+		)
 	},
 }
 
