@@ -23,7 +23,7 @@ Feature: remove a branch from the perennial branches configuration
   Scenario: not providing a branch name
     When I run `git-town perennial-branches --remove`
     Then Git Town prints the error "Error: flag needs an argument: --remove"
-    And Git Town prints the error:
+    And it prints the error:
       """
       Usage:
         git-town perennial-branches [flags]

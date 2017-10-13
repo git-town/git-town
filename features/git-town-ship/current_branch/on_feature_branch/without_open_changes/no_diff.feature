@@ -33,8 +33,8 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then Git Town prints the error "Nothing to undo"
-    And Git Town runs no commands
+		Then Git Town runs no commands
+    And it prints the error "Nothing to undo"
     And I am still on the "empty-feature" branch
     And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |

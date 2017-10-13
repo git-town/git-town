@@ -18,7 +18,7 @@ Feature: set the pull branch strategy
   Scenario: invalid strategy
     When I run `git-town pull-branch-strategy woof`
     Then Git Town prints the error "Invalid value: 'woof'"
-    And Git Town prints the error:
+    And it prints the error:
       """
       Usage:
         git-town pull-branch-strategy [(rebase | merge)] [flags]

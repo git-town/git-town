@@ -23,7 +23,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git rebase origin/main       |
       |            | git checkout production      |
       | production | git rebase origin/production |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -73,7 +73,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then Git Town runs no commands
-    And Git Town prints the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 

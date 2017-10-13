@@ -23,7 +23,7 @@ Feature: git town-ship: shipping a child branch
       | BRANCH    | COMMAND           |
       | feature-3 | git fetch --prune |
     And Git Town prints the error "Shipping this branch would ship feature-1, feature-2 as well."
-    And Git Town prints the error "Please ship "feature-1" first."
+    And it prints the error "Please ship "feature-1" first."
     And I end up on the "feature-3" branch
     And my repository is left with my original commits
     And my branch hierarchy metadata is unchanged
@@ -31,7 +31,7 @@ Feature: git town-ship: shipping a child branch
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then Git Town prints the error "Nothing to undo"
-    And Git Town runs no commands
+		Then Git Town runs no commands
+    And it prints the error "Nothing to undo"
     And I am still on the "feature-3" branch
     And my repository is left with my original commits

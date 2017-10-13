@@ -48,7 +48,7 @@ end
 
 
 
-Then(/^Git Town prints the error:$/) do |error_message|
+Then(/^(?:Git Town|it) prints the error:$/) do |error_message|
   @error_expected = true
   expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
   expect(@last_run_result.error).to be_truthy
@@ -66,7 +66,7 @@ Then(/^Git Town prints the error:$/) do |error_message|
 end
 
 
-Then(/^Git Town prints the error "(.+?)"$/) do |error_message|
+Then(/^(?:Git Town|it) prints the error "(.+?)"$/) do |error_message|
   step 'Git Town prints the error:', error_message
 end
 
@@ -87,7 +87,7 @@ Then(/^Git Town runs the commands$/) do |expected_commands|
 end
 
 
-Then(/^Git Town prints no output$/) do
+Then(/^(?:Git Town|it) prints no output$/) do
   expect(@last_run_result.out).to eql ''
 end
 
@@ -102,6 +102,6 @@ Then(/^Git Town prints$/) do |string|
 end
 
 
-Then(/^Git Town prints "(.*)"$/) do |string|
+Then(/^(?:Git Town|it) prints "(.*)"$/) do |string|
   step 'Git Town prints', string
 end

@@ -26,7 +26,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-    And Git Town prints the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
