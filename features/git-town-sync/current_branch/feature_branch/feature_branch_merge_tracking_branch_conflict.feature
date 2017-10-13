@@ -26,7 +26,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -46,14 +46,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
       | feature | git stash pop        |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then Git Town prints the error "You must resolve the conflicts before continuing"
     And my repository is still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -69,7 +69,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
@@ -89,7 +89,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |

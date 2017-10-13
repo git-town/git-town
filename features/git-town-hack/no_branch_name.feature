@@ -14,11 +14,11 @@ Feature: git town-hack: requires a branch name
 
   Scenario: result
     Then Git Town runs no commands
-    And I get the error "no branch name provided"
-    And I get the error:
+    And Git Town prints the error "no branch name provided"
+    And Git Town prints the error:
       """
       Usage:
         git-town hack <branch> [flags]
       """
     And my repository is still on the "existing-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file

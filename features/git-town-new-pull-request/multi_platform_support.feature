@@ -26,4 +26,4 @@ Feature: git-new-pull-request: multi-platform support
     And I have no command that opens browsers installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I get the error "Cannot open a browser"
+    Then Git Town prints the error "Cannot open a browser"

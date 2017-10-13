@@ -23,7 +23,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git add -A           |
       |        | git stash            |
       |        | git rebase origin/qa |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -40,7 +40,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | qa     | git rebase --abort |
       |        | git stash pop      |
     And my repository is still on the "qa" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
 
@@ -48,7 +48,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then Git Town runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And Git Town prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -63,7 +63,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git push --tags       |
       |        | git stash pop         |
     And my repository is still on the "qa" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
@@ -82,7 +82,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git push --tags |
       |        | git stash pop   |
     And my repository is still on the "qa" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |

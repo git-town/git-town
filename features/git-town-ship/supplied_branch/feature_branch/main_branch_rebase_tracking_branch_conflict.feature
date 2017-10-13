@@ -23,7 +23,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git stash              |
       |               | git checkout main      |
       | main          | git rebase origin/main |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
@@ -40,7 +40,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git checkout other-feature |
       | other-feature | git stash pop              |
     And my repository is still on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
 
@@ -64,7 +64,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And my repository ends up on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -91,7 +91,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And my repository ends up on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

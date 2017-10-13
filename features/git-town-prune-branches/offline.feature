@@ -8,7 +8,7 @@ Feature: git town-prune-branches: offline mode
   Scenario: trying to prune branches in offline mode
     Given Git Town is in offline mode
     When I run `git-town prune-branches`
-    Then I get the error:
+    Then Git Town prints the error:
       """
       This command requires an active internet connection
       """

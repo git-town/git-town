@@ -20,8 +20,8 @@ Feature: git town-ship: shipping a child branch
     Then Git Town runs the commands
       | BRANCH    | COMMAND           |
       | feature-1 | git fetch --prune |
-    And I get the error "Shipping this branch would ship feature-1, feature-2 as well."
-    And I get the error "Please ship "feature-1" first."
+    And Git Town prints the error "Shipping this branch would ship feature-1, feature-2 as well."
+    And Git Town prints the error "Please ship "feature-1" first."
     And my repository ends up on the "feature-1" branch
     And my repository is left with my original commits
     And my branch hierarchy metadata is unchanged

@@ -21,7 +21,7 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
     Then Git Town runs the commands
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
-    And I get the error "'current-feature' is not in sync with its tracking branch. Please sync the branches before renaming."
+    And Git Town prints the error "'current-feature' is not in sync with its tracking branch. Please sync the branches before renaming."
     And my repository ends up on the "current-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository is left with my original commits

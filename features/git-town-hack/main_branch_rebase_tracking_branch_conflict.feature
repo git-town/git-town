@@ -24,7 +24,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |                  | git stash              |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town hack --abort".
       To continue after you have resolved the conflicts, run "git-town hack --continue".
@@ -48,7 +48,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town hack --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then Git Town prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -63,7 +63,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And my repository ends up on the "new-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
@@ -85,7 +85,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And my repository ends up on the "new-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |

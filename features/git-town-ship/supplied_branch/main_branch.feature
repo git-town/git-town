@@ -14,6 +14,6 @@ Feature: git town-ship: errors when trying to ship the main branch
     Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
-    And I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
+    And Git Town prints the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file

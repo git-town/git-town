@@ -32,7 +32,7 @@ Feature: git-town sync --all: syncs all feature branches
       | feature-1 | git push --tags                      |
       |           | git stash pop                        |
     And my repository is still on the "feature-1" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME     |

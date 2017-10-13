@@ -24,5 +24,5 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
       |        | git stash     |
       |        | git stash pop |
     And my repository is still on the "qa" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository is left with my original commits

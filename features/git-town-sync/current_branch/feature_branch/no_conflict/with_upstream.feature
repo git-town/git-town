@@ -29,7 +29,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git push                           |
       |         | git stash pop                      |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION                    | MESSAGE                          |
       | main    | local, remote, and upstream | upstream commit                  |

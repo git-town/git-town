@@ -17,13 +17,13 @@ Feature: remove a branch from the perennial branches configuration
 
   Scenario: removing a branch that is not a perennial branch
     When I run `git-town perennial-branches --remove feature`
-    Then I get the error "'feature' is not a perennial branch"
+    Then Git Town prints the error "'feature' is not a perennial branch"
 
 
   Scenario: not providing a branch name
     When I run `git-town perennial-branches --remove`
-    Then I get the error "Error: flag needs an argument: --remove"
-    And I get the error:
+    Then Git Town prints the error "Error: flag needs an argument: --remove"
+    And Git Town prints the error:
       """
       Usage:
         git-town perennial-branches [flags]

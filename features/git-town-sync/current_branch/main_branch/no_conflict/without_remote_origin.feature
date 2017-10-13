@@ -22,5 +22,5 @@ Feature: git-town sync: syncing the main branch (without remote repo)
       |        | git stash     |
       |        | git stash pop |
     And my repository is still on the "main" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository is left with my original commits

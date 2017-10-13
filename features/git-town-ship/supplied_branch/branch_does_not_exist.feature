@@ -15,6 +15,6 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
     Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    And I get the error "There is no branch named 'non-existing-branch'"
+    And Git Town prints the error "There is no branch named 'non-existing-branch'"
     And my repository ends up on the "main" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file

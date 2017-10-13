@@ -39,7 +39,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git stash pop                              |
       | <none>          | cd <%= git_folder "new_folder" %>          |
     And my repository is still on the "current-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
       | main            | local and remote | main commit                              | main_file        |

@@ -30,7 +30,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And I get the error "Aborted because commit exited with error"
+    And Git Town prints the error "Aborted because commit exited with error"
     And my repository is still on the "feature" branch
     And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
@@ -39,7 +39,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then I get the error "Nothing to undo"
+    Then Git Town prints the error "Nothing to undo"
     And my repository is still on the "feature" branch
     And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

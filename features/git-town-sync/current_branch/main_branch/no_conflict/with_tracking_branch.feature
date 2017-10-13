@@ -26,7 +26,7 @@ Feature: git-town sync: syncing the main branch
       |        | git push --tags        |
       |        | git stash pop          |
     And my repository is still on the "main" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |

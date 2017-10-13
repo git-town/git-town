@@ -29,7 +29,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       | <none>      | cd <%= git_root_folder %>/new_folder |
     And my repository ends up on the "new-feature" branch
     And I am in the project root folder
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main commit |

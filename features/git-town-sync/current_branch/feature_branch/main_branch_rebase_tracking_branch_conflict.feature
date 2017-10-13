@@ -24,7 +24,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |         | git stash              |
       |         | git checkout main      |
       | main    | git rebase origin/main |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -41,14 +41,14 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |         | git checkout feature |
       | feature | git stash pop        |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then Git Town prints the error "You must resolve the conflicts before continuing"
     And my repo still has a rebase in progress
     And my uncommitted file is stashed
 
@@ -66,7 +66,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |         | git push                           |
       |         | git stash pop                      |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
       | main    | local and remote | conflicting remote commit | conflicting_file |
@@ -91,7 +91,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |         | git push                           |
       |         | git stash pop                      |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
       | main    | local and remote | conflicting remote commit | conflicting_file |

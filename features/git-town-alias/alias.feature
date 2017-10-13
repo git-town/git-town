@@ -41,8 +41,8 @@ Feature: git town: alias
 
   Scenario: invalid value
     When I run `git-town alias other`
-    Then I get the error "Invalid value: 'other'"
-    And I get the error:
+    Then Git Town prints the error "Invalid value: 'other'"
+    And Git Town prints the error:
       """
       Usage:
         git-town alias (true | false) [flags]

@@ -26,7 +26,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
       |               | git merge --no-edit main           |
-    And I get the error:
+    And Git Town prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
@@ -45,7 +45,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | main          | git checkout other-feature |
       | other-feature | git stash pop              |
     And my repository ends up on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no merge in progress
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
@@ -68,7 +68,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And my repository ends up on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
@@ -90,7 +90,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And my repository ends up on the "other-feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |

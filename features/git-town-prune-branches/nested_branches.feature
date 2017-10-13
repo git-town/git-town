@@ -30,7 +30,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | main   | git fetch --prune     |
       |        | git branch -D feature |
     And my repository ends up on the "main" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, feature-child |
@@ -46,7 +46,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |
     And my repository ends up on the "main" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                     |
       | local      | main, feature, feature-child |

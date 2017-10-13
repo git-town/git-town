@@ -19,7 +19,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
   Scenario: error when trying to rename
     When I run `git-town rename-branch production renamed-production`
     Then Git Town runs no commands
-    And I get the error "'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
+    And Git Town prints the error "'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: forcing rename
@@ -34,7 +34,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       |                    | git branch -D production                 |
     And my repository ends up on the "renamed-production" branch
     And my repo is configured with perennial branches as "qa" and "renamed-production"
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
@@ -54,7 +54,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
         | production         | git branch -D renamed-production                     |
     And my repository ends up on the "production" branch
     And my repo is configured with perennial branches as "qa" and "production"
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |

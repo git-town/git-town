@@ -33,7 +33,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       |         | git push                           |
       |         | git stash pop                      |
     And my repository is still on the "feature" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | remote main commit                                         | remote_main_file    |

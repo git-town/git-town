@@ -24,7 +24,7 @@ Feature: git town-kill: killing the given branch with child branches
       |           | git push origin :feature-2 |
       |           | git branch -D feature-2    |
     And my repository ends up on the "feature-3" branch
-    And my workspace still has my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |

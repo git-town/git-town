@@ -8,8 +8,8 @@ Feature: too many arguments
   Scenario: hack
     When I run `git-town hack arg1 arg2`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town hack <branch> [flags]
@@ -18,8 +18,8 @@ Feature: too many arguments
 
   Scenario: hack-push-flag
     When I run `git-town hack-push-flag arg1 arg2`
-    Then I get the error "Too many arguments"
-    And I get the error:
+    Then Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town hack-push-flag [(true | false)] [flags]
@@ -29,8 +29,8 @@ Feature: too many arguments
   Scenario: kill
     When I run `git-town kill arg1 arg2`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town kill [<branch>] [flags]
@@ -39,8 +39,8 @@ Feature: too many arguments
 
   Scenario: main-branch
     When I run `git-town main-branch arg1 arg2`
-    Then I get the error "Too many arguments"
-    And I get the error:
+    Then Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town main-branch [<branch>]
@@ -50,8 +50,8 @@ Feature: too many arguments
   Scenario: new-pull-request
     When I run `git-town new-pull-request arg1`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town new-pull-request [flags]
@@ -60,8 +60,8 @@ Feature: too many arguments
 
   Scenario: perennial-branches
     When I run `git-town perennial-branches arg1`
-    Then I get the error "Too many arguments"
-    And I get the error:
+    Then Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town perennial-branches [flags]
@@ -71,8 +71,8 @@ Feature: too many arguments
   Scenario: prune-branches
     When I run `git-town prune-branches arg1`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town prune-branches [flags]
@@ -81,8 +81,8 @@ Feature: too many arguments
 
   Scenario: pull-branch-strategy
     When I run `git-town pull-branch-strategy arg1 arg2`
-    Then I get the error "Too many arguments"
-    And I get the error:
+    Then Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town pull-branch-strategy [(rebase | merge)] [flags]
@@ -92,8 +92,8 @@ Feature: too many arguments
   Scenario: repo
     When I run `git-town repo arg1`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town repo [flags]
@@ -103,8 +103,8 @@ Feature: too many arguments
   Scenario: sync
     When I run `git-town sync arg1`
     Then Git Town runs no commands
-    And I get the error "Too many arguments"
-    And I get the error:
+    And Git Town prints the error "Too many arguments"
+    And Git Town prints the error:
       """
       Usage:
         git-town sync [flags]

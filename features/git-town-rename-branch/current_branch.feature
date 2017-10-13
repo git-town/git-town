@@ -39,7 +39,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "feature" branch
     When I run `git-town rename-branch feature`
     Then Git Town runs no commands
-    And I get the error "Cannot rename branch to current name."
+    And Git Town prints the error "Cannot rename branch to current name."
     And my repository ends up on the "feature" branch
     And my repository is left with my original commits
 
@@ -48,7 +48,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "production" branch
     When I run `git-town rename-branch renamed-production`
     Then Git Town runs no commands
-    And I get the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
+    And Git Town prints the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: rename perennial branch (forced)
