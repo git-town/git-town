@@ -11,7 +11,7 @@ Feature: listing the configuration
 
   Scenario: everything is configured
     Given the main branch name is configured as "main"
-    And the perennial branches are configured as "qa"
+    And my perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter "main" and ""
     Then Git Town prints
       """
@@ -31,7 +31,7 @@ Feature: listing the configuration
 
   Scenario: empty input
     Given the main branch name is configured as "main"
-    And the perennial branches are configured as "qa"
+    And my perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter "", "main" and ""
     Then I see "A main development branch is required to enable the features provided by Git Town"
     And my repo is configured with the main branch as "main"
@@ -40,7 +40,7 @@ Feature: listing the configuration
 
   Scenario: non-empty input
     Given the main branch name is configured as "main"
-    And the perennial branches are configured as "qa"
+    And my perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter:
       | main       |
       | production |
