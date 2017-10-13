@@ -19,5 +19,6 @@ func CommentOutSquashCommitMessage(prefix string) {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
-	ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
+	err = ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
+	exit.On(err)
 }
