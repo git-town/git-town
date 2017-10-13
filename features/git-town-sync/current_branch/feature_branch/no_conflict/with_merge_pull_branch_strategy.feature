@@ -7,7 +7,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
 
   Background:
     Given my repository has the "pull-branch-strategy" configuration set to "merge"
-    And I have a feature branch named "feature"
+    And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |

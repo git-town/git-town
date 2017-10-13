@@ -1,7 +1,7 @@
 Feature: git-town sync --all: does not sync remote only branches
 
   Background:
-    Given I have a feature branch named "my-feature"
+    Given my repository has a feature branch named "my-feature"
     And my coworker has a feature branch named "co-feature"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE         | FILE NAME     |

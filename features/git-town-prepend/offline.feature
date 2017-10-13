@@ -7,7 +7,7 @@ Feature: git prepend: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And I have a feature branch named "existing-feature"
+    And my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local and remote | existing_feature_commit | existing_feature_file | existing feature content |

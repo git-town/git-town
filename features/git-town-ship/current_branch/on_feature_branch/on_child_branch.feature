@@ -6,9 +6,9 @@ Feature: git town-ship: shipping a child branch
 
 
   Background:
-    Given I have a feature branch named "feature-1"
-    And I have a feature branch named "feature-2" as a child of "feature-1"
-    And I have a feature branch named "feature-3" as a child of "feature-2"
+    Given my repository has a feature branch named "feature-1"
+    And my repository has a feature branch named "feature-2" as a child of "feature-1"
+    And my repository has a feature branch named "feature-3" as a child of "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local and remote | feature 1 commit | feature_1_file | feature 1 content |

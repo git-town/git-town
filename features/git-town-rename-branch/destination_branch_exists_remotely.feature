@@ -4,7 +4,7 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
 
 
   Background:
-    Given I have a feature branch named "current-feature"
+    Given my repository has a feature branch named "current-feature"
     And my coworker has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 |

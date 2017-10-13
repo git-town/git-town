@@ -6,7 +6,7 @@ Feature: git town-hack: starting a new feature from a feature branch (with remot
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION | MESSAGE                 |
       | main             | remote   | main commit             |

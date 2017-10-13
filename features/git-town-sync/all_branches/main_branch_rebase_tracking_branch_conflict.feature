@@ -1,7 +1,7 @@
 Feature: git-town sync --all: handling rebase conflicts between main branch and its tracking branch
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |

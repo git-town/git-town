@@ -6,7 +6,7 @@ Feature: git-town sync: collaborative feature branch syncing
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And my coworker fetches updates
     And my coworker sets the parent branch of "feature" as "main"
     And the following commits exist in my repository

@@ -6,7 +6,7 @@ Feature: Prompt for parent branch when unknown
 
 
   Scenario: prompting for parent branch when running git town-append
-    Given I have a feature branch named "feature-1" with no parent
+    Given my repository has a feature branch named "feature-1" with no parent
     And I am on the "feature-1" branch
     When I run `git-town append feature-2` and press ENTER
     Then my repository ends up on the "feature-2" branch
@@ -17,7 +17,7 @@ Feature: Prompt for parent branch when unknown
 
 
   Scenario: prompting for parent branch when running git town-kill
-    Given I have a feature branch named "feature" with no parent
+    Given my repository has a feature branch named "feature" with no parent
     And I am on the "feature" branch
     When I run `git-town kill` and press ENTER
     Then my repository ends up on the "main" branch
@@ -27,7 +27,7 @@ Feature: Prompt for parent branch when unknown
 
 
   Scenario: prompting for parent branch when running git town-sync
-    Given I have a feature branch named "feature" with no parent
+    Given my repository has a feature branch named "feature" with no parent
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE        |
       | main    | local and remote | main commit    |
@@ -43,8 +43,8 @@ Feature: Prompt for parent branch when unknown
 
 
   Scenario: prompting for parent branch when running git town-sync --all
-    Given I have a feature branch named "feature-1" with no parent
-    And I have a feature branch named "feature-2" with no parent
+    Given my repository has a feature branch named "feature-1" with no parent
+    And my repository has a feature branch named "feature-2" with no parent
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          |
       | main      | local and remote | main commit      |

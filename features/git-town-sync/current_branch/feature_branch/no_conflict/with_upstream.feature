@@ -2,7 +2,7 @@ Feature: git-sync: on a feature branch with a upstream remote
 
   Background:
     Given my repo has an upstream repo
-    And I have a feature branch named "feature"
+    And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |

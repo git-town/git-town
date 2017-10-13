@@ -7,7 +7,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
   Background:
     Given I have a perennial branch named "production"
-    And I have a feature branch named "child-feature" as a child of "production"
+    And my repository has a feature branch named "child-feature" as a child of "production"
     And the following commits exist in my repository
       | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
       | child-feature | local and remote | child feature commit | child_feature_file | child feature content |
