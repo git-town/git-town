@@ -22,7 +22,7 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git push                 |
       |        | git push --tags          |
       |        | git stash pop            |
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH | LOCATION                    | MESSAGE         |

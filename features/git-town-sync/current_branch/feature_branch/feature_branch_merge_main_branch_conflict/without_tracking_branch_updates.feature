@@ -29,7 +29,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       To continue after you have resolved the conflicts, run "git-town sync --continue".
       To skip the sync of the 'feature' branch, run "git-town sync --skip".
       """
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -42,7 +42,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git checkout main    |
       | main    | git checkout feature |
       | feature | git stash pop        |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repository still has the following commits
@@ -55,7 +55,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     When I run `git-town sync --continue`
     Then Git Town runs no commands
     And Git Town prints the error "You must resolve the conflicts before continuing"
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -68,7 +68,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git commit --no-edit |
       |         | git push             |
       |         | git stash pop        |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
@@ -90,7 +90,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git commit --no-edit |
       |         | git push             |
       |         | git stash pop        |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
@@ -111,7 +111,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | COMMAND       |
       | feature | git push      |
       |         | git stash pop |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |

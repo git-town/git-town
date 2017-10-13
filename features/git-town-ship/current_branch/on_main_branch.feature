@@ -12,6 +12,6 @@ Feature: git town-ship: errors when trying to ship the main branch
 
   Scenario: result
     Then Git Town prints the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And there are no commits
     And there are no open changes

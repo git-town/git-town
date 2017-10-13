@@ -43,7 +43,7 @@ Feature: Syncing before creating the pull request
       |                | git stash pop                                                                              |
       | <none>         | open https://github.com/Originate/git-town/compare/parent-feature...child-feature?expand=1 |
     And I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
-    And my repository is still on the "child-feature" branch
+    And I am still on the "child-feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH         | LOCATION         | MESSAGE                                                                  | FILE NAME          |

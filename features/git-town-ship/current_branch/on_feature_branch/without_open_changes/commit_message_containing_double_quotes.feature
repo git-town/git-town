@@ -29,7 +29,7 @@ Feature: git town-ship: shipping the current feature branch
       |         | git push                                               |
       |         | git push origin :feature                               |
       |         | git branch -D feature                                  |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And there are no more feature branches
     And there are no open changes
     And my repository has the following commits
@@ -48,7 +48,7 @@ Feature: git town-ship: shipping the current feature branch
       |         | git checkout feature                                       |
       | feature | git checkout main                                          |
       | main    | git checkout feature                                       |
-    And my repository ends up on the "feature" branch
+    And I end up on the "feature" branch
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                     | FILE NAME    |
       | main    | local and remote | message containing "double quotes"          | feature_file |

@@ -30,7 +30,7 @@ Feature: git town-ship: shipping hotfixes
       |            | git push                          |
       |            | git push origin :hotfix           |
       |            | git branch -D hotfix              |
-    And my repository ends up on the "production" branch
+    And I end up on the "production" branch
     And there are no more feature branches
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE     | FILE NAME   |

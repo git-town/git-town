@@ -36,7 +36,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And there is no rebase in progress
     And my repository is left with my original commits
 
@@ -57,7 +57,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -81,7 +81,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And there is no "feature" branch
     And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

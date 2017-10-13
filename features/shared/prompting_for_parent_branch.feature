@@ -9,7 +9,7 @@ Feature: Prompt for parent branch when unknown
     Given my repository has a feature branch named "feature-1" with no parent
     And I am on the "feature-1" branch
     When I run `git-town append feature-2` and press ENTER
-    Then my repository ends up on the "feature-2" branch
+    Then I end up on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -20,7 +20,7 @@ Feature: Prompt for parent branch when unknown
     Given my repository has a feature branch named "feature" with no parent
     And I am on the "feature" branch
     When I run `git-town kill` and press ENTER
-    Then my repository ends up on the "main" branch
+    Then I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |

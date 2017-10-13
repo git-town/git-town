@@ -16,6 +16,6 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | BRANCH     | COMMAND           |
       | production | git fetch --prune |
     And Git Town prints the error "The branch 'production' is not a feature branch. Only feature branches can have parent branches."
-    And my repository is still on the "production" branch
+    And I am still on the "production" branch
     And there are no commits
     And there are no open changes

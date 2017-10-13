@@ -18,7 +18,7 @@ Feature: git town-kill: errors when trying to kill a perennial branch
     When I run `git-town kill qa`
     Then Git Town runs no commands
     And Git Town prints the error "You can only kill feature branches"
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES          |

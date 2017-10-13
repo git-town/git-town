@@ -7,7 +7,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
     Given my repository has feature branches named "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town kill previous`
-    Then my repository is still on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "main"
 
 
@@ -19,7 +19,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
       | current | local    | current_file | current content |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town prune-branches`
-    Then my repository is still on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "main"
 
 
@@ -30,5 +30,5 @@ Feature: deleting the current branch makes the main branch the new previous bran
       | previous | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town ship previous -m "feature done"`
-    Then my repository is still on the "current" branch
+    Then I am still on the "current" branch
     And my previous Git branch is now "main"

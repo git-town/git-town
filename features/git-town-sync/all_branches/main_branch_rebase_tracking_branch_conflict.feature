@@ -34,7 +34,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
@@ -65,7 +65,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git checkout main                  |
       | main    | git push --tags                    |
       |         | git stash pop                      |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
@@ -90,7 +90,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git checkout main                  |
       | main    | git push --tags                    |
       |         | git stash pop                      |
-    And my repository ends up on the "main" branch
+    And I end up on the "main" branch
     And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |

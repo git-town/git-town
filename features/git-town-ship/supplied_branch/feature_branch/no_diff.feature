@@ -30,5 +30,5 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
       | main          | git checkout other-feature                   |
       | other-feature | git stash pop                                |
     And Git Town prints the error "The branch 'empty-feature' has no shippable changes"
-    And my repository is still on the "other-feature" branch
+    And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file

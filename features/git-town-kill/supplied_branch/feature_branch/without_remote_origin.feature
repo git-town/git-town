@@ -23,7 +23,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
       |                 | git stash                   |
       |                 | git branch -D other-feature |
       |                 | git stash pop               |
-    And my repository is still on the "current-feature" branch
+    And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES              |
@@ -42,7 +42,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
       |                 | git stash                                                  |
       |                 | git branch other-feature <%= sha 'other feature commit' %> |
       |                 | git stash pop                                              |
-    And my repository is still on the "current-feature" branch
+    And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |

@@ -35,7 +35,7 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And my repository ends up on the "other-feature" branch
+    And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository has the following commits

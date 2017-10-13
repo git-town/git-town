@@ -30,7 +30,7 @@ Feature: git-town sync --all: syncs all perennial branches
       |            | git checkout main            |
       | main       | git push --tags              |
       |            | git stash pop                |
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
     And my repository has the following commits

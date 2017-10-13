@@ -28,7 +28,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And my repository is still on the "feature" branch
+    And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION                    | MESSAGE                          |

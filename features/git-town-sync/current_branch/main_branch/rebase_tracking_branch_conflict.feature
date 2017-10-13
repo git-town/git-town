@@ -37,7 +37,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
@@ -60,7 +60,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git push              |
       |        | git push --tags       |
       |        | git stash pop         |
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -79,7 +79,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | main   | git push        |
       |        | git push --tags |
       |        | git stash pop   |
-    And my repository is still on the "main" branch
+    And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

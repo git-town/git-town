@@ -39,7 +39,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | main          | git rebase --abort         |
       |               | git checkout other-feature |
       | other-feature | git stash pop              |
-    And my repository is still on the "other-feature" branch
+    And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
@@ -63,7 +63,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And my repository ends up on the "other-feature" branch
+    And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits
@@ -90,7 +90,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And my repository ends up on the "other-feature" branch
+    And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no "feature" branch
     And my repository still has the following commits

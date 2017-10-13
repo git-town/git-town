@@ -22,7 +22,7 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
       |             | git stash                        |
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
-    And my repository ends up on the "new-feature" branch
+    And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
       | BRANCH      | LOCATION | MESSAGE     | FILE NAME |
