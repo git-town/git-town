@@ -57,7 +57,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
@@ -76,7 +76,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push                     |
       |         | git push origin :feature     |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |

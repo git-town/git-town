@@ -24,7 +24,7 @@ Feature: git town-kill: killing a local branch in offline mode
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I don't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
@@ -43,7 +43,7 @@ Feature: git town-kill: killing a local branch in offline mode
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
-    And I end up on the "current-feature" branch
+    And my repository ends up on the "current-feature" branch
     And I again have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |

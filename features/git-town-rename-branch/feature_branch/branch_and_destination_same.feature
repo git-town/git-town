@@ -18,6 +18,6 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
   Scenario: result
     Then it runs no commands
     And I get the error "Cannot rename branch to current name."
-    And I end up on the "current-feature" branch
+    And my repository ends up on the "current-feature" branch
     And my workspace still has my uncommitted file
     And I am left with my original commits

@@ -26,7 +26,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       | renamed-feature | git push -u origin renamed-feature |
       |                 | git push origin :feature           |
       |                 | git branch -D feature              |
-    And I end up on the "renamed-feature" branch
+    And my repository ends up on the "renamed-feature" branch
     And my repo is configured with perennial branches as "production"
     And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE     |
@@ -40,7 +40,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     When I run `git-town rename-branch feature`
     Then it runs no commands
     And I get the error "Cannot rename branch to current name."
-    And I end up on the "feature" branch
+    And my repository ends up on the "feature" branch
     And I am left with my original commits
 
 
@@ -62,7 +62,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       | renamed-production | git push -u origin renamed-production    |
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
-    And I end up on the "renamed-production" branch
+    And my repository ends up on the "renamed-production" branch
     And my repo is configured with perennial branches as "renamed-production"
     And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE     |
@@ -82,7 +82,7 @@ Feature: git town-rename-branch: rename current branch implicitly
         |                 | git push origin :renamed-feature            |
         |                 | git checkout feature                        |
         | feature         | git branch -D renamed-feature               |
-    And I end up on the "feature" branch
+    And my repository ends up on the "feature" branch
     And my repo is configured with perennial branches as "production"
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE     |

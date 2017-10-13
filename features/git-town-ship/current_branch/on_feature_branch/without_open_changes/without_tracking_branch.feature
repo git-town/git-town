@@ -25,7 +25,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
       |         | git commit -m "feature done" |
       |         | git push                     |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there are no more feature branches
     And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
@@ -42,7 +42,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
-    And I end up on the "feature" branch
+    And my repository ends up on the "feature" branch
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME    |
       | main    | local and remote | feature done          | feature_file |

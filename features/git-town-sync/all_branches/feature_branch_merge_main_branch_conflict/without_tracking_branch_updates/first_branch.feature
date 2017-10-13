@@ -28,7 +28,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       To continue after you have resolved the conflicts, run "git-town sync --continue".
       To skip the sync of the 'feature-1' branch, run "git-town sync --skip".
       """
-    And I end up on the "feature-1" branch
+    And my repository ends up on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -40,7 +40,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-1 | git merge --abort |
       |           | git checkout main |
       | main      | git stash pop     |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME        |
@@ -61,7 +61,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
@@ -95,7 +95,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
@@ -121,7 +121,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main                    |
       | main      | git push --tags                      |
       |           | git stash pop                        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |

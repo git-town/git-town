@@ -16,5 +16,5 @@ Feature: git town-kill: errors if supplied branch does not exist
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I get the error "There is no branch named 'non-existing-feature'"
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And my workspace still has my uncommitted file

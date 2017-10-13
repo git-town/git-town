@@ -22,7 +22,7 @@ Feature: git town-rename-branch: offline mode
       | feature         | git branch renamed-feature feature |
       |                 | git checkout renamed-feature       |
       | renamed-feature | git branch -D feature              |
-    And I end up on the "renamed-feature" branch
+    And my repository ends up on the "renamed-feature" branch
     And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE     |
       | main            | local and remote | main commit |
@@ -37,7 +37,7 @@ Feature: git town-rename-branch: offline mode
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |
         |                 | git checkout feature                        |
         | feature         | git branch -D renamed-feature               |
-    And I end up on the "feature" branch
+    And my repository ends up on the "feature" branch
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE     |
       | main    | local and remote | main commit |

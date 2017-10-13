@@ -63,7 +63,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And I end up on the "other-feature" branch
+    And my repository ends up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
@@ -90,7 +90,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-    And I end up on the "other-feature" branch
+    And my repository ends up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits

@@ -43,7 +43,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git checkout production |
       | production | git checkout main       |
       | main       | git stash pop           |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
@@ -61,7 +61,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |        | git checkout main  |
       | main   | git push --tags    |
       |        | git stash pop      |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
@@ -89,7 +89,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |        | git checkout main     |
       | main   | git push --tags       |
       |        | git stash pop         |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
@@ -108,7 +108,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |        | git checkout main |
       | main   | git push --tags   |
       |        | git stash pop     |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           | FILE NAME        |
