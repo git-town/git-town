@@ -4,7 +4,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
 
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
+    Given my repository has feature branches named "feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | main    | local and remote | main commit    | main_file    | main content    |
@@ -35,6 +35,6 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       | main          | git checkout other-feature                   |
       | other-feature | git stash pop                                |
     And I get the error "Aborted because commit exited with error"
-    And I am still on the "other-feature" branch
+    And my repository is still on the "other-feature" branch
     And my workspace still has my uncommitted file
     And my repository is left with my original commits

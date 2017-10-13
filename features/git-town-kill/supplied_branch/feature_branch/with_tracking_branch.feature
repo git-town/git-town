@@ -6,7 +6,7 @@ Feature: git town-kill: killing the given feature branch
 
 
   Background:
-    Given I have feature branches named "good-feature" and "dead-feature"
+    Given my repository has feature branches named "good-feature" and "dead-feature"
     And the following commits exist in my repository
       | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        |
       | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
@@ -26,7 +26,7 @@ Feature: git town-kill: killing the given feature branch
       |              | git push origin :dead-feature |
       |              | git branch -D dead-feature    |
       |              | git stash pop                 |
-    And I am still on the "good-feature" branch
+    And my repository is still on the "good-feature" branch
     And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES           |
@@ -47,7 +47,7 @@ Feature: git town-kill: killing the given feature branch
       |              | git branch dead-feature <%= sha 'dead-end commit' %> |
       |              | git push -u origin dead-feature                      |
       |              | git stash pop                                        |
-    And I am still on the "good-feature" branch
+    And my repository is still on the "good-feature" branch
     And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                         |

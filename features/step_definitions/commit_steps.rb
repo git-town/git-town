@@ -14,7 +14,7 @@ end
 
 
 
-Then(/^(?:now )?(I|my coworker) (?:still )?(?:have|has) the following commits$/) do |who, commits_table|
+Then(/^(?:now )?(my repository|my coworker) (?:still )?(?:have|has) the following commits$/) do |who, commits_table|
   user = (who == 'I') ? :developer : :coworker
   in_repository user do
     verify_commits commits_table

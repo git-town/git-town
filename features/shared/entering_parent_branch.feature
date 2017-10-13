@@ -6,7 +6,7 @@ Feature: Entering a parent branch name when prompted
 
 
   Background:
-    Given I have feature branches named "feature-1" and "feature-2"
+    Given my repository has feature branches named "feature-1" and "feature-2"
     And Git Town has no branch hierarchy information for "feature-1" and "feature-2"
     And I am on the "feature-2" branch
 

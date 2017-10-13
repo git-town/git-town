@@ -33,7 +33,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | git merge --no-edit main           |
       |         | git push                           |
       |         | git stash pop                      |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |

@@ -6,7 +6,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
 
   Background:
-    Given I have perennial branches named "production" and "qa"
+    Given my repository has perennial branches named "production" and "qa"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
@@ -39,7 +39,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
-    And I am still on the "qa" branch
+    And my repository is still on the "qa" branch
     And my workspace still has my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits
@@ -62,7 +62,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git push              |
       |        | git push --tags       |
       |        | git stash pop         |
-    And I am still on the "qa" branch
+    And my repository is still on the "qa" branch
     And my workspace still has my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
@@ -81,7 +81,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | qa     | git push        |
       |        | git push --tags |
       |        | git stash pop   |
-    And I am still on the "qa" branch
+    And my repository is still on the "qa" branch
     And my workspace still has my uncommitted file
     And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |

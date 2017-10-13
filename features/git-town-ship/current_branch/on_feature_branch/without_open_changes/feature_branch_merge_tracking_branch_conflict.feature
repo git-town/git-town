@@ -28,7 +28,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
       """
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my repo has a merge in progress
 
 
@@ -39,7 +39,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | feature | git merge --abort    |
       |         | git checkout main    |
       | main    | git checkout feature |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And there is no merge in progress
     And my repository is left with my original commits
 

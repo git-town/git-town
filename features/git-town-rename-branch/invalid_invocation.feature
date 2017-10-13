@@ -17,7 +17,7 @@ Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional f
     When I run `git-town rename-branch`
     Then it runs no commands
     And I get the error "Too few arguments"
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my repository is left with my original commits
 
 
@@ -25,5 +25,5 @@ Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional f
     When I run `git-town rename-branch one two three`
     Then it runs no commands
     And I get the error "Too many arguments"
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my repository is left with my original commits

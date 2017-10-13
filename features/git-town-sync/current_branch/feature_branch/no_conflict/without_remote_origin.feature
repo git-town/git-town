@@ -22,7 +22,7 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
       |         | git stash                |
       |         | git merge --no-edit main |
       |         | git stash pop            |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |

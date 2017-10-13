@@ -36,7 +36,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And there is no rebase in progress
     And my repository is left with my original commits
 

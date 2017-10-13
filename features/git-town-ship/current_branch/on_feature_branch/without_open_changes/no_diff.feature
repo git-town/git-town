@@ -28,14 +28,14 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       |               | git checkout main                            |
       | main          | git checkout empty-feature                   |
     And I get the error "The branch 'empty-feature' has no shippable changes"
-    And I am still on the "empty-feature" branch
+    And my repository is still on the "empty-feature" branch
 
 
   Scenario: undo
     When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no commands
-    And I am still on the "empty-feature" branch
+    And my repository is still on the "empty-feature" branch
     And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |
       | main          | local and remote | main commit    | common_file |

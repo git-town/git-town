@@ -36,7 +36,7 @@ Feature: git-town sync: syncing a nested feature branch (with known parent branc
       |                | git merge --no-edit parent-feature        |
       |                | git push                                  |
       |                | git stash pop                             |
-    And I am still on the "child-feature" branch
+    And my repository is still on the "child-feature" branch
     And my workspace still has my uncommitted file
     And my repository has the following commits
       | BRANCH         | LOCATION         | MESSAGE                                                                  | FILE NAME                  |

@@ -31,7 +31,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       | feature | git checkout main                  |
       | main    | git checkout feature               |
     And I get the error "Aborted because commit exited with error"
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
@@ -40,7 +40,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
   Scenario: undo
     When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |

@@ -1,7 +1,7 @@
 Feature: git-town sync --all: handling merge conflicts between feature branch and main branch
 
   Background:
-    Given I have feature branches named "feature-1" and "feature-2"
+    Given my repository has feature branches named "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE                 | FILE NAME            | FILE CONTENT             |
       | main      | remote           | main commit             | conflicting_file     | main content             |
@@ -84,7 +84,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
-    And I am still on the "feature-2" branch
+    And my repository is still on the "feature-2" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 

@@ -4,7 +4,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Background:
-    Given I have feature branches named "current-feature" and "other-feature"
+    Given my repository has feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main            | local and remote | conflicting main commit    | conflicting_file | main content    |
@@ -31,7 +31,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git merge --no-edit main                   |
     And I am in the project root folder
     And I get the error "Automatic merge failed"
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -45,7 +45,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | main            | git checkout current-feature      |
       | current-feature | git stash pop                     |
       | <none>          | cd <%= git_folder "new_folder" %> |
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
     And my repository is left with my original commits
@@ -56,7 +56,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -76,7 +76,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | current-feature | git push --tags                          |
       |                 | git stash pop                            |
       | <none>          | cd <%= git_folder "new_folder" %>        |
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
     And now my repository has the following commits

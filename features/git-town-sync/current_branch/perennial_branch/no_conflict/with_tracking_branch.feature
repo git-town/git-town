@@ -6,7 +6,7 @@ Feature: git-town sync: syncing the current perennial branch
 
 
   Background:
-    Given I have perennial branches named "production" and "qa"
+    Given my repository has perennial branches named "production" and "qa"
     And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
@@ -27,7 +27,7 @@ Feature: git-town sync: syncing the current perennial branch
       |        | git push             |
       |        | git push --tags      |
       |        | git stash pop        |
-    And I am still on the "qa" branch
+    And my repository is still on the "qa" branch
     And my workspace still has my uncommitted file
     And all branches are now synchronized
     And my repository has the following commits

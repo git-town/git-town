@@ -33,5 +33,5 @@ Feature: git town-ship: shipping a child branch
     When I run `git-town ship --undo`
     Then I get the error "Nothing to undo"
     And it runs no commands
-    And I am still on the "feature-3" branch
+    And my repository is still on the "feature-3" branch
     And my repository is left with my original commits

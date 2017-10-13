@@ -6,7 +6,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Background:
-    Given I have feature branches named "current-feature" and "other-feature"
+    Given my repository has feature branches named "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE              | FILE NAME        |
       | main            | local and remote | main commit          | main_file        |
@@ -38,7 +38,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | current-feature | git push --tags                            |
       |                 | git stash pop                              |
       | <none>          | cd <%= git_folder "new_folder" %>          |
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my workspace still has my uncommitted file
     And now my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |

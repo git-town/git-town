@@ -97,11 +97,11 @@ Then(/^Git Town does not print "(.*)"$/) do |string|
 end
 
 
-Then(/^I see$/) do |string|
+Then(/^Git Town prints$/) do |string|
   expect(unformatted_last_run_output).to include(string)
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  step 'I see', string
+Then(/^Git Town prints "(.*)"$/) do |string|
+  step 'Git Town prints', string
 end

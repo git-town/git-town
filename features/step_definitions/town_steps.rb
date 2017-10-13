@@ -69,7 +69,7 @@ Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
 end
 
 
-Then(/^I see the initial configuration prompt$/) do
+Then(/^Git Town prints the initial configuration prompt$/) do
   step %(I see "Git Town needs to be configured")
 end
 

@@ -24,7 +24,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       To continue after you have resolved the conflicts, run "git-town sync --continue".
       To skip the sync of the 'feature' branch, run "git-town sync --skip".
       """
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -35,7 +35,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
     And my repository is left with my original commits
@@ -45,7 +45,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     When I run `git-town sync --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -57,7 +57,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git stash pop        |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |
@@ -77,7 +77,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     Then Git Town runs the commands
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I again have my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |

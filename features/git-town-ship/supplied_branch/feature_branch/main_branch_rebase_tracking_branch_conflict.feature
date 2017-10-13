@@ -4,7 +4,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
+    Given my repository has feature branches named "feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main    | local    | conflicting local commit  | conflicting_file | local conflicting content  |
@@ -39,7 +39,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | main          | git rebase --abort         |
       |               | git checkout other-feature |
       | other-feature | git stash pop              |
-    And I am still on the "other-feature" branch
+    And my repository is still on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no rebase in progress
     And my repository is left with my original commits

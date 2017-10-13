@@ -1,7 +1,7 @@
 Feature: git-town sync --all: syncs all feature branches
 
   Background:
-    Given I have feature branches named "feature-1" and "feature-2"
+    Given my repository has feature branches named "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME     |
       | main      | remote           | main commit      | main_file     |
@@ -31,7 +31,7 @@ Feature: git-town sync --all: syncs all feature branches
       |           | git checkout feature-1               |
       | feature-1 | git push --tags                      |
       |           | git stash pop                        |
-    And I am still on the "feature-1" branch
+    And my repository is still on the "feature-1" branch
     And my workspace still has my uncommitted file
     And all branches are now synchronized
     And my repository has the following commits

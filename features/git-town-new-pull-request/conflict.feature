@@ -35,7 +35,7 @@ Feature: Syncing before creating the pull request
       To abort, run "git-town new-pull-request --abort".
       To continue after you have resolved the conflicts, run "git-town new-pull-request --continue".
       """
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -48,7 +48,7 @@ Feature: Syncing before creating the pull request
       |         | git checkout main    |
       | main    | git checkout feature |
       | feature | git stash pop        |
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
     And my repository is left with my original commits
@@ -59,7 +59,7 @@ Feature: Syncing before creating the pull request
     When I run `git-town new-pull-request --continue`
     Then it runs no commands
     And I get the error "You must resolve the conflicts before continuing"
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
 
@@ -74,7 +74,7 @@ Feature: Syncing before creating the pull request
       |         | git stash pop                                                       |
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
@@ -93,7 +93,7 @@ Feature: Syncing before creating the pull request
       |         | git stash pop                                                       |
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
-    And I am still on the "feature" branch
+    And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |

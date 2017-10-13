@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors when the destination branch exists local
 
 
   Background:
-    Given I have feature branches named "current-feature" and "existing-feature"
+    Given my repository has feature branches named "current-feature" and "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 |
       | current-feature  | local and remote | current-feature commit  |
@@ -21,6 +21,6 @@ Feature: git town-rename-branch: errors when the destination branch exists local
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
     And I get the error "A branch named 'existing-feature' already exists"
-    And I am still on the "current-feature" branch
+    And my repository is still on the "current-feature" branch
     And my workspace still has my uncommitted file
     And my repository is left with my original commits
