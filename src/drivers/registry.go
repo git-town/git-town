@@ -1,6 +1,8 @@
 package drivers
 
-import "sort"
+import (
+	"sort"
+)
 
 // Registry collects and manages all CodeHostingDriver instances
 type Registry struct {
@@ -8,10 +10,13 @@ type Registry struct {
 }
 
 // DetermineActiveDriver determines the driver to use for the given hostname
-func (r *Registry) DetermineActiveDriver(originURL string) CodeHostingDriver {
+func (r *Registry) DetermineActiveDriver(driverOptions DriverOptions) CodeHostingDriver {
 	for _, driver := range r.drivers {
-		driver.SetOriginURL(originURL)
-		if driver.CanBeUsed() {
+		driver.SetOriginURL(driverOptions.OriginURL)
+		if driverOptions.OriginHostname != "" {
+			driver.SetOriginHostname(driverOptions.OriginHostname)
+		}
+		if driver.CanBeUsed(driverOptions.DriverType) {
 			return driver
 		}
 	}
