@@ -7,7 +7,7 @@ Feature: git-town new-pull-request: when origin is a self hosted servie
 
   Scenario Outline: self hosted
     Given I have "open" installed
-    And I have a feature branch named "feature"
+    And my repository has a feature branch named "feature"
     And my remote origin is "git@self-hosted:Originate/git-town.git"
     And I configure "git-town.code-hosting-driver" as "<DRIVER>"
     And I am on the "feature" branch
