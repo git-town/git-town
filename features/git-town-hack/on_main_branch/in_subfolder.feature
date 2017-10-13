@@ -28,7 +28,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | <none>      | cd <%= git_folder "new_folder" %> |
     And I am in the project root folder
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And I have the following commits
       | BRANCH      | LOCATION         | MESSAGE       |
       | main        | local and remote | folder commit |

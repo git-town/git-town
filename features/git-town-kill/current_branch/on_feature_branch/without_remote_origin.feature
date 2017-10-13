@@ -39,7 +39,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

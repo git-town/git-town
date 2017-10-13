@@ -16,7 +16,7 @@ Feature: git town-ship: errors if there are open changes
     Then it runs no commands
     And I get the error "You have uncommitted changes. Did you mean to commit them before shipping?"
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there are no commits
 
 
@@ -25,4 +25,4 @@ Feature: git town-ship: errors if there are open changes
     Then I get the error "Nothing to undo"
     And it runs no commands
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file

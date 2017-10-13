@@ -24,7 +24,7 @@ Feature: git town-hack: offline mode
       |         | git checkout -b feature main |
       | feature | git stash pop                |
     And I end up on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And I have the following commits
       | BRANCH  | LOCATION         | MESSAGE     |
       | main    | local and remote | main commit |

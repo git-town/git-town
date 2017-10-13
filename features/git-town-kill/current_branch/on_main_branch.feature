@@ -19,7 +19,7 @@ Feature: git town-kill: errors when trying to kill the main branch
     Then it runs no commands
     And I get the error "You can only kill feature branches"
     And I am still on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |

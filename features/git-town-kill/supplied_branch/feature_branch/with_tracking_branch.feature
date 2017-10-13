@@ -27,7 +27,7 @@ Feature: git town-kill: killing the given feature branch
       |              | git branch -D dead-feature    |
       |              | git stash pop                 |
     And I am still on the "good-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
@@ -48,7 +48,7 @@ Feature: git town-kill: killing the given feature branch
       |              | git push -u origin dead-feature                      |
       |              | git stash pop                                        |
     And I am still on the "good-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |

@@ -43,7 +43,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | main          | git checkout other-feature |
       | other-feature | git stash pop              |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there is no merge in progress
     And I am left with my original commits
 
@@ -64,7 +64,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
@@ -86,7 +86,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |

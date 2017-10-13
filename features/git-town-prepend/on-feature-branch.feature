@@ -27,7 +27,7 @@ Feature: Prepending a branch to a feature branch
       |                  | git checkout new-parent    |
       | new-parent       | git stash pop              |
     And I end up on the "new-parent" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And I have the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing_feature_commit |
@@ -49,7 +49,7 @@ Feature: Prepending a branch to a feature branch
         |                  | git checkout existing-feature |
         | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And I am left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
