@@ -8,7 +8,7 @@ Feature: git-town new-pull-request: when origin is an ssh identity
   Scenario Outline: ssh identity
     Given I have "open" installed
     And my repository has a feature branch named "feature"
-    And my remote origin is "git@my-ssh-identity:Originate/git-town.git"
+    And my repo's remote origin is "git@my-ssh-identity:Originate/git-town.git"
     And I configure "git-town.code-hosting-origin-hostname" as "<ORIGIN_HOSTNAME>"
     And I am on the "feature" branch
     When I run `git-town new-pull-request`

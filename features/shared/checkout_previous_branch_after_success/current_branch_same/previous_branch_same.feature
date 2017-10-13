@@ -16,7 +16,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
   Scenario: new-pull-request
     Given my repository has feature branches named "previous" and "current"
     And I have "open" installed
-    And my remote origin is "https://github.com/Originate/git-town.git"
+    And my repo's remote origin is "https://github.com/Originate/git-town.git"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town new-pull-request`
     Then I am still on the "current" branch
@@ -38,7 +38,7 @@ Feature: Git checkout history is preserved when the current and previous branch 
   Scenario: repo
     Given my repository has feature branches named "previous" and "current"
     And I have "open" installed
-    And my remote origin is "https://github.com/Originate/git-town.git"
+    And my repo's remote origin is "https://github.com/Originate/git-town.git"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town repo`
     Then I am still on the "current" branch

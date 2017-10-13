@@ -17,7 +17,7 @@ Feature: Syncing before creating the pull request
       | child-feature  | local    | local child commit   | local_child_file   |
       |                | remote   | remote child commit  | remote_child_file  |
     And I have "open" installed
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
     And my workspace has an uncommitted file
     When I run `git-town new-pull-request`

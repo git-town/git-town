@@ -12,7 +12,7 @@ Feature: Syncing before creating the pull request
       | main    | local and remote | main commit    | conflicting_file | main_content    |
       | feature | local            | feature commit | conflicting_file | feature content |
     And I have "open" installed
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run `git-town new-pull-request`
