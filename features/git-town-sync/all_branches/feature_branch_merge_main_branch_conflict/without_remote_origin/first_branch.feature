@@ -61,7 +61,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-  And now I have the following committed files
+  And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | feature-1 content |
@@ -76,7 +76,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And my repository is still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-    And now I have the following committed files
+    And now my repository has the following committed files
         | BRANCH    | NAME             | CONTENT           |
         | main      | conflicting_file | main content      |
         | feature-1 | conflicting_file | feature-1 content |
@@ -104,7 +104,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |
@@ -132,7 +132,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |

@@ -63,7 +63,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-1 |                  |
       | feature-2 | local    | feature-2 commit                   | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
@@ -99,7 +99,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | conflicting_file |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |
@@ -125,7 +125,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | conflicting_file |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | main content      |

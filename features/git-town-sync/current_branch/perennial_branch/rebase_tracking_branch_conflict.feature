@@ -68,7 +68,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
@@ -87,6 +87,6 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

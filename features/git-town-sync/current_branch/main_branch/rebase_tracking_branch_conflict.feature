@@ -66,7 +66,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
@@ -85,6 +85,6 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

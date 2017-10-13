@@ -30,7 +30,7 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
       | feature | local    | local feature commit             | local_feature_file |
       |         |          | local main commit                | local_main_file    |
       |         |          | Merge branch 'main' into feature |                    |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH  | NAME               | CONTENT         |
       | main    | local_main_file    | main content    |
       | feature | local_feature_file | feature content |

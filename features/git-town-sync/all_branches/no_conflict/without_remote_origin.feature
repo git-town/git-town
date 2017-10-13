@@ -34,7 +34,7 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
       | feature-2 | local    | feature-2 commit                   | feature2_file |
       |           |          | main commit                        | main_file     |
       |           |          | Merge branch 'main' into feature-2 |               |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH    | NAME          | CONTENT           |
       | main      | main_file     | main content      |
       | feature-1 | feature1_file | feature-1 content |

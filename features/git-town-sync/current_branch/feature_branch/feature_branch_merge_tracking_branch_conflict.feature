@@ -75,7 +75,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
@@ -95,6 +95,6 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
