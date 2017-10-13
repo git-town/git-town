@@ -92,7 +92,7 @@ Then(/^I see no output$/) do
 end
 
 
-Then(/^I don't see "(.*)"$/) do |string|
+Then(/^Git Town does not print "(.*)"$/) do |string|
   expect(unformatted_last_run_output).not_to include(string)
 end
 

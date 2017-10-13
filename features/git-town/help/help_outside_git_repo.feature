@@ -11,7 +11,7 @@ Feature: show help screen even outside of a Git repository
       Usage:
         git-town [command]
       """
-    And I don't see "fatal: Not a Git repository"
+    And Git Town does not print "fatal: Not a Git repository"
 
     Examples:
       | COMMAND       |

@@ -102,7 +102,7 @@ Feature: Entering a parent branch name when prompted
     When I run `git-town sync` and enter:
       | feature-1 |
     Then Git Town prints "Please specify the parent branch of feature-2"
-    And I don't see "Nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
+    And Git Town does not print "Nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
