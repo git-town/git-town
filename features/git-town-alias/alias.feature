@@ -50,6 +50,6 @@ Feature: git town: alias
 
 
   Scenario: works outside of a Git repository
-    Given I'm currently not in a git repository
+    Given my workspace is currently not in a git repository
     When I run `git-town alias true`
     Then I don't see "Not a git repository"
