@@ -8,4 +8,5 @@ fi
 
 # Disabled linters:
 # - https://github.com/GoASTScanner/gas: not production-ready at this point
-gometalinter.v1 -D gas src/...
+# - https://godoc.org/golang.org/x/tools/cmd/gotype duplicated by install / build
+gometalinter.v1 -D gas -D gotype -D gotypex src/...
