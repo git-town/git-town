@@ -42,7 +42,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
     And I am still on the "qa" branch
     And my workspace still has my uncommitted file
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts

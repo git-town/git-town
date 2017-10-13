@@ -22,7 +22,7 @@ Then(/^(?:now )?(I|my coworker) (?:still )?(?:have|has) the following commits$/)
 end
 
 
-Then(/^I am left with my original commits$/) do
+Then(/^my repository is left with my original commits$/) do
   @initial_commits_table.map_headers!(&:upcase)
   verify_commits @initial_commits_table
 end

@@ -26,4 +26,4 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | remote     | main, feature |
-    And I am left with my original commits
+    And my repository is left with my original commits

@@ -37,4 +37,4 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
     And I get the error "Aborted because commit exited with error"
     And I am still on the "other-feature" branch
     And my workspace still has my uncommitted file
-    And I am left with my original commits
+    And my repository is left with my original commits

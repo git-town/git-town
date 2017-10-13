@@ -21,4 +21,4 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
     And I get the error "There is no branch named 'non-existing-feature'"
     And my repository ends up on the "main" branch
     And my workspace still has my uncommitted file
-    And I am left with my original commits
+    And my repository is left with my original commits

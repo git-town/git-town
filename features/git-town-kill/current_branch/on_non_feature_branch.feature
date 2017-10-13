@@ -24,4 +24,4 @@ Feature: git town-kill: errors when trying to kill a perennial branch
       | REPOSITORY | BRANCHES |
       | local      | main, qa |
       | remote     | main, qa |
-    And I am left with my original commits
+    And my repository is left with my original commits

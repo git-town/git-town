@@ -53,4 +53,4 @@ Feature: git town-kill: killing the given feature branch
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
-    And I am left with my original commits
+    And my repository is left with my original commits

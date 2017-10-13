@@ -42,7 +42,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And I am still on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts

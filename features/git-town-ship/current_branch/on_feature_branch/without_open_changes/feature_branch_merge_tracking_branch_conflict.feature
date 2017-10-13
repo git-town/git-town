@@ -41,7 +41,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts
