@@ -1,34 +1,17 @@
 Feature: git-town repo: when origin is an ssh identity
 
-  Background:
+  Scenario Outline: ssh identity
     Given I have "open" installed
-
-
-  Scenario: bitbucket ssh identity
-    Given my remote origin is "git@my-ssh-identity:Originate/git-town.git"
-    And I configure "git-town.code-hosting-origin-hostname" as "bitbucket.org"
+    And my remote origin is "git@my-ssh-identity:Originate/git-town.git"
+    And I configure "git-town.code-hosting-origin-hostname" as "<ORIGIN_HOSTNAME>"
     When I run `git-town repo`
     Then I see my repo homepage this url in my browser:
       """
-      https://bitbucket.org/Originate/git-town
+      <REPO_URL>
       """
 
-
-  Scenario: github ssh identity
-    Given my remote origin is "git@my-ssh-identity:Originate/git-town.git"
-    And I configure "git-town.code-hosting-origin-hostname" as "github.com"
-    When I run `git-town repo`
-    Then I see my repo homepage this url in my browser:
-      """
-      https://github.com/Originate/git-town
-      """
-
-
-  Scenario: gitlab ssh identity
-    Given my remote origin is "git@my-ssh-identity:Originate/git-town.git"
-    And I configure "git-town.code-hosting-origin-hostname" as "gitlab.com"
-    When I run `git-town repo`
-    Then I see my repo homepage this url in my browser:
-      """
-      https://gitlab.com/Originate/git-town
-      """
+    Examples:
+      | ORIGIN_HOSTNAME | REPO_URL                                 |
+      | bitbucket.org   | https://bitbucket.org/Originate/git-town |
+      | github.com      | https://github.com/Originate/git-town    |
+      | gitlab.com      | https://gitlab.com/Originate/git-town    |

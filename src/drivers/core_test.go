@@ -11,8 +11,8 @@ var _ = Describe("CodeHostingDriver", func() {
 		Describe("with driver override", func() {
 			It("works with bitbucket", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					DriverOverride: "bitbucket",
-					OriginURL:      "git@self-hosted-bitbucket.com:Originate/git-town.git",
+					DriverType: "bitbucket",
+					OriginURL:  "git@self-hosted-bitbucket.com:Originate/git-town.git",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Bitbucket"))
@@ -21,8 +21,8 @@ var _ = Describe("CodeHostingDriver", func() {
 
 			It("works with github", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					DriverOverride: "github",
-					OriginURL:      "git@self-hosted-github.com:Originate/git-town.git",
+					DriverType: "github",
+					OriginURL:  "git@self-hosted-github.com:Originate/git-town.git",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Github"))
@@ -31,8 +31,8 @@ var _ = Describe("CodeHostingDriver", func() {
 
 			It("works with gitlab", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					DriverOverride: "gitlab",
-					OriginURL:      "git@self-hosted-gitlab.com:Originate/git-town.git",
+					DriverType: "gitlab",
+					OriginURL:  "git@self-hosted-gitlab.com:Originate/git-town.git",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Gitlab"))
@@ -43,8 +43,8 @@ var _ = Describe("CodeHostingDriver", func() {
 		Describe("with origin hostname override", func() {
 			It("works with bitbucket", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					OriginURL:              "git@my-ssh-identity.com:Originate/git-town.git",
-					OriginHostnameOverride: "bitbucket.org",
+					OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
+					OriginHostname: "bitbucket.org",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Bitbucket"))
@@ -53,8 +53,8 @@ var _ = Describe("CodeHostingDriver", func() {
 
 			It("works with github", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					OriginURL:              "git@my-ssh-identity.com:Originate/git-town.git",
-					OriginHostnameOverride: "github.com",
+					OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
+					OriginHostname: "github.com",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Github"))
@@ -63,8 +63,8 @@ var _ = Describe("CodeHostingDriver", func() {
 
 			It("works with gitlab", func() {
 				result := drivers.GetDriver(drivers.DriverOptions{
-					OriginURL:              "git@my-ssh-identity.com:Originate/git-town.git",
-					OriginHostnameOverride: "gitlab.com",
+					OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
+					OriginHostname: "gitlab.com",
 				})
 				Expect(result).NotTo(BeNil())
 				Expect(result.HostingServiceName()).To(Equal("Gitlab"))

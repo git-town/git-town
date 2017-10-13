@@ -13,10 +13,10 @@ type Registry struct {
 func (r *Registry) DetermineActiveDriver(driverOptions DriverOptions) CodeHostingDriver {
 	for _, driver := range r.drivers {
 		driver.SetOriginURL(driverOptions.OriginURL)
-		if driverOptions.OriginHostnameOverride != "" {
-			driver.SetOriginHostname(driverOptions.OriginHostnameOverride)
+		if driverOptions.OriginHostname != "" {
+			driver.SetOriginHostname(driverOptions.OriginHostname)
 		}
-		if driver.CanBeUsed(driverOptions.DriverOverride) {
+		if driver.CanBeUsed(driverOptions.DriverType) {
 			return driver
 		}
 	}
