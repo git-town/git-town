@@ -48,7 +48,7 @@ end
 
 
 
-Then(/^Git Town's perennial branches are now configured as "(.*)"$/) do |data|
+Then(/^(?:Git Town's|its) perennial branches are now configured as "(.*)"$/) do |data|
   branch_names = Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names
 end

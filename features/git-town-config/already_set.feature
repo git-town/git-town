@@ -45,5 +45,5 @@ Feature: listing the configuration
       | main       |
       | production |
       |            |
-    And Git Town's main branch is now configured as "main"
-    And Git Town's perennial branches are now configured as "production"
+    Then Git Town's main branch is now configured as "main"
+    And its perennial branches are now configured as "production"
