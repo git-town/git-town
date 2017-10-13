@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/Originate/git-town/src/git"
 )
@@ -15,8 +14,8 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-func (d *gitlabCodeHostingDriver) CanBeUsed() bool {
-	return d.hostname == "gitlab.com" || strings.Contains(d.hostname, "gitlab")
+func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
+	return driverType == "gitlab" || d.hostname == "gitlab.com"
 }
 
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
@@ -31,7 +30,7 @@ func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch stri
 }
 
 func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
-	return "https://gitlab.com/" + d.repository
+	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
 func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
@@ -46,6 +45,10 @@ func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
 	d.hostname = git.GetURLHostname(originURL)
 	d.repository = git.GetURLRepositoryName(originURL)
+}
+
+func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
+	d.hostname = originHostname
 }
 
 func (d *gitlabCodeHostingDriver) GetAPITokenKey() string {

@@ -31,7 +31,7 @@ var _ = Describe("CodeHostingDriver - Github", func() {
 	var driver CodeHostingDriver
 
 	BeforeEach(func() {
-		driver = GetDriver("git@github.com:Originate/git-town.git")
+		driver = GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
 		Expect(driver).NotTo(BeNil())
 	})
 

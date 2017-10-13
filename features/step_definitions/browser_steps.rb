@@ -17,6 +17,11 @@ Then(/^I see a new pull request with this url in my browser:$/) do |url|
 end
 
 
+Then(/^I see my repo homepage this url in my browser:$/) do |url|
+  expect(@last_run_result.out.strip).to match "#{@tool} called with: #{url}".gsub('?', '\?')
+end
+
+
 Then(/^I see the (Bitbucket|GitHub|GitLab) homepage of the "(.+?)" repository in my browser$/) do |domain, repository|
   expect(@last_run_result.out.strip).to include "#{@tool} called with: #{repository_homepage_url domain, repository}"
 end
