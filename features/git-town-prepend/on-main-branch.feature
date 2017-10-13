@@ -14,7 +14,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
 
   Scenario: result
-    Given I have an uncommitted file
+    Given my workspace has an uncommitted file
     When I run `git-town prepend new-branch`
     Then it runs the commands
       | BRANCH | COMMAND           |

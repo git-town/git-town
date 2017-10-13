@@ -17,7 +17,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | deleted-feature | local and remote | deleted-feature commit |
     And the "deleted-feature" branch gets deleted on the remote
     And I am on the "deleted-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town prune-branches`
 
 

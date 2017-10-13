@@ -12,7 +12,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
       | current-feature | local    | current feature commit | current_feature_file |
       | other-feature   | local    | other feature commit   | other_feature_file   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file with name: "conflicting_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name: "conflicting_file" and content: "conflicting content"
     When I run `git-town kill other-feature`
 
 

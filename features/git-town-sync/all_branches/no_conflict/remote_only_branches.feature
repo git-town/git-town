@@ -9,7 +9,7 @@ Feature: git-town sync --all: does not sync remote only branches
       | my-feature | local and remote | my commit       | my_file       |
       | co-feature | remote           | coworker commit | coworker_file |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 

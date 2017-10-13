@@ -12,7 +12,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 

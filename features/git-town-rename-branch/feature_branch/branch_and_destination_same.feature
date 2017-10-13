@@ -11,7 +11,7 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current-feature commit |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch current-feature current-feature`
 
 

@@ -11,7 +11,7 @@ Feature: git-town sync: syncing the main branch (without remote repo)
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | local commit | local_file |
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 

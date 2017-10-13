@@ -11,7 +11,7 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
       | current-feature  | local and remote | current-feature commit  |
       | existing-feature | remote           | existing-feature commit |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch current-feature existing-feature`
 
 

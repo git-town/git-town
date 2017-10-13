@@ -12,7 +12,7 @@ Feature: git prepend: offline mode
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local and remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
 
 
   Scenario: inserting a branch into the branch ancestry

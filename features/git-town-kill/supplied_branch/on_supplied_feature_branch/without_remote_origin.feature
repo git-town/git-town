@@ -11,7 +11,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
       | current-feature | local    | current feature commit |
       | other-feature   | local    | other feature commit   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill current-feature`
 
 

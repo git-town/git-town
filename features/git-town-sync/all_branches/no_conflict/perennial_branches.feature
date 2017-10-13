@@ -10,7 +10,7 @@ Feature: git-town sync --all: syncs all perennial branches
       | qa         | local    | qa local commit          | qa_local_file          |
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 

@@ -13,7 +13,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       | production | local and remote | production commit |
       | qa         | local and remote | qa commit         |
     And I am on the "production" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
 
 
   Scenario: error when trying to rename

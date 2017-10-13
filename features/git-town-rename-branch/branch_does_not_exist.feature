@@ -10,7 +10,7 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
       | BRANCH | LOCATION         | MESSAGE     |
       | main   | local and remote | main commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch non-existing-feature renamed-feature`
 
 

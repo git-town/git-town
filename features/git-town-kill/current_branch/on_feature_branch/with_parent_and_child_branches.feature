@@ -15,7 +15,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       | feature-2 | local and remote | feature 2 commit |
       | feature-3 | local and remote | feature 3 commit |
     And I am on the "feature-2" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill`
 
 

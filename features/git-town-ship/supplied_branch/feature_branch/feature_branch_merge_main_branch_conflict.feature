@@ -10,7 +10,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     And I run `git-town ship feature -m "feature done"`
 
 

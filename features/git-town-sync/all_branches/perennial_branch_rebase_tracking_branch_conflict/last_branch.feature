@@ -9,7 +9,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | qa         | local            | qa local commit   | conflicting_file | qa local content   |
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 

@@ -6,7 +6,7 @@ Feature: git town-ship: errors when trying to ship a perennial branch
   Background:
     Given I have perennial branches named "qa" and "production"
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town ship production`
 
 

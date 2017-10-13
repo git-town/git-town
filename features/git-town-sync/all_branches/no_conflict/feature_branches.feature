@@ -8,7 +8,7 @@ Feature: git-town sync --all: syncs all feature branches
       | feature-1 | local and remote | feature-1 commit | feature1_file |
       | feature-2 | local and remote | feature-2 commit | feature2_file |
     And I am on the "feature-1" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 

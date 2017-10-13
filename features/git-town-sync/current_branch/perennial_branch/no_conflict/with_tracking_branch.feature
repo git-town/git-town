@@ -13,7 +13,7 @@ Feature: git-town sync: syncing the current perennial branch
       | qa     | local            | local commit  | local_file  |
       |        | remote           | remote commit | remote_file |
       | main   | local and remote | main commit   | main_file   |
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 

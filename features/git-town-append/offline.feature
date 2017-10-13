@@ -12,7 +12,7 @@ Feature: git append: offline mode
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing feature commit |
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
 
 
   Scenario: appending a branch in offline mode

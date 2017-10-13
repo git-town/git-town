@@ -15,7 +15,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       | feature | local    | local feature commit  | local_feature_file  |
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 

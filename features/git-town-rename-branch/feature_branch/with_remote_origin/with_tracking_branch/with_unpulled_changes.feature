@@ -13,7 +13,7 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
       | current-feature | local and remote | feature commit        |
       |                 | remote           | remote feature commit |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch current-feature renamed-feature`
 
 

@@ -15,7 +15,7 @@ Feature: git-town sync: offline mode
       | feature | local    | local feature commit  | local_feature_file  |
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 

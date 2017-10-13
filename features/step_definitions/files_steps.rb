@@ -8,7 +8,7 @@ Given(/^my repo ignores files named "([^"]*)"$/) do |filename|
 end
 
 
-Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$/) do |name, content|
+Given(/^my workspace has an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$/) do |name, content|
   @uncommitted_file_name = name || 'uncommitted_file'
   @uncommitted_file_content = content || 'uncommitted content'
   create_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content

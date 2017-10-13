@@ -13,7 +13,7 @@ Feature: git town-rename-branch: errors if renaming a perennial branch that has 
       | production | local and remote | production commit        |
       |            | remote           | remote production commit |
     And I am on the "production" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch --force production renamed-production`
 
 

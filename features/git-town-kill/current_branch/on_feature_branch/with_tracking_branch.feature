@@ -12,7 +12,7 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | current-feature | local and remote | current feature commit |
       | other-feature   | local and remote | other feature commit   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill`
 
 

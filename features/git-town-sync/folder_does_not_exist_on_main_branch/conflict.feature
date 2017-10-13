@@ -12,7 +12,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 |                  | folder commit              | new_folder/file1 |                 |
       | other-feature   | local and remote | other feature commit       | file2            |                 |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all` in the "new_folder" folder
 
 

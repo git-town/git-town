@@ -10,7 +10,7 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git-town ship feature -m "feature done"`
 
 

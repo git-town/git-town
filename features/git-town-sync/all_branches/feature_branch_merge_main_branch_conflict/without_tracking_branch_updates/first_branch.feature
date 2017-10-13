@@ -8,7 +8,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-1 | local and remote | feature-1 commit | conflicting_file | feature-1 content |
       | feature-2 | local and remote | feature-2 commit | feature2_file    | feature-2 content |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 

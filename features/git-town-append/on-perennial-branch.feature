@@ -11,7 +11,7 @@ Feature: Appending a branch to a perennial branch
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "production" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town append new-child`
 
 

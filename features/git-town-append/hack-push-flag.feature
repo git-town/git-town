@@ -9,7 +9,7 @@ Feature: push branch to remote upon creation
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town append new-child`
 
 

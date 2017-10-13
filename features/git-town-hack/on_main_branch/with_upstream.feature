@@ -6,7 +6,7 @@ Feature: git-hack: on the main branch with a upstream remote
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack new-feature`
 
 
