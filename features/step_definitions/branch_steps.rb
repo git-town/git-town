@@ -8,7 +8,7 @@ Given(/^(I|my coworker) (?:am|is) on the "(.+?)" branch$/) do |who, branch_name|
 end
 
 
-Given(/^my repository has a( local)?( feature)?( perennial)? branch named "([^"]+)"( on another machine)?$/) do |local, feature, perennial, branch_name, remote|
+Given(/^I have a( local)?( feature)?( perennial)? branch named "([^"]+)"( on another machine)?$/) do |local, feature, perennial, branch_name, remote|
   user = 'developer'
   user += '_secondary' if remote
   in_repository user do
@@ -19,12 +19,12 @@ Given(/^my repository has a( local)?( feature)?( perennial)? branch named "([^"]
 end
 
 
-Given(/^my repository has a feature branch named "([^"]+)" with no parent$/) do |branch_name|
+Given(/^I have a feature branch named "([^"]+)" with no parent$/) do |branch_name|
   create_branch branch_name
 end
 
 
-Given(/^my repository has ( local)?( feature)?( perennial)? branches named "(.+?)"$/) do |local, feature, perennial, branch_names|
+Given(/^I have( local)?( feature)?( perennial)? branches named "(.+?)"$/) do |local, feature, perennial, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
     set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
@@ -33,14 +33,14 @@ Given(/^my repository has ( local)?( feature)?( perennial)? branches named "(.+?
 end
 
 
-Given(/^my repository has a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
+Given(/^I have a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
   create_branch branch_name, remote: true, start_point: parent_name
   set_parent_branch branch: branch_name, parent: parent_name
   store_branch_hierarchy_metadata
 end
 
 
-Given(/^my coworker's repository has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
+Given(/^my coworker has a feature branch named "(.+?)"(?: (behind|ahead of) main)?$/) do |branch_name, relation|
   in_repository :coworker do
     create_branch branch_name
     if relation

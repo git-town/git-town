@@ -6,13 +6,13 @@ Feature: show help screen when Git Town is configured
 
 
   Background:
-    Given the main branch name is "main"
+    Given I have configured the main branch name as "main"
     And my perennial branches are configured as "qa" and "staging"
 
 
   Scenario Outline:
     When I run `<COMMAND>`
-    Then Git Town prints
+    Then I see
       """
       Usage:
         git-town [command]

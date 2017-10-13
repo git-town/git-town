@@ -6,7 +6,7 @@ Feature: show help screen even outside of a Git repository
   Scenario Outline: Running outside of a Git repository
     Given I'm currently not in a git repository
     When I run `<COMMAND>`
-    Then Git Town prints
+    Then I see
       """
       Usage:
         git-town [command]
