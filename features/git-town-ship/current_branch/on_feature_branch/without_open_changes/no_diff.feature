@@ -36,7 +36,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
     Then I get the error "Nothing to undo"
     And it runs no commands
     And I am still on the "empty-feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |
       | main          | local and remote | main commit    | common_file |
       | empty-feature | local            | feature commit | common_file |

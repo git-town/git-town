@@ -29,8 +29,8 @@ Feature: git town-ship: shipping a parent branch
       |                | git push                                  |
       |                | git branch -D parent-feature              |
       |                | git checkout child-feature                |
-    And I end up on the "child-feature" branch
-    And I have the following commits
+    And my repository ends up on the "child-feature" branch
+    And my repository has the following commits
       | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | main           | local and remote | parent feature done   | parent_feature_file | parent feature content |
       | child-feature  | local and remote | child feature commit  | child_feature_file  | child feature content  |

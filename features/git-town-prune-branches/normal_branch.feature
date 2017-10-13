@@ -27,8 +27,8 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | deleted-feature | git fetch --prune             |
       |                 | git checkout main             |
       | main            | git branch -D deleted-feature |
-    And I end up on the "main" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "main" branch
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES             |
       | local      | main, active-feature |
@@ -41,8 +41,8 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | BRANCH | COMMAND                                                        |
       | main   | git branch deleted-feature <%= sha 'deleted-feature commit' %> |
       |        | git checkout deleted-feature                                   |
-    And I end up on the "deleted-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "deleted-feature" branch
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                              |
       | local      | main, active-feature, deleted-feature |

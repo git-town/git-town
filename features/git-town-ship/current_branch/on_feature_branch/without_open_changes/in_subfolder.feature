@@ -31,9 +31,9 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       |         | git push origin :feature           |
       |         | git branch -D feature              |
       | <none>  | cd <%= git_folder "new_folder" %>  |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there are no more feature branches
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME               |
       | main   | local and remote | feature done | new_folder/feature_file |
 
@@ -51,8 +51,8 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
       | <none>  | cd <%= git_folder "new_folder" %>              |
-    And I end up on the "feature" branch
-    And I have the following commits
+    And my repository ends up on the "feature" branch
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME               |
       | main    | local and remote | feature done          | new_folder/feature_file |
       |         |                  | Revert "feature done" | new_folder/feature_file |

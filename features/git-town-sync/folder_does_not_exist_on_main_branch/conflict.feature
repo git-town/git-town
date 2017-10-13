@@ -79,7 +79,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am still on the "current-feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
       | main            | local and remote | conflicting main commit                  | conflicting_file |
       | current-feature | local and remote | conflicting feature commit               | conflicting_file |

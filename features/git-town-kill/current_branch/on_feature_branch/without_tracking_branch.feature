@@ -25,12 +25,12 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE              |
       | other-feature | local and remote | other feature commit |
 
@@ -42,8 +42,8 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
-    And I end up on the "current-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "current-feature" branch
+    And my workspace still has my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

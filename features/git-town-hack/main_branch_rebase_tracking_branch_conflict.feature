@@ -40,7 +40,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | main             | git rebase --abort            |
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
-    And I end up on the "existing-feature" branch
+    And my repository ends up on the "existing-feature" branch
     And I again have my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
@@ -62,9 +62,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git push                         |
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
-    And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my repository ends up on the "new-feature" branch
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
@@ -84,9 +84,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | main        | git push                         |
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
-    And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my repository ends up on the "new-feature" branch
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |

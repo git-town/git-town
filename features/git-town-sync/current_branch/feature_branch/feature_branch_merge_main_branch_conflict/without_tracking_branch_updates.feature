@@ -91,7 +91,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And I still have the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |

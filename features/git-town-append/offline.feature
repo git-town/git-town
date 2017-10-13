@@ -29,8 +29,8 @@ Feature: git append: offline mode
       |                  | git branch new-feature existing-feature     |
       |                  | git checkout new-feature                    |
       | new-feature      | git stash pop                               |
-    And I end up on the "new-feature" branch
-    And I have the following commits
+    And my repository ends up on the "new-feature" branch
+    And my repository has the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing feature commit |
       | new-feature      | local            | existing feature commit |
@@ -48,8 +48,8 @@ Feature: git append: offline mode
         |                  | git checkout main             |
         | main             | git checkout existing-feature |
         | existing-feature | git stash pop                 |
-    And I end up on the "existing-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "existing-feature" branch
+    And my workspace still has my uncommitted file
     And I am left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |

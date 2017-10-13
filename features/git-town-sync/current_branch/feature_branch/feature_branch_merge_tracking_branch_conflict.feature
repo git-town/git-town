@@ -46,7 +46,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there is no merge in progress
     And I am left with my original commits
 
@@ -69,8 +69,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |
@@ -89,8 +89,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |

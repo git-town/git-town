@@ -29,7 +29,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
       """
-    And I end up on the "feature" branch
+    And my repository ends up on the "feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -42,8 +42,8 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout main          |
       | main          | git checkout other-feature |
       | other-feature | git stash pop              |
-    And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "other-feature" branch
+    And my workspace still has my uncommitted file
     And there is no merge in progress
     And I am left with my original commits
 
@@ -63,8 +63,8 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git branch -D feature        |
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
-    And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "other-feature" branch
+    And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
@@ -85,8 +85,8 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git branch -D feature        |
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
-    And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my repository ends up on the "other-feature" branch
+    And my workspace still has my uncommitted file
     And there is no "feature" branch
     And I still have the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |

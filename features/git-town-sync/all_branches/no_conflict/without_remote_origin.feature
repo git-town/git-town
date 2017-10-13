@@ -24,8 +24,8 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
       |           | git checkout feature-1   |
       | feature-1 | git stash pop            |
     And I am still on the "feature-1" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME     |
       | main      | local    | main commit                        | main_file     |
       | feature-1 | local    | feature-1 commit                   | feature1_file |

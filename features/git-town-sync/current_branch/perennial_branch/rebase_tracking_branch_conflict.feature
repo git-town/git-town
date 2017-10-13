@@ -40,7 +40,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       | qa     | git rebase --abort |
       |        | git stash pop      |
     And I am still on the "qa" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file
     And there is no rebase in progress
     And I am left with my original commits
 
@@ -63,8 +63,8 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git push --tags       |
       |        | git stash pop         |
     And I am still on the "qa" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
@@ -82,8 +82,8 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git push --tags |
       |        | git stash pop   |
     And I am still on the "qa" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still has my uncommitted file
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | qa     | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |

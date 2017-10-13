@@ -21,4 +21,4 @@ Feature: git town-hack: requires a branch name
         git-town hack <branch> [flags]
       """
     And I am still on the "existing-feature" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file

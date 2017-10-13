@@ -24,9 +24,9 @@ Feature: push branch to remote upon creation
       |           | git checkout new-child       |
       | new-child | git push -u origin new-child |
       |           | git stash pop                |
-    And I end up on the "new-child" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my repository ends up on the "new-child" branch
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE     |
       | main      | local and remote | main_commit |
       | new-child | local and remote | main_commit |
@@ -45,8 +45,8 @@ Feature: push branch to remote upon creation
         |           | git checkout main          |
         | main      | git branch -d new-child    |
         |           | git stash pop              |
-    And I end up on the "main" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my repository ends up on the "main" branch
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE     |
       | main   | local and remote | main_commit |

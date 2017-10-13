@@ -29,9 +29,9 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git push                           |
       |         | git push origin :feature           |
       |         | git branch -D feature              |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there are no more feature branches
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
 
@@ -47,8 +47,8 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       |         | git checkout feature                           |
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
-    And I end up on the "feature" branch
-    And I have the following commits
+    And my repository ends up on the "feature" branch
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME    |
       | main    | local and remote | feature done          | feature_file |
       |         |                  | Revert "feature done" | feature_file |

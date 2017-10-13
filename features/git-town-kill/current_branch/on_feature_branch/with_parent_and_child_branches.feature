@@ -28,13 +28,13 @@ Feature: git town-kill: killing the current feature branch with child branches
       |           | git commit -m "WIP on feature-2" |
       |           | git checkout feature-1           |
       | feature-1 | git branch -D feature-2          |
-    And I end up on the "feature-1" branch
+    And my repository ends up on the "feature-1" branch
     And I don't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE          |
       | feature-1 | local and remote | feature 1 commit |
       | feature-3 | local and remote | feature 3 commit |
@@ -52,7 +52,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       |           | git checkout feature-2                             |
       | feature-2 | git reset <%= sha 'feature 2 commit' %>            |
       |           | git push -u origin feature-2                       |
-    And I end up on the "feature-2" branch
+    And my repository ends up on the "feature-2" branch
     And I again have my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                              |

@@ -29,7 +29,7 @@ Feature: git-town sync: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
       | feature | local and remote | my commit | my_file   |
 
@@ -60,7 +60,7 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |
       |         |                  | my commit                                                  | my_file       |

@@ -31,8 +31,8 @@ Feature: git-town sync: offline mode
       |         | git merge --no-edit main           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |
       | main    | local    | local main commit                | local_main_file    |
       | feature | local    | local feature commit             | local_feature_file |

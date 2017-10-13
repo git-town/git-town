@@ -16,4 +16,4 @@ Feature: git town-ship: errors when trying to ship a perennial branch
       | main   | git fetch --prune |
     And I get the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still has my uncommitted file

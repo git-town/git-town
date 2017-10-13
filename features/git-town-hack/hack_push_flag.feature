@@ -21,8 +21,8 @@ Feature: git town-hack: push branch to remote upon creation
       |         | git rebase origin/main       |
       |         | git checkout -b feature main |
       | feature | git push -u origin feature   |
-    And I end up on the "feature" branch
-    And I have the following commits
+    And my repository ends up on the "feature" branch
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE       |
       | main    | local and remote | remote commit |
       | feature | local and remote | remote commit |

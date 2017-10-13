@@ -34,8 +34,8 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | git push                           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |

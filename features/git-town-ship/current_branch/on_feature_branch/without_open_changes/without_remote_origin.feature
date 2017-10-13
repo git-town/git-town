@@ -23,9 +23,9 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
       | main    | git merge --squash feature   |
       |         | git commit -m "feature done" |
       |         | git branch -D feature        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |
 
@@ -37,8 +37,8 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
       | main   | git branch feature <%= sha 'feature commit' %> |
       |        | git revert <%= sha 'feature done' %>           |
       |        | git checkout feature                           |
-    And I end up on the "feature" branch
-    And I have the following commits
+    And my repository ends up on the "feature" branch
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME    |
       | main    | local    | feature done          | feature_file |
       |         |          | Revert "feature done" | feature_file |

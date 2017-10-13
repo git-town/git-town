@@ -28,7 +28,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       To continue after you have resolved the conflicts, run "git-town sync --continue".
       To skip the sync of the 'feature-2' branch, run "git-town sync --skip".
       """
-    And I end up on the "feature-2" branch
+    And my repository ends up on the "feature-2" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
 
@@ -42,7 +42,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-1 | git reset --hard <%= sha 'feature-1 commit' %> |
       |           | git checkout main                              |
       | main      | git stash pop                                  |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
     And I am left with my original commits
 
@@ -54,9 +54,9 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | git merge --abort |
       |           | git checkout main |
       | main      | git stash pop     |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | feature1_file    |
@@ -88,9 +88,9 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | git commit --no-edit |
       |           | git checkout main    |
       | main      | git stash pop        |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | feature1_file    |
@@ -114,9 +114,9 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | BRANCH    | COMMAND           |
       | feature-2 | git checkout main |
       | main      | git stash pop     |
-    And I end up on the "main" branch
+    And my repository ends up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | feature1_file    |

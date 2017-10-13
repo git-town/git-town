@@ -27,7 +27,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
       Enter user's number or a custom author (default: 1):
       """
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR           |
       | main   | local and remote | feature done | <FEATURE_AUTHOR> |
 
@@ -42,7 +42,7 @@ Feature: git town-ship: shipping a coworker's feature branch
   Scenario Outline: enter invalid number then valid number
     When I run `git-town ship -m 'feature done'` and enter "<NUMBER>" and "1"
     Then I see "Invalid author number"
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR                            |
       | main   | local and remote | feature done | developer <developer@example.com> |
 

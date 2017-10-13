@@ -23,9 +23,9 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
       |             | git rebase origin/main           |
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
-    And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my repository ends up on the "new-feature" branch
+    And my workspace still has my uncommitted file
+    And my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main_commit |
       | new-feature | local            | main_commit |
