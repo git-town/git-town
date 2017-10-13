@@ -14,7 +14,7 @@ Feature: git-new-pull-request when origin is on GitLab
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    Then Git Town prints a new pull request with this url in my browser:
       """
       https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main
       """
@@ -31,7 +31,7 @@ Feature: git-new-pull-request when origin is on GitLab
     And my remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "child-feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new GitLab pull request for the "child-feature" branch against the "parent-feature" branch in the "kadu/kadu" repo in my browser
+    Then Git Town prints a new GitLab pull request for the "child-feature" branch against the "parent-feature" branch in the "kadu/kadu" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (entering the parent name)
@@ -40,7 +40,7 @@ Feature: git-new-pull-request when origin is on GitLab
     And my remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and enter "main"
-    Then I see a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser
+    Then Git Town prints a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
@@ -49,4 +49,4 @@ Feature: git-new-pull-request when origin is on GitLab
     And my remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and press ENTER
-    Then I see a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser
+    Then Git Town prints a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser

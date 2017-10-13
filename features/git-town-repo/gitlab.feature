@@ -4,7 +4,7 @@ Feature: git-repo when origin is on GitLab
     Given my remote origin is <ORIGIN>
     And I have "open" installed
     When I run `git-town repo`
-    Then I see the GitLab homepage of the "kadu/kadu" repository in my browser
+    Then Git Town prints the GitLab homepage of the "kadu/kadu" repository in my browser
 
     Examples:
       | ORIGIN                           |

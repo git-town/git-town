@@ -11,7 +11,7 @@ Feature: remove a branch from the perennial branches configuration
 
   Scenario: removing a branch that is a perennial branch
     When I run `git-town perennial-branches --remove staging`
-    Then I see no output
+    Then Git Town prints no output
     And my repo is configured with perennial branches as "qa"
 
 

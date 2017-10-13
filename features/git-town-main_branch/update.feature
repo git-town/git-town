@@ -8,7 +8,7 @@ Feature: set the main branch configuration
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git-town main-branch main`
-    Then I see no output
+    Then Git Town prints no output
     And my repo is configured with the main branch as "main"
 
 
@@ -16,7 +16,7 @@ Feature: set the main branch configuration
     Given my repository has branches named "main-old" and "main-new"
     And Git Town has configured the main branch name as "main-old"
     When I run `git-town main-branch main-new`
-    Then I see no output
+    Then Git Town prints no output
     And my repo is configured with the main branch as "main-new"
 
 

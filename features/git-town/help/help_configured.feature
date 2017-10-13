@@ -12,7 +12,7 @@ Feature: show help screen when Git Town is configured
 
   Scenario Outline:
     When I run `<COMMAND>`
-    Then I see
+    Then Git Town prints
       """
       Usage:
         git-town [command]

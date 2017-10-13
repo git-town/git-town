@@ -35,7 +35,7 @@ Feature: Initial configuration
       |      |
       | main |
       |      |
-    Then I see "A main development branch is required to enable the features provided by Git Town"
+    Then Git Town prints "A main development branch is required to enable the features provided by Git Town"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -45,7 +45,7 @@ Feature: Initial configuration
       | 4    |
       | main |
       |      |
-    Then I see "Invalid branch number"
+    Then Git Town prints "Invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -55,7 +55,7 @@ Feature: Initial configuration
       | non-existent |
       | main         |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
+    Then Git Town prints "Branch 'non-existent' doesn't exist"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
@@ -66,7 +66,7 @@ Feature: Initial configuration
       | main |
       | dev  |
       |      |
-    Then I see "'main' is already set as the main branch"
+    Then Git Town prints "'main' is already set as the main branch"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "dev"
 
@@ -77,7 +77,7 @@ Feature: Initial configuration
       | 4    |
       | 3    |
       |      |
-    Then I see "Invalid branch number"
+    Then Git Town prints "Invalid branch number"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "production"
 
@@ -88,6 +88,6 @@ Feature: Initial configuration
       | non-existent |
       | dev          |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
+    Then Git Town prints "Branch 'non-existent' doesn't exist"
     And my repo is configured with the main branch as "main"
     And my repo is configured with perennial branches as "dev"

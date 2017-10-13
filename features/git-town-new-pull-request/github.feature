@@ -14,7 +14,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then I see a new pull request with this url in my browser:
+		Then Git Town prints a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/git-town/compare/feature?expand=1
 			"""
@@ -35,7 +35,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then I see a new pull request with this url in my browser:
+		Then Git Town prints a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
 			"""
@@ -55,7 +55,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then I see a new pull request with this url in my browser:
+		Then Git Town prints a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/git-town/compare/feature?expand=1
 			"""
@@ -72,7 +72,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
     When I run `git-town new-pull-request`
-    Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
+    Then Git Town prints a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (entering the parent name)
@@ -81,7 +81,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and enter "main"
-    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+    Then Git Town prints a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
@@ -90,4 +90,4 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and press ENTER
-    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+    Then Git Town prints a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser

@@ -13,7 +13,7 @@ Feature: listing the configuration
     Given Git Town has configured the main branch name as "main"
     And my perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter "main" and ""
-    Then I see
+    Then Git Town prints
       """
       Git Town needs to be configured
 
@@ -33,7 +33,7 @@ Feature: listing the configuration
     Given Git Town has configured the main branch name as "main"
     And my perennial branches are configured as "qa"
     When I run `git-town config --setup` and enter "", "main" and ""
-    Then I see "A main development branch is required to enable the features provided by Git Town"
+    Then Git Town prints "A main development branch is required to enable the features provided by Git Town"
     And my repo is configured with the main branch as "main"
     And my repo is configured with no perennial branches
 
