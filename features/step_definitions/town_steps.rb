@@ -30,7 +30,7 @@ Given(/^Git Town's main branch is configured as "(.*)"$/) do |main_branch_name|
 end
 
 
-Given(/^the perennial branches are configured as (.*)$/) do |data|
+Given(/^(?:Git Town's|its) perennial branches are configured as (.*)$/) do |data|
   branch_names = Kappamaki.from_sentence data
   set_configuration 'perennial-branch-names', branch_names.join(' ')
 end

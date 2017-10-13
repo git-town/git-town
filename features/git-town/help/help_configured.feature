@@ -7,7 +7,7 @@ Feature: show help screen when Git Town is configured
 
   Background:
     Given Git Town's main branch is configured as "main"
-    And the perennial branches are configured as "qa" and "staging"
+    And its perennial branches are configured as "qa" and "staging"
 
 
   Scenario Outline:
