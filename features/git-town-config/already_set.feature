@@ -23,7 +23,7 @@ Feature: listing the configuration
 
       Please specify the main development branch by name or number (current value: main):
       """
-    And Git Town prints
+    And I see
       """
       Please specify a perennial branch by name or number. Leave it blank to finish (current value: qa):
       """
