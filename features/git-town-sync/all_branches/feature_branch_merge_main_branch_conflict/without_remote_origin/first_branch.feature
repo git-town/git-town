@@ -40,7 +40,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop     |
     And my repository ends up on the "main" branch
     And I again have my uncommitted file
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: skipping

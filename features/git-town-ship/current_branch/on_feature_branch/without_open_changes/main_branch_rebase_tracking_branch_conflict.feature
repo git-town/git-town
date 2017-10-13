@@ -38,7 +38,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |        | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts

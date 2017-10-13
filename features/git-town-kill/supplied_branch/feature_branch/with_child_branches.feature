@@ -51,7 +51,7 @@ Feature: git town-kill: killing the given branch with child branches
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature-1, feature-2, feature-3 |
       | remote     | main, feature-1, feature-2, feature-3 |
-    And I am left with my original commits
+    And my repository is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |

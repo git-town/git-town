@@ -50,4 +50,4 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, current-feature, other-feature |
-    And I am left with my original commits
+    And my repository is left with my original commits

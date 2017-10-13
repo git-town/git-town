@@ -13,8 +13,8 @@ Feature: set the main branch configuration
 
 
   Scenario: main branch is configured
-    Given I have branches named "main-old" and "main-new"
-    And I have configured the main branch name as "main-old"
+    Given my repository has branches named "main-old" and "main-new"
+    And Git Town has configured the main branch name as "main-old"
     When I run `git-town main-branch main-new`
     Then I see no output
     And my repo is configured with the main branch as "main-new"

@@ -51,7 +51,7 @@ Feature: Syncing before creating the pull request
     And I am still on the "feature" branch
     And I again have my uncommitted file
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   @finishes-with-non-empty-stash

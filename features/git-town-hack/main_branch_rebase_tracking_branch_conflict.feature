@@ -43,7 +43,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my repository ends up on the "existing-feature" branch
     And I again have my uncommitted file
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts

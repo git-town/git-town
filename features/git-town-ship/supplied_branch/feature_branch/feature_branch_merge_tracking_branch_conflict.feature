@@ -45,7 +45,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
     And my repository ends up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts

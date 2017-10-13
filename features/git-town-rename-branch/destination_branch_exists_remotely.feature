@@ -22,4 +22,4 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
     And I get the error "A branch named 'existing-feature' already exists"
     And I am still on the "current-feature" branch
     And my workspace still has my uncommitted file
-    And I am left with my original commits
+    And my repository is left with my original commits

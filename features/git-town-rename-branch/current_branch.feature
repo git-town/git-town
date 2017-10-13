@@ -41,7 +41,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Then it runs no commands
     And I get the error "Cannot rename branch to current name."
     And my repository ends up on the "feature" branch
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: rename perennial branch
