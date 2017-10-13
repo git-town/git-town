@@ -30,7 +30,7 @@ Given(/^the main branch name is configured as "(.*)"$/) do |main_branch_name|
 end
 
 
-Given(/^my perennial branches are configured as (.*)$/) do |data|
+Given(/^the perennial branches are configured as (.*)$/) do |data|
   branch_names = Kappamaki.from_sentence data
   set_configuration 'perennial-branch-names', branch_names.join(' ')
 end

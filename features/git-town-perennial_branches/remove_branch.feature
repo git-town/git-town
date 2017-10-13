@@ -6,7 +6,7 @@ Feature: remove a branch from the perennial branches configuration
 
 
   Background:
-    Given my perennial branches are configured as "staging" and "qa"
+    Given the perennial branches are configured as "staging" and "qa"
 
 
   Scenario: removing a branch that is a perennial branch
