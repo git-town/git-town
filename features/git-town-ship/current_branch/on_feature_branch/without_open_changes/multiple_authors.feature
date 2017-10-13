@@ -6,7 +6,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | AUTHOR                            |
       | feature | local    | feature commit1 | developer <developer@example.com> |

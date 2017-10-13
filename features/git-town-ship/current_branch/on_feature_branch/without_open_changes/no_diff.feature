@@ -6,7 +6,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Background:
-    Given I have a feature branch named "empty-feature"
+    Given my repository has a feature branch named "empty-feature"
     And the following commit exists in my repository
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |

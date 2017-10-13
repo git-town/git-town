@@ -19,7 +19,7 @@ Given(/^I have a( local)?( feature)?( perennial)? branch named "([^"]+)"( on ano
 end
 
 
-Given(/^I have a feature branch named "([^"]+)" with no parent$/) do |branch_name|
+Given(/^my repository has a feature branch named "([^"]+)" with no parent$/) do |branch_name|
   create_branch branch_name
 end
 

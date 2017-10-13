@@ -6,8 +6,8 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
 
 
   Background:
-    Given I have a feature branch named "other-feature"
-    And I have a feature branch named "feature" on another machine
+    Given my repository has a feature branch named "other-feature"
+    And my repository has a feature branch named "feature" on another machine
     And the following commit exists in my repository on another machine
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |

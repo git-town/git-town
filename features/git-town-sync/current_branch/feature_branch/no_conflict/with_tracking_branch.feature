@@ -6,7 +6,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |

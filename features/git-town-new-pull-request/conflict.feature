@@ -6,7 +6,7 @@ Feature: Syncing before creating the pull request
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | main commit    | conflicting_file | main_content    |

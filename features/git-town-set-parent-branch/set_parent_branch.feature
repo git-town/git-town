@@ -6,8 +6,8 @@ Feature: update the parent of a nested feature branch
 
 
   Background:
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
 
 
   Scenario: updating the parent branch

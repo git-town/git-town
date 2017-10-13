@@ -1,7 +1,7 @@
 Feature: git-new-pull-request: multi-platform support
 
   Scenario Outline: supported tool installed
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And my remote origin is https://github.com/Originate/git-town.git
     And I have "<TOOL>" installed
     And I am on the "feature" branch
@@ -21,7 +21,7 @@ Feature: git-new-pull-request: multi-platform support
 
 
   Scenario: no supported tool installed
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And my remote origin is https://github.com/Originate/git-town.git
     And I have no command that opens browsers installed
     And I am on the "feature" branch

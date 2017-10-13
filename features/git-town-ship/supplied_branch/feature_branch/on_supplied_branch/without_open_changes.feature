@@ -4,7 +4,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |

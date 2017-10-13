@@ -6,7 +6,7 @@ Feature: git town-rename-branch: does nothing if renaming a feature branch onto 
 
 
   Background:
-    Given I have a feature branch named "current-feature"
+    Given my repository has a feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current-feature commit |

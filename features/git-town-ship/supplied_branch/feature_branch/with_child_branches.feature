@@ -4,8 +4,8 @@ Feature: git town-ship: shipping a parent branch
 
 
   Background:
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
     And the following commits exist in my repository
       | BRANCH         | LOCATION         | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | parent-feature | local and remote | parent feature commit | parent_feature_file | parent feature content |

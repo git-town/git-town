@@ -6,7 +6,7 @@ Feature: git town-rename-branch: requires 1 or 2 branch names, and an optional f
 
 
   Background:
-    Given I have a feature branch named "current-feature"
+    Given my repository has a feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION | MESSAGE        |
       | current-feature | local    | feature commit |

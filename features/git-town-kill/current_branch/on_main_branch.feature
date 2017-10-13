@@ -6,7 +6,7 @@ Feature: git town-kill: errors when trying to kill the main branch
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE     |
       | feature | local and remote | good commit |

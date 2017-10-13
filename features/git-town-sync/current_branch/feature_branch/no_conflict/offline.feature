@@ -7,7 +7,7 @@ Feature: git-town sync: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And I have a feature branch named "feature"
+    And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |
