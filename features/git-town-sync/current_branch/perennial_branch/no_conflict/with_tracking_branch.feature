@@ -18,7 +18,7 @@ Feature: git-town sync: syncing the current perennial branch
 
 
   Scenario: no conflict
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       |        | git add -A           |

@@ -12,7 +12,7 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I get the error "There is no branch named 'non-existing-branch'"

@@ -15,7 +15,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: result
     Then I am not prompted for any parent branches
-    And it runs the commands
+    And Git Town runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
       |            | git add -A                   |
@@ -37,7 +37,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                 |
       | qa         | git rebase --abort      |
       |            | git checkout production |
@@ -55,7 +55,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: skipping
     When I run `git-town sync --skip`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git checkout main  |
@@ -82,7 +82,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
       |        | git push              |
@@ -102,7 +102,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     And I run `git rebase --continue; git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | qa     | git push          |
       |        | git checkout main |

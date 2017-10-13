@@ -17,7 +17,7 @@ Feature: git prepend: offline mode
 
   Scenario: inserting a branch into the branch ancestry
     When I run `git-town prepend new-parent`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH           | COMMAND                    |
       | existing-feature | git add -A                 |
       |                  | git stash                  |
@@ -40,7 +40,7 @@ Feature: git prepend: offline mode
   Scenario: Undo
     Given I run `git-town prepend new-parent`
     When I run `git-town prepend --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |
         |                  | git stash                     |

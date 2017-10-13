@@ -20,7 +20,7 @@ Feature: git town-kill: killing the current feature branch with child branches
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                          |
       | feature-2 | git fetch --prune                |
       |           | git push origin :feature-2       |
@@ -46,7 +46,7 @@ Feature: git town-kill: killing the current feature branch with child branches
 
   Scenario: undoing the kill
     When I run `git-town kill --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                            |
       | feature-1 | git branch feature-2 <%= sha 'WIP on feature-2' %> |
       |           | git checkout feature-2                             |

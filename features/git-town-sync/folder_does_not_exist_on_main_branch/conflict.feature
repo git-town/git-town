@@ -18,7 +18,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
       | <none>          | cd <%= git_root_folder %>                  |
@@ -38,7 +38,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
       |                 | git checkout main                 |
@@ -64,7 +64,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |
       |                 | git push                                 |

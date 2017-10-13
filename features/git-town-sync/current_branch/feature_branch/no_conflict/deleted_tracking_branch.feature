@@ -16,7 +16,7 @@ Feature: git-town sync: restores deleted tracking branch
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune          |
       |         | git checkout main          |

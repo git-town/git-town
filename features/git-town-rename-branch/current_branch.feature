@@ -18,7 +18,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: rename feature branch
     Given I am on the "feature" branch
     When I run `git-town rename-branch renamed-feature`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                            |
       | feature         | git fetch --prune                  |
       |                 | git branch renamed-feature feature |
@@ -54,7 +54,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: rename perennial branch (forced)
     Given I am on the "production" branch
     When I run `git-town rename-branch renamed-production --force`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune                        |
       |                    | git branch renamed-production production |
@@ -75,7 +75,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "feature" branch
     And I run `git-town rename-branch renamed-feature`
     When I run `git-town rename-branch --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
         | BRANCH          | COMMAND                                     |
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |
         |                 | git push -u origin feature                  |

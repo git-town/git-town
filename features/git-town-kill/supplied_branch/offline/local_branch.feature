@@ -18,7 +18,7 @@ Feature: git town-kill: killing a local branch in offline mode
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
@@ -38,7 +38,7 @@ Feature: git town-kill: killing a local branch in offline mode
 
   Scenario: undoing the kill
     When I run `git-town kill --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git checkout current-feature                                   |

@@ -18,7 +18,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git fetch --prune                      |
       |                 | git add -A                             |
@@ -37,7 +37,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
   Scenario: Undoing a kill of a local feature branch
     When I run `git-town kill --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git checkout current-feature                                   |

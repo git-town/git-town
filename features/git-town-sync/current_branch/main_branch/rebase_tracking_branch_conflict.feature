@@ -16,7 +16,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       |        | git add -A             |
@@ -33,7 +33,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
@@ -54,7 +54,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
       |        | git push              |
@@ -74,7 +74,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND         |
       | main   | git push        |
       |        | git push --tags |

@@ -16,7 +16,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH        | COMMAND                                      |
       | empty-feature | git fetch --prune                            |
       |               | git checkout main                            |

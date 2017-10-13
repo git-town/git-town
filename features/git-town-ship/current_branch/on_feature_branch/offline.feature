@@ -16,7 +16,7 @@ Feature: git town-ship: offline mode
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git checkout main                  |
       | main    | git rebase origin/main             |
@@ -36,7 +36,7 @@ Feature: git town-ship: offline mode
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git revert <%= sha 'feature done' %>           |

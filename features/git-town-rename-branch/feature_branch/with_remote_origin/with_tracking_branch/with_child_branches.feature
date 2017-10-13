@@ -17,7 +17,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH                 | COMMAND                                          |
       | parent-feature         | git fetch --prune                                |
       |                        | git branch renamed-parent-feature parent-feature |
@@ -38,7 +38,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
   Scenario: undo
     When I run `git-town rename-branch --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH                 | COMMAND                                                      |
       | renamed-parent-feature | git branch parent-feature <%= sha 'parent feature commit' %> |
       |                        | git push -u origin parent-feature                            |

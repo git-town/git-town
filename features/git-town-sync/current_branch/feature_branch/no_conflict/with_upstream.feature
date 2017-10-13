@@ -13,7 +13,7 @@ Feature: git-sync: on a feature branch with a upstream remote
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |

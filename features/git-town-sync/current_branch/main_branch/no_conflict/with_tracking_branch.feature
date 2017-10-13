@@ -16,7 +16,7 @@ Feature: git-town sync: syncing the main branch
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       |        | git add -A             |

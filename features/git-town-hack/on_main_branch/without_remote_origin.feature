@@ -16,7 +16,7 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git add -A                       |
       |             | git stash                        |

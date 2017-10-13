@@ -17,7 +17,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH           | COMMAND                |
       | existing-feature | git fetch --prune      |
       |                  | git add -A             |
@@ -35,7 +35,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: aborting
     When I run `git-town hack --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |
       |                  | git checkout existing-feature |
@@ -56,7 +56,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town hack --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git rebase --continue            |
       |             | git push                         |
@@ -79,7 +79,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git-town hack --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git push                         |
       |             | git checkout -b new-feature main |

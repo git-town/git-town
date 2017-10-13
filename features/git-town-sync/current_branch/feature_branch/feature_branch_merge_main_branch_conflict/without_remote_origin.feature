@@ -13,7 +13,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git add -A               |
       |         | git stash                |
@@ -31,7 +31,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND           |
       | feature | git merge --abort |
       |         | git stash pop     |
@@ -53,7 +53,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git stash pop        |
@@ -74,7 +74,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
     And I am still on the "feature" branch

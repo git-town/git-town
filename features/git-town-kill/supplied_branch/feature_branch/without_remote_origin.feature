@@ -17,7 +17,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                     |
       | current-feature | git add -A                  |
       |                 | git stash                   |
@@ -36,7 +36,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
 
   Scenario: undoing the kill
     When I run `git-town kill --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                                    |
       | current-feature | git add -A                                                 |
       |                 | git stash                                                  |

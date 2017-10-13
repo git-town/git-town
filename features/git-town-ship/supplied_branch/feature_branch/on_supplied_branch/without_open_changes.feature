@@ -13,7 +13,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
@@ -36,7 +36,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |
       |         | git push -u origin feature                     |

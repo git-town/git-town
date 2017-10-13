@@ -13,7 +13,7 @@ Feature: git-town sync --all: syncs all feature branches
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git fetch --prune                    |
       |           | git add -A                           |

@@ -18,7 +18,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune                          |
       | <none>          | cd <%= git_root_folder %>                  |

@@ -15,7 +15,7 @@ Feature: push branch to remote upon creation
 
   Scenario: inserting a branch into the branch ancestry
     When I run `git-town prepend new-parent`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH           | COMMAND                       |
       | existing-feature | git fetch --prune             |
       |                  | git add -A                    |
@@ -40,7 +40,7 @@ Feature: push branch to remote upon creation
   Scenario: Undo
     Given I run `git-town prepend new-parent`
     When I run `git-town prepend --undo`
-    Then it runs the commands
+    Then Git Town runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |
         |                  | git stash                     |

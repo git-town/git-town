@@ -14,7 +14,7 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
       |               | git add -A                         |

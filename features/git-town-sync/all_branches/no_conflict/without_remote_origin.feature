@@ -14,7 +14,7 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git add -A               |
       |           | git stash                |

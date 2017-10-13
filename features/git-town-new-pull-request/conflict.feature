@@ -20,7 +20,7 @@ Feature: Syncing before creating the pull request
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |
@@ -42,7 +42,7 @@ Feature: Syncing before creating the pull request
 
   Scenario: aborting
     When I run `git-town new-pull-request --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
       |         | git checkout main    |
@@ -67,7 +67,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town new-pull-request --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                             |
       | feature | git commit --no-edit                                                |
       |         | git push                                                            |
@@ -87,7 +87,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git-town new-pull-request --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                                                             |
       | feature | git push                                                            |
       |         | git stash pop                                                       |

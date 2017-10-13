@@ -11,7 +11,7 @@ Feature: git town-hack: errors when the branch exists remotely
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And I get the error "A branch named 'existing-feature' already exists"

@@ -19,7 +19,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND           |
       | feature-3 | git fetch --prune |
     And I get the error "Shipping this branch would ship feature-1, feature-2 as well."

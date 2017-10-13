@@ -14,7 +14,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                              |
       | main      | git fetch --prune                    |
       |           | git add -A                           |
@@ -36,7 +36,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | feature-1 | git merge --abort                                    |
       |           | git reset --hard <%= sha 'feature-1 local commit' %> |
@@ -54,7 +54,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: skipping
     When I run `git-town sync --skip`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                                              |
       | feature-1 | git merge --abort                                    |
       |           | git reset --hard <%= sha 'feature-1 local commit' %> |
@@ -89,7 +89,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git commit --no-edit                 |
       |           | git push                             |
@@ -118,7 +118,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git-town sync --continue`
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git push                             |
       |           | git checkout feature-2               |

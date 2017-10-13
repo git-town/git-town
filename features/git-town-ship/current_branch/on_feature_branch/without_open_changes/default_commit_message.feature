@@ -15,7 +15,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |

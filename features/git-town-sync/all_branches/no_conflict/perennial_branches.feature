@@ -15,7 +15,7 @@ Feature: git-town sync --all: syncs all perennial branches
 
 
   Scenario: result
-    Then it runs the commands
+    Then Git Town runs the commands
       | BRANCH     | COMMAND                      |
       | main       | git fetch --prune            |
       |            | git add -A                   |
