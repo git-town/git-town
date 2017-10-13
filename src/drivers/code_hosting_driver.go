@@ -9,8 +9,8 @@ type CodeHostingDriver interface {
 	CanBeUsed() bool
 
 	// CanMergePullRequest returns whether or not MergePullRequest should be
-	// called when shipping
-	CanMergePullRequest(branch, parentBranch string) (bool, error)
+	// called when shipping. If true, also returns the default commit message
+	CanMergePullRequest(branch, parentBranch string) (bool, string, error)
 
 	// GetNewPullRequestURL returns the URL of the page
 	// to create a new pull request online

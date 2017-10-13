@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -30,16 +29,15 @@ The default value is false.`,
 				return err
 			}
 		}
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+		)
 	},
 }
 
 func printHackPushFlag() {
-	fmt.Println(git.GetPrintableHackPushFlag())
+	cfmt.Println(git.GetPrintableHackPushFlag())
 }
 
 func setHackPushFlag(value bool) {

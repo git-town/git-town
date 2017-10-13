@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -21,16 +21,15 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+		)
 	},
 }
 
 func printMainBranch() {
-	fmt.Println(git.GetPrintableMainBranch())
+	cfmt.Println(git.GetPrintableMainBranch())
 }
 
 func setMainBranch(branchName string) {

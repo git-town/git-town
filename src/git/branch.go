@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
@@ -47,6 +48,9 @@ func EnsureIsPerennialBranch(branchName, errorMessage string) {
 
 // GetCurrentBranchName returns the name of the currently checked out branch
 func GetCurrentBranchName() string {
+	if dryrun.IsActive() {
+		return dryrun.GetCurrentBranchName()
+	}
 	if IsRebaseInProgress() {
 		return getCurrentBranchNameDuringRebase()
 	}

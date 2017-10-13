@@ -19,8 +19,8 @@ func (d *bitbucketCodeHostingDriver) CanBeUsed() bool {
 	return d.hostname == "bitbucket.org" || strings.Contains(d.hostname, "bitbucket")
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, error) {
-	return false, nil
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
+	return false, "", nil
 }
 
 func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {

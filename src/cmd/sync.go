@@ -7,6 +7,7 @@ import (
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -55,16 +56,12 @@ the main branch is synced with its upstream counterpart.`,
 		})
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := validateMaxArgs(args, 0)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgsFunc(args, 0),
+			git.ValidateIsRepository,
+			conditionallyActivateDryRun,
+			validateIsConfigured,
+		)
 	},
 }
 
@@ -104,6 +101,7 @@ func init() {
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
 	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
 	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }

@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/exit"
 	"github.com/fatih/color"
 )
@@ -139,7 +140,7 @@ func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	_, err := labelFmt.Println(label + ":")
 	exit.On(err)
-	fmt.Println(Indent(value, 1))
+	cfmt.Println(Indent(value, 1))
 	fmt.Println()
 }
 
