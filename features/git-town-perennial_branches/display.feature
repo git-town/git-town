@@ -14,7 +14,7 @@ Feature: display the perennial branches configuration
   Scenario: perennial branches are configured
     Given my perennial branches are configured as "qa" and "production"
     When I run `git-town perennial-branches`
-    Then I see
+    Then Git Town prints
       """
       qa
       production

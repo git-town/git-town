@@ -25,7 +25,7 @@ Given(/^my repository has the "([^"]*)" configuration set to "([^"]*)"$/) do |co
 end
 
 
-Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name|
+Given(/^the main branch name is "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
 end
 
