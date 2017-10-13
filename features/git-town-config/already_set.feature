@@ -6,7 +6,7 @@ Feature: listing the configuration
 
 
   Background:
-    Given I have branches named "production" and "qa"
+    Given my repository has branches named "production" and "qa"
 
 
   Scenario: everything is configured

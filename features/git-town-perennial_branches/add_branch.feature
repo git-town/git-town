@@ -6,7 +6,7 @@ Feature: add a branch to the perennial branches configuration
 
 
   Background:
-    Given I have branches named "staging" and "qa"
+    Given my repository has branches named "staging" and "qa"
     And my perennial branches are configured as "qa"
 
 
