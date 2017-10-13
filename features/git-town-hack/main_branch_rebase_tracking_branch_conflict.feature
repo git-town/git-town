@@ -41,7 +41,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
     And my repository ends up on the "existing-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no rebase in progress
     And my repository is left with my original commits
 

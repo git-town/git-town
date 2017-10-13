@@ -53,7 +53,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       | feature-2 | git reset <%= sha 'feature 2 commit' %>            |
       |           | git push -u origin feature-2                       |
     And my repository ends up on the "feature-2" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature-1, feature-2, feature-3 |

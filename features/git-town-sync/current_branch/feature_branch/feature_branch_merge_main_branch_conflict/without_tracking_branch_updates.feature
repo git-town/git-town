@@ -43,9 +43,9 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
       | feature | git stash pop        |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
@@ -69,14 +69,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push             |
       |         | git stash pop        |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | conflicting feature commit       | conflicting_file |
       |         |                  | conflicting main commit          | conflicting_file |
       |         |                  | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -92,13 +92,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop        |
     And my repository is still on the "feature" branch
     And my workspace still has my uncommitted file
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | conflicting feature commit       | conflicting_file |
       |         |                  | conflicting main commit          | conflicting_file |
       |         |                  | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
@@ -112,14 +112,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git push      |
       |         | git stash pop |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | conflicting main commit          | conflicting_file |
       | feature | local and remote | conflicting feature commit       | conflicting_file |
       |         |                  | conflicting main commit          | conflicting_file |
       |         |                  | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

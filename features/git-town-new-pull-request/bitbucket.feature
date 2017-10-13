@@ -11,7 +11,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://bitbucket.org/Originate/git-town/pull-request/new?dest=Originate%2Fgit-town%3A%3Amain&source=Originate%2Fgit-town%.*%3Afeature
 			"""
@@ -33,7 +33,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://bitbucket.org/Originate/originate.github.com/pull-request/new?dest=Originate%2Foriginate.github.com%3A%3Amain&source=Originate%2Foriginate.github.com%.*%3Afeature
 			"""
@@ -54,7 +54,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://bitbucket.org/Originate/git-town/pull-request/new?dest=Originate%2Fgit-town%3A%3Amain&source=Originate%2Fgit-town%.*%3Afeature
 			"""

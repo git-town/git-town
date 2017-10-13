@@ -14,7 +14,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/git-town/compare/feature?expand=1
 			"""
@@ -35,7 +35,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/originate.github.com/compare/feature?expand=1 |
 			"""
@@ -55,7 +55,7 @@ Feature: git-new-pull-request when origin is on GitHub
     And my remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-		Then Git Town prints a new pull request with this url in my browser:
+		Then I see a new pull request with this url in my browser:
 		  """
 			https://github.com/Originate/git-town/compare/feature?expand=1
 			"""

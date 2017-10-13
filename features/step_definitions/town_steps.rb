@@ -70,7 +70,7 @@ end
 
 
 Then(/^Git Town prints the initial configuration prompt$/) do
-  step %(I see "Git Town needs to be configured")
+  step %(Git Town prints "Git Town needs to be configured")
 end
 
 

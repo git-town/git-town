@@ -45,7 +45,7 @@ Feature: git town-kill: killing the given feature branch when on it
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
       |                 | git push -u origin current-feature                             |
     And my repository ends up on the "current-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

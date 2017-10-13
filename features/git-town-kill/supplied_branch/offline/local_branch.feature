@@ -44,7 +44,7 @@ Feature: git town-kill: killing a local branch in offline mode
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And my repository ends up on the "current-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |

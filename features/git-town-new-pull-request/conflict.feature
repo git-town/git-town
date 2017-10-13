@@ -49,7 +49,7 @@ Feature: Syncing before creating the pull request
       | main    | git checkout feature |
       | feature | git stash pop        |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repository is left with my original commits
 

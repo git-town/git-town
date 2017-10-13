@@ -6,7 +6,7 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
 
 
   Background:
-    Given I have a perennial branch named "production"
+    Given my repository has a perennial branch named "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | production | local and remote | production commit |

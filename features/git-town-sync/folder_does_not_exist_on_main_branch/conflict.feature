@@ -46,7 +46,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | current-feature | git stash pop                     |
       | <none>          | cd <%= git_folder "new_folder" %> |
     And my repository is still on the "current-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repository is left with my original commits
 
@@ -77,7 +77,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git stash pop                            |
       | <none>          | cd <%= git_folder "new_folder" %>        |
     And my repository is still on the "current-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
     And now my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
@@ -89,7 +89,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | other-feature   | local and remote | other feature commit                     | file2            |
       |                 |                  | conflicting main commit                  | conflicting_file |
       |                 |                  | Merge branch 'main' into other-feature   |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current-feature | conflicting_file | resolved content |

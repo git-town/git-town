@@ -66,7 +66,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And my repository ends up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
@@ -93,7 +93,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
     And my repository ends up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |

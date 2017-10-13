@@ -36,7 +36,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git merge --abort |
       |         | git stash pop     |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repository is left with my original commits
 
@@ -58,14 +58,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git commit --no-edit |
       |         | git stash pop        |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |
       | main    | local    | conflicting main commit          | conflicting_file |
       | feature | local    | conflicting feature commit       | conflicting_file |
       |         |          | conflicting main commit          | conflicting_file |
       |         |          | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -78,14 +78,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
     And my repository is still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |
       | main    | local    | conflicting main commit          | conflicting_file |
       | feature | local    | conflicting feature commit       | conflicting_file |
       |         |          | conflicting main commit          | conflicting_file |
       |         |          | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

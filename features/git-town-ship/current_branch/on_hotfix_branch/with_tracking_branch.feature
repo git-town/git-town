@@ -6,8 +6,8 @@ Feature: git town-ship: shipping hotfixes
 
 
   Background:
-    Given I have a perennial branch named "production"
-    And I have a hotfix branch named "hotfix" as a child of "production"
+    Given my repository has a perennial branch named "production"
+    And my repository has a hotfix branch named "hotfix" as a child of "production"
     And the following commit exists in my repository
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   | FILE CONTENT   |
       | hotfix | local and remote | hotfix commit | hotfix_file | hotfix content |

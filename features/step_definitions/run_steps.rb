@@ -87,7 +87,7 @@ Then(/^Git Town runs the commands$/) do |expected_commands|
 end
 
 
-Then(/^I see no output$/) do
+Then(/^Git Town prints no output$/) do
   expect(@last_run_result.out).to eql ''
 end
 

@@ -59,7 +59,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And my repository ends up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
 
@@ -78,6 +78,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And my repository ends up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |

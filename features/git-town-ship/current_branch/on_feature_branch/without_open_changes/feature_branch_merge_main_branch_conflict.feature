@@ -43,7 +43,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
     And my repository is still on the "feature" branch
     And there is no merge in progress
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
@@ -63,7 +63,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And my repository ends up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
@@ -82,7 +82,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And my repository ends up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |

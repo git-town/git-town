@@ -39,7 +39,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main |
       | main      | git stash pop     |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository is left with my original commits
 
 
@@ -53,7 +53,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main        |
       | main      | git stash pop            |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
@@ -94,7 +94,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main        |
       | main      | git stash pop            |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
@@ -122,7 +122,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git checkout main        |
       | main      | git stash pop            |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |

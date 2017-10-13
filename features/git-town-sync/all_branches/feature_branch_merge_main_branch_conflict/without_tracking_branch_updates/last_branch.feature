@@ -46,7 +46,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-1 | git checkout main      |
       | main      | git stash pop          |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
       | main      | local and remote | main commit                        | conflicting_file |
@@ -65,7 +65,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git push --tags   |
       |           | git stash pop     |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
       | main      | local and remote | main commit                        | conflicting_file |
@@ -95,7 +95,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git push --tags      |
       |           | git stash pop        |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
       | main      | local and remote | main commit                        | conflicting_file |
@@ -117,7 +117,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git push --tags   |
       |           | git stash pop     |
     And my repository ends up on the "main" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
       | main      | local and remote | main commit                        | conflicting_file |

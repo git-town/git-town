@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors if renaming a perennial branch that has 
 
 
   Background:
-    Given I have a perennial branch named "production"
+    Given my repository has a perennial branch named "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE                  |
       | main       | local and remote | main commit              |
