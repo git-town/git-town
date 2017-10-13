@@ -85,7 +85,7 @@ Then(/^my previous Git branch is (?:now|still) "(.+?)"/) do |previous_branch|
 end
 
 
-Then(/^I (?:end up|am still) on the "(.+?)" branch$/) do |branch_name|
+Then(/^my repository (?:ends up|is still) on the "(.+?)" branch$/) do |branch_name|
   expect(current_branch_name).to eql branch_name
 end
 
