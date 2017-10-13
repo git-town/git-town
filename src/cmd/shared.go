@@ -3,6 +3,10 @@ package cmd
 import (
 	"errors"
 	"fmt"
+
+	"github.com/Originate/git-town/src/prompt"
+	"github.com/Originate/git-town/src/script"
+	"github.com/Originate/git-town/src/util"
 )
 
 // These variables represent command-line flags
@@ -20,12 +24,20 @@ var continueFlagDescription = "Continue a previous command that resulted in a co
 var undoFlagDescription = "Undo a previous command"
 var dryRunFlagDescription = "Output the commands that would be run without them"
 
-func validateArgsCount(args []string, count int) error {
-	err := validateMinArgs(args, count)
-	if err != nil {
-		return err
+func conditionallyActivateDryRun() error {
+	if dryRunFlag {
+		script.ActivateDryRun()
 	}
-	return validateMaxArgs(args, count)
+	return nil
+}
+
+func validateArgsCountFunc(args []string, count int) func() error {
+	return func() error {
+		return util.FirstError(
+			validateMinArgsFunc(args, count),
+			validateMaxArgsFunc(args, count),
+		)
+	}
 }
 
 func validateBooleanArgument(arg string) error {
@@ -35,6 +47,12 @@ func validateBooleanArgument(arg string) error {
 	return nil
 }
 
+func validateBooleanArgumentFunc(arg string) func() error {
+	return func() error {
+		return validateBooleanArgument(arg)
+	}
+}
+
 func validateMinArgs(args []string, min int) error {
 	if len(args) < min {
 		return errors.New("Too few arguments")
@@ -42,9 +60,26 @@ func validateMinArgs(args []string, min int) error {
 	return nil
 }
 
+func validateMinArgsFunc(args []string, min int) func() error {
+	return func() error {
+		return validateMinArgs(args, min)
+	}
+}
+
 func validateMaxArgs(args []string, max int) error {
 	if len(args) > max {
 		return errors.New("Too many arguments")
 	}
+	return nil
+}
+
+func validateMaxArgsFunc(args []string, max int) func() error {
+	return func() error {
+		return validateMaxArgs(args, max)
+	}
+}
+
+func validateIsConfigured() error {
+	prompt.EnsureIsConfigured()
 	return nil
 }

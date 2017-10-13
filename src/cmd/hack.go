@@ -4,9 +4,9 @@ import (
 	"errors"
 
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
+	"github.com/Originate/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -48,16 +48,11 @@ $ git town hack-push-flag false`,
 		if len(args) == 0 && !abortFlag && !continueFlag {
 			return errors.New("no branch name provided")
 		}
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		err = git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		prompt.EnsureIsConfigured()
-		return nil
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+			validateIsConfigured,
+		)
 	},
 }
 

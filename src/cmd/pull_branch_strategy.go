@@ -5,6 +5,7 @@ import (
 
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -27,11 +28,10 @@ for the main branch and perennial branches.`,
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
 			return fmt.Errorf("Invalid value: '%s'", args[0])
 		}
-		err := validateMaxArgs(args, 1)
-		if err != nil {
-			return err
-		}
-		return git.ValidateIsRepository()
+		return util.FirstError(
+			validateMaxArgsFunc(args, 1),
+			git.ValidateIsRepository,
+		)
 	},
 }
 
