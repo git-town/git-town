@@ -16,7 +16,7 @@ Feature: Initial configuration
       | production |
       | dev        |
       |            |
-    Then my repo is configured with the main branch as "main"
+    Then Git Town's main branch is now configured as "main"
     And my repo is configured with perennial branches as "production" and "dev"
 
 
@@ -26,7 +26,7 @@ Feature: Initial configuration
       | 1 |
       | 3 |
       |   |
-    Then my repo is configured with the main branch as "main"
+    Then Git Town's main branch is now configured as "main"
     And my repo is configured with perennial branches as "production" and "dev"
 
 
@@ -36,7 +36,7 @@ Feature: Initial configuration
       | main |
       |      |
     Then Git Town prints "A main development branch is required to enable the features provided by Git Town"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -46,7 +46,7 @@ Feature: Initial configuration
       | main |
       |      |
     Then Git Town prints "Invalid branch number"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -56,7 +56,7 @@ Feature: Initial configuration
       | main         |
       |              |
     Then Git Town prints "Branch 'non-existent' doesn't exist"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -67,7 +67,7 @@ Feature: Initial configuration
       | dev  |
       |      |
     Then Git Town prints "'main' is already set as the main branch"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with perennial branches as "dev"
 
 
@@ -78,7 +78,7 @@ Feature: Initial configuration
       | 3    |
       |      |
     Then Git Town prints "Invalid branch number"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with perennial branches as "production"
 
 
@@ -89,5 +89,5 @@ Feature: Initial configuration
       | dev          |
       |              |
     Then Git Town prints "Branch 'non-existent' doesn't exist"
-    And my repo is configured with the main branch as "main"
+    And Git Town's main branch is now configured as "main"
     And my repo is configured with perennial branches as "dev"

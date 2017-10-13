@@ -59,7 +59,7 @@ Then(/^my repo is configured with no perennial branches$/) do
 end
 
 
-Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_name|
+Then(/^Git Town's main branch is now configured as "([^"]*)"$/) do |branch_name|
   expect(main_branch_configuration).to eql branch_name
 end
 
