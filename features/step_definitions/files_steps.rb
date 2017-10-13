@@ -23,7 +23,7 @@ end
 
 
 
-Then(/^my workspace(?: still)? has (?:my|the) uncommitted file(?: again)?$/) do
+Then(/^my workspace(?: still)? (?:has|contains) (?:my|the) uncommitted file(?: again)?$/) do
   verify_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
 end
 
