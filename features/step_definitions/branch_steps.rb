@@ -33,7 +33,7 @@ Given(/^my repository has( local)?( feature)?( perennial)? branches named "(.+?)
 end
 
 
-Given(/^my repository has a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
+Given(/^(?:my repository|it) has a(?: feature| hotfix)? branch named "([^"]+)" as a child of "([^"]+)"$/) do |branch_name, parent_name|
   create_branch branch_name, remote: true, start_point: parent_name
   set_parent_branch branch: branch_name, parent: parent_name
   store_branch_hierarchy_metadata

@@ -24,7 +24,7 @@ Feature: listing the configuration
     Given Git Town's main branch is configured as "main"
     And its perennial branches are configured as "qa" and "staging"
     And my repository has feature branches named "parent-feature" and "stand-alone-feature"
-    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
+    And it has a feature branch named "child-feature" as a child of "parent-feature"
     When I run `git-town config`
     Then Git Town prints
       """

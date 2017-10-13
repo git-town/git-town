@@ -8,7 +8,7 @@ Feature: git town-kill: killing the current feature branch with child branches
   Background:
     Given my repository has a feature branch named "feature-1"
     And my repository has a feature branch named "feature-2" as a child of "feature-1"
-    And my repository has a feature branch named "feature-3" as a child of "feature-2"
+    And it has a feature branch named "feature-3" as a child of "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          |
       | feature-1 | local and remote | feature 1 commit |
