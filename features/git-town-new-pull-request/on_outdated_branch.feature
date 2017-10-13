@@ -45,7 +45,7 @@ Feature: Syncing before creating the pull request
     And I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "child-feature" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH         | LOCATION         | MESSAGE                                                                  | FILE NAME          |
       | main           | local and remote | remote main commit                                                       | remote_main_file   |
       |                |                  | local main commit                                                        | local_main_file    |

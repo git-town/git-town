@@ -32,6 +32,6 @@ Feature: git town-ship: shipping hotfixes
       |            | git branch -D hotfix              |
     And I end up on the "production" branch
     And there are no more feature branches
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE     | FILE NAME   |
       | production | local and remote | hotfix done | hotfix_file |

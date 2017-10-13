@@ -37,6 +37,6 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
     And I end up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |

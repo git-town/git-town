@@ -31,7 +31,7 @@ Feature: Appending a branch to a feature branch
       | new-child        | git stash pop                               |
     And I end up on the "new-child" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing_feature_commit |
       | new-child        | local            | existing_feature_commit |

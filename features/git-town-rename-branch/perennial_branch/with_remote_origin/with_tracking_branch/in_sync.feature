@@ -35,7 +35,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     And I end up on the "renamed-production" branch
     And my repo is configured with perennial branches as "qa" and "renamed-production"
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
       | qa                 | local and remote | qa commit         |
@@ -55,7 +55,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     And I end up on the "production" branch
     And my repo is configured with perennial branches as "qa" and "production"
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
       | production | local and remote | production commit |

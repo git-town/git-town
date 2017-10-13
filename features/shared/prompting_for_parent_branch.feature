@@ -34,7 +34,7 @@ Feature: Prompt for parent branch when unknown
       | feature | local and remote | feature commit |
     And I am on the "feature" branch
     When I run `git-town sync` and press ENTER
-    Then I have the following commits
+    Then my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          |
       | main    | local and remote | main commit                      |
       | feature | local and remote | feature commit                   |
@@ -52,7 +52,7 @@ Feature: Prompt for parent branch when unknown
       | feature-2 | local and remote | feature-2 commit |
     And I am on the "main" branch
     When I run `git-town sync --all` and press ENTER twice
-    Then I have the following commits
+    Then my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            |
       | main      | local and remote | main commit                        |
       | feature-1 | local and remote | feature-1 commit                   |

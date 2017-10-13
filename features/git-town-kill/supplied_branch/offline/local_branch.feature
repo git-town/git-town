@@ -30,7 +30,7 @@ Feature: git town-kill: killing a local branch in offline mode
       | REPOSITORY | BRANCHES                             |
       | local      | main, other-feature                  |
       | remote     | main, current-feature, other-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                |
       | other-feature   | local and remote | other feature commit   |
       | current-feature | remote           | current feature commit |

@@ -62,7 +62,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git stash pop         |
     And I am still on the "main" branch
     And my workspace still has my uncommitted file
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
@@ -81,7 +81,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git stash pop   |
     And I am still on the "main" branch
     And my workspace still has my uncommitted file
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |

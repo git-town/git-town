@@ -76,7 +76,7 @@ Feature: Syncing before creating the pull request
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main commit                      | conflicting_file |
       | feature | local and remote | feature commit                   | conflicting_file |
@@ -95,7 +95,7 @@ Feature: Syncing before creating the pull request
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main commit                      | conflicting_file |
       | feature | local and remote | feature commit                   | conflicting_file |

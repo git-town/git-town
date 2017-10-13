@@ -27,7 +27,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
     And my repo is configured with perennial branches as "renamed-production"
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
       | child-feature      | local and remote | child feature commit | child_feature_file | child feature content |
       | renamed-production | local and remote | production commit    | production_file    | production content    |
@@ -47,7 +47,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
       | production         | git branch -D renamed-production                     |
     And I end up on the "production" branch
     And my repo is configured with perennial branches as "production"
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE              | FILE NAME          | FILE CONTENT          |
       | child-feature | local and remote | child feature commit | child_feature_file | child feature content |
       | production    | local and remote | production commit    | production_file    | production content    |

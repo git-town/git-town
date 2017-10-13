@@ -28,7 +28,7 @@ Feature: Prepending a branch to a feature branch
       | new-parent       | git stash pop              |
     And I end up on the "new-parent" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy

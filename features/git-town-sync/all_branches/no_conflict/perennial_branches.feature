@@ -33,7 +33,7 @@ Feature: git-town sync --all: syncs all perennial branches
     And I am still on the "main" branch
     And my workspace still has my uncommitted file
     And all branches are now synchronized
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME              |
       | main       | local and remote | main commit              | main_file              |
       | production | local and remote | production remote commit | production_remote_file |

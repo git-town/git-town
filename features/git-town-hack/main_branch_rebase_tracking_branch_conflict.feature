@@ -64,7 +64,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
     And my workspace still has my uncommitted file
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
@@ -86,7 +86,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
     And my workspace still has my uncommitted file
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |

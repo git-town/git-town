@@ -30,6 +30,6 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
     And I end up on the "other-feature" branch
     And my workspace still has my uncommitted file
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |

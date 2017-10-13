@@ -26,7 +26,7 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
       | new-feature      | git stash pop                    |
     And I end up on the "new-feature" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH           | LOCATION | MESSAGE                 |
       | main             | local    | main commit             |
       | existing-feature | local    | existing feature commit |

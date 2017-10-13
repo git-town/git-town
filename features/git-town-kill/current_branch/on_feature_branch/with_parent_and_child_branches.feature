@@ -34,7 +34,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE          |
       | feature-1 | local and remote | feature 1 commit |
       | feature-3 | local and remote | feature 3 commit |

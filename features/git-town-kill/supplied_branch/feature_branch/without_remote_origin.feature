@@ -28,7 +28,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
     And the existing branches are
       | REPOSITORY | BRANCHES              |
       | local      | main, current-feature |
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
       | main            | local    | main commit            | conflicting_file     |
       | current-feature | local    | current feature commit | current_feature_file |

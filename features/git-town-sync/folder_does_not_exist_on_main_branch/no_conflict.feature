@@ -40,7 +40,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | <none>          | cd <%= git_folder "new_folder" %>          |
     And I am still on the "current-feature" branch
     And my workspace still has my uncommitted file
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
       | main            | local and remote | main commit                              | main_file        |
       | current-feature | local and remote | folder commit                            | new_folder/file1 |

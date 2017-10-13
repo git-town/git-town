@@ -42,7 +42,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | main       | git stash pop      |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
       | main       | local and remote | main commit              | main_file        |
       | production | local            | production local commit  | conflicting_file |
@@ -62,7 +62,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
       | main       | local and remote | main commit              | main_file        |
       | production | local            | production local commit  | conflicting_file |
@@ -92,7 +92,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop         |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
       | main       | local and remote | main commit              | main_file        |
       | production | local and remote | production remote commit | conflicting_file |
@@ -113,7 +113,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
       | main       | local and remote | main commit              | main_file        |
       | production | local and remote | production remote commit | conflicting_file |

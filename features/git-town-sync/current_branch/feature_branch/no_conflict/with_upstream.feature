@@ -30,7 +30,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still has my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION                    | MESSAGE                          |
       | main    | local, remote, and upstream | upstream commit                  |
       | feature | local and remote            | local commit                     |

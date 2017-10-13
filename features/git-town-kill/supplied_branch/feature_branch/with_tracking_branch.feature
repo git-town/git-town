@@ -32,7 +32,7 @@ Feature: git town-kill: killing the given feature branch
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH       | LOCATION         | MESSAGE                              | FILE NAME        |
       | main         | local and remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local and remote | good commit                          | good_file        |

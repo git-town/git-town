@@ -26,7 +26,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
 

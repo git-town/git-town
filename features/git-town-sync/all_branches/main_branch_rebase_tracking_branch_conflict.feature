@@ -36,7 +36,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |        | git stash pop      |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | local    | main local commit  | conflicting_file |
       |         | remote   | main remote commit | conflicting_file |
@@ -67,7 +67,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git stash pop                      |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |
@@ -92,7 +92,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |         | git stash pop                      |
     And I end up on the "main" branch
     And I again have my uncommitted file
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |

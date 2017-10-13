@@ -28,7 +28,7 @@ Feature: git-town sync: syncing the main branch
     And I am still on the "main" branch
     And my workspace still has my uncommitted file
     And all branches are now synchronized
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | main   | local and remote | remote commit | remote_file |
       |        |                  | local commit  | local_file  |

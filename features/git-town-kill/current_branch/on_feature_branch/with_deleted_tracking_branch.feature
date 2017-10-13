@@ -31,7 +31,7 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE              |
       | other-feature | local and remote | other feature commit |
 
@@ -49,7 +49,7 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local            | current feature commit |
       | other-feature   | local and remote | other feature commit   |
