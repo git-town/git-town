@@ -7,7 +7,7 @@ Feature: git town-kill: killing a local branch in offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repository has feature branches named "current-feature" and "other-feature"
+    And my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current feature commit |

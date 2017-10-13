@@ -4,7 +4,7 @@ Feature: creating a new branch makes the current branch the new previous branch
 
 
   Scenario: hack
-    Given my repository has feature branches named "previous" and "current"
+    Given my repository has the feature branches "previous" and "current"
     And I am on the "current" branch with "previous" as the previous Git branch
     When I run `git-town hack new`
     Then I end up on the "new" branch

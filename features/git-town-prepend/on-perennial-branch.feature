@@ -6,7 +6,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
 
   Background:
-    Given my repository has perennial branches named "qa" and "production"
+    Given my repository has the perennial branches "qa" and "production"
     And I am on the "production" branch
     When I run `git-town prepend new-parent`
 

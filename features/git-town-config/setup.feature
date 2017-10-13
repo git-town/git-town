@@ -6,7 +6,7 @@ Feature: Initial configuration
 
 
   Background:
-    Given my repository has branches named "production" and "dev"
+    Given my repository has the branches "production" and "dev"
     And I haven't configured Git Town yet
 
 

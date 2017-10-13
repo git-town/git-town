@@ -5,7 +5,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has local feature branches named "current-feature" and "other-feature"
+    And my repository has the local feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION | MESSAGE                |
       | current-feature | local    | current feature commit |

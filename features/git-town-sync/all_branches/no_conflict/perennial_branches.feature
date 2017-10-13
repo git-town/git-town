@@ -1,7 +1,7 @@
 Feature: git-town sync --all: syncs all perennial branches
 
   Background:
-    Given my repository has perennial branches named "production" and "qa"
+    Given my repository has the perennial branches "production" and "qa"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |

@@ -4,7 +4,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
 
 
   Background:
-    Given my repository has feature branches named "feature" and "other-feature"
+    Given my repository has the feature branches "feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | main    | local and remote | main commit    | main_file    | main content    |

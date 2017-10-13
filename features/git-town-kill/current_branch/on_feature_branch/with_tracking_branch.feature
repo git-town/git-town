@@ -6,7 +6,7 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
 
 
   Background:
-    Given my repository has feature branches named "current-feature" and "other-feature"
+    Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current feature commit |

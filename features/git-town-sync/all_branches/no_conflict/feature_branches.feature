@@ -1,7 +1,7 @@
 Feature: git-town sync --all: syncs all feature branches
 
   Background:
-    Given my repository has feature branches named "feature-1" and "feature-2"
+    Given my repository has the feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME     |
       | main      | remote           | main commit      | main_file     |

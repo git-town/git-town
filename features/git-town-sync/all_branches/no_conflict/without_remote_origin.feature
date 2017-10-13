@@ -2,7 +2,7 @@ Feature: git-town sync --all: syncs all feature branches (without remote repo)
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has local feature branches named "feature-1" and "feature-2"
+    And my repository has the local feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION | MESSAGE          | FILE NAME     | FILE CONTENT      |
       | main      | local    | main commit      | main_file     | main content      |

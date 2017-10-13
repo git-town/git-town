@@ -6,7 +6,7 @@ Feature: add a branch to the perennial branches configuration
 
 
   Background:
-    Given my repository has branches named "staging" and "qa"
+    Given my repository has the branches "staging" and "qa"
     And Git Town's perennial branches are configured as "qa"
 
 

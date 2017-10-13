@@ -4,7 +4,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Background:
-    Given my repository has feature branches named "current-feature" and "other-feature"
+    Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main            | local and remote | conflicting main commit    | conflicting_file | main content    |
