@@ -20,7 +20,7 @@ Given(/^my perennial branches are not configured$/) do
 end
 
 
-Given(/^my repository has the "([^"]*)" configuration set to "([^"]*)"$/) do |configuration, value|
+Given(/^the "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, value|
   set_configuration configuration, value
 end
 

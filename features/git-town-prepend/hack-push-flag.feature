@@ -4,7 +4,7 @@ Feature: push branch to remote upon creation
 
 
   Background:
-    Given my repository has the "hack-push-flag" configuration set to "true"
+    Given the "hack-push-flag" configuration is set to "true"
     And my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
