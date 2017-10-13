@@ -23,12 +23,12 @@ end
 
 
 
-Then(/^my workspace (?:still|again) has my uncommitted file$/) do
+Then(/^my workspace(?: still)? has (?:my|the) uncommitted file(?: again)?$/) do
   verify_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
 end
 
 
-Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
+Then(/^(?:now my repository|my repository still) has the following committed files$/) do |files_data|
   files_data.diff! files_in_branches
 end
 

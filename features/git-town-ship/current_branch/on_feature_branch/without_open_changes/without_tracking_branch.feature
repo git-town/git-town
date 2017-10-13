@@ -4,7 +4,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
 
 
   Background:
-    Given I have a local feature branch named "feature"
+    Given my repository has a local feature branch named "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |

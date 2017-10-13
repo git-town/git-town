@@ -6,7 +6,7 @@ Feature: git-new-pull-request: multi-platform support
     And I have "<TOOL>" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
-    Then Git Town prints a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
     Examples:
       | TOOL          |
