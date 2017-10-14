@@ -10,6 +10,7 @@ import (
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/runner"
 	"github.com/Originate/git-town/src/util"
 	"github.com/fatih/color"
 )
@@ -52,7 +53,7 @@ func askForAuthor(authors []branchAuthor) string {
 }
 
 func getBranchAuthors(branchName string) (result []branchAuthor) {
-	output := util.GetCommandOutput("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName)
+	output := runner.New("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName).Output()
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")

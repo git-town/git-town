@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Originate/git-town/src/exit"
+	"github.com/Originate/git-town/src/runner"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -19,7 +20,7 @@ func EnsureVersionRequirementSatisfied() {
 func isVersionRequirementSatisfied() bool {
 	versionRegexp, err := regexp.Compile(`git version (\d+).(\d+).(\d+)`)
 	exit.OnWrap(err, "Error compiling version regular expression")
-	matches := versionRegexp.FindStringSubmatch(util.GetCommandOutput("git", "version"))
+	matches := versionRegexp.FindStringSubmatch(runner.New("git", "version").Output())
 	if matches == nil {
 		log.Fatal("'git version' returned unexpected output. Please open an issue and supply the output of running 'git version'.")
 	}
