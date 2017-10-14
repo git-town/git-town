@@ -3,7 +3,7 @@ package browsers
 import (
 	"runtime"
 
-	"github.com/Originate/git-town/src/runner"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -17,10 +17,10 @@ func GetOpenBrowserCommand() string {
 		//       So we are using "start" here.
 		return "start"
 	}
-	for _, command := range openBrowserCommands {
-		runner := runner.New("which", command)
-		if runner.Err() == nil && runner.Output() != "" {
-			return command
+	for _, browserCommand := range openBrowserCommands {
+		command := command.New("which", browserCommand)
+		if command.Err() == nil && command.Output() != "" {
+			return browserCommand
 		}
 	}
 	util.ExitWithErrorMessage(missingOpenBrowserCommandMessages...)

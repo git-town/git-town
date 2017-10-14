@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/git-town/src/runner"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -23,23 +23,23 @@ func EnsureDoesNotHaveOpenChanges(message string) {
 // GetRootDirectory returns the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func GetRootDirectory() string {
-	return runner.New("git", "rev-parse", "--show-toplevel").Output()
+	return command.New("git", "rev-parse", "--show-toplevel").Output()
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
 func HasConflicts() bool {
-	return runner.New("git", "status").OutputContainsText("Unmerged paths")
+	return command.New("git", "status").OutputContainsText("Unmerged paths")
 }
 
 // HasOpenChanges returns whether the local repository contains uncommitted changes.
 func HasOpenChanges() bool {
-	return runner.New("git", "status", "--porcelain").Output() != ""
+	return command.New("git", "status", "--porcelain").Output() != ""
 }
 
 // HasShippableChanges returns whether the supplied branch has an changes
 // not currently on the main branchName
 func HasShippableChanges(branchName string) bool {
-	return runner.New("git", "diff", GetMainBranch()+".."+branchName).Output() != ""
+	return command.New("git", "diff", GetMainBranch()+".."+branchName).Output() != ""
 }
 
 // IsMergeInProgress returns whether the local repository is in the middle of
@@ -52,5 +52,5 @@ func IsMergeInProgress() bool {
 // IsRebaseInProgress returns whether the local repository is in the middle of
 // an unfinished rebase process.
 func IsRebaseInProgress() bool {
-	return runner.New("git", "status").OutputContainsText("rebase in progress")
+	return command.New("git", "status").OutputContainsText("rebase in progress")
 }

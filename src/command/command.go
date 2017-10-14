@@ -1,4 +1,4 @@
-package runner
+package command
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-// Runner runs commands on the command line
-type Runner struct {
+// Command runs commands on the command line
+type Command struct {
 	Name   string
 	Args   []string
 	ran    bool
@@ -18,29 +18,15 @@ type Runner struct {
 	output string
 }
 
-// New creates a new Runner instance
-func New(command ...string) *Runner {
-	return &Runner{Name: command[0], Args: command[1:]}
+// New creates a new Command instance
+func New(command ...string) *Command {
+	return &Command{Name: command[0], Args: command[1:]}
 }
 
-// WithArg appends the given command-line switch to this runner's command
-func (r *Runner) WithArg(arg string) *Runner {
-	r.Args = append(r.Args, arg)
-	return r
-}
-
-// WithArgs appends the given command-line switch to this runner's command
-func (r *Runner) WithArgs(args ...string) *Runner {
-	for _, arg := range args {
-		r.WithArg(arg)
-	}
-	return r
-}
-
-// Run runs this runner.
+// Run runs this command.
 // Doesn't run again if it ran already.
 // Stores the outcome in fields of the instance.
-func (r *Runner) Run() {
+func (r *Command) Run() {
 	if r.ran {
 		return
 	}
@@ -52,38 +38,38 @@ func (r *Runner) Run() {
 	r.ran = true
 }
 
-// RunOrExit runs this runner.
+// RunOrExit runs this command.
 // Doesn't run again if it ran already.
 // Exits the application in case of errors
-func (r *Runner) RunOrExit() {
+func (r *Command) RunOrExit() {
 	r.Run()
 	exit.OnWrapf(r.err, "Command: %s\nOutput: %s", r.String(), r.output)
 }
 
 // Output returns the output of this command.
 // Runs if it hasn't so far.
-func (r *Runner) Output() string {
+func (r *Command) Output() string {
 	r.Run()
 	return r.output
 }
 
 // OutputOrExit returns the output of this command.
 // Exits the application in case of errors
-func (r *Runner) OutputOrExit() string {
+func (r *Command) OutputOrExit() string {
 	r.RunOrExit()
 	return r.output
 }
 
-// Err returns the error that this runner encountered.
+// Err returns the error that this command encountered.
 // Runs the command if it hasn't so far.
-func (r *Runner) Err() error {
+func (r *Command) Err() error {
 	r.Run()
 	return r.err
 }
 
 // OutputContainsLine returns whether the output of this command
 // contains the given line
-func (r *Runner) OutputContainsLine(line string) bool {
+func (r *Command) OutputContainsLine(line string) bool {
 	r.Run()
 	lines := strings.Split(r.output, "\n")
 	return util.DoesStringArrayContain(lines, line)
@@ -91,11 +77,11 @@ func (r *Runner) OutputContainsLine(line string) bool {
 
 // OutputContainsText returns whether the output of this command
 // contains the given text
-func (r *Runner) OutputContainsText(text string) bool {
+func (r *Command) OutputContainsText(text string) bool {
 	r.Run()
 	return strings.Contains(r.output, text)
 }
 
-func (r Runner) String() string {
+func (r Command) String() string {
 	return fmt.Sprintf("%s %s", r.Name, strings.Join(r.Args, " "))
 }

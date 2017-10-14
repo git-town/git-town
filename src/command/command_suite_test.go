@@ -1,4 +1,4 @@
-package runner_test
+package command_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestRunner(t *testing.T) {
+func TestCommand(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Runner Suite")
+	RunSpecs(t, "Command Suite")
 }

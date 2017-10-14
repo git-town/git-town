@@ -3,7 +3,7 @@ package git
 import (
 	"errors"
 
-	"github.com/Originate/git-town/src/runner"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -30,5 +30,5 @@ func ValidateIsRepository() error {
 
 // IsRepository returns whether or not the current directory is in a repository
 func IsRepository() bool {
-	return runner.New("git", "rev-parse").Err() == nil
+	return command.New("git", "rev-parse").Err() == nil
 }
