@@ -11,8 +11,8 @@ import (
 
 // Command runs commands on the command line
 type Command struct {
-	Name   string
-	Args   []string
+	name   string
+	args   []string
 	ran    bool
 	err    error
 	output string
@@ -20,7 +20,7 @@ type Command struct {
 
 // New creates a new Command instance
 func New(command ...string) *Command {
-	return &Command{Name: command[0], Args: command[1:]}
+	return &Command{name: command[0], args: command[1:]}
 }
 
 // Run runs this command.
@@ -31,7 +31,7 @@ func (r *Command) Run() {
 		return
 	}
 
-	subProcess := exec.Command(r.Name, r.Args...) // #nosec
+	subProcess := exec.Command(r.name, r.args...) // #nosec
 	output, err := subProcess.CombinedOutput()
 	r.output = strings.TrimSpace(string(output))
 	r.err = err
@@ -83,5 +83,5 @@ func (r *Command) OutputContainsText(text string) bool {
 }
 
 func (r Command) String() string {
-	return fmt.Sprintf("%s %s", r.Name, strings.Join(r.Args, " "))
+	return fmt.Sprintf("%s %s", r.name, strings.Join(r.args, " "))
 }
