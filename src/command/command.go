@@ -5,7 +5,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -38,25 +37,10 @@ func (r *Command) Run() {
 	r.ran = true
 }
 
-// RunOrExit runs this command.
-// Doesn't run again if it ran already.
-// Exits the application in case of errors
-func (r *Command) RunOrExit() {
-	r.Run()
-	exit.OnWrapf(r.err, "Command: %s\nOutput: %s", r.String(), r.output)
-}
-
 // Output returns the output of this command.
 // Runs if it hasn't so far.
 func (r *Command) Output() string {
 	r.Run()
-	return r.output
-}
-
-// OutputOrExit returns the output of this command.
-// Exits the application in case of errors
-func (r *Command) OutputOrExit() string {
-	r.RunOrExit()
 	return r.output
 }
 
