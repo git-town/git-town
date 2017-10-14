@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 5.0.0 (2017-08-16)
+
+#### BREAKING CHANGES
+* `git new-pull-request / repo`: support for ssh identities changed
+  * Previously: ssh identity needed to include "github", "gitlab" or "bitbucket"
+  * Now: Run `git config git-town.code-hosting-origin-hostname <hostname>` where hostname matches what is in your ssh config file
+
+#### New Features
+* `git new-pull-request / repo`: support for self hosted versions
+  * Run `git config git-town.code-hosting-driver <driver>` where driver is "bitbucket", "github", or "gitlab"
+* `git sync`: add `--dry-run` flag to view the commands that would be run without running them
+* `git ship`: when merging via the GitHub API, update the default commit message to include the PR title and number
+
 ## 4.2.1 (2017-08-16)
 
 #### Bug Fixes
