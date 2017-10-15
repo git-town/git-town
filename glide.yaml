@@ -17,3 +17,4 @@ import:
   - context
 - package: github.com/pkg/errors
   version: v0.8.0
+- package: github.com/Originate/exit
