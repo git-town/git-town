@@ -1,8 +1,8 @@
 package steps
 
 import (
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/drivers"
-	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 )

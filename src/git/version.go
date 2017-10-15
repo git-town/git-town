@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Originate/git-town/src/exit"
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
