@@ -36,7 +36,7 @@ func askForBranch(config branchPromptConfig) string {
 
 func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 	numericRegex, err := regexp.Compile("^[0-9]+$")
-	exit.OnWrap(err, "Error compiling numeric regular expression")
+	exit.IfWrap(err, "Error compiling numeric regular expression")
 
 	if numericRegex.MatchString(userInput) {
 		return parseBranchNumber(config.branchNames, userInput)
@@ -53,7 +53,7 @@ func parseBranch(config branchPromptConfig, userInput string) (string, error) {
 
 func parseBranchNumber(branchNames []string, userInput string) (string, error) {
 	index, err := strconv.Atoi(userInput)
-	exit.OnWrap(err, "Error parsing string to integer")
+	exit.IfWrap(err, "Error parsing string to integer")
 	if index >= 1 && index <= len(branchNames) {
 		return branchNames[index-1], nil
 	}

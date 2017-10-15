@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/dryrun"
-	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -184,7 +184,7 @@ func ShouldBranchBePushed(branchName string) bool {
 func getCurrentBranchNameDuringRebase() string {
 	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
 	rawContent, err := ioutil.ReadFile(filename)
-	exit.On(err)
+	exit.If(err)
 	content := strings.TrimSpace(string(rawContent))
 	return strings.Replace(content, "refs/heads/", "", -1)
 }
