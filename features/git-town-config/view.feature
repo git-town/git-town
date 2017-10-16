@@ -6,8 +6,8 @@ Feature: listing the configuration
 
 
   Scenario: everything is configured
-    Given Git Town's main branch is configured as "main"
-    And its perennial branches are configured as "qa" and "staging"
+    Given the main branch is configured as "main"
+    And the perennial branches are configured as "qa" and "staging"
     When I run `git-town config`
     Then Git Town prints
       """
@@ -21,8 +21,8 @@ Feature: listing the configuration
 
 
   Scenario: everything is configured and there are nested branches
-    Given Git Town's main branch is configured as "main"
-    And its perennial branches are configured as "qa" and "staging"
+    Given the main branch is configured as "main"
+    And the perennial branches are configured as "qa" and "staging"
     And my repository has the feature branches "parent-feature" and "stand-alone-feature"
     And it has a feature branch named "child-feature" as a child of "parent-feature"
     When I run `git-town config`
@@ -44,7 +44,7 @@ Feature: listing the configuration
 
 
   Scenario: the main branch is configured but the perennial branches are not
-    Given Git Town's main branch is configured as "main"
+    Given the main branch is configured as "main"
     And my perennial branches are not configured
     When I run `git-town config`
     Then Git Town prints
@@ -59,7 +59,7 @@ Feature: listing the configuration
 
   Scenario: the main branch is not configured but the perennial branches are
     Given I don't have a main branch name configured
-    And Git Town's perennial branches are configured as "qa" and "staging"
+    And the perennial branches are configured as "qa" and "staging"
     When I run `git-town config`
     Then Git Town prints
       """

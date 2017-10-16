@@ -12,6 +12,6 @@ Feature: display the main branch configuration
 
 
   Scenario: main branch is configured
-    Given Git Town's main branch is configured as "main"
+    Given the main branch is configured as "main"
     When I run `git-town main-branch`
     Then Git Town prints "main"

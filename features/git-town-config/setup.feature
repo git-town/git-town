@@ -16,8 +16,8 @@ Feature: Initial configuration
       | production |
       | dev        |
       |            |
-    Then Git Town's main branch is now configured as "main"
-    And its perennial branches are now configured as "production" and "dev"
+    Then the main branch is now configured as "main"
+    And the perennial branches are now configured as "production" and "dev"
 
 
   Scenario: succeeds on valid main branch and perennial branch numbers
@@ -26,8 +26,8 @@ Feature: Initial configuration
       | 1 |
       | 3 |
       |   |
-    Then Git Town's main branch is now configured as "main"
-    And its perennial branches are now configured as "production" and "dev"
+    Then the main branch is now configured as "main"
+    And the perennial branches are now configured as "production" and "dev"
 
 
   Scenario: shows error and re-prompts on empty main branch
@@ -36,7 +36,7 @@ Feature: Initial configuration
       | main |
       |      |
     Then Git Town prints "A main development branch is required to enable the features provided by Git Town"
-    And Git Town's main branch is now configured as "main"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -46,7 +46,7 @@ Feature: Initial configuration
       | main |
       |      |
     Then Git Town prints "Invalid branch number"
-    And Git Town's main branch is now configured as "main"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -56,7 +56,7 @@ Feature: Initial configuration
       | main         |
       |              |
     Then Git Town prints "Branch 'non-existent' doesn't exist"
-    And Git Town's main branch is now configured as "main"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -67,8 +67,8 @@ Feature: Initial configuration
       | dev  |
       |      |
     Then Git Town prints "'main' is already set as the main branch"
-    And Git Town's main branch is now configured as "main"
-    And its perennial branches are now configured as "dev"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "dev"
 
 
   Scenario: shows error and re-prompts on invalid perennial branch number
@@ -78,8 +78,8 @@ Feature: Initial configuration
       | 3    |
       |      |
     Then Git Town prints "Invalid branch number"
-    And Git Town's main branch is now configured as "main"
-    And its perennial branches are now configured as "production"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "production"
 
 
   Scenario: shows error and re-prompts on non-existent perennial branch
@@ -89,5 +89,5 @@ Feature: Initial configuration
       | dev          |
       |              |
     Then Git Town prints "Branch 'non-existent' doesn't exist"
-    And Git Town's main branch is now configured as "main"
-    And its perennial branches are now configured as "dev"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "dev"

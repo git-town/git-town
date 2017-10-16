@@ -9,15 +9,15 @@ Feature: set the main branch configuration
     Given I don't have a main branch name configured
     When I run `git-town main-branch main`
     Then Git Town prints no output
-    And Git Town's main branch is now configured as "main"
+    And the main branch is now configured as "main"
 
 
   Scenario: main branch is configured
     Given my repository has the branches "main-old" and "main-new"
-    And Git Town's main branch is configured as "main-old"
+    And the main branch is configured as "main-old"
     When I run `git-town main-branch main-new`
     Then Git Town prints no output
-    And Git Town's main branch is now configured as "main-new"
+    And the main branch is now configured as "main-new"
 
 
   Scenario: invalid branch name

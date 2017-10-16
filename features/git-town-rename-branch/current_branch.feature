@@ -27,7 +27,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                 | git push origin :feature           |
       |                 | git branch -D feature              |
     And I end up on the "renamed-feature" branch
-    And Git Town's perennial branches are now configured as "production"
+    And the perennial branches are now configured as "production"
     And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE     |
       | main            | local and remote | main commit |
@@ -63,7 +63,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
-    And Git Town's perennial branches are now configured as "renamed-production"
+    And the perennial branches are now configured as "renamed-production"
     And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE     |
       | main               | local and remote | main commit |
@@ -83,7 +83,7 @@ Feature: git town-rename-branch: rename current branch implicitly
         |                 | git checkout feature                        |
         | feature         | git branch -D renamed-feature               |
     And I end up on the "feature" branch
-    And Git Town's perennial branches are now configured as "production"
+    And the perennial branches are now configured as "production"
     And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE     |
       | main       | local and remote | main commit |
