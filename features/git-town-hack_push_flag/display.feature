@@ -7,7 +7,7 @@ Feature: passing an invalid option to the hack push flag configuration
 
   Scenario: default setting
     When I run `git-town hack-push-flag`
-    Then Git Town prints
+    Then it prints
       """
       false
       """
@@ -16,7 +16,7 @@ Feature: passing an invalid option to the hack push flag configuration
   Scenario: set to "true"
     Given the "hack-push-flag" configuration is set to "true"
     When I run `git-town hack-push-flag`
-    Then Git Town prints
+    Then it prints
       """
       true
       """
@@ -25,7 +25,7 @@ Feature: passing an invalid option to the hack push flag configuration
   Scenario: set to "false"
     Given the "hack-push-flag" configuration is set to "false"
     When I run `git-town hack-push-flag`
-    Then Git Town prints
+    Then it prints
       """
       false
       """

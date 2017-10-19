@@ -35,7 +35,7 @@ Feature: Initial configuration
       |      |
       | main |
       |      |
-    Then Git Town prints "A main development branch is required to enable the features provided by Git Town"
+    Then it prints "A main development branch is required to enable the features provided by Git Town"
     And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
@@ -45,7 +45,7 @@ Feature: Initial configuration
       | 4    |
       | main |
       |      |
-    Then Git Town prints "Invalid branch number"
+    Then it prints "Invalid branch number"
     And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
@@ -55,7 +55,7 @@ Feature: Initial configuration
       | non-existent |
       | main         |
       |              |
-    Then Git Town prints "Branch 'non-existent' doesn't exist"
+    Then it prints "Branch 'non-existent' doesn't exist"
     And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
@@ -66,7 +66,7 @@ Feature: Initial configuration
       | main |
       | dev  |
       |      |
-    Then Git Town prints "'main' is already set as the main branch"
+    Then it prints "'main' is already set as the main branch"
     And the main branch is now configured as "main"
     And the perennial branches are now configured as "dev"
 
@@ -77,7 +77,7 @@ Feature: Initial configuration
       | 4    |
       | 3    |
       |      |
-    Then Git Town prints "Invalid branch number"
+    Then it prints "Invalid branch number"
     And the main branch is now configured as "main"
     And the perennial branches are now configured as "production"
 
@@ -88,6 +88,6 @@ Feature: Initial configuration
       | non-existent |
       | dev          |
       |              |
-    Then Git Town prints "Branch 'non-existent' doesn't exist"
+    Then it prints "Branch 'non-existent' doesn't exist"
     And the main branch is now configured as "main"
     And the perennial branches are now configured as "dev"

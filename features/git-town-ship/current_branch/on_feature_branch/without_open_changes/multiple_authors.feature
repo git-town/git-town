@@ -17,7 +17,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario Outline: prompt for squashed commit author
     When I run `git-town ship -m 'feature done'` and <ACTION>
-    Then Git Town prints
+    Then it prints
       """
       Multiple people authored the 'feature' branch.
       Please choose an author for the squash commit.
@@ -41,7 +41,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario Outline: enter invalid number then valid number
     When I run `git-town ship -m 'feature done'` and enter "<NUMBER>" and "1"
-    Then Git Town prints "Invalid author number"
+    Then it prints "Invalid author number"
     And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR                            |
       | main   | local and remote | feature done | developer <developer@example.com> |

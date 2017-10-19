@@ -13,7 +13,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: choosing the default branch name
     When I run `git-town sync` and press ENTER
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -21,7 +21,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering the number of the master branch
     When I run `git-town sync` and enter "1"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -30,7 +30,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: entering the number of another branch
     When I run `git-town sync` and enter "2" and "1"
     Then it prints "Please specify the parent branch of feature-2"
-    And Git Town prints "Please specify the parent branch of feature-1"
+    And it prints "Please specify the parent branch of feature-1"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -39,7 +39,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering a wrong number
     When I run `git-town sync` and enter "5" and "1"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it prints "Invalid branch number"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
@@ -48,7 +48,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering the name of the master branch
     When I run `git-town sync` and enter "main"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -56,7 +56,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering the name of another branch
     When I run `git-town sync` and enter "feature-1" and "main"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it prints "Please specify the parent branch of feature-1"
     Then Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
@@ -66,7 +66,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering a wrong name
     When I run `git-town sync` and enter "zonk" and "main"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it prints "Branch 'zonk' doesn't exist"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
@@ -75,7 +75,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: entering self
     When I run `git-town sync` and enter "feature-2" and "main"
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it prints "'feature-2' cannot be the parent of itself"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
@@ -87,7 +87,7 @@ Feature: Entering a parent branch name when prompted
       | feature-1 |
       | feature-2 |
       | main      |
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it prints "Nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
@@ -101,7 +101,7 @@ Feature: Entering a parent branch name when prompted
       | feature-1 | main   |
     When I run `git-town sync` and enter:
       | feature-1 |
-    Then Git Town prints "Please specify the parent branch of feature-2"
+    Then it prints "Please specify the parent branch of feature-2"
     And it does not print "Nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT    |

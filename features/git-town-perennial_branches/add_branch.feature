@@ -12,7 +12,7 @@ Feature: add a branch to the perennial branches configuration
 
   Scenario: adding an existing branch
     When I run `git-town perennial-branches --add staging`
-    Then Git Town prints no output
+    Then it prints no output
     And the perennial branches are now configured as "qa" and "staging"
 
 

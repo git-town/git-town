@@ -8,10 +8,10 @@ Feature: display the main branch configuration
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git-town main-branch`
-    Then Git Town prints "[none]"
+    Then it prints "[none]"
 
 
   Scenario: main branch is configured
     Given the main branch is configured as "main"
     When I run `git-town main-branch`
-    Then Git Town prints "main"
+    Then it prints "main"
