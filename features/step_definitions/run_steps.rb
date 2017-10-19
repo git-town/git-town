@@ -87,12 +87,12 @@ Then(/^Git Town runs the commands$/) do |expected_commands|
 end
 
 
-Then(/^(?:Git Town|it) prints no output$/) do
+Then(/^it prints no output$/) do
   expect(@last_run_result.out).to eql ''
 end
 
 
-Then(/^(?:Git Town|it) does not print "(.*)"$/) do |string|
+Then(/^it does not print "(.*)"$/) do |string|
   expect(unformatted_last_run_output).not_to include(string)
 end
 
