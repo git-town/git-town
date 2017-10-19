@@ -3,8 +3,8 @@ package cmd
 import (
 	"strings"
 
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/drivers"
-	"github.com/Originate/git-town/src/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -153,7 +153,7 @@ func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
 		return false, ""
 	}
 	canMerge, defaultCommitMessage, err := driver.CanMergePullRequest(branch, parentBranch)
-	exit.On(err)
+	exit.If(err)
 	return canMerge, defaultCommitMessage
 }
 

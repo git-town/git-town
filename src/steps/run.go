@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/git-town/src/exit"
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 
@@ -106,12 +106,12 @@ func exitWithMessages(command string, skipMessage string) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
 	_, err := messageFmt.Printf("To abort, run \"git-town %s --abort\".\n", command)
-	exit.On(err)
+	exit.If(err)
 	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".\n", command)
-	exit.On(err)
+	exit.If(err)
 	if skipMessage != "" {
 		_, err = messageFmt.Printf("To skip %s, run \"git-town %s --skip\".\n", skipMessage, command)
-		exit.On(err)
+		exit.If(err)
 	}
 	fmt.Println()
 	os.Exit(1)

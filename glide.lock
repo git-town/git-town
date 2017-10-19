@@ -1,5 +1,5 @@
-hash: 6d19ad19ddb3d53cc6dd2999df79ceced1824a2ede766f6e4a11abc34eda7f31
-updated: 2017-09-01T12:24:36.809561041-07:00
+hash: 698caa3d5a813949c34fa4943a476fe77ec711195c7024bf25454ba00ebabe71
+updated: 2017-10-15T14:39:56.18638922-07:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -23,6 +23,8 @@ imports:
 - name: github.com/mattn/go-isatty
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
   repo: https://github.com/mattn/go-isatty
+- name: github.com/Originate/exit
+  version: b631decd21354ac95f89b4a750c36aa4aee10d94
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
