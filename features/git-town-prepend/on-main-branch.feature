@@ -16,7 +16,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
   Scenario: result
     Given my workspace has an uncommitted file
     When I run `git-town prepend new-branch`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And it prints the error "The branch 'main' is not a feature branch. Only feature branches can have parent branches."

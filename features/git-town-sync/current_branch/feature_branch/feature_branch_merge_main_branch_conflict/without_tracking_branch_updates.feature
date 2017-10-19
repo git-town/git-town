@@ -12,7 +12,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |
@@ -36,7 +36,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
       |         | git checkout main    |
@@ -53,7 +53,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -63,7 +63,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
@@ -85,7 +85,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts resulting in no changes
     Given I resolve the conflict in "conflicting_file" with "feature content"
     When I run `git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git commit --no-edit |
       |         | git push             |
@@ -107,7 +107,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |
       |         | git stash pop |

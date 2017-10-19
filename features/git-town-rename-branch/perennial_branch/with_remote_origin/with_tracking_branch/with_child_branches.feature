@@ -17,7 +17,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune                        |
       |                    | git branch renamed-production production |
@@ -38,7 +38,7 @@ Feature: git town-rename-branch: renaming a feature branch with child branches
 
   Scenario: undo
     When I run `git-town rename-branch --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH             | COMMAND                                              |
       | renamed-production | git branch production <%= sha 'production commit' %> |
       |                    | git push -u origin production                        |

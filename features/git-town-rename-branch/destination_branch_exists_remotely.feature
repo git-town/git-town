@@ -16,7 +16,7 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
     And it prints the error "A branch named 'existing-feature' already exists"

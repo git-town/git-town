@@ -17,7 +17,7 @@ Feature: git append: offline mode
 
   Scenario: appending a branch in offline mode
     When I run `git-town append new-feature`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git add -A                                  |
       |                  | git stash                                   |
@@ -39,7 +39,7 @@ Feature: git append: offline mode
   Scenario: Undo
     Given I run `git-town append new-feature`
     When I run `git-town append --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-feature      | git add -A                    |
         |                  | git stash                     |

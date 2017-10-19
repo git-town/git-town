@@ -16,7 +16,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git merge --no-edit main     |
       |         | git checkout main            |
@@ -32,7 +32,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |
       |        | git revert <%= sha 'feature done' %>           |

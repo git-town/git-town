@@ -12,7 +12,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH     | COMMAND           |
       | production | git fetch --prune |
     And it prints the error "The branch 'production' is not a feature branch. Only feature branches can have parent branches."

@@ -19,7 +19,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |

@@ -22,7 +22,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND                       |
       | deleted-feature | git fetch --prune             |
       |                 | git checkout main             |
@@ -37,7 +37,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
   Scenario: undo
     When I run `git-town prune-branches --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND                                                        |
       | main   | git branch deleted-feature <%= sha 'deleted-feature commit' %> |
       |        | git checkout deleted-feature                                   |

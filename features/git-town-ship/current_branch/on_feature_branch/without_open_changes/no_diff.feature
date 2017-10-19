@@ -16,7 +16,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH        | COMMAND                                      |
       | empty-feature | git fetch --prune                            |
       |               | git checkout main                            |
@@ -33,7 +33,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
   Scenario: undo
     When I run `git-town ship --undo`
-		Then Git Town runs no commands
+		Then it runs no commands
     And it prints the error "Nothing to undo"
     And I am still on the "empty-feature" branch
     And my repository has the following commits

@@ -20,7 +20,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |

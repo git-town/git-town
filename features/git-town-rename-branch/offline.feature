@@ -17,7 +17,7 @@ Feature: git town-rename-branch: offline mode
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND                            |
       | feature         | git branch renamed-feature feature |
       |                 | git checkout renamed-feature       |
@@ -32,7 +32,7 @@ Feature: git town-rename-branch: offline mode
 
   Scenario: undo rename branch
     When I run `git-town rename-branch --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
         | BRANCH          | COMMAND                                     |
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |
         |                 | git checkout feature                        |

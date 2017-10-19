@@ -15,7 +15,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH      | COMMAND                           |
       | main        | git fetch --prune                 |
       | <none>      | cd <%= git_root_folder %>         |

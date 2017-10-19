@@ -16,7 +16,7 @@ Feature: git-town sync: syncing the main branch (without remote repo)
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND       |
       | main   | git add -A    |
       |        | git stash     |

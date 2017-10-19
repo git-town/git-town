@@ -71,12 +71,12 @@ Then(/^(?:Git Town|it) prints the error "(.+?)"$/) do |error_message|
 end
 
 
-Then(/^Git Town runs no commands$/) do
+Then(/^it runs no commands$/) do
   expect(commands_of_last_run).to be_empty
 end
 
 
-Then(/^Git Town runs the commands$/) do |expected_commands|
+Then(/^it runs the commands$/) do |expected_commands|
   # We need ERB here to fill in commit SHAs in Git commands
   expected_commands.map_column! 'COMMAND' do |command|
     ERB.new(command).result

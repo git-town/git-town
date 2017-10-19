@@ -17,7 +17,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-1 | git fetch --prune |
     And it prints the error "Shipping this branch would ship feature-1, feature-2 as well."

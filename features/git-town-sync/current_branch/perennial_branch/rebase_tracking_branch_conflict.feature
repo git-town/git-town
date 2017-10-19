@@ -17,7 +17,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND              |
       | qa     | git fetch --prune    |
       |        | git add -A           |
@@ -35,7 +35,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
       |        | git stash pop      |
@@ -47,7 +47,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
@@ -56,7 +56,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
       |        | git push              |
@@ -76,7 +76,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
       |        | git push --tags |

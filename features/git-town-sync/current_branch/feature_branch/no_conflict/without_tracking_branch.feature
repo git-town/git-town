@@ -16,7 +16,7 @@ Feature: git-town sync: syncing the current feature branch without a tracking br
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                    |
       | feature | git fetch --prune          |
       |         | git add -A                 |

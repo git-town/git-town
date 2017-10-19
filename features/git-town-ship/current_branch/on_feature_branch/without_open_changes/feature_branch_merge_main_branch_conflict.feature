@@ -16,7 +16,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |
@@ -36,7 +36,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
   Scenario: aborting
     When I run `git-town ship --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
       |         | git checkout main    |
@@ -52,7 +52,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town ship --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
       |         | git checkout main            |
@@ -72,7 +72,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git-town ship --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git checkout main            |
       | main    | git merge --squash feature   |

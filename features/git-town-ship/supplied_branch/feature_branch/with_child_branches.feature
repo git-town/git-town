@@ -15,7 +15,7 @@ Feature: git town-ship: shipping a parent branch
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune                         |
       |                | git checkout main                         |

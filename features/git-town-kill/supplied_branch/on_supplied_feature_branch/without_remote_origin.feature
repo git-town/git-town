@@ -16,7 +16,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                |
       | current-feature | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
@@ -34,7 +34,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
 
   Scenario: undoing the kill
     When I run `git-town kill --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND                                                        |
       | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
       |                 | git checkout current-feature                                   |

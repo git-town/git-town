@@ -13,7 +13,7 @@ Feature: git town-hack: errors when the branch exists locally
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And it prints the error "A branch named 'existing-feature' already exists"

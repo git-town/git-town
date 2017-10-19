@@ -20,7 +20,7 @@ Feature: git-town sync: offline mode
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git add -A                         |
       |         | git stash                          |

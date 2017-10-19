@@ -13,7 +13,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND                |
       | main   | git fetch --prune      |
       |        | git add -A             |
@@ -30,7 +30,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
       |        | git stash pop      |
@@ -45,7 +45,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
@@ -54,7 +54,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
       |         | git push                           |
@@ -80,7 +80,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     And I run `git rebase --continue; git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
       |         | git checkout feature               |

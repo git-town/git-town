@@ -11,7 +11,7 @@ Feature: git-sync: on the main branch with a upstream remote
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune        |
       |        | git add -A               |

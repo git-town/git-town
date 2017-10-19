@@ -18,7 +18,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: rename feature branch
     Given I am on the "feature" branch
     When I run `git-town rename-branch renamed-feature`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH          | COMMAND                            |
       | feature         | git fetch --prune                  |
       |                 | git branch renamed-feature feature |
@@ -38,7 +38,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: rename branch to itself
     Given I am on the "feature" branch
     When I run `git-town rename-branch feature`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Cannot rename branch to current name."
     And I end up on the "feature" branch
     And my repository is left with my original commits
@@ -47,14 +47,14 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: rename perennial branch
     Given I am on the "production" branch
     When I run `git-town rename-branch renamed-production`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: rename perennial branch (forced)
     Given I am on the "production" branch
     When I run `git-town rename-branch renamed-production --force`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune                        |
       |                    | git branch renamed-production production |
@@ -75,7 +75,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "feature" branch
     And I run `git-town rename-branch renamed-feature`
     When I run `git-town rename-branch --undo`
-    Then Git Town runs the commands
+    Then it runs the commands
         | BRANCH          | COMMAND                                     |
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |
         |                 | git push -u origin feature                  |

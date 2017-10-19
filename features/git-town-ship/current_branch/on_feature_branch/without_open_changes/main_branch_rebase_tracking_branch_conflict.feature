@@ -17,7 +17,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                |
       | feature | git fetch --prune      |
       |         | git checkout main      |
@@ -32,7 +32,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: aborting
     When I run `git-town ship --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
       |        | git checkout feature |
@@ -44,7 +44,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town ship --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
       |         | git push                           |
@@ -69,7 +69,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git-town ship --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
       |         | git checkout feature               |

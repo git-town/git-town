@@ -14,7 +14,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | main      | git fetch --prune                    |
       |           | git add -A                           |
@@ -35,7 +35,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: aborting
     When I run `git-town sync --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-1 | git merge --abort |
       |           | git checkout main |
@@ -52,7 +52,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: skipping
     When I run `git-town sync --skip`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git merge --abort                    |
       |           | git checkout feature-2               |
@@ -76,7 +76,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
@@ -86,7 +86,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     And I run `git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git commit --no-edit                 |
       |           | git merge --no-edit main             |
@@ -116,7 +116,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     And I run `git commit --no-edit; git-town sync --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git merge --no-edit main             |
       |           | git push                             |

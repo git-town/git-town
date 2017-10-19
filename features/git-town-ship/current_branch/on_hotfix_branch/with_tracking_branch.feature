@@ -16,7 +16,7 @@ Feature: git town-ship: shipping hotfixes
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH     | COMMAND                           |
       | hotfix     | git fetch --prune                 |
       |            | git checkout production           |

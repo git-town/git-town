@@ -19,7 +19,7 @@ Feature: git-town sync: syncing a nested feature branch (with known parent branc
     And I am on the "child-feature" branch
     And my workspace has an uncommitted file
     When I run `git-town sync`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH         | COMMAND                                   |
       | child-feature  | git fetch --prune                         |
       |                | git add -A                                |

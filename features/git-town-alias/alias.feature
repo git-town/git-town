@@ -2,7 +2,7 @@ Feature: git town: alias
 
   Scenario: add alias
     When I run `git-town alias true`
-    Then Git Town runs the commands
+    Then it runs the commands
       | COMMAND                                                            |
       | git config --global alias.append "town append"                     |
       | git config --global alias.hack "town hack"                         |
@@ -19,7 +19,7 @@ Feature: git town: alias
   Scenario: remove alias
     Given I run `git-town alias true`
     When I run `git-town alias false`
-    Then Git Town runs the commands
+    Then it runs the commands
       | COMMAND                                            |
       | git config --global --unset alias.append           |
       | git config --global --unset alias.hack             |
@@ -36,7 +36,7 @@ Feature: git town: alias
   Scenario: remove alias does not remove unrelated aliases
     Given I run `git config --global alias.hack checkout`
     When I run `git-town alias false`
-    Then Git Town runs no commands
+    Then it runs no commands
 
 
   Scenario: invalid value

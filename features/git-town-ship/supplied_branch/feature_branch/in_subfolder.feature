@@ -14,7 +14,7 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune                  |
       | <none>        | cd <%= git_root_folder %>          |

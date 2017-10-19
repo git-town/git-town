@@ -20,7 +20,7 @@ Feature: Syncing before creating the pull request
 
   @finishes-with-non-empty-stash
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git add -A                         |
@@ -42,7 +42,7 @@ Feature: Syncing before creating the pull request
 
   Scenario: aborting
     When I run `git-town new-pull-request --abort`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
       |         | git checkout main    |
@@ -57,7 +57,7 @@ Feature: Syncing before creating the pull request
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town new-pull-request --continue`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -67,7 +67,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town new-pull-request --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                                                             |
       | feature | git commit --no-edit                                                |
       |         | git push                                                            |
@@ -87,7 +87,7 @@ Feature: Syncing before creating the pull request
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
     When I run `git commit --no-edit; git-town new-pull-request --continue`
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                                                             |
       | feature | git push                                                            |
       |         | git stash pop                                                       |

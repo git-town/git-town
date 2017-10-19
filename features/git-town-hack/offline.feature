@@ -16,7 +16,7 @@ Feature: git town-hack: offline mode
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                      |
       | main    | git add -A                   |
       |         | git stash                    |

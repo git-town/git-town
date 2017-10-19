@@ -15,7 +15,7 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH        | COMMAND                                      |
       | other-feature | git fetch --prune                            |
       |               | git add -A                                   |

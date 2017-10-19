@@ -19,7 +19,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-3 | git fetch --prune |
     And it prints the error "Shipping this branch would ship feature-1, feature-2 as well."
@@ -31,7 +31,7 @@ Feature: git town-ship: shipping a child branch
 
   Scenario: undo
     When I run `git-town ship --undo`
-		Then Git Town runs no commands
+		Then it runs no commands
     And it prints the error "Nothing to undo"
     And I am still on the "feature-3" branch
     And my repository is left with my original commits

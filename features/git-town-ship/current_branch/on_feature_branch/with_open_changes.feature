@@ -13,7 +13,7 @@ Feature: git town-ship: errors if there are open changes
 
 
   Scenario: result
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "You have uncommitted changes. Did you mean to commit them before shipping?"
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
@@ -22,7 +22,7 @@ Feature: git town-ship: errors if there are open changes
 
   Scenario: undo
     When I run `git-town ship --undo`
-		Then Git Town runs no commands
+		Then it runs no commands
     And it prints the error "Nothing to undo"
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file

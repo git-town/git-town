@@ -15,7 +15,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune                  |
       |         | git checkout main                  |

@@ -15,7 +15,7 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
     And it prints the error "There is no branch named 'non-existing-feature'"

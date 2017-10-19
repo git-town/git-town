@@ -11,7 +11,7 @@ Feature: git town-ship: errors when trying to ship the main branch
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
     And it prints the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."

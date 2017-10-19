@@ -17,7 +17,7 @@ Feature: git town-hack: starting a new feature from a feature branch (with remot
 
 
   Scenario: result
-    Then Git Town runs the commands
+    Then it runs the commands
       | BRANCH           | COMMAND                          |
       | existing-feature | git fetch --prune                |
       |                  | git add -A                       |

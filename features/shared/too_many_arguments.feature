@@ -7,7 +7,7 @@ Feature: too many arguments
 
   Scenario: hack
     When I run `git-town hack arg1 arg2`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
@@ -28,7 +28,7 @@ Feature: too many arguments
 
   Scenario: kill
     When I run `git-town kill arg1 arg2`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
@@ -49,7 +49,7 @@ Feature: too many arguments
 
   Scenario: new-pull-request
     When I run `git-town new-pull-request arg1`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
@@ -70,7 +70,7 @@ Feature: too many arguments
 
   Scenario: prune-branches
     When I run `git-town prune-branches arg1`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
@@ -91,7 +91,7 @@ Feature: too many arguments
 
   Scenario: repo
     When I run `git-town repo arg1`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
@@ -102,7 +102,7 @@ Feature: too many arguments
 
   Scenario: sync
     When I run `git-town sync arg1`
-    Then Git Town runs no commands
+    Then it runs no commands
     And it prints the error "Too many arguments"
     And it prints the error:
       """
