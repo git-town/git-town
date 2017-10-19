@@ -3,12 +3,12 @@ package util
 import (
 	"strconv"
 
-	"github.com/Originate/git-town/src/exit"
+	"github.com/Originate/exit"
 )
 
 // StringToBool parses the given string into a bool
 func StringToBool(arg string) bool {
 	value, err := strconv.ParseBool(arg)
-	exit.On(err)
+	exit.If(err)
 	return value
 }

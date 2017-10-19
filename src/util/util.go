@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/exit"
 	"github.com/fatih/color"
 )
 
@@ -33,7 +33,7 @@ var inputReader = bufio.NewReader(os.Stdin)
 // GetUserInput reads input from the user and returns it.
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
-	exit.OnWrap(err, "Error getting user input")
+	exit.IfWrap(err, "Error getting user input")
 	return strings.TrimSpace(text)
 }
 
@@ -60,10 +60,10 @@ func PrintError(messages ...string) {
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
 	_, err := errHeaderFmt.Println("  Error")
-	exit.On(err)
+	exit.If(err)
 	for _, message := range messages {
 		_, err = errMessageFmt.Println("  " + message)
-		exit.On(err)
+		exit.If(err)
 	}
 	fmt.Println()
 }
@@ -74,7 +74,7 @@ func PrintError(messages ...string) {
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	_, err := labelFmt.Println(label + ":")
-	exit.On(err)
+	exit.If(err)
 	cfmt.Println(Indent(value, 1))
 	fmt.Println()
 }
