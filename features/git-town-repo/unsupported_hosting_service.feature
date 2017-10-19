@@ -5,7 +5,7 @@ Feature: git-repo when origin is unsupported
 
 
   Scenario: result
-    Then Git Town prints the error:
+    Then it prints the error:
       """
       Unsupported hosting service
 

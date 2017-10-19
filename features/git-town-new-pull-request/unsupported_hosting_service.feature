@@ -12,7 +12,7 @@ Feature: git-new-pull-request: when origin is unsupported
 
 
   Scenario: result
-    Then Git Town prints the error:
+    Then it prints the error:
       """
       Unsupported hosting service
 
