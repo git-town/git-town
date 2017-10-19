@@ -22,12 +22,12 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: with an existing Git autocompletion file
     Given I have an existing Git autocompletion file
     When I run `git-town install-fish-autocompletion`
-    Then Git Town prints the error "Git autocompletion for Fish shell already exists"
+    Then it prints the error "Git autocompletion for Fish shell already exists"
     And I still have my original Git autocompletion file
 
 
   Scenario: with existing Git autocompletion symlink
     Given I have an existing Git autocompletion symlink
     When I run `git-town install-fish-autocompletion`
-    Then Git Town prints the error "Git autocompletion for Fish shell already exists"
+    Then it prints the error "Git autocompletion for Fish shell already exists"
     And I still have my original Git autocompletion file

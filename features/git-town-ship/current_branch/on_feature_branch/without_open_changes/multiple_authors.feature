@@ -54,5 +54,5 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario: enter invalid custom author
     When I run `git-town ship -m 'feature done'` and enter "invalid"
-    Then Git Town prints the error "Aborted because commit exited with error"
+    Then it prints the error "Aborted because commit exited with error"
     And my repository is left with my original commits

@@ -22,4 +22,4 @@ Feature: set the main branch configuration
 
   Scenario: invalid branch name
     When I run `git-town main-branch non-existing`
-    Then Git Town prints the error "no branch named 'non-existing'"
+    Then it prints the error "no branch named 'non-existing'"

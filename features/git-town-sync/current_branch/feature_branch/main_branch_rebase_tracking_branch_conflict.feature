@@ -48,7 +48,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then Git Town prints the error "You must resolve the conflicts before continuing"
+    Then it prints the error "You must resolve the conflicts before continuing"
     And my repo still has a rebase in progress
     And my uncommitted file is stashed
 

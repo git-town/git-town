@@ -18,23 +18,23 @@ Feature: add a branch to the perennial branches configuration
 
   Scenario: adding a branch that is already a perennial branch
     When I run `git-town perennial-branches --add qa`
-    Then Git Town prints the error "'qa' is already a perennial branch"
+    Then it prints the error "'qa' is already a perennial branch"
 
 
   Scenario: adding a branch that is already set as the main branch
     Given the main branch is configured as "staging"
     When I run `git-town perennial-branches --add staging`
-    Then Git Town prints the error "'staging' is already set as the main branch"
+    Then it prints the error "'staging' is already set as the main branch"
 
 
   Scenario: adding a branch that does not exist
     When I run `git-town perennial-branches --add branch-does-not-exist`
-    Then Git Town prints the error "no branch named 'branch-does-not-exist'"
+    Then it prints the error "no branch named 'branch-does-not-exist'"
 
 
   Scenario: not providing a branch name
     When I run `git-town perennial-branches --add`
-    Then Git Town prints the error "Error: flag needs an argument: --add"
+    Then it prints the error "Error: flag needs an argument: --add"
     And it prints the error:
       """
       Usage:

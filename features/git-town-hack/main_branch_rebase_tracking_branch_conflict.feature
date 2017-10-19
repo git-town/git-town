@@ -48,7 +48,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town hack --continue`
-    Then Git Town prints the error "You must resolve the conflicts before continuing"
+    Then it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 

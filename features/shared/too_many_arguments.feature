@@ -18,7 +18,7 @@ Feature: too many arguments
 
   Scenario: hack-push-flag
     When I run `git-town hack-push-flag arg1 arg2`
-    Then Git Town prints the error "Too many arguments"
+    Then it prints the error "Too many arguments"
     And it prints the error:
       """
       Usage:
@@ -39,7 +39,7 @@ Feature: too many arguments
 
   Scenario: main-branch
     When I run `git-town main-branch arg1 arg2`
-    Then Git Town prints the error "Too many arguments"
+    Then it prints the error "Too many arguments"
     And it prints the error:
       """
       Usage:
@@ -60,7 +60,7 @@ Feature: too many arguments
 
   Scenario: perennial-branches
     When I run `git-town perennial-branches arg1`
-    Then Git Town prints the error "Too many arguments"
+    Then it prints the error "Too many arguments"
     And it prints the error:
       """
       Usage:
@@ -81,7 +81,7 @@ Feature: too many arguments
 
   Scenario: pull-branch-strategy
     When I run `git-town pull-branch-strategy arg1 arg2`
-    Then Git Town prints the error "Too many arguments"
+    Then it prints the error "Too many arguments"
     And it prints the error:
       """
       Usage:
