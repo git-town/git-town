@@ -15,7 +15,7 @@ Given(/^Git Town has no branch hierarchy information for "(.*?)"$/) do |branch_n
 end
 
 
-Then(/^Git Town is now aware of this branch hierarchy$/) do |table|
+Then(/^(?:Git Town|it) is now aware of this branch hierarchy$/) do |table|
   table.diff! configured_branch_hierarchy_information.table
 end
 

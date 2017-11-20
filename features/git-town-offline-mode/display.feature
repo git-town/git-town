@@ -8,7 +8,7 @@ Feature: Displaying the current offline status
   Scenario: set to "true"
     Given Git Town is in offline mode
     When I run `git-town offline`
-    Then I see
+    Then it prints
       """
       true
       """
@@ -17,7 +17,7 @@ Feature: Displaying the current offline status
   Scenario: set to "false"
     Given Git Town is not in offline mode
     When I run `git-town offline`
-    Then I see
+    Then it prints
       """
       false
       """

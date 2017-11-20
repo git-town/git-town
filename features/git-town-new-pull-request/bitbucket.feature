@@ -6,8 +6,8 @@ Feature: git-new-pull-request when origin is on Bitbucket
 
 
   Scenario Outline: normal origin
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
@@ -27,8 +27,8 @@ Feature: git-new-pull-request when origin is on Bitbucket
 
 
 	Scenario Outline: origin includes path that looks like a URL
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
@@ -48,8 +48,8 @@ Feature: git-new-pull-request when origin is on Bitbucket
 
 
 	Scenario Outline: SSH style origin
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`

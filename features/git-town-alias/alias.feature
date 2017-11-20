@@ -41,8 +41,8 @@ Feature: git town: alias
 
   Scenario: invalid value
     When I run `git-town alias other`
-    Then I get the error "Invalid value: 'other'"
-    And I get the error:
+    Then it prints the error "Invalid value: 'other'"
+    And it prints the error:
       """
       Usage:
         git-town alias (true | false) [flags]
@@ -50,6 +50,6 @@ Feature: git town: alias
 
 
   Scenario: works outside of a Git repository
-    Given I'm currently not in a git repository
+    Given my workspace is currently not a Git repository
     When I run `git-town alias true`
-    Then I don't see "Not a git repository"
+    Then it does not print "Not a git repository"

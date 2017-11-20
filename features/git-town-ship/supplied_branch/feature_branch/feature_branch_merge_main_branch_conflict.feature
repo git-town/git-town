@@ -4,13 +4,13 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
+    Given my repository has the feature branches "feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     And I run `git-town ship feature -m "feature done"`
 
 
@@ -26,7 +26,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout feature               |
       | feature       | git merge --no-edit origin/feature |
       |               | git merge --no-edit main           |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
@@ -45,9 +45,9 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | main          | git checkout other-feature |
       | other-feature | git stash pop              |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
@@ -68,9 +68,9 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
@@ -90,9 +90,9 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       |               | git checkout other-feature   |
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |

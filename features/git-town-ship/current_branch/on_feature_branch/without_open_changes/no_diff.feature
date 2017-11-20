@@ -6,7 +6,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Background:
-    Given I have a feature branch named "empty-feature"
+    Given my repository has a feature branch named "empty-feature"
     And the following commit exists in my repository
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
@@ -27,16 +27,16 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       |               | git reset --hard <%= sha 'feature commit' %> |
       |               | git checkout main                            |
       | main          | git checkout empty-feature                   |
-    And I get the error "The branch 'empty-feature' has no shippable changes"
+    And it prints the error "The branch 'empty-feature' has no shippable changes"
     And I am still on the "empty-feature" branch
 
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then I get the error "Nothing to undo"
-    And it runs no commands
+		Then it runs no commands
+    And it prints the error "Nothing to undo"
     And I am still on the "empty-feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE        | FILE NAME   |
       | main          | local and remote | main commit    | common_file |
       | empty-feature | local            | feature commit | common_file |

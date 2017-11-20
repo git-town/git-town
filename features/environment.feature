@@ -1,9 +1,9 @@
 Feature: Git Town performs correctly depending on the environment
 
   Scenario Outline: Git Town commands run outside of a Git repository
-    Given I'm currently not in a git repository
+    Given my workspace is currently not a Git repository
     When I run `<COMMAND>`
-    Then I get the error "This is not a Git repository"
+    Then it prints the error "This is not a Git repository"
 
     Examples:
       | COMMAND                     |

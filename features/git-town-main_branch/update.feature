@@ -8,18 +8,18 @@ Feature: set the main branch configuration
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run `git-town main-branch main`
-    Then I see no output
-    And my repo is configured with the main branch as "main"
+    Then it prints no output
+    And the main branch is now configured as "main"
 
 
   Scenario: main branch is configured
-    Given I have branches named "main-old" and "main-new"
-    And I have configured the main branch name as "main-old"
+    Given my repository has the branches "main-old" and "main-new"
+    And the main branch is configured as "main-old"
     When I run `git-town main-branch main-new`
-    Then I see no output
-    And my repo is configured with the main branch as "main-new"
+    Then it prints no output
+    And the main branch is now configured as "main-new"
 
 
   Scenario: invalid branch name
     When I run `git-town main-branch non-existing`
-    Then I get the error "no branch named 'non-existing'"
+    Then it prints the error "no branch named 'non-existing'"

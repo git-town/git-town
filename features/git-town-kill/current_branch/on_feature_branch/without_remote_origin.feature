@@ -5,13 +5,13 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
   Background:
     Given my repo does not have a remote origin
-    And I have local feature branches named "current-feature" and "other-feature"
+    And my repository has the local feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION | MESSAGE                |
       | current-feature | local    | current feature commit |
       | other-feature   | local    | other feature commit   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill`
 
 
@@ -26,7 +26,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
 
@@ -39,8 +39,8 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-    And I am left with my original commits
+    And my repository is left with my original commits

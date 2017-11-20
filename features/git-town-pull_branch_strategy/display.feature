@@ -7,25 +7,25 @@ Feature: passing an invalid option to the pull strategy configuration
 
   Scenario: default setting
     When I run `git-town pull-branch-strategy`
-    Then I see
+    Then it prints
       """
       rebase
       """
 
 
   Scenario: explicit rebase
-    Given my repository has the "pull-branch-strategy" configuration set to "rebase"
+    Given the "pull-branch-strategy" configuration is set to "rebase"
     When I run `git-town pull-branch-strategy`
-    Then I see
+    Then it prints
       """
       rebase
       """
 
 
   Scenario: explicit merge
-    Given my repository has the "pull-branch-strategy" configuration set to "merge"
+    Given the "pull-branch-strategy" configuration is set to "merge"
     When I run `git-town pull-branch-strategy`
-    Then I see
+    Then it prints
       """
       merge
       """

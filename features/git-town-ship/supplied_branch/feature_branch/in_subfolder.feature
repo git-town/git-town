@@ -4,12 +4,12 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
 
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
+    Given my repository has the feature branches "feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file with name: "new_folder/other_feature_file" and content: "other feature content"
+    And my workspace has an uncommitted file with name: "new_folder/other_feature_file" and content: "other feature content"
     When I run `git-town ship feature -m "feature done"` in the "new_folder" folder
 
 
@@ -35,8 +35,8 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
       | other-feature | git stash pop                      |
       | <none>        | cd <%= git_folder "new_folder" %>  |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |
