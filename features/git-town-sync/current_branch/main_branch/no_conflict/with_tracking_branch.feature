@@ -11,7 +11,7 @@ Feature: git-town sync: syncing the main branch
       | LOCATION | MESSAGE       | FILE NAME   |
       | local    | local commit  | local_file  |
       | remote   | remote commit | remote_file |
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -26,9 +26,9 @@ Feature: git-town sync: syncing the main branch
       |        | git push --tags        |
       |        | git stash pop          |
     And I am still on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | main   | local and remote | remote commit | remote_file |
       |        |                  | local commit  | local_file  |

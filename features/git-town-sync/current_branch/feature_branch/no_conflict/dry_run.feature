@@ -6,7 +6,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |
@@ -14,7 +14,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       | feature | local    | local feature commit  | local_feature_file  |
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --dry-run`
 
 
@@ -33,8 +33,8 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       |         | git push                           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE              | FILE NAME          |
       | main    | local    | local main commit    | local_main_file    |
       | feature | local    | local feature commit | local_feature_file |

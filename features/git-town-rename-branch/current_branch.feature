@@ -6,8 +6,8 @@ Feature: git town-rename-branch: rename current branch implicitly
 
 
   Background:
-    Given I have a feature branch named "feature"
-    And I have a perennial branch named "production"
+    Given my repository has a feature branch named "feature"
+    And my repository has a perennial branch named "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE     |
       | main       | local and remote | main commit |
@@ -27,8 +27,8 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                 | git push origin :feature           |
       |                 | git branch -D feature              |
     And I end up on the "renamed-feature" branch
-    And my repo is configured with perennial branches as "production"
-    And I have the following commits
+    And the perennial branches are now configured as "production"
+    And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE     |
       | main            | local and remote | main commit |
       | production      | local and remote | prod commit |
@@ -39,16 +39,16 @@ Feature: git town-rename-branch: rename current branch implicitly
     Given I am on the "feature" branch
     When I run `git-town rename-branch feature`
     Then it runs no commands
-    And I get the error "Cannot rename branch to current name."
+    And it prints the error "Cannot rename branch to current name."
     And I end up on the "feature" branch
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: rename perennial branch
     Given I am on the "production" branch
     When I run `git-town rename-branch renamed-production`
     Then it runs no commands
-    And I get the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
+    And it prints the error "production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: rename perennial branch (forced)
@@ -63,8 +63,8 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
-    And my repo is configured with perennial branches as "renamed-production"
-    And I have the following commits
+    And the perennial branches are now configured as "renamed-production"
+    And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE     |
       | main               | local and remote | main commit |
       | feature            | local and remote | feat commit |
@@ -83,8 +83,8 @@ Feature: git town-rename-branch: rename current branch implicitly
         |                 | git checkout feature                        |
         | feature         | git branch -D renamed-feature               |
     And I end up on the "feature" branch
-    And my repo is configured with perennial branches as "production"
-    And I have the following commits
+    And the perennial branches are now configured as "production"
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE     |
       | main       | local and remote | main commit |
       | feature    | local and remote | feat commit |

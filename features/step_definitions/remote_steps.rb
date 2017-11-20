@@ -12,6 +12,6 @@ Given(/^my repo does not have a remote origin$/) do
 end
 
 
-Given(/^my remote origin is (.+?)$/) do |origin|
+Given(/^my repo's remote origin is (.+?)$/) do |origin|
   run "git config git-town.testing.remote-url #{origin}"
 end

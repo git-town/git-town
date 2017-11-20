@@ -6,7 +6,7 @@ Feature: Initial configuration
 
 
   Background:
-    Given I have branches named "production" and "dev"
+    Given my repository has the branches "production" and "dev"
     And I haven't configured Git Town yet
 
 
@@ -16,8 +16,8 @@ Feature: Initial configuration
       | production |
       | dev        |
       |            |
-    Then my repo is configured with the main branch as "main"
-    And my repo is configured with perennial branches as "production" and "dev"
+    Then the main branch is now configured as "main"
+    And the perennial branches are now configured as "production" and "dev"
 
 
   Scenario: succeeds on valid main branch and perennial branch numbers
@@ -26,8 +26,8 @@ Feature: Initial configuration
       | 1 |
       | 3 |
       |   |
-    Then my repo is configured with the main branch as "main"
-    And my repo is configured with perennial branches as "production" and "dev"
+    Then the main branch is now configured as "main"
+    And the perennial branches are now configured as "production" and "dev"
 
 
   Scenario: shows error and re-prompts on empty main branch
@@ -35,8 +35,8 @@ Feature: Initial configuration
       |      |
       | main |
       |      |
-    Then I see "A main development branch is required to enable the features provided by Git Town"
-    And my repo is configured with the main branch as "main"
+    Then it prints "A main development branch is required to enable the features provided by Git Town"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -45,8 +45,8 @@ Feature: Initial configuration
       | 4    |
       | main |
       |      |
-    Then I see "Invalid branch number"
-    And my repo is configured with the main branch as "main"
+    Then it prints "Invalid branch number"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -55,8 +55,8 @@ Feature: Initial configuration
       | non-existent |
       | main         |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
-    And my repo is configured with the main branch as "main"
+    Then it prints "Branch 'non-existent' doesn't exist"
+    And the main branch is now configured as "main"
     And my repo is configured with no perennial branches
 
 
@@ -66,9 +66,9 @@ Feature: Initial configuration
       | main |
       | dev  |
       |      |
-    Then I see "'main' is already set as the main branch"
-    And my repo is configured with the main branch as "main"
-    And my repo is configured with perennial branches as "dev"
+    Then it prints "'main' is already set as the main branch"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "dev"
 
 
   Scenario: shows error and re-prompts on invalid perennial branch number
@@ -77,9 +77,9 @@ Feature: Initial configuration
       | 4    |
       | 3    |
       |      |
-    Then I see "Invalid branch number"
-    And my repo is configured with the main branch as "main"
-    And my repo is configured with perennial branches as "production"
+    Then it prints "Invalid branch number"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "production"
 
 
   Scenario: shows error and re-prompts on non-existent perennial branch
@@ -88,6 +88,6 @@ Feature: Initial configuration
       | non-existent |
       | dev          |
       |              |
-    Then I see "Branch 'non-existent' doesn't exist"
-    And my repo is configured with the main branch as "main"
-    And my repo is configured with perennial branches as "dev"
+    Then it prints "Branch 'non-existent' doesn't exist"
+    And the main branch is now configured as "main"
+    And the perennial branches are now configured as "dev"

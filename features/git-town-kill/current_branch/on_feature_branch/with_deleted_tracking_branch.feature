@@ -6,14 +6,14 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
 
 
   Background:
-    Given I have feature branches named "current-feature" and "other-feature"
+    Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local and remote | current feature commit |
       | other-feature   | local and remote | other feature commit   |
     And the "current-feature" branch gets deleted on the remote
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill`
 
 
@@ -31,7 +31,7 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE              |
       | other-feature | local and remote | other feature commit |
 
@@ -44,12 +44,12 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local            | current feature commit |
       | other-feature   | local and remote | other feature commit   |

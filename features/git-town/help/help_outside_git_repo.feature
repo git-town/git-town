@@ -4,14 +4,14 @@ Feature: show help screen even outside of a Git repository
 
 
   Scenario Outline: Running outside of a Git repository
-    Given I'm currently not in a git repository
+    Given my workspace is currently not a Git repository
     When I run `<COMMAND>`
-    Then I see
+    Then it prints
       """
       Usage:
         git-town [command]
       """
-    And I don't see "fatal: Not a Git repository"
+    And it does not print "fatal: Not a Git repository"
 
     Examples:
       | COMMAND       |
