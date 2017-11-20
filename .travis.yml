@@ -13,6 +13,8 @@ install:
 
 script:
   - rake
+
+after_script:
   - $GOPATH/bin/goveralls -service=travis-ci -coverprofile=coverage.cov
 
 notifications:
