@@ -10,4 +10,4 @@ bundle exec cucumber_lint
 bin/tests
 
 # feature tests
-bin/cuke features/git-town-append
+bin/cuke
