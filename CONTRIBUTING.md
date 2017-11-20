@@ -12,7 +12,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Setup
 
-* install [Go](https://golang.org) version 1.9 or better
+* install [Go](https://golang.org) version 1.9 or higher
   * on macOS via `brew install go`
   * on Windows via the [official Go installer](https://golang.org/dl)
 * install [Ruby 2.4.1](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
