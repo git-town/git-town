@@ -4,10 +4,10 @@
 
 ```bash
 # running the different test types
-rake           # runs all tests
+bin/spec       # runs all tests
 bin/lint       # runs the linters
 bin/lint_go    # runs the Go linters
-rake test      # runs the feature tests
+bin/cuke       # runs the feature tests
 
 # running individual scenarios/features
 cucumber <filename>[:<lineno>]
@@ -19,11 +19,8 @@ bin/cuke [cucumber parameters]
 # auto-detected number of processors
 
 # auto-fixing formatting issues
-rake format
+bin/fix
 ```
-
-The `rake [parameters]` commands above can also be run as `bundle exec rake [parameters]`
-if you encounter Ruby versioning issues.
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
 automatically tests all commits and pull requests,
