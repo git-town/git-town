@@ -100,10 +100,12 @@ After do
 end
 
 
+COUNTER = [0]
 def save_coverage_file
   filename = File.join(REPOSITORY_BASE, "developer", "coverage.cov")
   if File.exist? filename
-    FileUtils.mv(filename, File.join(GIT_TOWN_DIRECTORY, "coverage.cov"))
+    FileUtils.mv(filename, File.join(GIT_TOWN_DIRECTORY, "coverage#{COUNTER[0].to_s}.cov"))
+    COUNTER[0] += 1
   end
 end
 
