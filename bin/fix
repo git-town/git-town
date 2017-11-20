@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+# Runs all the auto-fixes
+
+bundle exec cucumber_lint --fix

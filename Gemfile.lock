@@ -84,7 +84,6 @@ DEPENDENCIES
   mortadella
   open4
   parallel_tests
-  rake
   rspec
   rubocop
 
