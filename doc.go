@@ -1,9 +1,13 @@
 /*
 Git Town - a high-level CLI for Git
 
-Git Town provides additional Git commands
-that make working in large teams
-easy and fun.
+Git Town makes software development teams
+who use Git even more productive and happy.
+It adds Git commands that support GitHub Flow,
+Git Flow, the Nvie model, GitLab Flow,
+and other workflows more directly,
+and it allows you to perform
+many common Git operations faster and easier.
 More information at https://github.com/Originate/git-town.
 
 Installation alternatives:
