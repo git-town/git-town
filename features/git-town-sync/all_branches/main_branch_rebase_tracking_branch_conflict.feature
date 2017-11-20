@@ -1,14 +1,14 @@
 Feature: git-town sync --all: handling rebase conflicts between main branch and its tracking branch
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        | FILE CONTENT        |
       | main    | local    | main local commit  | conflicting_file | main local content  |
       | main    | remote   | main remote commit | conflicting_file | main remote content |
       | feature | local    | feature commit     | feature_file     | feature content     |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 
@@ -19,7 +19,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       |        | git add -A             |
       |        | git stash              |
       |        | git rebase origin/main |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -35,8 +35,8 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       | main   | git rebase --abort |
       |        | git stash pop      |
     And I end up on the "main" branch
-    And I again have my uncommitted file
-    And I have the following commits
+    And my workspace has the uncommitted file again
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE            | FILE NAME        |
       | main    | local    | main local commit  | conflicting_file |
       |         | remote   | main remote commit | conflicting_file |
@@ -46,7 +46,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -66,8 +66,8 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       | main    | git push --tags                    |
       |         | git stash pop                      |
     And I end up on the "main" branch
-    And I again have my uncommitted file
-    And I have the following commits
+    And my workspace has the uncommitted file again
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |
@@ -91,8 +91,8 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
       | main    | git push --tags                    |
       |         | git stash pop                      |
     And I end up on the "main" branch
-    And I again have my uncommitted file
-    And I have the following commits
+    And my workspace has the uncommitted file again
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main remote commit               | conflicting_file |
       |         |                  | main local commit                | conflicting_file |

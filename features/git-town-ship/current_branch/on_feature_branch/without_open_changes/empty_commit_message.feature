@@ -6,7 +6,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
@@ -30,17 +30,17 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And I get the error "Aborted because commit exited with error"
+    And it prints the error "Aborted because commit exited with error"
     And I am still on the "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
 
 
   Scenario: undo
     When I run `git-town ship --undo`
-    Then I get the error "Nothing to undo"
+    Then it prints the error "Nothing to undo"
     And I am still on the "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |

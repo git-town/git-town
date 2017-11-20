@@ -6,14 +6,14 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given my repository has a feature branch named "existing-feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
       | BRANCH           | LOCATION | MESSAGE                 |
       | main             | local    | main commit             |
       | existing-feature | local    | existing feature commit |
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack new-feature`
 
 
@@ -25,8 +25,8 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
       |                  | git checkout -b new-feature main |
       | new-feature      | git stash pop                    |
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH           | LOCATION | MESSAGE                 |
       | main             | local    | main commit             |
       | existing-feature | local    | existing feature commit |

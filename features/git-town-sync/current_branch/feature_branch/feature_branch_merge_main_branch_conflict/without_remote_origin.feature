@@ -2,13 +2,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Background:
     Given my repo does not have a remote origin
-    And I have a local feature branch named "feature"
+    And my repository has a local feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -18,7 +18,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git add -A               |
       |         | git stash                |
       |         | git merge --no-edit main |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -36,15 +36,15 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git merge --abort |
       |         | git stash pop     |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -58,14 +58,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git commit --no-edit |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |
       | main    | local    | conflicting main commit          | conflicting_file |
       | feature | local    | conflicting feature commit       | conflicting_file |
       |         |          | conflicting main commit          | conflicting_file |
       |         |          | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -78,14 +78,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | BRANCH  | COMMAND       |
       | feature | git stash pop |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME        |
       | main    | local    | conflicting main commit          | conflicting_file |
       | feature | local    | conflicting feature commit       | conflicting_file |
       |         |          | conflicting main commit          | conflicting_file |
       |         |          | Merge branch 'main' into feature |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

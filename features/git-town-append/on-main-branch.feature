@@ -10,7 +10,7 @@ Feature: Appending a branch to a feature branch
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town append new-child`
 
 
@@ -25,8 +25,8 @@ Feature: Appending a branch to a feature branch
       |           | git checkout new-child    |
       | new-child | git stash pop             |
     And I end up on the "new-child" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE     |
       | main      | local and remote | main_commit |
       | new-child | local            | main_commit |
@@ -45,7 +45,7 @@ Feature: Appending a branch to a feature branch
         | main      | git branch -d new-child |
         |           | git stash pop           |
     And I end up on the "main" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE     |
       | main   | local and remote | main_commit |

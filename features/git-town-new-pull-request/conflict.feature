@@ -6,15 +6,15 @@ Feature: Syncing before creating the pull request
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | main commit    | conflicting_file | main_content    |
       | feature | local            | feature commit | conflicting_file | feature content |
     And I have "open" installed
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town new-pull-request`
 
 
@@ -30,7 +30,7 @@ Feature: Syncing before creating the pull request
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town new-pull-request --abort".
       To continue after you have resolved the conflicts, run "git-town new-pull-request --continue".
@@ -49,16 +49,16 @@ Feature: Syncing before creating the pull request
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town new-pull-request --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -75,8 +75,8 @@ Feature: Syncing before creating the pull request
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main commit                      | conflicting_file |
       | feature | local and remote | feature commit                   | conflicting_file |
@@ -94,8 +94,8 @@ Feature: Syncing before creating the pull request
       | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
     And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
       | main    | local and remote | main commit                      | conflicting_file |
       | feature | local and remote | feature commit                   | conflicting_file |

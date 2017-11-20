@@ -9,7 +9,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Background:
-    Given I have feature branches named "feature" and "feature-child"
+    Given my repository has the feature branches "feature" and "feature-child"
     And the following commits exist in my repository
       | BRANCH        | LOCATION         | MESSAGE              |
       | feature       | local and remote | feature commit       |
@@ -20,7 +20,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | feature-child | feature |
     And the "feature" branch gets deleted on the remote
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town prune-branches`
 
 
@@ -30,7 +30,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | main   | git fetch --prune     |
       |        | git branch -D feature |
     And I end up on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, feature-child |
@@ -46,7 +46,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |
     And I end up on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                     |
       | local      | main, feature, feature-child |

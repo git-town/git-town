@@ -4,12 +4,12 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
 
 
   Background:
-    Given I have feature branches named "feature" and "other-feature"
+    Given my repository has the feature branches "feature" and "other-feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git-town ship feature -m "feature done"`
 
 
@@ -33,8 +33,8 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |

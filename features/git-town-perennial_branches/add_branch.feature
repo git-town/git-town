@@ -6,36 +6,36 @@ Feature: add a branch to the perennial branches configuration
 
 
   Background:
-    Given I have branches named "staging" and "qa"
-    And my perennial branches are configured as "qa"
+    Given my repository has the branches "staging" and "qa"
+    And the perennial branches are configured as "qa"
 
 
   Scenario: adding an existing branch
     When I run `git-town perennial-branches --add staging`
-    Then I see no output
-    And my repo is configured with perennial branches as "qa" and "staging"
+    Then it prints no output
+    And the perennial branches are now configured as "qa" and "staging"
 
 
   Scenario: adding a branch that is already a perennial branch
     When I run `git-town perennial-branches --add qa`
-    Then I get the error "'qa' is already a perennial branch"
+    Then it prints the error "'qa' is already a perennial branch"
 
 
   Scenario: adding a branch that is already set as the main branch
-    Given I have configured the main branch name as "staging"
+    Given the main branch is configured as "staging"
     When I run `git-town perennial-branches --add staging`
-    Then I get the error "'staging' is already set as the main branch"
+    Then it prints the error "'staging' is already set as the main branch"
 
 
   Scenario: adding a branch that does not exist
     When I run `git-town perennial-branches --add branch-does-not-exist`
-    Then I get the error "no branch named 'branch-does-not-exist'"
+    Then it prints the error "no branch named 'branch-does-not-exist'"
 
 
   Scenario: not providing a branch name
     When I run `git-town perennial-branches --add`
-    Then I get the error "Error: flag needs an argument: --add"
-    And I get the error:
+    Then it prints the error "Error: flag needs an argument: --add"
+    And it prints the error:
       """
       Usage:
         git-town perennial-branches [flags]

@@ -8,7 +8,7 @@ Feature: git town-repo: offline mode
   Scenario: trying to prune branches in offline mode
     Given Git Town is in offline mode
     When I run `git-town repo`
-    Then I get the error:
+    Then it prints the error:
       """
       This command requires an active internet connection
       """
