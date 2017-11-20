@@ -1,6 +1,6 @@
 # Measuring Test Coverage
 
-Measuring test coverage is a bit trickier than normal
+Measuring test coverage is a bit trickier than in normal Go tests
 because the end-to-end tests of Git Town are in Ruby.
 We therefore measure test coverage using these steps:
 
