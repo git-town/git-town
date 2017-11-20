@@ -4,12 +4,16 @@ dist: trusty
 language: go
 go: 1.8
 
+before_install:
+  - go get github.com/mattn/goveralls
+
 install:
   - rvm install 2.4.1
   - bin/setup
 
 script:
   - rake
+  - $GOPATH/bin/goveralls -service=travis-ci
 
 notifications:
   email: false
