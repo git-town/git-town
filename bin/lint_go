@@ -9,7 +9,7 @@ if [ -n "$(goimports -d src 2>&1)" ]; then
 fi
 
 gometalinter -D gotype -D gotypex --debug src/... 2> lint_output.txt
-if [ -n "$(grep 'warning:' lint_output.txt)" ]; then
+if [ -n "$(grep 'WARNING:' lint_output.txt)" ]; then
   echo "There are linter warnings. Check 'lint_output.txt'."
   echo ""
   echo "Expected warnings:"
