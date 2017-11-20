@@ -12,6 +12,7 @@ install:
   - bin/setup
 
 script:
+  - ls -la
   - bin/build-test
   - bin/spec
 
