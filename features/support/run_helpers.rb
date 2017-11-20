@@ -54,9 +54,16 @@ end
 
 
 def run command, inputs: [], ignore_errors: false
+  is_git_town_command = git_town_command? command
+
+  # delete coverage file if running another Git Town command
+  coverage_file_path = File.join(Dir.pwd, 'coverage.cov')
+  if is_git_town_command && File.exist?(coverage_file_path)
+    File.delete coverage_file_path
+  end
   command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
   result = run_shell_command command, inputs
-  is_git_town_command = git_town_command? command
+  result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...}, ''
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
                                     result: result,
                                     ignore_errors: ignore_errors

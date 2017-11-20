@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 Then(/^there are no open changes$/) do
-  expect(run('git status --short').out).to eql ''
+  changes = run('git status --short').out
+  changes.sub!(/.* coverage.cov\n/, '')
+  expect(changes).to eql ''
 end
