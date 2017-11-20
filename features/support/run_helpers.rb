@@ -57,7 +57,9 @@ end
 def run command, inputs: [], ignore_errors: false
   is_git_town_command = git_town_command? command
 
-  # delete coverage file if running another Git Town command
+  # Delete coverage file if running another Git Town command.
+  # This is necessary because otherwise the coverage file shows up in the Git workspace,
+  # polluting the list of open files.
   coverage_file_path = File.join(Dir.pwd, 'coverage.cov')
   if is_git_town_command && File.exist?(coverage_file_path)
     File.delete coverage_file_path
