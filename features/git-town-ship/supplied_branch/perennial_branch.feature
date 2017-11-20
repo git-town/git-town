@@ -4,9 +4,9 @@ Feature: git town-ship: errors when trying to ship a perennial branch
 
 
   Background:
-    Given I have perennial branches named "qa" and "production"
+    Given my repository has the perennial branches "qa" and "production"
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town ship production`
 
 
@@ -14,6 +14,6 @@ Feature: git town-ship: errors when trying to ship a perennial branch
     Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    And I get the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
+    And it prints the error "The branch 'production' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file

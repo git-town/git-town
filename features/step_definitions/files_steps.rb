@@ -8,7 +8,7 @@ Given(/^my repo ignores files named "([^"]*)"$/) do |filename|
 end
 
 
-Given(/^I have an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$/) do |name, content|
+Given(/^my workspace has an uncommitted file(?: with name: "(.+?)" and content: "(.+?)")?$/) do |name, content|
   @uncommitted_file_name = name || 'uncommitted_file'
   @uncommitted_file_content = content || 'uncommitted content'
   create_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
@@ -23,12 +23,12 @@ end
 
 
 
-Then(/^I (?:still|again) have my uncommitted file$/) do
+Then(/^my workspace(?: still)? (?:has|contains) (?:my|the) uncommitted file(?: again)?$/) do
   verify_uncommitted_file name: @uncommitted_file_name, content: @uncommitted_file_content
 end
 
 
-Then(/^(?:now I|I still) have the following committed files$/) do |files_data|
+Then(/^(?:now my repository|my repository still) has the following committed files$/) do |files_data|
   files_data.diff! files_in_branches
 end
 

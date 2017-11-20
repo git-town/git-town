@@ -6,8 +6,8 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
 
 
   Background:
-    Given my repository has the "pull-branch-strategy" configuration set to "merge"
-    And I have a feature branch named "feature"
+    Given the "pull-branch-strategy" configuration is set to "merge"
+    And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |
@@ -15,7 +15,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       | feature | local    | local feature commit  | local_feature_file  |
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -34,8 +34,8 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | git push                           |
       |         | git stash pop                      |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
       | main    | local and remote | local main commit                                          | local_main_file     |
       |         |                  | remote main commit                                         | remote_main_file    |

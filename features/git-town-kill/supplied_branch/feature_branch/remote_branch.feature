@@ -1,7 +1,7 @@
 Feature: git town-kill: killing a remote only branch
 
   Background:
-    Given I have a feature branch named "feature" on another machine
+    Given my repository has a feature branch named "feature" on another machine
     And the following commit exists in my repository on another machine
       | BRANCH  | LOCATION         | MESSAGE        |
       | feature | local and remote | feature commit |

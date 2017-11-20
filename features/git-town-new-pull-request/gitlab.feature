@@ -10,8 +10,8 @@ Feature: git-new-pull-request when origin is on GitLab
 
 
   Scenario Outline: creating pull-requests
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
@@ -26,27 +26,27 @@ Feature: git-new-pull-request when origin is on GitLab
 
 
   Scenario: nested feature branch with known parent
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
-    And my remote origin is git@gitlab.com:kadu/kadu.git
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
+    And my repo's remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "child-feature" branch
     When I run `git-town new-pull-request`
     Then I see a new GitLab pull request for the "child-feature" branch against the "parent-feature" branch in the "kadu/kadu" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (entering the parent name)
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
-    And my remote origin is git@gitlab.com:kadu/kadu.git
+    And my repo's remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and enter "main"
     Then I see a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
-    And my remote origin is git@gitlab.com:kadu/kadu.git
+    And my repo's remote origin is git@gitlab.com:kadu/kadu.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and press ENTER
     Then I see a new GitLab pull request for the "feature" branch in the "kadu/kadu" repo in my browser

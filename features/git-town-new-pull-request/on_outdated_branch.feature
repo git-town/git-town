@@ -6,8 +6,8 @@ Feature: Syncing before creating the pull request
 
 
   Background:
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
     And the following commits exist in my repository
       | BRANCH         | LOCATION | MESSAGE              | FILE NAME          |
       | main           | local    | local main commit    | local_main_file    |
@@ -17,9 +17,9 @@ Feature: Syncing before creating the pull request
       | child-feature  | local    | local child commit   | local_child_file   |
       |                | remote   | remote child commit  | remote_child_file  |
     And I have "open" installed
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town new-pull-request`
 
 
@@ -44,8 +44,8 @@ Feature: Syncing before creating the pull request
       | <none>         | open https://github.com/Originate/git-town/compare/parent-feature...child-feature?expand=1 |
     And I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
     And I am still on the "child-feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH         | LOCATION         | MESSAGE                                                                  | FILE NAME          |
       | main           | local and remote | remote main commit                                                       | remote_main_file   |
       |                |                  | local main commit                                                        | local_main_file    |

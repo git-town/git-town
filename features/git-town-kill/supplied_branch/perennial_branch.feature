@@ -4,8 +4,8 @@ Feature: git town-kill: errors when trying to kill a perennial branch
 
 
   Background:
-    Given I have a feature branch named "feature"
-    And I have a perennial branch named "qa"
+    Given my repository has a feature branch named "feature"
+    And my repository has a perennial branch named "qa"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE     |
       | feature | local and remote | good commit |
@@ -14,14 +14,14 @@ Feature: git town-kill: errors when trying to kill a perennial branch
 
 
   Scenario: result
-    Given I have an uncommitted file
+    Given my workspace has an uncommitted file
     When I run `git-town kill qa`
     Then it runs no commands
-    And I get the error "You can only kill feature branches"
+    And it prints the error "You can only kill feature branches"
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES          |
       | local      | main, qa, feature |
       | remote     | main, qa, feature |
-    And I am left with my original commits
+    And my repository is left with my original commits

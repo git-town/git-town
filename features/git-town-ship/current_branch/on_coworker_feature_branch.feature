@@ -31,6 +31,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local and remote | feature done | coworker_file | coworker <coworker@example.com> |

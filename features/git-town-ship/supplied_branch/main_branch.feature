@@ -4,9 +4,9 @@ Feature: git town-ship: errors when trying to ship the main branch
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town ship main`
 
 
@@ -14,6 +14,6 @@ Feature: git town-ship: errors when trying to ship the main branch
     Then it runs the commands
       | BRANCH  | COMMAND           |
       | feature | git fetch --prune |
-    And I get the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
+    And it prints the error "The branch 'main' is not a feature branch. Only feature branches can be shipped."
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file

@@ -6,20 +6,20 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
 
   Background:
-    Given I have perennial branches named "qa" and "production"
+    Given my repository has the perennial branches "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
       | production | local and remote | production commit |
       | qa         | local and remote | qa commit         |
     And I am on the "production" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
 
 
   Scenario: error when trying to rename
     When I run `git-town rename-branch production renamed-production`
     Then it runs no commands
-    And I get the error "'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
+    And it prints the error "'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
 
 
   Scenario: forcing rename
@@ -33,9 +33,9 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
       |                    | git push origin :production              |
       |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
-    And my repo is configured with perennial branches as "qa" and "renamed-production"
-    And I still have my uncommitted file
-    And I have the following commits
+    And the perennial branches are now configured as "qa" and "renamed-production"
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH             | LOCATION         | MESSAGE           |
       | main               | local and remote | main commit       |
       | qa                 | local and remote | qa commit         |
@@ -53,9 +53,9 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
         |                    | git checkout production                              |
         | production         | git branch -D renamed-production                     |
     And I end up on the "production" branch
-    And my repo is configured with perennial branches as "qa" and "production"
-    And I still have my uncommitted file
-    And I have the following commits
+    And the perennial branches are now configured as "qa" and "production"
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
       | main       | local and remote | main commit       |
       | production | local and remote | production commit |

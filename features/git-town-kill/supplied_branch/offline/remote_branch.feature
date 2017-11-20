@@ -6,7 +6,7 @@ Feature: git town-kill: killing a remote branch in offline mode
 
 
   Background:
-    Given I have a feature branch named "feature" on another machine
+    Given my repository has a feature branch named "feature" on another machine
     And the following commit exists in my repository on another machine
       | BRANCH  | LOCATION         | MESSAGE        |
       | feature | local and remote | feature commit |
@@ -19,5 +19,5 @@ Feature: git town-kill: killing a remote branch in offline mode
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND |
-    And I get the error "Cannot delete remote branch 'feature' in offline mode"
+    And it prints the error "Cannot delete remote branch 'feature' in offline mode"
     And I am still on the "main" branch

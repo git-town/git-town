@@ -6,13 +6,13 @@ Feature: git-new-pull-request: when origin is unsupported
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
 
 
   Scenario: result
-    Then I get the error:
+    Then it prints the error:
       """
       Unsupported hosting service
 

@@ -6,7 +6,7 @@ Feature: git-town sync: collaborative feature branch syncing
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And my coworker fetches updates
     And my coworker sets the parent branch of "feature" as "main"
     And the following commits exist in my repository
@@ -29,7 +29,7 @@ Feature: git-town sync: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
       | feature | local and remote | my commit | my_file   |
 
@@ -60,7 +60,7 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And now I have the following commits
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
       | feature | local and remote | coworker commit                                            | coworker_file |
       |         |                  | my commit                                                  | my_file       |
