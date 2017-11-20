@@ -54,7 +54,7 @@ end
 
 
 def run command, inputs: [], ignore_errors: false
-  command = command.gsub 'git-town', 'git-town.test -test.coverprofile=coverage.cov'
+  command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
   result = run_shell_command command, inputs
   is_git_town_command = git_town_command? command
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
