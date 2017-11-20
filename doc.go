@@ -4,8 +4,7 @@ Git Town - a high-level CLI for Git
 Git Town provides additional Git commands
 that make working in large teams
 easy and fun.
-
-More information at https://github.com/Originate/git-town
+More information at https://github.com/Originate/git-town.
 
 Installation alternatives:
 	- HomeBrew (macOS): brew install git-town
@@ -13,7 +12,7 @@ Installation alternatives:
 	- go get github.com/Originate/git-town
 	- direct download of platform-specific binaries: https://github.com/Originate/git-town/releases/latest
 
-Usage:
+Available commands and usage:
   git town help
 */
 package main
