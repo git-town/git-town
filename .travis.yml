@@ -4,16 +4,12 @@ dist: trusty
 language: go
 go: 1.9
 
-before_install:
-  - go get github.com/mattn/goveralls
-
 install:
   - rvm install 2.4.1
   - bin/setup
+  - go get github.com/mattn/goveralls
 
 script:
-  - ls -la
-  - bin/build-test
   - bin/spec
 
 after_script:
