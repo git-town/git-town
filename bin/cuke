@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-bin/build
 # Runs the feature tests
 
+bin/build
 
 if [ "$#" == 0 ]; then
   bundle exec parallel_cucumber features
