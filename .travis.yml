@@ -13,7 +13,7 @@ install:
 
 script:
   - rake
-  - $GOPATH/bin/goveralls -service=travis-ci
+  - $GOPATH/bin/goveralls -service=travis-ci -coverprofile=coverage.cov
 
 notifications:
   email: false
