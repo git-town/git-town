@@ -6,7 +6,7 @@ Feature: git-sync: on the main branch with a upstream remote
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -23,7 +23,7 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git push --tags          |
       |        | git stash pop            |
     And I am still on the "main" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH | LOCATION                    | MESSAGE         |
       | main   | local, remote, and upstream | upstream commit |

@@ -10,7 +10,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack new-feature` in the "new_folder" folder
 
 
@@ -28,8 +28,8 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       | <none>      | cd <%= git_folder "new_folder" %> |
     And I am in the project root folder
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE       |
       | main        | local and remote | folder commit |
       | new-feature | local            | folder commit |

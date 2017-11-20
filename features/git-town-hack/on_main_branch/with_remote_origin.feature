@@ -10,7 +10,7 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack new-feature`
 
 
@@ -24,8 +24,8 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE     |
       | main        | local and remote | main_commit |
       | new-feature | local            | main_commit |

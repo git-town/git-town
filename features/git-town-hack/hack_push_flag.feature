@@ -6,7 +6,7 @@ Feature: git town-hack: push branch to remote upon creation
 
 
   Background:
-    Given my repository has the "hack-push-flag" configuration set to "true"
+    Given the "hack-push-flag" configuration is set to "true"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE       |
       | main   | remote   | remote commit |
@@ -22,7 +22,7 @@ Feature: git town-hack: push branch to remote upon creation
       |         | git checkout -b feature main |
       | feature | git push -u origin feature   |
     And I end up on the "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE       |
       | main    | local and remote | remote commit |
       | feature | local and remote | remote commit |

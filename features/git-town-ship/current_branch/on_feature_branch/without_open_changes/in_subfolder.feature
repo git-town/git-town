@@ -6,7 +6,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commit exists in my repository
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME               | FILE CONTENT    |
       | feature | local and remote | feature commit | new_folder/feature_file | feature content |
@@ -33,7 +33,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | <none>  | cd <%= git_folder "new_folder" %>  |
     And I end up on the "main" branch
     And there are no more feature branches
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME               |
       | main   | local and remote | feature done | new_folder/feature_file |
 
@@ -52,7 +52,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | main    | git checkout feature                           |
       | <none>  | cd <%= git_folder "new_folder" %>              |
     And I end up on the "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE               | FILE NAME               |
       | main    | local and remote | feature done          | new_folder/feature_file |
       |         |                  | Revert "feature done" | new_folder/feature_file |

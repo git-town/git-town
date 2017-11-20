@@ -1,14 +1,14 @@
 Feature: git-town sync --all: syncs all feature branches
 
   Background:
-    Given I have feature branches named "feature-1" and "feature-2"
+    Given my repository has the feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION         | MESSAGE          | FILE NAME     |
       | main      | remote           | main commit      | main_file     |
       | feature-1 | local and remote | feature-1 commit | feature1_file |
       | feature-2 | local and remote | feature-2 commit | feature2_file |
     And I am on the "feature-1" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync --all`
 
 
@@ -32,9 +32,9 @@ Feature: git-town sync --all: syncs all feature branches
       | feature-1 | git push --tags                      |
       |           | git stash pop                        |
     And I am still on the "feature-1" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME     |
       | main      | local and remote | main commit                        | main_file     |
       | feature-1 | local and remote | feature-1 commit                   | feature1_file |

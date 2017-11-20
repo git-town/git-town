@@ -6,8 +6,8 @@ Feature: update the parent of a nested feature branch
 
 
   Background:
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
 
 
   Scenario: updating the parent branch
@@ -20,7 +20,7 @@ Feature: update the parent of a nested feature branch
 
   Scenario: invalid child branch name
     When I run `git-town set-parent-branch non-existing parent-feature`
-    Then I get the error:
+    Then it prints the error:
       """
       There is no branch named 'non-existing'
       """
@@ -28,7 +28,7 @@ Feature: update the parent of a nested feature branch
 
   Scenario: invalid parent branch name
     When I run `git-town set-parent-branch child-feature non-existing`
-    Then I get the error:
+    Then it prints the error:
       """
       There is no branch named 'non-existing'
       """

@@ -6,13 +6,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -26,7 +26,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -46,14 +46,14 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
       | feature | git stash pop        |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -69,13 +69,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
@@ -89,12 +89,12 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push                 |
       |         | git stash pop            |
     And I am still on the "feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | feature | local and remote | local conflicting commit                                   | conflicting_file |
       |         |                  | remote conflicting commit                                  | conflicting_file |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
