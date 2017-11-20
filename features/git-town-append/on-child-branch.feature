@@ -6,12 +6,12 @@ Feature: Appending a branch to a feature branch
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION         | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local and remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
 
 
   Scenario: inserting a branch into the branch ancestry
@@ -30,8 +30,8 @@ Feature: Appending a branch to a feature branch
       |                  | git checkout new-child                      |
       | new-child        | git stash pop                               |
     And I end up on the "new-child" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH           | LOCATION         | MESSAGE                 |
       | existing-feature | local and remote | existing_feature_commit |
       | new-child        | local            | existing_feature_commit |
@@ -54,8 +54,8 @@ Feature: Appending a branch to a feature branch
         | main             | git checkout existing-feature |
         | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
-    And I still have my uncommitted file
-    And I am left with my original commits
+    And my workspace still contains my uncommitted file
+    And my repository is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

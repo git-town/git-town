@@ -6,7 +6,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE         | AUTHOR                            |
       | feature | local    | feature commit1 | developer <developer@example.com> |
@@ -17,7 +17,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario Outline: prompt for squashed commit author
     When I run `git-town ship -m 'feature done'` and <ACTION>
-    Then I see
+    Then it prints
       """
       Multiple people authored the 'feature' branch.
       Please choose an author for the squash commit.
@@ -27,7 +27,7 @@ Feature: git town-ship: shipping a coworker's feature branch
 
       Enter user's number or a custom author (default: 1):
       """
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR           |
       | main   | local and remote | feature done | <FEATURE_AUTHOR> |
 
@@ -41,8 +41,8 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario Outline: enter invalid number then valid number
     When I run `git-town ship -m 'feature done'` and enter "<NUMBER>" and "1"
-    Then I see "Invalid author number"
-    And I have the following commits
+    Then it prints "Invalid author number"
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR                            |
       | main   | local and remote | feature done | developer <developer@example.com> |
 
@@ -54,5 +54,5 @@ Feature: git town-ship: shipping a coworker's feature branch
 
   Scenario: enter invalid custom author
     When I run `git-town ship -m 'feature done'` and enter "invalid"
-    Then I get the error "Aborted because commit exited with error"
-    And I am left with my original commits
+    Then it prints the error "Aborted because commit exited with error"
+    And my repository is left with my original commits

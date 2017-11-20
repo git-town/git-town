@@ -20,17 +20,17 @@ Given(/^my perennial branches are not configured$/) do
 end
 
 
-Given(/^my repository has the "([^"]*)" configuration set to "([^"]*)"$/) do |configuration, value|
+Given(/^the "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, value|
   set_configuration configuration, value
 end
 
 
-Given(/^I have configured the main branch name as "(.*)"$/) do |main_branch_name|
+Given(/^the main branch is configured as "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
 end
 
 
-Given(/^my perennial branches are configured as (.*)$/) do |data|
+Given(/^the perennial branches are configured as (.*)$/) do |data|
   branch_names = Kappamaki.from_sentence data
   set_configuration 'perennial-branch-names', branch_names.join(' ')
 end
@@ -48,7 +48,7 @@ end
 
 
 
-Then(/^my repo is configured with perennial branches as "(.*)"$/) do |data|
+Then(/^the perennial branches are now configured as "(.*)"$/) do |data|
   branch_names = Kappamaki.from_sentence(data)
   expect(perennial_branch_configuration.split(' ').map(&:strip)).to match_array branch_names
 end
@@ -59,7 +59,7 @@ Then(/^my repo is configured with no perennial branches$/) do
 end
 
 
-Then(/^my repo is configured with the main branch as "([^"]*)"$/) do |branch_name|
+Then(/^the main branch is now configured as "([^"]*)"$/) do |branch_name|
   expect(main_branch_configuration).to eql branch_name
 end
 
@@ -74,8 +74,8 @@ Then(/^Git Town is (?:no longer|still not) configured for this repository$/) do
 end
 
 
-Then(/^I see the initial configuration prompt$/) do
-  step %(I see "Git Town needs to be configured")
+Then(/^it prints the initial configuration prompt$/) do
+  step %(it prints "Git Town needs to be configured")
 end
 
 

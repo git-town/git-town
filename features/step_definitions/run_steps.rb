@@ -48,7 +48,7 @@ end
 
 
 
-Then(/^I get the error:$/) do |error_message|
+Then(/^it prints the error:$/) do |error_message|
   @error_expected = true
   expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
   expect(@last_run_result.error).to be_truthy
@@ -66,8 +66,8 @@ Then(/^I get the error:$/) do |error_message|
 end
 
 
-Then(/^I get the error "(.+?)"$/) do |error_message|
-  step 'I get the error:', error_message
+Then(/^it prints the error "(.+?)"$/) do |error_message|
+  step 'it prints the error:', error_message
 end
 
 
@@ -87,21 +87,21 @@ Then(/^it runs the commands$/) do |expected_commands|
 end
 
 
-Then(/^I see no output$/) do
+Then(/^it prints no output$/) do
   expect(@last_run_result.out).to eql ''
 end
 
 
-Then(/^I don't see "(.*)"$/) do |string|
+Then(/^it does not print "(.*)"$/) do |string|
   expect(unformatted_last_run_output).not_to include(string)
 end
 
 
-Then(/^I see$/) do |string|
+Then(/^it prints$/) do |string|
   expect(unformatted_last_run_output).to include(string)
 end
 
 
-Then(/^I see "(.*)"$/) do |string|
-  step 'I see', string
+Then(/^it prints "(.*)"$/) do |string|
+  step 'it prints', string
 end

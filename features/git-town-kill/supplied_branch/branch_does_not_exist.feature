@@ -11,10 +11,10 @@ Feature: git town-kill: errors if supplied branch does not exist
 
   Scenario: result
     When I run `git-town kill non-existing-feature`
-    Given I have an uncommitted file
+    Given my workspace has an uncommitted file
     Then it runs the commands
       | BRANCH | COMMAND           |
       | main   | git fetch --prune |
-    And I get the error "There is no branch named 'non-existing-feature'"
+    And it prints the error "There is no branch named 'non-existing-feature'"
     And I end up on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file

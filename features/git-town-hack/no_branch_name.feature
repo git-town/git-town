@@ -6,19 +6,19 @@ Feature: git town-hack: requires a branch name
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given my repository has a feature branch named "existing-feature"
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack`
 
 
   Scenario: result
     Then it runs no commands
-    And I get the error "no branch name provided"
-    And I get the error:
+    And it prints the error "no branch name provided"
+    And it prints the error:
       """
       Usage:
         git-town hack <branch> [flags]
       """
     And I am still on the "existing-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file

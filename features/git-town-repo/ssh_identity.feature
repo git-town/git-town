@@ -2,7 +2,7 @@ Feature: git-town repo: when origin is an ssh identity
 
   Scenario Outline: ssh identity
     Given I have "open" installed
-    And my remote origin is "git@my-ssh-identity:Originate/git-town.git"
+    And my repo's remote origin is "git@my-ssh-identity:Originate/git-town.git"
     And I configure "git-town.code-hosting-origin-hostname" as "<ORIGIN_HOSTNAME>"
     When I run `git-town repo`
     Then I see my repo homepage this url in my browser:

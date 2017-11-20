@@ -11,7 +11,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -22,7 +22,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git add -A             |
       |        | git stash              |
       |        | git rebase origin/main |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -38,15 +38,15 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | main   | git rebase --abort |
       |        | git stash pop      |
     And I am still on the "main" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -61,12 +61,12 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git push --tags       |
       |        | git stash pop         |
     And I am still on the "main" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
@@ -80,11 +80,11 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git push --tags |
       |        | git stash pop   |
     And I am still on the "main" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
       | main   | local and remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

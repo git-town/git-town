@@ -1,14 +1,14 @@
 Feature: git-town sync: resolving conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
       |         | remote   | feature commit             | feature_file     | feature content |
     And I am on the "feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town sync`
 
 
@@ -24,7 +24,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town sync --abort".
       To continue after you have resolved the conflicts, run "git-town sync --continue".
@@ -45,9 +45,9 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | main    | git checkout feature                                     |
       | feature | git stash pop                                            |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no merge in progress
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
@@ -57,7 +57,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing without resolving the conflicts
     When I run `git-town sync --continue`
     Then it runs no commands
-    And I get the error "You must resolve the conflicts before continuing"
+    And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -72,8 +72,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git push             |
       |         | git stash pop        |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | main    | local and remote | conflicting main commit                                    | conflicting_file |
       | feature | local and remote | conflicting feature commit                                 | conflicting_file |
@@ -81,7 +81,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |
       |         |                  | Merge branch 'main' into feature                           |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -96,8 +96,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       | feature | git push      |
       |         | git stash pop |
     And I am still on the "feature" branch
-    And I again have my uncommitted file
-    And I still have the following commits
+    And my workspace has the uncommitted file again
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
       | main    | local and remote | conflicting main commit                                    | conflicting_file |
       | feature | local and remote | conflicting feature commit                                 | conflicting_file |
@@ -105,7 +105,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |
       |         |                  | Merge branch 'main' into feature                           |                  |
-    And I still have the following committed files
+    And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

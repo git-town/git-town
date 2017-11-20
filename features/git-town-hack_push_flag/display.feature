@@ -7,25 +7,25 @@ Feature: passing an invalid option to the hack push flag configuration
 
   Scenario: default setting
     When I run `git-town hack-push-flag`
-    Then I see
+    Then it prints
       """
       false
       """
 
 
   Scenario: set to "true"
-    Given my repository has the "hack-push-flag" configuration set to "true"
+    Given the "hack-push-flag" configuration is set to "true"
     When I run `git-town hack-push-flag`
-    Then I see
+    Then it prints
       """
       true
       """
 
 
   Scenario: set to "false"
-    Given my repository has the "hack-push-flag" configuration set to "false"
+    Given the "hack-push-flag" configuration is set to "false"
     When I run `git-town hack-push-flag`
-    Then I see
+    Then it prints
       """
       false
       """
