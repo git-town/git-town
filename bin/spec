@@ -2,7 +2,7 @@
 set -ex
 
 # linters
-lint_go
+bin/lint_go
 bundle exec rubocop
 bundle exec cucumber_lint
 
