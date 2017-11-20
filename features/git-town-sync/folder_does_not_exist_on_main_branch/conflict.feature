@@ -30,7 +30,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | current-feature | git merge --no-edit origin/current-feature |
       |                 | git merge --no-edit main                   |
     And I am in the project root folder
-    And Git Town prints the error "Automatic merge failed"
+    And it prints the error "Automatic merge failed"
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress

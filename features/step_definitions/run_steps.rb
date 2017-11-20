@@ -48,7 +48,7 @@ end
 
 
 
-Then(/^(?:Git Town|it) prints the error:$/) do |error_message|
+Then(/^it prints the error:$/) do |error_message|
   @error_expected = true
   expect(@last_run_result).to_not be_nil, 'Error message expected, but no commands were run'
   expect(@last_run_result.error).to be_truthy
@@ -66,8 +66,8 @@ Then(/^(?:Git Town|it) prints the error:$/) do |error_message|
 end
 
 
-Then(/^(?:Git Town|it) prints the error "(.+?)"$/) do |error_message|
-  step 'Git Town prints the error:', error_message
+Then(/^it prints the error "(.+?)"$/) do |error_message|
+  step 'it prints the error:', error_message
 end
 
 
@@ -97,11 +97,11 @@ Then(/^it does not print "(.*)"$/) do |string|
 end
 
 
-Then(/^(?:Git Town|it) prints$/) do |string|
+Then(/^it prints$/) do |string|
   expect(unformatted_last_run_output).to include(string)
 end
 
 
-Then(/^(?:Git Town|it) prints "(.*)"$/) do |string|
-  step 'Git Town prints', string
+Then(/^it prints "(.*)"$/) do |string|
+  step 'it prints', string
 end
