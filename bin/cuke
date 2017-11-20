@@ -3,17 +3,20 @@ set -e
 
 # Runs the feature tests
 
+
+# compile the test binary
 bin/build-test
 
+# run the tests
 if [ "$#" == 0 ]; then
   bundle exec parallel_cucumber features
 else
   bundle exec parallel_cucumber "$@"
 fi
 
+# merge the coverage data
 file_count=$(find . -name 'coverage_*.cov' | wc -l | tr -d ' ')
 echo "merging $file_count coverages"
-
 find . -name 'coverage_*.cov' -print0 | xargs -0 "$(echo $GOPATH | cut -d: -f1)/bin/gocovmerge" > cov.cov
 find . -name 'coverage_*.cov' -print0 | xargs -0 rm
 mv cov.cov coverage.cov
