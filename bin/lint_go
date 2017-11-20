@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 if [ -n "$(goimports -d src 2>&1)" ]; then
   echo "Code is not formatted. Run 'goimports -w src'"
