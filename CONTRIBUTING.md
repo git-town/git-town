@@ -12,10 +12,10 @@ This guide will help you get started and outline some things you should know whe
 
 ## Setup
 
-* install [Go](https://golang.org)
+* install [Go](https://golang.org) version 1.9 or better
   * on macOS via `brew install go`
   * on Windows via the [official Go installer](https://golang.org/dl)
-* install [Ruby 2.3.3](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
+* install [Ruby 2.4.1](https://www.ruby-lang.org/en/documentation/installation) to run the feature tests
   * prefer install with [rbenv](https://github.com/sstephenson/rbenv)
   * run `gem install bundler`
 * set up the Go directory structure on your machine
