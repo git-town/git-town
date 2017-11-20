@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -ex
 
-
 # This script cross-compiles
 # the Git Town source code
 # into binaries for all target platforms.

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -ex
 
+# Runs all the tests
+
+
 # linters
 bin/lint_go
 bundle exec rubocop

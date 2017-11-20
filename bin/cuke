@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+# Runs the feature tests
+
 bin/build-test
 
 if [ "$#" == 0 ]; then
