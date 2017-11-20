@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+go test -c -coverpkg ./...
+mv git-town.test ~/d/go/bin
