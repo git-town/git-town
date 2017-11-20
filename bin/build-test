@@ -2,5 +2,4 @@
 set -e
 
 go test -c -coverpkg ./...
-
 mv git-town.test "$(echo $GOPATH | cut -d: -f1)/bin"
