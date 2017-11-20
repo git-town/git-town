@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# Runs the auto-fixes for Gherkin
+# Runs the Gherkin auto-fixes
 
 bundle exec cucumber_lint --fix
