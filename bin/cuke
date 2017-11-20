@@ -9,7 +9,9 @@ else
   bundle exec parallel_cucumber "$@"
 fi
 
-# find . -name 'coverage*.cov' -print0 | xargs -0 gocovmerge > cov.cov
-# find . -name 'coverage*.cov' -print0 | xargs -0 -L 1 rm
-# mv cov.cov coverage.cov
-# echo DONE
+file_count=$(find . -name 'coverage_*.cov' | wc -l | tr -d ' ')
+echo "merging $file_count coverages"
+
+find . -name 'coverage_*.cov' -print0 | xargs -0 gocovmerge > cov.cov
+find . -name 'coverage_*.cov' -print0 | xargs -0 rm
+mv cov.cov coverage.cov
