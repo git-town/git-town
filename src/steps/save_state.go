@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"reflect"
 
-	"github.com/Originate/git-town/src/exit"
+	"github.com/Originate/exit"
 )
 
 func saveState(runState *RunState) {
@@ -15,15 +15,15 @@ func saveState(runState *RunState) {
 		UndoSteps: serializeSteps(runState.UndoStepList.List),
 	}
 	content, err := json.Marshal(serializedRunState)
-	exit.On(err)
+	exit.If(err)
 	filename := getRunResultFilename(runState.Command)
 	err = ioutil.WriteFile(filename, content, 0644)
-	exit.On(err)
+	exit.If(err)
 }
 
 func serializeStep(step Step) SerializedStep {
 	data, err := json.Marshal(step)
-	exit.On(err)
+	exit.If(err)
 	return SerializedStep{
 		Data: data,
 		Type: getTypeName(step),
