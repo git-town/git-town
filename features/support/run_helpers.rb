@@ -53,6 +53,7 @@ def print_result result
 end
 
 
+# rubocop:disable Metrics/MethodLength
 def run command, inputs: [], ignore_errors: false
   is_git_town_command = git_town_command? command
 
@@ -61,9 +62,12 @@ def run command, inputs: [], ignore_errors: false
   if is_git_town_command && File.exist?(coverage_file_path)
     File.delete coverage_file_path
   end
+
+  # run the binary with test coverage enabled
   command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
   result = run_shell_command command, inputs
   result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...\n}, ''
+
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
                                     result: result,
                                     ignore_errors: ignore_errors
@@ -73,6 +77,7 @@ def run command, inputs: [], ignore_errors: false
   @last_run_result = result if is_git_town_command
   result
 end
+# rubocop:enable Metrics/MethodLength
 
 
 def run_shell_command command, inputs = []
