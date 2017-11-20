@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
+# Runs all the available linters
+
 lint_go

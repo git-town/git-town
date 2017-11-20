@@ -2,6 +2,8 @@
 set -e
 
 go get github.com/Masterminds/glide github.com/alecthomas/gometalinter github.com/onsi/ginkgo/ginkgo
+# The setup steps necessary on developer machines
+
 gometalinter --install
 bin/build
 bundle install
