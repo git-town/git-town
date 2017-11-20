@@ -1,3 +1,5 @@
+// See ./test-coverage.md for why this file exists
+
 package main
 
 import (
