@@ -63,7 +63,7 @@ def run command, inputs: [], ignore_errors: false
   end
   command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
   result = run_shell_command command, inputs
-  result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...}, ''
+  result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...\n}, ''
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
                                     result: result,
                                     ignore_errors: ignore_errors

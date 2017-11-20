@@ -88,7 +88,7 @@ end
 
 
 Then(/^I see no output$/) do
-  expect(@last_run_result.out.strip).to eql ''
+  expect(@last_run_result.out).to eql ''
 end
 
 
