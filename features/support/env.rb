@@ -95,16 +95,16 @@ end
 
 
 After do
-  save_coverage_file
+  # save_coverage_file
   FileUtils.rm_rf @temporary_shell_overrides_directory
 end
 
 
-COUNTER = [0]
+# COUNTER = [0]
 def save_coverage_file
-  filename = File.join(REPOSITORY_BASE, "developer", "coverage.cov")
+  filename = File.join(REPOSITORY_BASE, 'developer', 'coverage.cov')
   if File.exist? filename
-    FileUtils.mv(filename, File.join(GIT_TOWN_DIRECTORY, "coverage#{COUNTER[0].to_s}.cov"))
+    FileUtils.mv(filename, File.join(GIT_TOWN_DIRECTORY, "coverage#{COUNTER[0]}.cov"))
     COUNTER[0] += 1
   end
 end

@@ -9,7 +9,7 @@ else
   bundle exec parallel_cucumber "$@"
 fi
 
-find . -name 'coverage*.cov' -print0 | xargs -0 gocovmerge > cov.cov
-find . -name 'coverage*.cov' -print0 | xargs -0 -L 1 rm
-mv cov.cov coverage.cov
-echo DONE
+# find . -name 'coverage*.cov' -print0 | xargs -0 gocovmerge > cov.cov
+# find . -name 'coverage*.cov' -print0 | xargs -0 -L 1 rm
+# mv cov.cov coverage.cov
+# echo DONE
