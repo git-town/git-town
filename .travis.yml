@@ -12,7 +12,8 @@ install:
   - bin/setup
 
 script:
-  - rake
+  - bin/build-test
+  - bin/spec
 
 after_script:
   - $GOPATH/bin/goveralls -service=travis-ci -coverprofile=coverage.cov

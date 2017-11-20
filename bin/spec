@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -ex
+
+# linters
+lint_go
+bundle exec rubocop
+bundle exec cucumber_lint
+
+# unit tests
+bin/tests
+
+# feature tests
+bin/cuke
