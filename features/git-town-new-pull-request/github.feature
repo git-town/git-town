@@ -10,8 +10,8 @@ Feature: git-new-pull-request when origin is on GitHub
 
 
   Scenario Outline: normal origin
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
 		Then I see a new pull request with this url in my browser:
@@ -30,8 +30,8 @@ Feature: git-new-pull-request when origin is on GitHub
 
 
   Scenario Outline: origin contains path that looks like a URL
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
 		Then I see a new pull request with this url in my browser:
@@ -50,8 +50,8 @@ Feature: git-new-pull-request when origin is on GitHub
 
 
   Scenario Outline: SSH style origin
-    Given I have a feature branch named "feature"
-    And my remote origin is <ORIGIN>
+    Given my repository has a feature branch named "feature"
+    And my repo's remote origin is <ORIGIN>
     And I am on the "feature" branch
     When I run `git-town new-pull-request`
 		Then I see a new pull request with this url in my browser:
@@ -66,27 +66,27 @@ Feature: git-new-pull-request when origin is on GitHub
 
 
   Scenario: nested feature branch with known parent
-    Given I have a feature branch named "parent-feature"
-    And I have a feature branch named "child-feature" as a child of "parent-feature"
-    And my remote origin is git@github.com:Originate/git-town.git
+    Given my repository has a feature branch named "parent-feature"
+    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "child-feature" branch
     When I run `git-town new-pull-request`
     Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (entering the parent name)
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and enter "main"
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
 
   Scenario: nested feature branch with unknown parent (accepting default choice)
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
-    And my remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and press ENTER
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser

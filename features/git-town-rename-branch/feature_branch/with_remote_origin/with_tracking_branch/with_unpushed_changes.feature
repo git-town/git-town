@@ -6,14 +6,14 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
 
 
   Background:
-    Given I have a feature branch named "current-feature"
+    Given my repository has a feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE              |
       | main            | local and remote | main commit          |
       | current-feature | local and remote | feature commit       |
       |                 | local            | local feature commit |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town rename-branch current-feature renamed-feature`
 
 
@@ -21,7 +21,7 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
     Then it runs the commands
       | BRANCH          | COMMAND           |
       | current-feature | git fetch --prune |
-    And I get the error "'current-feature' is not in sync with its tracking branch. Please sync the branches before renaming."
+    And it prints the error "'current-feature' is not in sync with its tracking branch. Please sync the branches before renaming."
     And I end up on the "current-feature" branch
-    And I still have my uncommitted file
-    And I am left with my original commits
+    And my workspace still contains my uncommitted file
+    And my repository is left with my original commits

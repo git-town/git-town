@@ -6,13 +6,13 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
 
 
   Background:
-    Given I have a feature branch named "other-feature"
-    And I have a feature branch named "feature" on another machine
+    Given my repository has a feature branch named "other-feature"
+    And my repository has a feature branch named "feature" on another machine
     And the following commit exists in my repository on another machine
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
-    And I have an uncommitted file with name: "feature_file" and content: "conflicting content"
+    And my workspace has an uncommitted file with name: "feature_file" and content: "conflicting content"
     When I run `git-town ship feature -m "feature done"` and press ENTER
 
 
@@ -36,8 +36,8 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
     And I end up on the "other-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And there is no "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
       | main   | local and remote | feature done | feature_file |

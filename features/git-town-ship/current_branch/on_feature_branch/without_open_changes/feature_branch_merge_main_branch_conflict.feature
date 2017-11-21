@@ -6,7 +6,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
@@ -25,7 +25,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
@@ -43,7 +43,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
@@ -63,7 +63,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
@@ -82,7 +82,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
       | main   | local and remote | conflicting main commit | conflicting_file |
       |        |                  | feature done            | conflicting_file |
