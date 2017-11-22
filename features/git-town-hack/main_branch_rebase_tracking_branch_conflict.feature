@@ -6,13 +6,13 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Background:
-    Given I have a feature branch named "existing-feature"
+    Given my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town hack new-feature`
 
 
@@ -24,7 +24,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |                  | git stash              |
       |                  | git checkout main      |
       | main             | git rebase origin/main |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town hack --abort".
       To continue after you have resolved the conflicts, run "git-town hack --continue".
@@ -41,14 +41,14 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |                  | git checkout existing-feature |
       | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
-    And I again have my uncommitted file
+    And my workspace has the uncommitted file again
     And there is no rebase in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
     When I run `git-town hack --continue`
-    Then I get the error "You must resolve the conflicts before continuing"
+    Then it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -63,14 +63,14 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new-feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new-feature | conflicting_file | resolved content |
@@ -85,14 +85,14 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             | git checkout -b new-feature main |
       | new-feature | git stash pop                    |
     And I end up on the "new-feature" branch
-    And I still have my uncommitted file
-    And now I have the following commits
+    And my workspace still contains my uncommitted file
+    And now my repository has the following commits
       | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
       | main        | local and remote | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
       | new-feature | local            | conflicting remote commit | conflicting_file |
       |             |                  | conflicting local commit  | conflicting_file |
-    And now I have the following committed files
+    And now my repository has the following committed files
       | BRANCH      | NAME             | CONTENT          |
       | main        | conflicting_file | resolved content |
       | new-feature | conflicting_file | resolved content |

@@ -6,12 +6,12 @@ Feature: Appending a branch to a perennial branch
 
 
   Background:
-    Given I have perennial branches named "qa" and "production"
+    Given my repository has the perennial branches "qa" and "production"
     And the following commit exists in my repository
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "production" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town append new-child`
 
 
@@ -26,8 +26,8 @@ Feature: Appending a branch to a perennial branch
       |            | git checkout new-child          |
       | new-child  | git stash pop                   |
     And I end up on the "new-child" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
       | new-child  | local            | production_commit |
       | production | local and remote | production_commit |
@@ -46,7 +46,7 @@ Feature: Appending a branch to a perennial branch
         | production | git branch -D new-child |
         |            | git stash pop           |
     And I end up on the "production" branch
-    And I still have my uncommitted file
-    And I have the following commits
+    And my workspace still contains my uncommitted file
+    And my repository has the following commits
       | BRANCH     | LOCATION         | MESSAGE           |
       | production | local and remote | production_commit |

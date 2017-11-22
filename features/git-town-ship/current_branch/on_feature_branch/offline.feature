@@ -7,7 +7,7 @@ Feature: git town-ship: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And I have a feature branch named "feature"
+    And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION         | MESSAGE        |
       | feature | local and remote | feature commit |
@@ -28,7 +28,7 @@ Feature: git town-ship: offline mode
       |         | git commit -m "feature done"       |
       |         | git branch -D feature              |
     And I end up on the "main" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION | MESSAGE        |
       | main    | local    | feature done   |
       | feature | remote   | feature commit |
@@ -45,7 +45,7 @@ Feature: git town-ship: offline mode
       | main    | git reset --hard <%= sha 'Initial commit' %>   |
       |         | git checkout feature                           |
     And I end up on the "feature" branch
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE        |
       | feature | local and remote | feature commit |
     And Git Town is now aware of this branch hierarchy

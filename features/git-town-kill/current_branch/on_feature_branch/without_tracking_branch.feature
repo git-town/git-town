@@ -6,14 +6,14 @@ Feature: git town-kill: killing the current feature branch without a tracking br
 
 
   Background:
-    Given I have a feature branch named "other-feature"
-    And I have a local feature branch named "current-feature"
+    Given my repository has a feature branch named "other-feature"
+    And my repository has a local feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                |
       | current-feature | local            | current feature commit |
       | other-feature   | local and remote | other feature commit   |
     And I am on the "current-feature" branch
-    And I have an uncommitted file
+    And my workspace has an uncommitted file
     When I run `git-town kill`
 
 
@@ -30,7 +30,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And I have the following commits
+    And my repository has the following commits
       | BRANCH        | LOCATION         | MESSAGE              |
       | other-feature | local and remote | other feature commit |
 
@@ -43,9 +43,9 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       |                 | git checkout current-feature                                   |
       | current-feature | git reset <%= sha 'current feature commit' %>                  |
     And I end up on the "current-feature" branch
-    And I still have my uncommitted file
+    And my workspace still contains my uncommitted file
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And I am left with my original commits
+    And my repository is left with my original commits

@@ -6,7 +6,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
 
   Background:
-    Given I have a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
@@ -23,7 +23,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
-    And I get the error:
+    And it prints the error:
       """
       To abort, run "git-town ship --abort".
       To continue after you have resolved the conflicts, run "git-town ship --continue".
@@ -41,7 +41,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | main    | git checkout feature |
     And I am still on the "feature" branch
     And there is no merge in progress
-    And I am left with my original commits
+    And my repository is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts
@@ -59,7 +59,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
 
@@ -78,6 +78,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git branch -D feature        |
     And I end up on the "main" branch
     And there is no "feature" branch
-    And I still have the following commits
+    And my repository still has the following commits
       | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
       | main   | local and remote | feature done | conflicting_file |
