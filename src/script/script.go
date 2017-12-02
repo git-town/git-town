@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"github.com/Originate/exit"
+	"github.com/Originate/git-town/src/browsers"
 	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 
 	"github.com/fatih/color"
 )
@@ -31,7 +31,7 @@ func ActivateDryRun() {
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
-	command := util.GetOpenBrowserCommand()
+	command := browsers.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
 	exit.If(err)
 }
@@ -70,7 +70,7 @@ func RunCommand(cmd ...string) error {
 	if runtime.GOOS == "windows" {
 		cmd = append([]string{"cmd", "/C"}, cmd...)
 	}
-	subProcess := exec.Command(cmd[0], cmd[1:]...)
+	subProcess := exec.Command(cmd[0], cmd[1:]...) // #nosec
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
 	subProcess.Stdout = os.Stdout
