@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/Originate/exit"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -85,14 +86,13 @@ func GetChildBranches(branchName string) (result []string) {
 // GetConfigurationValue returns the given configuration value,
 // from either global or local Git configuration
 func GetConfigurationValue(key string) (result string) {
-	result, _ = util.GetFullCommandOutput("git", "config", key)
-	return
+	return command.New("git", "config", key).Output()
 }
 
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
 func GetGlobalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("global", key) {
-		result = util.GetCommandOutput("git", "config", "--global", key)
+		result = command.New("git", "config", "--global", key).Output()
 	}
 	return
 }
@@ -130,12 +130,12 @@ func GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return util.GetCommandOutput("git", "remote", "get-url", "origin")
+	return command.New("git", "remote", "get-url", "origin").Output()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func GetRemoteUpstreamURL() string {
-	return util.GetCommandOutput("git", "remote", "get-url", "upstream")
+	return command.New("git", "remote", "get-url", "upstream").Output()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -163,7 +163,7 @@ func GetURLRepositoryName(url string) string {
 
 // HasGlobalConfigurationValue returns whether there is a global git configuration for the given key
 func HasGlobalConfigurationValue(key string) bool {
-	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--global", "--name"}, key)
+	return command.New("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
 }
 
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
@@ -181,7 +181,7 @@ func HasCompiledAncestorBranches(branchName string) bool {
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
 func HasRemote(name string) bool {
-	return util.DoesCommandOuputContainLine([]string{"git", "remote"}, name)
+	return command.New("git", "remote").OutputContainsLine(name)
 }
 
 // IsFeatureBranch returns whether the branch with the given name is
@@ -205,7 +205,7 @@ func IsPerennialBranch(branchName string) bool {
 
 // RemoveAllConfiguration removes all Git Town configuration
 func RemoveAllConfiguration() {
-	util.GetCommandOutput("git", "config", "--remove-section", "git-town")
+	command.New("git", "config", "--remove-section", "git-town").Output()
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
@@ -272,7 +272,7 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 // only from the local Git configuration
 func getLocalConfigurationValue(key string) (result string) {
 	if hasConfigurationValue("local", key) {
-		result = util.GetCommandOutput("git", "config", "--local", key)
+		result = command.New("git", "config", "--local", key).Output()
 	}
 	return
 }
@@ -288,7 +288,7 @@ func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
 func getConfigurationKeysMatching(toMatch string) (result []string) {
 	configRegexp, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	lines := util.GetCommandOutput("git", "config", "-l", "--local", "--name")
+	lines := command.New("git", "config", "-l", "--local", "--name").Output()
 	for _, line := range strings.Split(lines, "\n") {
 		if configRegexp.MatchString(line) {
 			result = append(result, line)
@@ -298,17 +298,17 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 }
 
 func hasConfigurationValue(location, key string) bool {
-	return util.DoesCommandOuputContainLine([]string{"git", "config", "-l", "--" + location, "--name"}, key)
+	return command.New("git", "config", "-l", "--"+location, "--name").OutputContainsLine(key)
 }
 
 func setConfigurationValue(key, value string) {
-	util.GetCommandOutput("git", "config", key, value)
+	command.New("git", "config", key, value).Run()
 }
 
 func setGlobalConfigurationValue(key, value string) {
-	util.GetCommandOutput("git", "config", "--global", key, value)
+	command.New("git", "config", "--global", key, value).Run()
 }
 
 func removeConfigurationValue(key string) {
-	util.GetCommandOutput("git", "config", "--unset", key)
+	command.New("git", "config", "--unset", key).Run()
 }
