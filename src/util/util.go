@@ -4,27 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
-	"runtime"
 	"strings"
 
 	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/fatih/color"
 )
-
-// DoesCommandOuputContain runs the given command
-// and returns whether its output contains the given string.
-func DoesCommandOuputContain(cmd []string, value string) bool {
-	return strings.Contains(GetCommandOutput(cmd...), value)
-}
-
-// DoesCommandOuputContainLine runs the given command
-// and returns whether its output contains the given string as an entire line.
-func DoesCommandOuputContainLine(cmd []string, value string) bool {
-	list := strings.Split(GetCommandOutput(cmd...), "\n")
-	return DoesStringArrayContain(list, value)
-}
 
 // DoesStringArrayContain returns whether the given string slice
 // contains the given string.
@@ -41,56 +26,6 @@ func DoesStringArrayContain(list []string, value string) bool {
 func ExitWithErrorMessage(messages ...string) {
 	PrintError(messages...)
 	os.Exit(1)
-}
-
-// GetCommandOutput runs the given command and returns its output.
-func GetCommandOutput(cmd ...string) string {
-	output, err := GetFullCommandOutput(cmd...)
-	exit.IfWrapf(err, "Command: %s\nOutput: %s", strings.Join(cmd, " "), output)
-	return strings.TrimSpace(output)
-}
-
-// GetFullCommandOutput runs the given command and returns its output and error
-func GetFullCommandOutput(cmd ...string) (string, error) {
-	subProcess := exec.Command(cmd[0], cmd[1:]...)
-	output, err := subProcess.CombinedOutput()
-	return strings.TrimSpace(string(output)), err
-}
-
-var openBrowserCommands = []string{
-	"xdg-open",
-	"open",
-	"cygstart",
-	"x-www-browser",
-	"firefox",
-	"opera",
-	"mozilla",
-	"netscape",
-}
-var missingOpenBrowserCommandMessages = []string{
-	"Cannot open a browser.",
-	"If you think this is a bug,",
-	"please open an issue at https://github.com/Originate/git-town/issues",
-	"and mention your OS and browser.",
-}
-
-// GetOpenBrowserCommand returns the command to run on the console
-// to open the default browser.
-func GetOpenBrowserCommand() string {
-	if runtime.GOOS == "windows" {
-		// NOTE: the "explorer" command cannot handle special characters
-		//       like "?" and "=", so we are using "start" here.
-		//       "?" can be escaped via "\", but "=" cannot.
-		return "start"
-	}
-	for _, command := range openBrowserCommands {
-		output, err := GetFullCommandOutput("which", command)
-		if err == nil && output != "" {
-			return command
-		}
-	}
-	ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
-	return ""
 }
 
 var inputReader = bufio.NewReader(os.Stdin)
