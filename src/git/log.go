@@ -1,8 +1,8 @@
 package git
 
-import "github.com/Originate/git-town/src/util"
+import "github.com/Originate/git-town/src/command"
 
 // GetLastCommitMessage returns the commit message for the last commit
 func GetLastCommitMessage() string {
-	return util.GetCommandOutput("git", "log", "-1", "--format=%B")
+	return command.New("git", "log", "-1", "--format=%B").Output()
 }

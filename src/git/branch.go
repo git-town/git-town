@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Originate/exit"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/util"
 )
@@ -13,7 +14,7 @@ import (
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return util.GetCommandOutput("git", "log", GetMainBranch()+".."+branchName) != ""
+	return command.New("git", "log", GetMainBranch()+".."+branchName).Output() != ""
 }
 
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
@@ -54,7 +55,7 @@ func GetCurrentBranchName() string {
 	if IsRebaseInProgress() {
 		return getCurrentBranchNameDuringRebase()
 	}
-	return util.GetCommandOutput("git", "rev-parse", "--abbrev-ref", "HEAD")
+	return command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -72,8 +73,7 @@ func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, in
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically
 func GetLocalBranches() (result []string) {
-	output := util.GetCommandOutput("git", "branch")
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(command.New("git", "branch").Output(), "\n") {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
@@ -84,8 +84,7 @@ func GetLocalBranches() (result []string) {
 // GetLocalBranchesWithDeletedTrackingBranches returns the names of all branches
 // whose remote tracking branches have been deleted
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
-	output := util.GetCommandOutput("git", "branch", "-vv")
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(command.New("git", "branch", "-vv").Output(), "\n") {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branchName := parts[0]
@@ -114,11 +113,11 @@ func GetLocalBranchesWithMainBranchFirst() (result []string) {
 
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch
 func GetPreviouslyCheckedOutBranch() string {
-	branch, err := util.GetFullCommandOutput("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
-	if err != nil {
+	command := command.New("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	if command.Err() != nil {
 		return ""
 	}
-	return branch
+	return command.Output()
 }
 
 // GetTrackingBranchName returns the name of the remote branch
@@ -130,8 +129,7 @@ func GetTrackingBranchName(branchName string) string {
 // HasBranch returns whether the repository contains a branch with the given name.
 // The branch does not have to be present on the local repository.
 func HasBranch(branchName string) bool {
-	output := util.GetCommandOutput("git", "branch", "-a")
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(command.New("git", "branch", "-a").Output(), "\n") {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -152,8 +150,7 @@ func HasLocalBranch(branchName string) bool {
 // has a tracking branch.
 func HasTrackingBranch(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
-	output := util.GetCommandOutput("git", "branch", "-r")
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(command.New("git", "branch", "-r").Output(), "\n") {
 		if strings.TrimSpace(line) == trackingBranchName {
 			return true
 		}
@@ -175,8 +172,8 @@ func IsBranchInSync(branchName string) bool {
 // contains commits that have not been pushed to the remote.
 func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
-	output := util.GetCommandOutput("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
-	return output != ""
+	command := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
+	return command.Output() != ""
 }
 
 // Helpers
