@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+# Runs the Markdown linter
+
+prettier -l '{,!(vendor)/**/}*.md'
