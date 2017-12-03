@@ -101,8 +101,9 @@ func (bg *BipartiteGraph) createSLAPGuideLayers(matching EdgeSet) (guideLayers [
 
 	if len(currentLayer) == 0 {
 		return []NodeOrderedSet{}
+	} else {
+		guideLayers = append(guideLayers, currentLayer)
 	}
-	guideLayers = append(guideLayers, currentLayer)
 
 	done := false
 
@@ -151,8 +152,9 @@ func (bg *BipartiteGraph) createSLAPGuideLayers(matching EdgeSet) (guideLayers [
 
 		if len(currentLayer) == 0 {
 			return []NodeOrderedSet{}
+		} else {
+			guideLayers = append(guideLayers, currentLayer)
 		}
-		guideLayers = append(guideLayers, currentLayer)
 	}
 
 	return

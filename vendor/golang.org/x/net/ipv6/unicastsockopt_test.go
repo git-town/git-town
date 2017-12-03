@@ -1,4 +1,4 @@
-// Copyright 2013 The Go Authors.  All rights reserved.
+// Copyright 2013 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -29,8 +29,15 @@ func TestConnUnicastSocketOptions(t *testing.T) {
 	}
 	defer ln.Close()
 
-	done := make(chan bool)
-	go acceptor(t, ln, done)
+	errc := make(chan error, 1)
+	go func() {
+		c, err := ln.Accept()
+		if err != nil {
+			errc <- err
+			return
+		}
+		errc <- c.Close()
+	}()
 
 	c, err := net.Dial("tcp6", ln.Addr().String())
 	if err != nil {
@@ -40,7 +47,9 @@ func TestConnUnicastSocketOptions(t *testing.T) {
 
 	testUnicastSocketOptions(t, ipv6.NewConn(c))
 
-	<-done
+	if err := <-errc; err != nil {
+		t.Errorf("server: %v", err)
+	}
 }
 
 var packetConnUnicastSocketOptionTests = []struct {

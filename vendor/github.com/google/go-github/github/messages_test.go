@@ -117,14 +117,6 @@ func TestParseWebHook(t *testing.T) {
 			messageType: "gollum",
 		},
 		{
-			payload:     &InstallationEvent{},
-			messageType: "installation",
-		},
-		{
-			payload:     &InstallationRepositoriesEvent{},
-			messageType: "installation_repositories",
-		},
-		{
 			payload:     &IssueCommentEvent{},
 			messageType: "issue_comment",
 		},
@@ -207,10 +199,6 @@ func TestParseWebHook(t *testing.T) {
 		{
 			payload:     &StatusEvent{},
 			messageType: "status",
-		},
-		{
-			payload:     &TeamEvent{},
-			messageType: "team",
 		},
 		{
 			payload:     &TeamAddEvent{},

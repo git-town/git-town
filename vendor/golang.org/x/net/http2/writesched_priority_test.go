@@ -434,7 +434,7 @@ func TestPriorityFlowControl(t *testing.T) {
 			t.Fatalf("Pop(%d)=false, want true", i)
 		}
 		if got, want := wr.DataSize(), 8; got != want {
-			t.Fatalf("Pop(%d)=%d bytes, want %d bytes", got, want)
+			t.Fatalf("Pop(%d)=%d bytes, want %d bytes", i, got, want)
 		}
 	}
 }
@@ -521,6 +521,21 @@ func TestPriorityWeights(t *testing.T) {
 	//   st2, total bytes so far is (st1=40, st=32)
 	//   st2, total bytes so far is (st1=40, st=40)
 	if err := checkPopAll(ws, []uint32{1, 2, 1, 1, 1, 2, 1, 2, 2, 2}); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestPriorityRstStreamOnNonOpenStreams(t *testing.T) {
+	ws := NewPriorityWriteScheduler(&PriorityWriteSchedulerConfig{
+		MaxClosedNodesInTree: 0,
+		MaxIdleNodesInTree:   0,
+	})
+	ws.OpenStream(1, OpenStreamOptions{})
+	ws.CloseStream(1)
+	ws.Push(FrameWriteRequest{write: streamError(1, ErrCodeProtocol)})
+	ws.Push(FrameWriteRequest{write: streamError(2, ErrCodeProtocol)})
+
+	if err := checkPopAll(ws, []uint32{1, 2}); err != nil {
 		t.Error(err)
 	}
 }
