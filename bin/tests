@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
+# Runs the unit tests
+
 ginkgo src/...

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+# Runs all the Golang linters
+
 if [ -n "$(goimports -d src 2>&1)" ]; then
   echo "Code is not formatted. Run 'goimports -w src'"
   exit 1
