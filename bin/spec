@@ -5,9 +5,7 @@ set -ex
 
 
 # linters
-bin/lint_go
-bundle exec rubocop
-bundle exec cucumber_lint
+bin/lint
 
 # unit tests
 bin/tests
