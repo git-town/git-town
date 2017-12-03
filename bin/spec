@@ -3,12 +3,6 @@ set -ex
 
 # Runs all the tests
 
-
-# linters
 bin/lint
-
-# unit tests
 bin/tests
-
-# feature tests
 bin/cuke
