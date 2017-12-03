@@ -62,11 +62,13 @@ def run command, inputs: [], ignore_errors: false
   # polluting the list of open files.
   coverage_file_path = File.join(Dir.pwd, 'coverage.cov')
   if is_git_town_command && File.exist?(coverage_file_path)
+    p 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXx DELETING COVERAGE FILE'
     File.delete coverage_file_path
   end
 
   # run the binary with test coverage enabled
   command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
+  p "running command: #{command}"
   result = run_shell_command command, inputs
   result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...\n}, ''
 

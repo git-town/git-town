@@ -102,13 +102,14 @@ end
 
 def save_coverage_file
   file_path = File.join(REPOSITORY_BASE, 'developer', 'coverage.cov')
-  if File.exist? file_path
-    FileUtils.mv(file_path, File.join(GIT_TOWN_DIRECTORY, "coverage_#{SecureRandom.uuid}.cov"))
-  end
+  p file_path
+  # if File.exist? file_path
+  #   FileUtils.mv(file_path, File.join(GIT_TOWN_DIRECTORY, "coverage_#{SecureRandom.uuid}.cov"))
+  # end
 end
 
 
 at_exit do
-  FileUtils.rm_rf REPOSITORY_BASE
+  # FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end
