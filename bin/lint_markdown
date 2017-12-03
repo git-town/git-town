@@ -3,4 +3,4 @@ set -e
 
 # Runs the Markdown linter
 
-prettier -l '{,!(vendor)/**/}*.md'
+node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
