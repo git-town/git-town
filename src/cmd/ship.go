@@ -116,6 +116,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
 	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
 	if canShipWithDriver {
+		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
