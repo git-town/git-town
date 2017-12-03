@@ -60,9 +60,7 @@ This guide will help you get started and outline some things you should know whe
 ## Command documentation
 
 Every Git Town command
-* has a [man page](./man/man1)
 * has a [Markdown page](./documentation/commands) that is identical to the man page
-* is listed on the [git-town man page](./man/man1/git-town.1)
 * is listed on the [README](./README.md)
 
 
