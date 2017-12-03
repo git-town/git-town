@@ -1,4 +1,6 @@
-// See ./test-coverage.md for why this file exists
+// This file exists to compile a test binary
+// that behaves like the production binary.
+// See ./documentation/test-coverage.md for more information.
 
 package main
 
