@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# Runs all the Golang linters
+# Runs the Ruby linter
 
 bundle exec rubocop
