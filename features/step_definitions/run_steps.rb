@@ -18,24 +18,24 @@ end
 
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
   # In vim "dG" removes all lines and "ZZ" saves and exits
-  @result = run command, inputs: ["dGZZ"]
+  @result = run command, inputs: ['dGZZ']
 end
 
 
 When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
   # In vim "ZZ" saves and exits
-  @result = run command, inputs: ["ZZ"]
+  @result = run command, inputs: ['ZZ']
 end
 
 
 When(/^I run `(.+?)` and answer the prompts:$/) do |command, table|
-  table.map_headers! { |header| header.downcase }
+  table.map_headers!(&:downcase)
   table.map_column!('answer') do |text|
     text
-      .gsub("ENTER", "\n")
-      .gsub("DOWN", "\e[B")
-      .gsub("SPACE", " ")
-      .gsub(", ", "")
+      .gsub('ENTER', "\n")
+      .gsub('DOWN', "\e[B")
+      .gsub('SPACE', ' ')
+      .gsub(', ', '')
   end
   @result = run command, responses: table.hashes
 end

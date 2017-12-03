@@ -73,27 +73,40 @@ def run_shell_command command, inputs = [], responses = []
   kill = inputs.pop if inputs.last == '^C' # command shouldn't error if user aborts it
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    if responses.length > 0
-      index = 0
-      stdin.close if responses.length == index
-      result.out = ""
-      while line = stdout.gets do
-        if index < responses.length && line.include?(responses[index]['prompt'])
-          stdin.write responses[index]['answer']
-          index += 1
-          stdin.close if responses.length == index
-        end
-        result.out += line
-      end
-    else
-      inputs.each { |input| stdin.puts input }
-      stdin.close
-      result.out = stdout.read
-    end
+    result.out = interact_with_streams inputs, responses, stdin, stdout
   end
 
   result.error = status.exitstatus.nonzero? && !kill
   result
+end
+
+
+def interact_with_streams inputs, responses, stdin, stdout
+  if !responses.empty?
+    respond_to_output responses, stdin, stdout
+  else
+    inputs.each { |input| stdin.puts input }
+    stdin.close
+    stdout.read
+  end
+end
+
+
+# rubocop:disable MethodLength
+def respond_to_output responses, stdin, stdout
+  index = 0
+  output = ''
+  loop do
+    stdin.close if responses.length == index
+    line = stdout.gets
+    break unless line
+    if index < responses.length && line.include?(responses[index]['prompt'])
+      stdin.write responses[index]['answer']
+      index += 1
+    end
+    output += line
+  end
+  output
 end
 
 

@@ -25,11 +25,6 @@ func GetSquashCommitAuthor(branchName string) string {
 
 // Helpers
 
-type branchAuthor struct {
-	NameAndEmail    string
-	NumberOfCommits string
-}
-
 var squashCommitAuthorHeaderTemplate = "Multiple people authored the '%s' branch."
 
 func askForAuthor(authors []string) string {
@@ -44,6 +39,7 @@ func askForAuthor(authors []string) string {
 }
 
 func getBranchAuthors(branchName string) (result []string) {
+	// Returns lines of "<number of commits>\t<name and email>"
 	output := command.New("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName).Output()
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.TrimSpace(line)
