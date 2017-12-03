@@ -1,8 +1,7 @@
 package prompt
 
 import (
-	"log"
-
+	"github.com/Originate/exit"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -26,9 +25,7 @@ func askForBranch(opts askForBranchOptions) string {
 		Default: opts.defaultBranchName,
 	}
 	err := survey.AskOne(prompt, &result, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.If(err)
 	return result
 }
 
@@ -40,8 +37,6 @@ func askForBranches(opts askForBranchesOptions) []string {
 		Default: opts.defaultBranchNames,
 	}
 	err := survey.AskOne(prompt, &result, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	exit.If(err)
 	return result
 }
