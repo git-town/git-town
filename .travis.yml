@@ -9,7 +9,7 @@ install:
   - bin/setup
 
 script:
-  - rake
+  - bin/spec
 
 notifications:
   email: false

@@ -12,7 +12,6 @@ group :development do
   gem 'mortadella'
   gem 'open4'
   gem 'parallel_tests'
-  gem 'rake'
   gem 'rspec'
   gem 'rubocop'
 end
