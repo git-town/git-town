@@ -113,11 +113,11 @@ func GetLocalBranchesWithMainBranchFirst() (result []string) {
 
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch
 func GetPreviouslyCheckedOutBranch() string {
-	command := command.New("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
-	if command.Err() != nil {
+	cmd := command.New("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	if cmd.Err() != nil {
 		return ""
 	}
-	return command.Output()
+	return cmd.Output()
 }
 
 // GetTrackingBranchName returns the name of the remote branch
@@ -172,8 +172,8 @@ func IsBranchInSync(branchName string) bool {
 // contains commits that have not been pushed to the remote.
 func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
-	command := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
-	return command.Output() != ""
+	cmd := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
+	return cmd.Output() != ""
 }
 
 // Helpers
