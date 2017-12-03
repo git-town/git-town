@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Originate/git-town)](https://goreportcard.com/report/github.com/Originate/git-town)
-[![Coverage Status](https://coveralls.io/repos/github/Originate/git-town/badge.svg)](https://coveralls.io/github/Originate/git-town)
+[![Test Coverage](https://coveralls.io/repos/github/Originate/git-town/badge.svg)](https://coveralls.io/github/Originate/git-town)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 
 Git Town makes software development teams who use Git even more productive and happy.

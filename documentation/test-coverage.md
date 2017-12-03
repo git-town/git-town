@@ -7,8 +7,8 @@ because the end-to-end tests of Git Town are in Ruby.
 ## Measuring Test Coverage
 
 1. Compile a test binary called `git-town.test`.
-   This is done via `bin/build-test`
-   The test binary can be run like the production binary.
+   This is done via the `bin/build-test` script.
+   The test binary can be run similar to the production binary.
    Each time it runs, it creates a coverage file
    called `coverage.cov`.
 
@@ -35,9 +35,13 @@ because the end-to-end tests of Git Town are in Ruby.
 
 ## Viewing Test Coverage
 
-To see the coverage, look at Coveralls.
+To see the coverage, look at [Coveralls](https://coveralls.io/github/Originate/git-town).
 You can also see it locally by running `bin/cuke` and then:
 
 ```
 go tool cover -html=coverage.cov
 ```
+
+There are also ways to see code coverage in source code editors:
+- __Vim:__ install [vim-go](https://github.com/fatih/vim-go) and run `:GoCoverage`
+- __Visual Studio Code:__ install the [vscode-go](https://github.com/Microsoft/vscode-go) plugin and enable code coverage
