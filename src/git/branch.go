@@ -81,6 +81,18 @@ func GetLocalBranches() (result []string) {
 	return
 }
 
+// GetLocalBranchesWithoutMain returns the names of all branches in the local repository,
+// ordered alphabetically without the main branch
+func GetLocalBranchesWithoutMain() (result []string) {
+	mainBranch := GetMainBranch()
+	for _, branch := range GetLocalBranches() {
+		if branch != mainBranch {
+			result = append(result, branch)
+		}
+	}
+	return
+}
+
 // GetLocalBranchesWithDeletedTrackingBranches returns the names of all branches
 // whose remote tracking branches have been deleted
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {

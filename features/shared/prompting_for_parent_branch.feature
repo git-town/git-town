@@ -8,7 +8,9 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git town-append
     Given my repository has a feature branch named "feature-1" with no parent
     And I am on the "feature-1" branch
-    When I run `git-town append feature-2` and press ENTER
+    When I run `git-town append feature-2` and answer the prompts:
+      | PROMPT                                          | ANSWER |
+      | Please specify the parent branch of 'feature-1' | ENTER  |
     Then I end up on the "feature-2" branch
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
@@ -19,7 +21,9 @@ Feature: Prompt for parent branch when unknown
   Scenario: prompting for parent branch when running git town-kill
     Given my repository has a feature branch named "feature" with no parent
     And I am on the "feature" branch
-    When I run `git-town kill` and press ENTER
+    When I run `git-town kill` and answer the prompts:
+      | PROMPT                                        | ANSWER |
+      | Please specify the parent branch of 'feature' | ENTER  |
     Then I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |
@@ -33,7 +37,9 @@ Feature: Prompt for parent branch when unknown
       | main    | local and remote | main commit    |
       | feature | local and remote | feature commit |
     And I am on the "feature" branch
-    When I run `git-town sync` and press ENTER
+    When I run `git-town sync` and answer the prompts:
+      | PROMPT                                        | ANSWER |
+      | Please specify the parent branch of 'feature' | ENTER  |
     Then my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE                          |
       | main    | local and remote | main commit                      |
@@ -51,7 +57,10 @@ Feature: Prompt for parent branch when unknown
       | feature-1 | local and remote | feature-1 commit |
       | feature-2 | local and remote | feature-2 commit |
     And I am on the "main" branch
-    When I run `git-town sync --all` and press ENTER twice
+    When I run `git-town sync --all` and answer the prompts:
+      | PROMPT                                          | ANSWER |
+      | Please specify the parent branch of 'feature-1' | ENTER  |
+      | Please specify the parent branch of 'feature-2' | ENTER  |
     Then my repository has the following commits
       | BRANCH    | LOCATION         | MESSAGE                            |
       | main      | local and remote | main commit                        |

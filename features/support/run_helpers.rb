@@ -53,8 +53,8 @@ def print_result result
 end
 
 
-def run command, inputs: [], ignore_errors: false
-  result = run_shell_command command, inputs
+def run command, inputs: [], ignore_errors: false, responses: []
+  result = run_shell_command command, inputs, responses
   is_git_town_command = git_town_command? command
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
                                     result: result,
@@ -67,15 +67,29 @@ def run command, inputs: [], ignore_errors: false
 end
 
 
-def run_shell_command command, inputs = []
+def run_shell_command command, inputs = [], responses = []
   result = OpenStruct.new(command: command, location: Pathname.new(Dir.pwd).basename)
   command = "#{shell_overrides}; #{command} 2>&1"
   kill = inputs.pop if inputs.last == '^C' # command shouldn't error if user aborts it
 
   status = Open4.popen4(command) do |_pid, stdin, stdout, _stderr|
-    inputs.each { |input| stdin.puts input }
-    stdin.close
-    result.out = stdout.read
+    if responses.length > 0
+      index = 0
+      stdin.close if responses.length == index
+      result.out = ""
+      while line = stdout.gets do
+        if index < responses.length && line.include?(responses[index]['prompt'])
+          stdin.write responses[index]['answer']
+          index += 1
+          stdin.close if responses.length == index
+        end
+        result.out += line
+      end
+    else
+      inputs.each { |input| stdin.puts input }
+      stdin.close
+      result.out = stdout.read
+    end
   end
 
   result.error = status.exitstatus.nonzero? && !kill
