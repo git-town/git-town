@@ -1,5 +1,5 @@
 hash: b327d0388b77bf04c13864e61633be1232865be07b4334540bd5667f1144bfdf
-updated: 2017-12-03T10:15:19.442910811-08:00
+updated: 2017-12-03T10:48:00.279797321-08:00
 imports:
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
@@ -23,6 +23,8 @@ imports:
 - name: github.com/mattn/go-isatty
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
   repo: https://github.com/mattn/go-isatty
+- name: github.com/mgutz/ansi
+  version: 9520e82c474b0a04dd04f8a40959027271bab992
 - name: github.com/Originate/exit
   version: 8f9dec5ec964dc363624e001efe5e4018f05313e
 - name: github.com/pkg/errors
@@ -60,6 +62,9 @@ imports:
   - urlfetch
 - name: gopkg.in/AlecAivazis/survey.v1
   version: 0aa8b6a162b391fe2d95648b7677d1d6ac2090a6
+  subpackages:
+  - core
+  - terminal
 testImports:
 - name: github.com/onsi/ginkgo
   version: 8382b23d18dbaaff8e5f7e83784c53ebb8ec2f47
