@@ -31,13 +31,14 @@ Feature: Prompt for parent branch when unknown
 
 
   Scenario: prompting for parent branch when running git town-new-pull-request
-    Given my repository has a feature branch named "feature"
+    Given I have "open" installed
+    And my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
     And my repo's remote origin is git@github.com:Originate/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and answer the prompts:
-      | PROMPT                                          | ANSWER |
-      | Please specify the parent branch of 'feature-1' | ENTER  |
+      | PROMPT                                        | ANSWER |
+      | Please specify the parent branch of 'feature' | ENTER  |
     Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
 
 
