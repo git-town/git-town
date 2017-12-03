@@ -3,5 +3,5 @@ set -e
 
 # Runs all the available linters
 
-lint_go
-lint_ruby
+bin/lint_go
+bin/lint_ruby
