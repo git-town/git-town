@@ -5,7 +5,8 @@ set -e
 
 go get github.com/Masterminds/glide \
        github.com/alecthomas/gometalinter \
-       github.com/onsi/ginkgo/ginkgo
+       github.com/onsi/ginkgo/ginkgo \
+       github.com/wadey/gocovmerge
 
 gometalinter --install
 bin/build

@@ -63,5 +63,5 @@ end
 
 
 def uncommitted_files
-  array_output_of "git status --porcelain --untracked-files=all | awk '{print $2}'"
+  array_output_of "git status --porcelain --untracked-files=all | grep -v coverage.cov | awk '{print $2}'"
 end

@@ -53,9 +53,25 @@ def print_result result
 end
 
 
+# rubocop:disable Metrics/MethodLength
 def run command, inputs: [], ignore_errors: false
-  result = run_shell_command command, inputs
   is_git_town_command = git_town_command? command
+
+  # Delete coverage file if running another Git Town command.
+  # This is necessary because otherwise the coverage file shows up in the Git workspace,
+  # polluting the list of open files.
+  coverage_file_path = File.join(Dir.pwd, 'coverage.cov')
+  if is_git_town_command && File.exist?(coverage_file_path)
+    p 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXx DELETING COVERAGE FILE'
+    File.delete coverage_file_path
+  end
+
+  # run the binary with test coverage enabled
+  command = command.sub(/^git-town\b/, 'git-town.test -test.coverprofile=coverage.cov')
+  p "running command: #{command}"
+  result = run_shell_command command, inputs
+  result.out = result.out.sub %r{PASS\s+coverage: .* of statements in ./...\n}, ''
+
   raise_error = should_raise_error? is_git_town_command: is_git_town_command,
                                     result: result,
                                     ignore_errors: ignore_errors
@@ -65,6 +81,7 @@ def run command, inputs: [], ignore_errors: false
   @last_run_result = result if is_git_town_command
   result
 end
+# rubocop:enable Metrics/MethodLength
 
 
 def run_shell_command command, inputs = []

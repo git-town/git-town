@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+# Builds the test binary that measures code coverage in tests
+
+go test -c -coverpkg ./...
+mv git-town.test "$(echo $GOPATH | cut -d: -f1)/bin"

@@ -7,9 +7,13 @@ go: 1.9
 install:
   - rvm install 2.4.1
   - bin/setup
+  - go get github.com/mattn/goveralls
 
 script:
   - bin/spec
+
+after_script:
+  - $GOPATH/bin/goveralls -service=travis-ci -coverprofile=coverage.cov
 
 notifications:
   email: false

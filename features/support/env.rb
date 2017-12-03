@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/all'
+require 'fileutils'
 require 'kappamaki'
 require 'mortadella'
 require 'open4'
@@ -94,11 +95,21 @@ end
 
 
 After do
+  save_coverage_file
   FileUtils.rm_rf @temporary_shell_overrides_directory
 end
 
 
+def save_coverage_file
+  file_path = File.join(REPOSITORY_BASE, 'developer', 'coverage.cov')
+  p file_path
+  # if File.exist? file_path
+  #   FileUtils.mv(file_path, File.join(GIT_TOWN_DIRECTORY, "coverage_#{SecureRandom.uuid}.cov"))
+  # end
+end
+
+
 at_exit do
-  FileUtils.rm_rf REPOSITORY_BASE
+  # FileUtils.rm_rf REPOSITORY_BASE
   FileUtils.rm_rf MEMOIZED_REPOSITORY_BASE
 end
