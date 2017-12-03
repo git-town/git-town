@@ -4,7 +4,7 @@ type GomegaFailHandler func(message string, callerSkip ...int)
 
 //A simple *testing.T interface wrapper
 type GomegaTestingT interface {
-	Fatalf(format string, args ...interface{})
+	Errorf(format string, args ...interface{})
 }
 
 //All Gomega matchers must implement the GomegaMatcher interface

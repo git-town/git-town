@@ -17,9 +17,10 @@ package github
 import (
 	"context"
 	"net/http"
+
+	"google.golang.org/appengine"
 )
 
-func withContext(ctx context.Context, req *http.Request) *http.Request {
-	// No-op because App Engine adds context to a request differently.
-	return req
+func withContext(ctx context.Context, req *http.Request) (context.Context, *http.Request) {
+	return appengine.WithContext(ctx, req), req
 }

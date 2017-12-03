@@ -18,3 +18,5 @@ import:
 - package: github.com/pkg/errors
   version: v0.8.0
 - package: github.com/Originate/exit
+- package: gopkg.in/AlecAivazis/survey.v1
+  version: v1.4.1

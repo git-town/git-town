@@ -91,8 +91,7 @@ type RepositoryAddCollaboratorOptions struct {
 	Permission string `json:"permission,omitempty"`
 }
 
-// AddCollaborator sends an invitation to the specified GitHub user
-// to become a collaborator to the given repo.
+// AddCollaborator adds the specified GitHub user as collaborator to the given repo.
 //
 // GitHub API docs: https://developer.github.com/v3/repos/collaborators/#add-user-as-a-collaborator
 func (s *RepositoriesService) AddCollaborator(ctx context.Context, owner, repo, user string, opt *RepositoryAddCollaboratorOptions) (*Response, error) {
