@@ -3,7 +3,9 @@ set -e
 
 # The setup steps necessary on developer machines
 
-go get github.com/Masterminds/glide github.com/alecthomas/gometalinter github.com/onsi/ginkgo/ginkgo
+go get github.com/Masterminds/glide \
+       github.com/alecthomas/gometalinter \
+       github.com/onsi/ginkgo/ginkgo
 
 gometalinter --install
 bin/build
