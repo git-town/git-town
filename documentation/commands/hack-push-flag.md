@@ -2,7 +2,6 @@
 
 hack-push-flag - display or update the Git Town configuration for the `hack` push flag
 
-
 #### SYNOPSIS
 
 ```

@@ -10,7 +10,6 @@ Each step is a go `struct`.
 When executing a step, the undo steps are determined and added to a separate list.
 This is done by calling the methods `step.CreateUndoStepBeforeRun()` and `step.CreateUndoStepAfterRun()`.
 
-
 ## Abort / Continue
 
 If a Git command fails (typically due to a merge conflict), then the program halts
@@ -23,7 +22,6 @@ and we resume executing steps.
 
 `git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
-
 
 ## Undo
 

@@ -2,13 +2,11 @@
 
 repo - view the repository homepage
 
-
 #### SYNOPSIS
 
 ```
 git town repo
 ```
-
 
 #### DESCRIPTION
 

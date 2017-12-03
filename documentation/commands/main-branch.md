@@ -2,7 +2,6 @@
 
 main-branch - display or update the Git Town configuration for the main development branch
 
-
 #### SYNOPSIS
 
 ```

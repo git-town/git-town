@@ -2,14 +2,12 @@
 
 append - create a new feature branch as a direct child of the current branch
 
-
 #### SYNOPSIS
 
 ```
 git town append <branch_name>
 git town append (--abort | --continue)
 ```
-
 
 #### DESCRIPTION
 
@@ -19,7 +17,6 @@ makes the new branch a child of the current branch,
 pushes the new feature branch to the remote repository
 if and only if [hack-push-flag](./hack-push-flag.md) is true,
 and brings over all uncommitted changes to the new feature branch.
-
 
 #### OPTIONS
 

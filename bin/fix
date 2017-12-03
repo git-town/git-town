@@ -3,4 +3,5 @@ set -e
 
 # Runs all the auto-fixes
 
-bundle exec cucumber_lint --fix
+./bin/fix_cucumber
+./bin/fix_markdown

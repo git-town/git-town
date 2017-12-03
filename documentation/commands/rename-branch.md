@@ -2,13 +2,11 @@
 
 rename-branch - rename a branch both locally and remotely
 
-
 #### SYNOPSIS
 
 ```
 git town rename-branch [<old_branch_name>] <new_branch_name> [-f]
 ```
-
 
 #### DESCRIPTION
 
@@ -20,16 +18,18 @@ This command is intended for feature branches. Renaming perennial branches has t
 * Deletes the old branch
 
 When there is a remote repository
+
 * Syncs the repository
 
 When there is a tracking branch
+
 * Pushes the new branch to the remote repository
 * Deletes the old branch from the remote repository
 
 When run on a perennial branch
+
 * Requires the use of the `-f` option
 * Reconfigures git town locally for the perennial branch
-
 
 #### OPTIONS
 

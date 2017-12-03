@@ -27,7 +27,6 @@ automatically tests all commits and pull requests,
 and notifies you via email and through status badges in pull requests
 about problems.
 
-
 ## Debugging
 
 To see the output of the Git commands run in tests, you can set the
@@ -40,18 +39,17 @@ $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
 Alternatively, you can also add a `@debug-commands` flag to the respective
 Cucumber spec:
 
-  ```cucumber
-  @debug-commands
-  Scenario: foo bar baz
-    Given ...
-  ```
+```cucumber
+@debug-commands
+Scenario: foo bar baz
+  Given ...
+```
 
 For even more detailed output, you can use the `DEBUG` variable or tag
 in a similar fashion.
 If set, Git Town prints every shell command executed during the tests
 (includes setup, inspection of the Git status, and the Git commands),
 and the respective console output.
-
 
 ## Mocking
 
@@ -64,7 +62,6 @@ by setting the Git configuration value
 `git-town.testing.remote-url` to the respective value.
 To keep this behavior clean and secure,
 this also requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
-
 
 ## Auto-running tests
 

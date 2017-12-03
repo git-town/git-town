@@ -2,14 +2,12 @@
 
 hack - create a new feature branch off the main development branch
 
-
 #### SYNOPSIS
 
 ```
 git town hack <branch_name>
 git town hack (--abort | --continue)
 ```
-
 
 #### DESCRIPTION
 
@@ -18,7 +16,6 @@ forks a new feature branch with the given name off it,
 pushes the new feature branch to the remote repository
 if and only if [hack-push-flag](./hack-push-flag.md) is true,
 and brings over all uncommitted changes to the new feature branch.
-
 
 #### OPTIONS
 

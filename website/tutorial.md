@@ -1,7 +1,6 @@
 Let's assume you are part of a development team with Bob and Carol.
 Your repository is hosted on GitHub, and you follow [GitHub Flow](https://guides.github.com/introduction/flow/index.html).
 
-
 ## Starting a new feature
 
 You are in the middle of the sprint and have just finished a feature.
@@ -15,7 +14,6 @@ Since we are developing in feature branches, you now need to
 Running `git town hack reset-passwords` achieves all this in a single command.
 This gives you the best possible start for building the new feature,
 on top of the latest version of the code base.
-
 
 ## Synchronizing the branch
 
@@ -39,7 +37,6 @@ And this can (should) happen several times per day, for each of your feature bra
 With Bob's bug fixes and the new UI from Carol available in your branch,
 any more modification you make go right on top of their work.
 
-
 ## Creating a pull request
 
 Once your feature is ready for review, it's time to open a pull request on GitHub.
@@ -49,7 +46,6 @@ You fire up a browser, go to GitHub, navigate to your repository and finally end
 Your current branch is already selected,
 so all you need to do is fill out the title and description,
 tag the reviewers, and submit.
-
 
 ## Shipping the feature
 

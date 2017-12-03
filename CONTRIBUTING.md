@@ -9,7 +9,6 @@ their contributions of any size to make it even better.
 
 This guide will help you get started and outline some things you should know when developing Git Town.
 
-
 ## Setup
 
 * install [Go](https://golang.org) version 1.9 or higher
@@ -31,11 +30,9 @@ This guide will help you get started and outline some things you should know whe
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
   for auto-running tests
 
-
 ## Building
 
 * run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
-
 
 ## Testing
 
@@ -43,7 +40,6 @@ This guide will help you get started and outline some things you should know whe
 * all features need to have comprehensive test coverage
 * source code and test files must pass the linters
 * See [here](./documentation/development/testing.md) for how to run the tests
-
 
 ## Developing
 
@@ -55,13 +51,12 @@ This guide will help you get started and outline some things you should know whe
   * your pull request for the feature that requires the new library
     should contain the updated glide files and vendor folder
 
-
 ## Command documentation
 
 Every Git Town command
+
 * has a [Markdown page](./documentation/commands) that is identical to the man page
 * is listed on the [README](./README.md)
-
 
 ## Achitecture documents
 
@@ -69,16 +64,13 @@ Every Git Town command
 * [drivers](./documentation/development/drivers.md) - third-party specific functionality
 * [steps list](./documentation/development/steps_list.md) - the architecture behind most of the Git Town commands
 
-
 ## Website development
 
 * See [here](./documentation/development/website.md)
 
-
 ## Code style
 
 Please follow the existing code style.
-
 
 ## Pull Requests
 
@@ -87,11 +79,12 @@ have when committed later and include the
 [issue](https://github.com/Originate/git-town/issues) it resolves.
 
 When merging approved PRs:
+
 * use `git town ship`
 * the message for the squashed commit should follow the
   [formatting guidelines for commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 * [mention the closed issue](https://help.github.com/articles/closing-issues-via-commit-messages)
-in the commit body, so that the respective issue is automatically closed.
+  in the commit body, so that the respective issue is automatically closed.
 
 Example of a commit message:
 
@@ -107,6 +100,7 @@ Implements #123
 ## Release Process
 
 #### Originate/git-town
+
 * Create a feature branch which updates
   * `RELEASE_NOTES.md`
   * the version in `src/cmd/version.go` and the related features
@@ -117,6 +111,7 @@ Implements #123
 * Travis-CI creates a new release on Github and attaches the GT binaries to it
 
 #### Homebrew/homebrew
+
 * Fork [Homebrew](https://github.com/Homebrew/homebrew)
 * Update `Library/Formula/git-town.rb`
   * Get the sha256 by downloading the release (`.tar.gz`) and using `shasum -a 256 /path/to/file`

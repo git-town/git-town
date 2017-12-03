@@ -2,14 +2,12 @@
 
 prepend - create a new feature branch between the current branch and its parent
 
-
 #### SYNOPSIS
 
 ```
 git town prepend <branch_name>
 git town prepend (--abort | --continue)
 ```
-
 
 #### DESCRIPTION
 
@@ -19,7 +17,6 @@ makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository
 if and only if [hack-push-flag](./hack-push-flag.md) is true,
 and brings over all uncommitted changes to the new feature branch.
-
 
 #### OPTIONS
 
@@ -34,7 +31,7 @@ and brings over all uncommitted changes to the new feature branch.
     Continue the operation after resolving conflicts.
 ```
 
-
 #### SEE ALSO
+
 * [git append](append.md) to create a new feature branch as a child of the current branch
 * [git hack](hack.md) to create a new top-level feature branch
