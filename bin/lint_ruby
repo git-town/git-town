@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+# Runs the Ruby linter
+
+bundle exec rubocop
