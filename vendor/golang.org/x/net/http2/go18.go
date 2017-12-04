@@ -8,10 +8,15 @@ package http2
 
 import (
 	"crypto/tls"
+	"io"
 	"net/http"
 )
 
-func cloneTLSConfig(c *tls.Config) *tls.Config { return c.Clone() }
+func cloneTLSConfig(c *tls.Config) *tls.Config {
+	c2 := c.Clone()
+	c2.GetClientCertificate = c.GetClientCertificate // golang.org/issue/19264
+	return c2
+}
 
 var _ http.Pusher = (*responseWriter)(nil)
 
@@ -34,4 +39,16 @@ func configureServer18(h1 *http.Server, h2 *Server) error {
 		}
 	}
 	return nil
+}
+
+func shouldLogPanic(panicValue interface{}) bool {
+	return panicValue != nil && panicValue != http.ErrAbortHandler
+}
+
+func reqGetBody(req *http.Request) func() (io.ReadCloser, error) {
+	return req.GetBody
+}
+
+func reqBodyIsNoBody(body io.ReadCloser) bool {
+	return body == http.NoBody
 }

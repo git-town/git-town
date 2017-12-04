@@ -147,9 +147,8 @@ func TestPullRequestsService_CreateReview(t *testing.T) {
 	defer teardown()
 
 	input := &PullRequestReviewRequest{
-		CommitID: String("commit_id"),
-		Body:     String("b"),
-		Event:    String("APPROVE"),
+		Body:  String("b"),
+		Event: String("APPROVE"),
 	}
 
 	mux.HandleFunc("/repos/o/r/pulls/1/reviews", func(w http.ResponseWriter, r *http.Request) {

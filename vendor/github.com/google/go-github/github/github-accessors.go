@@ -260,38 +260,6 @@ func (b *Branch) GetProtected() bool {
 	return *b.Protected
 }
 
-// GetBody returns the Body field if it's non-nil, zero value otherwise.
-func (c *CodeOfConduct) GetBody() string {
-	if c == nil || c.Body == nil {
-		return ""
-	}
-	return *c.Body
-}
-
-// GetKey returns the Key field if it's non-nil, zero value otherwise.
-func (c *CodeOfConduct) GetKey() string {
-	if c == nil || c.Key == nil {
-		return ""
-	}
-	return *c.Key
-}
-
-// GetName returns the Name field if it's non-nil, zero value otherwise.
-func (c *CodeOfConduct) GetName() string {
-	if c == nil || c.Name == nil {
-		return ""
-	}
-	return *c.Name
-}
-
-// GetURL returns the URL field if it's non-nil, zero value otherwise.
-func (c *CodeOfConduct) GetURL() string {
-	if c == nil || c.URL == nil {
-		return ""
-	}
-	return *c.URL
-}
-
 // GetHTMLURL returns the HTMLURL field if it's non-nil, zero value otherwise.
 func (c *CodeResult) GetHTMLURL() string {
 	if c == nil || c.HTMLURL == nil {
@@ -2013,7 +1981,7 @@ func (i *Installation) GetRepositoriesURL() string {
 }
 
 // GetAction returns the Action field if it's non-nil, zero value otherwise.
-func (i *InstallationEvent) GetAction() string {
+func (i *IntegrationInstallationEvent) GetAction() string {
 	if i == nil || i.Action == nil {
 		return ""
 	}
@@ -2021,19 +1989,11 @@ func (i *InstallationEvent) GetAction() string {
 }
 
 // GetAction returns the Action field if it's non-nil, zero value otherwise.
-func (i *InstallationRepositoriesEvent) GetAction() string {
+func (i *IntegrationInstallationRepositoriesEvent) GetAction() string {
 	if i == nil || i.Action == nil {
 		return ""
 	}
 	return *i.Action
-}
-
-// GetRepositorySelection returns the RepositorySelection field if it's non-nil, zero value otherwise.
-func (i *InstallationRepositoriesEvent) GetRepositorySelection() string {
-	if i == nil || i.RepositorySelection == nil {
-		return ""
-	}
-	return *i.RepositorySelection
 }
 
 // GetCreatedAt returns the CreatedAt field if it's non-nil, zero value otherwise.
@@ -3516,14 +3476,6 @@ func (p *Project) GetURL() string {
 	return *p.URL
 }
 
-// GetColumnID returns the ColumnID field if it's non-nil, zero value otherwise.
-func (p *ProjectCard) GetColumnID() int {
-	if p == nil || p.ColumnID == nil {
-		return 0
-	}
-	return *p.ColumnID
-}
-
 // GetColumnURL returns the ColumnURL field if it's non-nil, zero value otherwise.
 func (p *ProjectCard) GetColumnURL() string {
 	if p == nil || p.ColumnURL == nil {
@@ -3570,14 +3522,6 @@ func (p *ProjectCard) GetUpdatedAt() Timestamp {
 		return Timestamp{}
 	}
 	return *p.UpdatedAt
-}
-
-// GetURL returns the URL field if it's non-nil, zero value otherwise.
-func (p *ProjectCard) GetURL() string {
-	if p == nil || p.URL == nil {
-		return ""
-	}
-	return *p.URL
 }
 
 // GetAction returns the Action field if it's non-nil, zero value otherwise.
@@ -4164,28 +4108,12 @@ func (p *PullRequestReviewRequest) GetBody() string {
 	return *p.Body
 }
 
-// GetCommitID returns the CommitID field if it's non-nil, zero value otherwise.
-func (p *PullRequestReviewRequest) GetCommitID() string {
-	if p == nil || p.CommitID == nil {
-		return ""
-	}
-	return *p.CommitID
-}
-
 // GetEvent returns the Event field if it's non-nil, zero value otherwise.
 func (p *PullRequestReviewRequest) GetEvent() string {
 	if p == nil || p.Event == nil {
 		return ""
 	}
 	return *p.Event
-}
-
-// GetDismissStaleReviews returns the DismissStaleReviews field if it's non-nil, zero value otherwise.
-func (p *PullRequestReviewsEnforcementUpdate) GetDismissStaleReviews() bool {
-	if p == nil || p.DismissStaleReviews == nil {
-		return false
-	}
-	return *p.DismissStaleReviews
 }
 
 // GetBase returns the Base field if it's non-nil, zero value otherwise.
@@ -6474,14 +6402,6 @@ func (t *Team) GetURL() string {
 		return ""
 	}
 	return *t.URL
-}
-
-// GetAction returns the Action field if it's non-nil, zero value otherwise.
-func (t *TeamEvent) GetAction() string {
-	if t == nil || t.Action == nil {
-		return ""
-	}
-	return *t.Action
 }
 
 // GetDescription returns the Description field if it's non-nil, zero value otherwise.
