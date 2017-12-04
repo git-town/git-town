@@ -14,7 +14,7 @@ Feature: listing the configuration
     And the perennial branches are configured as "qa"
     When I run `git-town config --setup` and answer the prompts:
       | PROMPT                                     | ANSWER                    |
-      | Please specify the main development branch | ENTER                     |
-      | Please specify perennial branches          | SPACE, DOWN, SPACE, ENTER |
+      | Please specify the main development branch | [ENTER]                     |
+      | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"

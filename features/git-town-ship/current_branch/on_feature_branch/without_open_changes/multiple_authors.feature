@@ -25,5 +25,5 @@ Feature: git town-ship: shipping a coworker's feature branch
 
     Examples:
       | ANSWER      | FEATURE_AUTHOR                    |
-      | ENTER       | developer <developer@example.com> |
-      | DOWN, ENTER | coworker <coworker@example.com>   |
+      | [ENTER]       | developer <developer@example.com> |
+      | [DOWN][ENTER] | coworker <coworker@example.com>   |

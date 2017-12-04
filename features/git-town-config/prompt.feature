@@ -13,8 +13,8 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
   Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
     When I run `<COMMAND>` and answer the prompts:
       | PROMPT                                     | ANSWER |
-      | Please specify the main development branch | ENTER  |
-      | Please specify perennial branches          | ENTER  |
+      | Please specify the main development branch | [ENTER]  |
+      | Please specify perennial branches          | [ENTER]  |
     Then it prints the initial configuration prompt
     And the main branch is now configured as "main"
     And my repo is configured with no perennial branches

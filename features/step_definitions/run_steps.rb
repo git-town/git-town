@@ -32,10 +32,9 @@ When(/^I run `(.+?)` and answer the prompts:$/) do |command, table|
   table.map_headers!(&:downcase)
   table.map_column!('answer') do |text|
     text
-      .gsub('ENTER', "\n")
-      .gsub('DOWN', "\e[B")
-      .gsub('SPACE', ' ')
-      .gsub(', ', '')
+      .gsub('[ENTER]', "\n")
+      .gsub('[DOWN]', "\e[B")
+      .gsub('[SPACE]', ' ')
   end
   @result = run command, responses: table.hashes
 end
