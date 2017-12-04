@@ -97,6 +97,10 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := DeleteRemoteBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
 		return &step
+	case "*DriverMergePullRequestStep":
+		step := DriverMergePullRequestStep{}
+		exit.If(json.Unmarshal(serializedStep.Data, &step))
+		return &step
 	case "*EnsureHasShippableChangesStep":
 		step := EnsureHasShippableChangesStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
@@ -111,6 +115,10 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		return &NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
 		step := PreserveCheckoutHistoryStep{}
+		exit.If(json.Unmarshal(serializedStep.Data, &step))
+		return &step
+	case "*PullBranchStep":
+		step := PullBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
 		return &step
 	case "*PushBranchAfterCurrentBranchSteps":
