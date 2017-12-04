@@ -23,7 +23,7 @@ Feature: Entering a parent branch name when prompted
   Scenario: choosing other branches
     When I run `git-town sync` and answer the prompts:
       | PROMPT                                          | ANSWER        |
-      | Please specify the parent branch of 'feature-2' | [UP][ENTER] |
+      | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
       | Please specify the parent branch of 'feature-1' | [ENTER]       |
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
@@ -34,5 +34,5 @@ Feature: Entering a parent branch name when prompted
   Scenario: choosing "<none> (make a perennial branch)"
     When I run `git-town sync` and answer the prompts:
       | PROMPT                                          | ANSWER  |
-      | Please specify the parent branch of 'feature-2' | [UP][UP][ENTER] |
+      | Please specify the parent branch of 'feature-2' | [UP][ENTER] |
     And the perennial branches are now configured as "feature-2"
