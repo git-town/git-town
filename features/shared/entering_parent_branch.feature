@@ -33,6 +33,6 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: choosing "<none> (make a perennial branch)"
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                                          | ANSWER  |
+      | PROMPT                                          | ANSWER      |
       | Please specify the parent branch of 'feature-2' | [UP][ENTER] |
     And the perennial branches are now configured as "feature-2"
