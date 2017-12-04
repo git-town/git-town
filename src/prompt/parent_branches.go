@@ -5,7 +5,6 @@ import (
 
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/fatih/color"
 )
 
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
@@ -37,21 +36,20 @@ The former allows to develop and ship features completely independent of each ot
 The latter allows to build on top of currently unshipped features.
 
 `
-var parentBranchPromptTemplate = "Please specify the parent branch of %s by name or number (default: %s): "
+var parentBranchPromptTemplate = "Please specify the parent branch of '%s':"
 
 func askForBranchAncestry(branchName string) {
 	current := branchName
+	choices := git.GetLocalBranches()
 	for {
 		parent := git.GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
-			parent = askForBranch(branchPromptConfig{
-				branchNames:       git.GetLocalBranchesWithMainBranchFirst(),
+			filteredChoices := filterOutSelfAndDescendants(current, choices)
+			parent = askForBranch(askForBranchOptions{
+				branchNames:       filteredChoices,
+				prompt:            fmt.Sprintf(parentBranchPromptTemplate, current),
 				defaultBranchName: git.GetMainBranch(),
-				prompt:            getParentBranchPrompt(current),
-				validate: func(branchName string) error {
-					return validateParentBranch(current, branchName)
-				},
 			})
 			git.SetParentBranch(current, parent)
 		}
@@ -62,26 +60,20 @@ func askForBranchAncestry(branchName string) {
 	}
 }
 
-func validateParentBranch(branchName string, parent string) error {
-	if branchName == parent {
-		return fmt.Errorf("'%s' cannot be the parent of itself", parent)
+func filterOutSelfAndDescendants(branchName string, choices []string) []string {
+	result := []string{}
+	for _, choice := range choices {
+		if choice == branchName || git.IsAncestorBranch(choice, branchName) {
+			continue
+		}
+		result = append(result, choice)
 	}
-	if branchName != "" && git.IsAncestorBranch(parent, branchName) {
-		return fmt.Errorf("Nested branch loop detected: '%s' is an ancestor of '%s'", branchName, parent)
-	}
-	return nil
+	return result
 }
 
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
 		cfmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
-		printNumberedBranches(git.GetLocalBranchesWithMainBranchFirst())
-		fmt.Println()
 	}
-}
-
-func getParentBranchPrompt(branchName string) string {
-	coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(branchName)
-	return fmt.Sprintf(parentBranchPromptTemplate, coloredBranchName, git.GetMainBranch())
 }

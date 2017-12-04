@@ -12,97 +12,19 @@ Feature: Entering a parent branch name when prompted
 
 
   Scenario: choosing the default branch name
-    When I run `git-town sync` and press ENTER
-    Then it prints "Please specify the parent branch of feature-2"
+    When I run `git-town sync` and answer the prompts:
+      | PROMPT                                          | ANSWER  |
+      | Please specify the parent branch of 'feature-2' | [ENTER] |
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
 
 
-  Scenario: entering the number of the master branch
-    When I run `git-town sync` and enter "1"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-
-
-  Scenario: entering the number of another branch
-    When I run `git-town sync` and enter "2" and "1"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "Please specify the parent branch of feature-1"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
-
-
-  Scenario: entering a wrong number
-    When I run `git-town sync` and enter "5" and "1"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "Invalid branch number"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-
-
-  Scenario: entering the name of the master branch
-    When I run `git-town sync` and enter "main"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-
-
-  Scenario: entering the name of another branch
-    When I run `git-town sync` and enter "feature-1" and "main"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "Please specify the parent branch of feature-1"
-    Then Git Town is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
-
-
-  Scenario: entering a wrong name
-    When I run `git-town sync` and enter "zonk" and "main"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "Branch 'zonk' doesn't exist"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-
-
-  Scenario: entering self
-    When I run `git-town sync` and enter "feature-2" and "main"
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "'feature-2' cannot be the parent of itself"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-2 | main   |
-
-
-  Scenario: creating a loop
-    When I run `git-town sync` and enter:
-      | feature-1 |
-      | feature-2 |
-      | main      |
-    Then it prints "Please specify the parent branch of feature-2"
-    And it prints "Nested branch loop detected: 'feature-1' is an ancestor of 'feature-2'"
-    And it is now aware of this branch hierarchy
-      | BRANCH    | PARENT    |
-      | feature-1 | main      |
-      | feature-2 | feature-1 |
-
-
-  Scenario: fix loop incorrectly reported (#784)
-    Given Git Town is aware of this branch hierarchy
-      | BRANCH    | PARENT |
-      | feature-1 | main   |
-    When I run `git-town sync` and enter:
-      | feature-1 |
-    Then it prints "Please specify the parent branch of feature-2"
-    And it does not print "Nested branch loop detected: 'feature-2' is an ancestor of 'feature-1'"
+  Scenario: choosing other branches
+    When I run `git-town sync` and answer the prompts:
+      | PROMPT                                          | ANSWER        |
+      | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
+      | Please specify the parent branch of 'feature-1' | [ENTER]       |
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |

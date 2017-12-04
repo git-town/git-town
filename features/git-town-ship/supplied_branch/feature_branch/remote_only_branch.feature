@@ -13,7 +13,9 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name: "feature_file" and content: "conflicting content"
-    When I run `git-town ship feature -m "feature done"` and press ENTER
+    When I run `git-town ship feature -m "feature done"` and answer the prompts:
+      | PROMPT                                        | ANSWER  |
+      | Please specify the parent branch of 'feature' | [ENTER] |
 
 
   Scenario: result

@@ -12,38 +12,9 @@ Feature: listing the configuration
   Scenario: everything is configured
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa"
-    When I run `git-town config --setup` and enter "main" and ""
-    Then it prints
-      """
-      Git Town needs to be configured
-
-        1: main
-        2: production
-        3: qa
-
-      Please specify the main development branch by name or number (current value: main):
-      """
-    And it prints
-      """
-      Please specify a perennial branch by name or number. Leave it blank to finish (current value: qa):
-      """
-
-
-  Scenario: empty input
-    Given the main branch is configured as "main"
-    And the perennial branches are configured as "qa"
-    When I run `git-town config --setup` and enter "", "main" and ""
-    Then it prints "A main development branch is required to enable the features provided by Git Town"
-    And the main branch is now configured as "main"
-    And my repo is configured with no perennial branches
-
-
-  Scenario: non-empty input
-    Given the main branch is configured as "main"
-    And the perennial branches are configured as "qa"
-    When I run `git-town config --setup` and enter:
-      | main       |
-      | production |
-      |            |
+    When I run `git-town config --setup` and answer the prompts:
+      | PROMPT                                     | ANSWER                      |
+      | Please specify the main development branch | [ENTER]                     |
+      | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"

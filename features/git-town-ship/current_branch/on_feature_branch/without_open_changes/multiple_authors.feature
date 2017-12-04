@@ -16,43 +16,14 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario Outline: prompt for squashed commit author
-    When I run `git-town ship -m 'feature done'` and <ACTION>
-    Then it prints
-      """
-      Multiple people authored the 'feature' branch.
-      Please choose an author for the squash commit.
-
-        1: developer <developer@example.com> (2 commits)
-        2: coworker <coworker@example.com> (1 commit)
-
-      Enter user's number or a custom author (default: 1):
-      """
+    When I run `git-town ship -m 'feature done'` and answer the prompts:
+      | PROMPT                                        | ANSWER   |
+      | Please choose an author for the squash commit | <ANSWER> |
     And my repository has the following commits
       | BRANCH | LOCATION         | MESSAGE      | AUTHOR           |
       | main   | local and remote | feature done | <FEATURE_AUTHOR> |
 
     Examples:
-      | ACTION                             | FEATURE_AUTHOR                    |
-      | press ENTER                        | developer <developer@example.com> |
-      | enter "1"                          | developer <developer@example.com> |
-      | enter "2"                          | coworker <coworker@example.com>   |
-      | enter "other <other@example.com>"" | other <other@example.com>         |
-
-
-  Scenario Outline: enter invalid number then valid number
-    When I run `git-town ship -m 'feature done'` and enter "<NUMBER>" and "1"
-    Then it prints "Invalid author number"
-    And my repository has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | AUTHOR                            |
-      | main   | local and remote | feature done | developer <developer@example.com> |
-
-    Examples:
-      | NUMBER |
-      | 0      |
-      | 3      |
-
-
-  Scenario: enter invalid custom author
-    When I run `git-town ship -m 'feature done'` and enter "invalid"
-    Then it prints the error "Aborted because commit exited with error"
-    And my repository is left with my original commits
+      | ANSWER        | FEATURE_AUTHOR                    |
+      | [ENTER]       | developer <developer@example.com> |
+      | [DOWN][ENTER] | coworker <coworker@example.com>   |

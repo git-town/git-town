@@ -16,33 +16,27 @@ When(/^I run `([^`]+)` in the "(.+?)" folder$/) do |commands, folder_name|
 end
 
 
-When(/^I run `(.+?)` and enter "(.*?)"$/) do |command, input|
-  inputs = Kappamaki.from_sentence(input)
-  @result = run command, inputs: inputs
-end
-
-
-When(/^I run `(.+?)` and enter:$/) do |command, table|
-  @result = run command, inputs: table.raw.map { |row| row[0] }
-end
-
-
 When(/^I run `(.+?)` and enter an empty commit message$/) do |command|
   # In vim "dG" removes all lines and "ZZ" saves and exits
-  step "I run `#{command}` and enter \"dGZZ\""
+  @result = run command, inputs: ['dGZZ']
 end
 
 
 When(/^I run `(.+?)` and don't change the default commit message$/) do |command|
   # In vim "ZZ" saves and exits
-  step "I run `#{command}` and enter \"ZZ\""
+  @result = run command, inputs: ['ZZ']
 end
 
 
-When(/^I run `(.+?)` and press ENTER( twice)?$/) do |command, twice|
-  inputs = ["\n"]
-  inputs += inputs if twice
-  @result = run command, inputs: inputs
+When(/^I run `(.+?)` and answer the prompts:$/) do |command, table|
+  table.map_headers!(&:downcase)
+  table.map_column!('answer') do |text|
+    text
+      .gsub('[ENTER]', "\n")
+      .gsub('[DOWN]', "\e[B")
+      .gsub('[SPACE]', ' ')
+  end
+  @result = run command, responses: table.hashes
 end
 
 

@@ -72,21 +72,3 @@ Feature: git-new-pull-request when origin is on GitHub
     And I am on the "child-feature" branch
     When I run `git-town new-pull-request`
     Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "Originate/git-town" repo in my browser
-
-
-  Scenario: nested feature branch with unknown parent (entering the parent name)
-    Given my repository has a feature branch named "feature"
-    And Git Town has no branch hierarchy information for "feature"
-    And my repo's remote origin is git@github.com:Originate/git-town.git
-    And I am on the "feature" branch
-    When I run `git-town new-pull-request` and enter "main"
-    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
-
-
-  Scenario: nested feature branch with unknown parent (accepting default choice)
-    Given my repository has a feature branch named "feature"
-    And Git Town has no branch hierarchy information for "feature"
-    And my repo's remote origin is git@github.com:Originate/git-town.git
-    And I am on the "feature" branch
-    When I run `git-town new-pull-request` and press ENTER
-    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
