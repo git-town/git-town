@@ -24,6 +24,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       | main   | local and remote | feature done | <FEATURE_AUTHOR> |
 
     Examples:
-      | ANSWER      | FEATURE_AUTHOR                    |
+      | ANSWER        | FEATURE_AUTHOR                    |
       | [ENTER]       | developer <developer@example.com> |
       | [DOWN][ENTER] | coworker <coworker@example.com>   |

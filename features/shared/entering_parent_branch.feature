@@ -13,8 +13,8 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: choosing the default branch name
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                                          | ANSWER |
-      | Please specify the parent branch of 'feature-2' | [ENTER]  |
+      | PROMPT                                          | ANSWER  |
+      | Please specify the parent branch of 'feature-2' | [ENTER] |
     And it is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | feature-2 | main   |
@@ -22,7 +22,7 @@ Feature: Entering a parent branch name when prompted
 
   Scenario: choosing other branches
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                                          | ANSWER      |
+      | PROMPT                                          | ANSWER        |
       | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
       | Please specify the parent branch of 'feature-1' | [ENTER]       |
     And it is now aware of this branch hierarchy

@@ -13,7 +13,7 @@ Feature: listing the configuration
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa"
     When I run `git-town config --setup` and answer the prompts:
-      | PROMPT                                     | ANSWER                    |
+      | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [ENTER]                     |
       | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
     Then the main branch is now configured as "main"
