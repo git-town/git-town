@@ -37,20 +37,25 @@ The latter allows to build on top of currently unshipped features.
 
 `
 var parentBranchPromptTemplate = "Please specify the parent branch of '%s':"
+var perennialBranchOption = "<none> (perennial branch)"
 
 func askForBranchAncestry(branchName string) {
 	current := branchName
-	choices := git.GetLocalBranches()
+	choices := git.GetLocalBranchesWithMainBranchFirst()
 	for {
 		parent := git.GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
 			filteredChoices := filterOutSelfAndDescendants(current, choices)
 			parent = askForBranch(askForBranchOptions{
-				branchNames:       filteredChoices,
+				branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
 				prompt:            fmt.Sprintf(parentBranchPromptTemplate, current),
 				defaultBranchName: git.GetMainBranch(),
 			})
+			if parent == perennialBranchOption {
+				git.AddToPerennialBranches(current)
+				break
+			}
 			git.SetParentBranch(current, parent)
 		}
 		if parent == git.GetMainBranch() || git.IsPerennialBranch(parent) {

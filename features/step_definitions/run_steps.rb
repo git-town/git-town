@@ -34,6 +34,7 @@ When(/^I run `(.+?)` and answer the prompts:$/) do |command, table|
     text
       .gsub('[ENTER]', "\n")
       .gsub('[DOWN]', "\e[B")
+      .gsub('[UP]', "\e[A")
       .gsub('[SPACE]', ' ')
   end
   @result = run command, responses: table.hashes
