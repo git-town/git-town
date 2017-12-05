@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+#### New Features
+* Nicer prompts from of https://github.com/AlecAivazis/survey
+* Parent branch prompt: add option to make the branch a perennial branch
+
+#### Bug Fixes
+* `git ship`: fix bug when encountering a merge conflict and using a code hosting driver ([#1060](https://github.com/Originate/git-town/issues/1060))
+
 ## 5.0.0 (2017-08-16)
 
 #### BREAKING CHANGES
