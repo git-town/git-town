@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 5.1.0 (2017-12-05)
+
 #### New Features
 * Nicer prompts from of https://github.com/AlecAivazis/survey
 * Parent branch prompt: add option to make the branch a perennial branch
