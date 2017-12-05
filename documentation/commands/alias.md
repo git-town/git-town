@@ -2,7 +2,6 @@
 
 alias - add or remove the default git aliases
 
-
 #### SYNOPSIS
 
 ```

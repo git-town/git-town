@@ -2,7 +2,6 @@
 
 perennial-branches - display or update the Git Town configuration for the perennial branches
 
-
 #### SYNOPSIS
 
 ```

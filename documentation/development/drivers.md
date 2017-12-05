@@ -1,6 +1,6 @@
 # Drivers
 
-_The following refers to the commands `git-new-pull-request` and `git-repo`.
+_The following refers to the commands `git-new-pull-request` and `git-repo`._
 
 _Drivers_ implement third-party specific functionality in a standardized way.
 For example, the [GitHub driver](./src/drivers/code_hosting/github.sh)

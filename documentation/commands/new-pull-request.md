@@ -2,13 +2,11 @@
 
 new-pull-request - create a new pull request
 
-
 #### SYNOPSIS
 
 ```
 git town new-pull-request
 ```
-
 
 #### DESCRIPTION
 
@@ -21,7 +19,7 @@ against the immediate parent branch.
 
 Supported only for repositories hosted on [GitHub](http://github.com/),
 [GitLab](http://gitlab.com/), and [Bitbucket](https://bitbucket.org/).
-When using self-hosted versions this command needs to be configured with 
+When using self-hosted versions this command needs to be configured with
 `git config git-town.code-hosting-driver <driver>`
 where driver is "github", "gitlab", or "bitbucket".
 When using SSH identities, this command needs to be configured with

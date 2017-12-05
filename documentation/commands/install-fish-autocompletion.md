@@ -2,7 +2,6 @@
 
 install-fish-autocompletion - install the autocompletion definition for [Fish shell](http://fishshell.com)
 
-
 #### SYNOPSIS
 
 ```

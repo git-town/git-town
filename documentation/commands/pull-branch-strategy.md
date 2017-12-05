@@ -2,13 +2,11 @@
 
 pull-branch-strategy - display or update the Git Town configuration for the pull branch strategy
 
-
 #### SYNOPSIS
 
 ```
 git town pull-branch-strategy [(rebase | merge)]
 ```
-
 
 #### DESCRIPTION
 

@@ -2,14 +2,12 @@
 
 ship - deliver a completed feature branch
 
-
 #### SYNOPSIS
 
 ```
 git town ship [<branch_name>] [<commit_options>]
 git town ship (--abort | --continue)
 ```
-
 
 #### DESCRIPTION
 

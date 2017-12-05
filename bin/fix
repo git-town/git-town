@@ -5,3 +5,4 @@ set -ex
 
 bin/fix_cucumber
 bin/fix_ruby
+bin/fix_markdown

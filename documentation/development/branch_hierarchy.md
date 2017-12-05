@@ -1,29 +1,28 @@
 # Branch Hierarchy
 
 Git Town divides all branches into three categories:
+
 * main branch
 * perennial branches
 * feature branches
-
 
 ## Main branch
 
 The main development branch from which all feature branches are cut from and merged in.
 This is stored in the git config under `git-town.main-branch-name`
 
-
 ## Perennial branches
 
 > **per·en·ni·al**
 > \pəˈrenēəl\
-> *adjective*
+> _adjective_
+>
 > * lasting or existing for a long or apparently infinite time; enduring or continually recurring.
 
 These are branches that serve some special purpose, such as deployment.
 Perennial branches cannot be killed or shipped,
 and only rebase with their own tracking branch when synced.
 These are stored in the git config under `git-town.perennial-branch-names` as a space separated list.
-
 
 ## Nested Feature Branches
 
@@ -66,6 +65,7 @@ Git Town stores the immediate parent of each feature branch in the git config un
 and the full ancestral line, top-down, as a space separated list under `git-town-branch.<branch_name>.ancestors`
 
 For this example it would store
+
 ```
 git-town-branch.feature1.parent=master
 git-town-branch.feature1.ancestors=master

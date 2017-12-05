@@ -10,13 +10,11 @@ It is hosted with [GitHub pages](https://pages.github.com/)
 * [Harp](http://harpjs.com)
   * `npm install -g harp`
 
-
 ## Local Development
 
 * `cd website`
 * `harp server`
 * go to [localhost:9000](http://localhost:9000)
-
 
 ## Deployment
 

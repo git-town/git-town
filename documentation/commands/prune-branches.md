@@ -2,13 +2,11 @@
 
 prune-branches - delete merged branches
 
-
 #### SYNOPSIS
 
 ```
 git town prune-branches
 ```
-
 
 #### DESCRIPTION
 

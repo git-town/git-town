@@ -2,7 +2,6 @@
 
 version - provides the currently installed version of Git Town
 
-
 #### SYNOPSIS
 
 ```

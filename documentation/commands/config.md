@@ -2,13 +2,11 @@
 
 config - display or resets the Git Town configuration
 
-
 #### SYNOPSIS
 
 ```
 git town config [--reset | --setup]
 ```
-
 
 #### OPTIONS
 

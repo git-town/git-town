@@ -1,0 +1,6 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "https://github.com/prettier/prettier/tarball/master"
+  }
+}
