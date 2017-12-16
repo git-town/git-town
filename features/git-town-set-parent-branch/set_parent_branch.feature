@@ -10,7 +10,7 @@ Feature: update the parent of a nested feature branch
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
 
 
-  Scenario: selecting the default parent branch (current parent)
+  Scenario: selecting the default branch (current parent)
     When I run `git-town set-parent-branch` and answer the prompts:
       | PROMPT                                              | ANSWER  |
       | Please specify the parent branch of 'child-feature' | [ENTER] |
