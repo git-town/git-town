@@ -8,18 +8,17 @@ import (
 )
 
 var hackPushFlagCommand = &cobra.Command{
-	Use:   "hack-push-flag [(true | false)]",
-	Short: "Displays or sets your hack push flag",
-	Long: `Displays or sets your hack push flag
+	Use:   "new-branch-push-flag [(true | false)]",
+	Short: "Displays or sets your new branch push flag",
+	Long: `Displays or sets your new branch push flag
 
-Newly hacked branches will be pushed upon creation
-if and only if "hack-push-flag" is true.
-The default value is false.`,
+Branches created with hack / append / prepend will be pushed upon creation
+if and only if "new-branch-push-flag" is true. The default value is false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			printHackPushFlag()
+			printNewBranchPushFlag()
 		} else {
-			setHackPushFlag(util.StringToBool(args[0]))
+			setNewBranchPushFlag(util.StringToBool(args[0]))
 		}
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -36,12 +35,12 @@ The default value is false.`,
 	},
 }
 
-func printHackPushFlag() {
-	cfmt.Println(git.GetPrintableHackPushFlag())
+func printNewBranchPushFlag() {
+	cfmt.Println(git.GetPrintableNewBranchPushFlag())
 }
 
-func setHackPushFlag(value bool) {
-	git.UpdateShouldHackPush(value)
+func setNewBranchPushFlag(value bool) {
+	git.UpdateShouldNewBranchPush(value)
 }
 
 func init() {

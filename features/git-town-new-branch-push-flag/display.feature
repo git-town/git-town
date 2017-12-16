@@ -1,4 +1,4 @@
-Feature: passing an invalid option to the hack push flag configuration
+Feature: displaying the new branch push flag configuration
 
   As a user or tool configuring Git Town's git-hack push flag
   I want to know what the existing value for the git-hack push flag is
@@ -6,7 +6,7 @@ Feature: passing an invalid option to the hack push flag configuration
 
 
   Scenario: default setting
-    When I run `git-town hack-push-flag`
+    When I run `git-town new-branch-push-flag`
     Then it prints
       """
       false
@@ -14,8 +14,8 @@ Feature: passing an invalid option to the hack push flag configuration
 
 
   Scenario: set to "true"
-    Given the "hack-push-flag" configuration is set to "true"
-    When I run `git-town hack-push-flag`
+    Given the "new-branch-push-flag" configuration is set to "true"
+    When I run `git-town new-branch-push-flag`
     Then it prints
       """
       true
@@ -23,8 +23,8 @@ Feature: passing an invalid option to the hack push flag configuration
 
 
   Scenario: set to "false"
-    Given the "hack-push-flag" configuration is set to "false"
-    When I run `git-town hack-push-flag`
+    Given the "new-branch-push-flag" configuration is set to "false"
+    When I run `git-town new-branch-push-flag`
     Then it prints
       """
       false

@@ -4,7 +4,7 @@ Feature: push branch to remote upon creation
 
 
   Background:
-    Given the "hack-push-flag" configuration is set to "true"
+    Given the "new-branch-push-flag" configuration is set to "true"
     And the following commit exists in my repository
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
