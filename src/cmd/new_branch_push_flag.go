@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var hackPushFlagCommand = &cobra.Command{
+var newBranchPushFlagCommand = &cobra.Command{
 	Use:   "new-branch-push-flag [(true | false)]",
 	Short: "Displays or sets your new branch push flag",
 	Long: `Displays or sets your new branch push flag
@@ -44,5 +44,5 @@ func setNewBranchPushFlag(value bool) {
 }
 
 func init() {
-	RootCmd.AddCommand(hackPushFlagCommand)
+	RootCmd.AddCommand(newBranchPushFlagCommand)
 }
