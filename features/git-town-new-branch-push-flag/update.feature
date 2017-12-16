@@ -1,7 +1,7 @@
 Feature: set the new-branch-push-flag
 
   As a user or tool configuring Git Town
-  I want an easy way to specifically set the git-hack push flag
+  I want an easy way to specifically set the new branch push flag
   So that I can configure Git Town safely, and the tool does exactly what I want.
 
 

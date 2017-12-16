@@ -1,7 +1,7 @@
 Feature: displaying the new branch push flag configuration
 
-  As a user or tool configuring Git Town's git-hack push flag
-  I want to know what the existing value for the git-hack push flag is
+  As a user or tool configuring Git Town's new branch push flag
+  I want to know what the existing value for the new branch push flag is
   So I can decide whether to I want to adjust it.
 
 
