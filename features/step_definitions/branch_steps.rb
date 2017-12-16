@@ -13,7 +13,7 @@ Given(/^my repository has a( local)?( feature)?( perennial)? branch named "([^"]
   user += '_secondary' if remote
   in_repository user do
     create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
+    set_parent_branch branch: branch_name, parent: 'main' if feature
     add_perennial_branch branch_name if perennial
   end
 end
@@ -27,7 +27,7 @@ end
 Given(/^my repository has the( local)?( feature)?( perennial)? branches "(.+?)"$/) do |local, feature, perennial, branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     create_branch branch_name, remote: !local
-    set_parent_branch branch: branch_name, parent: 'main', ancestors: 'main' if feature
+    set_parent_branch branch: branch_name, parent: 'main' if feature
     add_perennial_branch branch_name if perennial
   end
 end

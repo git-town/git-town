@@ -12,13 +12,10 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasCompiledAncestorBranches(branchName) {
+		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
 			continue
 		}
 		askForBranchAncestry(branchName)
-		ancestors := git.CompileAncestorBranches(branchName)
-		git.SetAncestorBranches(branchName, ancestors)
-
 		if parentBranchHeaderShown {
 			fmt.Println()
 		}

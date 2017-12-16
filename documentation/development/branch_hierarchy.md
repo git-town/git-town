@@ -62,14 +62,10 @@ Git Town only displays the changes between `feature2` and `feature1`,
 not the diff against `master`.
 
 Git Town stores the immediate parent of each feature branch in the git config under `git-town.<branch_name>.parent`.
-and the full ancestral line, top-down, as a space separated list under `git-town-branch.<branch_name>.ancestors`
 
 For this example it would store
 
 ```
 git-town-branch.feature1.parent=master
-git-town-branch.feature1.ancestors=master
-
 git-town-branch.feature2.parent=feature1
-git-town-branch.feature2.ancestors=master feature1
 ```
