@@ -244,7 +244,7 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldNewBranchPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldNewBranchPush() bool {
-	return util.StringToBool(getLocalConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
+	return util.StringToBool(getConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
