@@ -83,8 +83,6 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := CreateTrackingBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
 		return &step
-	case "*DeleteAncestorBranchesStep":
-		return &DeleteAncestorBranchesStep{}
 	case "*DeleteLocalBranchStep":
 		step := DeleteLocalBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))

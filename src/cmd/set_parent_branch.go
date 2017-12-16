@@ -27,7 +27,6 @@ func setParentBranch(childBranch, parentBranch string) {
 	git.EnsureHasBranch(childBranch)
 	git.EnsureHasBranch(parentBranch)
 	git.SetParentBranch(childBranch, parentBranch)
-	git.DeleteAllAncestorBranches()
 }
 
 func init() {

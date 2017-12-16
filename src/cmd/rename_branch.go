@@ -107,7 +107,6 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 	for _, child := range git.GetChildBranches(config.OldBranchName) {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
 	}
-	result.Append(&steps.DeleteAncestorBranchesStep{})
 	if git.HasTrackingBranch(config.OldBranchName) && !git.IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})

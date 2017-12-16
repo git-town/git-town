@@ -22,14 +22,6 @@ func AddToPerennialBranches(branchName string) {
 	SetPerennialBranches(append(GetPerennialBranches(), branchName))
 }
 
-// DeleteAllAncestorBranches removes all Git Town ancestor entries
-// for all branches from the configuration.
-func DeleteAllAncestorBranches() {
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.ancestors$") {
-		removeConfigurationValue(key)
-	}
-}
-
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func DeleteParentBranch(branchName string) {
@@ -61,13 +53,14 @@ func GetAncestorBranches(branchName string) (result []string) {
 }
 
 // GetParentBranchMap returns a map from branch name to its parent branch
-func GetParentBranchMap() (result map[string]string) {
-	lines := command.New("git", "config", "--get-regexp", "git-town-branch\\..*.parent").Output()
-	for _, line := range strings.Split(lines, "\n") {
-		parts := strings.Split(line, " ")
-		result[parts[0]] = parts[1]
+func GetParentBranchMap() map[string]string {
+	result := map[string]string{}
+	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := getLocalConfigurationValue(key)
+		result[child] = parent
 	}
-	return
+	return result
 }
 
 // GetChildBranches returns the names of all branches for which the given branch
