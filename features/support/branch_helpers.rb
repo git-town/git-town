@@ -111,9 +111,8 @@ def perennial_branches
 end
 
 
-def set_parent_branch branch:, parent:, ancestors: nil
+def set_parent_branch branch:, parent:
   run "git config git-town-branch.#{branch}.parent #{parent}"
-  run "git config git-town-branch.#{branch}.ancestors #{ancestors}" if ancestors
 end
 
 
