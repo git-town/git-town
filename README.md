@@ -93,8 +93,8 @@ The following configuration options have defaults, so the configuration wizard d
   * default: `rebase`
   * possible values: `merge`, `rebase`
 
-* the git-hack push flag
-  * whether or not newly-hacked branches should be pushed to remote repo
+* the new branch push flag
+  * whether or not branches created by hack / append / prepend should be pushed to remote repo
   * default: `false`
   * possible values: `true`, `false`
 

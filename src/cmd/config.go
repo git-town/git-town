@@ -43,7 +43,7 @@ func printConfig() {
 	}
 
 	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
-	util.PrintLabelAndValue("git-hack push flag", git.GetPrintableNewBranchPushFlag())
+	util.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
 }
 
 func resetConfig() {
