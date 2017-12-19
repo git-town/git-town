@@ -22,31 +22,6 @@ func AddToPerennialBranches(branchName string) {
 	SetPerennialBranches(append(GetPerennialBranches(), branchName))
 }
 
-// CompileAncestorBranches calculates and returns the list of ancestor branches
-// of the given branch based off the "git-town-branch.XXX.parent" configuration values.
-func CompileAncestorBranches(branchName string) (result []string) {
-	current := branchName
-	for {
-		if IsMainBranch(current) || IsPerennialBranch(current) {
-			return
-		}
-		parent := GetParentBranch(current)
-		if parent == "" {
-			return
-		}
-		result = append([]string{parent}, result...)
-		current = parent
-	}
-}
-
-// DeleteAllAncestorBranches removes all Git Town ancestor entries
-// for all branches from the configuration.
-func DeleteAllAncestorBranches() {
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.ancestors$") {
-		removeConfigurationValue(key)
-	}
-}
-
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func DeleteParentBranch(branchName string) {
@@ -59,15 +34,33 @@ func EnsureIsFeatureBranch(branchName, errorSuffix string) {
 }
 
 // GetAncestorBranches returns the names of all parent branches for the given branch,
-// beginning but not including the parennial branch from which this hierarchy was cut.
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-func GetAncestorBranches(branchName string) []string {
-	value := getLocalConfigurationValue("git-town-branch." + branchName + ".ancestors")
-	if value == "" {
-		return []string{}
+func GetAncestorBranches(branchName string) (result []string) {
+	parentBranchMap := GetParentBranchMap()
+	current := branchName
+	for {
+		if IsMainBranch(current) || IsPerennialBranch(current) {
+			return
+		}
+		parent := parentBranchMap[current]
+		if parent == "" {
+			return
+		}
+		result = append([]string{parent}, result...)
+		current = parent
 	}
-	return strings.Split(value, " ")
+}
+
+// GetParentBranchMap returns a map from branch name to its parent branch
+func GetParentBranchMap() map[string]string {
+	result := map[string]string{}
+	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
+		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+		parent := getLocalConfigurationValue(key)
+		result[child] = parent
+	}
+	return result
 }
 
 // GetChildBranches returns the names of all branches for which the given branch
@@ -168,14 +161,8 @@ func HasGlobalConfigurationValue(key string) bool {
 
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
 func IsAncestorBranch(branchName, ancestorBranchName string) bool {
-	ancestorBranches := CompileAncestorBranches(branchName)
+	ancestorBranches := GetAncestorBranches(branchName)
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
-}
-
-// HasCompiledAncestorBranches returns whether the Git Town configuration
-// contains a cached ancestor list for the branch with the given name.
-func HasCompiledAncestorBranches(branchName string) bool {
-	return len(GetAncestorBranches(branchName)) > 0
 }
 
 // HasRemote returns whether the current repository contains a Git remote
