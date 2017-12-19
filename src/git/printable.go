@@ -25,9 +25,9 @@ func GetPrintablePerennialBranches() string {
 	return output
 }
 
-// GetPrintableHackPushFlag returns a user printable hack push flag
-func GetPrintableHackPushFlag() string {
-	return strconv.FormatBool(ShouldHackPush())
+// GetPrintableNewBranchPushFlag returns a user printable new branch push flag
+func GetPrintableNewBranchPushFlag() string {
+	return strconv.FormatBool(ShouldNewBranchPush())
 }
 
 // GetPrintableBranchTree returns a user printable branch tree

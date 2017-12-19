@@ -227,10 +227,10 @@ func SetPullBranchStrategy(strategy string) {
 	setConfigurationValue("git-town.pull-branch-strategy", strategy)
 }
 
-// ShouldHackPush returns whether the current repository is configured to push
+// ShouldNewBranchPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func ShouldHackPush() bool {
-	return util.StringToBool(getLocalConfigurationValueWithDefault("git-town.hack-push-flag", "false"))
+func ShouldNewBranchPush() bool {
+	return util.StringToBool(getLocalConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
@@ -238,10 +238,10 @@ func UpdateOffline(value bool) {
 	setGlobalConfigurationValue("git-town.offline", strconv.FormatBool(value))
 }
 
-// UpdateShouldHackPush updates whether the current repository is configured to push
+// UpdateShouldNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func UpdateShouldHackPush(value bool) {
-	setConfigurationValue("git-town.hack-push-flag", strconv.FormatBool(value))
+func UpdateShouldNewBranchPush(value bool) {
+	setConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
 // Helpers

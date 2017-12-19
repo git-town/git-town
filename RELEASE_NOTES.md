@@ -5,6 +5,7 @@
 #### BREAKING CHANGES
 
 * `git town set-parent-branch`: update interface to no longer accept arguments and instead prompt the user for the parent of the current branch
+* Rename `hack-push-flag` to `new-branch-push-flag`. Please reconfigure if you are not using the default.
 
 ## 5.1.0 (2017-12-05)
 

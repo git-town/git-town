@@ -27,8 +27,8 @@ and brings over all uncommitted changes to the new feature branch.
 
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "hack-push-flag" configuration:
-$ git town hack-push-flag false`,
+This can be disabled by toggling the "new-branch-push-flag" configuration:
+$ git town new-branch-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
@@ -69,7 +69,7 @@ func getHackStepList(config hackConfig) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
 	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
 	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: mainBranchName})
-	if git.HasRemote("origin") && git.ShouldHackPush() && !git.IsOffline() {
+	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

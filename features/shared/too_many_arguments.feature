@@ -16,13 +16,13 @@ Feature: too many arguments
       """
 
 
-  Scenario: hack-push-flag
-    When I run `git-town hack-push-flag arg1 arg2`
+  Scenario: new-branch-push-flag
+    When I run `git-town new-branch-push-flag arg1 arg2`
     Then it prints the error "Too many arguments"
     And it prints the error:
       """
       Usage:
-        git-town hack-push-flag [(true | false)] [flags]
+        git-town new-branch-push-flag [(true | false)] [flags]
       """
 
 

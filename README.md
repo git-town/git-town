@@ -40,7 +40,7 @@ Git Town provides these additional Git commands:
 **Git Town Configuration**
 
 * [git town config](/documentation/commands/config.md) - displays or updates your Git Town configuration
-* [git town hack-push-flag](/documentation/commands/hack-push-flag.md) - configures whether new empty branches are pushed to origin
+* [git town new-branch-push-flag](/documentation/commands/new-branch-push-flag.md) - configures whether new empty branches are pushed to origin
 * [git town main-branch](/documentation/commands/main-branch.md) - displays or sets the main development branch for the current repo
 * [git town perennial-branches](/documentation/commands/perennial-branches.md) - displays or updates the perennial branches for the current repo
 * [git town pull-branch-strategy](/documentation/commands/pull-branch-strategy.md) - displays or sets the strategy with which perennial branches are updated
@@ -93,8 +93,8 @@ The following configuration options have defaults, so the configuration wizard d
   * default: `rebase`
   * possible values: `merge`, `rebase`
 
-* the git-hack push flag
-  * whether or not newly-hacked branches should be pushed to remote repo
+* the new branch push flag
+  * whether or not branches created by hack / append / prepend should be pushed to remote repo
   * default: `false`
   * possible values: `true`, `false`
 
