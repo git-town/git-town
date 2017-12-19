@@ -10,25 +10,31 @@ Feature: update the parent of a nested feature branch
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
 
 
-  Scenario: updating the parent branch
-    When I run `git-town set-parent-branch child-feature main`
+  Scenario: selecting the default branch (current parent)
+    When I run `git-town set-parent-branch` and answer the prompts:
+      | PROMPT                                              | ANSWER  |
+      | Please specify the parent branch of 'child-feature' | [ENTER] |
+    Then Git Town is now aware of this branch hierarchy
+      | BRANCH         | PARENT         |
+      | child-feature  | parent-feature |
+      | parent-feature | main           |
+
+
+  Scenario: selecting another branch
+    When I run `git-town set-parent-branch` and answer the prompts:
+      | PROMPT                                              | ANSWER      |
+      | Please specify the parent branch of 'child-feature' | [UP][ENTER] |
     Then Git Town is now aware of this branch hierarchy
       | BRANCH         | PARENT |
       | child-feature  | main   |
       | parent-feature | main   |
 
 
-  Scenario: invalid child branch name
-    When I run `git-town set-parent-branch non-existing parent-feature`
-    Then it prints the error:
-      """
-      There is no branch named 'non-existing'
-      """
-
-
-  Scenario: invalid parent branch name
-    When I run `git-town set-parent-branch child-feature non-existing`
-    Then it prints the error:
-      """
-      There is no branch named 'non-existing'
-      """
+  Scenario: choosing "<none> (make a perennial branch)"
+    When I run `git-town set-parent-branch` and answer the prompts:
+      | PROMPT                                              | ANSWER          |
+      | Please specify the parent branch of 'child-feature' | [UP][UP][ENTER] |
+    Then the perennial branches are now configured as "child-feature"
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH         | PARENT |
+      | parent-feature | main   |
