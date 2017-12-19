@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+#### BREAKING CHANGES
+
+* `git town set-parent-branch`: update interface to no longer accept arguments and instead prompt the user for the parent of the current branch
+
 ## 5.1.0 (2017-12-05)
 
 #### New Features
