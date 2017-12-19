@@ -31,7 +31,6 @@ func promptForParentBranch() {
 		defaultParentBranch = git.GetMainBranch()
 	}
 	git.DeleteParentBranch(branchName)
-	git.DeleteAllAncestorBranches()
 	prompt.AskForBranchAncestry(branchName, defaultParentBranch)
 }
 

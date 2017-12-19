@@ -12,33 +12,17 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasCompiledAncestorBranches(branchName) {
+		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
 			continue
 		}
 		AskForBranchAncestry(branchName, git.GetMainBranch())
-		ancestors := git.CompileAncestorBranches(branchName)
-		git.SetAncestorBranches(branchName, ancestors)
-
 		if parentBranchHeaderShown {
 			fmt.Println()
 		}
 	}
 }
 
-// Helpers
-
-var parentBranchHeaderShown = false
-var parentBranchHeaderTemplate = `
-Feature branches can be branched directly off
-%s or from other feature branches.
-
-The former allows to develop and ship features completely independent of each other.
-The latter allows to build on top of currently unshipped features.
-
-`
-var parentBranchPromptTemplate = "Please specify the parent branch of '%s':"
-var perennialBranchOption = "<none> (perennial branch)"
-
+// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
 	choices := git.GetLocalBranchesWithMainBranchFirst()
@@ -64,6 +48,20 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 		current = parent
 	}
 }
+
+// Helpers
+
+var parentBranchHeaderShown = false
+var parentBranchHeaderTemplate = `
+Feature branches can be branched directly off
+%s or from other feature branches.
+
+The former allows to develop and ship features completely independent of each other.
+The latter allows to build on top of currently unshipped features.
+
+`
+var parentBranchPromptTemplate = "Please specify the parent branch of '%s':"
+var perennialBranchOption = "<none> (perennial branch)"
 
 func filterOutSelfAndDescendants(branchName string, choices []string) []string {
 	result := []string{}
