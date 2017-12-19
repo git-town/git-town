@@ -134,7 +134,6 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	for _, child := range childBranches {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
 	}
-	result.Append(&steps.DeleteAncestorBranchesStep{})
 	if !isShippingInitialBranch {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}

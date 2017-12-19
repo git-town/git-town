@@ -10,7 +10,6 @@ end
 Given(/^Git Town has no branch hierarchy information for "(.*?)"$/) do |branch_names|
   Kappamaki.from_sentence(branch_names).each do |branch_name|
     run_shell_command "git config --unset git-town-branch.#{branch_name}.parent"
-    run_shell_command "git config --unset git-town-branch.#{branch_name}.ancestors"
   end
 end
 

@@ -59,7 +59,6 @@ func getPruneBranchesStepList() (result steps.StepList) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
-			result.Append(&steps.DeleteAncestorBranchesStep{})
 		}
 
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
