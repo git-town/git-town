@@ -25,7 +25,7 @@ Given(/^the "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, va
 end
 
 
-Given(/^the "([^"]*)" configuration is globally set to "([^"]*)"$/) do |configuration, value|
+Given(/^the global "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, value|
   set_global_configuration configuration, value
 end
 
