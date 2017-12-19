@@ -159,6 +159,11 @@ func HasGlobalConfigurationValue(key string) bool {
 	return command.New("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
 }
 
+// HasParentBranch returns whether or not the given branch has a parent
+func HasParentBranch(branchName string) bool {
+	return GetParentBranch(branchName) != ""
+}
+
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
 func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 	ancestorBranches := GetAncestorBranches(branchName)
@@ -198,12 +203,6 @@ func RemoveAllConfiguration() {
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
 func RemoveFromPerennialBranches(branchName string) {
 	SetPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))
-}
-
-// SetAncestorBranches stores the given list of branches as ancestors
-// for the given branch in the Git Town configuration.
-func SetAncestorBranches(branchName string, ancestorBranches []string) {
-	setConfigurationValue("git-town-branch."+branchName+".ancestors", strings.Join(ancestorBranches, " "))
 }
 
 // SetMainBranch marks the given branch as the main branch
