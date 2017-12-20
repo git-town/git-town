@@ -230,7 +230,13 @@ func SetPullBranchStrategy(strategy string) {
 // ShouldNewBranchPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func ShouldNewBranchPush() bool {
-	return util.StringToBool(getLocalConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
+	return util.StringToBool(getConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
+}
+
+// GetGlobalNewBranchPushFlag returns the global configuration for to push
+// freshly created branches up to the origin remote.
+func GetGlobalNewBranchPushFlag() string {
+	return getGlobalConfigurationValueWithDefault("git-town.new-branch-push-flag", "false")
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
@@ -244,10 +250,31 @@ func UpdateShouldNewBranchPush(value bool) {
 	setConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
+// UpdateGlobalShouldNewBranchPush updates global whether to push
+// freshly created branches up to the origin remote.
+func UpdateGlobalShouldNewBranchPush(value bool) {
+	setGlobalConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+}
+
 // Helpers
 
 func getConfigurationValueWithDefault(key, defaultValue string) string {
 	value := GetConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
+func getGlobalConfigurationValue(key string) (result string) {
+	if hasConfigurationValue("global", key) {
+		result = command.New("git", "config", "--global", key).Output()
+	}
+	return
+}
+
+func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getGlobalConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}

@@ -22,6 +22,11 @@ def get_configuration configuration
 end
 
 
+def get_global_configuration configuration
+  output_of "git config --global --get git-town.#{configuration} || true"
+end
+
+
 def git_town_configuration
   # OR'ed with true so that this doesn't exit with an error if config doesn't exist
   array_output_of 'git config --get-regex git-town || true'

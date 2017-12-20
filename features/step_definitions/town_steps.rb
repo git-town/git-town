@@ -25,6 +25,11 @@ Given(/^the "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, va
 end
 
 
+Given(/^the global "([^"]*)" configuration is set to "([^"]*)"$/) do |configuration, value|
+  set_global_configuration configuration, value
+end
+
+
 Given(/^the main branch is configured as "(.*)"$/) do |main_branch_name|
   set_configuration 'main-branch-name', main_branch_name
 end
@@ -66,6 +71,11 @@ end
 
 Then(/^my repo is now configured with "([^"]*)" set to "(.+?)"$/) do |configuration, value|
   expect(get_configuration(configuration)).to eql value
+end
+
+
+Then(/^git is now configured with "([^"]*)" set to "(.+?)"$/) do |configuration, value|
+  expect(get_global_configuration(configuration)).to eql value
 end
 
 

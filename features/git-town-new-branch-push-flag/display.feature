@@ -29,3 +29,22 @@ Feature: displaying the new branch push flag configuration
       """
       false
       """
+
+
+  Scenario: globally set to "true", local unset
+    Given the global "new-branch-push-flag" configuration is set to "true"
+    When I run `git-town new-branch-push-flag`
+    Then it prints
+      """
+      true
+      """
+
+
+  Scenario: globally set to "true", local set to "false"
+    Given the global "new-branch-push-flag" configuration is set to "true"
+    And the "new-branch-push-flag" configuration is set to "false"
+    When I run `git-town new-branch-push-flag`
+    Then it prints
+      """
+      false
+      """

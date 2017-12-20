@@ -15,6 +15,7 @@ var (
 	allFlag,
 	continueFlag,
 	dryRunFlag,
+	globalFlag,
 	skipFlag,
 	undoFlag bool
 )
