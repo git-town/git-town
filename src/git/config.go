@@ -55,10 +55,9 @@ func GetAncestorBranches(branchName string) (result []string) {
 // GetParentBranchMap returns a map from branch name to its parent branch
 func GetParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
+	for key, value := range getLocalConfigurationMapMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := getLocalConfigurationValue(key)
-		result[child] = parent
+		result[child] = value
 	}
 	return result
 }
@@ -66,10 +65,9 @@ func GetParentBranchMap() map[string]string {
 // GetChildBranches returns the names of all branches for which the given branch
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := getLocalConfigurationValue(key)
-		if parent == branchName {
-			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
+	parentBranchMap := GetParentBranchMap()
+	for child, parent := range parentBranchMap {
+		if branchName == parent {
 			result = append(result, child)
 		}
 	}
@@ -298,16 +296,20 @@ func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
 	return value
 }
 
-func getConfigurationKeysMatching(toMatch string) (result []string) {
+func getLocalConfigurationMapMatching(toMatch string) map[string]string {
+	result := map[string]string{}
 	configRegexp, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	lines := command.New("git", "config", "-l", "--local", "--name").Output()
+	lines := command.New("git", "config", "-l", "--local").Output()
 	for _, line := range strings.Split(lines, "\n") {
-		if configRegexp.MatchString(line) {
-			result = append(result, line)
+		parts := strings.SplitN(line, "=", 2)
+		key := parts[0]
+		value := parts[1]
+		if configRegexp.MatchString(key) {
+			result[key] = value
 		}
 	}
-	return
+	return result
 }
 
 func hasConfigurationValue(location, key string) bool {
