@@ -58,9 +58,10 @@ func GetAncestorBranches(branchName string) (result []string) {
 // GetParentBranchMap returns a map from branch name to its parent branch
 func GetParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for key, value := range getConfigurationMapMatching("^git-town-branch\\..*\\.parent$") {
+	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		result[child] = value
+		parent := getLocalConfigurationValue(key)
+		result[child] = parent
 	}
 	return result
 }
@@ -68,9 +69,10 @@ func GetParentBranchMap() map[string]string {
 // GetChildBranches returns the names of all branches for which the given branch
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
-	parentBranchMap := GetParentBranchMap()
-	for child, parent := range parentBranchMap {
-		if branchName == parent {
+	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
+		parent := getLocalConfigurationValue(key)
+		if parent == branchName {
+			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
 		}
 	}
@@ -283,16 +285,15 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 	return value
 }
 
-func getConfigurationMapMatching(toMatch string) map[string]string {
-	result := map[string]string{}
+func getConfigurationKeysMatching(toMatch string) (result []string) {
 	configRegexp, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	for key, value := range configMap {
+	for key := range configMap {
 		if configRegexp.MatchString(key) {
-			result[key] = value
+			result = append(result, key)
 		}
 	}
-	return result
+	return
 }
 
 func hasConfigurationValue(key string) bool {
