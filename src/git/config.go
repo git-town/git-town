@@ -60,7 +60,7 @@ func GetParentBranchMap() map[string]string {
 	result := map[string]string{}
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := getLocalConfigurationValue(key)
+		parent := getConfigurationValue(key)
 		result[child] = parent
 	}
 	return result
@@ -70,7 +70,7 @@ func GetParentBranchMap() map[string]string {
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := getLocalConfigurationValue(key)
+		parent := getConfigurationValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -86,11 +86,8 @@ func GetConfigurationValue(key string) (result string) {
 }
 
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
-func GetGlobalConfigurationValue(key string) (result string) {
-	if hasGlobalConfigurationValue(key) {
-		result = command.New("git", "config", "--global", key).Output()
-	}
-	return
+func GetGlobalConfigurationValue(key string) string {
+	return globalConfigMap[key]
 }
 
 // GetMainBranch returns the name of the main branch.
@@ -261,12 +258,8 @@ func UpdateGlobalShouldNewBranchPush(value bool) {
 
 // Helpers
 
-func getGlobalConfigurationValue(key string) (result string) {
-	return globalConfigMap[key]
-}
-
 func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := getGlobalConfigurationValue(key)
+	value := GetGlobalConfigurationValue(key)
 	if value == "" {
 		return defaultValue
 	}
@@ -294,16 +287,6 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 		}
 	}
 	return
-}
-
-func hasConfigurationValue(key string) bool {
-	_, ok := configMap[key]
-	return ok
-}
-
-func hasGlobalConfigurationValue(key string) bool {
-	_, ok := globalConfigMap[key]
-	return ok
 }
 
 func setConfigurationValue(key, value string) {
