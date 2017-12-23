@@ -39,7 +39,7 @@ func printConfig() {
 
 	mainBranch := git.GetMainBranch()
 	if mainBranch != "" {
-		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch, git.GetParentBranchMap()))
+		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}
 
 	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
