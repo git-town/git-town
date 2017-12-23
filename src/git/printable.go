@@ -31,10 +31,12 @@ func GetPrintableNewBranchPushFlag() string {
 }
 
 // GetPrintableBranchTree returns a user printable branch tree
-func GetPrintableBranchTree(branchName string) (result string) {
+func GetPrintableBranchTree(branchName string, parentBranchMap map[string]string) (result string) {
 	result += branchName
-	for _, childBranch := range GetChildBranches(branchName) {
-		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch), 1)
+	for child, parent := range parentBranchMap {
+		if parent == branchName {
+			result += "\n" + util.Indent(GetPrintableBranchTree(child, parentBranchMap), 1)
+		}
 	}
 	return
 }
