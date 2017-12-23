@@ -297,9 +297,7 @@ func setConfigurationValue(key, value string) {
 func setGlobalConfigurationValue(key, value string) {
 	command.New("git", "config", "--global", key, value).Run()
 	globalConfigMap[key] = value
-	if _, ok := configMap[key]; !ok {
-		configMap[key] = value
-	}
+	updateConfigMap() // Need to reset config in case it was inheriting
 }
 
 func removeConfigurationValue(key string) {
@@ -318,9 +316,19 @@ func parseConfigListOutput(output string) map[string]string {
 	return result
 }
 
-func init() {
+func updateConfigMap() {
 	configListOutput := command.New("git", "config", "-l").Output()
 	configMap = parseConfigListOutput(configListOutput)
+}
+
+func updateGlobalConfigMap() {
 	globalConfigListOutput := command.New("git", "config", "-l", "--global").Output()
 	globalConfigMap = parseConfigListOutput(globalConfigListOutput)
+}
+
+// Init
+
+func init() {
+	updateConfigMap()
+	updateGlobalConfigMap()
 }
