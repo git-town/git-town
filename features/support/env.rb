@@ -28,6 +28,7 @@ def setup_environment
 end
 
 
+# rubocop:disable MethodLength
 def initialize_environment
   # Create origin repo and set "main" as default branch
   create_repository :origin do
@@ -43,11 +44,13 @@ def initialize_environment
     run 'git push -u origin main'
   end
 
-  FileUtils.touch File.join(REPOSITORY_BASE, ".gitconfig")
+  # Add empty global git config
+  FileUtils.touch File.join(REPOSITORY_BASE, '.gitconfig')
 
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 end
+# rubocop:enable MethodLength
 
 
 AfterConfiguration do
