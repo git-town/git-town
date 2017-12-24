@@ -19,8 +19,6 @@ import (
 
 var configMap *ConfigMap
 var globalConfigMap *ConfigMap
-var remotes []string
-var remotesInitialized bool
 
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
@@ -171,6 +169,10 @@ func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 	ancestorBranches := GetAncestorBranches(branchName)
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
+
+// Remotes are cached in order to minimize the number of git commands run
+var remotes []string
+var remotesInitialized bool
 
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
