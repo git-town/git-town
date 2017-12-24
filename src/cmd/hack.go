@@ -67,7 +67,7 @@ func getHackConfig(args []string) (result hackConfig) {
 
 func getHackStepList(config hackConfig) (result steps.StepList) {
 	mainBranchName := git.GetMainBranch()
-	result.AppendList(steps.GetSyncBranchSteps(mainBranchName))
+	result.AppendList(steps.GetSyncBranchSteps(mainBranchName, true))
 	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: mainBranchName})
 	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
