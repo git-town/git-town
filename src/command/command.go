@@ -3,7 +3,6 @@ package command
 import (
 	"fmt"
 	"os/exec"
-	"strconv"
 	"strings"
 
 	"github.com/Originate/git-town/src/util"
@@ -23,8 +22,6 @@ func New(command ...string) *Command {
 	return &Command{name: command[0], args: command[1:]}
 }
 
-var count int
-
 // Run runs this command.
 // Doesn't run again if it ran already.
 // Stores the outcome in fields of the instance.
@@ -33,8 +30,6 @@ func (r *Command) Run() {
 		return
 	}
 
-	count += 1
-	fmt.Println(append([]string{strconv.Itoa(count), r.name}, r.args...))
 	subProcess := exec.Command(r.name, r.args...) // #nosec
 	output, err := subProcess.CombinedOutput()
 	r.output = strings.TrimSpace(string(output))
