@@ -13,6 +13,7 @@ import (
 
 var currentBranchCache string
 var remoteBranches []string
+var remoteBranchesInitialized bool
 
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
@@ -168,8 +169,12 @@ func HasLocalBranch(branchName string) bool {
 // HasTrackingBranch returns whether the local branch with the given name
 // has a tracking branch.
 func HasTrackingBranch(branchName string) bool {
+	if !remoteBranchesInitialized {
+		remoteBranches = strings.Split(command.New("git", "branch", "-r").Output(), "\n")
+		remoteBranchesInitialized = true
+	}
 	trackingBranchName := GetTrackingBranchName(branchName)
-	for _, line := range strings.Split(command.New("git", "branch", "-r").Output(), "\n") {
+	for _, line := range remoteBranches {
 		if strings.TrimSpace(line) == trackingBranchName {
 			return true
 		}
