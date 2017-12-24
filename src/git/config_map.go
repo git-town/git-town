@@ -72,4 +72,5 @@ func (c *ConfigMap) initialize() {
 		value := parts[1]
 		c.data[key] = value
 	}
+	c.initialized = true
 }
