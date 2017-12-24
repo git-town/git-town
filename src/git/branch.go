@@ -2,18 +2,11 @@ package git
 
 import (
 	"fmt"
-	"io/ioutil"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/util"
 )
-
-var currentBranchCache string
-var remoteBranches []string
-var remoteBranchesInitialized bool
 
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
@@ -49,21 +42,6 @@ func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(IsPerennialBranch(branchName), errorMessage)
-}
-
-// GetCurrentBranchName returns the name of the currently checked out branch
-func GetCurrentBranchName() string {
-	if dryrun.IsActive() {
-		return dryrun.GetCurrentBranchName()
-	}
-	if currentBranchCache == "" {
-		if IsRebaseInProgress() {
-			currentBranchCache = getCurrentBranchNameDuringRebase()
-		} else {
-			currentBranchCache = command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
-		}
-	}
-	return currentBranchCache
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -166,6 +144,9 @@ func HasLocalBranch(branchName string) bool {
 	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
+var remoteBranches []string
+var remoteBranchesInitialized bool
+
 // HasTrackingBranch returns whether the local branch with the given name
 // has a tracking branch.
 func HasTrackingBranch(branchName string) bool {
@@ -192,30 +173,10 @@ func IsBranchInSync(branchName string) bool {
 	return true
 }
 
-// ClearCurrentBranchCache clears the cache of the current branch
-func ClearCurrentBranchCache() {
-	currentBranchCache = ""
-}
-
-// UpdateCurrentBranchCache clears the cache of the current branch
-func UpdateCurrentBranchCache(branchName string) {
-	currentBranchCache = branchName
-}
-
 // ShouldBranchBePushed returns whether the local branch with the given name
 // contains commits that have not been pushed to the remote.
 func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
 	cmd := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
 	return cmd.Output() != ""
-}
-
-// Helpers
-
-func getCurrentBranchNameDuringRebase() string {
-	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
-	rawContent, err := ioutil.ReadFile(filename)
-	exit.If(err)
-	content := strings.TrimSpace(string(rawContent))
-	return strings.Replace(content, "refs/heads/", "", -1)
 }
