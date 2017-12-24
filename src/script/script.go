@@ -65,6 +65,7 @@ func RunCommand(cmd ...string) error {
 		}
 		return nil
 	}
+	git.ClearCurrentBranchCache()
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	if runtime.GOOS == "windows" {

@@ -11,6 +11,8 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
+var currentBranchCache string
+
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
@@ -52,10 +54,14 @@ func GetCurrentBranchName() string {
 	if dryrun.IsActive() {
 		return dryrun.GetCurrentBranchName()
 	}
-	if IsRebaseInProgress() {
-		return getCurrentBranchNameDuringRebase()
+	if currentBranchCache == "" {
+		if IsRebaseInProgress() {
+			currentBranchCache = getCurrentBranchNameDuringRebase()
+		} else {
+			currentBranchCache = command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+		}
 	}
-	return command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+	return currentBranchCache
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -178,6 +184,11 @@ func IsBranchInSync(branchName string) bool {
 		return localSha == remoteSha
 	}
 	return true
+}
+
+// ClearCurrentBranchCache clears the cache of the current branch
+func ClearCurrentBranchCache() {
+	currentBranchCache = ""
 }
 
 // ShouldBranchBePushed returns whether the local branch with the given name
