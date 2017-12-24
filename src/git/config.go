@@ -307,10 +307,6 @@ func removeConfigurationValue(key string) {
 	configMap.Delete(key)
 }
 
-func updateRemotes() {
-	remotes = strings.Split(command.New("git", "remote").Output(), "\n")
-}
-
 // Init
 
 func init() {
