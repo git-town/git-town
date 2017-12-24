@@ -144,6 +144,7 @@ func HasLocalBranch(branchName string) bool {
 	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
+// Remote branches are cached in order to minimize the number of git commands run
 var remoteBranches []string
 var remoteBranchesInitialized bool
 
