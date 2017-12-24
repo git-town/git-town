@@ -305,12 +305,12 @@ func removeConfigurationValue(key string) {
 	delete(configMap, key)
 }
 
-func parseConfigListOutput(output string) map[string]string {
+func parseConfigListOutput(cmd *command.Command) map[string]string {
 	result := map[string]string{}
-	if output == "" {
+	if cmd.Err() != nil || cmd.Output() == "" {
 		return result
 	}
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(cmd.Output(), "\n") {
 		parts := strings.SplitN(line, "=", 2)
 		key := parts[0]
 		value := parts[1]
@@ -320,13 +320,13 @@ func parseConfigListOutput(output string) map[string]string {
 }
 
 func updateConfigMap() {
-	configListOutput := command.New("git", "config", "-l").Output()
-	configMap = parseConfigListOutput(configListOutput)
+	configListCommand := command.New("git", "config", "-l")
+	configMap = parseConfigListOutput(configListCommand)
 }
 
 func updateGlobalConfigMap() {
-	globalConfigListOutput := command.New("git", "config", "-l", "--global").Output()
-	globalConfigMap = parseConfigListOutput(globalConfigListOutput)
+	globalConfigListCommand := command.New("git", "config", "-l", "--global")
+	globalConfigMap = parseConfigListOutput(globalConfigListCommand)
 }
 
 // Init
