@@ -20,7 +20,7 @@ func (step *CheckoutBranchStep) CreateUndoStepBeforeRun() Step {
 func (step *CheckoutBranchStep) Run() error {
 	if git.GetCurrentBranchName() != step.BranchName {
 		err := script.RunCommand("git", "checkout", step.BranchName)
-		git.ClearCurrentBranchCache()
+		git.UpdateCurrentBranchCache(step.BranchName)
 		return err
 	}
 	return nil

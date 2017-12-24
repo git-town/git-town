@@ -191,6 +191,11 @@ func ClearCurrentBranchCache() {
 	currentBranchCache = ""
 }
 
+// UpdateCurrentBranchCache clears the cache of the current branch
+func UpdateCurrentBranchCache(branchName string) {
+	currentBranchCache = branchName
+}
+
 // ShouldBranchBePushed returns whether the local branch with the given name
 // contains commits that have not been pushed to the remote.
 func ShouldBranchBePushed(branchName string) bool {
