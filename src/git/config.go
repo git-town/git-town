@@ -19,6 +19,7 @@ import (
 
 var configMap map[string]string
 var globalConfigMap map[string]string
+var remotes []string
 
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
@@ -173,7 +174,7 @@ func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
 func HasRemote(name string) bool {
-	return command.New("git", "remote").OutputContainsLine(name)
+	return util.DoesStringArrayContain(remotes, name)
 }
 
 // IsFeatureBranch returns whether the branch with the given name is
@@ -325,9 +326,14 @@ func updateGlobalConfigMap() {
 	globalConfigMap = parseConfigListOutput(globalConfigListCommand)
 }
 
+func updateRemotes() {
+	remotes = strings.Split(command.New("git", "remote").Output(), "\n")
+}
+
 // Init
 
 func init() {
 	updateConfigMap()
 	updateGlobalConfigMap()
+	updateRemotes()
 }
