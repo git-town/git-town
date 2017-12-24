@@ -43,6 +43,8 @@ def initialize_environment
     run 'git push -u origin main'
   end
 
+  FileUtils.touch File.join(REPOSITORY_BASE, ".gitconfig")
+
   # memoize environment by saving directory contents
   FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 end

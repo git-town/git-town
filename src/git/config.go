@@ -307,6 +307,9 @@ func removeConfigurationValue(key string) {
 
 func parseConfigListOutput(output string) map[string]string {
 	result := map[string]string{}
+	if output == "" {
+		return result
+	}
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.SplitN(line, "=", 2)
 		key := parts[0]
