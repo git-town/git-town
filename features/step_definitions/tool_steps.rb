@@ -10,9 +10,7 @@ Given(/^I have Git "(\d+)\.(\d+)\.(\d+)" installed$/) do |major, minor, patch|
   git_path = File.join(@temporary_shell_overrides_directory, 'git')
   IO.write git_path, <<~HEREDOC
     #!/usr/bin/env bash
-    if [ "$1" == "version" ]; then
-      echo "git version #{major}.#{minor}.#{patch}"
-    fi
+    echo "git version #{major}.#{minor}.#{patch}"
   HEREDOC
   FileUtils.chmod 'u+x', git_path
 end

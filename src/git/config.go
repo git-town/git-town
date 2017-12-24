@@ -17,9 +17,10 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-var configMap map[string]string
-var globalConfigMap map[string]string
+var configMap *ConfigMap
+var globalConfigMap *ConfigMap
 var remotes []string
+var remotesInitialized bool
 
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
@@ -83,12 +84,12 @@ func GetChildBranches(branchName string) (result []string) {
 // GetConfigurationValue returns the given configuration value,
 // from either global or local Git configuration
 func GetConfigurationValue(key string) (result string) {
-	return configMap[key]
+	return configMap.Get(key)
 }
 
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
 func GetGlobalConfigurationValue(key string) string {
-	return globalConfigMap[key]
+	return globalConfigMap.Get(key)
 }
 
 // GetMainBranch returns the name of the main branch.
@@ -174,6 +175,10 @@ func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
 func HasRemote(name string) bool {
+	if !remotesInitialized {
+		remotes = strings.Split(command.New("git", "remote").Output(), "\n")
+		remotesInitialized = true
+	}
 	return util.DoesStringArrayContain(remotes, name)
 }
 
@@ -278,7 +283,7 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 func getConfigurationKeysMatching(toMatch string) (result []string) {
 	configRegexp, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	for key := range configMap {
+	for key := range configMap.Data() {
 		if configRegexp.MatchString(key) {
 			result = append(result, key)
 		}
@@ -288,52 +293,23 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 
 func setConfigurationValue(key, value string) {
 	command.New("git", "config", key, value).Run()
-	configMap[key] = value
+	configMap.Set(key, value)
 }
 
 func setGlobalConfigurationValue(key, value string) {
 	command.New("git", "config", "--global", key, value).Run()
-	globalConfigMap[key] = value
-	updateConfigMap() // Need to reset config in case it was inheriting
+	globalConfigMap.Set(key, value)
+	configMap.Reset() // Need to reset config in case it was inheriting
 }
 
 func removeConfigurationValue(key string) {
 	command.New("git", "config", "--unset", key).Run()
-	delete(configMap, key)
-}
-
-func parseConfigListOutput(cmd *command.Command) map[string]string {
-	result := map[string]string{}
-	if cmd.Err() != nil || cmd.Output() == "" {
-		return result
-	}
-	for _, line := range strings.Split(cmd.Output(), "\n") {
-		parts := strings.SplitN(line, "=", 2)
-		key := parts[0]
-		value := parts[1]
-		result[key] = value
-	}
-	return result
-}
-
-func updateConfigMap() {
-	configListCommand := command.New("git", "config", "-l")
-	configMap = parseConfigListOutput(configListCommand)
-}
-
-func updateGlobalConfigMap() {
-	globalConfigListCommand := command.New("git", "config", "-l", "--global")
-	globalConfigMap = parseConfigListOutput(globalConfigListCommand)
-}
-
-func updateRemotes() {
-	remotes = strings.Split(command.New("git", "remote").Output(), "\n")
+	configMap.Delete(key)
 }
 
 // Init
 
 func init() {
-	updateConfigMap()
-	updateGlobalConfigMap()
-	updateRemotes()
+	configMap = NewConfigMap(false)
+	globalConfigMap = NewConfigMap(true)
 }
