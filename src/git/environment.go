@@ -7,6 +7,9 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
+var isRepository bool
+var isRepositoryInitialized bool
+
 // IsOffline returns whether Git Town is currently in offline mode
 func IsOffline() bool {
 	return util.StringToBool(getConfigurationValueWithDefault("git-town.offline", "false"))
@@ -30,5 +33,9 @@ func ValidateIsRepository() error {
 
 // IsRepository returns whether or not the current directory is in a repository
 func IsRepository() bool {
-	return command.New("git", "rev-parse").Err() == nil
+	if !isRepositoryInitialized {
+		isRepository = command.New("git", "rev-parse").Err() == nil
+		isRepositoryInitialized = true
+	}
+	return isRepository
 }
