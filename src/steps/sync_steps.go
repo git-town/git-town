@@ -17,13 +17,17 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
 
 	result.Append(&CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
-		result.Append(&MergeTrackingBranchStep{})
+		if git.HasTrackingBranch(branchName) {
+			result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+		}
 		result.Append(&MergeBranchStep{BranchName: git.GetParentBranch(branchName)})
 	} else {
-		if git.GetPullBranchStrategy() == "rebase" {
-			result.Append(&RebaseTrackingBranchStep{})
-		} else {
-			result.Append(&MergeTrackingBranchStep{})
+		if git.HasTrackingBranch(branchName) {
+			if git.GetPullBranchStrategy() == "rebase" {
+				result.Append(&RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+			} else {
+				result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+			}
 		}
 
 		mainBranchName := git.GetMainBranch()

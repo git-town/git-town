@@ -12,6 +12,7 @@ import (
 )
 
 var currentBranchCache string
+var remoteBranches []string
 
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
