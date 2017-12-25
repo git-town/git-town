@@ -70,12 +70,10 @@ func (c *ConfigMap) initialize() {
 		cmdArgs = append(cmdArgs, "--global")
 	}
 	cmd := command.New(cmdArgs...)
-	if err := cmd.Err(); err != nil {
-		if strings.Contains(err.Error(), "No such file or directory") {
-			return
-		}
-		exit.If(err)
+	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
+		return
 	}
+	exit.If(cmd.Err())
 	if cmd.Output() == "" {
 		return
 	}
