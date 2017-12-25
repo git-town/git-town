@@ -72,6 +72,25 @@ func TestAuthCodeURL_Optional(t *testing.T) {
 	}
 }
 
+func TestURLUnsafeClientConfig(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if got, want := r.Header.Get("Authorization"), "Basic Q0xJRU5UX0lEJTNGJTNGOkNMSUVOVF9TRUNSRVQlM0YlM0Y="; got != want {
+			t.Errorf("Authorization header = %q; want %q", got, want)
+		}
+
+		w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+		w.Write([]byte("access_token=90d64460d14870c08c81352a05dedd3465940a7c&scope=user&token_type=bearer"))
+	}))
+	defer ts.Close()
+	conf := newConf(ts.URL)
+	conf.ClientID = "CLIENT_ID??"
+	conf.ClientSecret = "CLIENT_SECRET??"
+	_, err := conf.Exchange(context.Background(), "exchange-code")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestExchangeRequest(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.String() != "/token" {
@@ -397,6 +416,32 @@ func TestFetchWithNoRefreshToken(t *testing.T) {
 	_, err := c.Get(ts.URL + "/somethingelse")
 	if err == nil {
 		t.Errorf("Fetch should return an error if no refresh token is set")
+	}
+}
+
+func TestTokenRetrieveError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.String() != "/token" {
+			t.Errorf("Unexpected token refresh request URL, %v is found.", r.URL)
+		}
+		w.Header().Set("Content-type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "invalid_grant"}`))
+	}))
+	defer ts.Close()
+	conf := newConf(ts.URL)
+	_, err := conf.Exchange(context.Background(), "exchange-code")
+	if err == nil {
+		t.Fatalf("got no error, expected one")
+	}
+	_, ok := err.(*RetrieveError)
+	if !ok {
+		t.Fatalf("got %T error, expected *RetrieveError", err)
+	}
+	// Test error string for backwards compatibility
+	expected := fmt.Sprintf("oauth2: cannot fetch token: %v\nResponse: %s", "400 Bad Request", `{"error": "invalid_grant"}`)
+	if errStr := err.Error(); errStr != expected {
+		t.Fatalf("got %#v, expected %#v", errStr, expected)
 	}
 }
 
