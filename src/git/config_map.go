@@ -1,8 +1,10 @@
 package git
 
 import (
+	"regexp"
 	"strings"
 
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
 )
 
@@ -23,13 +25,18 @@ func NewConfigMap(global bool) *ConfigMap {
 	}
 }
 
-// Data returns the map of the data
-func (c *ConfigMap) Data() map[string]string {
+// KeysMatching returns the keys that match the given regexp
+func (c *ConfigMap) KeysMatching(re *regexp.Regexp) (result []string) {
 	c.initialize()
-	return c.data
+	for key := range c.data {
+		if re.MatchString(key) {
+			result = append(result, key)
+		}
+	}
+	return
 }
 
-// Delete delete the given key
+// Delete deletes the given key
 func (c *ConfigMap) Delete(key string) {
 	c.initialize()
 	delete(c.data, key)
@@ -63,13 +70,18 @@ func (c *ConfigMap) initialize() {
 		cmdArgs = append(cmdArgs, "--global")
 	}
 	cmd := command.New(cmdArgs...)
-	if cmd.Err() != nil || cmd.Output() == "" {
+	if err := cmd.Err(); err != nil {
+		if strings.Contains(err.Error(), "No such file or directory") {
+			return
+		}
+		exit.If(err)
+	}
+	if cmd.Output() == "" {
 		return
 	}
 	for _, line := range strings.Split(cmd.Output(), "\n") {
 		parts := strings.SplitN(line, "=", 2)
-		key := parts[0]
-		value := parts[1]
+		key, value := parts[0], parts[1]
 		c.data[key] = value
 	}
 	c.initialized = true
