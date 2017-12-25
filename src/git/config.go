@@ -170,18 +170,10 @@ func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
 
-// Remotes are cached in order to minimize the number of git commands run
-var remotes []string
-var remotesInitialized bool
-
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
 func HasRemote(name string) bool {
-	if !remotesInitialized {
-		remotes = strings.Split(command.New("git", "remote").Output(), "\n")
-		remotesInitialized = true
-	}
-	return util.DoesStringArrayContain(remotes, name)
+	return util.DoesStringArrayContain(getRemotes(), name)
 }
 
 // IsFeatureBranch returns whether the branch with the given name is
@@ -283,14 +275,9 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 }
 
 func getConfigurationKeysMatching(toMatch string) (result []string) {
-	configRegexp, err := regexp.Compile(toMatch)
+	re, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	for key := range configMap.Data() {
-		if configRegexp.MatchString(key) {
-			result = append(result, key)
-		}
-	}
-	return
+	return configMap.KeysMatching(re)
 }
 
 func setConfigurationValue(key, value string) {
@@ -307,6 +294,18 @@ func setGlobalConfigurationValue(key, value string) {
 func removeConfigurationValue(key string) {
 	command.New("git", "config", "--unset", key).Run()
 	configMap.Delete(key)
+}
+
+// Remotes are cached in order to minimize the number of git commands run
+var remotes []string
+var remotesInitialized bool
+
+func getRemotes() []string {
+	if !remotesInitialized {
+		remotes = strings.Split(command.New("git", "remote").Output(), "\n")
+		remotesInitialized = true
+	}
+	return remotes
 }
 
 // Init

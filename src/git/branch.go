@@ -144,19 +144,11 @@ func HasLocalBranch(branchName string) bool {
 	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
-// Remote branches are cached in order to minimize the number of git commands run
-var remoteBranches []string
-var remoteBranchesInitialized bool
-
 // HasTrackingBranch returns whether the local branch with the given name
 // has a tracking branch.
 func HasTrackingBranch(branchName string) bool {
-	if !remoteBranchesInitialized {
-		remoteBranches = strings.Split(command.New("git", "branch", "-r").Output(), "\n")
-		remoteBranchesInitialized = true
-	}
 	trackingBranchName := GetTrackingBranchName(branchName)
-	for _, line := range remoteBranches {
+	for _, line := range getRemoteBranches() {
 		if strings.TrimSpace(line) == trackingBranchName {
 			return true
 		}
@@ -180,4 +172,18 @@ func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
 	cmd := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
 	return cmd.Output() != ""
+}
+
+// Helpers
+
+// Remote branches are cached in order to minimize the number of git commands run
+var remoteBranches []string
+var remoteBranchesInitialized bool
+
+func getRemoteBranches() []string {
+	if !remoteBranchesInitialized {
+		remoteBranches = strings.Split(command.New("git", "branch", "-r").Output(), "\n")
+		remoteBranchesInitialized = true
+	}
+	return remoteBranches
 }
