@@ -28,14 +28,14 @@ func GetCurrentBranchName() string {
 	return currentBranchCache
 }
 
-// ClearCurrentBranchCache clears the cache of the current branch
-// called when a rebase fails
+// ClearCurrentBranchCache clears the cache of the current branch.
+// This should be called when a rebase fails
 func ClearCurrentBranchCache() {
 	currentBranchCache = ""
 }
 
-// UpdateCurrentBranchCache clears the cache of the current branch
-// called when a new branch is checked out
+// UpdateCurrentBranchCache clears the cache of the current branch.
+// This should be called when a new branch is checked out
 func UpdateCurrentBranchCache(branchName string) {
 	currentBranchCache = branchName
 }

@@ -283,14 +283,9 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 }
 
 func getConfigurationKeysMatching(toMatch string) (result []string) {
-	configRegexp, err := regexp.Compile(toMatch)
+	re, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	for key := range configMap.Data() {
-		if configRegexp.MatchString(key) {
-			result = append(result, key)
-		}
-	}
-	return
+	return configMap.KeysMatching(re)
 }
 
 func setConfigurationValue(key, value string) {
