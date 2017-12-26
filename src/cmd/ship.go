@@ -60,9 +60,14 @@ It will also update the base branch for any pull requests against that branch.`,
 			},
 		})
 	},
+	Args: func(cmd *cobra.Command, args []string) error {
+		if undoFlag {
+			return cobra.NoArgs(cmd, args)
+		}
+		return cobra.MaximumNArgs(1)(cmd, args)
+	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)

@@ -55,9 +55,9 @@ the main branch is synced with its upstream counterpart.`,
 			},
 		})
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 			conditionallyActivateDryRun,
 			validateIsConfigured,

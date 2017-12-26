@@ -30,9 +30,9 @@ This usually means the branch was shipped or killed on another machine.`,
 			},
 		})
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 			git.ValidateIsOnline,

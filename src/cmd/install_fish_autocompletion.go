@@ -17,9 +17,7 @@ var installFishAutocompletionCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		installFishAutocompletion()
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return validateMaxArgs(args, 0)
-	},
+	Args: cobra.NoArgs,
 }
 
 func installFishAutocompletion() {

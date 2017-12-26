@@ -14,9 +14,9 @@ var setParentBranchCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		promptForParentBranch()
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)
