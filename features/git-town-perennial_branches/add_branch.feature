@@ -30,13 +30,3 @@ Feature: add a branch to the perennial branches configuration
   Scenario: adding a branch that does not exist
     When I run `git-town perennial-branches --add branch-does-not-exist`
     Then it prints the error "no branch named 'branch-does-not-exist'"
-
-
-  Scenario: not providing a branch name
-    When I run `git-town perennial-branches --add`
-    Then it prints the error "Error: flag needs an argument: --add"
-    And it prints the error:
-      """
-      Usage:
-        git-town perennial-branches [flags]
-      """
