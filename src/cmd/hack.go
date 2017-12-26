@@ -44,7 +44,7 @@ $ git town new-branch-push-flag false`,
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if abortFlag || continueFlag {
-			cobra.NoArgs(cmd, args)
+			return cobra.NoArgs(cmd, args)
 		}
 		return cobra.ExactArgs(1)(cmd, args)
 	},

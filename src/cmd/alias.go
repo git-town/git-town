@@ -40,11 +40,10 @@ Note that this can conflict with other tools that also define additional Git com
 		}
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
-		err := cobra.ExactArgs(1)(cmd, args)
-		if err != nil {
-			return err
+		if len(args) == 1 {
+			return validateBooleanArgument(args[0])
 		}
-		return validateBooleanArgument(args[0])
+		return cobra.ExactArgs(1)(cmd, args)
 	},
 }
 
