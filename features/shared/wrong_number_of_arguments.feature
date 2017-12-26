@@ -23,6 +23,8 @@ Feature: wrong number of arguments
       | perennial-branches arg1        |
       | prune-branches arg1            |
       | pull-branch-strategy arg1 arg2 |
+      | rename-branch                  |
+      | rename-branch arg1 arg2 arg3   |
       | repo arg1                      |
       | sync arg1                      |
       | ship arg1 arg2                 |
