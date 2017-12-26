@@ -11,6 +11,8 @@ import (
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
 func EnsureIsConfigured() {
 	if git.GetMainBranch() == "" {
+		fmt.Println("Git Town needs to be configured")
+		fmt.Println()
 		ConfigureMainBranch()
 		ConfigurePerennialBranches()
 	}
@@ -18,7 +20,6 @@ func EnsureIsConfigured() {
 
 // ConfigureMainBranch has the user to confgure the main branch
 func ConfigureMainBranch() {
-	printConfigurationHeader()
 	newMainBranch := askForBranch(askForBranchOptions{
 		branchNames:       git.GetLocalBranches(),
 		prompt:            getMainBranchPrompt(),
@@ -29,7 +30,6 @@ func ConfigureMainBranch() {
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches
 func ConfigurePerennialBranches() {
-	printConfigurationHeader()
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        git.GetLocalBranchesWithoutMain(),
 		prompt:             getPerennialBranchesPrompt(),
@@ -39,8 +39,6 @@ func ConfigurePerennialBranches() {
 }
 
 // Helpers
-
-var configurationHeaderShown bool
 
 func getMainBranchPrompt() (result string) {
 	result += "Please specify the main development branch:"
@@ -60,12 +58,4 @@ func getPerennialBranchesPrompt() (result string) {
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)
 	}
 	return
-}
-
-func printConfigurationHeader() {
-	if !configurationHeaderShown {
-		configurationHeaderShown = true
-		fmt.Println("Git Town needs to be configured")
-		fmt.Println()
-	}
 }
