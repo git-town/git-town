@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Originate/git-town)](https://goreportcard.com/report/github.com/Originate/git-town)
 [![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
+[![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
 Git Town makes software development teams who use Git even more productive and happy.
 It adds Git commands that support
