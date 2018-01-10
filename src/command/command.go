@@ -30,6 +30,7 @@ func (r *Command) Run() {
 		return
 	}
 
+	logRun(r)
 	subProcess := exec.Command(r.name, r.args...) // #nosec
 	output, err := subProcess.CombinedOutput()
 	r.output = strings.TrimSpace(string(output))
