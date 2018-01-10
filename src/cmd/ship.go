@@ -108,10 +108,8 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	var isOffline = git.IsOffline()
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
-	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.BranchToShip})
-	result.Append(&steps.MergeTrackingBranchStep{})
-	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
+	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
+	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
 	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
