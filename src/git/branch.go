@@ -2,12 +2,9 @@ package git
 
 import (
 	"fmt"
-	"io/ioutil"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -45,17 +42,6 @@ func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(IsPerennialBranch(branchName), errorMessage)
-}
-
-// GetCurrentBranchName returns the name of the currently checked out branch
-func GetCurrentBranchName() string {
-	if dryrun.IsActive() {
-		return dryrun.GetCurrentBranchName()
-	}
-	if IsRebaseInProgress() {
-		return getCurrentBranchNameDuringRebase()
-	}
-	return command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -186,14 +172,4 @@ func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
 	cmd := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
 	return cmd.Output() != ""
-}
-
-// Helpers
-
-func getCurrentBranchNameDuringRebase() string {
-	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
-	rawContent, err := ioutil.ReadFile(filename)
-	exit.If(err)
-	content := strings.TrimSpace(string(rawContent))
-	return strings.Replace(content, "refs/heads/", "", -1)
 }

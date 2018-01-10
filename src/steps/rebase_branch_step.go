@@ -29,5 +29,9 @@ func (step *RebaseBranchStep) CreateUndoStepBeforeRun() Step {
 
 // Run executes this step.
 func (step *RebaseBranchStep) Run() error {
-	return script.RunCommand("git", "rebase", step.BranchName)
+	err := script.RunCommand("git", "rebase", step.BranchName)
+	if err != nil {
+		git.ClearCurrentBranchCache()
+	}
+	return err
 }
