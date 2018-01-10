@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -20,11 +19,9 @@ The main branch is the Git branch from which new feature branches are cut.`,
 			setMainBranch(args[0])
 		}
 	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
-			git.ValidateIsRepository,
-		)
+		return git.ValidateIsRepository()
 	},
 }
 

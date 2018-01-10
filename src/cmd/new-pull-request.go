@@ -49,9 +49,9 @@ Example: your SSH identity should be something like
 			},
 		})
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 			git.ValidateIsOnline,
@@ -72,7 +72,7 @@ func getNewPullRequestConfig() (result newPullRequestConfig) {
 
 func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})

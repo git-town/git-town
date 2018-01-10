@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -49,12 +47,14 @@ This can be disabled by toggling the "new-branch-push-flag" configuration:
 			},
 		})
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !abortFlag && !continueFlag && !undoFlag {
-			return errors.New("no branch name provided")
+	Args: func(cmd *cobra.Command, args []string) error {
+		if abortFlag || continueFlag || undoFlag {
+			return cobra.NoArgs(cmd, args)
 		}
+		return cobra.ExactArgs(1)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)
@@ -76,7 +76,7 @@ func getPrependConfig(args []string) (result prependConfig) {
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
 	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})

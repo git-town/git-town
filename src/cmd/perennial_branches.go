@@ -5,7 +5,6 @@ import (
 
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -28,11 +27,9 @@ They cannot be shipped.`,
 			printPerennialBranches()
 		}
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
-			git.ValidateIsRepository,
-		)
+		return git.ValidateIsRepository()
 	},
 }
 

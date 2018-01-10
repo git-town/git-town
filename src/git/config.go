@@ -17,9 +17,6 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-var configMap *ConfigMap
-var globalConfigMap *ConfigMap
-
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
 	SetPerennialBranches(append(GetPerennialBranches(), branchName))
@@ -60,7 +57,7 @@ func GetParentBranchMap() map[string]string {
 	result := map[string]string{}
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := GetConfigurationValue(key)
+		parent := getLocalConfigurationValue(key)
 		result[child] = parent
 	}
 	return result
@@ -70,7 +67,7 @@ func GetParentBranchMap() map[string]string {
 // is a parent.
 func GetChildBranches(branchName string) (result []string) {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := GetConfigurationValue(key)
+		parent := getLocalConfigurationValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -82,27 +79,30 @@ func GetChildBranches(branchName string) (result []string) {
 // GetConfigurationValue returns the given configuration value,
 // from either global or local Git configuration
 func GetConfigurationValue(key string) (result string) {
-	return configMap.Get(key)
+	return command.New("git", "config", key).Output()
 }
 
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
-func GetGlobalConfigurationValue(key string) string {
-	return globalConfigMap.Get(key)
+func GetGlobalConfigurationValue(key string) (result string) {
+	if hasConfigurationValue("global", key) {
+		result = command.New("git", "config", "--global", key).Output()
+	}
+	return
 }
 
 // GetMainBranch returns the name of the main branch.
 func GetMainBranch() string {
-	return GetConfigurationValue("git-town.main-branch-name")
+	return getLocalConfigurationValue("git-town.main-branch-name")
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
 func GetParentBranch(branchName string) string {
-	return GetConfigurationValue("git-town-branch." + branchName + ".parent")
+	return getLocalConfigurationValue("git-town-branch." + branchName + ".parent")
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
 func GetPerennialBranches() []string {
-	result := GetConfigurationValue("git-town.perennial-branch-names")
+	result := getLocalConfigurationValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -111,14 +111,14 @@ func GetPerennialBranches() []string {
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.
 func GetPullBranchStrategy() string {
-	return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
+	return getLocalConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
 }
 
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func GetRemoteOriginURL() string {
 	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := GetConfigurationValue("git-town.testing.remote-url")
+		mockRemoteURL := getLocalConfigurationValue("git-town.testing.remote-url")
 		if mockRemoteURL != "" {
 			return mockRemoteURL
 		}
@@ -173,7 +173,7 @@ func IsAncestorBranch(branchName, ancestorBranchName string) bool {
 // HasRemote returns whether the current repository contains a Git remote
 // with the given name.
 func HasRemote(name string) bool {
-	return util.DoesStringArrayContain(getRemotes(), name)
+	return command.New("git", "remote").OutputContainsLine(name)
 }
 
 // IsFeatureBranch returns whether the branch with the given name is
@@ -258,14 +258,6 @@ func UpdateGlobalShouldNewBranchPush(value bool) {
 
 // Helpers
 
-func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := GetGlobalConfigurationValue(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
 func getConfigurationValueWithDefault(key, defaultValue string) string {
 	value := GetConfigurationValue(key)
 	if value == "" {
@@ -274,43 +266,62 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 	return value
 }
 
+func getGlobalConfigurationValue(key string) (result string) {
+	if hasConfigurationValue("global", key) {
+		result = command.New("git", "config", "--global", key).Output()
+	}
+	return
+}
+
+func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getGlobalConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
+// getLocalConfigurationValue returns the given configuration value
+// only from the local Git configuration
+func getLocalConfigurationValue(key string) (result string) {
+	if hasConfigurationValue("local", key) {
+		result = command.New("git", "config", "--local", key).Output()
+	}
+	return
+}
+
+func getLocalConfigurationValueWithDefault(key, defaultValue string) string {
+	value := getLocalConfigurationValue(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}
+
 func getConfigurationKeysMatching(toMatch string) (result []string) {
-	re, err := regexp.Compile(toMatch)
+	configRegexp, err := regexp.Compile(toMatch)
 	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	return configMap.KeysMatching(re)
+	lines := command.New("git", "config", "-l", "--local", "--name").Output()
+	for _, line := range strings.Split(lines, "\n") {
+		if configRegexp.MatchString(line) {
+			result = append(result, line)
+		}
+	}
+	return
+}
+
+func hasConfigurationValue(location, key string) bool {
+	return command.New("git", "config", "-l", "--"+location, "--name").OutputContainsLine(key)
 }
 
 func setConfigurationValue(key, value string) {
 	command.New("git", "config", key, value).Run()
-	configMap.Set(key, value)
 }
 
 func setGlobalConfigurationValue(key, value string) {
 	command.New("git", "config", "--global", key, value).Run()
-	globalConfigMap.Set(key, value)
-	configMap.Reset() // Need to reset config in case it was inheriting
 }
 
 func removeConfigurationValue(key string) {
 	command.New("git", "config", "--unset", key).Run()
-	configMap.Delete(key)
-}
-
-// Remotes are cached in order to minimize the number of git commands run
-var remotes []string
-var remotesInitialized bool
-
-func getRemotes() []string {
-	if !remotesInitialized {
-		remotes = strings.Split(command.New("git", "remote").Output(), "\n")
-		remotesInitialized = true
-	}
-	return remotes
-}
-
-// Init
-
-func init() {
-	configMap = NewConfigMap(false)
-	globalConfigMap = NewConfigMap(true)
 }

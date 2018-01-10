@@ -2,9 +2,12 @@ package git
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
+	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
+	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/util"
 )
 
@@ -42,6 +45,17 @@ func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(IsPerennialBranch(branchName), errorMessage)
+}
+
+// GetCurrentBranchName returns the name of the currently checked out branch
+func GetCurrentBranchName() string {
+	if dryrun.IsActive() {
+		return dryrun.GetCurrentBranchName()
+	}
+	if IsRebaseInProgress() {
+		return getCurrentBranchNameDuringRebase()
+	}
+	return command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -148,7 +162,7 @@ func HasLocalBranch(branchName string) bool {
 // has a tracking branch.
 func HasTrackingBranch(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
-	for _, line := range getRemoteBranches() {
+	for _, line := range strings.Split(command.New("git", "branch", "-r").Output(), "\n") {
 		if strings.TrimSpace(line) == trackingBranchName {
 			return true
 		}
@@ -176,14 +190,10 @@ func ShouldBranchBePushed(branchName string) bool {
 
 // Helpers
 
-// Remote branches are cached in order to minimize the number of git commands run
-var remoteBranches []string
-var remoteBranchesInitialized bool
-
-func getRemoteBranches() []string {
-	if !remoteBranchesInitialized {
-		remoteBranches = strings.Split(command.New("git", "branch", "-r").Output(), "\n")
-		remoteBranchesInitialized = true
-	}
-	return remoteBranches
+func getCurrentBranchNameDuringRebase() string {
+	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
+	rawContent, err := ioutil.ReadFile(filename)
+	exit.If(err)
+	content := strings.TrimSpace(string(rawContent))
+	return strings.Replace(content, "refs/heads/", "", -1)
 }

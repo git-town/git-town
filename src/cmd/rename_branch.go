@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/Originate/git-town/src/git"
@@ -56,12 +55,14 @@ When run on a perennial branch
 			},
 		})
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !undoFlag {
-			return errors.New("Too few arguments")
+	Args: func(cmd *cobra.Command, args []string) error {
+		if undoFlag {
+			return cobra.NoArgs(cmd, args)
 		}
+		return cobra.RangeArgs(1, 2)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 2),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)

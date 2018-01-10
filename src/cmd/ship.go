@@ -60,9 +60,14 @@ It will also update the base branch for any pull requests against that branch.`,
 			},
 		})
 	},
+	Args: func(cmd *cobra.Command, args []string) error {
+		if undoFlag {
+			return cobra.NoArgs(cmd, args)
+		}
+		return cobra.MaximumNArgs(1)(cmd, args)
+	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)
@@ -108,8 +113,10 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	var isOffline = git.IsOffline()
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
-	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
-	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
+	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto))
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.BranchToShip})
+	result.Append(&steps.MergeTrackingBranchStep{})
+	result.Append(&steps.MergeBranchStep{BranchName: branchToMergeInto})
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
 	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)

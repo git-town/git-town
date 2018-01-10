@@ -55,9 +55,9 @@ the main branch is synced with its upstream counterpart.`,
 			},
 		})
 	},
+	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 0),
 			git.ValidateIsRepository,
 			conditionallyActivateDryRun,
 			validateIsConfigured,
@@ -87,7 +87,7 @@ func getSyncConfig() (result syncConfig) {
 
 func getSyncStepList(config syncConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	if git.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {

@@ -107,6 +107,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := MergeBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
 		return &step
+	case "*MergeTrackingBranchStep":
+		return &MergeTrackingBranchStep{}
 	case "*NoOpStep":
 		return &NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
@@ -129,6 +131,8 @@ func deserializeStep(serializedStep SerializedStep) Step {
 		step := RebaseBranchStep{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))
 		return &step
+	case "*RebaseTrackingBranchStep":
+		return &RebaseTrackingBranchStep{}
 	case "*RemoveFromPerennialBranches":
 		step := RemoveFromPerennialBranches{}
 		exit.If(json.Unmarshal(serializedStep.Data, &step))

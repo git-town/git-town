@@ -15,9 +15,5 @@ type CreateAndCheckoutBranchStep struct {
 // Run executes this step.
 func (step *CreateAndCheckoutBranchStep) Run() error {
 	git.SetParentBranch(step.BranchName, step.ParentBranchName)
-	err := script.RunCommand("git", "checkout", "-b", step.BranchName, step.ParentBranchName)
-	if err == nil {
-		git.UpdateCurrentBranchCache(step.BranchName)
-	}
-	return err
+	return script.RunCommand("git", "checkout", "-b", step.BranchName, step.ParentBranchName)
 }
