@@ -68,7 +68,7 @@ func getAppendConfig(args []string) (result appendConfig) {
 
 func getAppendStepList(config appendConfig) (result steps.StepList) {
 	for _, branchName := range append(git.GetAncestorBranches(config.InitialBranch), config.InitialBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})

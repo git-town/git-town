@@ -20,10 +20,16 @@ func EnsureDoesNotHaveOpenChanges(message string) {
 	util.Ensure(!HasOpenChanges(), "You have uncommitted changes. "+message)
 }
 
+// Root directory is cached in order to minimize the number of git commands run
+var rootDirectory string
+
 // GetRootDirectory returns the path of the rood directory of the current repository,
 // i.e. the directory that contains the ".git" folder.
 func GetRootDirectory() string {
-	return command.New("git", "rev-parse", "--show-toplevel").Output()
+	if rootDirectory == "" {
+		rootDirectory = command.New("git", "rev-parse", "--show-toplevel").Output()
+	}
+	return rootDirectory
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
