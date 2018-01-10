@@ -24,11 +24,12 @@ import (
 	"github.com/onsi/gomega/types"
 )
 
-const GOMEGA_VERSION = "1.0"
+const GOMEGA_VERSION = "1.2.0"
 
 const nilFailHandlerPanic = `You are trying to make an assertion, but Gomega's fail handler is nil.
 If you're using Ginkgo then you probably forgot to put your assertion in an It().
 Alternatively, you may have forgotten to register a fail handler with RegisterFailHandler() or RegisterTestingT().
+Depending on your vendoring solution you may be inadvertently importing gomega and subpackages (e.g. ghhtp, gexec,...) from different locations.
 `
 
 var globalFailHandler types.GomegaFailHandler

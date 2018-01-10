@@ -15,7 +15,7 @@ import (
 )
 
 func TestSearchService_Repositories(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/repositories", func(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +48,7 @@ func TestSearchService_Repositories(t *testing.T) {
 }
 
 func TestSearchService_Commits(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/commits", func(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +79,7 @@ func TestSearchService_Commits(t *testing.T) {
 }
 
 func TestSearchService_Issues(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/issues", func(w http.ResponseWriter, r *http.Request) {
@@ -111,8 +111,37 @@ func TestSearchService_Issues(t *testing.T) {
 	}
 }
 
+func TestSearchService_Issues_withQualifiers(t *testing.T) {
+	client, mux, _, teardown := setup()
+	defer teardown()
+
+	mux.HandleFunc("/search/issues", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "GET")
+		testFormValues(t, r, values{
+			"q": "gopher is:issue label:bug language:go",
+		})
+
+		fmt.Fprint(w, `{"total_count": 4, "incomplete_results": true, "items": [{"number":1},{"number":2}]}`)
+	})
+
+	opts := &SearchOptions{}
+	result, _, err := client.Search.Issues(context.Background(), "gopher is:issue label:bug language:go", opts)
+	if err != nil {
+		t.Errorf("Search.Issues returned error: %v", err)
+	}
+
+	want := &IssuesSearchResult{
+		Total:             Int(4),
+		IncompleteResults: Bool(true),
+		Issues:            []Issue{{Number: Int(1)}, {Number: Int(2)}},
+	}
+	if !reflect.DeepEqual(result, want) {
+		t.Errorf("Search.Issues returned %+v, want %+v", result, want)
+	}
+}
+
 func TestSearchService_Users(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/users", func(w http.ResponseWriter, r *http.Request) {
@@ -145,7 +174,7 @@ func TestSearchService_Users(t *testing.T) {
 }
 
 func TestSearchService_Code(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/code", func(w http.ResponseWriter, r *http.Request) {
@@ -178,7 +207,7 @@ func TestSearchService_Code(t *testing.T) {
 }
 
 func TestSearchService_CodeTextMatch(t *testing.T) {
-	setup()
+	client, mux, _, teardown := setup()
 	defer teardown()
 
 	mux.HandleFunc("/search/code", func(w http.ResponseWriter, r *http.Request) {
