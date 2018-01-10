@@ -38,6 +38,7 @@ Feature: git town: alias
     When I run `git-town alias false`
     Then it runs no commands
 
+
   Scenario: works outside of a Git repository
     Given my workspace is currently not a Git repository
     When I run `git-town alias true`
