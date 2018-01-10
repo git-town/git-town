@@ -76,7 +76,7 @@ func getPrependConfig(args []string) (result prependConfig) {
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
 	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
