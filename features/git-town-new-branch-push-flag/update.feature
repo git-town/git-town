@@ -13,13 +13,3 @@ Feature: set the new-branch-push-flag
   Scenario: update to "false"
     When I run `git-town new-branch-push-flag false`
     Then my repo is now configured with "new-branch-push-flag" set to "false"
-
-
-  Scenario: invalid flag
-    When I run `git-town new-branch-push-flag woof`
-    Then it prints the error "Invalid value: 'woof'"
-    And it prints the error:
-      """
-      Usage:
-        git-town new-branch-push-flag [(true | false)] [flags]
-      """

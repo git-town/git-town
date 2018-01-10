@@ -21,17 +21,14 @@ if and only if "new-branch-push-flag" is true. The default value is false.`,
 			setNewBranchPushFlag(util.StringToBool(args[0]))
 		}
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
+	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 {
-			err := validateBooleanArgument(args[0])
-			if err != nil {
-				return err
-			}
+			return validateBooleanArgument(args[0])
 		}
-		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
-			git.ValidateIsRepository,
-		)
+		return cobra.MaximumNArgs(1)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return git.ValidateIsRepository()
 	},
 }
 

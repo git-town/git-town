@@ -17,14 +17,11 @@ var offlineCommand = &cobra.Command{
 			setOfflineFlag(util.StringToBool(args[0]))
 		}
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
+	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 {
-			err := validateBooleanArgument(args[0])
-			if err != nil {
-				return err
-			}
+			return validateBooleanArgument(args[0])
 		}
-		return validateMaxArgs(args, 1)
+		return cobra.MaximumNArgs(1)(cmd, args)
 	},
 }
 

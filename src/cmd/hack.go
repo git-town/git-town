@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"errors"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
@@ -44,12 +42,14 @@ $ git town new-branch-push-flag false`,
 			},
 		})
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 && !abortFlag && !continueFlag {
-			return errors.New("no branch name provided")
+	Args: func(cmd *cobra.Command, args []string) error {
+		if abortFlag || continueFlag {
+			return cobra.NoArgs(cmd, args)
 		}
+		return cobra.ExactArgs(1)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
 			git.ValidateIsRepository,
 			validateIsConfigured,
 		)

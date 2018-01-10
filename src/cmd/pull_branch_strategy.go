@@ -5,7 +5,6 @@ import (
 
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -24,14 +23,14 @@ for the main branch and perennial branches.`,
 			setPullBranchStrategy(args[0])
 		}
 	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
+	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
 			return fmt.Errorf("Invalid value: '%s'", args[0])
 		}
-		return util.FirstError(
-			validateMaxArgsFunc(args, 1),
-			git.ValidateIsRepository,
-		)
+		return cobra.MaximumNArgs(1)(cmd, args)
+	},
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return git.ValidateIsRepository()
 	},
 }
 
