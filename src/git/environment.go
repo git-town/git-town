@@ -28,7 +28,15 @@ func ValidateIsRepository() error {
 	return errors.New("This is not a Git repository")
 }
 
+// isRepository is cached in order to minimize the number of git commands run
+var isRepository bool
+var isRepositoryInitialized bool
+
 // IsRepository returns whether or not the current directory is in a repository
 func IsRepository() bool {
-	return command.New("git", "rev-parse").Err() == nil
+	if !isRepositoryInitialized {
+		isRepository = command.New("git", "rev-parse").Err() == nil
+		isRepositoryInitialized = true
+	}
+	return isRepository
 }

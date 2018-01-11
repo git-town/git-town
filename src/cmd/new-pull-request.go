@@ -72,7 +72,7 @@ func getNewPullRequestConfig() (result newPullRequestConfig) {
 
 func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})

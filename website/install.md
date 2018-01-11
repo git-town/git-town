@@ -38,7 +38,7 @@ please use the manual install and ensure your Git version is 2.7.0 or higher._
 
 * Install: download the Git Town binary for your platform from the
   [releases page](https://github.com/Originate/git-town/releases),
-  rename it to `git-town`,
+  rename it to `git-town`, make it executable with `chmod +x git-town`
   and put it somewhere in your `$PATH`
 * Update: install the new version over the old version
 * Uninstall:

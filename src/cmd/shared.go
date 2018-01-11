@@ -12,6 +12,7 @@ var (
 	abortFlag,
 	allFlag,
 	continueFlag,
+	debugFlag,
 	dryRunFlag,
 	globalFlag,
 	skipFlag,

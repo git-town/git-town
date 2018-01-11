@@ -1,6 +1,7 @@
 package git
 
 import (
+	"sort"
 	"strconv"
 	"strings"
 
@@ -33,7 +34,9 @@ func GetPrintableNewBranchPushFlag() string {
 // GetPrintableBranchTree returns a user printable branch tree
 func GetPrintableBranchTree(branchName string) (result string) {
 	result += branchName
-	for _, childBranch := range GetChildBranches(branchName) {
+	childBranches := GetChildBranches(branchName)
+	sort.Strings(childBranches)
+	for _, childBranch := range childBranches {
 		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch), 1)
 	}
 	return

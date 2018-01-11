@@ -7,7 +7,7 @@ import (
 )
 
 // GetSyncBranchSteps returns the steps to sync the branch with the given name.
-func GetSyncBranchSteps(branchName string) (result StepList) {
+func GetSyncBranchSteps(branchName string, pushBranch bool) (result StepList) {
 	isFeature := git.IsFeatureBranch(branchName)
 	hasRemoteOrigin := git.HasRemote("origin")
 
@@ -17,23 +17,12 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
 
 	result.Append(&CheckoutBranchStep{BranchName: branchName})
 	if isFeature {
-		result.Append(&MergeTrackingBranchStep{})
-		result.Append(&MergeBranchStep{BranchName: git.GetParentBranch(branchName)})
+		result.AppendList(getSyncFeatureBranchSteps(branchName))
 	} else {
-		if git.GetPullBranchStrategy() == "rebase" {
-			result.Append(&RebaseTrackingBranchStep{})
-		} else {
-			result.Append(&MergeTrackingBranchStep{})
-		}
-
-		mainBranchName := git.GetMainBranch()
-		if mainBranchName == branchName && git.HasRemote("upstream") {
-			result.Append(&FetchUpstreamStep{})
-			result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
-		}
+		result.AppendList(getSyncNonFeatureBranchSteps(branchName))
 	}
 
-	if hasRemoteOrigin && !git.IsOffline() {
+	if pushBranch && hasRemoteOrigin && !git.IsOffline() {
 		if git.HasTrackingBranch(branchName) {
 			result.Append(&PushBranchStep{BranchName: branchName})
 		} else {
@@ -41,5 +30,32 @@ func GetSyncBranchSteps(branchName string) (result StepList) {
 		}
 	}
 
+	return
+}
+
+// Helpers
+
+func getSyncFeatureBranchSteps(branchName string) (result StepList) {
+	if git.HasTrackingBranch(branchName) {
+		result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+	}
+	result.Append(&MergeBranchStep{BranchName: git.GetParentBranch(branchName)})
+	return
+}
+
+func getSyncNonFeatureBranchSteps(branchName string) (result StepList) {
+	if git.HasTrackingBranch(branchName) {
+		if git.GetPullBranchStrategy() == "rebase" {
+			result.Append(&RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+		} else {
+			result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
+		}
+	}
+
+	mainBranchName := git.GetMainBranch()
+	if mainBranchName == branchName && git.HasRemote("upstream") {
+		result.Append(&FetchUpstreamStep{})
+		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
+	}
 	return
 }
