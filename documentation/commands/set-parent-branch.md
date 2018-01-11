@@ -1,28 +1,9 @@
 #### NAME
 
-set-parent-branch - update the Git Town configuration for the parent branch of a feature branch
+set-parent-branch - prompts to set the parent branch for the current branch
 
 #### SYNOPSIS
 
 ```
-git town set-parent-branch <child_branch_name> <parent_branch_name>
+git town set-parent-branch
 ```
-
-#### OPTIONS
-
-```
-<child_branch_name>
-    The branch to update the parent for
-
-<parent_branch_name>
-    The new parent of <child_branch_name>
-```
-
-* _set-parent-branch_
-
-> Update the parent branch of a feature branch
->
-> ```bash
-> # Set the parent branch of "feature-a" to "feature-b"
-> git town set-parent-branch feature-a feature-b
-> ```
