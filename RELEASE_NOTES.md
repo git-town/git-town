@@ -1,5 +1,7 @@
 # Git Town Release Notes
 
+## Unreleased
+
 ## 6.0.0 (2018-01-15)
 
 #### BREAKING CHANGES
