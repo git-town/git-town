@@ -5,18 +5,11 @@ perennial-branches - display or update the Git Town configuration for the perenn
 #### SYNOPSIS
 
 ```
-git town perennial-branches [(--add | --remove) <branch_name>]
+git town perennial-branches
+git town perennial-branches update
 ```
 
-#### OPTIONS
+#### DESCRIPTION
 
-```
-<branch_name>
-    The branch to add or remove.
-
---add
-    Add <branch_name> as a perennial branch
-
---remove
-    Remove <branch_name> from the list of perennial branches
-```
+Without `update`, displays your perennial branches.
+With `update`, prompts you to update your perennial branches.
