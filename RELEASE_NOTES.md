@@ -1,15 +1,18 @@
 # Git Town Release Notes
 
-## Unreleased
+## 6.0.0 (2018-01-15)
 
 #### BREAKING CHANGES
 
 * `git town set-parent-branch`: update interface to no longer accept arguments and instead prompt the user for the parent of the current branch
+* `git town perennial-branches`: update the interface to add / remove perennial branches. Run `git town perennial-branch update` to receive the same prompt as initial configuration.
 * Rename `hack-push-flag` to `new-branch-push-flag`. Please reconfigure if you are not using the default.
 
 #### New Features
 
 * `git town new-branch-push-flag`: add `--global` flag in order to set your default value. Any locally configured value will override.
+* add `--debug` flag in order to see all the git commands runs under the hood
+* speed improvement thanks to various optimizations to greatly reduce the number of git commands run under the hood
 
 ## 5.1.0 (2017-12-05)
 
