@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 6.0.1 (2018-01-24)
+
+* fixes displayed version number
+
 ## 6.0.0 (2018-01-15)
 
 #### BREAKING CHANGES
