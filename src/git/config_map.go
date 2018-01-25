@@ -65,7 +65,7 @@ func (c *ConfigMap) initialize() {
 	if c.initialized {
 		return
 	}
-	cmdArgs := []string{"git", "config", "-l"}
+	cmdArgs := []string{"git", "config", "-lz"}
 	if c.global {
 		cmdArgs = append(cmdArgs, "--global")
 	}
@@ -77,8 +77,11 @@ func (c *ConfigMap) initialize() {
 	if cmd.Output() == "" {
 		return
 	}
-	for _, line := range strings.Split(cmd.Output(), "\n") {
-		parts := strings.SplitN(line, "=", 2)
+	for _, line := range strings.Split(cmd.Output(), "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
 		key, value := parts[0], parts[1]
 		c.data[key] = value
 	}
