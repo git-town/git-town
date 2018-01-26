@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+## 6.0.2 (2018-01-25)
+
+#### Bug Fixes
+
+* fix parsing of git config when a value contains a newline
+
 ## 6.0.1 (2018-01-24)
+
+#### Bug Fixes
 
 * fixes displayed version number
 
