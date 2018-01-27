@@ -15,12 +15,13 @@ type PushBranchStep struct {
 	Undoable   bool
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *PushBranchStep) CreateUndoStepBeforeRun() Step {
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *PushBranchStep) AddUndoSteps(stepList *StepList) {
 	if step.Undoable {
-		return &PushBranchAfterCurrentBranchSteps{}
+		stepList.Prepend(&PushBranchAfterCurrentBranchSteps{})
+	} else {
+		stepList.Prepend(&SkipCurrentBranchSteps{})
 	}
-	return &SkipCurrentBranchSteps{}
 }
 
 // Run executes this step.

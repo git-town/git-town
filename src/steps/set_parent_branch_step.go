@@ -8,19 +8,22 @@ type SetParentBranchStep struct {
 	NoOpStep
 	BranchName       string
 	ParentBranchName string
+
+	previousParent string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *SetParentBranchStep) CreateUndoStepBeforeRun() Step {
-	oldParent := git.GetParentBranch(step.BranchName)
-	if oldParent == "" {
-		return &DeleteParentBranchStep{BranchName: step.BranchName}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *SetParentBranchStep) AddUndoSteps(stepList *StepList) {
+	if step.previousParent == "" {
+		stepList.Prepend(&DeleteParentBranchStep{BranchName: step.BranchName})
+	} else {
+		stepList.Prepend(&SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent})
 	}
-	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: oldParent}
 }
 
 // Run executes this step.
 func (step *SetParentBranchStep) Run() error {
+	step.previousParent = git.GetParentBranch(step.BranchName)
 	git.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil
 }

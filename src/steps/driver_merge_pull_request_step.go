@@ -26,9 +26,9 @@ func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	return nil
 }
 
-// CreateUndoStepAfterRun returns the undo step for this step after it is run.
-func (step *DriverMergePullRequestStep) CreateUndoStepAfterRun() Step {
-	return &RevertCommitStep{Sha: step.mergeSha}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *DriverMergePullRequestStep) AddUndoSteps(stepList *StepList) {
+	stepList.Prepend(&RevertCommitStep{Sha: step.mergeSha})
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step

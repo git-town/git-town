@@ -18,9 +18,9 @@ func (step *SquashMergeBranchStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-// CreateUndoStepAfterRun returns the undo step for this step after it is run.
-func (step *SquashMergeBranchStep) CreateUndoStepAfterRun() Step {
-	return &RevertCommitStep{Sha: git.GetCurrentSha()}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *SquashMergeBranchStep) AddUndoSteps(stepList *StepList) {
+	stepList.Prepend(&RevertCommitStep{Sha: git.GetCurrentSha()})
 }
 
 // GetAutomaticAbortErrorMessage returns the error message to display when this step

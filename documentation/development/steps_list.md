@@ -8,7 +8,7 @@ If there are no errors, it generates a list of steps to run.
 Each step is a go `struct`.
 
 When executing a step, the undo steps are determined and added to a separate list.
-This is done by calling the methods `step.CreateUndoStepBeforeRun()` and `step.CreateUndoStepAfterRun()`.
+This is done by calling the methods `step.AddUndoSteps()`
 
 ## Abort / Continue
 

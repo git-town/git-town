@@ -6,19 +6,21 @@ import "github.com/Originate/git-town/src/git"
 type DeleteParentBranchStep struct {
 	NoOpStep
 	BranchName string
+
+	previousParent string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *DeleteParentBranchStep) CreateUndoStepBeforeRun() Step {
-	parent := git.GetParentBranch(step.BranchName)
-	if parent == "" {
-		return &NoOpStep{}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *DeleteParentBranchStep) AddUndoSteps(stepList *StepList) {
+	if step.previousParent == "" {
+		return
 	}
-	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: parent}
+	stepList.Prepend(&SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent})
 }
 
 // Run executes this step.
 func (step *DeleteParentBranchStep) Run() error {
+	step.previousParent = git.GetParentBranch(step.BranchName)
 	git.DeleteParentBranch(step.BranchName)
 	return nil
 }

@@ -8,9 +8,9 @@ type RemoveFromPerennialBranches struct {
 	BranchName string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *RemoveFromPerennialBranches) CreateUndoStepBeforeRun() Step {
-	return &AddToPerennialBranches{BranchName: step.BranchName}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *RemoveFromPerennialBranches) AddUndoSteps(stepList *StepList) {
+	stepList.Prepend(&AddToPerennialBranches{BranchName: step.BranchName})
 }
 
 // Run executes this step.

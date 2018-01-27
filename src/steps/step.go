@@ -14,8 +14,7 @@ import (
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
-	CreateUndoStepBeforeRun() Step
-	CreateUndoStepAfterRun() Step
+	AddUndoSteps(*StepList)
 	GetAutomaticAbortErrorMessage() string
 	Run() error
 	ShouldAutomaticallyAbortOnError() bool

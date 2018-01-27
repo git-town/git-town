@@ -11,16 +11,18 @@ import (
 // It does not ask the user for a commit message, but chooses one automatically.
 type CommitOpenChangesStep struct {
 	NoOpStep
+
+	previousSha string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *CommitOpenChangesStep) CreateUndoStepBeforeRun() Step {
-	branchName := git.GetCurrentBranchName()
-	return &ResetToShaStep{Sha: git.GetBranchSha(branchName)}
+// AddUndoSteps adds the undo steps for this step to the undo step list
+func (step *CommitOpenChangesStep) AddUndoSteps(stepList *StepList) {
+	stepList.Prepend(&ResetToShaStep{Sha: step.previousSha})
 }
 
 // Run executes this step.
 func (step *CommitOpenChangesStep) Run() error {
+	step.previousSha = git.GetCurrentSha()
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err
