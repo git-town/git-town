@@ -79,7 +79,7 @@ func buildAutocompletionDefinition() string {
 		{name: "hack", description: hackCmd.Short},
 		{name: "kill", description: killCommand.Short},
 		{name: "new-pull-request", description: newPullRequestCommand.Short},
-		{name: "prune-branches", description: pruneBranchesCommand.Short},
+		{name: "prune", description: pruneCommand.Short},
 		{name: "rename-branch", description: renameBranchCommand.Short},
 		{name: "repo", description: repoCommand.Short},
 		{name: "ship", description: shipCmd.Short},

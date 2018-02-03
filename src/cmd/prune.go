@@ -8,8 +8,37 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var pruneCommand = &cobra.Command{
+	Use:   "prune",
+	Short: "Cleans up outdated data",
+	Long:  `Runs 'git-town prune branches' and 'git-town prune config'`,
+	Run: func(cmd *cobra.Command, args []string) {
+		steps.Run(steps.RunOptions{
+			CanSkip:              func() bool { return false },
+			Command:              "prune",
+			IsAbort:              false,
+			IsContinue:           false,
+			IsSkip:               false,
+			IsUndo:               undoFlag,
+			SkipMessageGenerator: func() string { return "" },
+			StepListGenerator: func() steps.StepList {
+				checkPruneBranchesPreconditions()
+				return getPruneBranchesStepList()
+			},
+		})
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return util.FirstError(
+			git.ValidateIsRepository,
+			validateIsConfigured,
+			git.ValidateIsOnline,
+		)
+	},
+}
+
 var pruneBranchesCommand = &cobra.Command{
-	Use:   "prune-branches",
+	Use:   "branches",
 	Short: "Deletes local branches whose tracking branch no longer exists",
 	Long: `Deletes local branches whose tracking branch no longer exists
 
@@ -27,6 +56,34 @@ This usually means the branch was shipped or killed on another machine.`,
 			StepListGenerator: func() steps.StepList {
 				checkPruneBranchesPreconditions()
 				return getPruneBranchesStepList()
+			},
+		})
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return util.FirstError(
+			git.ValidateIsRepository,
+			validateIsConfigured,
+			git.ValidateIsOnline,
+		)
+	},
+}
+
+var pruneConfigCommand = &cobra.Command{
+	Use:   "config",
+	Short: "Removes Git configuration for branches that don't exist in the local repository",
+	Long:  `Removes Git configuration for branches that don't exist in the local repository`,
+	Run: func(cmd *cobra.Command, args []string) {
+		steps.Run(steps.RunOptions{
+			CanSkip:              func() bool { return false },
+			Command:              "config",
+			IsAbort:              false,
+			IsContinue:           false,
+			IsSkip:               false,
+			IsUndo:               undoFlag,
+			SkipMessageGenerator: func() string { return "" },
+			StepListGenerator: func() steps.StepList {
+				return getPruneConfigStepList()
 			},
 		})
 	},
@@ -67,7 +124,13 @@ func getPruneBranchesStepList() (result steps.StepList) {
 	return
 }
 
+func getPruneConfigStepList() (result steps.StepList) {
+	return
+}
+
 func init() {
+	pruneCommand.AddCommand(pruneBranchesCommand)
+	pruneCommand.AddCommand(pruneConfigCommand)
 	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
-	RootCmd.AddCommand(pruneBranchesCommand)
+	RootCmd.AddCommand(pruneCommand)
 }

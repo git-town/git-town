@@ -9,6 +9,11 @@ Feature: pruning configuration data
 
   Scenario: Git config contains information about non-existing branches
     Given my repository has the feature branches "existing-feature"
-    And my Git configuration has the entries:
-      | KEY | VALUE |
-      |
+    And Git Town is aware of this branch hierarchy
+      | BRANCH           | PARENT  |
+      | existing-feature | main    |
+      | other-feature    | feature |
+    When I run `git-town prune config`
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH           | PARENT |
+      | existing-feature | main   |
