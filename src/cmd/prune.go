@@ -10,7 +10,7 @@ import (
 
 var pruneCommand = &cobra.Command{
 	Use:   "prune",
-	Short: "Cleans up outdated data",
+	Short: "Clean up outdated data",
 	Long:  `Runs 'git-town prune branches' and 'git-town prune config'`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
@@ -74,7 +74,10 @@ This usually means the branch was shipped or killed on another machine.`,
 var pruneConfigCommand = &cobra.Command{
 	Use:   "config",
 	Short: "Removes Git configuration for branches that don't exist in the local repository",
-	Long:  `Removes Git configuration for branches that don't exist in the local repository`,
+	Long: `Removes Git configuration for branches that don't exist in the local repository
+
+Removes Git configuration entries for branches that don't exist in the local repository.
+This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
