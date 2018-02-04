@@ -60,6 +60,7 @@ Every Git Town command
 
 ## Achitecture documents
 
+* [architecture overview](./documentation/development/architecture.md)
 * [branch hierarchy](./documentation/development/branch_hierarchy.md) - how Git Town sees branches
 * [drivers](./documentation/development/drivers.md) - third-party specific functionality
 * [steps list](./documentation/development/steps_list.md) - the architecture behind most of the Git Town commands
