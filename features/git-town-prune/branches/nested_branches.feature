@@ -1,4 +1,4 @@
-Feature: git town-prune-branches: delete branches that were shipped or removed on another machine
+Feature: git-town prune branches: delete branches that were shipped or removed on another machine
 
   As a developer pruning branches with child branches
   I want that the pruned branches get removed from the branch hierarchy metadata
@@ -21,7 +21,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
     And the "feature" branch gets deleted on the remote
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town prune-branches`
+    When I run `git-town prune branches`
 
 
   Scenario: result
@@ -41,7 +41,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town prune-branches --undo`
+    When I run `git-town prune branches --undo`
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |

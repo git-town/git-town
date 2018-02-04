@@ -1,4 +1,4 @@
-Feature: git town-prune-branches: offline mode
+Feature: git-town prune branches: offline mode
 
   When offline
   I want to still be able to prune branches
@@ -7,7 +7,7 @@ Feature: git town-prune-branches: offline mode
 
   Scenario: trying to prune branches in offline mode
     Given Git Town is in offline mode
-    When I run `git-town prune-branches`
+    When I run `git-town prune branches`
     Then it prints the error:
       """
       This command requires an active internet connection

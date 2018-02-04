@@ -23,14 +23,14 @@ Feature: Git checkout history is preserved when the current and previous branch 
     And my previous Git branch is still "previous"
 
 
-  Scenario: prune-branches
+  Scenario: prune branches
     Given my repository has the feature branches "previous" and "current"
     And the following commit exists in my repository
       | BRANCH   | LOCATION | FILE NAME     | FILE CONTENT     |
       | previous | local    | previous_file | previous content |
       | current  | local    | current_file  | current content  |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git-town prune-branches`
+    When I run `git-town prune branches`
     Then I am still on the "current" branch
     And my previous Git branch is still "previous"
 

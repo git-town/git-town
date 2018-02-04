@@ -30,7 +30,9 @@ Feature: invalid invocation
       | offline arg1 arg2                |
       | perennial-branches arg1          |
       | perennial-branches update arg1   |
-      | prune-branches arg1              |
+      | prune arg1                       |
+      | prune branches arg1              |
+      | prune config arg1                |
       | pull-branch-strategy arg1 arg2   |
       | pull-branch-strategy invalid     |
       | rename-branch                    |

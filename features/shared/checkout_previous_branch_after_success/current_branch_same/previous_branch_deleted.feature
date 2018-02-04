@@ -11,14 +11,14 @@ Feature: deleting the current branch makes the main branch the new previous bran
     And my previous Git branch is now "main"
 
 
-  Scenario: prune-branches
+  Scenario: prune branches
     Given my repository has the feature branches "previous" and "current"
     And the "previous" branch gets deleted on the remote
     And the following commit exists in my repository
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | current | local    | current_file | current content |
     And I am on the "current" branch with "previous" as the previous Git branch
-    When I run `git-town prune-branches`
+    When I run `git-town prune branches`
     Then I am still on the "current" branch
     And my previous Git branch is now "main"
 

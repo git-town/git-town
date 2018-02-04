@@ -47,7 +47,7 @@ This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		steps.Run(steps.RunOptions{
 			CanSkip:              func() bool { return false },
-			Command:              "prune-branches",
+			Command:              "branches",
 			IsAbort:              false,
 			IsContinue:           false,
 			IsSkip:               false,

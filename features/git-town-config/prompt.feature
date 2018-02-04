@@ -24,7 +24,7 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
       | git-town hack feature     |
       | git-town kill             |
       | git-town new-pull-request |
-      | git-town prune-branches   |
+      | git-town prune            |
       | git-town repo             |
       | git-town ship             |
       | git-town sync             |

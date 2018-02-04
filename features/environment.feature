@@ -13,7 +13,7 @@ Feature: Git Town performs correctly depending on the environment
       | git-town hack feature       |
       | git-town kill               |
       | git-town new-pull-request   |
-      | git-town prune-branches     |
+      | git-town prune              |
       | git-town repo               |
       | git-town ship               |
       | git-town sync               |

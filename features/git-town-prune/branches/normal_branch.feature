@@ -1,4 +1,4 @@
-Feature: git town-prune-branches: delete branches that were shipped or removed on another machine
+Feature: git-town prune branches: delete branches that were shipped or removed on another machine
 
   As a developer checking out branches that are also developed on another machine
   I want to remove all branches that have been shipped or deleted on another machine
@@ -18,7 +18,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
     And the "deleted-feature" branch gets deleted on the remote
     And I am on the "deleted-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town prune-branches`
+    When I run `git-town prune branches`
 
 
   Scenario: result
@@ -36,7 +36,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town prune-branches --undo`
+    When I run `git-town prune branches --undo`
     Then it runs the commands
       | BRANCH | COMMAND                                                        |
       | main   | git branch deleted-feature <%= sha 'deleted-feature commit' %> |
