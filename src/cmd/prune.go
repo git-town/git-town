@@ -134,9 +134,9 @@ func getPruneConfigStepList() (result steps.StepList) {
 }
 
 func init() {
-	pruneCommand.AddCommand(pruneBranchesCommand)
-	pruneCommand.AddCommand(pruneConfigCommand)
 	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	pruneConfigCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
+	pruneCommand.AddCommand(pruneBranchesCommand)
+	pruneCommand.AddCommand(pruneConfigCommand)
 	RootCmd.AddCommand(pruneCommand)
 }
