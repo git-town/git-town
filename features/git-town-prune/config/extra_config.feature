@@ -7,13 +7,24 @@ Feature: pruning configuration data
   - running "git town prune configuration" prunes the configuration data
 
 
-  Scenario: Git config contains information about non-existing branches
+  Background:
     Given my repository has the feature branches "existing-feature"
     And Git Town is aware of this branch hierarchy
       | BRANCH           | PARENT  |
       | existing-feature | main    |
       | other-feature    | feature |
     When I run `git-town prune config`
-    And Git Town is now aware of this branch hierarchy
+
+
+  Scenario: result
+    Then Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |
+
+
+  Scenario: undo
+    When I run `git-town prune config --undo`
+    Then Git Town is now aware of this branch hierarchy
+      | BRANCH           | PARENT |
+      | existing-feature | main   |
+      | other-feature    | feature |

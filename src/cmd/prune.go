@@ -137,5 +137,6 @@ func init() {
 	pruneCommand.AddCommand(pruneBranchesCommand)
 	pruneCommand.AddCommand(pruneConfigCommand)
 	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
+	pruneConfigCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(pruneCommand)
 }
