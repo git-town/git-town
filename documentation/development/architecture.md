@@ -5,12 +5,10 @@
 Git Town is written in [Go](https://golang.org).
 The source code is located in the [src](../../src) folder.
 
-
 ### CLI wrapper
 
 Git Town uses the [Cobra](https://github.com/spf13/cobra) CLI framework.
 [src/cmd](../../src/cmd) contains the commands that Git Town understands.
-
 
 ### Steps
 
@@ -29,10 +27,10 @@ Each of the possible steps is a Go struct that has a `Run` method to execute the
 as well as a `CreateUndoStepBeforeRun` method
 that returns a step that performs the inverse operation.
 
-
 ### Utility code
 
 The other folders in [src](../../src) are utility methods used by the commands and steps:
+
 * [src/browsers](../../src/browsers) provides code to open a browser window with a given URL
 * [src/cfmt](../../src/cfmt) contains helpers to print colored text in the terminal
 * [src/command](../../src/command) contains a helper to run external tools like Git in a subshell and capture their output
@@ -45,7 +43,6 @@ The other folders in [src](../../src) are utility methods used by the commands a
 * [src/script](.../../src/script) contains high-level, Git-Town specific helpers
 * [src/util](../../src/util) contains a variety of other low-level helper methods
 
-
 ## State files
 
 When a Git Town command finishes, a list of the steps to undo the command
@@ -53,7 +50,6 @@ as well as optionally any remaining steps to be run (in case the command aborted
 are stored in state files in a temp folder on the machine.
 The code for that is in [src/steps/save_state.go](../../src/steps/save_state.go)
 and [src/steps/load_state.go](../../src/steps/load_state.go).
-
 
 ## Tests
 
