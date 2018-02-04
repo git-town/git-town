@@ -55,9 +55,9 @@ func GetAncestorBranches(branchName string) (result []string) {
 	}
 }
 
-// GetConfiguredBranches returns all branches listed in the Git Town configuration
-func GetConfiguredBranches() (result []string) {
-	re, err := regexp.Compile(`^git-town-branch\\.(.*)\\.parent$`)
+// GetBranchesInConfiguration returns all branches listed in the Git Town configuration
+func GetBranchesInConfiguration() (result []string) {
+	re, err := regexp.Compile(`^git-town-branch\.(.*)\.parent$`)
 	exit.IfWrapf(err, "Error compiling configuration regular expression: %v", err)
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		matches := re.FindStringSubmatch(key)

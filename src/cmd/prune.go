@@ -127,7 +127,7 @@ func getPruneBranchesStepList() (result steps.StepList) {
 }
 
 func getPruneConfigStepList() (result steps.StepList) {
-	for _, branchName := range git.GetConfiguredBranches() {
+	for _, branchName := range git.GetBranchesInConfiguration() {
 		if !git.HasBranch(branchName) {
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
