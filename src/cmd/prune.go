@@ -21,9 +21,11 @@ var pruneCommand = &cobra.Command{
 			IsSkip:               false,
 			IsUndo:               undoFlag,
 			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
+			StepListGenerator: func() (result steps.StepList) {
 				checkPruneBranchesPreconditions()
-				return getPruneBranchesStepList()
+				result = getPruneBranchesStepList()
+				result.AppendList(getPruneConfigStepList())
+				return
 			},
 		})
 	},
