@@ -20,16 +20,13 @@ that don't exist in the local workspace.
 
 `git-town prune` runs all subcommands.
 
-
 #### OPTIONS
 
 ```
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
+--undo
+    Undo the changes made by the previous run of this command
 ```
 
 #### SEE ALSO
+
 * [git config --reset](config.md) to remove all Git Town configuration from the current repository
