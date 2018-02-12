@@ -3,6 +3,6 @@ set -ex
 
 # Runs all the auto-fixes
 
-bin/fix_cucumber
-bin/fix_ruby
-bin/fix_markdown
+bin/fix-cucumber
+bin/fix-ruby
+bin/fix-markdown
