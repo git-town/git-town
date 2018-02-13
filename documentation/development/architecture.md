@@ -12,20 +12,7 @@ Git Town uses the [Cobra](https://github.com/spf13/cobra) CLI framework.
 
 ### Steps
 
-The individual steps that each Git Town command executes are expressed via the
-[command pattern](https://en.wikipedia.org/wiki/Command_pattern).
-This allows allow for robust and fully automated `--continue`, `--abort`,
-and `--undo` functionality.
-To distinguish the command-pattern commands from the Git Town commands in [src/cmd](../../src/cmd),
-we'll call the former `steps` from now on.
-Steps are in [src/steps](../../src/steps)
-and implement the individual steps that each Git Town command performs,
-like for example [changing to a different Git branch](../../src/steps/checkout_branch_step.go)
-or [pulling down updates for the current branch](../../src/steps/pull_branch_step.go).
-
-Each of the possible steps is a Go struct that has a `Run` method to execute the step
-as well as a `CreateUndoStepBeforeRun` method
-that returns a step that performs the inverse operation.
+See the [step list documentation](steps_list.md)
 
 ### Utility code
 
