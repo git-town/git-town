@@ -2,7 +2,7 @@ Feature: git town: alias
 
   Scenario: add alias
     When I run `git-town alias true`
-    Then it runs the commands
+    Then it should run the commands:
       | COMMAND                                                            |
       | git config --global alias.append "town append"                     |
       | git config --global alias.hack "town hack"                         |
@@ -19,7 +19,7 @@ Feature: git town: alias
   Scenario: remove alias
     Given I run `git-town alias true`
     When I run `git-town alias false`
-    Then it runs the commands
+    Then it should run the commands:
       | COMMAND                                            |
       | git config --global --unset alias.append           |
       | git config --global --unset alias.hack             |
@@ -36,10 +36,10 @@ Feature: git town: alias
   Scenario: remove alias does not remove unrelated aliases
     Given I run `git config --global alias.hack checkout`
     When I run `git-town alias false`
-    Then it runs no commands
+    Then it should run no commands
 
 
   Scenario: works outside of a Git repository
     Given my workspace is currently not a Git repository
     When I run `git-town alias true`
-    Then it does not print "Not a git repository"
+    Then it should not print "Not a git repository"
