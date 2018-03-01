@@ -44,7 +44,7 @@ please use the manual install and ensure your Git version is 2.7.0 or higher._
 * Uninstall:
   * remove Git Town's aliases: `git town alias false`
   * remove the Git Town configuration from your repositories:
-    in each repo, run `git town config --reset`
+    in each repo, run `git town config reset`
   * delete the `git-town` binary from your hard drive
 
 ---
