@@ -70,6 +70,6 @@ func setupConfig() {
 
 func init() {
 	configCommand.AddCommand(resetConfigCommand)
-	configCommand.AddCommand(updatePrennialBranchesCommand)
+	configCommand.AddCommand(setupConfigCommand)
 	RootCmd.AddCommand(configCommand)
 }
