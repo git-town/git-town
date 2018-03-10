@@ -18,7 +18,7 @@ Feature: Initial configuration
 
   Scenario: does not prompt for perennial branches if there is only the main branch
     Given I haven't configured Git Town yet
-    When I run `git-town config --setup` and answer the prompts:
+    When I run `git-town config setup` and answer the prompts:
       | PROMPT                                     | ANSWER                      |
       | Please specify the main development branch | [DOWN][ENTER]               |
     Then the main branch is now configured as "main"
