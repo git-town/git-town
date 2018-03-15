@@ -18,10 +18,12 @@ var hackCmd = &cobra.Command{
 	Short: "Creates a new feature branch off the main development branch",
 	Long: `Creates a new feature branch off the main development branch
 
-Syncs the main branch,
-forks a new feature branch with the given name off it,
-pushes the new feature branch to the remote repository,
-and brings over all uncommitted changes to the new feature branch.
+Syncs the main branch and forks a new feature branch with the given name off it.
+
+If (and only if) [new-branch-push-flag](./new-branch-push-flag.md) is true,
+pushes the new feature branch to the remote repository.
+
+Finally, brings over all uncommitted changes to the new feature branch.
 
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.
