@@ -27,12 +27,13 @@ They are Go structs that have a `Run` method which executes the step.
 ## Continuing commands
 
 If a Git command fails (typically due to a merge conflict),
-then the program halts and asks the user
-whether they would like to abort or continue.
+then the program saves state (lists with steps to abort and continue) to disk,
+informs the user how to abort/continue the current step,
+and exits.
+This is done by calling the `CreateContinueStep` method of the current (failed) step.
 
 If the user resolves the issue and continues,
-Git Town calls the `CreateContinueStep` method of the current (failed) step,
-then continues the remaining step list.
+Git Town processes the continue step list.
 
 `git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
