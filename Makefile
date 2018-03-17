@@ -1,5 +1,4 @@
-# Arguments for cuke
-DIR = $(if $(dir),$(dir),"features")
+.DEFAULT_GOAL := spec
 
 
 # Builds for the current platform
@@ -23,6 +22,7 @@ cross-compile:
 # Runs the feature tests
 cuke: build
 	bundle exec parallel_cucumber $(DIR)
+DIR = $(if $(dir),$(dir),"features")
 
 # Deploys the website
 deploy:
@@ -73,12 +73,16 @@ setup:
 				 github.com/alecthomas/gometalinter.v2 \
 				 github.com/onsi/ginkgo/ginkgo
 	gometalinter.v2 --install
-	bin/build
 	bundle install
 	yarn install
 
 # Runs all the tests
 spec: lint tests cuke
 
+# Runs the unit tests
 tests:
 	ginkgo src/...
+
+# Updates all dependencies
+update:
+	glide up

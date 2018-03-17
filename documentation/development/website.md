@@ -19,4 +19,4 @@ It is hosted with [GitHub pages](https://pages.github.com/)
 ## Deployment
 
 * make sure your changes to be deployed are all in `master`
-* `bin/deploy`
+* `make deploy`
