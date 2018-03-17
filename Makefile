@@ -11,9 +11,7 @@ build-release: cross-compile
 
 # Builds the binary for all platforms
 cross-compile:
-	# install the cross-compiler
 	go get github.com/mitchellh/gox
-	# build the binaries
 	timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
 	sha=$(git rev-parse HEAD)
 	gox -ldflags "-X github.com/Originate/git-town/cmd.Version=$TRAVIS_TAG -X github.com/Originate/git-town/cmd.BuildTime=$timestamp) -X github.com/Originate/git-town/cmd.GitHash=$sha" \
