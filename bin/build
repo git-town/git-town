@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-# Builds the production version of the binary for the current platform
-
-go install

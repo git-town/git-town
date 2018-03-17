@@ -1,0 +1,84 @@
+# Arguments for cuke
+DIR = $(if $(dir),$(dir),"features")
+
+
+# Builds for the current platform
+build:
+	go install
+
+# Makes a new binary release
+build-release: cross-compile
+	package/debian/make_deb.sh
+
+# Builds the binary for all platforms
+cross-compile:
+	# install the cross-compiler
+	go get github.com/mitchellh/gox
+	# build the binaries
+	timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
+	sha=$(git rev-parse HEAD)
+	gox -ldflags "-X github.com/Originate/git-town/cmd.Version=$TRAVIS_TAG -X github.com/Originate/git-town/cmd.BuildTime=$timestamp) -X github.com/Originate/git-town/cmd.GitHash=$sha" \
+			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
+
+# Runs the feature tests
+cuke: build
+	bundle exec parallel_cucumber $(DIR)
+
+# Deploys the website
+deploy:
+	git checkout gh-pages
+	git pull
+	git checkout master
+	git pull --rebase
+	harp compile website/ _www
+	git checkout gh-pages
+	cp -r _www/* .
+	rm -rf _www
+	git add -A
+	git commit
+	git push
+	git checkout master
+
+# Fixes all issues in all languages
+fix: fix-cucumber fix-ruby fix-markdown
+
+# Fixes all Cucumber issues
+fix-cucumber:
+	bundle exec cucumber_lint --fix
+
+# Fixes all Markdown issues
+fix-markdown:
+	prettier --write "{,!(vendor)/**/}*.md"
+
+# Fixes all Ruby issues
+fix-ruby:
+	bundle exec rubocop --auto-correct
+
+# Lints all the source code
+lint: lint-go lint-markdown lint-ruby
+
+lint-go:
+	goimports -d src
+	gometalinter.v2
+
+lint-markdown:
+	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
+
+lint-ruby:
+	bundle exec rubocop
+
+# The setup steps necessary on developer machines
+setup:
+	go get github.com/Masterminds/glide \
+				 github.com/alecthomas/gometalinter.v2 \
+				 github.com/onsi/ginkgo/ginkgo
+	gometalinter.v2 --install
+	bin/build
+	bundle install
+	yarn install
+
+# Runs all the tests
+spec: lint tests cuke
+
+tests:
+	ginkgo src/...

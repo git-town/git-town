@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -ex
-
-# Runs all the auto-fixes
-
-bin/fix-cucumber
-bin/fix-ruby
-bin/fix-markdown
