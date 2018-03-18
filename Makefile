@@ -68,7 +68,7 @@ lint-ruby:
 # The setup steps necessary on developer machines
 setup:
 	go get -u github.com/Masterminds/glide \
-					  gopkg.in/alecthomas/gometalinter.v2
+					  gopkg.in/alecthomas/gometalinter.v2 \
 					  github.com/onsi/ginkgo/ginkgo
 	gometalinter.v2 --install
 	bundle install
