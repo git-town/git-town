@@ -1,15 +1,15 @@
 .DEFAULT_GOAL := spec
 
 
-# Builds for the current platform
+# builds for the current platform
 build:
 	go install
 
-# Makes a new binary release
+# makes a new binary release
 build-release: cross-compile
 	package/debian/make_deb.sh
 
-# Builds the binary for all platforms
+# builds the binary for all platforms
 cross-compile:
 	go get github.com/mitchellh/gox
 	timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
@@ -17,12 +17,12 @@ cross-compile:
 	gox -ldflags "-X github.com/Originate/git-town/cmd.Version=$TRAVIS_TAG -X github.com/Originate/git-town/cmd.BuildTime=$timestamp) -X github.com/Originate/git-town/cmd.GitHash=$sha" \
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
-# Runs the feature tests
+# runs the feature tests
 cuke: build
 	bundle exec parallel_cucumber $(DIR)
 DIR = $(if $(dir),$(dir),"features")
 
-# Deploys the website
+# deploys the website
 deploy:
 	git checkout gh-pages
 	git pull
@@ -37,22 +37,22 @@ deploy:
 	git push
 	git checkout master
 
-# Fixes all issues in all languages
+# fixes all issues in all languages
 fix: fix-cucumber fix-ruby fix-markdown
 
-# Fixes all Cucumber issues
+# fixes all Cucumber issues
 fix-cucumber:
 	bundle exec cucumber_lint --fix
 
-# Fixes all Markdown issues
+# fixes all Markdown issues
 fix-markdown:
 	prettier --write "{,!(vendor)/**/}*.md"
 
-# Fixes all Ruby issues
+# fixes all Ruby issues
 fix-ruby:
 	bundle exec rubocop --auto-correct
 
-# Lints all the source code
+# lints all the source code
 lint: lint-go lint-markdown lint-ruby
 
 lint-go:
@@ -65,7 +65,7 @@ lint-markdown:
 lint-ruby:
 	bundle exec rubocop
 
-# The setup steps necessary on developer machines
+# the setup steps necessary on developer machines
 setup:
 	go get -u github.com/Masterminds/glide \
 					  gopkg.in/alecthomas/gometalinter.v2 \
@@ -74,13 +74,13 @@ setup:
 	bundle install
 	yarn install
 
-# Runs all the tests
+# runs all the tests
 spec: lint tests cuke
 
-# Runs the unit tests
+# runs the unit tests
 tests:
 	ginkgo src/...
 
-# Updates all dependencies
+# updates all dependencies
 update:
 	glide up
