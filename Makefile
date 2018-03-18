@@ -68,8 +68,8 @@ lint-ruby:
 # The setup steps necessary on developer machines
 setup:
 	go get github.com/Masterminds/glide \
-				 github.com/alecthomas/gometalinter.v2 \
 				 github.com/onsi/ginkgo/ginkgo
+	go get -u gopkg.in/alecthomas/gometalinter.v2
 	gometalinter.v2 --install
 	bundle install
 	yarn install
