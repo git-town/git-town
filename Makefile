@@ -5,7 +5,7 @@
 build:
 	go install
 
-# makes a new binary release
+# builds the artifacts for a new release
 build-release: cross-compile
 	package/debian/make_deb.sh
 
