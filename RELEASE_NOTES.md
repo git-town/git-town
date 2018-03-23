@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+#### BREAKING CHANGES
+
+* `git town config`: `reset` and `setup` are now subcommands instead of flags 
+
+#### Bug Fixes
+
+* skip perennial branch prompt if there are no options
+
 ## 6.0.2 (2018-01-26)
 
 #### Bug Fixes
