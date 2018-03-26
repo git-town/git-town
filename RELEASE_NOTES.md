@@ -4,7 +4,7 @@
 
 #### BREAKING CHANGES
 
-* `git town config`: `reset` and `setup` are now subcommands instead of flags 
+* `git town config`: `reset` and `setup` are now subcommands instead of flags
 
 #### Bug Fixes
 
