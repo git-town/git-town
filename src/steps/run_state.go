@@ -1,17 +1,40 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import (
+	"encoding/json"
+	"io/ioutil"
+
+	"github.com/Originate/exit"
+	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/util"
+)
 
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has ben done so far.
 type RunState struct {
-	AbortStep    Step
-	Command      string
-	IsAbort      bool
-	isUndo       bool
-	RunStepList  StepList
-	UndoStepList StepList
+	AbortStepList StepList
+	Command       string
+	IsAbort       bool
+	isUndo        bool
+	RunStepList   StepList
+	UndoStepList  StepList
+}
+
+// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
+func LoadPreviousRunState(command string) *RunState {
+	filename := getRunResultFilename(command)
+	if util.DoesFileExist(filename) {
+		var runState RunState
+		content, err := ioutil.ReadFile(filename)
+		exit.If(err)
+		err = json.Unmarshal(content, &runState)
+		exit.If(err)
+		return &runState
+	}
+	return &RunState{
+		Command: command,
+	}
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -36,7 +59,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 func (runState *RunState) CreateAbortRunState() (result RunState) {
 	result.Command = runState.Command
 	result.IsAbort = true
-	result.RunStepList.Append(runState.AbortStep)
+	result.RunStepList.AppendList(runState.AbortStepList)
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
 }
@@ -45,7 +68,7 @@ func (runState *RunState) CreateAbortRunState() (result RunState) {
 // that skips operations for the current branch.
 func (runState *RunState) CreateSkipRunState() (result RunState) {
 	result.Command = runState.Command
-	result.RunStepList.Append(runState.AbortStep)
+	result.RunStepList.AppendList(runState.AbortStepList)
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutBranchStep(step) {
 			break
@@ -72,6 +95,15 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 	result.isUndo = true
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
+}
+
+// Save saves the run state to disk
+func (runState *RunState) Save() {
+	content, err := json.Marshal(runState)
+	exit.If(err)
+	filename := getRunResultFilename(runState.Command)
+	err = ioutil.WriteFile(filename, content, 0644)
+	exit.If(err)
 }
 
 // SkipCurrentBranchSteps removes the steps for the current branch

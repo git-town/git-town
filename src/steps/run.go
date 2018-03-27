@@ -26,22 +26,22 @@ type RunOptions struct {
 // Run runs the Git Town command described by the given RunOptions.
 func Run(options RunOptions) {
 	if options.IsAbort {
-		runState := loadState(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		abortRunState := runState.CreateAbortRunState()
 		runSteps(&abortRunState, options)
 	} else if options.IsContinue {
-		runState := loadState(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		if runState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		git.EnsureDoesNotHaveConflicts()
-		runSteps(&runState, options)
+		runSteps(runState, options)
 	} else if options.IsSkip {
-		runState := loadState(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		skipRunState := runState.CreateSkipRunState()
 		runSteps(&skipRunState, options)
 	} else if options.IsUndo {
-		runState := loadState(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		undoRunState := runState.CreateUndoRunState()
 		if undoRunState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to undo")
@@ -49,7 +49,6 @@ func Run(options RunOptions) {
 			runSteps(&undoRunState, options)
 		}
 	} else {
-		clearSavedState(options.Command)
 		runSteps(&RunState{
 			Command:     options.Command,
 			RunStepList: options.StepListGenerator(),
@@ -64,8 +63,7 @@ func runSteps(runState *RunState, options RunOptions) {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			if !runState.IsAbort && !runState.isUndo {
-				runState.AbortStep = &NoOpStep{}
-				saveState(runState)
+				runState.Save()
 			}
 			fmt.Println()
 			return
@@ -81,14 +79,14 @@ func runSteps(runState *RunState, options RunOptions) {
 		undoStepBeforeRun := step.CreateUndoStepBeforeRun()
 		err := step.Run()
 		if err != nil {
-			runState.AbortStep = step.CreateAbortStep()
+			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
 				runSteps(&abortRunState, options)
 				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
-				saveState(runState)
+				runState.Save()
 				skipMessage := ""
 				if options.CanSkip() {
 					skipMessage = options.SkipMessageGenerator()
