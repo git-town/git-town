@@ -22,7 +22,7 @@ type RunState struct {
 }
 
 // NewRunState loads the run state from disk if it exists or creates a new run state
-func NewRunState(command string, loadFromDisk bool) RunState {
+func LoadPreviousRunStata(command string) *RunState {
 	filename := getRunResultFilename(command)
 	if util.DoesFileExist(filename) {
 		var runState RunState
@@ -30,9 +30,9 @@ func NewRunState(command string, loadFromDisk bool) RunState {
 		exit.If(err)
 		err = json.Unmarshal(content, &runState)
 		exit.If(err)
-		return runState
+		return &runState
 	}
-	return RunState{
+	return &RunState{
 		Command: command,
 	}
 }

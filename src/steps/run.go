@@ -13,20 +13,23 @@ import (
 
 // Run runs the Git Town command described by the given RunOptions.
 func Run(options RunOptions) {
-	runState := NewRunState(options.Command, options.ShouldLoadStateFromDisk())
 	if options.IsAbort {
+		runState := LoadPreviousRunStata(options.Command)
 		abortRunState := runState.CreateAbortRunState()
 		runSteps(&abortRunState, options)
 	} else if options.IsContinue {
+		runState := LoadPreviousRunStata(options.Command)
 		if runState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		git.EnsureDoesNotHaveConflicts()
-		runSteps(&runState, options)
+		runSteps(runState, options)
 	} else if options.IsSkip {
+		runState := LoadPreviousRunStata(options.Command)
 		skipRunState := runState.CreateSkipRunState()
 		runSteps(&skipRunState, options)
 	} else if options.IsUndo {
+		runState := LoadPreviousRunStata(options.Command)
 		undoRunState := runState.CreateUndoRunState()
 		if undoRunState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to undo")
