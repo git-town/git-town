@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"encoding/json"
 	"os"
 
 	"github.com/Originate/exit"
@@ -83,4 +84,33 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
+}
+
+// MarshalJSON marshals the step to JSON
+func (stepList *StepList) MarshalJSON() (b []byte, e error) {
+	jsonSteps := make([]*JSONStep, len(stepList.List))
+	for i, step := range stepList.List {
+		jsonStep, err := NewJSONStep(step)
+		if err != nil {
+			return nil, err
+		}
+		jsonSteps[i] = jsonStep
+	}
+	return json.Marshal(jsonSteps)
+}
+
+// UnmarshalJSON unmarshals the step from JSON
+func (stepList *StepList) UnmarshalJSON(b []byte) error {
+	var jsonSteps []JSONStep
+	err := json.Unmarshal(b, &jsonSteps)
+	if err != nil {
+		return err
+	}
+	if len(jsonSteps) > 0 {
+		stepList.List = make([]Step, len(jsonSteps))
+		for i, jsonStep := range jsonSteps {
+			stepList.List[i] = jsonStep.Step()
+		}
+	}
+	return nil
 }
