@@ -29,12 +29,12 @@ var _ = Describe("Session", func() {
 		command = exec.Command(fireflyPath)
 		var err error
 		session, err = Start(command, outWriter, errWriter)
-		Ω(err).ShouldNot(HaveOccurred())
+		Expect(err).ShouldNot(HaveOccurred())
 	})
 
 	Context("running a command", func() {
 		It("should start the process", func() {
-			Ω(command.Process).ShouldNot(BeNil())
+			Expect(command.Process).ShouldNot(BeNil())
 		})
 
 		It("should wrap the process's stdout and stderr with gbytes buffers", func(done Done) {
@@ -62,36 +62,35 @@ var _ = Describe("Session", func() {
 
 	Describe("providing the exit code", func() {
 		It("should provide the app's exit code", func() {
-			Ω(session.ExitCode()).Should(Equal(-1))
+			Expect(session.ExitCode()).Should(Equal(-1))
 
 			Eventually(session).Should(Exit())
-			Ω(session.ExitCode()).Should(BeNumerically(">=", 0))
-			Ω(session.ExitCode()).Should(BeNumerically("<", 3))
+			Expect(session.ExitCode()).Should(BeNumerically(">=", 0))
+			Expect(session.ExitCode()).Should(BeNumerically("<", 3))
 		})
 	})
 
 	Describe("wait", func() {
 		It("should wait till the command exits", func() {
-			Ω(session.ExitCode()).Should(Equal(-1))
-			Ω(session.Wait().ExitCode()).Should(BeNumerically(">=", 0))
-			Ω(session.Wait().ExitCode()).Should(BeNumerically("<", 3))
+			Expect(session.ExitCode()).Should(Equal(-1))
+			Expect(session.Wait().ExitCode()).Should(BeNumerically(">=", 0))
+			Expect(session.Wait().ExitCode()).Should(BeNumerically("<", 3))
 		})
 	})
 
 	Describe("exited", func() {
 		It("should close when the command exits", func() {
 			Eventually(session.Exited).Should(BeClosed())
-			Ω(session.ExitCode()).ShouldNot(Equal(-1))
+			Expect(session.ExitCode()).ShouldNot(Equal(-1))
 		})
 	})
 
 	Describe("kill", func() {
-		It("should kill the command and don't wait for it to exit", func() {
+		It("should kill the command", func() {
 			session, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-			Ω(err).ShouldNot(HaveOccurred())
+			Expect(err).ShouldNot(HaveOccurred())
 
 			session.Kill()
-			Ω(session).ShouldNot(Exit(), "Should not exit immediately...")
 			Eventually(session).Should(Exit(128 + 9))
 		})
 	})
@@ -99,10 +98,9 @@ var _ = Describe("Session", func() {
 	Describe("interrupt", func() {
 		It("should interrupt the command", func() {
 			session, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-			Ω(err).ShouldNot(HaveOccurred())
+			Expect(err).ShouldNot(HaveOccurred())
 
 			session.Interrupt()
-			Ω(session).ShouldNot(Exit(), "Should not exit immediately...")
 			Eventually(session).Should(Exit(128 + 2))
 		})
 	})
@@ -110,10 +108,9 @@ var _ = Describe("Session", func() {
 	Describe("terminate", func() {
 		It("should terminate the command", func() {
 			session, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-			Ω(err).ShouldNot(HaveOccurred())
+			Expect(err).ShouldNot(HaveOccurred())
 
 			session.Terminate()
-			Ω(session).ShouldNot(Exit(), "Should not exit immediately...")
 			Eventually(session).Should(Exit(128 + 15))
 		})
 	})
@@ -121,11 +118,17 @@ var _ = Describe("Session", func() {
 	Describe("signal", func() {
 		It("should send the signal to the command", func() {
 			session, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-			Ω(err).ShouldNot(HaveOccurred())
+			Expect(err).ShouldNot(HaveOccurred())
 
 			session.Signal(syscall.SIGABRT)
-			Ω(session).ShouldNot(Exit(), "Should not exit immediately...")
 			Eventually(session).Should(Exit(128 + 6))
+		})
+
+		It("should ignore sending a signal if the command did not start", func() {
+			session, err := Start(exec.Command("notexisting"), GinkgoWriter, GinkgoWriter)
+			Expect(err).To(HaveOccurred())
+
+			Expect(func() { session.Signal(syscall.SIGUSR1) }).NotTo(Panic())
 		})
 	})
 
@@ -137,13 +140,13 @@ var _ = Describe("Session", func() {
 		Describe("kill", func() {
 			It("should kill all the started sessions", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				Kill()
 
@@ -152,25 +155,15 @@ var _ = Describe("Session", func() {
 				Eventually(session3).Should(Exit(128 + 9))
 			})
 
-			It("should not wait for exit", func() {
-				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
-
-				Kill()
-				Ω(session1).ShouldNot(Exit(), "Should not exit immediately...")
-
-				Eventually(session1).Should(Exit(128 + 9))
-			})
-
 			It("should not track unstarted sessions", func() {
 				_, err := Start(exec.Command("does not exist", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).Should(HaveOccurred())
+				Expect(err).Should(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				Kill()
 
@@ -183,31 +176,31 @@ var _ = Describe("Session", func() {
 		Describe("killAndWait", func() {
 			It("should kill all the started sessions and wait for them to finish", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				KillAndWait()
-				Ω(session1).Should(Exit(128+9), "Should have exited")
-				Ω(session2).Should(Exit(128+9), "Should have exited")
-				Ω(session3).Should(Exit(128+9), "Should have exited")
+				Expect(session1).Should(Exit(128+9), "Should have exited")
+				Expect(session2).Should(Exit(128+9), "Should have exited")
+				Expect(session3).Should(Exit(128+9), "Should have exited")
 			})
 		})
 
 		Describe("terminate", func() {
 			It("should terminate all the started sessions", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				Terminate()
 
@@ -215,46 +208,37 @@ var _ = Describe("Session", func() {
 				Eventually(session2).Should(Exit(128 + 15))
 				Eventually(session3).Should(Exit(128 + 15))
 			})
-
-			It("should not wait for exit", func() {
-				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
-
-				Terminate()
-
-				Ω(session1).ShouldNot(Exit(), "Should not exit immediately...")
-			})
 		})
 
 		Describe("terminateAndWait", func() {
 			It("should terminate all the started sessions, and wait for them to exit", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				TerminateAndWait()
 
-				Ω(session1).Should(Exit(128+15), "Should have exited")
-				Ω(session2).Should(Exit(128+15), "Should have exited")
-				Ω(session3).Should(Exit(128+15), "Should have exited")
+				Expect(session1).Should(Exit(128+15), "Should have exited")
+				Expect(session2).Should(Exit(128+15), "Should have exited")
+				Expect(session3).Should(Exit(128+15), "Should have exited")
 			})
 		})
 
 		Describe("signal", func() {
 			It("should signal all the started sessions", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				Signal(syscall.SIGABRT)
 
@@ -262,42 +246,24 @@ var _ = Describe("Session", func() {
 				Eventually(session2).Should(Exit(128 + 6))
 				Eventually(session3).Should(Exit(128 + 6))
 			})
-
-			It("should not wait", func() {
-				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
-
-				Signal(syscall.SIGABRT)
-
-				Ω(session1).ShouldNot(Exit(), "Should not exit immediately...")
-			})
 		})
 
 		Describe("interrupt", func() {
 			It("should interrupt all the started sessions, and not wait", func() {
 				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session2, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				session3, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
+				Expect(err).ShouldNot(HaveOccurred())
 
 				Interrupt()
 
 				Eventually(session1).Should(Exit(128 + 2))
 				Eventually(session2).Should(Exit(128 + 2))
 				Eventually(session3).Should(Exit(128 + 2))
-			})
-
-			It("should not wait", func() {
-				session1, err := Start(exec.Command("sleep", "10000000"), GinkgoWriter, GinkgoWriter)
-				Ω(err).ShouldNot(HaveOccurred())
-
-				Interrupt()
-
-				Ω(session1).ShouldNot(Exit(), "Should not exit immediately...")
 			})
 		})
 	})
@@ -306,10 +272,10 @@ var _ = Describe("Session", func() {
 		It("should close the buffers", func() {
 			Eventually(session).Should(Exit())
 
-			Ω(session.Out.Closed()).Should(BeTrue())
-			Ω(session.Err.Closed()).Should(BeTrue())
+			Expect(session.Out.Closed()).Should(BeTrue())
+			Expect(session.Err.Closed()).Should(BeTrue())
 
-			Ω(session.Out).Should(Say("We've done the impossible, and that makes us mighty"))
+			Expect(session.Out).Should(Say("We've done the impossible, and that makes us mighty"))
 		})
 
 		var So = It
@@ -319,8 +285,8 @@ var _ = Describe("Session", func() {
 			failures := InterceptGomegaFailures(func() {
 				Eventually(session).Should(Say("blah blah blah blah blah"))
 			})
-			Ω(time.Since(t)).Should(BeNumerically("<=", 500*time.Millisecond))
-			Ω(failures).Should(HaveLen(1))
+			Expect(time.Since(t)).Should(BeNumerically("<=", 500*time.Millisecond))
+			Expect(failures).Should(HaveLen(1))
 		})
 	})
 
@@ -340,13 +306,13 @@ var _ = Describe("Session", func() {
 			Eventually(session.Out).Should(Say("We've done the impossible, and that makes us mighty"))
 			Eventually(session.Err).Should(Say("Ah, curse your sudden but inevitable betrayal!"))
 
-			Ω(outWriterBuffer.Contents()).Should(ContainSubstring("We've done the impossible, and that makes us mighty"))
-			Ω(errWriterBuffer.Contents()).Should(ContainSubstring("Ah, curse your sudden but inevitable betrayal!"))
+			Expect(outWriterBuffer.Contents()).Should(ContainSubstring("We've done the impossible, and that makes us mighty"))
+			Expect(errWriterBuffer.Contents()).Should(ContainSubstring("Ah, curse your sudden but inevitable betrayal!"))
 
 			Eventually(session).Should(Exit())
 
-			Ω(outWriterBuffer.Contents()).Should(Equal(session.Out.Contents()))
-			Ω(errWriterBuffer.Contents()).Should(Equal(session.Err.Contents()))
+			Expect(outWriterBuffer.Contents()).Should(Equal(session.Out.Contents()))
+			Expect(errWriterBuffer.Contents()).Should(Equal(session.Err.Contents()))
 		})
 
 		Context("when discarding the output of the command", func() {
@@ -364,7 +330,7 @@ var _ = Describe("Session", func() {
 	Describe("when the command fails to start", func() {
 		It("should return an error", func() {
 			_, err := Start(exec.Command("agklsjdfas"), nil, nil)
-			Ω(err).Should(HaveOccurred())
+			Expect(err).Should(HaveOccurred())
 		})
 	})
 })
