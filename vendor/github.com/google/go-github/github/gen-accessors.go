@@ -25,7 +25,6 @@ import (
 	"sort"
 	"strings"
 	"text/template"
-	"time"
 )
 
 const (
@@ -71,7 +70,7 @@ func main() {
 	for pkgName, pkg := range pkgs {
 		t := &templateData{
 			filename: pkgName + fileSuffix,
-			Year:     time.Now().Year(),
+			Year:     2017,
 			Package:  pkgName,
 			Imports:  map[string]string{},
 		}
@@ -204,7 +203,7 @@ func (t *templateData) addIdent(x *ast.Ident, receiverType, fieldName string) {
 	var zeroValue string
 	var namedStruct = false
 	switch x.String() {
-	case "int":
+	case "int", "int64":
 		zeroValue = "0"
 	case "string":
 		zeroValue = `""`

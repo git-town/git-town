@@ -21,6 +21,7 @@ func TestOrganizationsService_ListAll(t *testing.T) {
 	since := 1342004
 	mux.HandleFunc("/organizations", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		testFormValues(t, r, values{"since": "1342004"})
 		fmt.Fprint(w, `[{"id":4314092}]`)
 	})
@@ -31,7 +32,7 @@ func TestOrganizationsService_ListAll(t *testing.T) {
 		t.Errorf("Organizations.ListAll returned error: %v", err)
 	}
 
-	want := []*Organization{{ID: Int(4314092)}}
+	want := []*Organization{{ID: Int64(4314092)}}
 	if !reflect.DeepEqual(orgs, want) {
 		t.Errorf("Organizations.ListAll returned %+v, want %+v", orgs, want)
 	}
@@ -43,6 +44,7 @@ func TestOrganizationsService_List_authenticatedUser(t *testing.T) {
 
 	mux.HandleFunc("/user/orgs", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		fmt.Fprint(w, `[{"id":1},{"id":2}]`)
 	})
 
@@ -51,7 +53,7 @@ func TestOrganizationsService_List_authenticatedUser(t *testing.T) {
 		t.Errorf("Organizations.List returned error: %v", err)
 	}
 
-	want := []*Organization{{ID: Int(1)}, {ID: Int(2)}}
+	want := []*Organization{{ID: Int64(1)}, {ID: Int64(2)}}
 	if !reflect.DeepEqual(orgs, want) {
 		t.Errorf("Organizations.List returned %+v, want %+v", orgs, want)
 	}
@@ -63,6 +65,7 @@ func TestOrganizationsService_List_specifiedUser(t *testing.T) {
 
 	mux.HandleFunc("/users/u/orgs", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		testFormValues(t, r, values{"page": "2"})
 		fmt.Fprint(w, `[{"id":1},{"id":2}]`)
 	})
@@ -73,7 +76,7 @@ func TestOrganizationsService_List_specifiedUser(t *testing.T) {
 		t.Errorf("Organizations.List returned error: %v", err)
 	}
 
-	want := []*Organization{{ID: Int(1)}, {ID: Int(2)}}
+	want := []*Organization{{ID: Int64(1)}, {ID: Int64(2)}}
 	if !reflect.DeepEqual(orgs, want) {
 		t.Errorf("Organizations.List returned %+v, want %+v", orgs, want)
 	}
@@ -93,6 +96,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 
 	mux.HandleFunc("/orgs/o", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		fmt.Fprint(w, `{"id":1, "login":"l", "url":"u", "avatar_url": "a", "location":"l"}`)
 	})
 
@@ -101,7 +105,7 @@ func TestOrganizationsService_Get(t *testing.T) {
 		t.Errorf("Organizations.Get returned error: %v", err)
 	}
 
-	want := &Organization{ID: Int(1), Login: String("l"), URL: String("u"), AvatarURL: String("a"), Location: String("l")}
+	want := &Organization{ID: Int64(1), Login: String("l"), URL: String("u"), AvatarURL: String("a"), Location: String("l")}
 	if !reflect.DeepEqual(org, want) {
 		t.Errorf("Organizations.Get returned %+v, want %+v", org, want)
 	}
@@ -121,6 +125,7 @@ func TestOrganizationsService_GetByID(t *testing.T) {
 
 	mux.HandleFunc("/organizations/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		fmt.Fprint(w, `{"id":1, "login":"l", "url":"u", "avatar_url": "a", "location":"l"}`)
 	})
 
@@ -129,7 +134,7 @@ func TestOrganizationsService_GetByID(t *testing.T) {
 		t.Fatalf("Organizations.GetByID returned error: %v", err)
 	}
 
-	want := &Organization{ID: Int(1), Login: String("l"), URL: String("u"), AvatarURL: String("a"), Location: String("l")}
+	want := &Organization{ID: Int64(1), Login: String("l"), URL: String("u"), AvatarURL: String("a"), Location: String("l")}
 	if !reflect.DeepEqual(org, want) {
 		t.Errorf("Organizations.GetByID returned %+v, want %+v", org, want)
 	}
@@ -146,6 +151,7 @@ func TestOrganizationsService_Edit(t *testing.T) {
 		json.NewDecoder(r.Body).Decode(v)
 
 		testMethod(t, r, "PATCH")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		if !reflect.DeepEqual(v, input) {
 			t.Errorf("Request body = %+v, want %+v", v, input)
 		}
@@ -158,7 +164,7 @@ func TestOrganizationsService_Edit(t *testing.T) {
 		t.Errorf("Organizations.Edit returned error: %v", err)
 	}
 
-	want := &Organization{ID: Int(1)}
+	want := &Organization{ID: Int64(1)}
 	if !reflect.DeepEqual(org, want) {
 		t.Errorf("Organizations.Edit returned %+v, want %+v", org, want)
 	}
