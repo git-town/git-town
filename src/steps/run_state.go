@@ -21,8 +21,8 @@ type RunState struct {
 	UndoStepList  StepList
 }
 
-// NewRunState loads the run state from disk if it exists or creates a new run state
-func LoadPreviousRunStata(command string) *RunState {
+// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
+func LoadPreviousRunState(command string) *RunState {
 	filename := getRunResultFilename(command)
 	if util.DoesFileExist(filename) {
 		var runState RunState

@@ -11,25 +11,37 @@ import (
 	"github.com/fatih/color"
 )
 
+// RunOptions bundles the parameters for running a Git Town command.
+type RunOptions struct {
+	CanSkip              func() bool
+	Command              string
+	IsAbort              bool
+	IsContinue           bool
+	IsSkip               bool
+	IsUndo               bool
+	SkipMessageGenerator func() string
+	StepListGenerator    func() StepList
+}
+
 // Run runs the Git Town command described by the given RunOptions.
 func Run(options RunOptions) {
 	if options.IsAbort {
-		runState := LoadPreviousRunStata(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		abortRunState := runState.CreateAbortRunState()
 		runSteps(&abortRunState, options)
 	} else if options.IsContinue {
-		runState := LoadPreviousRunStata(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		if runState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		git.EnsureDoesNotHaveConflicts()
 		runSteps(runState, options)
 	} else if options.IsSkip {
-		runState := LoadPreviousRunStata(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		skipRunState := runState.CreateSkipRunState()
 		runSteps(&skipRunState, options)
 	} else if options.IsUndo {
-		runState := LoadPreviousRunStata(options.Command)
+		runState := LoadPreviousRunState(options.Command)
 		undoRunState := runState.CreateUndoRunState()
 		if undoRunState.RunStepList.isEmpty() {
 			util.ExitWithErrorMessage("Nothing to undo")
