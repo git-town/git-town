@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Originate/exit"
+	humanize "github.com/dustin/go-humanize"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -17,7 +18,7 @@ var (
 	ResponseTypeSkip     = "skip"
 )
 
-func AskHowToHandleUnfinishedRunState(command string, endBranch string, endTime time.Time) string {
+func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) string {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
 		ResponseTypeContinue: fmt.Sprintf("Continue the `%s` command", command),
@@ -29,10 +30,12 @@ func AskHowToHandleUnfinishedRunState(command string, endBranch string, endTime 
 		formattedOptions[ResponseTypeQuit],
 		formattedOptions[ResponseTypeContinue],
 	}
-	// if can skip, add skip option
+	if canSkip {
+		options = append(options, formattedOptions[ResponseTypeSkip])
+	}
 	options = append(options, formattedOptions[ResponseTypeAbort], formattedOptions[ResponseTypeDiscard])
 	prompt := &survey.Select{
-		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s.", command, endBranch, endTime),
+		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s.", command, endBranch, humanize.Time(endTime)),
 		Options: options,
 		Default: formattedOptions[ResponseTypeQuit],
 	}

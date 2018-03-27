@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
@@ -47,7 +49,22 @@ func validateIsConfigured() error {
 func ensureIsNotInUnfinishedState() error {
 	runState := steps.LoadPreviousRunState()
 	if runState != nil && runState.IsUnfinished {
-		prompt.AskHowToHandleUnfinishedRunState(runState)
+		response := prompt.AskHowToHandleUnfinishedRunState(runState)
+		switch response {
+		case prompt.ResponseTypeContinue:
+			git.EnsureDoesNotHaveConflicts()
+			steps.Run(runState)
+		case prompt.ResponseTypeAbort:
+			abortRunState := runState.CreateAbortRunState()
+			steps.Run(&abortRunState)
+		case prompt.ResponseTypeSkip:
+			skipRunState := runState.CreateSkipRunState()
+			steps.Run(&skipRunState)
+		case prompt.ResponseTypeQuit:
+			os.Exit(1)
+		case prompt.ResponseTypeDiscard:
+			steps.DeleteRunState()
+		}
 	}
 	return nil
 }

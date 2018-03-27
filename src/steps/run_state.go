@@ -3,6 +3,7 @@ package steps
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/Originate/exit"
@@ -37,6 +38,11 @@ func LoadPreviousRunState() *RunState {
 		return &runState
 	}
 	return nil
+}
+
+// DeleteRunState deletes the run state from disk
+func DeleteRunState() {
+	exit.If(os.Remove(getRunResultFilename()))
 }
 
 // NewRunState returns a new run state
