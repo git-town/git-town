@@ -9,12 +9,13 @@ import (
 	"github.com/Originate/exit"
 )
 
-// JSONStep is used to store a step in JSON.
+// JSONStep is used to store a step in JSON
 type JSONStep struct {
 	Data []byte
 	Type string
 }
 
+// NewJSONStep returns a new JSONStep for the given step
 func NewJSONStep(step Step) (*JSONStep, error) {
 	data, err := json.Marshal(step)
 	if err != nil {
@@ -26,6 +27,8 @@ func NewJSONStep(step Step) (*JSONStep, error) {
 	}, nil
 }
 
+// Step returns the serialized step
+// nolint: gocyclo
 func (j *JSONStep) Step() Step {
 	switch j.Type {
 	case "*AbortMergeBranchStep":
