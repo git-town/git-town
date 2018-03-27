@@ -46,19 +46,10 @@ If you are using GitHub, this command can squash merge pull requests via the Git
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "ship",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := gitShipConfig(args)
-				return getShipStepList(config)
-			},
-		})
+		config := gitShipConfig(args)
+		stepList := getShipStepList(config)
+		runState := steps.NewRunState("ship", stepList)
+		steps.Run(runState)
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if undoFlag {

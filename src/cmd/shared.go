@@ -5,6 +5,7 @@ import (
 
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
+	"github.com/Originate/git-town/src/steps"
 )
 
 // These variables represent command-line flags
@@ -40,5 +41,13 @@ func validateBooleanArgument(arg string) error {
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
+	return nil
+}
+
+func ensureIsNotInUnfinishedState() error {
+	runState := steps.LoadPreviousRunState()
+	if runState != nil && runState.IsUnfinished {
+		prompt.AskHowToHandleUnfinishedRunState(runState)
+	}
 	return nil
 }

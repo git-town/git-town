@@ -33,19 +33,10 @@ This can be disabled by toggling the "new-branch-push-flag" configuration:
 
 	git town new-branch-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "prepend",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getPrependConfig(args)
-				return getPrependStepList(config)
-			},
-		})
+		config := getPrependConfig(args)
+		stepList := getPrependStepList(config)
+		runState := steps.NewRunState("prepend", stepList)
+		steps.Run(runState)
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if abortFlag || continueFlag || undoFlag {

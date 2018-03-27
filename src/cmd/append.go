@@ -26,19 +26,10 @@ makes the new branch a child of the current branch,
 pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "append",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getAppendConfig(args)
-				return getAppendStepList(config)
-			},
-		})
+		config := getAppendConfig(args)
+		stepList := getAppendStepList(config)
+		runState := steps.NewRunState("append", stepList)
+		steps.Run(runState)
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if abortFlag || continueFlag || undoFlag {

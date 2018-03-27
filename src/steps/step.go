@@ -34,9 +34,9 @@ type SerializedRunState struct {
 	UndoSteps []SerializedStep
 }
 
-func getRunResultFilename(command string) string {
+func getRunResultFilename() string {
 	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
 	exit.IfWrap(err, "Error compiling replace character expression")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
-	return path.Join(os.TempDir(), command+"_"+directory)
+	return path.Join(os.TempDir(), directory)
 }

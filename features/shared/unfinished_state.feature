@@ -15,8 +15,8 @@ Feature: warn about unfinished prompt asking the user how to proceed
     And I run `git-town sync`
     And it prints the error:
       """
-      To abort, run "git-town sync --abort".
-      To continue after you have resolved the conflicts, run "git-town sync --continue".
+      To abort, run "git-town abort".
+      To continue after you have resolved the conflicts, run "git-town continue".
       """
 
 
@@ -26,7 +26,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | How would you like to proceed: | [ENTER] |
     Then it runs no commands
     And it prints the error "You have an unfinished `sync` command that ended on the `current-feature` branch 1 second ago."
-
+    And my uncommitted file is stashed
 
   Scenario: attempting to sync again and choosing to continue without resolving conflicts
     When I run `git-town sync` and answer the prompts:

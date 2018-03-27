@@ -41,19 +41,10 @@ When run on a perennial branch
 - Requires the use of the "-f" option
 - Reconfigures git town locally for the perennial branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "rename-branch",
-			IsAbort:              false,
-			IsContinue:           false,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getRenameBranchConfig(args)
-				return getRenameBranchStepList(config)
-			},
-		})
+		config := getRenameBranchConfig(args)
+		stepList := getRenameBranchStepList(config)
+		runState := steps.NewRunState("rename-branch", stepList)
+		steps.Run(runState)
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if undoFlag {

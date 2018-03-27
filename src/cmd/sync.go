@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -38,22 +36,10 @@ When run on the main branch or a perennial branch
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
-			},
-			Command:    "sync",
-			IsAbort:    abortFlag,
-			IsContinue: continueFlag,
-			IsSkip:     skipFlag,
-			IsUndo:     false,
-			SkipMessageGenerator: func() string {
-				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
-			},
-			StepListGenerator: func() steps.StepList {
-				return getSyncStepList(getSyncConfig())
-			},
-		})
+		config := getSyncConfig()
+		stepList := getSyncStepList(config)
+		runState := steps.NewRunState("sync", stepList)
+		steps.Run(runState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

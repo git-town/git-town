@@ -3,6 +3,7 @@ package steps
 import (
 	"encoding/json"
 	"io/ioutil"
+	"time"
 
 	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
@@ -15,15 +16,18 @@ import (
 type RunState struct {
 	AbortStepList StepList
 	Command       string
+	EndBranch     string
+	EndTime       time.Time
 	IsAbort       bool
 	isUndo        bool
+	IsUnfinished  bool
 	RunStepList   StepList
 	UndoStepList  StepList
 }
 
-// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
-func LoadPreviousRunState(command string) *RunState {
-	filename := getRunResultFilename(command)
+// LoadPreviousRunState loads the run state from disk if it exists
+func LoadPreviousRunState() *RunState {
+	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
 		var runState RunState
 		content, err := ioutil.ReadFile(filename)
@@ -32,8 +36,14 @@ func LoadPreviousRunState(command string) *RunState {
 		exit.If(err)
 		return &runState
 	}
+	return nil
+}
+
+// NewRunState returns a new run state
+func NewRunState(command string, stepList StepList) *RunState {
 	return &RunState{
-		Command: command,
+		Command:     command,
+		RunStepList: stepList,
 	}
 }
 
@@ -97,11 +107,21 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 	return
 }
 
+func (runState *RunState) MarkAsFinished() {
+	runState.IsUnfinished = false
+}
+
+func (runState *RunState) MarkAsUnfinished() {
+	runState.EndBranch = git.GetCurrentBranchName()
+	runState.EndTime = time.Now()
+	runState.IsUnfinished = true
+}
+
 // Save saves the run state to disk
 func (runState *RunState) Save() {
 	content, err := json.Marshal(runState)
 	exit.If(err)
-	filename := getRunResultFilename(runState.Command)
+	filename := getRunResultFilename()
 	err = ioutil.WriteFile(filename, content, 0644)
 	exit.If(err)
 }
