@@ -90,11 +90,7 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 func (stepList *StepList) MarshalJSON() (b []byte, e error) {
 	jsonSteps := make([]*JSONStep, len(stepList.List))
 	for i, step := range stepList.List {
-		jsonStep, err := NewJSONStep(step)
-		if err != nil {
-			return nil, err
-		}
-		jsonSteps[i] = jsonStep
+		jsonSteps[i] = &JSONStep{Step: step}
 	}
 	return json.Marshal(jsonSteps)
 }
@@ -109,7 +105,7 @@ func (stepList *StepList) UnmarshalJSON(b []byte) error {
 	if len(jsonSteps) > 0 {
 		stepList.List = make([]Step, len(jsonSteps))
 		for i, jsonStep := range jsonSteps {
-			stepList.List[i] = jsonStep.Step()
+			stepList.List[i] = jsonStep.Step
 		}
 	}
 	return nil
