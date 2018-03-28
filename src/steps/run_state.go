@@ -3,6 +3,7 @@ package steps
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
@@ -35,6 +36,11 @@ func LoadPreviousRunState(command string) *RunState {
 	return &RunState{
 		Command: command,
 	}
+}
+
+// DeleteRunState deletes the run state from disk
+func DeleteRunState(command string) {
+	exit.If(os.Remove(getRunResultFilename(command)))
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -99,7 +105,7 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 
 // Save saves the run state to disk
 func (runState *RunState) Save() {
-	content, err := json.Marshal(runState)
+	content, err := json.MarshalIndent(runState, "", "  ")
 	exit.If(err)
 	filename := getRunResultFilename(runState.Command)
 	err = ioutil.WriteFile(filename, content, 0644)
