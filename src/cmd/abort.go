@@ -13,7 +13,7 @@ var abortCmd = &cobra.Command{
 	Short: "Aborts the previous git-town command that encountered conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
-		if runState == nil || !runState.IsUnfinished {
+		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
