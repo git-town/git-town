@@ -35,12 +35,7 @@ $ git town new-branch-push-flag false`,
 		runState := steps.NewRunState("hack", stepList)
 		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if abortFlag || continueFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.ExactArgs(1)(cmd, args)
-	},
+	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -70,7 +65,5 @@ func getHackStepList(config hackConfig) (result steps.StepList) {
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	RootCmd.AddCommand(hackCmd)
 }
