@@ -42,8 +42,11 @@ func LoadPreviousRunState() *RunState {
 }
 
 // DeleteRunState deletes the run state from disk
-func DeleteRunState() {
-	exit.If(os.Remove(getRunResultFilename()))
+func DeletePreviousRunState() {
+	filename := getRunResultFilename()
+	if util.DoesFileExist(filename) {
+		exit.If(os.Remove(filename))
+	}
 }
 
 // NewRunState returns a new run state
