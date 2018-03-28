@@ -127,7 +127,7 @@ func (runState *RunState) MarkAsUnfinished() {
 
 // Save saves the run state to disk
 func (runState *RunState) Save() {
-	content, err := json.Marshal(runState)
+	content, err := json.MarshalIndent(runState, "", "  ")
 	exit.If(err)
 	filename := getRunResultFilename()
 	err = ioutil.WriteFile(filename, content, 0644)

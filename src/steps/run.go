@@ -37,6 +37,7 @@ import (
 // 			runSteps(&undoRunState, options)
 // 		}
 // 	} else {
+// 		DeleteRunState(options.Command)
 // 		runSteps(&RunState{
 // 			Command:     options.Command,
 // 			RunStepList: options.StepListGenerator(),
