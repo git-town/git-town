@@ -39,8 +39,11 @@ func LoadPreviousRunState(command string) *RunState {
 }
 
 // DeleteRunState deletes the run state from disk
-func DeleteRunState(command string) {
-	exit.If(os.Remove(getRunResultFilename(command)))
+func DeletePreviousRunState(command string) {
+	filename := getRunResultFilename(command)
+	if util.DoesFileExist(filename) {
+		exit.If(os.Remove(filename))
+	}
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
