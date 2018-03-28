@@ -51,7 +51,7 @@ func ensureIsNotInUnfinishedState() error {
 	if runState != nil && runState.IsUnfinished {
 		response := prompt.AskHowToHandleUnfinishedRunState(runState.Command, runState.EndBranch, runState.EndTime, runState.CanSkip)
 		if response == prompt.ResponseTypeDiscard {
-			steps.DeleteRunState()
+			steps.DeletePreviousRunState()
 			return nil
 		}
 		switch response {

@@ -13,7 +13,7 @@ var skipCmd = &cobra.Command{
 	Short: "Continues the previous git-town command that encountered conflicts by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
-		if runState == nil || !runState.IsUnfinished || runState.Command != "sync" {
+		if runState == nil || !runState.IsUnfinished || !runState.CanSkip {
 			util.ExitWithErrorMessage("Nothing to skip")
 		}
 		skipRunState := runState.CreateSkipRunState()

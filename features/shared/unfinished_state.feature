@@ -25,8 +25,9 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | PROMPT                         | ANSWER  |
       | Please choose how to proceed | [ENTER] |
     Then it runs no commands
-    And it prints the error "You have an unfinished `sync` command that ended on the `main` branch now."
+    And it prints "You have an unfinished `sync` command that ended on the `main` branch now."
     And my uncommitted file is stashed
+
 
   Scenario: attempting to sync again and choosing to continue without resolving conflicts
     When I run `git-town sync` and answer the prompts:
@@ -35,6 +36,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
+
 
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
@@ -64,12 +66,11 @@ Feature: warn about unfinished prompt asking the user how to proceed
 
 
   Scenario: running another command after manually aborting
-    Given I discard the open changes
-    And I checkout the "feature" branch
+    Given I run `git rebase --abort; git checkout feature; git stash pop`
     When I run `git-town kill` and answer the prompts:
       | PROMPT                         | ANSWER                    |
       | Please choose how to proceed | [DOWN][DOWN][DOWN][ENTER] |
-    Then it runs no commands
+    Then it runs the commands
       | BRANCH  | COMMAND                        |
       | feature | git fetch --prune              |
       |         | git push origin :feature       |
