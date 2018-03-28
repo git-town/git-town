@@ -16,8 +16,17 @@ var continueCmd = &cobra.Command{
 		if runState == nil || !runState.IsUnfinished {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
-		git.EnsureDoesNotHaveConflicts()
-		steps.Run(runState)
+		if skipFlag {
+			if runState.CanSkip {
+				skipRunState := runState.CreateSkipRunState()
+				steps.Run(&skipRunState)
+			} else {
+				util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
+			}
+		} else {
+			git.EnsureDoesNotHaveConflicts()
+			steps.Run(runState)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -29,5 +38,6 @@ var continueCmd = &cobra.Command{
 }
 
 func init() {
+	continueCmd.Flags().BoolVar(&skipFlag, "skip", false, "Skip the branch that resulted in conflicts")
 	RootCmd.AddCommand(continueCmd)
 }

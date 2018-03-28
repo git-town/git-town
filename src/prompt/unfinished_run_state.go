@@ -11,20 +11,26 @@ import (
 )
 
 var (
-	ResponseTypeAbort    = "abort"
+	// ResponseTypeAbort stands for the user choosing to abort the unfinished run state
+	ResponseTypeAbort = "abort"
+	// ResponseTypeContinue stands for the user choosing to continue the unfinished run state
 	ResponseTypeContinue = "continue"
-	ResponseTypeDiscard  = "discard"
-	ResponseTypeQuit     = "quit"
-	ResponseTypeSkip     = "skip"
+	// ResponseTypeDiscard stands for the user choosing to discard the unfinished run state
+	ResponseTypeDiscard = "discard"
+	// ResponseTypeQuit stands for the user choosing to quit the program
+	ResponseTypeQuit = "quit"
+	// ResponseTypeSkip stands for the user choosing to continue the unfinished run state by skipping the current branch
+	ResponseTypeSkip = "skip"
 )
 
+// AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state
 func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) string {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
-		ResponseTypeContinue: fmt.Sprintf("Continue the `%s` command", command),
+		ResponseTypeContinue: fmt.Sprintf("Continue the `%s` command (conficts are resolved)", command),
 		ResponseTypeDiscard:  "Discard the unfinished state and run the new command",
 		ResponseTypeQuit:     "Quit without running anything.",
-		ResponseTypeSkip:     fmt.Sprintf("Skip the `%s` command", command),
+		ResponseTypeSkip:     fmt.Sprintf("Continue the `%s` command (skip the current branch)", command),
 	}
 	options := []string{
 		formattedOptions[ResponseTypeQuit],

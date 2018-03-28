@@ -117,10 +117,12 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 	return
 }
 
+// MarkAsFinished updates the run state to be marked as finished
 func (runState *RunState) MarkAsFinished() {
 	runState.IsUnfinished = false
 }
 
+// MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields
 func (runState *RunState) MarkAsUnfinished() {
 	runState.CanSkip = false
 	runState.EndBranch = git.GetCurrentBranchName()
