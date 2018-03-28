@@ -12,6 +12,7 @@ import (
 )
 
 // Run runs the Git Town command described by the given state
+// nolint: gocyclo
 func Run(runState *RunState) {
 	for {
 		step := runState.RunStepList.Pop()
