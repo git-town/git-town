@@ -51,12 +51,7 @@ It will also update the base branch for any pull requests against that branch.`,
 		runState := steps.NewRunState("ship", stepList)
 		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -152,9 +147,6 @@ func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
 }
 
 func init() {
-	shipCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	shipCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
-	shipCmd.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(shipCmd)
 }

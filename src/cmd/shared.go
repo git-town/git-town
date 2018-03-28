@@ -12,19 +12,13 @@ import (
 
 // These variables represent command-line flags
 var (
-	abortFlag,
 	allFlag,
-	continueFlag,
 	debugFlag,
 	dryRunFlag,
 	globalFlag,
-	skipFlag,
-	undoFlag bool
+	skipFlag bool
 )
 
-var abortFlagDescription = "Abort a previous command that resulted in a conflict"
-var continueFlagDescription = "Continue a previous command that resulted in a conflict"
-var undoFlagDescription = "Undo a previous command"
 var dryRunFlagDescription = "Output the commands that would be run without them"
 
 func conditionallyActivateDryRun() error {

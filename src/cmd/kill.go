@@ -33,12 +33,7 @@ Does not delete perennial branches nor the main branch.`,
 		runState := steps.NewRunState("kill", stepList)
 		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -105,6 +100,5 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(killCommand)
 }

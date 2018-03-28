@@ -46,12 +46,7 @@ When run on a perennial branch
 		runState := steps.NewRunState("rename-branch", stepList)
 		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.RangeArgs(1, 2)(cmd, args)
-	},
+	Args: cobra.RangeArgs(1, 2),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -109,7 +104,6 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 }
 
 func init() {
-	renameBranchCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	renameBranchCommand.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	RootCmd.AddCommand(renameBranchCommand)
 }
