@@ -76,12 +76,13 @@ func Run(runState *RunState) {
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				runState.MarkAsUnfinished()
-				runState.Save()
 				skipMessage := ""
 				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName())) {
+					runState.CanSkip = true
 					skipMessage = fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
 				}
-				exitWithMessages(runState.Command, skipMessage)
+				runState.Save()
+				exitWithMessages(skipMessage)
 			}
 		}
 		undoStepAfterRun := step.CreateUndoStepAfterRun()
@@ -90,15 +91,15 @@ func Run(runState *RunState) {
 	}
 }
 
-func exitWithMessages(command string, skipMessage string) {
+func exitWithMessages(skipMessage string) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := messageFmt.Printf("To abort, run \"git-town %s --abort\".\n", command)
+	_, err := messageFmt.Printf("To abort, run \"git-town abort\".\n")
 	exit.If(err)
-	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".\n", command)
+	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town continue\".\n")
 	exit.If(err)
 	if skipMessage != "" {
-		_, err = messageFmt.Printf("To skip %s, run \"git-town %s --skip\".\n", skipMessage, command)
+		_, err = messageFmt.Printf("To skip %s, run \"git-town skip\".\n", skipMessage)
 		exit.If(err)
 	}
 	fmt.Println()

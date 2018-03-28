@@ -47,6 +47,7 @@ the main branch is synced with its upstream counterpart.`,
 			git.ValidateIsRepository,
 			conditionallyActivateDryRun,
 			validateIsConfigured,
+			ensureIsNotInUnfinishedState,
 		)
 	},
 }

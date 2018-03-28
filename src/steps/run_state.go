@@ -16,6 +16,7 @@ import (
 // and how to undo what has ben done so far.
 type RunState struct {
 	AbortStepList StepList
+	CanSkip       bool
 	Command       string
 	EndBranch     string
 	EndTime       time.Time
@@ -118,6 +119,7 @@ func (runState *RunState) MarkAsFinished() {
 }
 
 func (runState *RunState) MarkAsUnfinished() {
+	runState.CanSkip = false
 	runState.EndBranch = git.GetCurrentBranchName()
 	runState.EndTime = time.Now()
 	runState.IsUnfinished = true

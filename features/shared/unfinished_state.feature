@@ -23,24 +23,24 @@ Feature: warn about unfinished prompt asking the user how to proceed
   Scenario: attempting to sync again and choosing to quit
     When I run `git-town sync` and answer the prompts:
       | PROMPT                         | ANSWER  |
-      | How would you like to proceed: | [ENTER] |
+      | Please choose how to proceed | [ENTER] |
     Then it runs no commands
-    And it prints the error "You have an unfinished `sync` command that ended on the `current-feature` branch 1 second ago."
+    And it prints the error "You have an unfinished `sync` command that ended on the `main` branch now."
     And my uncommitted file is stashed
 
   Scenario: attempting to sync again and choosing to continue without resolving conflicts
     When I run `git-town sync` and answer the prompts:
       | PROMPT                         | ANSWER        |
-      | How would you like to proceed: | [DOWN][ENTER] |
+      | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
-
+    And my uncommitted file is stashed
 
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync` and answer the prompts:
       | PROMPT                         | ANSWER        |
-      | How would you like to proceed: | [DOWN][ENTER] |
+      | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -55,7 +55,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
   Scenario: attempting to sync again and choosing to abort
     When I run `git-town sync` and answer the prompts:
       | PROMPT                         | ANSWER              |
-      | How would you like to proceed: | [DOWN][DOWN][ENTER] |
+      | Please choose how to proceed | [DOWN][DOWN][ENTER] |
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | main    | git rebase --abort   |
@@ -68,7 +68,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
     And I checkout the "feature" branch
     When I run `git-town kill` and answer the prompts:
       | PROMPT                         | ANSWER                    |
-      | How would you like to proceed: | [DOWN][DOWN][DOWN][ENTER] |
+      | Please choose how to proceed | [DOWN][DOWN][DOWN][ENTER] |
     Then it runs no commands
       | BRANCH  | COMMAND                        |
       | feature | git fetch --prune              |

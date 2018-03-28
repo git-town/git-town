@@ -49,7 +49,11 @@ func validateIsConfigured() error {
 func ensureIsNotInUnfinishedState() error {
 	runState := steps.LoadPreviousRunState()
 	if runState != nil && runState.IsUnfinished {
-		response := prompt.AskHowToHandleUnfinishedRunState(runState)
+		response := prompt.AskHowToHandleUnfinishedRunState(runState.Command, runState.EndBranch, runState.EndTime, runState.CanSkip)
+		if response == prompt.ResponseTypeDiscard {
+			steps.DeleteRunState()
+			return nil
+		}
 		switch response {
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
@@ -60,11 +64,8 @@ func ensureIsNotInUnfinishedState() error {
 		case prompt.ResponseTypeSkip:
 			skipRunState := runState.CreateSkipRunState()
 			steps.Run(&skipRunState)
-		case prompt.ResponseTypeQuit:
-			os.Exit(1)
-		case prompt.ResponseTypeDiscard:
-			steps.DeleteRunState()
 		}
+		os.Exit(0)
 	}
 	return nil
 }
