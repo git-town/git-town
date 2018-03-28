@@ -41,7 +41,7 @@ func LoadPreviousRunState() *RunState {
 	return nil
 }
 
-// DeleteRunState deletes the run state from disk
+// DeletePreviousRunState deletes the previous run state from disk
 func DeletePreviousRunState() {
 	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
