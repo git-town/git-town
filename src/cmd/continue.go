@@ -13,11 +13,11 @@ var continueCmd = &cobra.Command{
 	Short: "Continues the previous git-town command that encountered conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
-		if runState == nil || !runState.IsUnfinished {
+		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		if skipFlag {
-			if runState.CanSkip {
+			if runState.UnfinishedDetails.CanSkip {
 				skipRunState := runState.CreateSkipRunState()
 				steps.Run(&skipRunState)
 			} else {

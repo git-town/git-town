@@ -44,10 +44,10 @@ func Run(runState *RunState) {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				runState.MarkAsUnfinished()
 				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName())) {
-					runState.CanSkip = true
+					runState.UnfinishedDetails.CanSkip = true
 				}
 				runState.Save()
-				exitWithMessages(runState.CanSkip)
+				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
 		undoStepAfterRun := step.CreateUndoStepAfterRun()

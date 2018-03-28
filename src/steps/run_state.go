@@ -11,20 +11,24 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
+// UnfinishedRunStateDetails has details about an unfinished run state
+type UnfinishedRunStateDetails struct {
+	CanSkip   bool
+	EndBranch string
+	EndTime   time.Time
+}
+
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has ben done so far.
 type RunState struct {
-	AbortStepList StepList
-	CanSkip       bool
-	Command       string
-	EndBranch     string
-	EndTime       time.Time
-	IsAbort       bool
-	isUndo        bool
-	IsUnfinished  bool
-	RunStepList   StepList
-	UndoStepList  StepList
+	AbortStepList     StepList
+	Command           string
+	IsAbort           bool
+	isUndo            bool
+	UnfinishedDetails *UnfinishedRunStateDetails
+	RunStepList       StepList
+	UndoStepList      StepList
 }
 
 // LoadPreviousRunState loads the run state from disk if it exists
@@ -117,17 +121,23 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 	return
 }
 
+// IsUnfinished returns whether or not the run state is unfinished
+func (runState *RunState) IsUnfinished() bool {
+	return runState.UnfinishedDetails != nil
+}
+
 // MarkAsFinished updates the run state to be marked as finished
 func (runState *RunState) MarkAsFinished() {
-	runState.IsUnfinished = false
+	runState.UnfinishedDetails = nil
 }
 
 // MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields
 func (runState *RunState) MarkAsUnfinished() {
-	runState.CanSkip = false
-	runState.EndBranch = git.GetCurrentBranchName()
-	runState.EndTime = time.Now()
-	runState.IsUnfinished = true
+	runState.UnfinishedDetails = &UnfinishedRunStateDetails{
+		CanSkip:   false,
+		EndBranch: git.GetCurrentBranchName(),
+		EndTime:   time.Now(),
+	}
 }
 
 // Save saves the run state to disk

@@ -48,8 +48,13 @@ func validateIsConfigured() error {
 
 func ensureIsNotInUnfinishedState() error {
 	runState := steps.LoadPreviousRunState()
-	if runState != nil && runState.IsUnfinished {
-		response := prompt.AskHowToHandleUnfinishedRunState(runState.Command, runState.EndBranch, runState.EndTime, runState.CanSkip)
+	if runState != nil && runState.IsUnfinished() {
+		response := prompt.AskHowToHandleUnfinishedRunState(
+			runState.Command,
+			runState.UnfinishedDetails.EndBranch,
+			runState.UnfinishedDetails.EndTime,
+			runState.UnfinishedDetails.CanSkip,
+		)
 		if response == prompt.ResponseTypeDiscard {
 			steps.DeletePreviousRunState()
 			return nil
