@@ -27,7 +27,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       """
       To abort, run "git-town abort".
       To continue after you have resolved the conflicts, run "git-town continue".
-      To skip the sync of the 'production' branch, run "git-town skip".
+      To continue by skipping the current branch, run "git-town continue --skip".
       """
     And my uncommitted file is stashed
     And my repo has a rebase in progress
@@ -51,7 +51,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: skipping
-    When I run `git-town skip`
+    When I run `git-town continue --skip`
     Then it runs the commands
       | BRANCH     | COMMAND              |
       | production | git rebase --abort   |

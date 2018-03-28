@@ -28,7 +28,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       """
       To abort, run "git-town abort".
       To continue after you have resolved the conflicts, run "git-town continue".
-      To skip the sync of the 'feature' branch, run "git-town skip".
+      To continue by skipping the current branch, run "git-town continue --skip".
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed

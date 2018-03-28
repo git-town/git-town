@@ -24,7 +24,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       """
       To abort, run "git-town abort".
       To continue after you have resolved the conflicts, run "git-town continue".
-      To skip the sync of the 'feature-1' branch, run "git-town skip".
+      To continue by skipping the current branch, run "git-town continue --skip".
       """
     And I end up on the "feature-1" branch
     And my uncommitted file is stashed
@@ -44,7 +44,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git-town skip`
+    When I run `git-town continue --skip`
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-1 | git merge --abort        |

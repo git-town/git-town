@@ -27,7 +27,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       """
       To abort, run "git-town abort".
       To continue after you have resolved the conflicts, run "git-town continue".
-      To skip the sync of the 'qa' branch, run "git-town skip".
+      To continue by skipping the current branch, run "git-town continue --skip".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
