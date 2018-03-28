@@ -39,7 +39,7 @@ Feature: git prepend: offline mode
 
   Scenario: Undo
     Given I run `git-town prepend new-parent`
-    When I run `git-town prepend --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |

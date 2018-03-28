@@ -37,7 +37,7 @@ Feature: Appending a branch to a perennial branch
 
 
   Scenario: Undo
-    When I run `git-town append --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH     | COMMAND                 |
         | new-child  | git add -A              |

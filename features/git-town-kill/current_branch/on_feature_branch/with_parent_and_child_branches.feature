@@ -45,7 +45,7 @@ Feature: git town-kill: killing the current feature branch with child branches
 
 
   Scenario: undoing the kill
-    When I run `git-town kill --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH    | COMMAND                                            |
       | feature-1 | git branch feature-2 <%= sha 'WIP on feature-2' %> |
