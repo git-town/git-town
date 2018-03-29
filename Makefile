@@ -37,18 +37,18 @@ deploy:
 	git push
 	git checkout master
 
-# autoa-fix lint issues in all languages
+# auto-fixes lint issues in all languages
 fix: fix-cucumber fix-ruby fix-markdown
 
-# auto-fixes all Cucumber issues
+# auto-fixes all Cucumber lint issues
 fix-cucumber:
 	bundle exec cucumber_lint --fix
 
-# auto-fixes all Markdown issues
+# auto-fixes all Markdown lint issues
 fix-markdown:
 	prettier --write "{,!(vendor)/**/}*.md"
 
-# auto-fixes all Ruby issues
+# auto-fixes all Ruby lint issues
 fix-ruby:
 	bundle exec rubocop --auto-correct
 
