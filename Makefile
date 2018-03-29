@@ -53,7 +53,10 @@ fix-ruby:
 	bundle exec rubocop --auto-correct
 
 # lints all the source code
-lint: lint-go lint-markdown lint-ruby
+lint: lint-cucumber lint-go lint-markdown lint-ruby
+
+lint-cucumber:
+	bundle exec cucumber_lint
 
 lint-go:
 	goimports -d src
