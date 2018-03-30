@@ -10,7 +10,7 @@ import (
 
 var abortCmd = &cobra.Command{
 	Use:   "abort",
-	Short: "Aborts the previous git-town command",
+	Short: "Aborts the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {

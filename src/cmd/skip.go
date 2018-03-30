@@ -10,7 +10,7 @@ import (
 
 var skipCmd = &cobra.Command{
 	Use:   "skip",
-	Short: "Restarts the previous git-town command by skipping the current branch",
+	Short: "Restarts the last run git-town command by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {

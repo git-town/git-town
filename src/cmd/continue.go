@@ -10,7 +10,7 @@ import (
 
 var continueCmd = &cobra.Command{
 	Use:   "continue",
-	Short: "Restarts the previous git-town command after having resolved conflicts",
+	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {
