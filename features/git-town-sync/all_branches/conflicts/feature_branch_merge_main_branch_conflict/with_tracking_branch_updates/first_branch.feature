@@ -53,7 +53,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git-town continue --skip`
+    When I run `git-town skip`
     Then it runs the commands
       | BRANCH    | COMMAND                                              |
       | feature-1 | git merge --abort                                    |

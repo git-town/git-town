@@ -8,16 +8,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var continueCmd = &cobra.Command{
-	Use:   "continue",
-	Short: "Restarts the previous git-town command after having resolved conflicts",
+var skipCmd = &cobra.Command{
+	Use:   "skip",
+	Short: "Restarts the previous git-town command by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {
-			util.ExitWithErrorMessage("Nothing to continue")
+			util.ExitWithErrorMessage("Nothing to skip")
 		}
-		git.EnsureDoesNotHaveConflicts()
-		steps.Run(runState)
+		if !runState.UnfinishedDetails.CanSkip {
+			util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
+		}
+		skipRunState := runState.CreateSkipRunState()
+		steps.Run(&skipRunState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -29,5 +32,5 @@ var continueCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(continueCmd)
+	RootCmd.AddCommand(skipCmd)
 }
