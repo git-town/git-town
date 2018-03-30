@@ -25,7 +25,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And it prints the error:
       """
       To abort, run "git-town abort".
-      To continue after you have resolved the conflicts, run "git-town continue".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed

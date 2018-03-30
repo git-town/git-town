@@ -26,7 +26,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
     And it prints the error:
       """
       To abort, run "git-town abort".
-      To continue after you have resolved the conflicts, run "git-town continue".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And I am still on the "feature" branch
     And my repo has a merge in progress
