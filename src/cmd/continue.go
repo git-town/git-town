@@ -10,23 +10,14 @@ import (
 
 var continueCmd = &cobra.Command{
 	Use:   "continue",
-	Short: "Continues the previous git-town command that encountered conflicts",
+	Short: "Restarts the last run git-town command after having resolved conflicts",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
-		if skipFlag {
-			if runState.UnfinishedDetails.CanSkip {
-				skipRunState := runState.CreateSkipRunState()
-				steps.Run(&skipRunState)
-			} else {
-				util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
-			}
-		} else {
-			git.EnsureDoesNotHaveConflicts()
-			steps.Run(runState)
-		}
+		git.EnsureDoesNotHaveConflicts()
+		steps.Run(runState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -38,6 +29,5 @@ var continueCmd = &cobra.Command{
 }
 
 func init() {
-	continueCmd.Flags().BoolVar(&skipFlag, "skip", false, "Skip the branch that resulted in conflicts")
 	RootCmd.AddCommand(continueCmd)
 }

@@ -10,7 +10,7 @@ import (
 
 var undoCmd = &cobra.Command{
 	Use:   "undo",
-	Short: "Undoes the previous git-town command",
+	Short: "Undoes the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || runState.IsUnfinished() {

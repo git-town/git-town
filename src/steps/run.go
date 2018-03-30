@@ -63,10 +63,10 @@ func exitWithMessages(canSkip bool) {
 	fmt.Println()
 	_, err := messageFmt.Printf("To abort, run \"git-town abort\".\n")
 	exit.If(err)
-	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town continue\".\n")
+	_, err = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
 	exit.If(err)
 	if canSkip {
-		_, err = messageFmt.Printf("To continue by skipping the current branch, run \"git-town continue --skip\".\n")
+		_, err = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
 		exit.If(err)
 	}
 	fmt.Println()

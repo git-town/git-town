@@ -8,16 +8,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var abortCmd = &cobra.Command{
-	Use:   "abort",
-	Short: "Aborts the last run git-town command",
+var skipCmd = &cobra.Command{
+	Use:   "skip",
+	Short: "Restarts the last run git-town command by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
 		runState := steps.LoadPreviousRunState()
 		if runState == nil || !runState.IsUnfinished() {
-			util.ExitWithErrorMessage("Nothing to abort")
+			util.ExitWithErrorMessage("Nothing to skip")
 		}
-		abortRunState := runState.CreateAbortRunState()
-		steps.Run(&abortRunState)
+		if !runState.UnfinishedDetails.CanSkip {
+			util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
+		}
+		skipRunState := runState.CreateSkipRunState()
+		steps.Run(&skipRunState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -29,5 +32,5 @@ var abortCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(abortCmd)
+	RootCmd.AddCommand(skipCmd)
 }

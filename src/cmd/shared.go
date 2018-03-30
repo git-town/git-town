@@ -15,8 +15,7 @@ var (
 	allFlag,
 	debugFlag,
 	dryRunFlag,
-	globalFlag,
-	skipFlag bool
+	globalFlag bool
 )
 
 var dryRunFlagDescription = "Output the commands that would be run without them"
