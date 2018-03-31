@@ -13,7 +13,7 @@ var commandsToAlias = []string{
 	"kill",
 	"new-pull-request",
 	"prepend",
-	"prune-branches",
+	"prune",
 	"rename-branch",
 	"repo",
 	"ship",

@@ -32,7 +32,7 @@ Git Town provides these additional Git commands:
 **Repository Maintenance**
 
 * [git town kill](/documentation/commands/kill.md) - removes a feature branch
-* [git town prune-branches](/documentation/commands/prune-branches.md) - delete all merged branches
+* [git town prune](/documentation/commands/prune.md) - clean up outdated information
 * [git town rename-branch](/documentation/commands/rename-branch.md) - rename a branch
 * [git town append](/documentation/commands/append.md) - insert a new branch as a child of the current branch
 * [git town prepend](/documentation/commands/prepend.md) - insert a new branch between the current branch and its parent
