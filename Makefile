@@ -44,7 +44,7 @@ fix-ruby:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
 
 help:  # prints all make targets
-	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#//' | sed -E 's/^([[:alnum:]-]+)/\1:/' | column -s ":" -t
+	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
 lint: lint-cucumber lint-go lint-markdown lint-ruby  # lints all the source code
 
