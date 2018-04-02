@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -ex
-
-# Runs all the tests
-
-bin/lint
-bin/tests
-bin/cuke
