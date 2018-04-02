@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# Builds the production versions of the binary for all platforms
-
-bin/cross-compile
-package/debian/make_deb.sh

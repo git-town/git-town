@@ -24,7 +24,10 @@ This guide will help you get started and outline some things you should know whe
   * create the directory `~/go/src/github.com/Originate`
   * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
   * cd into `$GOPATH/src/github.com/Originate/git-town`
-* run `bin/setup`
+* make sure you have `make` - Mac and Linux users should be okay,
+  Windows users should install
+  [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
+* run `make setup` and then `make build`
 * now you can run `git-town` on the command line
 * see https://golang.org/doc/install#testing for details on how to test
 * optionally install [Tertestrial](https://github.com/Originate/tertestrial-server)
@@ -32,7 +35,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Building
 
-* run `bin/build` to compile the source code into a runnable binary in $GOPATH/bin
+* run `make build` to compile the source code into a runnable binary in $GOPATH/bin
 
 ## Testing
 
@@ -45,7 +48,7 @@ This guide will help you get started and outline some things you should know whe
 
 * all dependencies are located in the [vendor](vendor) folder,
   which is checked into Git
-* update dependencies: `glide up`
+* update dependencies: `make update`
 * adding a new Go library:
   * `glide get <package name>`
   * your pull request for the feature that requires the new library
