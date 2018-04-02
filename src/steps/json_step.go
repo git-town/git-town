@@ -10,7 +10,7 @@ type JSONStep struct {
 	Step Step
 }
 
-// MarshalJSON marshals the step list to JSON
+// MarshalJSON marshals the step to JSON
 func (j *JSONStep) MarshalJSON() (b []byte, e error) {
 	return json.Marshal(map[string]interface{}{
 		"data": j.Step,
@@ -18,7 +18,7 @@ func (j *JSONStep) MarshalJSON() (b []byte, e error) {
 	})
 }
 
-// UnmarshalJSON unmarshals the step list from JSON
+// UnmarshalJSON unmarshals the step from JSON
 // nolint: gocyclo
 func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	var mapping map[string]*json.RawMessage
