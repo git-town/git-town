@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-# Runs the Ruby auto-fixes
-
-bundle exec rubocop --auto-correct
