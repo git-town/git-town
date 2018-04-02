@@ -4,22 +4,21 @@
 
 ```bash
 # running the different test types
-bin/spec       # runs all tests
-bin/lint       # runs the linters
-bin/lint_go    # runs the Go linters
-bin/cuke       # runs the feature tests
+make spec       # runs all tests
+make lint       # runs the linters
+make lint-go    # runs the Go linters
+make cuke       # runs the feature tests
 
 # running individual scenarios/features
-cucumber <filename>[:<lineno>]
-cucumber -n '<scenario/feature name>'
+make cuke dir=<path>
 
 # running tests in parallel
-bin/cuke [cucumber parameters]
+make cuke [cucumber parameters]
 # set the environment variable PARALLEL_TEST_PROCESSORS to override the
 # auto-detected number of processors
 
 # auto-fixing formatting issues
-bin/fix
+make fix
 ```
 
 Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
