@@ -79,6 +79,7 @@ end
 
 
 After do
+  run 'git-town discard'
   unless @non_empty_stash_expected
     expect(stash_size).to eql(0), 'Finished with non empty stash'
   end

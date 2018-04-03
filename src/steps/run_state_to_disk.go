@@ -13,8 +13,8 @@ import (
 )
 
 // LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
-func LoadPreviousRunState(command string) *RunState {
-	filename := getRunResultFilename(command)
+func LoadPreviousRunState() *RunState {
+	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
 		var runState RunState
 		content, err := ioutil.ReadFile(filename)
@@ -23,14 +23,12 @@ func LoadPreviousRunState(command string) *RunState {
 		exit.If(err)
 		return &runState
 	}
-	return &RunState{
-		Command: command,
-	}
+	return nil
 }
 
 // DeletePreviousRunState deletes the previous run state from disk
-func DeletePreviousRunState(command string) {
-	filename := getRunResultFilename(command)
+func DeletePreviousRunState() {
+	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
 		exit.If(os.Remove(filename))
 	}
@@ -40,14 +38,14 @@ func DeletePreviousRunState(command string) {
 func SaveRunState(runState *RunState) {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	exit.If(err)
-	filename := getRunResultFilename(runState.Command)
+	filename := getRunResultFilename()
 	err = ioutil.WriteFile(filename, content, 0644)
 	exit.If(err)
 }
 
-func getRunResultFilename(command string) string {
+func getRunResultFilename() string {
 	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
 	exit.IfWrap(err, "Error compiling replace character expression")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
-	return path.Join(os.TempDir(), command+"_"+directory)
+	return path.Join(os.TempDir(), directory)
 }

@@ -24,9 +24,9 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | git merge --no-edit main |
     And it prints the error:
       """
-      To abort, run "git-town sync --abort".
-      To continue after you have resolved the conflicts, run "git-town sync --continue".
-      To skip the sync of the 'feature-2' branch, run "git-town sync --skip".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
+      To continue by skipping the current branch, run "git-town skip".
       """
     And I end up on the "feature-2" branch
     And my uncommitted file is stashed
@@ -34,7 +34,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: aborting
-    When I run `git-town sync --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH    | COMMAND                                        |
       | feature-2 | git merge --abort                              |
@@ -48,7 +48,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git-town sync --skip`
+    When I run `git-town skip`
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git merge --abort |
@@ -72,7 +72,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town sync --continue`
+    When I run `git-town continue`
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-2" branch
@@ -82,7 +82,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git-town sync --continue`
+    And I run `git-town continue`
     Then it runs the commands
       | BRANCH    | COMMAND              |
       | feature-2 | git commit --no-edit |
@@ -109,7 +109,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit; git-town sync --continue`
+    And I run `git commit --no-edit; git-town continue`
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git checkout main |

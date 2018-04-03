@@ -35,7 +35,7 @@ Feature: git town-ship: offline mode
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |

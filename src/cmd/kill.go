@@ -28,25 +28,12 @@ from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "kill",
-			IsAbort:              false,
-			IsContinue:           false,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				return getKillStepList(getKillConfig(args))
-			},
-		})
+		config := getKillConfig(args)
+		stepList := getKillStepList(config)
+		runState := steps.NewRunState("kill", stepList)
+		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.MaximumNArgs(1)(cmd, args)
-	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -113,6 +100,5 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(killCommand)
 }

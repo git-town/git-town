@@ -74,7 +74,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Scenario: undo rename branch
     Given I am on the "feature" branch
     And I run `git-town rename-branch renamed-feature`
-    When I run `git-town rename-branch --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH          | COMMAND                                     |
         | renamed-feature | git branch feature <%= sha 'feat commit' %> |

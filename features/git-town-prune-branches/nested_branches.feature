@@ -41,7 +41,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town prune-branches --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |

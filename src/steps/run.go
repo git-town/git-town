@@ -11,58 +11,13 @@ import (
 	"github.com/fatih/color"
 )
 
-// RunOptions bundles the parameters for running a Git Town command.
-type RunOptions struct {
-	CanSkip              func() bool
-	Command              string
-	IsAbort              bool
-	IsContinue           bool
-	IsSkip               bool
-	IsUndo               bool
-	SkipMessageGenerator func() string
-	StepListGenerator    func() StepList
-}
-
-// Run runs the Git Town command described by the given RunOptions.
-func Run(options RunOptions) {
-	if options.IsAbort {
-		runState := LoadPreviousRunState(options.Command)
-		abortRunState := runState.CreateAbortRunState()
-		runSteps(&abortRunState, options)
-	} else if options.IsContinue {
-		runState := LoadPreviousRunState(options.Command)
-		if runState.RunStepList.isEmpty() {
-			util.ExitWithErrorMessage("Nothing to continue")
-		}
-		git.EnsureDoesNotHaveConflicts()
-		runSteps(runState, options)
-	} else if options.IsSkip {
-		runState := LoadPreviousRunState(options.Command)
-		skipRunState := runState.CreateSkipRunState()
-		runSteps(&skipRunState, options)
-	} else if options.IsUndo {
-		runState := LoadPreviousRunState(options.Command)
-		undoRunState := runState.CreateUndoRunState()
-		if undoRunState.RunStepList.isEmpty() {
-			util.ExitWithErrorMessage("Nothing to undo")
-		} else {
-			runSteps(&undoRunState, options)
-		}
-	} else {
-		DeletePreviousRunState(options.Command)
-		runSteps(&RunState{
-			Command:     options.Command,
-			RunStepList: options.StepListGenerator(),
-		}, options)
-	}
-}
-
-// Helpers
-
-func runSteps(runState *RunState, options RunOptions) {
+// Run runs the Git Town command described by the given state
+// nolint: gocyclo
+func Run(runState *RunState) {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
+			runState.MarkAsFinished()
 			if !runState.IsAbort && !runState.isUndo {
 				SaveRunState(runState)
 			}
@@ -83,16 +38,16 @@ func runSteps(runState *RunState, options RunOptions) {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
-				runSteps(&abortRunState, options)
+				Run(&abortRunState)
 				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
-				SaveRunState(runState)
-				skipMessage := ""
-				if options.CanSkip() {
-					skipMessage = options.SkipMessageGenerator()
+				runState.MarkAsUnfinished()
+				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName())) {
+					runState.UnfinishedDetails.CanSkip = true
 				}
-				exitWithMessages(runState.Command, skipMessage)
+				SaveRunState(runState)
+				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
 		undoStepAfterRun := step.CreateUndoStepAfterRun()
@@ -101,15 +56,17 @@ func runSteps(runState *RunState, options RunOptions) {
 	}
 }
 
-func exitWithMessages(command string, skipMessage string) {
+// Helpers
+
+func exitWithMessages(canSkip bool) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := messageFmt.Printf("To abort, run \"git-town %s --abort\".\n", command)
+	_, err := messageFmt.Printf("To abort, run \"git-town abort\".\n")
 	exit.If(err)
-	_, err = messageFmt.Printf("To continue after you have resolved the conflicts, run \"git-town %s --continue\".\n", command)
+	_, err = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
 	exit.If(err)
-	if skipMessage != "" {
-		_, err = messageFmt.Printf("To skip %s, run \"git-town %s --skip\".\n", skipMessage, command)
+	if canSkip {
+		_, err = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
 		exit.If(err)
 	}
 	fmt.Println()

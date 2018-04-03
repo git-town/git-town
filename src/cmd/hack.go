@@ -30,26 +30,12 @@ the main branch is synced with its upstream counterpart.
 This can be disabled by toggling the "new-branch-push-flag" configuration:
 $ git town new-branch-push-flag false`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "hack",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               false,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getHackConfig(args)
-				return getHackStepList(config)
-			},
-		})
+		config := getHackConfig(args)
+		stepList := getHackStepList(config)
+		runState := steps.NewRunState("hack", stepList)
+		steps.Run(runState)
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if abortFlag || continueFlag {
-			return cobra.NoArgs(cmd, args)
-		}
-		return cobra.ExactArgs(1)(cmd, args)
-	},
+	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -79,7 +65,5 @@ func getHackStepList(config hackConfig) (result steps.StepList) {
 }
 
 func init() {
-	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	RootCmd.AddCommand(hackCmd)
 }
