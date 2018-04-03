@@ -9,4 +9,6 @@ Your contributions to Gomega are essential for its long-term maintenance and imp
     - Please run following linter locally `go vet ./...` and make sure output does not contain any warnings
 - Update the documentation.  In addition to standard `godoc` comments Gomega has extensive documentation on the `gh-pages` branch.  If relevant, please submit a docs PR to that branch alongside your code PR.
 
+If you're a committer, check out RELEASING.md to learn how to cut a release.
+
 Thanks for supporting Gomega!
