@@ -2,6 +2,7 @@ package steps
 
 import (
 	"encoding/json"
+	"log"
 	"reflect"
 )
 
@@ -31,75 +32,82 @@ func (j *JSONStep) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
+	j.Step = getStep(stepType)
+	return json.Unmarshal(*mapping["data"], &j.Step)
+}
+
+func getStep(stepType string) Step {
 	switch stepType {
 	case "*AbortMergeBranchStep":
-		j.Step = &AbortMergeBranchStep{}
+		return &AbortMergeBranchStep{}
 	case "*AbortRebaseBranchStep":
-		j.Step = &AbortRebaseBranchStep{}
+		return &AbortRebaseBranchStep{}
 	case "*AddToPerennialBranches":
-		j.Step = &AddToPerennialBranches{}
+		return &AddToPerennialBranches{}
 	case "*ChangeDirectoryStep":
-		j.Step = &ChangeDirectoryStep{}
+		return &ChangeDirectoryStep{}
 	case "*CheckoutBranchStep":
-		j.Step = &CheckoutBranchStep{}
+		return &CheckoutBranchStep{}
 	case "*ContinueMergeBranchStep":
-		j.Step = &ContinueMergeBranchStep{}
+		return &ContinueMergeBranchStep{}
 	case "*ContinueRebaseBranchStep":
-		j.Step = &ContinueRebaseBranchStep{}
+		return &ContinueRebaseBranchStep{}
 	case "*CreateBranchStep":
-		j.Step = &CreateBranchStep{}
+		return &CreateBranchStep{}
 	case "*CreateAndCheckoutBranchStep":
-		j.Step = &CreateAndCheckoutBranchStep{}
+		return &CreateAndCheckoutBranchStep{}
 	case "*CreatePullRequestStep":
-		j.Step = &CreatePullRequestStep{}
+		return &CreatePullRequestStep{}
 	case "*CreateRemoteBranchStep":
-		j.Step = &CreateRemoteBranchStep{}
+		return &CreateRemoteBranchStep{}
 	case "*CreateTrackingBranchStep":
-		j.Step = &CreateTrackingBranchStep{}
+		return &CreateTrackingBranchStep{}
 	case "*DeleteLocalBranchStep":
-		j.Step = &DeleteLocalBranchStep{}
+		return &DeleteLocalBranchStep{}
 	case "*DeleteParentBranchStep":
-		j.Step = &DeleteParentBranchStep{}
+		return &DeleteParentBranchStep{}
 	case "*DeleteRemoteBranchStep":
-		j.Step = &DeleteRemoteBranchStep{}
+		return &DeleteRemoteBranchStep{}
 	case "*DriverMergePullRequestStep":
-		j.Step = &DriverMergePullRequestStep{}
+		return &DriverMergePullRequestStep{}
 	case "*EnsureHasShippableChangesStep":
-		j.Step = &EnsureHasShippableChangesStep{}
+		return &EnsureHasShippableChangesStep{}
 	case "*MergeBranchStep":
-		j.Step = &MergeBranchStep{}
+		return &MergeBranchStep{}
 	case "*NoOpStep":
-		j.Step = &NoOpStep{}
+		return &NoOpStep{}
 	case "*PreserveCheckoutHistoryStep":
-		j.Step = &PreserveCheckoutHistoryStep{}
+		return &PreserveCheckoutHistoryStep{}
 	case "*PullBranchStep":
-		j.Step = &PullBranchStep{}
+		return &PullBranchStep{}
 	case "*PushBranchAfterCurrentBranchSteps":
-		j.Step = &PushBranchAfterCurrentBranchSteps{}
+		return &PushBranchAfterCurrentBranchSteps{}
 	case "*PushBranchStep":
-		j.Step = &PushBranchStep{}
+		return &PushBranchStep{}
 	case "*PushTagsStep":
-		j.Step = &PushTagsStep{}
+		return &PushTagsStep{}
 	case "*RebaseBranchStep":
-		j.Step = &RebaseBranchStep{}
+		return &RebaseBranchStep{}
 	case "*RemoveFromPerennialBranches":
-		j.Step = &RemoveFromPerennialBranches{}
+		return &RemoveFromPerennialBranches{}
 	case "*ResetToShaStep":
-		j.Step = &ResetToShaStep{}
+		return &ResetToShaStep{}
 	case "*RestoreOpenChangesStep":
-		j.Step = &RestoreOpenChangesStep{}
+		return &RestoreOpenChangesStep{}
 	case "*RevertCommitStep":
-		j.Step = &RevertCommitStep{}
+		return &RevertCommitStep{}
 	case "*SetParentBranchStep":
-		j.Step = &SetParentBranchStep{}
+		return &SetParentBranchStep{}
 	case "*SquashMergeBranchStep":
-		j.Step = &SquashMergeBranchStep{}
+		return &SquashMergeBranchStep{}
 	case "*SkipCurrentBranchSteps":
-		j.Step = &SkipCurrentBranchSteps{}
+		return &SkipCurrentBranchSteps{}
 	case "*StashOpenChangesStep":
-		j.Step = &StashOpenChangesStep{}
+		return &StashOpenChangesStep{}
+	default:
+		log.Fatalf("Unknown step type: %s", stepType)
+		return nil
 	}
-	return json.Unmarshal(*mapping["data"], &j.Step)
 }
 
 func getTypeName(myvar interface{}) string {
