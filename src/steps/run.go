@@ -64,7 +64,7 @@ func runSteps(runState *RunState, options RunOptions) {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			if !runState.IsAbort && !runState.isUndo {
-				runState.Save()
+				SaveRunState(runState)
 			}
 			fmt.Println()
 			return
@@ -87,7 +87,7 @@ func runSteps(runState *RunState, options RunOptions) {
 				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
-				runState.Save()
+				SaveRunState(runState)
 				skipMessage := ""
 				if options.CanSkip() {
 					skipMessage = options.SkipMessageGenerator()
