@@ -5,6 +5,11 @@
 #### BREAKING CHANGES
 
 * `git town config`: `reset` and `setup` are now subcommands instead of flags
+* `--abort`, `--continue`, `--skip`, `--undo` flags removed. Instead there are now top level commands `git town abort`, `git town continue`, `git town skip`, `git town undo`
+
+#### New Features
+
+* now catches when there is an unfinished state from a git town command that hit conflicts. If you try to run another git town command, you will be prompted on how to resolve the unfinished state. The unfinished state can be discarded and there is also a new top level command `git town discard` to delete the state of the last run command.
 
 #### Bug Fixes
 
