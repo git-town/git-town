@@ -4,6 +4,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
   I want to be warned about it and presented with options
   So I can finish work I started and discard old state that is now irrelevant
 
+
   Background:
     Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
@@ -22,7 +23,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
 
   Scenario: attempting to sync again and choosing to quit
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                         | ANSWER  |
+      | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
     Then it runs no commands
     And it prints "You have an unfinished `sync` command that ended on the `main` branch now."
@@ -31,7 +32,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
 
   Scenario: attempting to sync again and choosing to continue without resolving conflicts
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                         | ANSWER        |
+      | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
@@ -41,7 +42,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                         | ANSWER        |
+      | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -56,7 +57,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
 
   Scenario: attempting to sync again and choosing to abort
     When I run `git-town sync` and answer the prompts:
-      | PROMPT                         | ANSWER              |
+      | PROMPT                       | ANSWER              |
       | Please choose how to proceed | [DOWN][DOWN][ENTER] |
     Then it runs the commands
       | BRANCH  | COMMAND              |
@@ -68,7 +69,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
   Scenario: running another command after manually aborting
     Given I run `git rebase --abort; git checkout feature; git stash pop`
     When I run `git-town kill` and answer the prompts:
-      | PROMPT                         | ANSWER                    |
+      | PROMPT                       | ANSWER                    |
       | Please choose how to proceed | [DOWN][DOWN][DOWN][ENTER] |
     Then it runs the commands
       | BRANCH  | COMMAND                        |

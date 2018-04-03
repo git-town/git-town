@@ -1,14 +1,9 @@
 package steps
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
 	"time"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state
@@ -29,28 +24,6 @@ type RunState struct {
 	UnfinishedDetails *UnfinishedRunStateDetails
 	RunStepList       StepList
 	UndoStepList      StepList
-}
-
-// LoadPreviousRunState loads the run state from disk if it exists
-func LoadPreviousRunState() *RunState {
-	filename := getRunResultFilename()
-	if util.DoesFileExist(filename) {
-		var runState RunState
-		content, err := ioutil.ReadFile(filename)
-		exit.If(err)
-		err = json.Unmarshal(content, &runState)
-		exit.If(err)
-		return &runState
-	}
-	return nil
-}
-
-// DeletePreviousRunState deletes the previous run state from disk
-func DeletePreviousRunState() {
-	filename := getRunResultFilename()
-	if util.DoesFileExist(filename) {
-		exit.If(os.Remove(filename))
-	}
 }
 
 // NewRunState returns a new run state
@@ -138,15 +111,6 @@ func (runState *RunState) MarkAsUnfinished() {
 		EndBranch: git.GetCurrentBranchName(),
 		EndTime:   time.Now(),
 	}
-}
-
-// Save saves the run state to disk
-func (runState *RunState) Save() {
-	content, err := json.MarshalIndent(runState, "", "  ")
-	exit.If(err)
-	filename := getRunResultFilename()
-	err = ioutil.WriteFile(filename, content, 0644)
-	exit.If(err)
 }
 
 // SkipCurrentBranchSteps removes the steps for the current branch

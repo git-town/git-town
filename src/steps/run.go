@@ -19,7 +19,7 @@ func Run(runState *RunState) {
 		if step == nil {
 			runState.MarkAsFinished()
 			if !runState.IsAbort && !runState.isUndo {
-				runState.Save()
+				SaveRunState(runState)
 			}
 			fmt.Println()
 			return
@@ -46,7 +46,7 @@ func Run(runState *RunState) {
 				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName())) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
-				runState.Save()
+				SaveRunState(runState)
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
