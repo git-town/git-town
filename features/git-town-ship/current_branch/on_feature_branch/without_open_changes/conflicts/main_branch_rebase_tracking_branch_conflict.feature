@@ -24,14 +24,14 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | main    | git rebase origin/main |
     And it prints the error:
       """
-      To abort, run "git-town ship --abort".
-      To continue after you have resolved the conflicts, run "git-town ship --continue".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And my repo has a rebase in progress
 
 
   Scenario: aborting
-    When I run `git-town ship --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
@@ -43,7 +43,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town ship --continue`
+    When I run `git-town continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -68,7 +68,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town ship --continue`
+    When I run `git rebase --continue; git-town continue`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |

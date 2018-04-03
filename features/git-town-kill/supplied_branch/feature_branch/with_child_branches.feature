@@ -40,7 +40,7 @@ Feature: git town-kill: killing the given branch with child branches
 
 
   Scenario: undoing the kill
-    When I run `git-town kill --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH    | COMMAND                                            |
       | feature-3 | git branch feature-2 <%= sha 'feature 2 commit' %> |

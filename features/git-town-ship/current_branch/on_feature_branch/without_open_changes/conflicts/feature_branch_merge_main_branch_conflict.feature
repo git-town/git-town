@@ -27,15 +27,15 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git merge --no-edit main           |
     And it prints the error:
       """
-      To abort, run "git-town ship --abort".
-      To continue after you have resolved the conflicts, run "git-town ship --continue".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And I am still on the "feature" branch
     And my repo has a merge in progress
 
 
   Scenario: aborting
-    When I run `git-town ship --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -51,7 +51,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town ship --continue`
+    When I run `git-town continue`
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
@@ -71,7 +71,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town ship --continue`
+    When I run `git commit --no-edit; git-town continue`
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git checkout main            |
