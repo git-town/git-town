@@ -27,10 +27,10 @@ var (
 func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) string {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
-		ResponseTypeContinue: fmt.Sprintf("Continue the `%s` command (after having resolved conflicts)", command),
+		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),
 		ResponseTypeDiscard:  "Discard the unfinished state and run the new command",
 		ResponseTypeQuit:     "Quit without running anything",
-		ResponseTypeSkip:     fmt.Sprintf("Continue the `%s` command (by skipping the current branch)", command),
+		ResponseTypeSkip:     fmt.Sprintf("Restart the `%s` command by skipping the current branch", command),
 	}
 	options := []string{
 		formattedOptions[ResponseTypeQuit],
