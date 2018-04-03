@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 7.0.0 (2018-04-03)
+
 #### BREAKING CHANGES
 
 * `git town config`: `reset` and `setup` are now subcommands instead of flags
