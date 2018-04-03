@@ -1,17 +1,19 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import (
+	"github.com/Originate/git-town/src/git"
+)
 
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
 // and how to undo what has ben done so far.
 type RunState struct {
-	AbortStep    Step
-	Command      string
-	IsAbort      bool
-	isUndo       bool
-	RunStepList  StepList
-	UndoStepList StepList
+	AbortStepList StepList
+	Command       string
+	IsAbort       bool
+	isUndo        bool
+	RunStepList   StepList
+	UndoStepList  StepList
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
@@ -36,7 +38,7 @@ func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 func (runState *RunState) CreateAbortRunState() (result RunState) {
 	result.Command = runState.Command
 	result.IsAbort = true
-	result.RunStepList.Append(runState.AbortStep)
+	result.RunStepList.AppendList(runState.AbortStepList)
 	result.RunStepList.AppendList(runState.UndoStepList)
 	return
 }
@@ -45,7 +47,7 @@ func (runState *RunState) CreateAbortRunState() (result RunState) {
 // that skips operations for the current branch.
 func (runState *RunState) CreateSkipRunState() (result RunState) {
 	result.Command = runState.Command
-	result.RunStepList.Append(runState.AbortStep)
+	result.RunStepList.AppendList(runState.AbortStepList)
 	for _, step := range runState.UndoStepList.List {
 		if isCheckoutBranchStep(step) {
 			break
