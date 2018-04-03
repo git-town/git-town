@@ -30,7 +30,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
 		Then it runs no commands
     And it prints the error "Nothing to undo"
     And I am still on the "feature-3" branch

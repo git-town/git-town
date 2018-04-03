@@ -17,7 +17,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
     And it prints the error:
       """
       To abort, run "git-town abort".
-      To continue after you have resolved the conflicts, run "git-town continue".
+      To continue after having resolved conflicts, run "git-town continue".
       """
 
 
