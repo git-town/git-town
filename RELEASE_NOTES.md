@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 7.1.0 (2018-04-05)
+
+#### New Features
+
+* automatically remove outdated configuration
+
 ## 7.0.0 (2018-04-03)
 
 #### BREAKING CHANGES
