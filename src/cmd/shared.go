@@ -36,6 +36,7 @@ func validateBooleanArgument(arg string) error {
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
+	git.RemoveOutdatedConfiguration()
 	return nil
 }
 
