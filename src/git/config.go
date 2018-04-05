@@ -61,11 +61,7 @@ func GetParentBranchMap() map[string]string {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 		parent := GetConfigurationValue(key)
-		if HasBranch(child) && HasBranch(parent) {
-			result[child] = parent
-		} else {
-			removeConfigurationValue(key)
-		}
+		result[child] = parent
 	}
 	return result
 }
@@ -202,6 +198,15 @@ func IsPerennialBranch(branchName string) bool {
 // RemoveAllConfiguration removes all Git Town configuration
 func RemoveAllConfiguration() {
 	command.New("git", "config", "--remove-section", "git-town").Output()
+}
+
+// RemoveOutdatedConfiguration removes outdated Git Town configuration
+func RemoveOutdatedConfiguration() {
+	for child, parent := range GetParentBranchMap() {
+		if !HasBranch(child) || !HasBranch(parent) {
+			DeleteParentBranch(child)
+		}
+	}
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
