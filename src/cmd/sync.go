@@ -62,10 +62,12 @@ func getSyncConfig() (result syncConfig) {
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else {
+	} else if git.IsFeatureBranch(result.InitialBranch) {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
 		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
-		result.ShouldPushTags = !git.IsFeatureBranch(result.InitialBranch)
+	} else {
+		result.BranchesToSync = []string{result.InitialBranch}
+		result.ShouldPushTags = true
 	}
 	return
 }
