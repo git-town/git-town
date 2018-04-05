@@ -61,7 +61,11 @@ func GetParentBranchMap() map[string]string {
 	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 		parent := GetConfigurationValue(key)
-		result[child] = parent
+		if HasBranch(child) && HasBranch(parent) {
+			result[child] = parent
+		} else {
+			removeConfigurationValue(key)
+		}
 	}
 	return result
 }
