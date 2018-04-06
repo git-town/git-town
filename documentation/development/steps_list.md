@@ -10,7 +10,6 @@ and `--undo` functionality for each command.
 To distinguish the command-pattern commands from the Git Town commands in [src/cmd](../../src/cmd),
 we'll call the former `steps` from now on.
 
-
 ## Running commands
 
 Each Git Town command begins by inspecting the current state of the Git repository
@@ -22,7 +21,6 @@ implement the individual steps that each Git Town command performs,
 like for example [changing to a different Git branch](../../src/steps/checkout_branch_step.go)
 or [pulling down updates for the current branch](../../src/steps/pull_branch_step.go).
 They are Go structs that have a `Run` method which executes the step.
-
 
 ## Continuing commands
 
@@ -38,7 +36,6 @@ Git Town processes the continue step list.
 `git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
 
-
 ## Aborting commands
 
 When executing a step, the undo steps for it are determined
@@ -49,7 +46,6 @@ and `step.CreateUndoStepAfterRun()`.
 If the user aborts the current command,
 Git Town calls the `CreateAbortStep` method for the failed step,
 then executes the list of undo steps for all previously run steps.
-
 
 ## Undoing commands
 
