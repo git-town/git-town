@@ -22,6 +22,7 @@ func TestPullRequestsService_List(t *testing.T) {
 
 	mux.HandleFunc("/repos/o/r/pulls", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		testFormValues(t, r, values{
 			"state":     "closed",
 			"head":      "h",
@@ -59,6 +60,7 @@ func TestPullRequestsService_Get(t *testing.T) {
 
 	mux.HandleFunc("/repos/o/r/pulls/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		fmt.Fprint(w, `{"number":1}`)
 	})
 
@@ -148,11 +150,11 @@ func TestPullRequestsService_Get_headAndBase(t *testing.T) {
 		Number: Int(1),
 		Head: &PullRequestBranch{
 			Ref:  String("r2"),
-			Repo: &Repository{ID: Int(2)},
+			Repo: &Repository{ID: Int64(2)},
 		},
 		Base: &PullRequestBranch{
 			Ref:  String("r1"),
-			Repo: &Repository{ID: Int(1)},
+			Repo: &Repository{ID: Int64(1)},
 		},
 	}
 	if !reflect.DeepEqual(pull, want) {
@@ -218,6 +220,7 @@ func TestPullRequestsService_Create(t *testing.T) {
 		json.NewDecoder(r.Body).Decode(v)
 
 		testMethod(t, r, "POST")
+		testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 		if !reflect.DeepEqual(v, input) {
 			t.Errorf("Request body = %+v, want %+v", v, input)
 		}
@@ -277,6 +280,7 @@ func TestPullRequestsService_Edit(t *testing.T) {
 		madeRequest := false
 		mux.HandleFunc(fmt.Sprintf("/repos/o/r/pulls/%v", i), func(w http.ResponseWriter, r *http.Request) {
 			testMethod(t, r, "PATCH")
+			testHeader(t, r, "Accept", mediaTypeGraphQLNodeIDPreview)
 			testBody(t, r, tt.wantUpdate+"\n")
 			io.WriteString(w, tt.sendResponse)
 			madeRequest = true

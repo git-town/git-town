@@ -36,7 +36,7 @@ Feature: push branch to remote upon creation
 
 
   Scenario: Undo
-    When I run `git-town append --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH    | COMMAND                    |
         | new-child | git add -A                 |

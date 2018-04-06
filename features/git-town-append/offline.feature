@@ -38,7 +38,7 @@ Feature: git append: offline mode
 
   Scenario: Undo
     Given I run `git-town append new-feature`
-    When I run `git-town append --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-feature      | git add -A                    |

@@ -2,6 +2,8 @@ package colorable
 
 import (
 	"bytes"
+	"os"
+	"runtime"
 	"testing"
 )
 
@@ -27,4 +29,73 @@ func TestEncoding(t *testing.T) {
 	checkEncoding(t, []byte(`abc`)) // "abc"
 	checkEncoding(t, []byte(`é`))   // "é" in UTF-8
 	checkEncoding(t, []byte{233})   // 'é' in Latin-1
+}
+
+func TestNonColorable(t *testing.T) {
+	var buf bytes.Buffer
+	want := "hello"
+	NewNonColorable(&buf).Write([]byte("\x1b[0m" + want + "\x1b[2J"))
+	got := buf.String()
+	if got != "hello" {
+		t.Fatalf("want %q but %q", want, got)
+	}
+
+	buf.Reset()
+	NewNonColorable(&buf).Write([]byte("\x1b["))
+	got = buf.String()
+	if got != "" {
+		t.Fatalf("want %q but %q", "", got)
+	}
+}
+
+func TestNonColorableNil(t *testing.T) {
+	paniced := false
+	func() {
+		defer func() {
+			recover()
+			paniced = true
+		}()
+		NewNonColorable(nil)
+		NewColorable(nil)
+	}()
+
+	if !paniced {
+		t.Fatalf("should panic")
+	}
+}
+
+func TestNonColorableESC(t *testing.T) {
+	var b bytes.Buffer
+	c := NewNonColorable(&b)
+	c.Write([]byte{0x1b})
+	if b.Len() > 0 {
+		t.Fatalf("0 bytes expected, got %d", b.Len())
+	}
+}
+
+func TestNonColorableBadESC(t *testing.T) {
+	var b bytes.Buffer
+	c := NewNonColorable(&b)
+	c.Write([]byte{0x1b, 0x1b})
+	if b.Len() > 0 {
+		t.Fatalf("0 bytes expected, got %d", b.Len())
+	}
+}
+
+func TestColorable(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skipf("skip this test on windows")
+	}
+	_, ok := NewColorableStdout().(*os.File)
+	if !ok {
+		t.Fatalf("should os.Stdout on UNIX")
+	}
+	_, ok = NewColorableStderr().(*os.File)
+	if !ok {
+		t.Fatalf("should os.Stdout on UNIX")
+	}
+	_, ok = NewColorable(os.Stdout).(*os.File)
+	if !ok {
+		t.Fatalf("should os.Stdout on UNIX")
+	}
 }

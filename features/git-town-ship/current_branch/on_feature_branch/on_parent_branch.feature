@@ -42,7 +42,7 @@ Feature: git town-ship: shipping a parent branch
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH         | COMMAND                                                      |
       | main           | git branch parent-feature <%= sha 'parent feature commit' %> |

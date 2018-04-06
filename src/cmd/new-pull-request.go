@@ -35,19 +35,10 @@ make sure that your SSH identity contains the phrase "github", "gitlab" or
 Example: your SSH identity should be something like
          "git@github-as-account1:Originate/git town.git"`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "new-pull-request",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               false,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getNewPullRequestConfig()
-				return getNewPullRequestStepList(config)
-			},
-		})
+		config := getNewPullRequestConfig()
+		stepList := getNewPullRequestStepList(config)
+		runState := steps.NewRunState("new-pull-request", stepList)
+		steps.Run(runState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -80,7 +71,5 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 }
 
 func init() {
-	newPullRequestCommand.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	newPullRequestCommand.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	RootCmd.AddCommand(newPullRequestCommand)
 }

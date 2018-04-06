@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -38,22 +36,10 @@ When run on the main branch or a perennial branch
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
-			},
-			Command:    "sync",
-			IsAbort:    abortFlag,
-			IsContinue: continueFlag,
-			IsSkip:     skipFlag,
-			IsUndo:     false,
-			SkipMessageGenerator: func() string {
-				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
-			},
-			StepListGenerator: func() steps.StepList {
-				return getSyncStepList(getSyncConfig())
-			},
-		})
+		config := getSyncConfig()
+		stepList := getSyncStepList(config)
+		runState := steps.NewRunState("sync", stepList)
+		steps.Run(runState)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -61,6 +47,7 @@ the main branch is synced with its upstream counterpart.`,
 			git.ValidateIsRepository,
 			conditionallyActivateDryRun,
 			validateIsConfigured,
+			ensureIsNotInUnfinishedState,
 		)
 	},
 }
@@ -75,12 +62,10 @@ func getSyncConfig() (result syncConfig) {
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else if git.IsFeatureBranch(result.InitialBranch) {
+	} else {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
 		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
-	} else {
-		result.BranchesToSync = []string{result.InitialBranch}
-		result.ShouldPushTags = true
+		result.ShouldPushTags = !git.IsFeatureBranch(result.InitialBranch)
 	}
 	return
 }
@@ -99,9 +84,6 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 
 func init() {
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
-	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }

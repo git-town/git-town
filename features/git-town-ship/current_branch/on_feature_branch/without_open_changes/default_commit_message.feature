@@ -38,7 +38,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it prints the error "Nothing to undo"
     And I am still on the "feature" branch
     And my repository still has the following commits

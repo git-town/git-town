@@ -200,6 +200,15 @@ func RemoveAllConfiguration() {
 	command.New("git", "config", "--remove-section", "git-town").Output()
 }
 
+// RemoveOutdatedConfiguration removes outdated Git Town configuration
+func RemoveOutdatedConfiguration() {
+	for child, parent := range GetParentBranchMap() {
+		if !HasBranch(child) || !HasBranch(parent) {
+			DeleteParentBranch(child)
+		}
+	}
+}
+
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
 func RemoveFromPerennialBranches(branchName string) {
 	SetPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))

@@ -26,15 +26,15 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | main             | git rebase origin/main |
     And it prints the error:
       """
-      To abort, run "git-town hack --abort".
-      To continue after you have resolved the conflicts, run "git-town hack --continue".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git-town hack --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |
@@ -47,7 +47,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town hack --continue`
+    When I run `git-town continue`
     Then it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
@@ -55,7 +55,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town hack --continue`
+    When I run `git-town continue`
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git rebase --continue            |
@@ -78,7 +78,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town hack --continue`
+    When I run `git rebase --continue; git-town continue`
     Then it runs the commands
       | BRANCH      | COMMAND                          |
       | main        | git push                         |
