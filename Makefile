@@ -64,6 +64,7 @@ lint-go:
 
 lint-markdown:
 	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
+	node_modules/.bin/text-run --offline
 
 lint-ruby:
 	bundle exec rubocop
