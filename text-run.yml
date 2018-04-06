@@ -5,7 +5,7 @@
 files: '{,!(vendor)/**/}*.md'
 
 # the formatter to use
-format: detailed
+format: dot
 
 # prefix that makes anchor tags active regions
 classPrefix: 'textrun'
