@@ -7,15 +7,7 @@ files: '{,!(vendor)/**/}*.md'
 # the formatter to use
 format: dot
 
-# prefix that makes anchor tags active regions
-classPrefix: 'textrun'
-
 # whether to run the tests in an external temp directory,
 # uses ./tmp if false,
 # you can also provide a custom directory path here
-useSystemTempDirectory: false
-
-# activity-type specific configuration
-activityTypes:
-  runConsoleCommand:
-    globals: {}
+useSystemTempDirectory: true
