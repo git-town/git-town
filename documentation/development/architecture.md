@@ -27,7 +27,7 @@ The other folders in [src](../../src) are utility methods used by the commands a
   that only print but don't execute their steps
 * [src/git](../../src/git) contains code to run various Git commands and parse their output intelligently
 * [src/prompt](../../src/prompt) contains the code to interactively ask the user for information via the command line
-* [src/script](.../../src/script) contains high-level, Git-Town specific helpers
+* [src/script](../../src/script) contains high-level, Git-Town specific helpers
 * [src/util](../../src/util) contains a variety of other low-level helper methods
 
 ## State files
