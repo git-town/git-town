@@ -58,6 +58,77 @@ func TestString(t *testing.T) {
 	}
 }
 
+type compactTest struct {
+	tag   string
+	index compactID
+	ok    bool
+}
+
+var compactTests = []compactTest{
+	// TODO: these values will change with each CLDR update. This issue
+	// will be solved if we decide to fix the indexes.
+	{"und", undIndex, true},
+	{"ca-ES-valencia", caESvalenciaIndex, true},
+	{"ca-ES-valencia-u-va-posix", caESvalenciaIndex, false},
+	{"ca-ES-valencia-u-co-phonebk", caESvalenciaIndex, false},
+	{"ca-ES-valencia-u-co-phonebk-va-posix", caESvalenciaIndex, false},
+	{"x-klingon", 0, false},
+	{"en-US", enUSIndex, true},
+	{"en-US-u-va-posix", enUSuvaposixIndex, true},
+	{"en", enIndex, true},
+	{"en-u-co-phonebk", enIndex, false},
+	{"en-001", en001Index, true},
+	{"zh-Hant-HK", zhHantHKIndex, true},
+	{"zh-HK", zhHantHKIndex, false}, // maximized to zh-Hant-HK
+	{"nl-Beng", 0, false},           // parent skips script
+	{"nl-NO", nlIndex, false},       // region is ignored
+	{"nl-Latn-NO", nlIndex, false},
+	{"nl-Latn-NO-u-co-phonebk", nlIndex, false},
+	{"nl-Latn-NO-valencia", nlIndex, false},
+	{"nl-Latn-NO-oxendict", nlIndex, false},
+	{"sh", shIndex, true}, // From plural rules.
+}
+
+func TestCompactIndex(t *testing.T) {
+	tests := append(compactTests, []compactTest{
+		{"en-GB", enGBIndex, true},
+		{"en-GB-u-rg-uszzzz", enGBIndex, true},
+		{"en-GB-u-rg-USZZZZ", enGBIndex, true},
+		{"en-GB-u-rg-uszzzz-va-posix", enGBIndex, false},
+		{"en-GB-u-co-phonebk-rg-uszzzz", enGBIndex, false},
+		// Invalid region specifications are ignored.
+		{"en-GB-u-rg-usz-va-posix", enGBIndex, false},
+		{"en-GB-u-co-phonebk-rg-usz", enGBIndex, false},
+	}...)
+	for _, tt := range tests {
+		x, ok := CompactIndex(Raw.MustParse(tt.tag))
+		if compactID(x) != tt.index || ok != tt.ok {
+			t.Errorf("%s: got %d, %v; want %d %v", tt.tag, x, ok, tt.index, tt.ok)
+		}
+	}
+}
+
+func TestRegionalCompactIndex(t *testing.T) {
+	tests := append(compactTests, []compactTest{
+		{"en-GB", enGBIndex, true},
+		{"en-GB-u-rg-uszzzz", enUSIndex, true},
+		{"en-GB-u-rg-USZZZZ", enUSIndex, true},
+		// TODO: use different exact values for language and regional tag?
+		{"en-GB-u-rg-uszzzz-va-posix", enUSuvaposixIndex, false},
+		{"en-GB-u-co-phonebk-rg-uszzzz-va-posix", enUSuvaposixIndex, false},
+		{"en-GB-u-co-phonebk-rg-uszzzz", enUSIndex, false},
+		// Invalid region specifications are ignored.
+		{"en-GB-u-rg-usz-va-posix", enGBIndex, false},
+		{"en-GB-u-co-phonebk-rg-usz", enGBIndex, false},
+	}...)
+	for _, tt := range tests {
+		x, ok := regionalCompactIndex(Raw.MustParse(tt.tag))
+		if compactID(x) != tt.index || ok != tt.ok {
+			t.Errorf("%s: got %d, %v; want %d %v", tt.tag, x, ok, tt.index, tt.ok)
+		}
+	}
+}
+
 func TestMarshal(t *testing.T) {
 	testCases := []string{
 		// TODO: these values will change with each CLDR update. This issue

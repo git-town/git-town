@@ -2,11 +2,7 @@
 
 package number
 
-import (
-	"unicode/utf8"
-
-	"golang.org/x/text/internal/language/compact"
-)
+import "unicode/utf8"
 
 // A system identifies a CLDR numbering system.
 type system byte
@@ -49,7 +45,7 @@ const hasNonLatnMask = 0x8000
 type symOffset uint16
 
 type altSymData struct {
-	compactTag compact.ID
+	compactTag uint16
 	symIndex   symOffset
 	system     system
 }

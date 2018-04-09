@@ -18,42 +18,42 @@ func (e *CustomErr) Error() string {
 
 var _ = Describe("HaveOccurred", func() {
 	It("should succeed if matching an error", func() {
-		Expect(errors.New("Foo")).Should(HaveOccurred())
+		Ω(errors.New("Foo")).Should(HaveOccurred())
 	})
 
 	It("should not succeed with nil", func() {
-		Expect(nil).ShouldNot(HaveOccurred())
+		Ω(nil).ShouldNot(HaveOccurred())
 	})
 
 	It("should only support errors and nil", func() {
 		success, err := (&HaveOccurredMatcher{}).Match("foo")
-		Expect(success).Should(BeFalse())
-		Expect(err).Should(HaveOccurred())
+		Ω(success).Should(BeFalse())
+		Ω(err).Should(HaveOccurred())
 
 		success, err = (&HaveOccurredMatcher{}).Match("")
-		Expect(success).Should(BeFalse())
-		Expect(err).Should(HaveOccurred())
+		Ω(success).Should(BeFalse())
+		Ω(err).Should(HaveOccurred())
 	})
 
 	It("doesn't support non-error type", func() {
 		success, err := (&HaveOccurredMatcher{}).Match(AnyType{})
-		Expect(success).Should(BeFalse())
-		Expect(err).Should(MatchError("Expected an error-type.  Got:\n    <matchers_test.AnyType>: {}"))
+		Ω(success).Should(BeFalse())
+		Ω(err).Should(MatchError("Expected an error-type.  Got:\n    <matchers_test.AnyType>: {}"))
 	})
 
 	It("doesn't support non-error pointer type", func() {
 		success, err := (&HaveOccurredMatcher{}).Match(&AnyType{})
-		Expect(success).Should(BeFalse())
-		Expect(err).Should(MatchError(MatchRegexp(`Expected an error-type.  Got:\n    <*matchers_test.AnyType | 0x[[:xdigit:]]+>: {}`)))
+		Ω(success).Should(BeFalse())
+		Ω(err).Should(MatchError(MatchRegexp(`Expected an error-type.  Got:\n    <*matchers_test.AnyType | 0x[[:xdigit:]]+>: {}`)))
 	})
 
 	It("should succeed with pointer types that conform to error interface", func() {
 		err := &CustomErr{"ohai"}
-		Expect(err).Should(HaveOccurred())
+		Ω(err).Should(HaveOccurred())
 	})
 
 	It("should not succeed with nil pointers to types that conform to error interface", func() {
 		var err *CustomErr = nil
-		Expect(err).ShouldNot(HaveOccurred())
+		Ω(err).ShouldNot(HaveOccurred())
 	})
 })

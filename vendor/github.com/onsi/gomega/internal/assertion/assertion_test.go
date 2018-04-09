@@ -37,27 +37,27 @@ var _ = Describe("Assertion", func() {
 		It("should pass the provided input value to the matcher", func() {
 			a.Should(matcher)
 
-			Expect(matcher.ReceivedActual).Should(Equal(input))
+			Ω(matcher.ReceivedActual).Should(Equal(input))
 			matcher.ReceivedActual = ""
 
 			a.ShouldNot(matcher)
 
-			Expect(matcher.ReceivedActual).Should(Equal(input))
+			Ω(matcher.ReceivedActual).Should(Equal(input))
 			matcher.ReceivedActual = ""
 
 			a.To(matcher)
 
-			Expect(matcher.ReceivedActual).Should(Equal(input))
+			Ω(matcher.ReceivedActual).Should(Equal(input))
 			matcher.ReceivedActual = ""
 
 			a.ToNot(matcher)
 
-			Expect(matcher.ReceivedActual).Should(Equal(input))
+			Ω(matcher.ReceivedActual).Should(Equal(input))
 			matcher.ReceivedActual = ""
 
 			a.NotTo(matcher)
 
-			Expect(matcher.ReceivedActual).Should(Equal(input))
+			Ω(matcher.ReceivedActual).Should(Equal(input))
 		})
 	})
 
@@ -70,23 +70,23 @@ var _ = Describe("Assertion", func() {
 		Context("and a positive assertion is being made", func() {
 			It("should not call the failure callback", func() {
 				a.Should(matcher)
-				Expect(failureMessage).Should(Equal(""))
+				Ω(failureMessage).Should(Equal(""))
 			})
 
 			It("should be true", func() {
-				Expect(a.Should(matcher)).Should(BeTrue())
+				Ω(a.Should(matcher)).Should(BeTrue())
 			})
 		})
 
 		Context("and a negative assertion is being made", func() {
 			It("should call the failure callback", func() {
 				a.ShouldNot(matcher)
-				Expect(failureMessage).Should(Equal("negative: The thing I'm testing"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("negative: The thing I'm testing"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 
 			It("should be false", func() {
-				Expect(a.ShouldNot(matcher)).Should(BeFalse())
+				Ω(a.ShouldNot(matcher)).Should(BeFalse())
 			})
 		})
 	})
@@ -100,23 +100,23 @@ var _ = Describe("Assertion", func() {
 		Context("and a positive assertion is being made", func() {
 			It("should call the failure callback", func() {
 				a.Should(matcher)
-				Expect(failureMessage).Should(Equal("positive: The thing I'm testing"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("positive: The thing I'm testing"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 
 			It("should be false", func() {
-				Expect(a.Should(matcher)).Should(BeFalse())
+				Ω(a.Should(matcher)).Should(BeFalse())
 			})
 		})
 
 		Context("and a negative assertion is being made", func() {
 			It("should not call the failure callback", func() {
 				a.ShouldNot(matcher)
-				Expect(failureMessage).Should(Equal(""))
+				Ω(failureMessage).Should(Equal(""))
 			})
 
 			It("should be true", func() {
-				Expect(a.ShouldNot(matcher)).Should(BeTrue())
+				Ω(a.ShouldNot(matcher)).Should(BeTrue())
 			})
 		})
 	})
@@ -130,16 +130,16 @@ var _ = Describe("Assertion", func() {
 		Context("and there is an optional description", func() {
 			It("should append the description to the failure message", func() {
 				a.Should(matcher, "A description")
-				Expect(failureMessage).Should(Equal("A description\npositive: The thing I'm testing"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("A description\npositive: The thing I'm testing"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 		})
 
 		Context("and there are multiple arguments to the optional description", func() {
 			It("should append the formatted description to the failure message", func() {
 				a.Should(matcher, "A description of [%d]", 3)
-				Expect(failureMessage).Should(Equal("A description of [3]\npositive: The thing I'm testing"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("A description of [3]\npositive: The thing I'm testing"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 		})
 	})
@@ -153,8 +153,8 @@ var _ = Describe("Assertion", func() {
 			It("should call the failure callback", func() {
 				matcher.MatchesToReturn = true
 				a.Should(matcher)
-				Expect(failureMessage).Should(Equal("Kaboom!"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("Kaboom!"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 		})
 
@@ -162,20 +162,20 @@ var _ = Describe("Assertion", func() {
 			It("should call the failure callback", func() {
 				matcher.MatchesToReturn = false
 				a.ShouldNot(matcher)
-				Expect(failureMessage).Should(Equal("Kaboom!"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(failureMessage).Should(Equal("Kaboom!"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 		})
 
 		It("should always be false", func() {
-			Expect(a.Should(matcher)).Should(BeFalse())
-			Expect(a.ShouldNot(matcher)).Should(BeFalse())
+			Ω(a.Should(matcher)).Should(BeFalse())
+			Ω(a.ShouldNot(matcher)).Should(BeFalse())
 		})
 	})
 
 	Context("when there are extra parameters", func() {
 		It("(a simple example)", func() {
-			Expect(func() (string, int, error) {
+			Ω(func() (string, int, error) {
 				return "foo", 0, nil
 			}()).Should(Equal("foo"))
 		})
@@ -189,10 +189,10 @@ var _ = Describe("Assertion", func() {
 				a = New(input, fakeFailHandler, 1, 0, nil, typedNil)
 
 				result := a.Should(matcher)
-				Expect(result).Should(BeTrue())
-				Expect(matcher.ReceivedActual).Should(Equal(input))
+				Ω(result).Should(BeTrue())
+				Ω(matcher.ReceivedActual).Should(Equal(input))
 
-				Expect(failureMessage).Should(BeZero())
+				Ω(failureMessage).Should(BeZero())
 			})
 		})
 
@@ -203,34 +203,34 @@ var _ = Describe("Assertion", func() {
 
 				a = New(input, fakeFailHandler, 1, errors.New("foo"))
 				result := a.Should(matcher)
-				Expect(result).Should(BeFalse())
-				Expect(matcher.ReceivedActual).Should(BeZero(), "The matcher doesn't even get called")
-				Expect(failureMessage).Should(ContainSubstring("foo"))
+				Ω(result).Should(BeFalse())
+				Ω(matcher.ReceivedActual).Should(BeZero(), "The matcher doesn't even get called")
+				Ω(failureMessage).Should(ContainSubstring("foo"))
 				failureMessage = ""
 
 				a = New(input, fakeFailHandler, 1, nil, 1)
 				result = a.ShouldNot(matcher)
-				Expect(result).Should(BeFalse())
-				Expect(failureMessage).Should(ContainSubstring("1"))
+				Ω(result).Should(BeFalse())
+				Ω(failureMessage).Should(ContainSubstring("1"))
 				failureMessage = ""
 
 				a = New(input, fakeFailHandler, 1, nil, 0, []string{"foo"})
 				result = a.To(matcher)
-				Expect(result).Should(BeFalse())
-				Expect(failureMessage).Should(ContainSubstring("foo"))
+				Ω(result).Should(BeFalse())
+				Ω(failureMessage).Should(ContainSubstring("foo"))
 				failureMessage = ""
 
 				a = New(input, fakeFailHandler, 1, nil, 0, []string{"foo"})
 				result = a.ToNot(matcher)
-				Expect(result).Should(BeFalse())
-				Expect(failureMessage).Should(ContainSubstring("foo"))
+				Ω(result).Should(BeFalse())
+				Ω(failureMessage).Should(ContainSubstring("foo"))
 				failureMessage = ""
 
 				a = New(input, fakeFailHandler, 1, nil, 0, []string{"foo"})
 				result = a.NotTo(matcher)
-				Expect(result).Should(BeFalse())
-				Expect(failureMessage).Should(ContainSubstring("foo"))
-				Expect(failureCallerSkip).Should(Equal(3))
+				Ω(result).Should(BeFalse())
+				Ω(failureMessage).Should(ContainSubstring("foo"))
+				Ω(failureCallerSkip).Should(Equal(3))
 			})
 		})
 	})
@@ -246,7 +246,7 @@ var _ = Describe("Assertion", func() {
 			}()
 
 			RegisterFailHandler(nil)
-			Expect(true).Should(BeTrue())
+			Ω(true).Should(BeTrue())
 		})
 	})
 })

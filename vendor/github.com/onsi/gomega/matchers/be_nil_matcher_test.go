@@ -7,22 +7,22 @@ import (
 
 var _ = Describe("BeNil", func() {
 	It("should succeed when passed nil", func() {
-		Expect(nil).Should(BeNil())
+		Ω(nil).Should(BeNil())
 	})
 
 	It("should succeed when passed a typed nil", func() {
 		var a []int
-		Expect(a).Should(BeNil())
+		Ω(a).Should(BeNil())
 	})
 
 	It("should succeed when passing nil pointer", func() {
 		var f *struct{}
-		Expect(f).Should(BeNil())
+		Ω(f).Should(BeNil())
 	})
 
 	It("should not succeed when not passed nil", func() {
-		Expect(0).ShouldNot(BeNil())
-		Expect(false).ShouldNot(BeNil())
-		Expect("").ShouldNot(BeNil())
+		Ω(0).ShouldNot(BeNil())
+		Ω(false).ShouldNot(BeNil())
+		Ω("").ShouldNot(BeNil())
 	})
 })

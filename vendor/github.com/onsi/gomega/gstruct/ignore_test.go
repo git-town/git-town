@@ -8,16 +8,16 @@ import (
 
 var _ = Describe("Ignore", func() {
 	It("should always succeed", func() {
-		Expect(nil).Should(Ignore())
-		Expect(struct{}{}).Should(Ignore())
-		Expect(0).Should(Ignore())
-		Expect(false).Should(Ignore())
+		Ω(nil).Should(Ignore())
+		Ω(struct{}{}).Should(Ignore())
+		Ω(0).Should(Ignore())
+		Ω(false).Should(Ignore())
 	})
 
 	It("should always fail", func() {
-		Expect(nil).ShouldNot(Reject())
-		Expect(struct{}{}).ShouldNot(Reject())
-		Expect(1).ShouldNot(Reject())
-		Expect(true).ShouldNot(Reject())
+		Ω(nil).ShouldNot(Reject())
+		Ω(struct{}{}).ShouldNot(Reject())
+		Ω(1).ShouldNot(Reject())
+		Ω(true).ShouldNot(Reject())
 	})
 })

@@ -15,7 +15,7 @@ type BufferProvider interface {
 /*
 Say is a Gomega matcher that operates on gbytes.Buffers:
 
-	Expect(buffer).Should(Say("something"))
+	Ω(buffer).Should(Say("something"))
 
 will succeed if the unread portion of the buffer matches the regular expression "something".
 
