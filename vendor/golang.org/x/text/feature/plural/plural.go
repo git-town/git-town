@@ -13,7 +13,6 @@
 package plural
 
 import (
-	"golang.org/x/text/internal/language/compact"
 	"golang.org/x/text/internal/number"
 	"golang.org/x/text/language"
 )
@@ -114,7 +113,7 @@ func getIntApprox(digits []byte, start, end, nMod, big int) (n int) {
 //      100000     []byte{1}           6      0
 //      100000.00  []byte{1}           6      3
 func (p *Rules) MatchDigits(t language.Tag, digits []byte, exp, scale int) Form {
-	index := tagToID(t)
+	index, _ := language.CompactIndex(t)
 
 	// Differentiate up to including mod 1000000 for the integer part.
 	n := getIntApprox(digits, 0, exp, 6, 1000000)
@@ -131,7 +130,8 @@ func (p *Rules) matchDisplayDigits(t language.Tag, d *number.Digits) (Form, int)
 }
 
 func validForms(p *Rules, t language.Tag) (forms []Form) {
-	offset := p.langToIndex[tagToID(t)]
+	index, _ := language.CompactIndex(t)
+	offset := p.langToIndex[index]
 	rules := p.rules[p.index[offset]:p.index[offset+1]]
 
 	forms = append(forms, Other)
@@ -146,7 +146,8 @@ func validForms(p *Rules, t language.Tag) (forms []Form) {
 }
 
 func (p *Rules) matchComponents(t language.Tag, n, f, scale int) Form {
-	return matchPlural(p, tagToID(t), n, f, scale)
+	index, _ := language.CompactIndex(t)
+	return matchPlural(p, index, n, f, scale)
 }
 
 // MatchPlural returns the plural form for the given language and plural
@@ -164,10 +165,11 @@ func (p *Rules) matchComponents(t language.Tag, n, f, scale int) Form {
 // If any of the operand values is too large to fit in an int, it is okay to
 // pass the value modulo 10,000,000.
 func (p *Rules) MatchPlural(lang language.Tag, i, v, w, f, t int) Form {
-	return matchPlural(p, tagToID(lang), i, f, v)
+	index, _ := language.CompactIndex(lang)
+	return matchPlural(p, index, i, f, v)
 }
 
-func matchPlural(p *Rules, index compact.ID, n, f, v int) Form {
+func matchPlural(p *Rules, index int, n, f, v int) Form {
 	nMask := p.inclusionMasks[n%maxMod]
 	// Compute the fMask inline in the rules below, as it is relatively rare.
 	// fMask := p.inclusionMasks[f%maxMod]
@@ -253,9 +255,4 @@ func matchPlural(p *Rules, index compact.ID, n, f, v int) Form {
 		}
 	}
 	return Other
-}
-
-func tagToID(t language.Tag) compact.ID {
-	id, _ := compact.RegionalID(compact.Tag(t))
-	return id
 }

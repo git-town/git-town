@@ -229,7 +229,7 @@ func (s *scanner) acceptMinSize(min int) (end int) {
 func Parse(s string) (t Tag, err error) {
 	// TODO: consider supporting old-style locale key-value pairs.
 	if s == "" {
-		return Und, ErrSyntax
+		return und, ErrSyntax
 	}
 	if len(s) <= maxAltTaglen {
 		b := [maxAltTaglen]byte{}
@@ -251,7 +251,7 @@ func Parse(s string) (t Tag, err error) {
 }
 
 func parse(scan *scanner, s string) (t Tag, err error) {
-	t = Und
+	t = und
 	var end int
 	if n := len(scan.token); n <= 1 {
 		scan.toLower(0, len(scan.b))
@@ -260,7 +260,7 @@ func parse(scan *scanner, s string) (t Tag, err error) {
 		}
 		end = parseExtensions(scan)
 	} else if n >= 4 {
-		return Und, ErrSyntax
+		return und, ErrSyntax
 	} else { // the usual case
 		t, end = parseTag(scan)
 		if n := len(scan.token); n == 1 {
