@@ -1,0 +1,13 @@
+# white-list for files to test
+# This is a glob expression, see https://github.com/isaacs/node-glob#glob-primer
+# The folder "node_modules" is already excluded.
+# To exclude the "vendor" folder: '{,!(vendor)/**/}*.md'
+files: '{,!(vendor)/**/}*.md'
+
+# the formatter to use
+format: dot
+
+# whether to run the tests in an external temp directory,
+# uses ./tmp if false,
+# you can also provide a custom directory path here
+useSystemTempDirectory: true

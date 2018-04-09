@@ -1,6 +1,7 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "prettier": "1.9.2"
+    "prettier": "1.9.2",
+    "text-runner": "2.0.2"
   }
 }

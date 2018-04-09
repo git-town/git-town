@@ -335,7 +335,7 @@
 * improved error messages when run outside a git repository
 * improved setup wizard for initial configuration in a git repository
 * added [contribution guide](/CONTRIBUTING.md)
-* added [tutorial](/documentation/tutorial.md)
+* added tutorial
 
 ## 0.5.0 (2015-01-08)
 
