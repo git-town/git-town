@@ -2,7 +2,7 @@ Feature: Strip colors
 
   As a developer with git configured so colors are always on
   I expect the tool to still work
-  So that git-town does not place addititional constraints on my workflow
+  So that git-town does not place addititional constraints on my computer setup
 
 
   Scenario: colors are stripped from the output of git commands run internally
