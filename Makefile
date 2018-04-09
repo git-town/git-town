@@ -1,29 +1,24 @@
 .DEFAULT_GOAL := spec
 
 
-# builds for the current platform
-build:
+build:  # builds for the current platform
 	go install
 
-# builds the artifacts for a new release
-build-release: cross-compile
+build-release: cross-compile  # builds the artifacts for a new release
 	package/debian/make_deb.sh
 
-# builds the binary for all platforms
-cross-compile:
+cross-compile:  # builds the binary for all platforms
 	go get github.com/mitchellh/gox
 	timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
 	sha=$(git rev-parse HEAD)
 	gox -ldflags "-X github.com/Originate/git-town/cmd.Version=$TRAVIS_TAG -X github.com/Originate/git-town/cmd.BuildTime=$timestamp) -X github.com/Originate/git-town/cmd.GitHash=$sha" \
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
-# runs the feature tests
-cuke: build
+cuke: build  # runs the feature tests
 	bundle exec parallel_cucumber $(DIR)
 DIR = $(if $(dir),$(dir),"features")
 
-# deploys the website
-deploy:
+deploy:  # deploys the website
 	git checkout gh-pages
 	git pull
 	git checkout master
@@ -37,39 +32,36 @@ deploy:
 	git push
 	git checkout master
 
-# auto-fixes lint issues in all languages
-fix: fix-cucumber fix-ruby fix-markdown
+fix: fix-cucumber fix-ruby fix-markdown  # auto-fixes lint issues in all languages
 
-# auto-fixes all Cucumber lint issues
-fix-cucumber:
+fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
-# auto-fixes all Markdown lint issues
-fix-markdown:
+fix-markdown:  # auto-fixes all Markdown lint issues
 	prettier --write "{,!(vendor)/**/}*.md"
 
-# auto-fixes all Ruby lint issues
-fix-ruby:
+fix-ruby:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
 
-# lints all the source code
-lint: lint-cucumber lint-go lint-markdown lint-ruby
+help:  # prints all make targets
+	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
-lint-cucumber:
+lint: lint-cucumber lint-go lint-markdown lint-ruby  # lints all the source code
+
+lint-cucumber:  # lints the Cucumber files
 	bundle exec cucumber_lint
 
-lint-go:
+lint-go:  # lints the Go files
 	goimports -d src
 	gometalinter.v2
 
-lint-markdown:
+lint-markdown:  # lints the Markdown files
 	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
 
-lint-ruby:
+lint-ruby:  # lints the Ruby files
 	bundle exec rubocop
 
-# the setup steps necessary on developer machines
-setup:
+setup:  # the setup steps necessary on developer machines
 	go get -u github.com/Masterminds/glide \
 					  gopkg.in/alecthomas/gometalinter.v2 \
 					  github.com/onsi/ginkgo/ginkgo
@@ -77,13 +69,10 @@ setup:
 	bundle install
 	yarn install
 
-# runs all the tests
-spec: lint tests cuke
+spec: lint tests cuke  # runs all the tests
 
-# runs the unit tests
-tests:
+tests:  # runs the unit tests
 	ginkgo src/...
 
-# updates all dependencies
-update:
+update:  # updates all dependencies
 	glide up
