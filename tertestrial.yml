@@ -2,13 +2,13 @@ actions:
 
   - match:
       filename: '\.feature$'
-    command: 'make build && bundle exec cucumber {{filename}}'
+    command: 'bin/build && bundle exec cucumber {{filename}}'
 
   - match:
       filename: '\.feature$'
       line: '\d+'
-    command: 'make build && bundle exec cucumber {{filename}}:{{line}}'
+    command: 'bin/build && bundle exec cucumber {{filename}}:{{line}}'
 
   - match:
       filename: '\.go$'
-    command: 'make build ; make lint'
+    command: 'bin/build ; bin/lint'
