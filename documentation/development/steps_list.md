@@ -34,17 +34,14 @@ and exits.
 
 #### Continuing commands
 
-The step to continue is determined by calling the `CreateContinueStep` method of the current (failed) step.
-
-If the user resolves the issue and continues,
-Git Town processes the continue step list.
+The step to continue is determined by calling the `CreateContinueStep` method of the current (failed) step. On the user resolving the issue and continuing, Git Town runs the continue step and the remaining step list.
 
 `git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
 
 #### Aborting commands
 
-The step to abort is determined by calling the `CreateAbortStep` method of the current (failed) step. On abort, git town executes the abort step and the list of undo steps for all previously run steps.
+The step to abort is determined by calling the `CreateAbortStep` method of the current (failed) step. On abort, Git Town executes the abort step and the list of undo steps for all previously run steps.
 
 #### Undoing commands
 
