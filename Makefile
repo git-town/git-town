@@ -57,6 +57,7 @@ lint-go:  # lints the Go files
 
 lint-markdown:  # lints the Markdown files
 	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
+	node_modules/.bin/text-run --offline
 
 lint-ruby:  # lints the Ruby files
 	bundle exec rubocop
