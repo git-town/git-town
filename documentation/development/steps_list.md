@@ -22,13 +22,19 @@ like for example [changing to a different Git branch](../../src/steps/checkout_b
 or [pulling down updates for the current branch](../../src/steps/pull_branch_step.go).
 They are Go structs that have a `Run` method which executes the step.
 
-## Continuing commands
+When executing a step, the undo steps for it are determined
+and appended to the `undo list` for the current Git Town command.
+This is done by calling the methods `step.CreateUndoStepBeforeRun()`
+and `step.CreateUndoStepAfterRun()`.
 
 If a Git command fails (typically due to a merge conflict),
 then the program saves state (lists with steps to abort and continue) to disk,
 informs the user how to abort/continue the current step,
 and exits.
-This is done by calling the `CreateContinueStep` method of the current (failed) step.
+
+#### Continuing commands
+
+The step to continue is determined by calling the `CreateContinueStep` method of the current (failed) step.
 
 If the user resolves the issue and continues,
 Git Town processes the continue step list.
@@ -36,18 +42,11 @@ Git Town processes the continue step list.
 `git town sync` also allows the user to skip the current branch,
 which skips all commands until the next checkout and then resumes executing steps.
 
-## Aborting commands
+#### Aborting commands
 
-When executing a step, the undo steps for it are determined
-and appended to the `undo list` for the current Git Town command.
-This is done by calling the methods `step.CreateUndoStepBeforeRun()`
-and `step.CreateUndoStepAfterRun()`.
+The step to abort is determined by calling the `CreateAbortStep` method of the current (failed) step. On abort, git town executes the abort step and the list of undo steps for all previously run steps.
 
-If the user aborts the current command,
-Git Town calls the `CreateAbortStep` method for the failed step,
-then executes the list of undo steps for all previously run steps.
-
-## Undoing commands
+#### Undoing commands
 
 A successfully finished command can be undone.
 To do that, Git Town executes all the undo steps.

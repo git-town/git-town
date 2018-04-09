@@ -33,10 +33,9 @@ The other folders in [src](../../src) are utility methods used by the commands a
 ## State files
 
 When a Git Town command finishes, a list of the steps to undo the command
-as well as optionally any remaining steps to be run (in case the command aborted)
-are stored in state files in a temp folder on the machine.
-The code for that is in [src/steps/save_state.go](../../src/steps/save_state.go)
-and [src/steps/load_state.go](../../src/steps/load_state.go).
+as well as optionally any remaining steps to be run (in case the command encountered conflicts)
+are stored in a state files in a temp folder on the machine.
+The struct that holds the state is in [src/steps/run_state.go](../../src/steps/run_state.go).
 
 ## Tests
 
