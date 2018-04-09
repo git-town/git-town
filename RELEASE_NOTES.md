@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+#### Bug Fixes
+
+* strip colors from the output of git commands run internally. This caused errors if you had git configured with `color.ui=always`
+
 ## 7.1.0 (2018-04-05)
 
 #### New Features
