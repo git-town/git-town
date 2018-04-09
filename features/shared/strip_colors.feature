@@ -1,6 +1,6 @@
 Feature: Strip colors
 
-  As a developer with git colors configured to always be on
+  As a developer with git configured so colors are always on
   I expect the tool to still work
   So that git-town does not place addititional constraints on my workflow
 
