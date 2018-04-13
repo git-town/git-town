@@ -28,36 +28,36 @@ var _ = Describe("SayMatcher", func() {
 	Context("when actual is not a gexec Buffer, or a BufferProvider", func() {
 		It("should error", func() {
 			failures := InterceptGomegaFailures(func() {
-				Expect("foo").Should(Say("foo"))
+				Ω("foo").Should(Say("foo"))
 			})
-			Expect(failures[0]).Should(ContainSubstring("*gbytes.Buffer"))
+			Ω(failures[0]).Should(ContainSubstring("*gbytes.Buffer"))
 		})
 	})
 
 	Context("when a match is found", func() {
 		It("should succeed", func() {
-			Expect(buffer).Should(Say("abc"))
+			Ω(buffer).Should(Say("abc"))
 		})
 
 		It("should support printf-like formatting", func() {
-			Expect(buffer).Should(Say("a%sc", "b"))
+			Ω(buffer).Should(Say("a%sc", "b"))
 		})
 
 		It("should use a regular expression", func() {
-			Expect(buffer).Should(Say("a.c"))
+			Ω(buffer).Should(Say("a.c"))
 		})
 
 		It("should fastforward the buffer", func() {
 			buffer.Write([]byte("def"))
-			Expect(buffer).Should(Say("abcd"))
-			Expect(buffer).Should(Say("ef"))
-			Expect(buffer).ShouldNot(Say("[a-z]"))
+			Ω(buffer).Should(Say("abcd"))
+			Ω(buffer).Should(Say("ef"))
+			Ω(buffer).ShouldNot(Say("[a-z]"))
 		})
 	})
 
 	Context("when no match is found", func() {
 		It("should not error", func() {
-			Expect(buffer).ShouldNot(Say("def"))
+			Ω(buffer).ShouldNot(Say("def"))
 		})
 
 		Context("when the buffer is closed", func() {
@@ -71,65 +71,65 @@ var _ = Describe("SayMatcher", func() {
 					Eventually(buffer).Should(Say("def"))
 				})
 				Eventually(buffer).ShouldNot(Say("def"))
-				Expect(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
-				Expect(failures).Should(HaveLen(1))
+				Ω(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
+				Ω(failures).Should(HaveLen(1))
 
 				t = time.Now()
 				Eventually(buffer).Should(Say("abc"))
-				Expect(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
+				Ω(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
 			})
 
 			It("should abort a consistently", func() {
 				t := time.Now()
 				Consistently(buffer, 2.0).ShouldNot(Say("def"))
-				Expect(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
+				Ω(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
 			})
 
 			It("should not error with a synchronous matcher", func() {
-				Expect(buffer).ShouldNot(Say("def"))
-				Expect(buffer).Should(Say("abc"))
+				Ω(buffer).ShouldNot(Say("def"))
+				Ω(buffer).Should(Say("abc"))
 			})
 		})
 	})
 
 	Context("when a positive match fails", func() {
 		It("should report where it got stuck", func() {
-			Expect(buffer).Should(Say("abc"))
+			Ω(buffer).Should(Say("abc"))
 			buffer.Write([]byte("def"))
 			failures := InterceptGomegaFailures(func() {
-				Expect(buffer).Should(Say("abc"))
+				Ω(buffer).Should(Say("abc"))
 			})
-			Expect(failures[0]).Should(ContainSubstring("Got stuck at:"))
-			Expect(failures[0]).Should(ContainSubstring("def"))
+			Ω(failures[0]).Should(ContainSubstring("Got stuck at:"))
+			Ω(failures[0]).Should(ContainSubstring("def"))
 		})
 	})
 
 	Context("when a negative match fails", func() {
 		It("should report where it got stuck", func() {
 			failures := InterceptGomegaFailures(func() {
-				Expect(buffer).ShouldNot(Say("abc"))
+				Ω(buffer).ShouldNot(Say("abc"))
 			})
-			Expect(failures[0]).Should(ContainSubstring("Saw:"))
-			Expect(failures[0]).Should(ContainSubstring("Which matches the unexpected:"))
-			Expect(failures[0]).Should(ContainSubstring("abc"))
+			Ω(failures[0]).Should(ContainSubstring("Saw:"))
+			Ω(failures[0]).Should(ContainSubstring("Which matches the unexpected:"))
+			Ω(failures[0]).Should(ContainSubstring("abc"))
 		})
 	})
 
 	Context("when a match is not found", func() {
 		It("should not fastforward the buffer", func() {
-			Expect(buffer).ShouldNot(Say("def"))
-			Expect(buffer).Should(Say("abc"))
+			Ω(buffer).ShouldNot(Say("def"))
+			Ω(buffer).Should(Say("abc"))
 		})
 	})
 
 	Context("a nice real-life example", func() {
 		It("should behave well", func() {
-			Expect(buffer).Should(Say("abc"))
+			Ω(buffer).Should(Say("abc"))
 			go func() {
 				time.Sleep(10 * time.Millisecond)
 				buffer.Write([]byte("def"))
 			}()
-			Expect(buffer).ShouldNot(Say("def"))
+			Ω(buffer).ShouldNot(Say("def"))
 			Eventually(buffer).Should(Say("def"))
 		})
 	})
@@ -140,10 +140,10 @@ var _ = Describe("SayMatcher", func() {
 				buffer: NewBuffer(),
 			}
 
-			Expect(s).ShouldNot(Say("abc"))
+			Ω(s).ShouldNot(Say("abc"))
 
 			s.Buffer().Write([]byte("abc"))
-			Expect(s).Should(Say("abc"))
+			Ω(s).Should(Say("abc"))
 		})
 
 		It("should abort an eventually", func() {
@@ -157,8 +157,8 @@ var _ = Describe("SayMatcher", func() {
 			failures := InterceptGomegaFailures(func() {
 				Eventually(s).Should(Say("def"))
 			})
-			Expect(failures).Should(HaveLen(1))
-			Expect(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
+			Ω(failures).Should(HaveLen(1))
+			Ω(time.Since(t)).Should(BeNumerically("<", 500*time.Millisecond))
 		})
 	})
 })

@@ -17,7 +17,7 @@ func (f *FakeT) Fatalf(format string, args ...interface{}) {
 
 func TestTestingT(t *testing.T) {
 	RegisterTestingT(t)
-	Expect(true).Should(BeTrue())
+	Ω(true).Should(BeTrue())
 }
 
 func TestGomegaWithT(t *testing.T) {

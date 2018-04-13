@@ -31,7 +31,7 @@ const (
 
 // Tag represents a BCP 47 language tag. It is used to specify an instance of a
 // specific language or locale. All language tag values are guaranteed to be
-// well-formed. The zero value of Tag is Und.
+// well-formed.
 type Tag struct {
 	// TODO: the following fields have the form TagTypeID. This name is chosen
 	// to allow refactoring the public package without conflicting with its
@@ -80,7 +80,7 @@ func (t Tag) IsRoot() bool {
 	if int(t.pVariant) < len(t.str) {
 		return false
 	}
-	return t.equalTags(Und)
+	return t.equalTags(und)
 }
 
 // IsPrivateUse reports whether the Tag consists solely of an IsPrivateUse use
@@ -100,7 +100,7 @@ func (t *Tag) RemakeString() {
 	if t.pVariant > 0 {
 		extra = extra[1:]
 	}
-	if t.equalTags(Und) && strings.HasPrefix(extra, "x-") {
+	if t.equalTags(und) && strings.HasPrefix(extra, "x-") {
 		t.str = extra
 		t.pVariant = 0
 		t.pExt = 0
@@ -241,12 +241,12 @@ func (t Tag) Parent() Tag {
 			// "und" instead of the base language.
 			base, _ := addTags(Tag{LangID: t.LangID})
 			if base.ScriptID != t.ScriptID {
-				return Und
+				return und
 			}
 			return Tag{LangID: t.LangID}
 		}
 	}
-	return Und
+	return und
 }
 
 // ParseExtension parses s as an extension and returns it on success.

@@ -22,21 +22,21 @@ var _ = Describe("BeSent", func() {
 
 				time.Sleep(10 * time.Millisecond)
 
-				Expect(c).Should(BeSent("foo"))
+				Ω(c).Should(BeSent("foo"))
 				Eventually(d).Should(Receive(Equal("foo")))
 			})
 
 			It("should succeed (with a buffered channel)", func() {
 				c := make(chan string, 1)
-				Expect(c).Should(BeSent("foo"))
-				Expect(<-c).Should(Equal("foo"))
+				Ω(c).Should(BeSent("foo"))
+				Ω(<-c).Should(Equal("foo"))
 			})
 		})
 
 		Context("when the channel is not ready to receive", func() {
 			It("should fail and not send down the channel", func() {
 				c := make(chan string)
-				Expect(c).ShouldNot(BeSent("foo"))
+				Ω(c).ShouldNot(BeSent("foo"))
 				Consistently(c).ShouldNot(Receive())
 			})
 		})
@@ -61,8 +61,8 @@ var _ = Describe("BeSent", func() {
 				c := make(chan string)
 				close(c)
 				success, err := (&BeSentMatcher{Arg: "foo"}).Match(c)
-				Expect(success).Should(BeFalse())
-				Expect(err).Should(HaveOccurred())
+				Ω(success).Should(BeFalse())
+				Ω(err).Should(HaveOccurred())
 			})
 
 			It("should short-circuit Eventually", func() {
@@ -73,8 +73,8 @@ var _ = Describe("BeSent", func() {
 				failures := InterceptGomegaFailures(func() {
 					Eventually(c, 10.0).Should(BeSent("foo"))
 				})
-				Expect(failures).Should(HaveLen(1))
-				Expect(time.Since(t)).Should(BeNumerically("<", time.Second))
+				Ω(failures).Should(HaveLen(1))
+				Ω(time.Since(t)).Should(BeNumerically("<", time.Second))
 			})
 		})
 	})
@@ -82,8 +82,8 @@ var _ = Describe("BeSent", func() {
 	Context("when passed a channel and a non-matching type", func() {
 		It("should error", func() {
 			success, err := (&BeSentMatcher{Arg: "foo"}).Match(make(chan int, 1))
-			Expect(success).Should(BeFalse())
-			Expect(err).Should(HaveOccurred())
+			Ω(success).Should(BeFalse())
+			Ω(err).Should(HaveOccurred())
 		})
 	})
 
@@ -92,16 +92,16 @@ var _ = Describe("BeSent", func() {
 			var c <-chan string
 			c = make(chan string, 1)
 			success, err := (&BeSentMatcher{Arg: "foo"}).Match(c)
-			Expect(success).Should(BeFalse())
-			Expect(err).Should(HaveOccurred())
+			Ω(success).Should(BeFalse())
+			Ω(err).Should(HaveOccurred())
 		})
 	})
 
 	Context("when passed a nonchannel", func() {
 		It("should error", func() {
 			success, err := (&BeSentMatcher{Arg: "foo"}).Match("bar")
-			Expect(success).Should(BeFalse())
-			Expect(err).Should(HaveOccurred())
+			Ω(success).Should(BeFalse())
+			Ω(err).Should(HaveOccurred())
 		})
 	})
 })

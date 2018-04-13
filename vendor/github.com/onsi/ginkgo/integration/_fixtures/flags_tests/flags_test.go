@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	remapped "math"
-	_ "math/cmplx"
 	"time"
 
 	. "github.com/onsi/ginkgo"

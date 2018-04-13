@@ -28,7 +28,7 @@ var _ = Describe("PrefixedWriter", func() {
 		writer.Write([]byte("\ntuv\nwx"))
 		writer.Write([]byte("yz\n\n"))
 
-		Expect(buffer.String()).Should(Equal(`[p]abcdef
+		Ω(buffer.String()).Should(Equal(`[p]abcdef
 [p]hij
 [p]
 [p]
