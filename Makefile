@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := spec
 date := $(shell TZ=UTC date -u '+%Y-%m-%d')
 
+
 build:  # builds for the current platform
 	go install -ldflags "-X github.com/Originate/git-town/src/cmd.version=v0.0.0-test -X github.com/Originate/git-town/src/cmd.buildDate=today"
 
