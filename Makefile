@@ -1,9 +1,9 @@
 .DEFAULT_GOAL := spec
-
+date := $(shell TZ=UTC date -u '+%Y-%m-%d')
 
 # builds for the current platform
 build:
-	go install
+	go install -ldflags "-X github.com/Originate/git-town/src/cmd.version=v0.0.0-test -X 'github.com/Originate/git-town/src/cmd.buildDate=today'"
 
 # builds the artifacts for a new release
 build-release: cross-compile
@@ -12,9 +12,7 @@ build-release: cross-compile
 # builds the binary for all platforms
 cross-compile:
 	go get github.com/mitchellh/gox
-	timestamp=$(TZ=UTC date -u '+%Y-%m-%dT%H:%M:%SZ')
-	sha=$(git rev-parse HEAD)
-	gox -ldflags "-X github.com/Originate/git-town/cmd.Version=$TRAVIS_TAG -X github.com/Originate/git-town/cmd.BuildTime=$timestamp) -X github.com/Originate/git-town/cmd.GitHash=$sha" \
+	gox -ldflags "-X github.com/Originate/git-town/src/cmd.version=${TRAVIS_TAG} -X 'github.com/Originate/git-town/src/cmd.buildDate=${date}'" \
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
 # runs the feature tests
