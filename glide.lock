@@ -1,6 +1,8 @@
-hash: 6423748be67469352b73d760bd59e9b53a49e1ac7bda963c726cc9d907520292
-updated: 2018-03-27T16:24:18.94646372-07:00
+hash: f5bd1db8ca8e8982e8cf72d287a3f662d6bbab1befef075404a9a35ed6a6a668
+updated: 2018-04-09T10:42:46.678258579-07:00
 imports:
+- name: github.com/acarl005/stripansi
+  version: 5a71ef0e047df0427e87a79f27009029921f1f9b
 - name: github.com/dustin/go-humanize
   version: bb3d318650d48840a39aa21a027c6630e198e626
 - name: github.com/fatih/color
@@ -10,7 +12,7 @@ imports:
   subpackages:
   - proto
 - name: github.com/google/go-github
-  version: a8ca0025ffdafe2d0dc933bc8fdbe247d0d0c5af
+  version: 88eb4e9dc91cb2db1bbc56c936f1ee39bbe72ba5
   subpackages:
   - github
 - name: github.com/google/go-querystring
@@ -20,9 +22,11 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/mattn/go-colorable
-  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
+  version: 5411d3eea5978e6cdc258b30de592b60df6aba96
+  repo: https://github.com/mattn/go-colorable
 - name: github.com/mattn/go-isatty
-  version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
+  version: 57fdcb988a5c543893cc61bce354a6e24ab70022
+  repo: https://github.com/mattn/go-isatty
 - name: github.com/mgutz/ansi
   version: 9520e82c474b0a04dd04f8a40959027271bab992
 - name: github.com/Originate/exit
@@ -30,9 +34,9 @@ imports:
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
-  version: a1f051bc3eba734da4772d60e2d677f47cf93ef4
+  version: cd30c2a7e91a1d63fd9a0027accf18a681e9d50b
 - name: github.com/spf13/pflag
-  version: ee5fd03fd6acfd43e44aea0b4135958546ed8e73
+  version: 1ce0cc6db4029d97571db82f85092fccedb572ce
 - name: github.com/spf13/viper
   version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: golang.org/x/net
@@ -44,15 +48,16 @@ imports:
   - html/atom
   - html/charset
 - name: golang.org/x/oauth2
-  version: fdc9e635145ae97e6c2cb777c48305600cf515cb
+  version: 921ae394b9430ed4fb549668d7b087601bd60a81
   subpackages:
   - internal
 - name: golang.org/x/sys
-  version: 37707fdb30a5b38865cfb95e5aab41707daec7fd
+  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+  repo: https://go.googlesource.com/sys
   subpackages:
   - unix
 - name: google.golang.org/appengine
-  version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
+  version: 0a24098c0ec68416ec050f567f75df563d6b231e
   subpackages:
   - internal
   - internal/base
@@ -68,7 +73,7 @@ imports:
   - terminal
 testImports:
 - name: github.com/onsi/ginkgo
-  version: 03ffd3f46debf00c49ed76d5dbb564ef4839adfe
+  version: 9008c7b79f9636c46a0a945141020124702f0ecf
   subpackages:
   - config
   - internal/codelocation
@@ -88,7 +93,7 @@ testImports:
   - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: 649b44d988ce182cabcda7dba01fcf3b6179ad19
+  version: 49e4233a3b46c26dddd43cf84547cf31c92d0f2b
   subpackages:
   - format
   - internal/assertion
@@ -102,7 +107,7 @@ testImports:
   - matchers/support/goraph/util
   - types
 - name: golang.org/x/text
-  version: ece95c760240037f89ebcbdd7155ac8cb52e38fa
+  version: 0b0b1f509072617b86d90971b51da23cc52694f2
   subpackages:
   - encoding
   - encoding/charmap
@@ -115,7 +120,6 @@ testImports:
   - encoding/traditionalchinese
   - encoding/unicode
   - internal/language
-  - internal/language/compact
   - internal/tag
   - internal/utf8internal
   - language
@@ -124,4 +128,4 @@ testImports:
 - name: gopkg.in/jarcoal/httpmock.v1
   version: 61bcb58a07522fbdf76a4cb03c57f5a52683d636
 - name: gopkg.in/yaml.v2
-  version: 86f5ed62f8a0ee96bd888d2efdfd6d4fb100a4eb
+  version: 7f97868eec74b32b0982dd158a51a446d1da7eb5

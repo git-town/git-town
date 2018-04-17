@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 7.1.1 (2018-04-09)
+
+#### Bug Fixes
+
+* strip colors from the output of git commands run internally. This caused errors if you had git configured with `color.ui=always`
+
 ## 7.1.0 (2018-04-05)
 
 #### New Features
@@ -335,7 +341,7 @@
 * improved error messages when run outside a git repository
 * improved setup wizard for initial configuration in a git repository
 * added [contribution guide](/CONTRIBUTING.md)
-* added [tutorial](/documentation/tutorial.md)
+* added tutorial
 
 ## 0.5.0 (2015-01-08)
 

@@ -98,7 +98,7 @@ func (spec *Spec) Summary(suiteID string) *types.SpecSummary {
 	componentCodeLocations[len(spec.containers)] = spec.subject.CodeLocation()
 
 	runTime := spec.runTime
-	if runTime == 0 && !spec.startTime.IsZero() {
+	if runTime == 0 {
 		runTime = time.Since(spec.startTime)
 	}
 
