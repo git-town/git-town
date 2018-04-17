@@ -1,7 +1,9 @@
 {
   "dependencies": {},
   "devDependencies": {
+    "jsdiff-console": "2.2.1",
     "prettier": "1.9.2",
+    "tertestrial": "0.3.2",
     "text-runner": "2.0.2"
   }
 }

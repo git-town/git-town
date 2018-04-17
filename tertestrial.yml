@@ -12,3 +12,7 @@ actions:
   - match:
       filename: '\.go$'
     command: 'bin/build ; bin/lint'
+
+  - match:
+      filename: '\.md$'
+    command: 'text-run {{filename}}'
