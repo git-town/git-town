@@ -18,6 +18,12 @@ var (
 	globalFlag bool
 )
 
+// These variables are set at build time
+var (
+	version,
+	buildDate string
+)
+
 var dryRunFlagDescription = "Output the commands that would be run without them"
 
 func conditionallyActivateDryRun() error {
