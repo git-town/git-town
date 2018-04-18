@@ -1,9 +1,15 @@
-#### NAME
+<a textrun="command-heading">
+# Install-fish-autocompletion command
+</a>
 
-install-fish-autocompletion - install the autocompletion definition for [Fish shell](http://fishshell.com)
+<a textrun="command-summary">
+Installs the autocompletion definition for [Fish shell](http://fishshell.com)
+</a>
 
-#### SYNOPSIS
+#### Usage
 
+<a textrun="command-cli">
 ```
 git town install-fish-autocompletion
 ```
+</a>

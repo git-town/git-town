@@ -13,7 +13,7 @@ import (
 
 var installFishAutocompletionCommand = &cobra.Command{
 	Use:   "install-fish-autocompletion",
-	Short: "Installs the autocompletion definition for Fish shell (http://fishshell.com)",
+	Short: "Installs the autocompletion definition for Fish shell",
 	Run: func(cmd *cobra.Command, args []string) {
 		installFishAutocompletion()
 	},

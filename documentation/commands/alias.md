@@ -1,8 +1,12 @@
-<a textrun="command-documentation">
+<a textrun="command-heading">
 # Alias command
+</a>
 
+<a textrun="command-summary">
 Adds or removes default global aliases
+</a>
 
+<a textrun="command-description">
 Global aliases allow Git Town commands to be used like native Git commands.
 When aliases are set, you can run "git hack" instead of having to run "git town hack".
 Example: "git append" becomes equivalent to "git town append".
@@ -10,9 +14,11 @@ Example: "git append" becomes equivalent to "git town append".
 When adding aliases, no existing aliases will be overwritten.
 
 Note that this can conflict with other tools that also define additional Git commands.
+</a>
 
 #### Usage
 
+<a textrun="command-cli">
 ```
 git town alias (true | false)
 ```

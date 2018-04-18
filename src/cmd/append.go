@@ -18,12 +18,13 @@ type appendConfig struct {
 var appendCommand = &cobra.Command{
 	Use:   "append <branch>",
 	Short: "Creates a new feature branch as a child of the current branch",
-	Long: `Creates a new feature branch as a child of the current branch.
+	Long: `Creates a new feature branch as a direct child of the current branch.
 
 Syncs the current branch,
 forks a new feature branch with the given name off the current branch,
 makes the new branch a child of the current branch,
-pushes the new feature branch to the remote repository,
+pushes the new feature branch to the remote repository
+if and only if new-branch-push-flag is true,
 and brings over all uncommitted changes to the new feature branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getAppendConfig(args)

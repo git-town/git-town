@@ -1,28 +1,22 @@
-#### NAME
+<a textrun="command-heading">
+# Kill command
+</a>
 
-kill - remove an obsolete feature branch
+<a textrun="command-summary">
+Removes an obsolete feature branch
+</a>
 
-#### SYNOPSIS
-
-```
-git town kill [<branch_name>]
-git town kill --undo
-```
-
-#### DESCRIPTION
-
-Deletes the current branch, or `<branch_name>` if given,
+<a textrun="command-description">
+Deletes the current branch, or the given one if a branch name is provided,
 from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.
+</a>
 
-#### OPTIONS
+#### Usage
 
+<a textrun="command-cli">
 ```
-<branch_name>
-    The branch to remove.
-    If not provided, uses the current branch.
-
---undo
-    Undo the previous `git town kill` operation.
+git town kill [<branch>]
 ```
+</a>

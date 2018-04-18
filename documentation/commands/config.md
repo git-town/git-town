@@ -1,11 +1,15 @@
-#### NAME
+<a textrun="command-heading">
+# Config command
+</a>
 
-config - displays, resets, or prompts setup of the Git Town configuration
+<a textrun="command-summary">
+Displays your Git Town configuration
+</a>
 
-#### SYNOPSIS
+#### Usage
 
+<a textrun="command-cli">
 ```
 git town config
-git town config reset
-git town config setup
 ```
+</a>

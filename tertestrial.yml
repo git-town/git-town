@@ -15,4 +15,4 @@ actions:
 
   - match:
       filename: '\.md$'
-    command: 'text-run {{filename}}'
+    command: 'make build && text-run {{filename}}'
