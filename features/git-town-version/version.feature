@@ -7,10 +7,10 @@ Feature: git town: show the current Git Town version
 
   Scenario: Using "version" flag
     When I run `git-town version`
-    Then it prints "Git Town 7.1.1"
+    Then it prints "Git Town v0.0.0-test (today)"
 
 
   Scenario: Running outside of a Git repository
     Given my workspace is currently not a Git repository
     When I run `git-town version`
-    Then it prints "Git Town 7.1.1"
+    Then it prints "Git Town v0.0.0-test (today)"

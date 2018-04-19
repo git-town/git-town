@@ -105,9 +105,7 @@ Implements #123
 
 #### Originate/git-town
 
-* Create a feature branch which updates
-  * `RELEASE_NOTES.md`
-  * the version in `src/cmd/version.go` and the related features
+* Create a feature branch which updates `RELEASE_NOTES.md`
 * Get the feature branch reviewed and merged
 * Create and push a new Git Tag for the release
   * `git tag -m release -a v4.0`
