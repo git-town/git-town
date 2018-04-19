@@ -1,5 +1,13 @@
 # Testing
 
+Tests are written in [Ruby](https://www.ruby-lang.org)
+for historical reasons and because that allows running them
+[in parallel](https://github.com/grosser/parallel_tests).
+
+The end-to-end tests are located in [features](../../features)
+and written in [Cucumber](https://github.com/cucumber/cucumber-ruby).
+Unit tests are written as normal Go tests using [Ginkgo](https://github.com/onsi/ginkgo).
+
 ## Running Tests
 
 ```bash
