@@ -3,6 +3,7 @@
   "devDependencies": {
     "jsdiff-console": "2.2.1",
     "prettier": "1.9.2",
+    "prettier-standard": "8.0.1",
     "tertestrial": "0.3.2",
     "text-runner": "2.0.2"
   }

@@ -3,7 +3,7 @@
 </a>
 
 <a textrun="command-summary">
-new-branch-push-flag - display or update the Git Town configuration for whether or not new branches are automatically pushed
+Displays or sets your new branch push flag
 </a>
 
 <a textrun="command-description">
@@ -13,17 +13,15 @@ if and only if "new-branch-push-flag" is true. The default value is false.
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town new-branch-push-flag [(true | false)]
-git town new-branch-push-flag --global [(true | false)]
 ```
 </a>
 
 
 <a textrun="command-flags">
 ```
---global
-    Display or update your global setting
+--global   Displays or sets your global new branch push flag
 ```
 </a>

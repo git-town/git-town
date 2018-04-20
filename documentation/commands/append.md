@@ -17,7 +17,7 @@ and brings over all uncommitted changes to the new feature branch.
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town append <branch>
 ```

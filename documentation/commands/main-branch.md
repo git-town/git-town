@@ -8,7 +8,7 @@ Displays or sets your main development branch
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town main-branch [<branch>]
 ```

@@ -18,7 +18,7 @@ Note that this can conflict with other tools that also define additional Git com
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town alias (true | false)
 ```

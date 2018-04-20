@@ -8,7 +8,7 @@ Displays your Git Town configuration
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town config
 ```

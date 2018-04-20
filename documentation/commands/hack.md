@@ -21,7 +21,7 @@ This can be disabled by toggling the "new-branch-push-flag" configuration.
 
 #### Usage
 
-<a textrun="command-cli">
+<a textrun="command-usage">
 ```
 git town hack <branch>
 ```
