@@ -11,11 +11,9 @@ if and only if "new-branch-push-flag" is true. The default value is false.
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town new-branch-push-flag [(true | false)]
-```
-</a>
+</pre>
 
 
 <a textrun="command-flags">
