@@ -1,8 +1,8 @@
 <h1 textrun="command-heading">Alias command</h1>
 
-<a textrun="command-summary">
-> Adds or removes default global aliases
-</a>
+<blockquote textrun="command-summary">
+Adds or removes default global aliases
+</blockquote>
 
 <a textrun="command-description">
 Global aliases allow Git Town commands to be used like native Git commands.
