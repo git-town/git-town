@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-# Main-branch command
-</a>
+<h1 textrun="command-heading">Main-branch command</h1>
 
 <a textrun="command-summary">
 Displays or sets your main development branch

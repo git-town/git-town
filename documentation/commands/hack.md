@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-# Hack command
-</a>
+<h1 textrun="command-heading">Hack command</h1>
 
 <a textrun="command-summary">
 Creates a new feature branch off the main development branch

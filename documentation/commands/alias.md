@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-# Alias command
-</a>
+<h1 textrun="command-heading">Alias command</h1>
 
 <a textrun="command-summary">
 Adds or removes default global aliases

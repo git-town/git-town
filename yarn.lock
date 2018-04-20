@@ -2869,9 +2869,9 @@ tertestrial@0.3.2:
     update-notifier "1.0.2"
     wait "0.1.0"
 
-text-runner@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/text-runner/-/text-runner-2.0.2.tgz#48d53df54d6c84276b3c67b00848b328181c84aa"
+text-runner@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/text-runner/-/text-runner-2.1.0.tgz#eb4ae4d4336329276ef1428f341e5b0148599c7d"
   dependencies:
     "@babel/code-frame" "7.0.0-beta.42"
     chalk "2.3.2"

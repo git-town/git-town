@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-# Append command
-</a>
+<h1 textrun="command-heading">Append command</h1>
 
 <a textrun="command-summary">
 Creates a new feature branch as a direct child of the current branch.

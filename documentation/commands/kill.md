@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-# Kill command
-</a>
+<h1 textrun="command-heading">Kill command</h1>
 
 <a textrun="command-summary">
 Removes an obsolete feature branch

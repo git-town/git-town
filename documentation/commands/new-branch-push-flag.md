@@ -1,6 +1,4 @@
-<a textrun="command-heading">
-#### New-branch-push-flag command
-</a>
+<h1 textrun="command-heading">New-branch-push-flag command</h1>
 
 <a textrun="command-summary">
 Displays or sets your new branch push flag
