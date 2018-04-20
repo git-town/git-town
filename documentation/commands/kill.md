@@ -1,8 +1,8 @@
 <h1 textrun="command-heading">Kill command</h1>
 
-<a textrun="command-summary">
+<blockquote textrun="command-summary">
 Removes an obsolete feature branch
-</a>
+</blockquote>
 
 <a textrun="command-description">
 Deletes the current branch, or the given one if a branch name is provided,

@@ -1,8 +1,8 @@
 <h1 textrun="command-heading">Hack command</h1>
 
-<a textrun="command-summary">
+<blockquote textrun="command-summary">
 Creates a new feature branch off the main development branch
-</a>
+</blockquote>
 
 <a textrun="command-description">
 Syncs the main branch and forks a new feature branch with the given name off it.

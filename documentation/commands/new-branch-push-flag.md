@@ -1,8 +1,8 @@
 <h1 textrun="command-heading">New-branch-push-flag command</h1>
 
-<a textrun="command-summary">
+<blockquote textrun="command-summary">
 Displays or sets your new branch push flag
-</a>
+</blockquote>
 
 <a textrun="command-description">
 Branches created with hack / append / prepend will be pushed upon creation
