@@ -1,7 +1,7 @@
 <h1 textrun="command-heading">Alias command</h1>
 
 <a textrun="command-summary">
-Adds or removes default global aliases
+> Adds or removes default global aliases
 </a>
 
 <a textrun="command-description">
