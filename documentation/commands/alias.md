@@ -16,11 +16,9 @@ Note that this can conflict with other tools that also define additional Git com
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town alias (true | false)
-```
-</a>
+</pre>
 
 #### DESCRIPTION
 

@@ -6,8 +6,6 @@ Installs the autocompletion definition for [Fish shell](http://fishshell.com)
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town install-fish-autocompletion
-```
-</a>
+</pre>

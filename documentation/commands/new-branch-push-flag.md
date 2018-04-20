@@ -16,8 +16,6 @@ git town new-branch-push-flag [(true | false)]
 </pre>
 
 
-<a textrun="command-flags">
-```
+<pre textrun="command-flags">
 --global   Displays or sets your global new branch push flag
-```
-</a>
+</pre>

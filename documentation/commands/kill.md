@@ -13,8 +13,6 @@ Does not delete perennial branches nor the main branch.
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town kill [<branch>]
-```
-</a>
+</pre>

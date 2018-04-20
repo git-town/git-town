@@ -6,8 +6,6 @@ Displays your Git Town configuration
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town config
-```
-</a>
+</pre>

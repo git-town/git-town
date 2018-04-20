@@ -6,8 +6,6 @@ Displays or sets your main development branch
 
 #### Usage
 
-<a textrun="command-usage">
-```
+<pre textrun="command-usage">
 git town main-branch [<branch>]
-```
-</a>
+</pre>
