@@ -19,11 +19,14 @@ func GetPrintableMainBranch() string {
 
 // GetPrintablePerennialBranches returns a user printable list of perennial branches
 func GetPrintablePerennialBranches() string {
-	output := strings.Join(GetPerennialBranches(), "\n")
-	if output == "" {
+	trees := []string{}
+	for _, perennialBranch := range GetPerennialBranches() {
+		trees = append(trees, GetPrintableBranchTree(perennialBranch))
+	}
+	if len(trees) == 0 {
 		return "[none]"
 	}
-	return output
+	return strings.Join(trees, "\n")
 }
 
 // GetPrintableNewBranchPushFlag returns a user printable new branch push flag
