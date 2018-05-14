@@ -8,23 +8,34 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
+var noneString = "[none]"
+
 // GetPrintableMainBranch returns a user printable main branch
 func GetPrintableMainBranch() string {
 	output := GetMainBranch()
 	if output == "" {
-		return "[none]"
+		return noneString
 	}
 	return output
 }
 
 // GetPrintablePerennialBranches returns a user printable list of perennial branches
 func GetPrintablePerennialBranches() string {
+	output := strings.Join(GetPerennialBranches(), "\n")
+	if output == "" {
+		return noneString
+	}
+	return output
+}
+
+// GetPrintablePerennialBranchTrees returns a user printable list of perennial branches trees
+func GetPrintablePerennialBranchTrees() string {
 	trees := []string{}
 	for _, perennialBranch := range GetPerennialBranches() {
 		trees = append(trees, GetPrintableBranchTree(perennialBranch))
 	}
 	if len(trees) == 0 {
-		return "[none]"
+		return noneString
 	}
 	return strings.Join(trees, "\n")
 }
