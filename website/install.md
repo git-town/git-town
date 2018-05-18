@@ -34,6 +34,14 @@ please use the manual install and ensure your Git version is 2.7.0 or higher._
 
 ---
 
+# Windows
+
+* Install / Update:
+  * Download a 32-bit or 64-bit executable for Windows from the latest release [here](https://github.com/Originate/git-town/releases).
+  * Run .exe file from a command line
+
+---
+
 # Manual
 
 * Install: download the Git Town binary for your platform from the
