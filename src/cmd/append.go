@@ -51,18 +51,6 @@ func getAppendConfig(args []string) (result appendConfig) {
 	return
 }
 
-func getAppendStepList(config appendConfig) (result steps.StepList) {
-	for _, branchName := range append(git.GetAncestorBranches(config.ParentBranch), config.ParentBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
-	}
-	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
-	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return
-}
-
 func init() {
 	RootCmd.AddCommand(appendCommand)
 }
