@@ -13,7 +13,7 @@ Feature: git-town sync --all: syncs all feature branches
 
 
   Scenario: result
-    Then it runs the commands
+    Then it should run the commands
       | BRANCH    | COMMAND                              |
       | feature-1 | git fetch --prune                    |
       |           | git add -A                           |
@@ -31,10 +31,10 @@ Feature: git-town sync --all: syncs all feature branches
       |           | git checkout feature-1               |
       | feature-1 | git push --tags                      |
       |           | git stash pop                        |
-    And I am still on the "feature-1" branch
-    And my workspace still contains my uncommitted file
-    And all branches are now synchronized
-    And my repository has the following commits
+    And I should be on the "feature-1" branch
+    And my workspace should contain my uncommitted file
+    And all branches should be synchronized
+    And my repository should have the following commits:
       | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME     |
       | main      | local and remote | main commit                        | main_file     |
       | feature-1 | local and remote | feature-1 commit                   | feature1_file |
