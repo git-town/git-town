@@ -24,7 +24,8 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
       |             | git stash                            |
       |             | git checkout main                    |
       | main        | git rebase origin/main               |
-      |             | git checkout -b new-feature main     |
+      |             | git branch new-feature main          |
+      |             | git checkout new-feature             |
       | new-feature | git stash pop                        |
       | <none>      | cd <%= git_root_folder %>/new_folder |
     And I end up on the "new-feature" branch
