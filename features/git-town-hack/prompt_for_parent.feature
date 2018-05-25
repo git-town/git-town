@@ -17,16 +17,17 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
 
   Scenario: selecting the default branch (the main development branch)
     When I run `git-town hack -p new-feature` and answer the prompts:
-      | PROMPT                                             | ANSWER  |
+      | PROMPT                                            | ANSWER  |
       | Please specify the parent branch of 'new-feature' | [ENTER] |
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | main        | git fetch --prune                |
-      |             | git add -A                       |
-      |             | git stash                        |
-      |             | git rebase origin/main           |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | main        | git fetch --prune           |
+      |             | git add -A                  |
+      |             | git stash                   |
+      |             | git rebase origin/main      |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
@@ -38,21 +39,22 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
 
     Scenario: selecting another branch
       When I run `git-town hack -p hotfix` and answer the prompts:
-        | PROMPT                                        | ANSWER        |
+        | PROMPT                                       | ANSWER        |
         | Please specify the parent branch of 'hotfix' | [DOWN][ENTER] |
       Then it runs the commands
-        | BRANCH      | COMMAND                           |
-        | main        | git fetch --prune                 |
-        |             | git add -A                        |
-        |             | git stash                         |
-        |             | git checkout production           |
-        |             | git rebase origin/production      |
-        |             | git checkout -b hotfix production |
-        | new-feature | git stash pop                     |
-      And I end up on the "new-feature" branch
+        | BRANCH     | COMMAND                      |
+        | main       | git fetch --prune            |
+        |            | git add -A                   |
+        |            | git stash                    |
+        |            | git checkout production      |
+        | production | git rebase origin/production |
+        |            | git branch hotfix production |
+        |            | git checkout hotfix          |
+        | hotfix     | git stash pop                |
+      And I end up on the "hotfix" branch
       And my workspace still contains my uncommitted file
       And my repository has the following commits
         | BRANCH     | LOCATION         | MESSAGE           |
-        | main       | local and remote | main_commit       |
+        | main       | remote           | main_commit       |
         | hotfix     | local            | production_commit |
-        | production | remote           | production_commit |
+        | production | local and remote | production_commit |
