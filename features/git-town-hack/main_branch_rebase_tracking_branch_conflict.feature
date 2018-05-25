@@ -57,11 +57,12 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     Given I resolve the conflict in "conflicting_file"
     When I run `git-town continue`
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | main        | git rebase --continue            |
-      |             | git push                         |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | main        | git rebase --continue       |
+      |             | git push                    |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And now my repository has the following commits
@@ -80,10 +81,11 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     Given I resolve the conflict in "conflicting_file"
     When I run `git rebase --continue; git-town continue`
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | main        | git push                         |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | main        | git push                    |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And now my repository has the following commits

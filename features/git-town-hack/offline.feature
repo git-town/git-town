@@ -17,12 +17,13 @@ Feature: git town-hack: offline mode
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | main    | git add -A                   |
-      |         | git stash                    |
-      |         | git rebase origin/main       |
-      |         | git checkout -b feature main |
-      | feature | git stash pop                |
+      | BRANCH  | COMMAND                 |
+      | main    | git add -A              |
+      |         | git stash               |
+      |         | git rebase origin/main  |
+      |         | git branch feature main |
+      |         | git checkout feature    |
+      | feature | git stash pop           |
     And I end up on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits

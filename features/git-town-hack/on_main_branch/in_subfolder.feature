@@ -23,7 +23,8 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
       |             | git stash                         |
       |             | git rebase origin/main            |
       |             | git push                          |
-      |             | git checkout -b new-feature main  |
+      |             | git branch new-feature main       |
+      |             | git checkout new-feature          |
       | new-feature | git stash pop                     |
       | <none>      | cd <%= git_folder "new_folder" %> |
     And I am in the project root folder
