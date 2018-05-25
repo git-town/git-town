@@ -6,6 +6,10 @@
 
 * `git town config`: print perennial branch trees
 
+#### Changes
+
+* when fetching the upstream repository, only fetch the main branch
+
 ## 7.1.1 (2018-04-09)
 
 #### Bug Fixes
