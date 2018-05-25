@@ -11,8 +11,8 @@ import (
 )
 
 type appendConfig struct {
-	InitialBranch string
-	TargetBranch  string
+	ParentBranch string
+	TargetBranch string
 }
 
 var appendCommand = &cobra.Command{
@@ -41,23 +41,21 @@ and brings over all uncommitted changes to the new feature branch.`,
 }
 
 func getAppendConfig(args []string) (result appendConfig) {
-	result.InitialBranch = git.GetCurrentBranchName()
+	result.ParentBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
 	if git.HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
-	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})
 	return
 }
 
 func getAppendStepList(config appendConfig) (result steps.StepList) {
-	for _, branchName := range append(git.GetAncestorBranches(config.InitialBranch), config.InitialBranch) {
+	for _, branchName := range append(git.GetAncestorBranches(config.ParentBranch), config.ParentBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
-	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.InitialBranch})
-	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.InitialBranch})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}

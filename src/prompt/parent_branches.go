@@ -25,17 +25,11 @@ func EnsureKnowsParentBranches(branchNames []string) {
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
-	choices := git.GetLocalBranchesWithMainBranchFirst()
 	for {
 		parent := git.GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
-			filteredChoices := filterOutSelfAndDescendants(current, choices)
-			parent = askForBranch(askForBranchOptions{
-				branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
-				prompt:            fmt.Sprintf(parentBranchPromptTemplate, current),
-				defaultBranchName: defaultBranchName,
-			})
+			parent = AskForBranchParent(current, defaultBranchName)
 			if parent == perennialBranchOption {
 				git.AddToPerennialBranches(current)
 				break
@@ -47,6 +41,17 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 		}
 		current = parent
 	}
+}
+
+// AskForBranchParent prompts the user for the parent of the given branch
+func AskForBranchParent(branchName, defaultBranchName string) string {
+	choices := git.GetLocalBranchesWithMainBranchFirst()
+	filteredChoices := filterOutSelfAndDescendants(branchName, choices)
+	return askForBranch(askForBranchOptions{
+		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
+		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
+		defaultBranchName: defaultBranchName,
+	})
 }
 
 // Helpers
