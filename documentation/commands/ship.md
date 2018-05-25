@@ -6,7 +6,6 @@ ship - deliver a completed feature branch
 
 ```
 git town ship [<branch_name>] [<commit_options>]
-git town ship (--abort | --continue)
 ```
 
 #### DESCRIPTION
@@ -42,11 +41,5 @@ It will also update the base branch for any pull requests against that branch.
     If not provided, uses the current branch.
 
 <commit_options>
-    Options to pass to 'git commit' when commiting the squash-merge.
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
+    Options to pass to 'git commit' when committing the squash-merge.
 ```

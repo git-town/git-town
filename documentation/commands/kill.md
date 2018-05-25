@@ -6,7 +6,6 @@ kill - remove an obsolete feature branch
 
 ```
 git town kill [<branch_name>]
-git town kill --undo
 ```
 
 #### DESCRIPTION
@@ -22,7 +21,4 @@ Does not delete perennial branches nor the main branch.
 <branch_name>
     The branch to remove.
     If not provided, uses the current branch.
-
---undo
-    Undo the previous `git town kill` operation.
 ```
