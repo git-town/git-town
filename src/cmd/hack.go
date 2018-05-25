@@ -9,10 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type hackConfig struct {
-	TargetBranch string
-}
-
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
 	Short: "Creates a new feature branch off the main development branch",
