@@ -17,7 +17,7 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git add -A               |
       |        | git stash                |
       |        | git rebase origin/main   |
-      |        | git fetch upstream       |
+      |        | git fetch upstream main  |
       |        | git rebase upstream/main |
       |        | git push                 |
       |        | git push --tags          |

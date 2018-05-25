@@ -20,7 +20,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git stash                          |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
-      |         | git fetch upstream                 |
+      |         | git fetch upstream main            |
       |         | git rebase upstream/main           |
       |         | git push                           |
       |         | git checkout feature               |
