@@ -54,7 +54,7 @@ func getSyncNonFeatureBranchSteps(branchName string) (result StepList) {
 
 	mainBranchName := git.GetMainBranch()
 	if mainBranchName == branchName && git.HasRemote("upstream") {
-		result.Append(&FetchUpstreamStep{})
+		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
 	return

@@ -8,9 +8,10 @@ import (
 // up to speed with activities that happened in the upstream remote.
 type FetchUpstreamStep struct {
 	NoOpStep
+	BranchName string
 }
 
 // Run executes this step.
 func (step *FetchUpstreamStep) Run() error {
-	return script.RunCommand("git", "fetch", "upstream")
+	return script.RunCommand("git", "fetch", "upstream", step.BranchName)
 }
