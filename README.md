@@ -55,7 +55,7 @@ Git Town provides these additional Git commands:
 
 ## Installation
 
-Since version 4.0, Git Town runs natively on all platforms.
+Since version 4.0, Git Town runs natively on all platforms without any dependencies.
 Check out our [installation instructions](http://www.git-town.com/install.html) for more details.
 
 ### Aliasing
