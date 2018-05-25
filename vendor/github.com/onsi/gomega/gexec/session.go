@@ -151,11 +151,7 @@ If the command has already exited, Kill returns silently.
 The session is returned to enable chaining.
 */
 func (s *Session) Kill() *Session {
-	if s.ExitCode() != -1 {
-		return s
-	}
-	s.Command.Process.Kill()
-	return s
+	return s.Signal(syscall.SIGKILL)
 }
 
 /*
@@ -188,10 +184,9 @@ If the command has already exited, Signal returns silently.
 The session is returned to enable chaining.
 */
 func (s *Session) Signal(signal os.Signal) *Session {
-	if s.ExitCode() != -1 {
-		return s
+	if s.processIsAlive() {
+		s.Command.Process.Signal(signal)
 	}
-	s.Command.Process.Signal(signal)
 	return s
 }
 
@@ -213,6 +208,10 @@ func (s *Session) monitorForExit(exited chan<- struct{}) {
 	s.lock.Unlock()
 
 	close(exited)
+}
+
+func (s *Session) processIsAlive() bool {
+	return s.ExitCode() == -1 && s.Command.Process != nil
 }
 
 var trackedSessions = []*Session{}

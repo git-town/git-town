@@ -36,7 +36,7 @@ func TestRepositoriesService_ListForks(t *testing.T) {
 		t.Errorf("Repositories.ListForks returned error: %v", err)
 	}
 
-	want := []*Repository{{ID: Int(1)}, {ID: Int(2)}}
+	want := []*Repository{{ID: Int64(1)}, {ID: Int64(2)}}
 	if !reflect.DeepEqual(repos, want) {
 		t.Errorf("Repositories.ListForks returned %+v, want %+v", repos, want)
 	}
@@ -66,7 +66,31 @@ func TestRepositoriesService_CreateFork(t *testing.T) {
 		t.Errorf("Repositories.CreateFork returned error: %v", err)
 	}
 
-	want := &Repository{ID: Int(1)}
+	want := &Repository{ID: Int64(1)}
+	if !reflect.DeepEqual(repo, want) {
+		t.Errorf("Repositories.CreateFork returned %+v, want %+v", repo, want)
+	}
+}
+
+func TestRepositoriesService_CreateFork_deferred(t *testing.T) {
+	client, mux, _, teardown := setup()
+	defer teardown()
+
+	mux.HandleFunc("/repos/o/r/forks", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "POST")
+		testFormValues(t, r, values{"organization": "o"})
+		// This response indicates the fork will happen asynchronously.
+		w.WriteHeader(http.StatusAccepted)
+		fmt.Fprint(w, `{"id":1}`)
+	})
+
+	opt := &RepositoryCreateForkOptions{Organization: "o"}
+	repo, _, err := client.Repositories.CreateFork(context.Background(), "o", "r", opt)
+	if _, ok := err.(*AcceptedError); !ok {
+		t.Errorf("Repositories.CreateFork returned error: %v (want AcceptedError)", err)
+	}
+
+	want := &Repository{ID: Int64(1)}
 	if !reflect.DeepEqual(repo, want) {
 		t.Errorf("Repositories.CreateFork returned %+v, want %+v", repo, want)
 	}

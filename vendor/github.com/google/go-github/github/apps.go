@@ -19,7 +19,7 @@ type AppsService service
 
 // App represents a GitHub App.
 type App struct {
-	ID          *int       `json:"id,omitempty"`
+	ID          *int64     `json:"id,omitempty"`
 	Owner       *User      `json:"owner,omitempty"`
 	Name        *string    `json:"name,omitempty"`
 	Description *string    `json:"description,omitempty"`
@@ -33,6 +33,34 @@ type App struct {
 type InstallationToken struct {
 	Token     *string    `json:"token,omitempty"`
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+}
+
+// InstallationPermissions lists the permissions for metadata, contents, issues and single file for an installation.
+type InstallationPermissions struct {
+	Metadata   *string `json:"metadata,omitempty"`
+	Contents   *string `json:"contents,omitempty"`
+	Issues     *string `json:"issues,omitempty"`
+	SingleFile *string `json:"single_file,omitempty"`
+}
+
+// Installation represents a GitHub Apps installation.
+type Installation struct {
+	ID                  *int64                   `json:"id,omitempty"`
+	AppID               *int64                   `json:"app_id,omitempty"`
+	TargetID            *int64                   `json:"target_id,omitempty"`
+	Account             *User                    `json:"account,omitempty"`
+	AccessTokensURL     *string                  `json:"access_tokens_url,omitempty"`
+	RepositoriesURL     *string                  `json:"repositories_url,omitempty"`
+	HTMLURL             *string                  `json:"html_url,omitempty"`
+	TargetType          *string                  `json:"target_type,omitempty"`
+	SingleFileName      *string                  `json:"single_file_name,omitempty"`
+	RepositorySelection *string                  `json:"repository_selection,omitempty"`
+	Events              []string                 `json:"events,omitempty"`
+	Permissions         *InstallationPermissions `json:"permissions,omitempty"`
+}
+
+func (i Installation) String() string {
+	return Stringify(i)
 }
 
 // Get a single GitHub App. Passing the empty string will get
@@ -97,7 +125,7 @@ func (s *AppsService) ListInstallations(ctx context.Context, opt *ListOptions) (
 // GetInstallation returns the specified installation.
 //
 // GitHub API docs: https://developer.github.com/v3/apps/#get-a-single-installation
-func (s *AppsService) GetInstallation(ctx context.Context, id int) (*Installation, *Response, error) {
+func (s *AppsService) GetInstallation(ctx context.Context, id int64) (*Installation, *Response, error) {
 	u := fmt.Sprintf("app/installations/%v", id)
 
 	req, err := s.client.NewRequest("GET", u, nil)
@@ -148,7 +176,7 @@ func (s *AppsService) ListUserInstallations(ctx context.Context, opt *ListOption
 // CreateInstallationToken creates a new installation token.
 //
 // GitHub API docs: https://developer.github.com/v3/apps/#create-a-new-installation-token
-func (s *AppsService) CreateInstallationToken(ctx context.Context, id int) (*InstallationToken, *Response, error) {
+func (s *AppsService) CreateInstallationToken(ctx context.Context, id int64) (*InstallationToken, *Response, error) {
 	u := fmt.Sprintf("installations/%v/access_tokens", id)
 
 	req, err := s.client.NewRequest("POST", u, nil)

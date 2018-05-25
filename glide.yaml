@@ -20,3 +20,5 @@ import:
 - package: github.com/Originate/exit
 - package: gopkg.in/AlecAivazis/survey.v1
   version: v1.4.1
+- package: github.com/dustin/go-humanize
+- package: github.com/acarl005/stripansi

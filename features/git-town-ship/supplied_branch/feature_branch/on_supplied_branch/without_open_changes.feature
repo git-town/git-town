@@ -35,7 +35,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | main    | git branch feature <%= sha 'feature commit' %> |

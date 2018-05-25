@@ -30,8 +30,12 @@ func ConfigureMainBranch() {
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches
 func ConfigurePerennialBranches() {
+	branchNames := git.GetLocalBranchesWithoutMain()
+	if len(branchNames) == 0 {
+		return
+	}
 	newPerennialBranches := askForBranches(askForBranchesOptions{
-		branchNames:        git.GetLocalBranchesWithoutMain(),
+		branchNames:        branchNames,
 		prompt:             getPerennialBranchesPrompt(),
 		defaultBranchNames: git.GetPerennialBranches(),
 	})

@@ -22,9 +22,11 @@ Feature: listing the configuration
 
   Scenario: everything is configured and there are nested branches
     Given the main branch is configured as "main"
+    And my repository has the branches "qa" and "staging"
     And the perennial branches are configured as "qa" and "staging"
     And my repository has the feature branches "parent-feature" and "stand-alone-feature"
     And it has a feature branch named "child-feature" as a child of "parent-feature"
+    And it has a feature branch named "qa-hotfix" as a child of "qa"
     When I run `git-town config`
     Then it prints
       """
@@ -33,6 +35,7 @@ Feature: listing the configuration
 
       Perennial branches:
         qa
+          qa-hotfix
         staging
 
       Branch Ancestry:

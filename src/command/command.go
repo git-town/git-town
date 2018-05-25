@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/src/util"
+	"github.com/acarl005/stripansi"
 )
 
 // Command runs commands on the command line
@@ -33,7 +34,7 @@ func (r *Command) Run() {
 	logRun(r)
 	subProcess := exec.Command(r.name, r.args...) // #nosec
 	output, err := subProcess.CombinedOutput()
-	r.output = strings.TrimSpace(string(output))
+	r.output = stripansi.Strip(strings.TrimSpace(string(output)))
 	r.err = err
 	r.ran = true
 }

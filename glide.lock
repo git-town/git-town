@@ -1,14 +1,18 @@
-hash: b327d0388b77bf04c13864e61633be1232865be07b4334540bd5667f1144bfdf
-updated: 2017-12-25T14:48:11.462603895-07:00
+hash: f5bd1db8ca8e8982e8cf72d287a3f662d6bbab1befef075404a9a35ed6a6a668
+updated: 2018-04-09T10:42:46.678258579-07:00
 imports:
+- name: github.com/acarl005/stripansi
+  version: 5a71ef0e047df0427e87a79f27009029921f1f9b
+- name: github.com/dustin/go-humanize
+  version: bb3d318650d48840a39aa21a027c6630e198e626
 - name: github.com/fatih/color
   version: 570b54cabe6b8eb0bc2dfce68d964677d63b5260
 - name: github.com/golang/protobuf
-  version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
+  version: bbd03ef6da3a115852eaf24c8a1c46aeb39aa175
   subpackages:
   - proto
 - name: github.com/google/go-github
-  version: 0c3b302de2a6de84a2511db47ea1bb2ff8146830
+  version: 88eb4e9dc91cb2db1bbc56c936f1ee39bbe72ba5
   subpackages:
   - github
 - name: github.com/google/go-querystring
@@ -30,13 +34,13 @@ imports:
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/spf13/cobra
-  version: ccaecb155a2177302cb56cae929251a256d0f646
+  version: cd30c2a7e91a1d63fd9a0027accf18a681e9d50b
 - name: github.com/spf13/pflag
-  version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
+  version: 1ce0cc6db4029d97571db82f85092fccedb572ce
 - name: github.com/spf13/viper
   version: 25b30aa063fc18e48662b86996252eabdcf2f0c7
 - name: golang.org/x/net
-  version: d866cfc389cec985d6fda2859936a575a55a3ab6
+  version: f5dfe339be1d06f81b22525fe34671ee7d2c8904
   subpackages:
   - context
   - context/ctxhttp
@@ -44,7 +48,7 @@ imports:
   - html/atom
   - html/charset
 - name: golang.org/x/oauth2
-  version: 0448841f0cbe9d174c6c1cedd177f583337b8e2c
+  version: 921ae394b9430ed4fb549668d7b087601bd60a81
   subpackages:
   - internal
 - name: golang.org/x/sys
@@ -53,7 +57,7 @@ imports:
   subpackages:
   - unix
 - name: google.golang.org/appengine
-  version: 5bee14b453b4c71be47ec1781b0fa61c2ea182db
+  version: 0a24098c0ec68416ec050f567f75df563d6b231e
   subpackages:
   - internal
   - internal/base
@@ -69,7 +73,7 @@ imports:
   - terminal
 testImports:
 - name: github.com/onsi/ginkgo
-  version: 6c46eb8334b30dc55b42f1a1c725d5ce97375390
+  version: 9008c7b79f9636c46a0a945141020124702f0ecf
   subpackages:
   - config
   - internal/codelocation
@@ -89,7 +93,7 @@ testImports:
   - reporters/stenographer/support/go-isatty
   - types
 - name: github.com/onsi/gomega
-  version: d35dcfdbfd01eaabf8da0b6b36f111ff953b68cb
+  version: 49e4233a3b46c26dddd43cf84547cf31c92d0f2b
   subpackages:
   - format
   - internal/assertion
@@ -103,7 +107,7 @@ testImports:
   - matchers/support/goraph/util
   - types
 - name: golang.org/x/text
-  version: eb22672bea55af56d225d4e35405f4d2e9f062a0
+  version: 0b0b1f509072617b86d90971b51da23cc52694f2
   subpackages:
   - encoding
   - encoding/charmap
@@ -115,12 +119,13 @@ testImports:
   - encoding/simplifiedchinese
   - encoding/traditionalchinese
   - encoding/unicode
+  - internal/language
   - internal/tag
   - internal/utf8internal
   - language
   - runes
   - transform
 - name: gopkg.in/jarcoal/httpmock.v1
-  version: cf52904a3cf0f78f199ecade6a6df8e245d5b25a
+  version: 61bcb58a07522fbdf76a4cb03c57f5a52683d636
 - name: gopkg.in/yaml.v2
-  version: 287cf08546ab5e7e37d55a84f7ed3fd1db036de5
+  version: 7f97868eec74b32b0982dd158a51a446d1da7eb5

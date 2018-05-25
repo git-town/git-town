@@ -7,7 +7,6 @@ package github
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -20,7 +19,7 @@ type RepositoriesService service
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	ID               *int             `json:"id,omitempty"`
+	ID               *int64           `json:"id,omitempty"`
 	Owner            *User            `json:"owner,omitempty"`
 	Name             *string          `json:"name,omitempty"`
 	FullName         *string          `json:"full_name,omitempty"`
@@ -72,7 +71,7 @@ type Repository struct {
 	Archived          *bool   `json:"archived,omitempty"`
 
 	// Creating an organization repository. Required for non-owners.
-	TeamID *int `json:"team_id,omitempty"`
+	TeamID *int64 `json:"team_id,omitempty"`
 
 	// API URLs
 	URL              *string `json:"url,omitempty"`
@@ -233,7 +232,7 @@ func (s *RepositoriesService) ListByOrg(ctx context.Context, org string, opt *Re
 // RepositoriesService.ListAll method.
 type RepositoryListAllOptions struct {
 	// ID of the last repository seen
-	Since int `url:"since,omitempty"`
+	Since int64 `url:"since,omitempty"`
 }
 
 // ListAll lists all GitHub repositories in the order that they were created.
@@ -335,7 +334,7 @@ func (s *RepositoriesService) GetCodeOfConduct(ctx context.Context, owner, repo 
 // GetByID fetches a repository.
 //
 // Note: GetByID uses the undocumented GitHub API endpoint /repositories/:id.
-func (s *RepositoriesService) GetByID(ctx context.Context, id int) (*Repository, *Response, error) {
+func (s *RepositoriesService) GetByID(ctx context.Context, id int64) (*Repository, *Response, error) {
 	u := fmt.Sprintf("repositories/%d", id)
 	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
@@ -390,7 +389,7 @@ func (s *RepositoriesService) Delete(ctx context.Context, owner, repo string) (*
 // Contributor represents a repository contributor
 type Contributor struct {
 	Login             *string `json:"login,omitempty"`
-	ID                *int    `json:"id,omitempty"`
+	ID                *int64  `json:"id,omitempty"`
 	AvatarURL         *string `json:"avatar_url,omitempty"`
 	GravatarID        *string `json:"gravatar_id,omitempty"`
 	URL               *string `json:"url,omitempty"`
@@ -572,39 +571,14 @@ type PullRequestReviewsEnforcement struct {
 // enforcement of a protected branch. It is separate from PullRequestReviewsEnforcement above
 // because the request structure is different from the response structure.
 type PullRequestReviewsEnforcementRequest struct {
-	// Specifies which users and teams should be allowed to dismiss pull request reviews. Can be nil to disable the restrictions.
-	DismissalRestrictionsRequest *DismissalRestrictionsRequest `json:"dismissal_restrictions"`
+	// Specifies which users and teams should be allowed to dismiss pull request reviews.
+	// User and team dismissal restrictions are only available for
+	// organization-owned repositories. Must be nil for personal repositories.
+	DismissalRestrictionsRequest *DismissalRestrictionsRequest `json:"dismissal_restrictions,omitempty"`
 	// Specifies if approved reviews can be dismissed automatically, when a new commit is pushed. (Required)
 	DismissStaleReviews bool `json:"dismiss_stale_reviews"`
 	// RequireCodeOwnerReviews specifies if an approved review is required in pull requests including files with a designated code owner.
 	RequireCodeOwnerReviews bool `json:"require_code_owner_reviews"`
-}
-
-// MarshalJSON implements the json.Marshaler interface.
-// Converts nil value of PullRequestReviewsEnforcementRequest.DismissalRestrictionsRequest to empty array
-func (req PullRequestReviewsEnforcementRequest) MarshalJSON() ([]byte, error) {
-	if req.DismissalRestrictionsRequest == nil {
-		newReq := struct {
-			R []interface{} `json:"dismissal_restrictions"`
-			D bool          `json:"dismiss_stale_reviews"`
-			O bool          `json:"require_code_owner_reviews"`
-		}{
-			R: []interface{}{},
-			D: req.DismissStaleReviews,
-			O: req.RequireCodeOwnerReviews,
-		}
-		return json.Marshal(newReq)
-	}
-	newReq := struct {
-		R *DismissalRestrictionsRequest `json:"dismissal_restrictions"`
-		D bool                          `json:"dismiss_stale_reviews"`
-		O bool                          `json:"require_code_owner_reviews"`
-	}{
-		R: req.DismissalRestrictionsRequest,
-		D: req.DismissStaleReviews,
-		O: req.RequireCodeOwnerReviews,
-	}
-	return json.Marshal(newReq)
 }
 
 // PullRequestReviewsEnforcementUpdate represents request to patch the pull request review
@@ -657,11 +631,12 @@ type DismissalRestrictions struct {
 // restriction to allows only specific users or teams to dimiss pull request reviews. It is
 // separate from DismissalRestrictions above because the request structure is
 // different from the response structure.
+// Note: Both Users and Teams must be nil, or both must be non-nil.
 type DismissalRestrictionsRequest struct {
-	// The list of user logins who can dismiss pull request reviews. (Required; use []string{} instead of nil for empty list.)
-	Users []string `json:"users"`
-	// The list of team slugs which can dismiss pull request reviews. (Required; use []string{} instead of nil for empty list.)
-	Teams []string `json:"teams"`
+	// The list of user logins who can dismiss pull request reviews. (Required; use nil to disable dismissal_restrictions or &[]string{} otherwise.)
+	Users *[]string `json:"users,omitempty"`
+	// The list of team slugs which can dismiss pull request reviews. (Required; use nil to disable dismissal_restrictions or &[]string{} otherwise.)
+	Teams *[]string `json:"teams,omitempty"`
 }
 
 // ListBranches lists branches for the specified repository.
@@ -1042,8 +1017,8 @@ func (s *RepositoriesService) ReplaceAllTopics(ctx context.Context, owner, repo 
 
 // TransferRequest represents a request to transfer a repository.
 type TransferRequest struct {
-	NewOwner string `json:"new_owner"`
-	TeamID   []int  `json:"team_id,omitempty"`
+	NewOwner string  `json:"new_owner"`
+	TeamID   []int64 `json:"team_id,omitempty"`
 }
 
 // Transfer transfers a repository from one account or organization to another.

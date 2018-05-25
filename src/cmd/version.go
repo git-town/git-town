@@ -12,7 +12,7 @@ var versionCmd = &cobra.Command{
 	Short: "Displays the version",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Git Town 6.0.2")
+		fmt.Printf("Git Town %s (%s)\n", version, buildDate)
 	},
 }
 

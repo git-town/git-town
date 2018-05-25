@@ -44,7 +44,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
   Scenario: undo
     Given I run `git-town rename-branch --force production renamed-production`
-    When I run `git-town rename-branch --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH             | COMMAND                                              |
         | renamed-production | git branch production <%= sha 'production commit' %> |

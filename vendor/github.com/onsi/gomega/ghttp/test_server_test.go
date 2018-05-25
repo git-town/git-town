@@ -86,10 +86,14 @@ var _ = Describe("TestServer", func() {
 	})
 
 	Describe("allowing unhandled requests", func() {
+		It("is not permitted by default", func() {
+			Expect(s.GetAllowUnhandledRequests()).To(BeFalse())
+		})
+
 		Context("when true", func() {
 			BeforeEach(func() {
-				s.AllowUnhandledRequests = true
-				s.UnhandledRequestStatusCode = http.StatusForbidden
+				s.SetAllowUnhandledRequests(true)
+				s.SetUnhandledRequestStatusCode(http.StatusForbidden)
 				resp, err = http.Get(s.URL() + "/foo")
 				Ω(err).ShouldNot(HaveOccurred())
 			})
@@ -226,7 +230,7 @@ var _ = Describe("TestServer", func() {
 
 	Describe("When a handler fails", func() {
 		BeforeEach(func() {
-			s.UnhandledRequestStatusCode = http.StatusForbidden //just to be clear that 500s aren't coming from unhandled requests
+			s.SetUnhandledRequestStatusCode(http.StatusForbidden) //just to be clear that 500s aren't coming from unhandled requests
 		})
 
 		Context("because the handler has panicked", func() {

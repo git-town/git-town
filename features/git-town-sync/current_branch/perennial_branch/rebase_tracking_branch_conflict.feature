@@ -25,16 +25,16 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git rebase origin/qa |
     And it prints the error:
       """
-      To abort, run "git-town sync --abort".
-      To continue after you have resolved the conflicts, run "git-town sync --continue".
-      To skip the sync of the 'qa' branch, run "git-town sync --skip".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
+      To continue by skipping the current branch, run "git-town skip".
       """
     And my repo has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git-town sync --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
@@ -46,7 +46,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town sync --continue`
+    When I run `git-town continue`
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
@@ -55,7 +55,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town sync --continue`
+    When I run `git-town continue`
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
@@ -75,7 +75,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town sync --continue`
+    When I run `git rebase --continue; git-town continue`
     Then it runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |
