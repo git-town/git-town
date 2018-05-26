@@ -6,7 +6,6 @@ hack - create a new feature branch off the main development branch
 
 ```
 git town hack [-p] <branch_name>
-git town hack (--abort | --continue)
 ```
 
 #### DESCRIPTION
@@ -26,10 +25,4 @@ Finally, brings over all uncommitted changes to the new feature branch.
 
 -p
     Prompts for the parent branch (instead of assuming the main development branch)
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
 ```
