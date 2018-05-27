@@ -5,17 +5,12 @@ Feature: git town-hack: prompt for parent branch
   So that I have a unified way for creating new branches
 
 
-  Background:
-    Given my repository has the perennial branches "production"
-    And the following commit exists in my repository
-      | BRANCH     | LOCATION | MESSAGE           |
-      | main       | remote   | main_commit       |
-      | production | remote   | production_commit |
+  Scenario: selecting the default branch (the main development branch)
+    Given the following commit exists in my repository
+      | BRANCH | LOCATION | MESSAGE     |
+      | main   | remote   | main_commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-
-
-  Scenario: selecting the default branch (the main development branch)
     When I run `git-town hack -p new-feature` and answer the prompts:
       | PROMPT                                            | ANSWER  |
       | Please specify the parent branch of 'new-feature' | [ENTER] |
@@ -31,13 +26,18 @@ Feature: git town-hack: prompt for parent branch
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE           |
-      | main        | local and remote | main_commit       |
-      | new-feature | local            | main_commit       |
-      | production  | remote           | production_commit |
+      | BRANCH      | LOCATION         | MESSAGE     |
+      | main        | local and remote | main_commit |
+      | new-feature | local            | main_commit |
 
 
     Scenario: selecting another branch
+      Given my repository has the perennial branches "production"
+      And the following commit exists in my repository
+        | BRANCH     | LOCATION | MESSAGE           |
+        | production | remote   | production_commit |
+      And I am on the "main" branch
+      And my workspace has an uncommitted file
       When I run `git-town hack -p hotfix` and answer the prompts:
         | PROMPT                                       | ANSWER        |
         | Please specify the parent branch of 'hotfix' | [DOWN][ENTER] |
@@ -55,6 +55,5 @@ Feature: git town-hack: prompt for parent branch
       And my workspace still contains my uncommitted file
       And my repository has the following commits
         | BRANCH     | LOCATION         | MESSAGE           |
-        | main       | remote           | main_commit       |
         | hotfix     | local            | production_commit |
         | production | local and remote | production_commit |
