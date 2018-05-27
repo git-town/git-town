@@ -6,7 +6,6 @@ sync - updates the current branch with all relevant changes
 
 ```
 git town sync [--all]
-git town sync (--abort | --continue | --skip)
 ```
 
 #### DESCRIPTION
@@ -33,13 +32,4 @@ the main branch is synced with its upstream counterpart.
 ```
 --all
     Syncs all local branches
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
-
---skip
-    Continue the operation by skipping the sync of the current branch.
 ```
