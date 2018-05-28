@@ -16,7 +16,7 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                            |
-      | other-feature | git fetch --prune                  |
+      | other-feature | git fetch --prune --tags           |
       | <none>        | cd <%= git_root_folder %>          |
       | other-feature | git add -A                         |
       |               | git stash                          |

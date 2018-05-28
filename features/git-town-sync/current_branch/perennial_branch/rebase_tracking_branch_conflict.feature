@@ -18,11 +18,11 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | qa     | git fetch --prune    |
-      |        | git add -A           |
-      |        | git stash            |
-      |        | git rebase origin/qa |
+      | BRANCH | COMMAND                  |
+      | qa     | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git rebase origin/qa     |
     And it prints the error:
       """
       To abort, run "git-town abort".

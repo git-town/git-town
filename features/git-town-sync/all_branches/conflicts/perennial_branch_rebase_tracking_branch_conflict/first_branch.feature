@@ -17,7 +17,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
     Then I am not prompted for any parent branches
     And it runs the commands
       | BRANCH     | COMMAND                      |
-      | main       | git fetch --prune            |
+      | main       | git fetch --prune --tags     |
       |            | git add -A                   |
       |            | git stash                    |
       |            | git rebase origin/main       |
