@@ -17,10 +17,10 @@ end
 # Creates a tag with the given name in the remote repo that is not on a branch
 def create_standalone_remote_tag tag_name
   in_secondary_repository do
-    run "git checkout -b temp"
-    run "touch a.txt"
-    run "git add -A"
-    run "git commit -m 'temp'"
+    run 'git checkout -b temp'
+    run 'touch a.txt'
+    run 'git add -A'
+    run 'git commit -m "temp"'
     run "git tag -a #{tag_name} -m '#{tag_name}'"
     run 'git push --tags'
   end
