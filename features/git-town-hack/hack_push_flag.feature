@@ -17,7 +17,7 @@ Feature: git town-hack: push branch to remote upon creation
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                    |
-      | main    | git fetch --prune          |
+      | main    | git fetch --prune --tags   |
       |         | git rebase origin/main     |
       |         | git branch feature main    |
       |         | git checkout feature       |

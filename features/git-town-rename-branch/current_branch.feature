@@ -20,7 +20,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     When I run `git-town rename-branch renamed-feature`
     Then it runs the commands
       | BRANCH          | COMMAND                            |
-      | feature         | git fetch --prune                  |
+      | feature         | git fetch --prune --tags           |
       |                 | git branch renamed-feature feature |
       |                 | git checkout renamed-feature       |
       | renamed-feature | git push -u origin renamed-feature |
@@ -56,7 +56,7 @@ Feature: git town-rename-branch: rename current branch implicitly
     When I run `git-town rename-branch renamed-production --force`
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
-      | production         | git fetch --prune                        |
+      | production         | git fetch --prune --tags                 |
       |                    | git branch renamed-production production |
       |                    | git checkout renamed-production          |
       | renamed-production | git push -u origin renamed-production    |

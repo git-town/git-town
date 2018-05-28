@@ -19,7 +19,7 @@ Feature: git town-hack: starting a new feature from a feature branch (with remot
   Scenario: result
     Then it runs the commands
       | BRANCH           | COMMAND                     |
-      | existing-feature | git fetch --prune           |
+      | existing-feature | git fetch --prune --tags    |
       |                  | git add -A                  |
       |                  | git stash                   |
       |                  | git checkout main           |

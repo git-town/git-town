@@ -15,7 +15,7 @@ Feature: git-town sync --all: syncs all feature branches
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                              |
-      | feature-1 | git fetch --prune                    |
+      | feature-1 | git fetch --prune --tags             |
       |           | git add -A                           |
       |           | git stash                            |
       |           | git checkout main                    |

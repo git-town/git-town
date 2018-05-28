@@ -22,7 +22,7 @@ Feature: git town-kill: killing the current feature branch with child branches
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                          |
-      | feature-2 | git fetch --prune                |
+      | feature-2 | git fetch --prune --tags         |
       |           | git push origin :feature-2       |
       |           | git add -A                       |
       |           | git commit -m "WIP on feature-2" |
