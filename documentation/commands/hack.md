@@ -5,7 +5,7 @@ hack - create a new feature branch off the main development branch
 #### SYNOPSIS
 
 ```
-git town hack <branch_name>
+git town hack [-p] <branch_name>
 ```
 
 #### DESCRIPTION
@@ -22,4 +22,7 @@ Finally, brings over all uncommitted changes to the new feature branch.
 ```
 <branch_name>
     The name of the branch to create.
+
+-p
+    Prompts for the parent branch (instead of assuming the main development branch)
 ```

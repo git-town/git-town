@@ -5,6 +5,7 @@
 #### New Features
 
 * `git town config`: print perennial branch trees
+* `git town hack`: add `-p` option which prompts for the parent branch instead of using the main development branch
 
 #### Changes
 
