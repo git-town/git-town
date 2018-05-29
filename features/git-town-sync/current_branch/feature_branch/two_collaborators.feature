@@ -22,7 +22,7 @@ Feature: git-town sync: collaborative feature branch syncing
     When I run `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
@@ -37,7 +37,7 @@ Feature: git-town sync: collaborative feature branch syncing
     When my coworker runs `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
@@ -54,7 +54,7 @@ Feature: git-town sync: collaborative feature branch syncing
     When I run `git-town sync`
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |

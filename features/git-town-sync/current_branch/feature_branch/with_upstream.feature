@@ -15,7 +15,7 @@ Feature: git-sync: on a feature branch with a upstream remote
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git add -A                         |
       |         | git stash                          |
       |         | git checkout main                  |

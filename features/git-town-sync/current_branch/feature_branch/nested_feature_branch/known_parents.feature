@@ -21,7 +21,7 @@ Feature: git-town sync: syncing a nested feature branch (with known parent branc
     When I run `git-town sync`
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
-      | child-feature  | git fetch --prune                         |
+      | child-feature  | git fetch --prune --tags                  |
       |                | git add -A                                |
       |                | git stash                                 |
       |                | git checkout main                         |

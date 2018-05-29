@@ -18,12 +18,12 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                |
-      | existing-feature | git fetch --prune      |
-      |                  | git add -A             |
-      |                  | git stash              |
-      |                  | git checkout main      |
-      | main             | git rebase origin/main |
+      | BRANCH           | COMMAND                  |
+      | existing-feature | git fetch --prune --tags |
+      |                  | git add -A               |
+      |                  | git stash                |
+      |                  | git checkout main        |
+      | main             | git rebase origin/main   |
     And it prints the error:
       """
       To abort, run "git-town abort".

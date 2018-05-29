@@ -19,14 +19,14 @@ Feature: git-town sync: syncing the current perennial branch
 
   Scenario: no conflict
     Then it runs the commands
-      | BRANCH | COMMAND              |
-      | qa     | git fetch --prune    |
-      |        | git add -A           |
-      |        | git stash            |
-      |        | git rebase origin/qa |
-      |        | git push             |
-      |        | git push --tags      |
-      |        | git stash pop        |
+      | BRANCH | COMMAND                  |
+      | qa     | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git rebase origin/qa     |
+      |        | git push                 |
+      |        | git push --tags          |
+      |        | git stash pop            |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized

@@ -18,7 +18,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                                      |
-      | empty-feature | git fetch --prune                            |
+      | empty-feature | git fetch --prune --tags                     |
       |               | git checkout main                            |
       | main          | git rebase origin/main                       |
       |               | git checkout empty-feature                   |

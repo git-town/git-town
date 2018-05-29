@@ -20,7 +20,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                |
-      | current-feature | git fetch --prune                      |
+      | current-feature | git fetch --prune --tags               |
       |                 | git add -A                             |
       |                 | git commit -m "WIP on current-feature" |
       |                 | git checkout main                      |

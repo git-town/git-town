@@ -18,7 +18,7 @@ Feature: Appending a branch to a feature branch
     When I run `git-town append new-child`
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
-      | existing-feature | git fetch --prune                           |
+      | existing-feature | git fetch --prune --tags                    |
       |                  | git add -A                                  |
       |                  | git stash                                   |
       |                  | git checkout main                           |
