@@ -13,8 +13,8 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
   Scenario: result
     Then it runs the commands
-      | BRANCH     | COMMAND           |
-      | production | git fetch --prune |
+      | BRANCH     | COMMAND                  |
+      | production | git fetch --prune --tags |
     And it prints the error "The branch 'production' is not a feature branch. Only feature branches can have parent branches."
     And I am still on the "production" branch
     And there are no commits

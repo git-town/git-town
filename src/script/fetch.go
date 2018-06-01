@@ -5,6 +5,6 @@ import "github.com/Originate/exit"
 // Fetch gets the local Git repo in sync with origin,
 // without modifying the workspace.
 func Fetch() {
-	err := RunCommand("git", "fetch", "--prune")
+	err := RunCommand("git", "fetch", "--prune", "--tags")
 	exit.If(err)
 }

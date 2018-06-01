@@ -17,7 +17,7 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                                      |
-      | other-feature | git fetch --prune                            |
+      | other-feature | git fetch --prune --tags                     |
       |               | git add -A                                   |
       |               | git stash                                    |
       |               | git checkout main                            |

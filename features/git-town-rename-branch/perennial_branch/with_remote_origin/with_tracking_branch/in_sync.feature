@@ -26,7 +26,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     When I run `git-town rename-branch --force production renamed-production`
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
-      | production         | git fetch --prune                        |
+      | production         | git fetch --prune --tags                 |
       |                    | git branch renamed-production production |
       |                    | git checkout renamed-production          |
       | renamed-production | git push -u origin renamed-production    |

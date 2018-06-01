@@ -30,7 +30,7 @@ end
 
 def create_remote_commit commit_data
   in_secondary_repository do
-    run 'git fetch --prune'
+    run 'git fetch --prune --tags'
     create_local_commit commit_data.merge(push: true)
   end
 end

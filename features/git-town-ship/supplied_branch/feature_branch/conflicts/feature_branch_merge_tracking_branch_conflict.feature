@@ -17,7 +17,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                            |
-      | other-feature | git fetch --prune                  |
+      | other-feature | git fetch --prune --tags           |
       |               | git add -A                         |
       |               | git stash                          |
       |               | git checkout main                  |

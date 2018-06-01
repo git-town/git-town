@@ -19,7 +19,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git add -A                         |
       |         | git stash                          |
       |         | git checkout main                  |

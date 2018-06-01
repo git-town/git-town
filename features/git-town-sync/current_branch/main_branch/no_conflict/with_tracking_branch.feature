@@ -17,14 +17,14 @@ Feature: git-town sync: syncing the main branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                |
-      | main   | git fetch --prune      |
-      |        | git add -A             |
-      |        | git stash              |
-      |        | git rebase origin/main |
-      |        | git push               |
-      |        | git push --tags        |
-      |        | git stash pop          |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git rebase origin/main   |
+      |        | git push                 |
+      |        | git push --tags          |
+      |        | git stash pop            |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized

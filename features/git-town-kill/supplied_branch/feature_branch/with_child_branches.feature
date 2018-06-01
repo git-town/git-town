@@ -20,7 +20,7 @@ Feature: git town-kill: killing the given branch with child branches
   Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                    |
-      | feature-3 | git fetch --prune          |
+      | feature-3 | git fetch --prune --tags   |
       |           | git push origin :feature-2 |
       |           | git branch -D feature-2    |
     And I end up on the "feature-3" branch

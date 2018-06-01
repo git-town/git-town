@@ -17,11 +17,11 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                |
-      | main   | git fetch --prune      |
-      |        | git add -A             |
-      |        | git stash              |
-      |        | git rebase origin/main |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git rebase origin/main   |
     And it prints the error:
       """
       To abort, run "git-town abort".

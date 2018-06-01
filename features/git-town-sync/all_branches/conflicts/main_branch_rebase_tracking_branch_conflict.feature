@@ -14,11 +14,11 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND                |
-      | main   | git fetch --prune      |
-      |        | git add -A             |
-      |        | git stash              |
-      |        | git rebase origin/main |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git add -A               |
+      |        | git stash                |
+      |        | git rebase origin/main   |
     And it prints the error:
       """
       To abort, run "git-town abort".

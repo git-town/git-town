@@ -16,7 +16,7 @@ Feature: git town-hack: prompt for parent branch
       | Please specify the parent branch of 'new-feature' | [ENTER] |
     Then it runs the commands
       | BRANCH      | COMMAND                     |
-      | main        | git fetch --prune           |
+      | main        | git fetch --prune --tags    |
       |             | git add -A                  |
       |             | git stash                   |
       |             | git rebase origin/main      |
@@ -43,7 +43,7 @@ Feature: git town-hack: prompt for parent branch
         | Please specify the parent branch of 'hotfix' | [DOWN][ENTER] |
       Then it runs the commands
         | BRANCH     | COMMAND                      |
-        | main       | git fetch --prune            |
+        | main       | git fetch --prune --tags     |
         |            | git add -A                   |
         |            | git stash                    |
         |            | git checkout production      |
