@@ -6,6 +6,7 @@
 
 * `git town config`: print perennial branch trees
 * `git town hack`: add `-p` option which prompts for the parent branch instead of using the main development branch
+* when fetching the origin repository, fetch tags that are not attached to pulled commits
 
 #### Changes
 
