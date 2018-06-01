@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 7.2.0 (2018-06-01)
+
 #### New Features
 
 * `git town config`: print perennial branch trees
