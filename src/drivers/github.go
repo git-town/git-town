@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -23,7 +24,7 @@ type githubCodeHostingDriver struct {
 }
 
 func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "github" || d.hostname == "github.com"
+	return driverType == "github" || d.hostname == "github.com" || d.hostname == os.Getenv("GHE_HOST")
 }
 
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {

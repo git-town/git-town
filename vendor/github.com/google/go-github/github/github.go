@@ -17,6 +17,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -222,8 +223,8 @@ func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
-	baseURL, _ := url.Parse(defaultBaseURL)
-	uploadURL, _ := url.Parse(uploadBaseURL)
+	baseURL, _ := url.Parse(GetEnv("GHE_API_ENDPOINT", defaultBaseURL))
+	uploadURL, _ := url.Parse(GetEnv("GHE_UPLOAD_ENDPOINT", uploadBaseURL))
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent, UploadURL: uploadURL}
 	c.common.client = c
@@ -656,6 +657,13 @@ type Error struct {
 	Field    string `json:"field"`    // field on which the error occurred
 	Code     string `json:"code"`     // validation error code
 	Message  string `json:"message"`  // Message describing the error. Errors with Code == "custom" will always have this set.
+}
+
+func GetEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }
 
 func (e *Error) Error() string {
