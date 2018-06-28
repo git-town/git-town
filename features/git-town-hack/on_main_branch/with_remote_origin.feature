@@ -16,13 +16,14 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | main        | git fetch --prune                |
-      |             | git add -A                       |
-      |             | git stash                        |
-      |             | git rebase origin/main           |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | main        | git fetch --prune --tags    |
+      |             | git add -A                  |
+      |             | git stash                   |
+      |             | git rebase origin/main      |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits

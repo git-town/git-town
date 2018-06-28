@@ -18,15 +18,16 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | feature     | git fetch --prune                |
-      | <none>      | cd <%= git_root_folder %>        |
-      | feature     | git add -A                       |
-      |             | git stash                        |
-      |             | git checkout main                |
-      | main        | git rebase origin/main           |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | feature     | git fetch --prune --tags    |
+      | <none>      | cd <%= git_root_folder %>   |
+      | feature     | git add -A                  |
+      |             | git stash                   |
+      |             | git checkout main           |
+      | main        | git rebase origin/main      |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And I am in the project root folder
     And my workspace still contains my uncommitted file

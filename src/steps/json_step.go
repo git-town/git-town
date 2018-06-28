@@ -54,8 +54,6 @@ func getStep(stepType string) Step {
 		return &ContinueRebaseBranchStep{}
 	case "*CreateBranchStep":
 		return &CreateBranchStep{}
-	case "*CreateAndCheckoutBranchStep":
-		return &CreateAndCheckoutBranchStep{}
 	case "*CreatePullRequestStep":
 		return &CreatePullRequestStep{}
 	case "*CreateRemoteBranchStep":

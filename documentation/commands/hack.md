@@ -22,3 +22,11 @@ This can be disabled by toggling the "new-branch-push-flag" configuration.
 <pre textrun="command-usage">
 git town hack <branch>
 </pre>
+
+
+#### OPTIONS
+
+```
+-p
+    Prompts for the parent branch (instead of assuming the main development branch)
+```

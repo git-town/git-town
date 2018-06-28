@@ -16,11 +16,12 @@ Feature: git town-hack: push branch to remote upon creation
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                      |
-      | main    | git fetch --prune            |
-      |         | git rebase origin/main       |
-      |         | git checkout -b feature main |
-      | feature | git push -u origin feature   |
+      | BRANCH  | COMMAND                    |
+      | main    | git fetch --prune --tags   |
+      |         | git rebase origin/main     |
+      |         | git branch feature main    |
+      |         | git checkout feature       |
+      | feature | git push -u origin feature |
     And I end up on the "feature" branch
     And my repository has the following commits
       | BRANCH  | LOCATION         | MESSAGE       |

@@ -48,7 +48,7 @@ var setupConfigCommand = &cobra.Command{
 func printConfig() {
 	fmt.Println()
 	util.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
+	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
 
 	mainBranch := git.GetMainBranch()
 	if mainBranch != "" {

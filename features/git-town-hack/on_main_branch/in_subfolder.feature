@@ -17,13 +17,14 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                           |
-      | main        | git fetch --prune                 |
+      | main        | git fetch --prune --tags          |
       | <none>      | cd <%= git_root_folder %>         |
       | main        | git add -A                        |
       |             | git stash                         |
       |             | git rebase origin/main            |
       |             | git push                          |
-      |             | git checkout -b new-feature main  |
+      |             | git branch new-feature main       |
+      |             | git checkout new-feature          |
       | new-feature | git stash pop                     |
       | <none>      | cd <%= git_folder "new_folder" %> |
     And I am in the project root folder

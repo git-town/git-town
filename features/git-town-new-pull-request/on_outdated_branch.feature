@@ -26,7 +26,7 @@ Feature: Syncing before creating the pull request
   Scenario: result
     Then it runs the commands
       | BRANCH         | COMMAND                                                                                    |
-      | child-feature  | git fetch --prune                                                                          |
+      | child-feature  | git fetch --prune --tags                                                                   |
       |                | git add -A                                                                                 |
       |                | git stash                                                                                  |
       |                | git checkout main                                                                          |

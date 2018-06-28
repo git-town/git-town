@@ -18,7 +18,7 @@ Feature: Appending a branch to a perennial branch
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                         |
-      | production | git fetch --prune               |
+      | production | git fetch --prune --tags        |
       |            | git add -A                      |
       |            | git stash                       |
       |            | git rebase origin/production    |

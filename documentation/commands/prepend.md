@@ -6,7 +6,6 @@ prepend - create a new feature branch between the current branch and its parent
 
 ```
 git town prepend <branch_name>
-git town prepend (--abort | --continue)
 ```
 
 #### DESCRIPTION
@@ -23,12 +22,6 @@ and brings over all uncommitted changes to the new feature branch.
 ```
 <branch_name>
     The name of the branch to create.
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
 ```
 
 #### SEE ALSO

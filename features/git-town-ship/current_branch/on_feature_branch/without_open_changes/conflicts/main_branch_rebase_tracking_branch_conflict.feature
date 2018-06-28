@@ -18,10 +18,10 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                |
-      | feature | git fetch --prune      |
-      |         | git checkout main      |
-      | main    | git rebase origin/main |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
     And it prints the error:
       """
       To abort, run "git-town abort".
