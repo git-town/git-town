@@ -12,7 +12,7 @@ module.exports = async function (activity) {
 }
 
 function getCommand (activity) {
-  return path.basename(activity.filename, '.md')
+  return path.basename(activity.file, '.md')
 }
 
 function getGittownUsage (activity) {

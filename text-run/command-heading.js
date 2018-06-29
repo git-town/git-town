@@ -13,5 +13,5 @@ function getHeadingText (activity) {
 }
 
 function getCommand (activity) {
-  return path.basename(activity.filename, '.md')
+  return path.basename(activity.file, '.md')
 }

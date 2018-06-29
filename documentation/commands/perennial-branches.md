@@ -7,15 +7,12 @@ Displays your perennial branches
 <a textrun="command-description">
 Perennial branches are long-lived branches.
 They cannot be shipped.
-
-Without `update`, displays your perennial branches.
-With `update`, prompts you to update your perennial branches.
 </a>
 
 #### Usage
 
 <pre textrun="command-usage">
-git town perennial-branches [command]
+git town perennial-branches
 </pre>
 
 Available commands:

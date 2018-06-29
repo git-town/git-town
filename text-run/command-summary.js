@@ -3,13 +3,13 @@ const diff = require('jsdiff-console')
 const path = require('path')
 
 module.exports = async function (activity) {
-  const markdownDesc = activity.nodes.text()
+  const markdownDesc = activity.nodes.text().trim()
   const gittownDesc = getGittownDescription(activity)
   diff(markdownDesc, gittownDesc)
 }
 
 function getCommand (activity) {
-  return path.basename(activity.filename, '.md')
+  return path.basename(activity.file, '.md')
 }
 
 function getGittownDescription (activity) {
