@@ -2,7 +2,9 @@
 # This is a glob expression, see https://github.com/isaacs/node-glob#glob-primer
 # The folder "node_modules" is already excluded.
 # To exclude the "vendor" folder: '{,!(vendor)/**/}*.md'
-files: '{,!(vendor)/**/}*.md'
+files: **/*.md
+
+exclude: vendor/**
 
 # the formatter to use
 format: dot

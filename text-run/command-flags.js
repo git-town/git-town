@@ -3,7 +3,7 @@ const diff = require('jsdiff-console')
 const path = require('path')
 
 module.exports = async function (activity) {
-  const markdownDesc = activity.searcher.tagContent('fence')
+  const markdownDesc = activity.nodes.text()
   const gittownDesc = getGittownFlags(activity)
   diff([markdownDesc], gittownDesc)
 }

@@ -4,9 +4,7 @@ const path = require('path')
 
 module.exports = async function (activity) {
   const markdownUsage = activity.nodes
-    .filter(node => node.type === 'text')
-    .map(node => node.content)
-    .join('')
+    .text()
     .replace(/\./g, '.\n')
     .replace(/\s+/, ' ')
   const gittownUsage = getGittownUsage(activity)

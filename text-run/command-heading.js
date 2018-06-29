@@ -6,8 +6,8 @@ module.exports = async function (activity) {
 }
 
 function getHeadingText (activity) {
-  return activity.searcher
-    .tagContent('text')
+  return activity.nodes
+    .text()
     .replace(' command', '')
     .toLowerCase()
 }
