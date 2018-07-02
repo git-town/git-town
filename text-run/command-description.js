@@ -26,4 +26,5 @@ function getGittownUsage (activity) {
     .replace(/:/g, ':\n')
     .replace(/^\s*/gm, '')
     .replace(/\s*$/gm, '')
+    .replace(/- /gm, '')
 }
