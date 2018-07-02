@@ -1,8 +1,8 @@
 const diff = require('jsdiff-console')
-const path = require('path')
+const getCommand = require('./helpers/get-command.js')
 
 module.exports = async function (activity) {
-  diff(getCommand(activity), getHeadingText(activity))
+  diff(getCommand(activity.file), getHeadingText(activity))
 }
 
 function getHeadingText (activity) {
@@ -10,8 +10,4 @@ function getHeadingText (activity) {
     .text()
     .replace(' command', '')
     .toLowerCase()
-}
-
-function getCommand (activity) {
-  return path.basename(activity.file, '.md')
 }

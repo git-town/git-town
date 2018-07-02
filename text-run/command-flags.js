@@ -1,6 +1,6 @@
 const child_process = require('child_process')
 const diff = require('jsdiff-console')
-const path = require('path')
+const getCommand = require('./helpers/get-command.js')
 
 module.exports = async function (activity) {
   const markdownDesc = activity.nodes.text().trim()
@@ -8,13 +8,9 @@ module.exports = async function (activity) {
   diff([markdownDesc], gittownDesc)
 }
 
-function getCommand (activity) {
-  return path.basename(activity.file, '.md')
-}
-
 function getGittownFlags (activity) {
   return child_process
-    .execSync(`git-town help ${getCommand(activity)}`)
+    .execSync(`git-town help ${getCommand(activity.file)}`)
     .toString()
     .match(/\nFlags:\n([\s\S]*)\nGlobal Flags:\n/)[1]
     .split('\n')
