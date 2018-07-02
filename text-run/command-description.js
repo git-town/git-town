@@ -5,8 +5,11 @@ const getCommand = require('./helpers/get-command.js')
 module.exports = async function (activity) {
   const markdownUsage = activity.nodes
     .text()
-    .replace(/\./g, '.\n')
     .replace(/\s+/, ' ')
+    .replace(/\./g, '.\n')
+    .replace(/:/g, ':\n')
+    .replace(/^\s*/gm, '')
+    .replace(/\s*$/gm, '')
   const gittownUsage = getGittownUsage(activity)
   diff(markdownUsage, gittownUsage)
 }
@@ -20,4 +23,7 @@ function getGittownUsage (activity) {
     .replace(/\n/g, '')
     .replace(/\s+/g, ' ')
     .replace(/\./g, '.\n')
+    .replace(/:/g, ':\n')
+    .replace(/^\s*/gm, '')
+    .replace(/\s*$/gm, '')
 }

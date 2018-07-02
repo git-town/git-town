@@ -1,28 +1,30 @@
-#### NAME
+<h1 textrun="command-heading">Prepend command</h1>
 
-prepend - create a new feature branch between the current branch and its parent
+<blockquote textrun="command-summary">
+Creates a new feature branch as the parent of the current branch
+</blockquote>
 
-#### SYNOPSIS
-
-```
-git town prepend <branch_name>
-```
-
-#### DESCRIPTION
-
-Syncs the parent branch,
+<a textrun="command-description">
+Syncs the parent branch
 forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
-pushes the new feature branch to the remote repository
-if and only if [new-branch-push-flag](./new-branch-push-flag.md) is true,
+pushes the new feature branch to the remote repository,
 and brings over all uncommitted changes to the new feature branch.
 
-#### OPTIONS
+Additionally, when there is a remote upstream,
+the main branch is synced with its upstream counterpart.
+This can be disabled by toggling the "new-branch-push-flag" configuration:
 
-```
-<branch_name>
-    The name of the branch to create.
-```
+    git town new-branch-push-flag false
+</a>
+
+
+#### Usage
+
+<pre textrun="command-usage">
+git town prepend <branch>
+</pre>
+
 
 #### SEE ALSO
 
