@@ -2994,9 +2994,9 @@ tertestrial@0.3.2:
     update-notifier "1.0.2"
     wait "0.1.0"
 
-text-runner@3.3.0-rc3:
-  version "3.3.0-rc3"
-  resolved "https://registry.yarnpkg.com/text-runner/-/text-runner-3.3.0-rc3.tgz#81d81dd898e3a5bc3dd7016cebdde89444cb7e04"
+text-runner@3.3.0-rc4:
+  version "3.3.0-rc4"
+  resolved "https://registry.yarnpkg.com/text-runner/-/text-runner-3.3.0-rc4.tgz#f77f60e80e7020b0517db25d85e703c378bd4c73"
   dependencies:
     "@babel/code-frame" "7.0.0-beta.51"
     babel-register "6.26.0"
