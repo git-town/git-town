@@ -1,13 +1,13 @@
-#### NAME
+<h1 textrun="command-heading">Offline</h1>
 
-offline - enable or disable offline mode
+<blockquote textrun="command-summary">
+Displays or sets offline mode
+</blockquote>
 
-#### SYNOPSIS
 
-```
+#### Usage
+
+<pre textrun="command-usage">
 git town offline [(true | false)]
-```
+</pre>
 
-#### DESCRIPTION
-
-If enabled, skips all network operations.
