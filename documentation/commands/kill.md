@@ -14,5 +14,5 @@ Does not delete perennial branches nor the main branch.
 #### Usage
 
 <pre textrun="command-usage">
-git town kill [<branch>]
+git town kill [&lt;branch&gt;]
 </pre>
