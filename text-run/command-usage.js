@@ -3,12 +3,12 @@ const diff = require('jsdiff-console')
 const getCommand = require('./helpers/get-command.js')
 
 module.exports = async function (activity) {
-  const markdownDesc = activity.nodes.text().trim()
-  const gittownDesc = getGittownDescription(activity)
-  diff(markdownDesc, gittownDesc)
+  const mdUsage = activity.nodes.text().trim()
+  const cliUsage = getCliUsage(activity)
+  diff(mdUsage, cliUsage)
 }
 
-function getGittownDescription (activity) {
+function getCliUsage (activity) {
   const command = getCommand(activity.file)
   const gittownOutput = child_process
     .execSync(`git-town help ${command}`)

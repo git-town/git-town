@@ -4,8 +4,8 @@ const getCommand = require('./helpers/get-command.js')
 
 module.exports = async function (activity) {
   const mdFlags = getMdFlags(activity)
-  const gittownFlags = getGittownFlags(activity)
-  diff(mdFlags, gittownFlags)
+  const cliFlags = getCliFlags(activity)
+  diff(mdFlags, cliFlags)
 }
 
 function getMdFlags (activity) {
@@ -15,7 +15,7 @@ function getMdFlags (activity) {
     .split('\n')
 }
 
-function getGittownFlags (activity) {
+function getCliFlags (activity) {
   return child_process
     .execSync(`git-town help ${getCommand(activity.file)}`)
     .toString()
