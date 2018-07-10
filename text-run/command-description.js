@@ -10,17 +10,23 @@ module.exports = async function (activity) {
 
 function getMd (activity) {
   return activity.nodes
-    .map(node => node.content)
-    .filter(node => node)
+    .map(nodeContent)
+    .map(text => text.trim())
+    .filter(text => text)
     .join('\n')
     .replace(/[ ]+/g, ' ')
     .replace(/\./g, '.\n')
     .replace(/\,/g, ',\n')
     .replace(/:/g, '\n')
     .replace(/"/g, '\n')
-    .replace(/^\s*/gm, '')
-    .replace(/\s*$/gm, '')
+    .replace(/\n<\/?a>\n/g, ' ')
     .trim()
+}
+
+function nodeContent (node) {
+  if (node.type === 'link_open') return '<a>'
+  if (node.type === 'link_close') return '</a>'
+  return node.content
 }
 
 function getGittownUsage (activity) {
