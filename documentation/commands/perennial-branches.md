@@ -13,6 +13,7 @@ They cannot be shipped.
 
 <pre textrun="command-usage">
 git town perennial-branches
+git town perennial-branches [command]
 </pre>
 
 Available commands:

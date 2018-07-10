@@ -8,6 +8,7 @@ Displays your Git Town configuration
 
 <pre textrun="command-usage">
 git town config
+git town config [command]
 </pre>
 
 Available commands:

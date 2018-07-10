@@ -13,9 +13,10 @@ function getCliUsage (activity) {
   const gittownOutput = child_process
     .execSync(`git-town help ${command}`)
     .toString()
-  const matches = gittownOutput.match(/\nUsage:\n(.*)/)
+  const matches = gittownOutput.match(/\nUsage:\n([\s\S]*?)\n\n/)
   return matches[1]
     .trim()
     .replace(' [flags]', '')
-    .replace('git-town', 'git town')
+    .replace(/git-town/g, 'git town')
+    .replace(/^\s+/gm, '')
 }
