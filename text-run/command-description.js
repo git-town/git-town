@@ -12,14 +12,14 @@ function getMd (activity) {
   return activity.nodes
     .map(nodeContent)
     .map(text => text.trim())
-    .filter(text => text)
     .join('\n')
-    .replace(/[ ]+/g, ' ')
     .replace(/\./g, '.\n')
     .replace(/\,/g, ',\n')
     .replace(/:/g, '\n')
     .replace(/"/g, '\n')
     .replace(/\n<\/?a>\n/g, ' ')
+    .replace(/[ ]+/g, ' ')
+    .replace(/\n+/g, '\n')
     .trim()
 }
 
