@@ -19,8 +19,11 @@ function getMd (activity) {
     .replace(/"/g, '\n')
     .replace(/\n<\/?a>\n/g, ' ')
     .replace(/[ ]+/g, ' ')
+    .replace(/ \./g, '.')
+    .replace(/ \,/g, ',')
     .replace(/\n+/g, '\n')
-    .trim()
+    .replace(/^\s+/gm, '')
+    .replace(/\s+$/gm, '')
 }
 
 function nodeContent (node) {
