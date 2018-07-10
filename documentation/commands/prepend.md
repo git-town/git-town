@@ -15,7 +15,9 @@ Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.
 This can be disabled by toggling the "new-branch-push-flag" configuration:
 
-    git town new-branch-push-flag false
+```
+git town new-branch-push-flag false
+```
 </a>
 
 

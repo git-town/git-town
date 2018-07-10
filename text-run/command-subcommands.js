@@ -14,7 +14,7 @@ function getGitTownCommands (activity) {
   const gitTownOutput = child_process
     .execSync(`git-town help ${command}`)
     .toString()
-  const matches = gitTownOutput.match(/\nAvailable Commands:\n(.*)/)
+  const matches = gitTownOutput.match(/\nAvailable Commands:\n([\s\S]*?)\n\n/)
   const text = matches[1]
   for (const line of text.split('\n')) {
     const words = line.trim().split(/\s+/)
