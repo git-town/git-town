@@ -3,9 +3,16 @@ const diff = require('jsdiff-console')
 const getCommand = require('./helpers/get-command.js')
 
 module.exports = async function (activity) {
-  const markdownDesc = activity.nodes.text().trim()
-  const gittownDesc = getGittownFlags(activity)
-  diff([markdownDesc], gittownDesc)
+  const mdFlags = getMdFlags(activity)
+  const gittownFlags = getGittownFlags(activity)
+  diff(mdFlags, gittownFlags)
+}
+
+function getMdFlags (activity) {
+  return activity.nodes
+    .text()
+    .trim()
+    .split('\n')
 }
 
 function getGittownFlags (activity) {

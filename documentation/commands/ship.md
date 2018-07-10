@@ -45,13 +45,9 @@ If you are using GitHub, this command can squash merge pull requests via the Git
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.
 
-#### OPTIONS
 
-```
-<branch_name>
-    The branch to ship.
-    If not provided, uses the current branch.
+#### Flags
 
-<commit_options>
-    Options to pass to 'git commit' when committing the squash-merge.
-```
+<pre textrun="command-flags">
+-m, --message string   Specify the commit message for the squash commit
+</pre>
