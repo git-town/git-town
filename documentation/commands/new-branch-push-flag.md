@@ -15,7 +15,7 @@ if and only if "new-branch-push-flag" is true. The default value is false.
 git town new-branch-push-flag [(true | false)]
 </pre>
 
-Flags:
+#### Flags
 
 <pre textrun="command-flags">
 --global   Displays or sets your global new branch push flag
