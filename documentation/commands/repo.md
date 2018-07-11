@@ -16,7 +16,6 @@ your SSH identity should be something like
 "git@github-as-account1:Originate/git town.git"
 </a>
 
-
 #### Usage
 
 <pre textrun="command-usage">

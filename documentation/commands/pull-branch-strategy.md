@@ -10,7 +10,6 @@ when merging remote tracking branches into local branches
 for the main branch and perennial branches.
 </a>
 
-
 #### Usage
 
 <pre textrun="command-usage">

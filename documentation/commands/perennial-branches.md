@@ -17,6 +17,7 @@ git town perennial-branches [command]
 </pre>
 
 Available commands:
+
 <table textrun="command-subcommands">
   <tr>
     <th>update</th>

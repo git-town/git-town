@@ -24,4 +24,3 @@ Example: your SSH identity should be something like "git@github-as-account1:Orig
 <pre textrun="command-usage">
 git town new-pull-request
 </pre>
-

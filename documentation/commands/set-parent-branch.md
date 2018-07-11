@@ -4,7 +4,6 @@
 Prompts to set the parent branch for the current branch
 </blockquote>
 
-
 #### Usage
 
 <pre textrun="command-usage">

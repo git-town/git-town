@@ -9,4 +9,3 @@ Displays the version
 <pre textrun="command-usage">
 git town version
 </pre>
-

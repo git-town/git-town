@@ -9,7 +9,6 @@ Deletes branches whose tracking branch no longer exists from the local repositor
 This usually means the branch was shipped or killed on another machine.
 </a>
 
-
 #### Usage
 
 <pre textrun="command-usage">

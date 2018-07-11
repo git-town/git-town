@@ -18,15 +18,14 @@ This can be disabled by toggling the "new-branch-push-flag" configuration:
 ```
 git town new-branch-push-flag false
 ```
-</a>
 
+</a>
 
 #### Usage
 
 <pre textrun="command-usage">
 git town prepend <branch>
 </pre>
-
 
 #### SEE ALSO
 

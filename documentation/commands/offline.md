@@ -4,10 +4,8 @@
 Displays or sets offline mode
 </blockquote>
 
-
 #### Usage
 
 <pre textrun="command-usage">
 git town offline [(true | false)]
 </pre>
-
