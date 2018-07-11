@@ -11,10 +11,10 @@ module.exports = async function (activity) {
 
 function getCliUsage (activity) {
   const command = getCommand(activity.file)
-  const gittownOutput = child_process
+  const cliOutput = child_process
     .execSync(`git-town help ${command}`)
     .toString()
-  const matches = gittownOutput.match(/\nUsage:\n([\s\S]*?)\n\n/)
+  const matches = cliOutput.match(/\nUsage:\n([\s\S]*?)\n\n/)
   return matches[1]
     .trim()
     .replace(' [flags]', '')

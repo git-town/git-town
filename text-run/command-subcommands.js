@@ -11,10 +11,10 @@ module.exports = async function (activity) {
 function getCliCommands (activity) {
   const result = []
   const command = getCommand(activity.file)
-  const gitTownOutput = child_process
+  const cliOutput = child_process
     .execSync(`git-town help ${command}`)
     .toString()
-  const matches = gitTownOutput.match(/\nAvailable Commands:\n([\s\S]*?)\n\n/)
+  const matches = cliOutput.match(/\nAvailable Commands:\n([\s\S]*?)\n\n/)
   const text = matches[1]
   for (const line of text.split('\n')) {
     const words = line.trim().split(/\s+/)

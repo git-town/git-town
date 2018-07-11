@@ -10,9 +10,9 @@ module.exports = async function (activity) {
 
 function getCliDescription (activity) {
   const command = getCommand(activity.file)
-  const gittownOutput = child_process
+  const cliOutput = child_process
     .execSync(`git-town help ${command}`)
     .toString()
-  const matches = gittownOutput.match(/^(.*)/)
+  const matches = cliOutput.match(/^(.*)/)
   return matches[1].trim()
 }
