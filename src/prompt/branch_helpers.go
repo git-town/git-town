@@ -1,11 +1,8 @@
 package prompt
 
 import (
-	"runtime"
-
 	"github.com/Originate/exit"
 	survey "gopkg.in/AlecAivazis/survey.v1"
-	surveyCore "gopkg.in/AlecAivazis/survey.v1/core"
 )
 
 type askForBranchOptions struct {
@@ -22,9 +19,7 @@ type askForBranchesOptions struct {
 
 func askForBranch(opts askForBranchOptions) string {
 	result := ""
-	if runtime.GOOS == "windows" {
-		surveyCore.SelectFocusIcon = ">"
-	}
+	initPrompts()
 	prompt := &survey.Select{
 		Message: opts.prompt,
 		Options: opts.branchNames,
@@ -37,10 +32,7 @@ func askForBranch(opts askForBranchOptions) string {
 
 func askForBranches(opts askForBranchesOptions) []string {
 	result := []string{}
-	if runtime.GOOS == "windows" {
-		surveyCore.MarkedOptionIcon = "[x]"
-		surveyCore.UnmarkedOptionIcon = "[ ]"
-	}
+	initPrompts()
 	prompt := &survey.MultiSelect{
 		Message: opts.prompt,
 		Options: opts.branchNames,

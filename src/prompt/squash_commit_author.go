@@ -29,6 +29,7 @@ var squashCommitAuthorHeaderTemplate = "Multiple people authored the '%s' branch
 
 func askForAuthor(authors []string) string {
 	result := ""
+	initPrompts()
 	prompt := &survey.Select{
 		Message: "Please choose an author for the squash commit:",
 		Options: authors,

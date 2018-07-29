@@ -40,6 +40,7 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 		options = append(options, formattedOptions[ResponseTypeSkip])
 	}
 	options = append(options, formattedOptions[ResponseTypeAbort], formattedOptions[ResponseTypeDiscard])
+	initPrompts()
 	prompt := &survey.Select{
 		Message: fmt.Sprintf("You have an unfinished `%s` command that ended on the `%s` branch %s. Please choose how to proceed", command, endBranch, humanize.Time(endTime)),
 		Options: options,
