@@ -19,7 +19,6 @@ type askForBranchesOptions struct {
 
 func askForBranch(opts askForBranchOptions) string {
 	result := ""
-	initPrompts()
 	prompt := &survey.Select{
 		Message: opts.prompt,
 		Options: opts.branchNames,
@@ -32,7 +31,6 @@ func askForBranch(opts askForBranchOptions) string {
 
 func askForBranches(opts askForBranchesOptions) []string {
 	result := []string{}
-	initPrompts()
 	prompt := &survey.MultiSelect{
 		Message: opts.prompt,
 		Options: opts.branchNames,
