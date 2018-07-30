@@ -28,7 +28,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 func Execute() {
 	git.EnsureVersionRequirementSatisfied()
 	color.NoColor = false // Prevent color from auto disable
-	prompt.InitPrompts()
+	prompt.Init()
 
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
