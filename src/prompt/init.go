@@ -13,5 +13,4 @@ func Init() {
 		surveyCore.MarkedOptionIcon = "[x]"
 		surveyCore.UnmarkedOptionIcon = "[ ]"
 	}
-
 }
