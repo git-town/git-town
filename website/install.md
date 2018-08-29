@@ -30,7 +30,7 @@ please use the manual install and ensure your Git version is 2.7.0 or higher._
 * Install / Update:
   * Download the deb file from the latest release [here](https://github.com/Originate/git-town/releases).
   * Run `dpkg -i /path/to/debfile`
-* Uninstall: run `apt-get remove git-town`
+* Uninstall: run `apt-get remove gittown`
 
 ---
 
