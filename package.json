@@ -2,7 +2,11 @@
   "dependencies": {},
   "devDependencies": {
     "harp": "0.27.0",
+    "he": "1.1.1",
+    "jsdiff-console": "2.2.1",
     "prettier": "1.9.2",
-    "text-runner": "2.0.2"
+    "prettier-standard": "8.0.1",
+    "tertestrial": "0.3.2",
+    "text-runner": "3.3.0-rc4"
   }
 }
