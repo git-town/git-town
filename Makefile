@@ -54,7 +54,7 @@ lint-go:  # lints the Go files
 	goimports -d src
 	gometalinter.v2
 
-lint-markdown:  # lints the Markdown files
+lint-markdown: build  # lints the Markdown files
 	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
 	node_modules/.bin/text-run --offline
 

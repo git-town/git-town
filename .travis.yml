@@ -6,6 +6,7 @@ go: 1.9
 
 install:
   - rvm install 2.4.1
+  - npm i -g yarn
   - make setup
 
 script:

@@ -1,9 +1,11 @@
-#### NAME
+<h1 textrun="command-heading">Version command</h1>
 
-version - provides the currently installed version of Git Town
+<blockquote textrun="command-summary">
+Displays the version
+</blockquote>
 
-#### SYNOPSIS
+#### Usage
 
-```
+<pre textrun="command-usage">
 git town version
-```
+</pre>

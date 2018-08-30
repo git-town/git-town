@@ -1,13 +1,17 @@
-#### NAME
+<h1 textrun="command-heading">Pull-branch-strategy command</h1>
 
-pull-branch-strategy - display or update the Git Town configuration for the pull branch strategy
+<blockquote textrun="command-summary">
+Displays or sets your pull branch strategy
+</blockquote>
 
-#### SYNOPSIS
+<a textrun="command-description">
+The pull branch strategy specifies what strategy to use
+when merging remote tracking branches into local branches
+for the main branch and perennial branches.
+</a>
 
-```
+#### Usage
+
+<pre textrun="command-usage">
 git town pull-branch-strategy [(rebase | merge)]
-```
-
-#### DESCRIPTION
-
-The pull branch strategy specifies what strategy to use when merging remote tracking branches into local branches for the main branch and perennial branches.
+</pre>
