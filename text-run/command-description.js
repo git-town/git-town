@@ -9,21 +9,15 @@ module.exports = async function (activity) {
 }
 
 function getMd (activity) {
-  return activity.nodes
-    .map(nodeContent)
-    .map(text => text.trim())
-    .join('\n')
-    .replace(/\./g, '.\n')
-    .replace(/\,/g, ',\n')
-    .replace(/:/g, '\n')
-    .replace(/"/g, '\n')
-    .replace(/\n<\/?a>\n/g, ' ')
-    .replace(/[ ]+/g, ' ')
-    .replace(/ \./g, '.')
-    .replace(/ \,/g, ',')
-    .replace(/\n+/g, '\n')
-    .replace(/^\s+/gm, '')
-    .replace(/\s+$/gm, '')
+  return normalize(
+    activity.nodes
+      .map(nodeContent)
+      .map(text => text.trim())
+      .join('\n')
+      .replace(/\n<\/?a>\n/g, ' ')
+      .replace(/ \./g, '.')
+      .replace(/ \,/g, ',')
+  )
 }
 
 function nodeContent (node) {
@@ -36,16 +30,18 @@ function getCliDesc (activity) {
   const command = getCommand(activity.file)
   const output = child_process.execSync(`git-town help ${command}`).toString()
   const matches = output.match(/^.*\n\n([\s\S]*)\n\nUsage:\n/m)
-  return matches[1]
-    .replace(/[ ]+/g, ' ')
+  return normalize(matches[1].replace(/- /g, '\n').replace(/[0-9]\./g, '\n'))
+}
+
+function normalize (text) {
+  return text
     .replace(/\./g, '.\n')
     .replace(/\,/g, ',\n')
-    .replace(/:/g, '\n')
-    .replace(/- /g, '\n')
-    .replace(/[0-9]\./g, '\n')
-    .replace(/"/g, '\n')
-    .replace(/^\s+/gm, '\n')
-    .replace(/\s+$/gm, '\n')
+    .replace(/[ ]+/g, ' ')
     .replace(/\n+/g, '\n')
+    .replace(/"/g, '\n')
+    .replace(/:/g, '\n')
+    .replace(/^\s+/gm, '')
+    .replace(/\s+$/gm, '')
     .trim()
 }
