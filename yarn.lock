@@ -4126,13 +4126,13 @@ prettier-standard@8.0.1:
     regenerator-runtime "^0.11.1"
     rxjs "^5.4.0"
 
-prettier@1.14.2, prettier@^1.7.0:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
-
-prettier@1.9.x:
+prettier@1.9.2, prettier@1.9.x:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.9.2.tgz#96bc2132f7a32338e6078aeb29727178c6335827"
+
+prettier@^1.7.0:
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
 
 pretty-format@^23.0.1:
   version "23.5.0"
