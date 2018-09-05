@@ -36,7 +36,7 @@ fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
 fix-markdown:  # auto-fixes all Markdown lint issues
-	prettier --write "{,!(vendor)/**/}*.md"
+	node_modules/.bin/prettier --write "{,!(vendor)/**/}*.md"
 
 fix-ruby:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
