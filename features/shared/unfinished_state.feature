@@ -79,3 +79,9 @@ Feature: warn about unfinished prompt asking the user how to proceed
       |         | git commit -m "WIP on feature" |
       |         | git checkout main              |
       | main    | git branch -D feature          |
+
+
+  Scenario: does not report unfinished state after abort
+    Given I run `git-town abort`
+    When I run `git-town kill`
+    Then it does not print "You have an unfinished `sync` command that ended on the `main` branch now."

@@ -18,7 +18,9 @@ func Run(runState *RunState) {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
-			if !runState.IsAbort && !runState.isUndo {
+			if runState.IsAbort || runState.isUndo {
+				DeletePreviousRunState()
+			} else {
 				SaveRunState(runState)
 			}
 			fmt.Println()
