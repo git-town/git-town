@@ -19,15 +19,14 @@ var hackCmd = &cobra.Command{
 
 Syncs the main branch and forks a new feature branch with the given name off it.
 
-If (and only if) [new-branch-push-flag](./new-branch-push-flag.md) is true,
+If (and only if) new-branch-push-flag is true,
 pushes the new feature branch to the remote repository.
 
 Finally, brings over all uncommitted changes to the new feature branch.
 
 Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "new-branch-push-flag" configuration:
-$ git town new-branch-push-flag false`,
+This can be disabled by toggling the "new-branch-push-flag" configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getHackConfig(args)
 		stepList := getAppendStepList(config)

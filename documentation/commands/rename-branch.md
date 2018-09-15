@@ -1,18 +1,14 @@
-#### NAME
+<h1 textrun="command-heading">Rename-branch command</h1>
 
-rename-branch - rename a branch both locally and remotely
+<blockquote textrun="command-summary">
+Renames a branch both locally and remotely
+</blockquote>
 
-#### SYNOPSIS
-
-```
-git town rename-branch [<old_branch_name>] <new_branch_name> [-f]
-```
-
-#### DESCRIPTION
-
+<a textrun="command-description">
 Renames the given branch on both the local machine and the remote if one is configured.
 Aborts if the new branch name already exists or the tracking branch is out of sync.
-This command is intended for feature branches. Renaming perennial branches has to be confirmed with the `-f` option.
+This command is intended for feature branches.
+Renaming perennial branches has to be confirmed with the "-f" option.
 
 * Creates a branch with the new name
 * Deletes the old branch
@@ -28,19 +24,18 @@ When there is a tracking branch
 
 When run on a perennial branch
 
-* Requires the use of the `-f` option
+* Requires the use of the "-f" option
 * Reconfigures git town locally for the perennial branch
+  </a>
 
-#### OPTIONS
+#### Usage
 
-```
-<old_branch_name>
-    The name of the branch to rename.
-    If omitted, the current branch will be renamed.
+<pre textrun="command-usage">
+git town rename-branch [<old_branch_name>] <new_branch_name>
+</pre>
 
-<new_branch_name>
-    The new name of the branch.
+#### Flags
 
--f
-    Forces the renaming of a perennial branch
-```
+<pre textrun="command-flags">
+--force   Force rename of perennial branch
+</pre>

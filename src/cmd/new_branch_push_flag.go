@@ -49,6 +49,6 @@ func setNewBranchPushFlag(value bool) {
 }
 
 func init() {
-	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets you global new branch push flag")
+	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	RootCmd.AddCommand(newBranchPushFlagCommand)
 }
