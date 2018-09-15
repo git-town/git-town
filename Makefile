@@ -1,7 +1,6 @@
 .DEFAULT_GOAL := spec
 date := $(shell TZ=UTC date -u '+%Y-%m-%d')
 
-
 build:  # builds for the current platform
 	go install -ldflags "-X github.com/Originate/git-town/src/cmd.version=v0.0.0-test -X github.com/Originate/git-town/src/cmd.buildDate=today"
 
@@ -37,7 +36,7 @@ fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
 fix-markdown:  # auto-fixes all Markdown lint issues
-	prettier --write "{,!(vendor)/**/}*.md"
+	node_modules/.bin/prettier --write "{,!(vendor)/**/}*.md"
 
 fix-ruby:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
@@ -54,8 +53,8 @@ lint-go:  # lints the Go files
 	goimports -d src
 	gometalinter.v2
 
-lint-markdown:  # lints the Markdown files
-	node_modules/.bin/prettier -l '{,!(vendor)/**/}*.md'
+lint-markdown: build  # lints the Markdown files
+	node_modules/.bin/prettier -l "{,!(vendor)/**/}*.md"
 	node_modules/.bin/text-run --offline
 
 lint-ruby:  # lints the Ruby files

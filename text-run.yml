@@ -2,12 +2,37 @@
 # This is a glob expression, see https://github.com/isaacs/node-glob#glob-primer
 # The folder "node_modules" is already excluded.
 # To exclude the "vendor" folder: '{,!(vendor)/**/}*.md'
-files: '{,!(vendor)/**/}*.md'
+files: '**/*.md'
+
+# black-list of files not to test
+# This is applied after the white-list above.
+exclude: 'vendor/'
 
 # the formatter to use
 format: dot
 
+# Define which folders of your Markdown source get compiled to HTML
+# and published under a different URL path.
+#
+# In this example, the public URL "/blog/foo"
+# is hosted as "post/foo.md":
+# publications:
+#   - localPath: /posts/
+#     publicPath: /blog
+#     publicExtension: ''
+
+# prefix that makes anchor tags active regions
+classPrefix: 'textrun'
+
 # whether to run the tests in an external temp directory,
 # uses ./tmp if false,
 # you can also provide a custom directory path here
-useSystemTempDirectory: true
+useSystemTempDirectory: false
+
+# whether to skip tests that require an online connection
+offline: false
+
+# activity-type specific configuration
+activityTypes:
+  runConsoleCommand:
+    globals: {}
