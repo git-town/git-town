@@ -15,5 +15,5 @@ Feature: cannot double undo
 
 
   Scenario:
-    And I run `git-town undo`
+    When I run `git-town undo`
     Then it prints the error "Nothing to undo"
