@@ -63,10 +63,6 @@ end
 # This is only enabled for commands that take branch names.
 # This is achieved through __fish_complete_git_town_command_takes_branch
 complete --command git --arguments "(git branch | tr -d '* ')" --no-files
-
-
-# Define autocompletion for command-line switches
-%s
 `
 
 type autocompleteDefinition struct {
