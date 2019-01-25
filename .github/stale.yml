@@ -7,10 +7,24 @@ daysUntilStale: 7
 # Set to false to disable. If disabled, issues still need to be closed manually, but will remain marked as stale.
 daysUntilClose: false
 
-# Limit to only `issues` or `pulls`
-only: pulls
-
+exemptLabels:
+  - documentation
+  - idea
+  - feature
+  - good first issue
+  - help wanted
+  - improvement
+  - refactoring
+  
 # Comment to post when marking as stale. Set to `false` to disable
-markComment: >
-  This change proposal is losing momentum.
-  Please help resolve it.
+pulls:
+  daysUntilStale: 7
+  markComment: >
+    This pull request is losing momentum.
+    Please help resolve it.
+
+issues:
+  daysUntilStale: 14
+  markComment: >
+    This issue is losing momentum.
+    Please help resolve it.
