@@ -24,6 +24,7 @@ This guide will help you get started and outline some things you should know whe
   * create the directory `~/go/src/github.com/Originate`
   * cd into that directory, and run `git clone git@github.com:Originate/git-town.git`
   * cd into `$GOPATH/src/github.com/Originate/git-town`
+* install [Yarn](https://yarnpkg.com/)
 * make sure you have `make` - Mac and Linux users should be okay,
   Windows users should install
   [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
