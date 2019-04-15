@@ -36,7 +36,7 @@ This guide will help you get started and outline some things you should know whe
 
 ## Building
 
-* run <code textrun="verify-make-command">make build</code> to compile the source code into a runnable binary in $GOPATH/bin
+* run <code textrun="verify-make-command">make build</code> to compile the source code into a runnable binary in `$GOPATH/bin`
 
 ## Testing
 
