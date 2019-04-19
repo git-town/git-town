@@ -50,8 +50,7 @@ lint-cucumber:  # lints the Cucumber files
 	bundle exec cucumber_lint
 
 lint-go:  # lints the Go files
-	goimports -d src
-	golangci-lint run -E goimports -E gofmt -E goconst
+	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits
 
 lint-markdown: build  # lints the Markdown files
 	node_modules/.bin/prettier -l "{,!(vendor)/**/}*.md"
