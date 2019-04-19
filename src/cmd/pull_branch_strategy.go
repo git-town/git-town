@@ -25,7 +25,7 @@ for the main branch and perennial branches.`,
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
-			return fmt.Errorf("Invalid value: '%s'", args[0])
+			return fmt.Errorf("invalid value: '%s'", args[0])
 		}
 		return cobra.MaximumNArgs(1)(cmd, args)
 	},

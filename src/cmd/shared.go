@@ -35,7 +35,7 @@ func conditionallyActivateDryRun() error {
 
 func validateBooleanArgument(arg string) error {
 	if arg != "true" && arg != "false" {
-		return fmt.Errorf("Invalid value: '%s'", arg)
+		return fmt.Errorf("invalid value: '%s'", arg)
 	}
 	return nil
 }
