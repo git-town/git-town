@@ -70,7 +70,8 @@ func getKillConfig(args []string) (result killConfig) {
 }
 
 func getKillStepList(config killConfig) (result steps.StepList) {
-	if config.IsTargetBranchLocal {
+	switch {
+	case config.IsTargetBranchLocal:
 		targetBranchParent := git.GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
@@ -86,9 +87,9 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-	} else if !git.IsOffline() {
+	case !git.IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
-	} else {
+	default:
 		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
 		os.Exit(1)
 	}

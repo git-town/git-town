@@ -44,8 +44,7 @@ func SaveRunState(runState *RunState) {
 }
 
 func getRunResultFilename() string {
-	replaceCharacterRegexp, err := regexp.Compile("[[:^alnum:]]")
-	exit.IfWrap(err, "Error compiling replace character expression")
+	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
 	return path.Join(os.TempDir(), directory)
 }

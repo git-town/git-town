@@ -44,9 +44,9 @@ func PrintCommand(cmd ...string) {
 			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
 		}
 		if index != 0 {
-			header = header + " "
+			header += " "
 		}
-		header = header + part
+		header += part
 	}
 	if strings.HasPrefix(header, "git") && git.IsRepository() {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
