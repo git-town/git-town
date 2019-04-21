@@ -51,9 +51,10 @@ This guide will help you get started and outline some things you should know whe
   which is checked into Git
 * update dependencies: <code textrun="verify-make-command">make update</code>
 * adding a new Go library:
-  * `glide get <package name>`
+  * run `dep ensure --add <package name>`
+  * start using it in the code
   * your pull request for the feature that requires the new library
-    should contain the updated glide files and vendor folder
+    should contain the updated `Gopkg.*` files and vendor folder
 
 ## Command documentation
 

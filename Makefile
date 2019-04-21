@@ -61,8 +61,8 @@ lint-ruby:  # lints the Ruby files
 	bundle exec rubocop
 
 setup:  # the setup steps necessary on developer machines
-	go get -u github.com/Masterminds/glide \
-					  gopkg.in/alecthomas/gometalinter.v2 \
+	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+	go get -u gopkg.in/alecthomas/gometalinter.v2 \
 					  github.com/onsi/ginkgo/ginkgo
 	gometalinter.v2 --install
 	bundle install
@@ -74,4 +74,4 @@ tests:  # runs the unit tests
 	ginkgo src/...
 
 update:  # updates all dependencies
-	glide up
+	dep ensure -update
