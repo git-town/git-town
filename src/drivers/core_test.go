@@ -25,7 +25,7 @@ var _ = Describe("CodeHostingDriver", func() {
 					OriginURL:  "git@self-hosted-github.com:Originate/git-town.git",
 				})
 				Expect(result).NotTo(BeNil())
-				Expect(result.HostingServiceName()).To(Equal("Github"))
+				Expect(result.HostingServiceName()).To(Equal("GitHub"))
 				Expect(result.GetRepositoryURL()).To(Equal("https://self-hosted-github.com/Originate/git-town"))
 			})
 
@@ -35,7 +35,7 @@ var _ = Describe("CodeHostingDriver", func() {
 					OriginURL:  "git@self-hosted-gitlab.com:Originate/git-town.git",
 				})
 				Expect(result).NotTo(BeNil())
-				Expect(result.HostingServiceName()).To(Equal("Gitlab"))
+				Expect(result.HostingServiceName()).To(Equal("GitLab"))
 				Expect(result.GetRepositoryURL()).To(Equal("https://self-hosted-gitlab.com/Originate/git-town"))
 			})
 		})
@@ -57,7 +57,7 @@ var _ = Describe("CodeHostingDriver", func() {
 					OriginHostname: "github.com",
 				})
 				Expect(result).NotTo(BeNil())
-				Expect(result.HostingServiceName()).To(Equal("Github"))
+				Expect(result.HostingServiceName()).To(Equal("GitHub"))
 				Expect(result.GetRepositoryURL()).To(Equal("https://github.com/Originate/git-town"))
 			})
 
@@ -67,7 +67,7 @@ var _ = Describe("CodeHostingDriver", func() {
 					OriginHostname: "gitlab.com",
 				})
 				Expect(result).NotTo(BeNil())
-				Expect(result.HostingServiceName()).To(Equal("Gitlab"))
+				Expect(result.HostingServiceName()).To(Equal("GitLab"))
 				Expect(result.GetRepositoryURL()).To(Equal("https://gitlab.com/Originate/git-town"))
 			})
 		})

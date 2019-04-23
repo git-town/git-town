@@ -64,7 +64,7 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 }
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
-	return "Github"
+	return "GitHub"
 }
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
