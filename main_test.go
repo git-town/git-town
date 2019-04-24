@@ -10,20 +10,24 @@ Test setup:
 
 import (
 	"fmt"
-	"log"
-	"os/exec"
 	"strings"
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/test"
 )
 
-// REPOSITORY_BASE contains the root directory
-// in which all Git repos are stored.
-// var REPOSITORY_BASE string
+var runner test.Runner
 
-// lastRunOutput contains the output of the last command
-var lastRunOutput string
+// repoManager manages the various Git repositories
+// that we use for testing the functionality of Git Town.
+// type repoManager struct {
+
+// 	// rootDir contains the name of the directory
+// 	// that contains the various Git repositories.
+// 	// This was named REPOSITORY_BASE before.
+// 	rootDir string
+// }
 
 func beforeSuite() {
 	// REPOSITORY_BASE, err := ioutil.TempDir("", "")
@@ -31,6 +35,7 @@ func beforeSuite() {
 	// 	log.Fatalf("cannot create temp directory", err)
 	// }
 	// fmt.Println("REPOSITORY_BASE:", REPOSITORY_BASE)
+	runner = test.Runner{}
 }
 
 func beforeScenario(interface{}) {
@@ -52,18 +57,6 @@ func beforeScenario(interface{}) {
 // func repositoryPath(repoName string) string {
 // 	return REPOSITORY_BASE + "/" + repoName
 // }
-
-// run runs the command consisting of the given elements.
-func run(name string, commands ...string) error {
-	cmd := exec.Command(name, commands...)
-	output, err := cmd.CombinedOutput()
-	lastRunOutput = string(output)
-	// fmt.Println("output:", lastRunOutput)
-	if err != nil {
-		log.Printf("Command finished with error: %v", err)
-	}
-	return err
-}
 
 // func runInRepo(repoName string, command string, args ...string) error {
 // 	path := repositoryPath(repoName)
@@ -99,21 +92,19 @@ func iHaventConfiguredGitTownYet() error {
 }
 
 func iRun(command string) error {
-	// NOTE: we split the string by space here, this only works for simple commands without quotes
-	parts := strings.Fields(command)
-	command, args := parts[0], parts[1:]
-	return run(command, args...)
+	runner.RunString(command)
+	return nil
 }
 
 func itPrints(expected *gherkin.DocString) error {
-	if !strings.Contains(lastRunOutput, expected.Content) {
+	if !strings.Contains(runner.Output, expected.Content) {
 		return fmt.Errorf(`text not found: %s`, expected.Content)
 	}
 	return nil
 }
 
 func itDoesNotPrint(text string) error {
-	if strings.Contains(lastRunOutput, text) {
+	if strings.Contains(runner.Output, text) {
 		return fmt.Errorf(`text found: %s`, text)
 	}
 	return nil
