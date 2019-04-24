@@ -15,7 +15,7 @@ and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.
 
 See [git-town.com](https://www.git-town.com) for documentation
-and this [Softpedia article](http://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
+and this [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
 ## Commands
