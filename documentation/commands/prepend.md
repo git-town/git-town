@@ -18,6 +18,7 @@ This can be disabled by toggling the "new-branch-push-flag" configuration:
 ```
 git town new-branch-push-flag false
 ```
+
 </a>
 
 #### Usage
