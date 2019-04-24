@@ -1,10 +1,13 @@
 package main
 
-/* Test setup:
- * - at script startup, it creates a memoized repo containing a main branch
- * - when creating an actual repo, it copies that memoized repo over
- *   rather than creating a new one from scratch
- */
+/*
+Test setup:
+- by default, each scenario runs in a directory called "developer"
+	that has a "main" branch and a valid Git Town configuration
+- at script startup, it creates a memoized repo with that setup
+- before each scenario, it copies that memoized repo over into the "developer" repo
+*/
+
 import (
 	"fmt"
 	"log"
@@ -17,7 +20,7 @@ import (
 
 // REPOSITORY_BASE contains the root directory
 // in which all Git repos are stored.
-var REPOSITORY_BASE string
+// var REPOSITORY_BASE string
 
 // lastRunOutput contains the output of the last command
 var lastRunOutput string
