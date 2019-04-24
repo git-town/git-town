@@ -97,14 +97,14 @@ func iRun(command string) error {
 }
 
 func itPrints(expected *gherkin.DocString) error {
-	if !strings.Contains(runner.Output, expected.Content) {
+	if !runner.OutputContains(expected.Content) {
 		return fmt.Errorf(`text not found: %s`, expected.Content)
 	}
 	return nil
 }
 
 func itDoesNotPrint(text string) error {
-	if strings.Contains(runner.Output, text) {
+	if runner.OutputContains(text) {
 		return fmt.Errorf(`text found: %s`, text)
 	}
 	return nil

@@ -30,3 +30,9 @@ func (r *Runner) RunString(command string) {
 	command, args := parts[0], parts[1:]
 	r.Run(command, args...)
 }
+
+// OutputContains returns whether the output of the last command
+// contains the given string.
+func (r *Runner) OutputContains(text string) bool {
+	return strings.Contains(r.Output, text)
+}
