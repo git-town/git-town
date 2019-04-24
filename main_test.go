@@ -17,7 +17,7 @@ import (
 	"github.com/Originate/git-town/test"
 )
 
-var runner test.Runner
+var runner *test.Runner
 
 // repoManager manages the various Git repositories
 // that we use for testing the functionality of Git Town.
@@ -30,12 +30,7 @@ var runner test.Runner
 // }
 
 func beforeSuite() {
-	// REPOSITORY_BASE, err := ioutil.TempDir("", "")
-	// if err != nil {
-	// 	log.Fatalf("cannot create temp directory", err)
-	// }
-	// fmt.Println("REPOSITORY_BASE:", REPOSITORY_BASE)
-	runner = test.Runner{}
+	runner = &test.Runner{}
 }
 
 func beforeScenario(interface{}) {
