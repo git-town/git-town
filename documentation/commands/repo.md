@@ -5,6 +5,7 @@ Opens the repository homepage
 </blockquote>
 
 <a textrun="command-description">
+
 Supported only for repositories hosted on [GitHub](http://github.com/),
 [GitLab](http://gitlab.com/), and [Bitbucket](https://bitbucket.org/).
 When using hosted versions of GitHub, GitLab, or Bitbucket,
