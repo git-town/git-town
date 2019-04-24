@@ -92,6 +92,12 @@ func myWorkspaceIsCurrentlyNotAGitRepository() error {
 	return nil
 }
 
+func iHaventConfiguredGitTownYet() error {
+	// delete_main_branch_configuration
+	// delete_perennial_branches_configuration
+	return nil
+}
+
 func iRun(command string) error {
 	// NOTE: we split the string by space here, this only works for simple commands without quotes
 	parts := strings.Fields(command)
@@ -116,6 +122,7 @@ func itDoesNotPrint(text string) error {
 func FeatureContext(s *godog.Suite) {
 	s.BeforeSuite(beforeSuite)
 	s.BeforeScenario(beforeScenario)
+	s.Step(`^I haven\'t configured Git Town yet$`, iHaventConfiguredGitTownYet)
 	s.Step("^my workspace is currently not a Git repository$", myWorkspaceIsCurrentlyNotAGitRepository)
 	s.Step(`^I run "([^"]*)"$`, iRun)
 	s.Step("^it prints$", itPrints)
