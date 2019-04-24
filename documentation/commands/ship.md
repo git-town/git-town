@@ -27,7 +27,7 @@ Setup:
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
    Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
    It will also update the base branch for any pull requests against that branch.
-   </a>
+</a>
 
 #### Usage
 

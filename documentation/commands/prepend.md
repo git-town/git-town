@@ -5,7 +5,7 @@ Creates a new feature branch as the parent of the current branch
 </blockquote>
 
 <a textrun="command-description">
-Syncs the parent branch
+Syncs the parent branch,
 forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository,
@@ -18,7 +18,6 @@ This can be disabled by toggling the "new-branch-push-flag" configuration:
 ```
 git town new-branch-push-flag false
 ```
-
 </a>
 
 #### Usage

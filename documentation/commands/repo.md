@@ -13,7 +13,7 @@ so that Git Town can guess which hosting service you use.
 
 Example:
 your SSH identity should be something like
-"git@github-as-account1:Originate/git town.git"
+"git@github-as-account1:Originate/git-town.git"
 </a>
 
 #### Usage

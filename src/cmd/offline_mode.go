@@ -10,6 +10,11 @@ import (
 var offlineCommand = &cobra.Command{
 	Use:   "offline [(true | false)]",
 	Short: "Displays or sets offline mode",
+	Long: `Displays or sets offline mode
+
+Use offline mode to maximize Git Town capabilities when working in an offline environment, such as on an airplane.
+When Git Town is in offline mode, certain commands will lose networking and upstream syncing capabilities but will
+continue to work locally. Commands that rely on network functionality will be completely disabled.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			printOfflineFlag()
