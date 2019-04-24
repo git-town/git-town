@@ -5,7 +5,7 @@ Feature: show help screen even outside of a Git repository
 
   Scenario Outline: Running outside of a Git repository
     Given my workspace is currently not a Git repository
-    When I run `<COMMAND>`
+    When I run "<COMMAND>"
     Then it prints
       """
       Usage:
