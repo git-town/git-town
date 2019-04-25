@@ -153,7 +153,7 @@ func (e *Environments) RunInRepo(repoName string, command string, args ...string
 	}
 	output, err := e.Run(command, args...)
 	if err != nil {
-		return "", errors.Wrapf(err, "error running %s command\noutput:%s", command, output)
+		return output, errors.Wrapf(err, "error running %s command\noutput:%s", command, output)
 	}
 	err = os.Chdir(currentDir)
 	if err != nil {

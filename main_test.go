@@ -69,6 +69,16 @@ func itDoesNotPrint(text string) error {
 	return nil
 }
 
+func itPrintsTheError(expected *gherkin.DocString) error {
+	if !strings.Contains(lastRunOutput, expected.Content) {
+		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunOutput)
+	}
+	if lastRunError == nil {
+		return fmt.Errorf("expected error")
+	}
+	return nil
+}
+
 func FeatureContext(s *godog.Suite) {
 	s.BeforeSuite(beforeSuite)
 	s.BeforeScenario(beforeScenario)
@@ -77,4 +87,5 @@ func FeatureContext(s *godog.Suite) {
 	s.Step(`^I run "([^"]*)"$`, iRun)
 	s.Step("^it prints$", itPrints)
 	s.Step("^it does not print \"([^\"]*)\"$", itDoesNotPrint)
+	s.Step(`^it prints the error:$`, itPrintsTheError)
 }
