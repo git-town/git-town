@@ -10,6 +10,7 @@ Test setup:
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/DATA-DOG/godog"
@@ -17,62 +18,25 @@ import (
 	"github.com/Originate/git-town/test"
 )
 
-var runner *test.Runner
-
-// repoManager manages the various Git repositories
-// that we use for testing the functionality of Git Town.
-// type repoManager struct {
-
-// 	// rootDir contains the name of the directory
-// 	// that contains the various Git repositories.
-// 	// This was named REPOSITORY_BASE before.
-// 	rootDir string
-// }
+var environments *test.Environments
+var lastRunOutput string
+var lastRunError error
 
 func beforeSuite() {
-	runner = &test.Runner{}
+	var err error
+	environments, err = test.NewEnvironments()
+	if err != nil {
+		log.Fatalf("cannot set up new environment: %s", err)
+	}
 }
 
 func beforeScenario(interface{}) {
 	// copy MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
 }
 
-// createRepository creates the
-// func createOriginRepository() error {
-// 	fmt.Println("creating origin repository")
-// 	repoPath := repositoryPath("origin")
-// 	fmt.Println("repository path:", repoPath)
-// 	err := os.MkdirAll(repoPath, 644)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return run("git", "init", "--bare", repoPath)
-// }
-
-// func repositoryPath(repoName string) string {
-// 	return REPOSITORY_BASE + "/" + repoName
-// }
-
 // func runInRepo(repoName string, command string, args ...string) error {
 // 	path := repositoryPath(repoName)
 // 	// at_path path, &block
-// }
-
-// func initializeEnvironment() {
-
-// // Create origin repo and set "main" as default branch
-// createRepository("origin")
-// runInRepo("origin", "git symbolic-ref HEAD refs/heads/main")
-
-// cloneRepo("origin", "developer")
-
-// // Initialize main branch
-// runInRepo("developer", "git checkout --orphan main")
-// runInRepo("developer", "git commit --allow-empty -m 'Initial commit'")
-// runInRepo("developer", "git push -u origin main")
-
-// // memoize environment by saving directory contents
-// // FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 // }
 
 func myWorkspaceIsCurrentlyNotAGitRepository() error {
@@ -87,19 +51,19 @@ func iHaventConfiguredGitTownYet() error {
 }
 
 func iRun(command string) error {
-	runner.RunString(command)
+	lastRunOutput, lastRunError = environments.RunStringInRepo("developer", command)
 	return nil
 }
 
 func itPrints(expected *gherkin.DocString) error {
-	if !runner.OutputContains(expected.Content) {
+	if !strings.Contains(lastRunOutput, expected.Content) {
 		return fmt.Errorf(`text not found: %s`, expected.Content)
 	}
 	return nil
 }
 
 func itDoesNotPrint(text string) error {
-	if runner.OutputContains(text) {
+	if strings.Contains(lastRunOutput, text) {
 		return fmt.Errorf(`text found: %s`, text)
 	}
 	return nil
