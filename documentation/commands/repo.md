@@ -5,6 +5,7 @@ Opens the repository homepage
 </blockquote>
 
 <a textrun="command-description">
+
 Supported only for repositories hosted on [GitHub](http://github.com/),
 [GitLab](http://gitlab.com/), and [Bitbucket](https://bitbucket.org/).
 When using hosted versions of GitHub, GitLab, or Bitbucket,
@@ -13,7 +14,7 @@ so that Git Town can guess which hosting service you use.
 
 Example:
 your SSH identity should be something like
-"git@github-as-account1:Originate/git town.git"
+"git@github-as-account1:Originate/git-town.git"
 </a>
 
 #### Usage

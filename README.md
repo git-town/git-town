@@ -1,21 +1,21 @@
-![Git Town](http://originate.github.io/git-town/documentation/logo-horizontal.svg)
+![Git Town](https://originate.github.io/git-town/documentation/logo-horizontal.svg)
 
 [![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Originate/git-town)](https://goreportcard.com/report/github.com/Originate/git-town)
-[![License](http://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
+[![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
 Git Town makes software development teams who use Git even more productive and happy.
 It adds Git commands that support
 [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
-the [Nvie model](http://nvie.com/posts/a-successful-git-branching-model),
+the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/),
 and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.
 
-See [git-town.com](http://www.git-town.com) for documentation
-and this [Softpedia article](http://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
+See [git-town.com](https://www.git-town.com) for documentation
+and this [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
 ## Commands
