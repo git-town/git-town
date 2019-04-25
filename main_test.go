@@ -19,12 +19,14 @@ import (
 )
 
 var environments *test.Environments
+var runner *test.Runner
 var lastRunOutput string
 var lastRunError error
 
 func beforeSuite() {
 	var err error
-	environments, err = test.NewEnvironments()
+	runner = &test.Runner{}
+	environments, err = test.NewEnvironments(runner)
 	if err != nil {
 		log.Fatalf("cannot set up new environment: %s", err)
 	}
