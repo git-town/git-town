@@ -10,6 +10,7 @@ Test setup:
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strings"
 
@@ -24,9 +25,12 @@ var lastRunOutput string
 var lastRunError error
 
 func beforeSuite() {
-	var err error
-	runner = &test.Runner{}
-	environments, err = test.NewEnvironments(runner)
+	baseDir, err := ioutil.TempDir("", "")
+	if err != nil {
+		log.Fatalf("cannot create base directory: %s", err)
+	}
+	runner = test.NewRunner(baseDir)
+	environments, err = test.NewEnvironments(baseDir, runner)
 	if err != nil {
 		log.Fatalf("cannot set up new environment: %s", err)
 	}
@@ -36,14 +40,21 @@ func beforeScenario(interface{}) {
 	// copy MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
 }
 
-// func runInRepo(repoName string, command string, args ...string) error {
-// 	path := repositoryPath(repoName)
-// 	// at_path path, &block
-// }
+func afterScenario(args interface{}, err error) {
+	runner.RemoveTempShellOverrides()
+}
 
 func myWorkspaceIsCurrentlyNotAGitRepository() error {
 	// FileUtils.rm_rf '.git'
 	return nil
+}
+
+func iHaveGitInstalled(arg1 string) error {
+	err := runner.AddTempShellOverride(
+		"git",
+		`#!/usr/bin/env bash
+		echo "git version 2.6.2"`)
+	return err
 }
 
 func iHaventConfiguredGitTownYet() error {
@@ -84,10 +95,12 @@ func itPrintsTheError(expected *gherkin.DocString) error {
 func FeatureContext(s *godog.Suite) {
 	s.BeforeSuite(beforeSuite)
 	s.BeforeScenario(beforeScenario)
+	s.AfterScenario(afterScenario)
 	s.Step(`^I haven\'t configured Git Town yet$`, iHaventConfiguredGitTownYet)
 	s.Step("^my workspace is currently not a Git repository$", myWorkspaceIsCurrentlyNotAGitRepository)
 	s.Step(`^I run "([^"]*)"$`, iRun)
 	s.Step("^it prints$", itPrints)
 	s.Step("^it does not print \"([^\"]*)\"$", itDoesNotPrint)
 	s.Step(`^it prints the error:$`, itPrintsTheError)
+	s.Step(`^I have Git "([^"]*)" installed$`, iHaveGitInstalled)
 }

@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -39,17 +38,9 @@ type Environments struct {
 
 // NewEnvironments creates a new Environments instance
 // and prepopulates its environment cache.
-func NewEnvironments(runner *Runner) (*Environments, error) {
-
-	// create temp dir
-	root, err := ioutil.TempDir("", "")
-	if err != nil {
-		return nil, errors.Wrap(err, "cannot create temp directory")
-	}
-	fmt.Println("REPOSITORY_BASE:", root)
-
-	environments := &Environments{baseDir: root, runner: runner}
-	err = environments.createMemoizedEnvironment()
+func NewEnvironments(baseDir string, runner *Runner) (*Environments, error) {
+	environments := &Environments{baseDir: baseDir, runner: runner}
+	err := environments.createMemoizedEnvironment()
 	if err != nil {
 		return environments, errors.Wrap(err, "Cannot create memoized environment")
 	}
@@ -65,7 +56,6 @@ func (e *Environments) createMemoizedEnvironment() error {
 	fmt.Println("creating origin repository")
 	repoPath := e.repositoryPath("origin")
 	fmt.Println("repository path:", repoPath)
-	fmt.Println(0x777)
 	err := os.MkdirAll(repoPath, 0777)
 	if err != nil {
 		return errors.Wrap(err, "cannot create origin directory")
