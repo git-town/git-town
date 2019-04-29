@@ -92,6 +92,22 @@ func itPrintsTheError(expected *gherkin.DocString) error {
 	return nil
 }
 
+func itRunsTheCommands(table *gherkin.DataTable) error {
+	commands := test.CommandsInOutput(lastRunOutput)
+	return test.AssertStringSliceMatchesTable(commands, table)
+}
+
+func itRunsNoCommands() error {
+	commands := test.CommandsInOutput(lastRunOutput)
+	if len(commands) > 0 {
+		for _, command := range commands {
+			fmt.Println(command)
+		}
+		return fmt.Errorf("expected no commands but found %d commands", len(commands))
+	}
+	return nil
+}
+
 func FeatureContext(s *godog.Suite) {
 	s.BeforeSuite(beforeSuite)
 	s.BeforeScenario(beforeScenario)
@@ -103,4 +119,6 @@ func FeatureContext(s *godog.Suite) {
 	s.Step("^it does not print \"([^\"]*)\"$", itDoesNotPrint)
 	s.Step(`^it prints the error:$`, itPrintsTheError)
 	s.Step(`^I have Git "([^"]*)" installed$`, iHaveGitInstalled)
+	s.Step(`^it runs the commands$`, itRunsTheCommands)
+	s.Step(`^it runs no commands$`, itRunsNoCommands)
 }
