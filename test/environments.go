@@ -38,19 +38,14 @@ type Environments struct {
 
 // NewEnvironments creates a new Environments instance
 // and prepopulates its environment cache.
-func NewEnvironments(baseDir string, runner *Runner) (*Environments, error) {
-	environments := &Environments{baseDir: baseDir, runner: runner}
-	err := environments.createMemoizedEnvironment()
-	if err != nil {
-		return environments, errors.Wrap(err, "Cannot create memoized environment")
-	}
-	return environments, nil
+func NewEnvironments(baseDir string, runner *Runner) *Environments {
+	return &Environments{baseDir: baseDir, runner: runner}
 }
 
-// createMemoizedEnvironment creates a cache for the standardized environment
+// CreateMemoizedEnvironment creates a cache for the standardized environment
 // that all Cucumber Scenarios start out with,
 // including a "main" branch and an "origin" remote.
-func (e *Environments) createMemoizedEnvironment() error {
+func (e *Environments) CreateMemoizedEnvironment() error {
 
 	// Create origin repo and set "main" as default branch
 	fmt.Println("creating origin repository")

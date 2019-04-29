@@ -30,9 +30,13 @@ func beforeSuite() {
 		log.Fatalf("cannot create base directory: %s", err)
 	}
 	runner = test.NewRunner(baseDir)
-	environments, err = test.NewEnvironments(baseDir, runner)
+	environments = test.NewEnvironments(baseDir, runner)
 	if err != nil {
 		log.Fatalf("cannot set up new environment: %s", err)
+	}
+	err = environments.CreateMemoizedEnvironment()
+	if err != nil {
+		log.Fatalf("Cannot create memoized environment: %s", err)
 	}
 }
 
@@ -108,6 +112,11 @@ func itRunsNoCommands() error {
 	return nil
 }
 
+func theFollowingCommitExistsInMyRepository(table *gherkin.DataTable) error {
+	return godog.ErrPending
+}
+
+// nolint:deadcode
 func FeatureContext(s *godog.Suite) {
 	s.BeforeSuite(beforeSuite)
 	s.BeforeScenario(beforeScenario)
@@ -121,4 +130,5 @@ func FeatureContext(s *godog.Suite) {
 	s.Step(`^I have Git "([^"]*)" installed$`, iHaveGitInstalled)
 	s.Step(`^it runs the commands$`, itRunsTheCommands)
 	s.Step(`^it runs no commands$`, itRunsNoCommands)
+	s.Step(`^the following commit exists in my repository$`, theFollowingCommitExistsInMyRepository)
 }
