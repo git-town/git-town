@@ -37,6 +37,14 @@
   version = "v1.1.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:fdae1c338ec6667687fb3fdbde842b3c421c930163981b5d441502b240b7f50b"
+  name = "github.com/dchest/uniuri"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8902c56451e9b58ff940bbe5fec35d5f9c04584a"
+
+[[projects]]
   digest = "1:ee7fe6a68ba9f21bc748293d4e1e66ad327f64a89b0f5ba2d021430babd4b8c9"
   name = "github.com/dustin/go-humanize"
   packages = ["."]
@@ -71,6 +79,14 @@
   packages = ["query"]
   pruneopts = "UT"
   revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
+
+[[projects]]
+  branch = "master"
+  digest = "1:be3bd107094de27145a9a92e9e5e2b3eb03d3d92a5dec68da31b8eba4e4c6ae2"
+  name = "github.com/iancoleman/strcase"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e506e3ef73653e84c592ba44aab577a46678f68c"
 
 [[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
@@ -300,9 +316,11 @@
     "github.com/DATA-DOG/godog/gherkin",
     "github.com/Originate/exit",
     "github.com/acarl005/stripansi",
+    "github.com/dchest/uniuri",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
     "github.com/google/go-github/github",
+    "github.com/iancoleman/strcase",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/pkg/errors",

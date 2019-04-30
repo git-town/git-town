@@ -14,38 +14,66 @@ import (
 	"log"
 	"strings"
 
+	"github.com/dchest/uniuri"
+
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test"
+	"github.com/iancoleman/strcase"
 )
 
-var environments *test.Environments
-var runner *test.Runner
-var lastRunOutput string
-var lastRunError error
+// the GitManager instance to use
+var gitManager test.GitManager
+
+// the GitEnvironment used in the current scenario
+var gitEnvironment test.GitEnvironment
+
+// the result of the last run of Git Town
+var lastRunResult test.RunResult
 
 func beforeSuite() {
+
+	// create the directory to put the GitEnvironments ino
 	baseDir, err := ioutil.TempDir("", "")
 	if err != nil {
 		log.Fatalf("cannot create base directory: %s", err)
 	}
-	runner = test.NewRunner(baseDir)
-	environments = test.NewEnvironments(baseDir, runner)
-	if err != nil {
-		log.Fatalf("cannot set up new environment: %s", err)
-	}
-	err = environments.CreateMemoizedEnvironment()
+
+	// create the GitManager
+	gitManager = test.NewGitManager(baseDir)
+	err = gitManager.CreateMemoizedEnvironment()
 	if err != nil {
 		log.Fatalf("Cannot create memoized environment: %s", err)
 	}
 }
 
-func beforeScenario(interface{}) {
-	// copy MEMOIZED_REPOSITORY_BASE to REPOSITORY_BASE
+func beforeScenario(args interface{}) {
+
+	// create a GitEnvironment for the scenario
+	random := uniuri.NewLen(10)
+	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(random)
+	var err error
+	gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
+	if err != nil {
+		log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
+	}
 }
 
 func afterScenario(args interface{}, err error) {
-	runner.RemoveTempShellOverrides()
+	// TODO: delete scenario environment
+}
+
+// scenarioName returns the name of the given Scenario or ScenarioOutline
+func scenarioName(args interface{}) string {
+	scenario, ok := args.(*gherkin.Scenario)
+	if ok {
+		return scenario.Name
+	}
+	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
+	if ok {
+		return scenarioOutline.Name
+	}
+	panic("unknown type")
 }
 
 func myWorkspaceIsCurrentlyNotAGitRepository() error {
@@ -54,7 +82,7 @@ func myWorkspaceIsCurrentlyNotAGitRepository() error {
 }
 
 func iHaveGitInstalled(arg1 string) error {
-	err := runner.AddTempShellOverride(
+	err := gitEnvironment.DeveloperRepo.AddTempShellOverride(
 		"git",
 		`#!/usr/bin/env bash
 		echo "git version 2.6.2"`)
@@ -68,41 +96,41 @@ func iHaventConfiguredGitTownYet() error {
 }
 
 func iRun(command string) error {
-	lastRunOutput, lastRunError = environments.RunStringInRepo("developer", command)
+	lastRunResult = gitEnvironment.DeveloperRepo.RunString(command)
 	return nil
 }
 
 func itPrints(expected *gherkin.DocString) error {
-	if !strings.Contains(lastRunOutput, expected.Content) {
+	if !strings.Contains(lastRunResult.Output, expected.Content) {
 		return fmt.Errorf(`text not found: %s`, expected.Content)
 	}
 	return nil
 }
 
 func itDoesNotPrint(text string) error {
-	if strings.Contains(lastRunOutput, text) {
+	if strings.Contains(lastRunResult.Output, text) {
 		return fmt.Errorf(`text found: %s`, text)
 	}
 	return nil
 }
 
 func itPrintsTheError(expected *gherkin.DocString) error {
-	if !strings.Contains(lastRunOutput, expected.Content) {
-		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunOutput)
+	if !strings.Contains(lastRunResult.Output, expected.Content) {
+		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunResult.Output)
 	}
-	if lastRunError == nil {
+	if lastRunResult.Err == nil {
 		return fmt.Errorf("expected error")
 	}
 	return nil
 }
 
 func itRunsTheCommands(table *gherkin.DataTable) error {
-	commands := test.CommandsInOutput(lastRunOutput)
+	commands := test.CommandsInOutput(lastRunResult.Output)
 	return test.AssertStringSliceMatchesTable(commands, table)
 }
 
 func itRunsNoCommands() error {
-	commands := test.CommandsInOutput(lastRunOutput)
+	commands := test.CommandsInOutput(lastRunResult.Output)
 	if len(commands) > 0 {
 		for _, command := range commands {
 			fmt.Println(command)

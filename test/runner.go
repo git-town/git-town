@@ -6,60 +6,74 @@ import (
 	"os/exec"
 	"path"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // Runner runs shell commands in a customizable environment.
 // Possible customizations:
 // - override certain shell commands permanently or temporary
 type Runner struct {
-	baseDir string
+
+	// tempShellOverrideDirDir contains the path of the directory in which the temp shell overrides exist.
+	// This variable is only populated when temp shell overrides are set.
+	tempShellOverridesDir string
 }
 
-func NewRunner(baseDir string) *Runner {
-	return &Runner{baseDir: baseDir}
+// RunResult represents the outcomes of a command that was run.
+type RunResult struct {
+	Output string
+	Err    error
 }
 
 // AddTempShellOverride adds a temporary mock of a shell command
-// with the given name and content.
+// with the given name and file content.
 func (r *Runner) AddTempShellOverride(name, content string) error {
-	err := r.createTempShellOverrideDir()
-	if err != nil {
-		return errors.Wrap(err, "cannot create temp shell overrides directory")
+	if !r.hasTempShellOverride() {
+		err := r.createTempShellOverridesDir()
+		if err != nil {
+			return err
+		}
 	}
-	filePath := path.Join(r.tempShellOverrideDirPath(), name)
-	err = ioutil.WriteFile(filePath, []byte(content), 0744)
-	if err != nil {
-		return errors.Wrapf(err, "cannot create temp shell override file %s", filePath)
-	}
-	return nil
+	return ioutil.WriteFile(r.tempShellOverrideFilePath(name), []byte(content), 0744)
+}
+
+// tempShellOverrideFilePath returns the path where to store the given
+// temp shell override on disk.
+func (r *Runner) tempShellOverrideFilePath(shellOverrideFilename string) string {
+	return path.Join(r.tempShellOverridesDir, shellOverrideFilename)
 }
 
 func (r *Runner) RemoveTempShellOverrides() {
-	os.RemoveAll(r.tempShellOverrideDirPath())
+	os.RemoveAll(r.tempShellOverridesDir)
+	r.tempShellOverridesDir = ""
 }
 
-func (r *Runner) createTempShellOverrideDir() error {
-	return os.MkdirAll(r.tempShellOverrideDirPath(), 0777)
+// createTempShellOverridesDir creates the folder that will contain the temp shell overrides.
+// It is safe to call this method multiple times.
+func (r *Runner) createTempShellOverridesDir() error {
+	var err error
+	r.tempShellOverridesDir, err = ioutil.TempDir("", "")
+	return err
 }
 
-func (r *Runner) tempShellOverrideDirPath() string {
-	return path.Join(r.baseDir, "temp_shell_overrides")
+// hasTempShellOverrideDir returns whether a folder for the temp shell overrides was already created.
+func (r *Runner) hasTempShellOverride() bool {
+	return r.tempShellOverridesDir != ""
 }
 
 // Run runs the given command with the given argv-like arguments in the current directory
 // and stores the output and error for later analysis.
-func (r *Runner) Run(name string, arguments ...string) (string, error) {
+func (r *Runner) Run(name string, arguments ...string) RunResult {
 
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
-	for i, entry := range customEnv {
-		if strings.HasPrefix(entry, "PATH=") {
-			parts := strings.SplitN(entry, "=", 2)
-			parts[1] = r.tempShellOverrideDirPath() + ":" + parts[1]
-			customEnv[i] = strings.Join(parts, "=")
-			break
+	if r.hasTempShellOverride() {
+		for i, entry := range customEnv {
+			if strings.HasPrefix(entry, "PATH=") {
+				parts := strings.SplitN(entry, "=", 2)
+				parts[1] = r.tempShellOverridesDir + ":" + parts[1]
+				customEnv[i] = strings.Join(parts, "=")
+				break
+			}
 		}
 	}
 
@@ -67,7 +81,14 @@ func (r *Runner) Run(name string, arguments ...string) (string, error) {
 	cmd := exec.Command(name, arguments...)
 	cmd.Env = customEnv
 	rawOutput, err := cmd.CombinedOutput()
-	return string(rawOutput), err
+
+	r.RemoveTempShellOverrides()
+
+	return RunResult{string(rawOutput), err}
+}
+
+func (r *Runner) hasTempShellOverrides() bool {
+	return len(r.tempShellOverridesDir) > 0
 }
 
 // RunString runs the given command (that can contain arguments) in the current directory
@@ -75,7 +96,7 @@ func (r *Runner) Run(name string, arguments ...string) (string, error) {
 //
 // Currently this splits the string by space,
 // this only works for simple commands without quotes.
-func (r *Runner) RunString(command string) (string, error) {
+func (r *Runner) RunString(command string) RunResult {
 	parts := strings.Fields(command)
 	command, args := parts[0], parts[1:]
 	return r.Run(command, args...)
@@ -86,9 +107,9 @@ func (r *Runner) RunString(command string) (string, error) {
 func (r *Runner) RunMany(commands [][]string) error {
 	for _, commandList := range commands {
 		command, args := commandList[0], commandList[1:]
-		_, err := r.Run(command, args...)
-		if err != nil {
-			return err
+		result := r.Run(command, args...)
+		if result.Err != nil {
+			return result.Err
 		}
 	}
 	return nil
