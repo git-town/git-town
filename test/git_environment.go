@@ -26,7 +26,7 @@ func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 
 // CloneFromFolder creates a new Git environment in the given folder
 // that contains a copy of the given original environment.
-func CloneEnvironment(dir string, original *GitEnvironment) (*GitEnvironment, error) {
+func CloneEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
 
 	// create the folder for the new environment
 	err := os.MkdirAll(dir, 0777)
@@ -44,7 +44,7 @@ func CloneEnvironment(dir string, original *GitEnvironment) (*GitEnvironment, er
 	}
 
 	gitEnv := &GitEnvironment{dir: dir}
-	gitEnv.DeveloperRepo = LoadExistingFolder(path.Join(dir, "developer"))
+	gitEnv.DeveloperRepo = LoadExistingFolder(original.DeveloperRepo.dir)
 	gitEnv.OriginRepo = LoadExistingFolder(path.Join(dir, "origin"))
 	return gitEnv, nil
 }
@@ -63,7 +63,7 @@ func (ge GitEnvironment) CreateScenarioSetup() error {
 	ge.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
 
 	// clone the "developer" repo
-	ge.DeveloperRepo, err = CloneFrom(ge.repositoryPath("origin"), "developer")
+	ge.DeveloperRepo, err = CloneFrom(ge.repositoryPath("origin"), ge.repositoryPath("developer"))
 	if err != nil {
 		return errors.Wrap(err, "cannot clone developer repo from origin")
 	}

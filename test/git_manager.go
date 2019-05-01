@@ -65,5 +65,5 @@ func (gm *GitManager) CreateMemoizedEnvironment() error {
 // CreateScenarioEnvironment creates a new GitEnvironment for the scenario with the given name
 func (gm GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
 	envPath := path.Join(gm.dir, scenarioName)
-	return CloneEnvironment(envPath, gm.memoized)
+	return CloneEnvironment(gm.memoized, envPath)
 }
