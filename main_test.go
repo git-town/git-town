@@ -23,10 +23,10 @@ import (
 )
 
 // the GitManager instance to use
-var gitManager test.GitManager
+var gitManager *test.GitManager
 
 // the GitEnvironment used in the current scenario
-var gitEnvironment test.GitEnvironment
+var gitEnvironment *test.GitEnvironment
 
 // the result of the last run of Git Town
 var lastRunResult test.RunResult
@@ -41,6 +41,8 @@ func beforeSuite() {
 
 	// create the GitManager
 	gitManager = test.NewGitManager(baseDir)
+
+	// create the memoized environment
 	err = gitManager.CreateMemoizedEnvironment()
 	if err != nil {
 		log.Fatalf("Cannot create memoized environment: %s", err)
@@ -50,13 +52,13 @@ func beforeSuite() {
 func beforeScenario(args interface{}) {
 
 	// create a GitEnvironment for the scenario
-	random := uniuri.NewLen(10)
-	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(random)
+	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(uniuri.NewLen(10))
 	var err error
 	gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
 	if err != nil {
 		log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
 	}
+	fmt.Println("GIT ENVIRONMENT", gitEnvironment)
 }
 
 func afterScenario(args interface{}, err error) {
@@ -141,7 +143,13 @@ func itRunsNoCommands() error {
 }
 
 func theFollowingCommitExistsInMyRepository(table *gherkin.DataTable) error {
-	return godog.ErrPending
+	// user = (who == 'my') ? 'developer' : 'coworker'
+	// user += '_secondary' if remote
+	// @initial_commits_table = table.clone
+	// @original_files = files_in_branches
+	// in_repository user do
+	fmt.Println("gitEnvironment.DeveloperRepo", gitEnvironment.DeveloperRepo)
+	return gitEnvironment.DeveloperRepo.CreateCommits(table)
 }
 
 // nolint:deadcode

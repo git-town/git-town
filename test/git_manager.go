@@ -1,7 +1,6 @@
 package test
 
 import (
-	"os"
 	"path"
 
 	"github.com/pkg/errors"
@@ -40,33 +39,31 @@ type GitManager struct {
 	dir string
 
 	// the memoized environment
-	memoized GitEnvironment
+	memoized *GitEnvironment
 }
 
 // NewEnvironments creates a new Environments instance
 // and prepopulates its environment cache.
-func NewGitManager(baseDir string) GitManager {
-	return GitManager{dir: baseDir}
+func NewGitManager(baseDir string) *GitManager {
+	return &GitManager{dir: baseDir}
 }
 
 // CreateMemoizedEnvironment creates the memoized environment
 func (gm *GitManager) CreateMemoizedEnvironment() error {
 	var err error
 	gm.memoized, err = NewGitEnvironment(path.Join(gm.dir, "memoized"))
-	return err
+	if err != nil {
+		return errors.Wrapf(err, "cannot create memoized environment")
+	}
+	err = gm.memoized.CreateScenarioSetup()
+	if err != nil {
+		return errors.Wrapf(err, "cannot populate memoized environment")
+	}
+	return nil
 }
 
 // CreateScenarioEnvironment creates a new GitEnvironment for the scenario with the given name
-func (gm GitManager) CreateScenarioEnvironment(scenarioName string) (GitEnvironment, error) {
-	err := os.Chdir(gm.memoized.dir)
-	if err != nil {
-		return GitEnvironment{}, errors.Wrapf(err, "cannot cd into the memoized directory '%s'", gm.memoized.dir)
-	}
-	result, err := NewGitEnvironment(path.Join(gm.dir, scenarioName))
-	if err != nil {
-		return result, err
-	}
-	runner := Runner{}
-	runResult := runner.Run("/bin/bash", "-c", "tar cf - * | ( cd "+scenarioName+"; tar xfp -)")
-	return result, runResult.Err
+func (gm GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
+	envPath := path.Join(baseDir, scenarioName)
+	return CloneFromFolder(envPath, gm.memoized)
 }
