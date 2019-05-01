@@ -26,7 +26,7 @@ func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 
 // CloneFromFolder creates a new Git environment in the given folder
 // that contains a copy of the given original environment.
-func CloneFromFolder(dir string, original GitEnvironment) (*GitEnvironment, error) {
+func CloneEnvironment(dir string, original *GitEnvironment) (*GitEnvironment, error) {
 
 	// create the folder for the new environment
 	err := os.MkdirAll(dir, 0777)
@@ -35,15 +35,18 @@ func CloneFromFolder(dir string, original GitEnvironment) (*GitEnvironment, erro
 	}
 
 	// copy the memoized environment over
-
 	runner := Runner{}
-	runResult := runner.Run("/bin/bash", "-c", "tar cf - "+original.Dir+" | tar xfp -")
+	tarCmd := fmt.Sprintf("(cd %s; tar c *) | tar xp", original.dir)
+	fmt.Println("TAR", tarCmd)
+	runResult := runner.Run("/bin/bash", "-c", tarCmd)
 	if runResult.Err != nil {
 		return nil, errors.Wrapf(runResult.Err, "cannot copy memoized environment over: %s", runResult.Output)
 	}
 
-	return *GitEnvironment.NewInFolder(envPath), nil
-
+	gitEnv := &GitEnvironment{dir: dir}
+	gitEnv.DeveloperRepo = LoadExistingFolder(path.Join(dir, "developer"))
+	gitEnv.OriginRepo = LoadExistingFolder(path.Join(dir, "origin"))
+	return gitEnv, nil
 }
 
 // CreateScenarioSetup creates the setup that all Cucumber Scenarios start out with.

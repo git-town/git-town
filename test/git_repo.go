@@ -81,6 +81,11 @@ func CloneFrom(parentDir, childDir string) (*GitRepository, error) {
 	return &GitRepository{dir: childDir}, err
 }
 
+// NewInFolder returns a GitRepository instance that manages the given existing folder
+func LoadExistingFolder(dir string) *GitRepository {
+	return &GitRepository{dir: dir}
+}
+
 type CommitTableEntry struct {
 	branch      string
 	location    string
