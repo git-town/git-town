@@ -1,4 +1,4 @@
-package test
+package infra
 
 import (
 	"fmt"
@@ -67,7 +67,6 @@ func (ge GitEnvironment) CreateScenarioSetup() error {
 	if err != nil {
 		return errors.Wrap(err, "cannot clone developer repo from origin")
 	}
-	fmt.Println(2222222222222, ge.DeveloperRepo.dir)
 
 	// Initialize main branch
 	err = ge.DeveloperRepo.RunMany([][]string{
@@ -79,8 +78,6 @@ func (ge GitEnvironment) CreateScenarioSetup() error {
 		return err
 	}
 
-	// memoize environment by saving directory contents
-	// FileUtils.cp_r "#{REPOSITORY_BASE}/.", MEMOIZED_REPOSITORY_BASE
 	return nil
 }
 
