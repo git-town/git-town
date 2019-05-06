@@ -24,35 +24,35 @@ Git Town provides these additional Git commands:
 
 **Development Workflow**
 
-* [git town hack](/documentation/commands/hack.md) - cuts a new up-to-date feature branch off the main branch
-* [git town sync](/documentation/commands/sync.md) - updates the current branch with all ongoing changes
-* [git town new-pull-request](/documentation/commands/new-pull-request.md) - create a new pull request
-* [git town ship](/documentation/commands/ship.md) - delivers a completed feature branch and removes it
+- [git town hack](/documentation/commands/hack.md) - cuts a new up-to-date feature branch off the main branch
+- [git town sync](/documentation/commands/sync.md) - updates the current branch with all ongoing changes
+- [git town new-pull-request](/documentation/commands/new-pull-request.md) - create a new pull request
+- [git town ship](/documentation/commands/ship.md) - delivers a completed feature branch and removes it
 
 **Repository Maintenance**
 
-* [git town kill](/documentation/commands/kill.md) - removes a feature branch
-* [git town prune-branches](/documentation/commands/prune-branches.md) - delete all merged branches
-* [git town rename-branch](/documentation/commands/rename-branch.md) - rename a branch
-* [git town append](/documentation/commands/append.md) - insert a new branch as a child of the current branch
-* [git town prepend](/documentation/commands/prepend.md) - insert a new branch between the current branch and its parent
-* [git town repo](/documentation/commands/repo.md) - view the repository homepage
+- [git town kill](/documentation/commands/kill.md) - removes a feature branch
+- [git town prune-branches](/documentation/commands/prune-branches.md) - delete all merged branches
+- [git town rename-branch](/documentation/commands/rename-branch.md) - rename a branch
+- [git town append](/documentation/commands/append.md) - insert a new branch as a child of the current branch
+- [git town prepend](/documentation/commands/prepend.md) - insert a new branch between the current branch and its parent
+- [git town repo](/documentation/commands/repo.md) - view the repository homepage
 
 **Git Town Configuration**
 
-* [git town config](/documentation/commands/config.md) - displays or updates your Git Town configuration
-* [git town new-branch-push-flag](/documentation/commands/new-branch-push-flag.md) - configures whether new empty branches are pushed to origin
-* [git town main-branch](/documentation/commands/main-branch.md) - displays or sets the main development branch for the current repo
-* [git town offline](/documentation/commands/offline.md) - enables/disables offline mode
-* [git town perennial-branches](/documentation/commands/perennial-branches.md) - displays or updates the perennial branches for the current repo
-* [git town pull-branch-strategy](/documentation/commands/pull-branch-strategy.md) - displays or sets the strategy with which perennial branches are updated
-* [git town set-parent-branch](/documentation/commands/set-parent-branch.md) - updates a branch's parent
+- [git town config](/documentation/commands/config.md) - displays or updates your Git Town configuration
+- [git town new-branch-push-flag](/documentation/commands/new-branch-push-flag.md) - configures whether new empty branches are pushed to origin
+- [git town main-branch](/documentation/commands/main-branch.md) - displays or sets the main development branch for the current repo
+- [git town offline](/documentation/commands/offline.md) - enables/disables offline mode
+- [git town perennial-branches](/documentation/commands/perennial-branches.md) - displays or updates the perennial branches for the current repo
+- [git town pull-branch-strategy](/documentation/commands/pull-branch-strategy.md) - displays or sets the strategy with which perennial branches are updated
+- [git town set-parent-branch](/documentation/commands/set-parent-branch.md) - updates a branch's parent
 
 **Other Commands**
 
-* [git town alias](/documentation/commands/alias.md) - adds or removes shorter aliases for Git Town commands
-* [git town install-fish-autocompletion](/documentation/commands/install-fish-autocompletion.md) - installs the autocompletion definition for [Fish shell](http://fishshell.com)
-* [git town version](/documentation/commands/version.md) - displays the installed version of Git Town
+- [git town alias](/documentation/commands/alias.md) - adds or removes shorter aliases for Git Town commands
+- [git town install-fish-autocompletion](/documentation/commands/install-fish-autocompletion.md) - installs the autocompletion definition for [Fish shell](http://fishshell.com)
+- [git town version](/documentation/commands/version.md) - displays the installed version of Git Town
 
 ## Installation
 
@@ -82,23 +82,23 @@ Use the [git town config](/documentation/commands/config.md) command to view or 
 
 #### Required configuration
 
-* the main development branch
-* the [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
+- the main development branch
+- the [perennial branches](/documentation/development/branch_hierarchy.md#perennial-branches)
 
 #### Optional Configuration
 
 The following configuration options have defaults, so the configuration wizard does not ask about them.
 
-* the pull branch strategy
+- the pull branch strategy
 
-  * how to sync the main branch / perennial branches with their upstream
-  * default: `rebase`
-  * possible values: `merge`, `rebase`
+  - how to sync the main branch / perennial branches with their upstream
+  - default: `rebase`
+  - possible values: `merge`, `rebase`
 
-* the new branch push flag
-  * whether or not branches created by hack / append / prepend should be pushed to remote repo
-  * default: `false`
-  * possible values: `true`, `false`
+- the new branch push flag
+  - whether or not branches created by hack / append / prepend should be pushed to remote repo
+  - default: `false`
+  - possible values: `true`, `false`
 
 ## Documentation
 

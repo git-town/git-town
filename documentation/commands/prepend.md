@@ -29,5 +29,5 @@ git town prepend <branch>
 
 #### SEE ALSO
 
-* [git append](append.md) to create a new feature branch as a child of the current branch
-* [git hack](hack.md) to create a new top-level feature branch
+- [git append](append.md) to create a new feature branch as a child of the current branch
+- [git hack](hack.md) to create a new top-level feature branch
