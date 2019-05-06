@@ -1,6 +1,6 @@
 # Git Town Release Notes
 
-## 7.2.1 (2019-05-06)
+## 7.3.0 (2019-05-06)
 
 #### New Features
 
