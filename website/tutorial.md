@@ -8,8 +8,8 @@ You take the next ticket from the backlog.
 Let's say it is called "resetting passwords".
 Since we are developing in feature branches, you now need to
 
-* update your master branch to the latest version on GitHub
-* cut a new feature branch from the master branch
+- update your master branch to the latest version on GitHub
+- cut a new feature branch from the master branch
 
 Running `git town hack reset-passwords` achieves all this in a single command.
 This gives you the best possible start for building the new feature,
@@ -22,9 +22,9 @@ and that Carol shipped some UI design updates.
 Both changes affect your work, so you want them in your feature branch before you continue.
 On a high level, you need to
 
-* pull updates for the `master` branch (to get Bob and Carol's changes)
-* merge the master branch into your `reset-passwords` branch
-* push your updated feature branch to the repo, so that others who work on it also get these updates
+- pull updates for the `master` branch (to get Bob and Carol's changes)
+- merge the master branch into your `reset-passwords` branch
+- push your updated feature branch to the repo, so that others who work on it also get these updates
 
 You will need to move between branches to do this,
 which means you also need to stash away any currently open changes in your repo temporarily.
@@ -53,15 +53,15 @@ When your pull request gets the approval to be merged,
 you want to ship it.
 To do this safely, i.e. without breaking the master branch, you want to
 
-* make sure there are no open changes (i.e. all changes are properly committed)
-* pull updates from your remote feature branch (to make sure you ship everything that is in that branch)
-* pull updates for the master branch (to make sure you ship on top of the latest version of master)
-* merge the _master_ branch into the _password-reset_ branch
+- make sure there are no open changes (i.e. all changes are properly committed)
+- pull updates from your remote feature branch (to make sure you ship everything that is in that branch)
+- pull updates for the master branch (to make sure you ship on top of the latest version of master)
+- merge the _master_ branch into the _password-reset_ branch
   (to make sure your branch doesn't create conflicts with _master_,
   and to give you a chance to resolve any issues before merging into _master_)
-* squash-merge the _password-reset_ branch into the _master_ branch (this makes it look like a single, clean commit, without the convoluted merge history and the many intermediate commits on your branch)
-* push the updated _master_ branch to the repository (so that your changes are available to Bob and Alice in return)
-* remove the _password-reset_ branch from your local machine and the repository
+- squash-merge the _password-reset_ branch into the _master_ branch (this makes it look like a single, clean commit, without the convoluted merge history and the many intermediate commits on your branch)
+- push the updated _master_ branch to the repository (so that your changes are available to Bob and Alice in return)
+- remove the _password-reset_ branch from your local machine and the repository
 
 This requires between 10-15 individual Git commands.
 Git Town provides a single, convenient command for this as well:
