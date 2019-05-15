@@ -11,6 +11,6 @@ Feature: git-repo when origin is unsupported
 
       This command requires hosting on one of these services:
       * Bitbucket
-      * Github
-      * Gitlab
+      * GitHub
+      * GitLab
       """

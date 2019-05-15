@@ -25,7 +25,7 @@ func GetRequestData(request *http.Request) map[string]interface{} {
 	return data
 }
 
-var _ = Describe("CodeHostingDriver - Github", func() {
+var _ = Describe("CodeHostingDriver - GitHub", func() {
 	pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
 	currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 	var driver CodeHostingDriver

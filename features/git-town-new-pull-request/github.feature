@@ -49,6 +49,24 @@ Feature: git-new-pull-request when origin is on GitHub
       | git@github.com:Originate/originate.github.com         |
 
 
+  Scenario Outline: proper URL encoding
+    Given my repository has a feature branch named "<BRANCH_NAME>"
+    And my repo's remote origin is "https://github.com/Originate/git-town"
+    And I am on the "<BRANCH_NAME>" branch
+    When I run `git-town new-pull-request`
+    Then I see a new pull request with this url in my browser:
+      """
+      <URL>
+      """
+
+    Examples:
+      | BRANCH_NAME    | URL                                                                   |
+      | feature-branch | https://github.com/Originate/git-town/compare/feature-branch?expand=1 |
+      | feature_branch | https://github.com/Originate/git-town/compare/feature_branch?expand=1 |
+      | fix-#2         | https://github.com/Originate/git-town/compare/fix-%232?expand=1       |
+      | test/feature   | https://github.com/Originate/git-town/compare/test%2Ffeature?expand=1 |
+
+
   Scenario Outline: SSH style origin
     Given my repository has a feature branch named "feature"
     And my repo's remote origin is <ORIGIN>

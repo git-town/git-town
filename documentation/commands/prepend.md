@@ -5,7 +5,7 @@ Creates a new feature branch as the parent of the current branch
 </blockquote>
 
 <a textrun="command-description">
-Syncs the parent branch
+Syncs the parent branch,
 forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository,
@@ -29,5 +29,5 @@ git town prepend <branch>
 
 #### SEE ALSO
 
-* [git append](append.md) to create a new feature branch as a child of the current branch
-* [git hack](hack.md) to create a new top-level feature branch
+- [git append](append.md) to create a new feature branch as a child of the current branch
+- [git hack](hack.md) to create a new top-level feature branch

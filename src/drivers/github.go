@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -46,7 +47,7 @@ func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBran
 	if parentBranch != git.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), toCompare)
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
 }
 
 func (d *githubCodeHostingDriver) GetRepositoryURL() string {
@@ -63,7 +64,7 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 }
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
-	return "Github"
+	return "GitHub"
 }
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
