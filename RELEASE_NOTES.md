@@ -1,6 +1,15 @@
 # Git Town Release Notes
 
-## Unreleased
+## 7.2.1 (2019-05-06)
+
+#### Bug Fixes
+
+- prune branches now properly updates perennial branch config
+- support branch names with special characters
+- fix the prompt on Windows CMD terminals
+- clear the runstate after undo to prevent running `git town undo` twice
+- fix Fish shell autocomplete
+- fix hosting service naming
 
 ## 7.2.0 (2018-06-01)
 
