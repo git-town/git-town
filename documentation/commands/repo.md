@@ -14,10 +14,6 @@ where driver is "github", "gitlab", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 `git config git-town.code-hosting-origin-hostname <hostname>`
 where hostname matches what is in your ssh config file.
-
-Example:
-your SSH identity should be something like
-"git@github-as-account1:Originate/git-town.git"
 </a>
 
 #### Usage
