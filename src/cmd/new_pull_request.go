@@ -33,7 +33,7 @@ When using self-hosted versions this command needs to be configured with
 where driver is "github", "gitlab", or "bitbucket".
 When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
-where hostname matches what is in your ssh config file."`,
+where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getNewPullRequestConfig()
 		stepList := getNewPullRequestStepList(config)
