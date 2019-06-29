@@ -20,5 +20,5 @@ This can be disabled by toggling the "new-branch-push-flag" configuration.
 #### Usage
 
 <pre textrun="command-usage">
-git town hack <branch>
+git town hack &lt;branch&gt;
 </pre>
