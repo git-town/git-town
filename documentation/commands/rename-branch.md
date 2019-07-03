@@ -31,7 +31,7 @@ When run on a perennial branch
 #### Usage
 
 <pre textrun="command-usage">
-git town rename-branch [&lt;old_branch_name&gt;] <&lt;new_branch_name&gt;>
+git town rename-branch [&lt;old_branch_name&gt;] &lt;new_branch_name&gt;
 </pre>
 
 #### Flags
