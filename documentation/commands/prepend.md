@@ -24,7 +24,7 @@ git town new-branch-push-flag false
 #### Usage
 
 <pre textrun="command-usage">
-git town prepend <branch>
+git town prepend &lt;branch&gt;
 </pre>
 
 #### SEE ALSO

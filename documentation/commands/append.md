@@ -17,5 +17,5 @@ and brings over all uncommitted changes to the new feature branch.
 #### Usage
 
 <pre textrun="command-usage">
-git town append <branch>
+git town append &lt;branch&gt;
 </pre>
