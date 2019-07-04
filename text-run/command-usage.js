@@ -4,9 +4,10 @@ const getCommand = require('./helpers/get-command.js')
 const he = require('he')
 
 module.exports = async function (activity) {
-  const mdUsage = he.decode(activity.nodes.text().trim())
+  const mdUsage = activity.nodes.text().trim()
   const cliUsage = getCliUsage(activity)
-  diff(mdUsage, cliUsage)
+  const cliEncoded = he.encode(cliUsage, { useNamedReferences: true })
+  diff(mdUsage, cliEncoded)
 }
 
 function getCliUsage (activity) {

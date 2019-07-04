@@ -7,5 +7,5 @@ Displays or sets your main development branch
 #### Usage
 
 <pre textrun="command-usage">
-git town main-branch [<branch>]
+git town main-branch [&lt;branch&gt;]
 </pre>
