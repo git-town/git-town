@@ -68,7 +68,7 @@ func CloneFrom(parentDir, childDir string) (*GitRepository, error) {
 	// configure the repo
 	err := os.Chdir(childDir)
 	if err != nil {
-		return &GitRepository{}, err
+		return &GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
 	}
 	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
 	err = runner.RunMany([][]string{
