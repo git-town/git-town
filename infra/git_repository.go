@@ -23,22 +23,22 @@ type GitRepository struct {
 	originalCommits []CommitTableEntry
 
 	// Runner enables to run console commands in this repo
-	Runner
+	ShellRunner
 }
 
 // InitGitRepository initializes a new Git repository in the given folder.
-func InitGitRepository(dir string, bare bool) (*GitRepository, error) {
+func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 	// create the folder
 	err := os.MkdirAll(dir, 0777)
 	if err != nil {
-		return &GitRepository{}, errors.Wrapf(err, "cannot create directory %s", dir)
+		return GitRepository{}, errors.Wrapf(err, "cannot create directory %s", dir)
 	}
 
 	// cd into the folder
 	err = os.Chdir(dir)
 	if err != nil {
-		return &GitRepository{}, errors.Wrapf(err, "cannot cd into dir %s", dir)
+		return GitRepository{}, errors.Wrapf(err, "cannot cd into dir %s", dir)
 	}
 
 	// initialize the repo in the folder
@@ -46,29 +46,29 @@ func InitGitRepository(dir string, bare bool) (*GitRepository, error) {
 	if bare {
 		args = append(args, "--bare")
 	}
-	runner := Runner{}
+	runner := ShellRunner{}
 	result := runner.Run("git", args...)
 	if result.Err != nil {
-		return &GitRepository{}, errors.Wrap(result.Err, "error running git "+strings.Join(args, " "))
+		return GitRepository{}, errors.Wrap(result.Err, "error running git "+strings.Join(args, " "))
 	}
-	return &GitRepository{dir: dir}, nil
+	return GitRepository{dir: dir}, nil
 }
 
-// CloneFrom initializes this repository as a clone of the given parent repo.
-func CloneFrom(parentDir, childDir string) (*GitRepository, error) {
+// CloneGitRepository clones the given parent repo into a new GitRepository.
+func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	fmt.Printf("cloning parent '%s' to '%s'", parentDir, childDir)
 
 	// clone the repo
-	runner := Runner{}
+	runner := ShellRunner{}
 	result := runner.Run("git", "clone", parentDir, childDir)
 	if result.Err != nil {
-		return &GitRepository{}, errors.Wrapf(result.Err, "cannot clone repo %s", parentDir)
+		return GitRepository{}, errors.Wrapf(result.Err, "cannot clone repo %s", parentDir)
 	}
 
 	// configure the repo
 	err := os.Chdir(childDir)
 	if err != nil {
-		return &GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
+		return GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
 	}
 	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
 	err = runner.RunMany([][]string{
@@ -79,12 +79,12 @@ func CloneFrom(parentDir, childDir string) (*GitRepository, error) {
 		[]string{"git", "config", "git-town.main-branch-name", "main"},
 		[]string{"git", "config", "git-town.perennial-branch-names", ""},
 	})
-	return &GitRepository{dir: childDir}, err
+	return GitRepository{dir: childDir}, err
 }
 
-// NewInFolder returns a GitRepository instance that manages the given existing folder
-func LoadExistingFolder(dir string) *GitRepository {
-	return &GitRepository{dir: dir}
+// LoadGitRepository returns a GitRepository instance that manages the given existing folder
+func LoadGitRepository(dir string) GitRepository {
+	return GitRepository{dir: dir}
 }
 
 type CommitTableEntry struct {
@@ -107,7 +107,6 @@ func NewCommitTableEntry() CommitTableEntry {
 }
 
 func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	fmt.Println(33333333333333, gr)
 	err := os.Chdir(gr.dir)
 	if err != nil {
 		return errors.Wrapf(err, "cannot cd into root dir of repo: %s", gr.dir)

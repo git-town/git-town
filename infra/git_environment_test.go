@@ -22,7 +22,7 @@ func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = ge.CreateScenarioSetup()
+	err = ge.Populate()
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,7 +35,7 @@ func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
 
 	// verify the "developer" folder contains a Git repo with a main branch
 	verifyFolderExists(path.Join(dir, "origin", "developer", ".git"))
-	runner := Runner{}
+	runner := ShellRunner{}
 	err = os.Chdir(devDir)
 	if err != nil {
 		log.Fatal(err)
@@ -62,12 +62,12 @@ func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = ge.CreateScenarioSetup()
+	err = ge.Populate()
 	if err != nil {
 		t.Error(err)
 	}
 
-	ce, err := CloneEnvironment(ge, path.Join(dir, "cloned"))
+	ce, err := CloneGitEnvironment(ge, path.Join(dir, "cloned"))
 	if err != nil {
 		log.Fatalf("cannot clone environment: %s", err)
 	}
@@ -83,7 +83,7 @@ func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 
 	// verify the "developer" folder contains a Git repo
 	verifyFolderExists(path.Join(dir, "cloned", "developer", ".git"))
-	runner := Runner{}
+	runner := ShellRunner{}
 	err = os.Chdir(devDir)
 	if err != nil {
 		log.Fatal(err)
@@ -109,7 +109,7 @@ func verifyFolderExists(dir string) {
 
 func verifyIsBareGitRepo(dir string) {
 	verifyFolderExists(dir)
-	runner := Runner{}
+	runner := ShellRunner{}
 	runResult := runner.Run("/bin/ls", "-1", dir)
 	if runResult.Err != nil {
 		log.Fatalf("command failed: %s", runResult.Err)

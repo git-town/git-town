@@ -18,18 +18,18 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/test"
+	"github.com/Originate/git-town/infra"
 	"github.com/iancoleman/strcase"
 )
 
 // the GitManager instance to use
-var gitManager *test.GitManager
+var gitManager *infra.GitManager
 
 // the GitEnvironment used in the current scenario
-var gitEnvironment *test.GitEnvironment
+var gitEnvironment *infra.GitEnvironment
 
 // the result of the last run of Git Town
-var lastRunResult test.RunResult
+var lastRunResult infra.RunResult
 
 func beforeSuite() {
 
@@ -40,7 +40,7 @@ func beforeSuite() {
 	}
 
 	// create the GitManager
-	gitManager = test.NewGitManager(baseDir)
+	gitManager = infra.NewGitManager(baseDir)
 
 	// create the memoized environment
 	err = gitManager.CreateMemoizedEnvironment()
@@ -127,12 +127,12 @@ func itPrintsTheError(expected *gherkin.DocString) error {
 }
 
 func itRunsTheCommands(table *gherkin.DataTable) error {
-	commands := test.CommandsInOutput(lastRunResult.Output)
-	return test.AssertStringSliceMatchesTable(commands, table)
+	commands := infra.CommandsInOutput(lastRunResult.Output)
+	return infra.AssertStringSliceMatchesTable(commands, table)
 }
 
 func itRunsNoCommands() error {
-	commands := test.CommandsInOutput(lastRunResult.Output)
+	commands := infra.CommandsInOutput(lastRunResult.Output)
 	if len(commands) > 0 {
 		for _, command := range commands {
 			fmt.Println(command)
