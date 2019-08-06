@@ -14,16 +14,14 @@ exemptLabels:
   - help wanted
   - improvement
   - refactoring
-  
+
 # Comment to post when marking as stale. Set to `false` to disable
 pulls:
   daysUntilStale: 7
   markComment: >
-    This pull request is losing momentum.
-    Please help resolve it.
+    This pull request is losing momentum. Please help resolve it.
 
 issues:
   daysUntilStale: 14
   markComment: >
-    This issue is losing momentum.
-    Please help resolve it.
+    This issue is losing momentum. Please help resolve it.

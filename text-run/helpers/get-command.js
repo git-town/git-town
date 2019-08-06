@@ -1,5 +1,5 @@
-const path = require('path')
+const path = require("path")
 
-module.exports = function getCommand (filename) {
-  return path.basename(filename, '.md')
+module.exports = function getCommand(filename) {
+  return path.basename(filename, ".md")
 }
