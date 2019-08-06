@@ -13,6 +13,7 @@ cross-compile:  # builds the binary for all platforms
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
 cuke: build  # runs the feature tests
+	godog features/git-town features/git-town-alias
 	bundle exec parallel_cucumber $(DIR)
 DIR = $(if $(dir),$(dir),"features")
 
