@@ -36,7 +36,14 @@ fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
 fix-markdown:  # auto-fixes all Markdown lint issues
-	node_modules/.bin/prettier --write "{,!(vendor)/**/}*.md"
+	@find . -type f \( \
+		-path '**/*.md' -o \
+		-path '**/*.yml' -o \
+		-path '**/*.json' -o \
+		-path '**/*.js' \) | \
+		grep -v node_modules | \
+		grep -v vendor | \
+		xargs node_modules/.bin/prettier --write
 
 fix-ruby:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
@@ -53,7 +60,14 @@ lint-go:  # lints the Go files
 	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits
 
 lint-markdown: build  # lints the Markdown files
-	node_modules/.bin/prettier -l "{,!(vendor)/**/}*.md"
+	@find . -type f \( \
+		-path '**/*.md' -o \
+		-path '**/*.yml' -o \
+		-path '**/*.json' -o \
+		-path '**/*.js' \) | \
+		grep -v node_modules | \
+		grep -v vendor | \
+		xargs node_modules/.bin/prettier -l
 	node_modules/.bin/text-run --offline
 
 lint-ruby:  # lints the Ruby files

@@ -1,4 +1,3 @@
-<% common = "-r features/step_definitions -r features/support --strict" %>
-
-default: <%= common %>
-parallel: <%= common %> --format=progress
+---
+default: -r features/step_definitions -r features/support --strict
+parallel: -r features/step_definitions -r features/support --strict --format=progress
