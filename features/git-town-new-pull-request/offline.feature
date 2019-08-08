@@ -10,5 +10,5 @@ Feature: git new-pull-request: offline mode
     When I run `git-town new-pull-request`
     Then it prints the error:
       """
-      This command requires an active internet connection
+      this command requires an active internet connection
       """

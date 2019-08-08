@@ -50,8 +50,7 @@ lint-cucumber:  # lints the Cucumber files
 	bundle exec cucumber_lint
 
 lint-go:  # lints the Go files
-	goimports -d src
-	gometalinter.v2
+	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits
 
 lint-markdown: build  # lints the Markdown files
 	node_modules/.bin/prettier -l "{,!(vendor)/**/}*.md"
@@ -62,9 +61,8 @@ lint-ruby:  # lints the Ruby files
 
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	go get -u gopkg.in/alecthomas/gometalinter.v2 \
-					  github.com/onsi/ginkgo/ginkgo
-	gometalinter.v2 --install
+	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $$(go env GOPATH)/bin v1.16.0
+	go get -u github.com/onsi/ginkgo/ginkgo
 	bundle install
 	yarn install
 

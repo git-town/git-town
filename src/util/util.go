@@ -49,7 +49,7 @@ func Indent(message string, level int) string {
 func Pluralize(count, word string) string {
 	result := count + " " + word
 	if count != "1" {
-		result = result + "s"
+		result += "s"
 	}
 	return result
 }

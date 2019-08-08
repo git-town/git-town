@@ -10,5 +10,5 @@ Feature: git town-repo: offline mode
     When I run `git-town repo`
     Then it prints the error:
       """
-      This command requires an active internet connection
+      this command requires an active internet connection
       """

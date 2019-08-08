@@ -18,8 +18,7 @@ func EnsureVersionRequirementSatisfied() {
 // Helpers
 
 func isVersionRequirementSatisfied() bool {
-	versionRegexp, err := regexp.Compile(`git version (\d+).(\d+).(\d+)`)
-	exit.IfWrap(err, "Error compiling version regular expression")
+	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	matches := versionRegexp.FindStringSubmatch(command.New("git", "version").Output())
 	if matches == nil {
 		log.Fatal("'git version' returned unexpected output. Please open an issue and supply the output of running 'git version'.")

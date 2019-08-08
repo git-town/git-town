@@ -112,7 +112,7 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 			httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 			_, err := driver.MergePullRequest(options)
 			Expect(err).ToNot(BeNil())
-			Expect(err.Error()).To(Equal("No pull request found"))
+			Expect(err.Error()).To(Equal("no pull request found"))
 		})
 
 		It("returns an error if multiple pull request numbers not found", func() {
@@ -120,7 +120,7 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 			httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
 			_, err := driver.MergePullRequest(options)
 			Expect(err).ToNot(BeNil())
-			Expect(err.Error()).To(Equal("Multiple pull requests found: 1, 2"))
+			Expect(err.Error()).To(Equal("multiple pull requests found: 1, 2"))
 		})
 
 		It("returns request errors (merging the pull request)", func() {

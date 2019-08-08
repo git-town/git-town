@@ -95,7 +95,8 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) (result steps.StepList) {
+func getShipStepList(config shipConfig) steps.StepList {
+	result := steps.StepList{}
 	var isOffline = git.IsOffline()
 	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
@@ -127,7 +128,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
-	return
+	return result
 }
 
 func getCanShipWithDriver(branch, parentBranch string) (bool, string) {

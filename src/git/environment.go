@@ -15,7 +15,7 @@ func IsOffline() bool {
 // ValidateIsOnline asserts that Git Town is not in offline mode
 func ValidateIsOnline() error {
 	if IsOffline() {
-		return errors.New("This command requires an active internet connection")
+		return errors.New("this command requires an active internet connection")
 	}
 	return nil
 }
@@ -25,7 +25,7 @@ func ValidateIsRepository() error {
 	if IsRepository() {
 		return nil
 	}
-	return errors.New("This is not a Git repository")
+	return errors.New("this is not a Git repository")
 }
 
 // isRepository is cached in order to minimize the number of git commands run

@@ -116,14 +116,14 @@ func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestO
 		return -1, err
 	}
 	if len(pullRequests) == 0 {
-		return -1, errors.New("No pull request found")
+		return -1, errors.New("no pull request found")
 	}
 	if len(pullRequests) > 1 {
 		pullRequestNumbersAsStrings := make([]string, len(pullRequests))
 		for i, pullRequest := range pullRequests {
 			pullRequestNumbersAsStrings[i] = strconv.Itoa(*pullRequest.Number)
 		}
-		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
+		return -1, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
 	}
 	return *pullRequests[0].Number, nil
 }
