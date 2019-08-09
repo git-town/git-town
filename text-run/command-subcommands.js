@@ -5,7 +5,7 @@ const getCommand = require("./helpers/get-command.js")
 module.exports = async function(activity) {
   const mdCommands = await getMdCommands(activity.nodes)
   const cliCommands = getCliCommands(activity)
-  diff.trimmedLines(mdCommands, cliCommands)
+  diff.trimmedLines(mdCommands.join("\n"), cliCommands.join("\n"))
 }
 
 function getCliCommands(activity) {
