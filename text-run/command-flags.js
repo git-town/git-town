@@ -9,10 +9,7 @@ module.exports = async function(activity) {
 }
 
 function getMdFlags(activity) {
-  return activity.nodes
-    .text()
-    .trim()
-    .split("\n")
+  return activity.nodes.text().trim()
 }
 
 function getCliFlags(activity) {
@@ -24,4 +21,5 @@ function getCliFlags(activity) {
     .filter(line => line)
     .filter(line => !line.includes("help"))
     .map(line => line.trim())
+    .join("\n")
 }
