@@ -3,7 +3,11 @@ const diff = require("jsdiff-console")
 const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
-  const mdUsage = unescape(activity.nodes.text().trim())
+  const mdUsage = activity.nodes
+    .text()
+    .trim()
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
   const cliUsage = getCliUsage(activity)
   diff(mdUsage, cliUsage)
 }
