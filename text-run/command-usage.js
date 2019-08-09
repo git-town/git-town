@@ -1,13 +1,12 @@
 const child_process = require("child_process")
 const diff = require("jsdiff-console")
 const getCommand = require("./helpers/get-command.js")
-const he = require("he")
 
 module.exports = async function(activity) {
-  const mdUsage = activity.nodes.text().trim()
+  const mdUsage = unescape(activity.nodes.text().trim())
+  console.log(mdUsage)
   const cliUsage = getCliUsage(activity)
-  const cliEncoded = he.encode(cliUsage, { useNamedReferences: true })
-  diff(mdUsage, cliEncoded)
+  diff(mdUsage, cliUsage)
 }
 
 function getCliUsage(activity) {

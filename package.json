@@ -2,7 +2,6 @@
   "dependencies": {},
   "devDependencies": {
     "harp": "0.30.0",
-    "he": "1.2.0",
     "jsdiff-console": "2.2.1",
     "prettier": "1.17.0",
     "prettier-standard": "9.1.1",
