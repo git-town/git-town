@@ -1,8 +1,8 @@
-const diff = require("jsdiff-console")
+const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
-  diff(getCommand(activity.file), getHeadingText(activity))
+  diff.trimmedLines(getCommand(activity.file), getHeadingText(activity))
 }
 
 function getHeadingText(activity) {
