@@ -4,7 +4,6 @@ const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
   const mdUsage = unescape(activity.nodes.text().trim())
-  console.log(mdUsage)
   const cliUsage = getCliUsage(activity)
   diff(mdUsage, cliUsage)
 }
