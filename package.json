@@ -1,10 +1,10 @@
 {
   "dependencies": {},
   "devDependencies": {
+    "assert-no-diff": "3.0.3",
     "harp": "0.30.0",
     "he": "1.2.0",
-    "jsdiff-console": "2.2.1",
-    "prettier": "1.17.0",
+    "prettier": "1.18.2",
     "prettier-standard": "9.1.1",
     "tertestrial": "0.3.2",
     "text-runner": "3.6.0"
