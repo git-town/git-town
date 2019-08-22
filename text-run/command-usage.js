@@ -1,5 +1,5 @@
 const child_process = require("child_process")
-const diff = require("jsdiff-console")
+const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
@@ -9,7 +9,7 @@ module.exports = async function(activity) {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
   const cliUsage = getCliUsage(activity)
-  diff(mdUsage, cliUsage)
+  diff.trimmedLines(mdUsage, cliUsage)
 }
 
 function getCliUsage(activity) {

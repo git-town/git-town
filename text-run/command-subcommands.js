@@ -1,11 +1,11 @@
 const child_process = require("child_process")
-const diff = require("jsdiff-console")
+const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
   const mdCommands = await getMdCommands(activity.nodes)
   const cliCommands = getCliCommands(activity)
-  diff(mdCommands, cliCommands)
+  diff.trimmedLines(mdCommands.join("\n"), cliCommands.join("\n"))
 }
 
 function getCliCommands(activity) {

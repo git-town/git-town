@@ -1,18 +1,15 @@
 const child_process = require("child_process")
-const diff = require("jsdiff-console")
+const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
 module.exports = async function(activity) {
   const mdFlags = getMdFlags(activity)
   const cliFlags = getCliFlags(activity)
-  diff(mdFlags, cliFlags)
+  diff.trimmedLines(mdFlags, cliFlags)
 }
 
 function getMdFlags(activity) {
-  return activity.nodes
-    .text()
-    .trim()
-    .split("\n")
+  return activity.nodes.text().trim()
 }
 
 function getCliFlags(activity) {
@@ -24,4 +21,5 @@ function getCliFlags(activity) {
     .filter(line => line)
     .filter(line => !line.includes("help"))
     .map(line => line.trim())
+    .join("\n")
 }
