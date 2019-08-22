@@ -3,7 +3,6 @@
   "devDependencies": {
     "assert-no-diff": "3.0.3",
     "harp": "0.30.0",
-    "he": "1.2.0",
     "prettier": "1.18.2",
     "prettier-standard": "9.1.1",
     "tertestrial": "0.3.2",
