@@ -9,152 +9,16 @@ Test setup:
 */
 
 import (
-	"fmt"
-	"io/ioutil"
-	"log"
-	"strings"
-
-	"github.com/dchest/uniuri"
-
 	"github.com/DATA-DOG/godog"
-	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/infra"
-	"github.com/iancoleman/strcase"
+	"github.com/Originate/git-town/infra/steps"
 )
-
-// the GitManager instance to use
-var gitManager *infra.GitManager
-
-// the GitEnvironment used in the current scenario
-var gitEnvironment *infra.GitEnvironment
-
-// the result of the last run of Git Town
-var lastRunResult infra.RunResult
 
 // nolint:deadcode
 func FeatureContext(s *godog.Suite) {
-	s.BeforeSuite(func() {
-
-		// create the directory to put the GitEnvironments ino
-		baseDir, err := ioutil.TempDir("", "")
-		if err != nil {
-			log.Fatalf("cannot create base directory: %s", err)
-		}
-
-		// create the GitManager
-		gitManager = infra.NewGitManager(baseDir)
-
-		// create the memoized environment
-		err = gitManager.CreateMemoizedEnvironment()
-		if err != nil {
-			log.Fatalf("Cannot create memoized environment: %s", err)
-		}
-	})
-
-	s.BeforeScenario(func(args interface{}) {
-		// create a GitEnvironment for the scenario
-		environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(uniuri.NewLen(10))
-		var err error
-		gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
-		if err != nil {
-			log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
-		}
-	})
-
-	s.AfterScenario(func(args interface{}, err error) {
-		// TODO: delete scenario environment
-	})
-
-	s.Step(`^I haven\'t configured Git Town yet$`, func() error {
-		// delete_main_branch_configuration
-		// delete_perennial_branches_configuration
-		return nil
-	})
-
-	s.Step("^my workspace is currently not a Git repository$",
-		func() error {
-			// FileUtils.rm_rf '.git'
-			return nil
-		})
-
-	s.Step(`^I run "([^"]*)"$`, func(command string) error {
-		lastRunResult = gitEnvironment.DeveloperRepo.RunString(command)
-		return nil
-	})
-
-	s.Step("^it prints$", func(expected *gherkin.DocString) error {
-		if !strings.Contains(lastRunResult.Output, expected.Content) {
-			return fmt.Errorf(`text not found: %s`, expected.Content)
-		}
-		return nil
-	})
-
-	s.Step("^it does not print \"([^\"]*)\"$",
-		func(text string) error {
-			if strings.Contains(lastRunResult.Output, text) {
-				return fmt.Errorf(`text found: %s`, text)
-			}
-			return nil
-		})
-
-	s.Step(`^it prints the error:$`, func(expected *gherkin.DocString) error {
-		if !strings.Contains(lastRunResult.Output, expected.Content) {
-			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunResult.Output)
-		}
-		if lastRunResult.Err == nil {
-			return fmt.Errorf("expected error")
-		}
-		return nil
-	})
-
-	s.Step(`^I have Git "([^"]*)" installed$`,
-		func(arg1 string) error {
-			err := gitEnvironment.DeveloperRepo.AddTempShellOverride(
-				"git",
-				`#!/usr/bin/env bash
-		echo "git version 2.6.2"`)
-			return err
-		})
-
-	s.Step(`^it runs the commands$`,
-		func(table *gherkin.DataTable) error {
-			commands := infra.CommandsInOutput(lastRunResult.Output)
-			return infra.AssertStringSliceMatchesTable(commands, table)
-		})
-
-	s.Step(`^it runs no commands$`,
-		func() error {
-			commands := infra.CommandsInOutput(lastRunResult.Output)
-			if len(commands) > 0 {
-				for _, command := range commands {
-					fmt.Println(command)
-				}
-				return fmt.Errorf("expected no commands but found %d commands", len(commands))
-			}
-			return nil
-		})
-
-	s.Step(`^the following commit exists in my repository$`,
-		func(table *gherkin.DataTable) error {
-			// user = (who == 'my') ? 'developer' : 'coworker'
-			// user += '_secondary' if remote
-			// @initial_commits_table = table.clone
-			// @original_files = files_in_branches
-			// in_repository user do
-			fmt.Println("gitEnvironment.DeveloperRepo", gitEnvironment.DeveloperRepo)
-			return gitEnvironment.DeveloperRepo.CreateCommits(table)
-		})
-}
-
-// scenarioName returns the name of the given Scenario or ScenarioOutline
-func scenarioName(args interface{}) string {
-	scenario, ok := args.(*gherkin.Scenario)
-	if ok {
-		return scenario.Name
-	}
-	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
-	if ok {
-		return scenarioOutline.Name
-	}
-	panic("unknown type")
+	steps.SuiteSteps(s)
+	steps.ConfigurationSteps(s)
+	steps.InstallationSteps(s)
+	steps.PrintSteps(s)
+	steps.RunSteps(s)
+	steps.WorkspaceSteps(s)
 }
