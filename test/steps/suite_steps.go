@@ -6,7 +6,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/infra"
+	"github.com/Originate/git-town/test"
 	"github.com/dchest/uniuri"
 	"github.com/iancoleman/strcase"
 )
@@ -21,7 +21,7 @@ func SuiteSteps(s *godog.Suite) {
 		}
 
 		// create the GitManager
-		gitManager = infra.NewGitManager(baseDir)
+		gitManager = test.NewGitManager(baseDir)
 
 		// create the memoized environment
 		err = gitManager.CreateMemoizedEnvironment()

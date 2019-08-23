@@ -1,5 +1,5 @@
 /*
-Package infra manages the repository setup for the feature specs.
+Package test manages the repository setup for the feature specs.
 
 Each feature spec starts out in a pre-defined GitEnvironment that looks like this:
 - The "developer" GitRepository contains the local workspace repo.
@@ -30,4 +30,4 @@ The folder structure on disk looks like this:
 		└── origin
 ```
 */
-package infra
+package test

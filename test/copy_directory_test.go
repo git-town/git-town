@@ -1,4 +1,4 @@
-package infra
+package test
 
 import (
 	"io/ioutil"

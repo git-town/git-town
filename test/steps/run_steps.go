@@ -5,7 +5,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/infra"
+	"github.com/Originate/git-town/test"
 )
 
 func RunSteps(s *godog.Suite) {
@@ -16,13 +16,13 @@ func RunSteps(s *godog.Suite) {
 
 	s.Step(`^it runs the commands$`,
 		func(table *gherkin.DataTable) error {
-			commands := infra.CommandsInOutput(lastRunResult.Output)
-			return infra.AssertStringSliceMatchesTable(commands, table)
+			commands := test.CommandsInOutput(lastRunResult.Output)
+			return test.AssertStringSliceMatchesTable(commands, table)
 		})
 
 	s.Step(`^it runs no commands$`,
 		func() error {
-			commands := infra.CommandsInOutput(lastRunResult.Output)
+			commands := test.CommandsInOutput(lastRunResult.Output)
 			if len(commands) > 0 {
 				for _, command := range commands {
 					fmt.Println(command)
