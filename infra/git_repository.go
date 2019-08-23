@@ -56,8 +56,6 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
 func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
-	fmt.Printf("cloning parent '%s' to '%s'", parentDir, childDir)
-
 	// clone the repo
 	runner := ShellRunner{}
 	result := runner.Run("git", "clone", parentDir, childDir)

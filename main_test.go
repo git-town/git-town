@@ -58,7 +58,6 @@ func beforeScenario(args interface{}) {
 	if err != nil {
 		log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
 	}
-	fmt.Println("GIT ENVIRONMENT", gitEnvironment)
 }
 
 func afterScenario(args interface{}, err error) {

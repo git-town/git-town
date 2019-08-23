@@ -1,7 +1,6 @@
 package infra
 
 import (
-	"fmt"
 	"os"
 	"path"
 
@@ -26,26 +25,16 @@ func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 
 // CloneGitEnvironment creates a new GitEnvironment in the given folder containing a copy of the given GitEnvironment.
 func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
-
-	// create the folder for the new environment
-	err := os.MkdirAll(dir, 0777)
+	err := CopyDirectory(original.dir, dir)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot make folder for scenario '%s'", dir)
+		return nil, errors.Wrapf(err, "cannot clone GitEnvironment '%s' to folder '%s'", original.dir, dir)
 	}
-
-	// copy the folder contents of the memoized environment over
-	runner := ShellRunner{}
-	tarCmd := fmt.Sprintf("(cd %s; tar c *) | tar xp", original.dir)
-	fmt.Println("TAR: ", tarCmd)
-	runResult := runner.Run("/bin/bash", "-c", tarCmd)
-	fmt.Println("TAR RESULT:", runResult)
-	if runResult.Err != nil {
-		return nil, errors.Wrapf(runResult.Err, "cannot copy memoized environment over: %s", runResult.Output)
+	result := &GitEnvironment{
+		dir:           dir,
+		DeveloperRepo: LoadGitRepository(path.Join(dir, "developer")),
+		OriginRepo:    LoadGitRepository(path.Join(dir, "origin")),
 	}
-	gitEnv := &GitEnvironment{dir: dir}
-	gitEnv.DeveloperRepo = LoadGitRepository(original.DeveloperRepo.dir)
-	gitEnv.OriginRepo = LoadGitRepository(path.Join(dir, "origin"))
-	return gitEnv, nil
+	return result, nil
 }
 
 // Populate instantiates the underlying folder content so that this GitEnvironment is ready for action.

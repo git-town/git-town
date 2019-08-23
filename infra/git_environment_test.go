@@ -13,32 +13,30 @@ import (
 )
 
 func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
+	gitEnvRootDir, err := ioutil.TempDir("", "")
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot create TempDir", err)
 	}
-	ge, err := NewGitEnvironment(dir)
+	gitEnv, err := NewGitEnvironment(gitEnvRootDir)
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot create new GitEnvironment", err)
 	}
-
-	err = ge.Populate()
+	err = gitEnv.Populate()
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot populate GitEnvironment", err)
 	}
+	verifyIsBareGitRepo(path.Join(gitEnvRootDir, "origin"))
 
-	verifyIsBareGitRepo(path.Join(dir, "origin"))
-
-	// verify the "developer" folder exists
-	devDir := path.Join(dir, "developer")
+	// verify the new GitEnvironment has a "developer" folder
+	devDir := path.Join(gitEnvRootDir, "developer")
 	verifyFolderExists(devDir)
 
 	// verify the "developer" folder contains a Git repo with a main branch
-	verifyFolderExists(path.Join(dir, "origin", "developer", ".git"))
+	verifyFolderExists(path.Join(devDir, ".git"))
 	runner := ShellRunner{}
 	err = os.Chdir(devDir)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("cannot enter developer dir of GitEnvironment", err)
 	}
 	runResult := runner.Run("git", "branch")
 	if runResult.Err != nil {
@@ -49,61 +47,57 @@ func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
 	diffs := dmp.DiffMain(strings.TrimSpace(expected), strings.TrimSpace(runResult.Output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder '%s' has the wrong Git branches", dir)
+		log.Fatalf("folder '%s' has the wrong Git branches", gitEnvRootDir)
 	}
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot create temp dir", err)
 	}
-	ge, err := NewGitEnvironment(path.Join(dir, "memoized"))
+	memoizedGitEnv, err := NewGitEnvironment(path.Join(dir, "memoized"))
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot create memoized GitEnvironment", err)
 	}
-	err = ge.Populate()
+	err = memoizedGitEnv.Populate()
 	if err != nil {
-		t.Error(err)
+		t.Error("cannot populate memoized GitEnvironment", err)
+	}
+	_, err = CloneGitEnvironment(memoizedGitEnv, path.Join(dir, "cloned"))
+	if err != nil {
+		log.Fatalf("cannot clone GitEnvironment: %s", err)
 	}
 
-	ce, err := CloneGitEnvironment(ge, path.Join(dir, "cloned"))
-	if err != nil {
-		log.Fatalf("cannot clone environment: %s", err)
-	}
-	if ce == nil {
-		log.Fatal("returned nil for cloned environment")
-	}
-
+	// verify that the GitEnvironment was properly cloned
 	verifyIsBareGitRepo(path.Join(dir, "cloned", "origin"))
-
-	// verify the "developer" folder exists
 	devDir := path.Join(dir, "cloned", "developer")
 	verifyFolderExists(devDir)
-
-	// verify the "developer" folder contains a Git repo
 	verifyFolderExists(path.Join(dir, "cloned", "developer", ".git"))
-	runner := ShellRunner{}
-	err = os.Chdir(devDir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	runResult := runner.Run("git", "branch")
-	if runResult.Err != nil {
-		log.Fatalf("cannot run 'git status' in '%s': %s", devDir, runResult.Err)
-	}
-	dmp := diffmatchpatch.New()
-	expected := "* main"
-	diffs := dmp.DiffMain(strings.TrimSpace(expected), strings.TrimSpace(runResult.Output), false)
-	if len(diffs) > 1 {
-		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder '%s' has the wrong Git branches", dir)
-	}
+	verifyHasGitBranches(devDir, "* main")
 }
 
 func verifyFolderExists(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		log.Fatalf("directory (%s) not found", dir)
+	}
+}
+
+func verifyHasGitBranches(dir, expectedBranches string) {
+	runner := ShellRunner{}
+	err := os.Chdir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	runResult := runner.Run("git", "branch")
+	if runResult.Err != nil {
+		log.Fatalf("cannot run 'git status' in '%s': %s", dir, runResult.Err)
+	}
+	dmp := diffmatchpatch.New()
+	diffs := dmp.DiffMain(strings.TrimSpace(expectedBranches), strings.TrimSpace(runResult.Output), false)
+	if len(diffs) > 1 {
+		fmt.Println(dmp.DiffPrettyText(diffs))
+		log.Fatalf("folder '%s' has the wrong Git branches", dir)
 	}
 }
 

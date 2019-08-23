@@ -12,8 +12,12 @@ cross-compile:  # builds the binary for all platforms
 	gox -ldflags "-X github.com/Originate/git-town/src/cmd.version=${TRAVIS_TAG} -X github.com/Originate/git-town/src/cmd.buildDate=${date}" \
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
-cuke: build  # runs the feature tests
+cuke: cuke-go cuke-ruby  # runs the feature tests
+
+cuke-go: build   # runs the new Godog-based feature tests
 	godog features/git-town features/git-town-alias
+
+cuke-ruby: build   # runs the old Ruby-based feature tests
 	bundle exec parallel_cucumber $(DIR)
 DIR = $(if $(dir),$(dir),"features")
 
