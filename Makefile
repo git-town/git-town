@@ -15,7 +15,8 @@ cross-compile:  # builds the binary for all platforms
 cuke: cuke-go cuke-ruby  # runs the feature tests
 
 cuke-go: build   # runs the new Godog-based feature tests
-	godog features/git-town features/git-town-alias
+	godog features/git-town \
+	      features/git-town-alias
 
 cuke-ruby: build   # runs the old Ruby-based feature tests
 	bundle exec parallel_cucumber $(DIR)
