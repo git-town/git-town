@@ -80,7 +80,8 @@ setup:  # the setup steps necessary on developer machines
 	bundle install
 	yarn install
 
-spec: lint unit cuke  # runs all the tests
+test: lint unit cuke  # runs all the tests
+.PHONY: test
 
 unit:  # runs the unit tests
 	ginkgo src/...

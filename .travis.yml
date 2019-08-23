@@ -10,7 +10,7 @@ install:
   - make setup
 
 script:
-  - make spec
+  - make test
 
 notifications:
   email: false

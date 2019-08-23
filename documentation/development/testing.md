@@ -12,7 +12,7 @@ Unit tests are written as normal Go tests using [Ginkgo](https://github.com/onsi
 
 ```bash
 # running the different test types
-make spec       # runs all tests
+make test       # runs all tests
 make lint       # runs the linters
 make lint-go    # runs the Go linters
 make cuke       # runs the feature tests
