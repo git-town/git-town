@@ -31,37 +31,119 @@ var gitEnvironment *infra.GitEnvironment
 // the result of the last run of Git Town
 var lastRunResult infra.RunResult
 
-func beforeSuite() {
+// nolint:deadcode
+func FeatureContext(s *godog.Suite) {
+	s.BeforeSuite(func() {
 
-	// create the directory to put the GitEnvironments ino
-	baseDir, err := ioutil.TempDir("", "")
-	if err != nil {
-		log.Fatalf("cannot create base directory: %s", err)
-	}
+		// create the directory to put the GitEnvironments ino
+		baseDir, err := ioutil.TempDir("", "")
+		if err != nil {
+			log.Fatalf("cannot create base directory: %s", err)
+		}
 
-	// create the GitManager
-	gitManager = infra.NewGitManager(baseDir)
+		// create the GitManager
+		gitManager = infra.NewGitManager(baseDir)
 
-	// create the memoized environment
-	err = gitManager.CreateMemoizedEnvironment()
-	if err != nil {
-		log.Fatalf("Cannot create memoized environment: %s", err)
-	}
-}
+		// create the memoized environment
+		err = gitManager.CreateMemoizedEnvironment()
+		if err != nil {
+			log.Fatalf("Cannot create memoized environment: %s", err)
+		}
+	})
 
-func beforeScenario(args interface{}) {
+	s.BeforeScenario(func(args interface{}) {
+		// create a GitEnvironment for the scenario
+		environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(uniuri.NewLen(10))
+		var err error
+		gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
+		if err != nil {
+			log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
+		}
+	})
 
-	// create a GitEnvironment for the scenario
-	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(uniuri.NewLen(10))
-	var err error
-	gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
-	if err != nil {
-		log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
-	}
-}
+	s.AfterScenario(func(args interface{}, err error) {
+		// TODO: delete scenario environment
+	})
 
-func afterScenario(args interface{}, err error) {
-	// TODO: delete scenario environment
+	s.Step(`^I haven\'t configured Git Town yet$`, func() error {
+		// delete_main_branch_configuration
+		// delete_perennial_branches_configuration
+		return nil
+	})
+
+	s.Step("^my workspace is currently not a Git repository$",
+		func() error {
+			// FileUtils.rm_rf '.git'
+			return nil
+		})
+
+	s.Step(`^I run "([^"]*)"$`, func(command string) error {
+		lastRunResult = gitEnvironment.DeveloperRepo.RunString(command)
+		return nil
+	})
+
+	s.Step("^it prints$", func(expected *gherkin.DocString) error {
+		if !strings.Contains(lastRunResult.Output, expected.Content) {
+			return fmt.Errorf(`text not found: %s`, expected.Content)
+		}
+		return nil
+	})
+
+	s.Step("^it does not print \"([^\"]*)\"$",
+		func(text string) error {
+			if strings.Contains(lastRunResult.Output, text) {
+				return fmt.Errorf(`text found: %s`, text)
+			}
+			return nil
+		})
+
+	s.Step(`^it prints the error:$`, func(expected *gherkin.DocString) error {
+		if !strings.Contains(lastRunResult.Output, expected.Content) {
+			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunResult.Output)
+		}
+		if lastRunResult.Err == nil {
+			return fmt.Errorf("expected error")
+		}
+		return nil
+	})
+
+	s.Step(`^I have Git "([^"]*)" installed$`,
+		func(arg1 string) error {
+			err := gitEnvironment.DeveloperRepo.AddTempShellOverride(
+				"git",
+				`#!/usr/bin/env bash
+		echo "git version 2.6.2"`)
+			return err
+		})
+
+	s.Step(`^it runs the commands$`,
+		func(table *gherkin.DataTable) error {
+			commands := infra.CommandsInOutput(lastRunResult.Output)
+			return infra.AssertStringSliceMatchesTable(commands, table)
+		})
+
+	s.Step(`^it runs no commands$`,
+		func() error {
+			commands := infra.CommandsInOutput(lastRunResult.Output)
+			if len(commands) > 0 {
+				for _, command := range commands {
+					fmt.Println(command)
+				}
+				return fmt.Errorf("expected no commands but found %d commands", len(commands))
+			}
+			return nil
+		})
+
+	s.Step(`^the following commit exists in my repository$`,
+		func(table *gherkin.DataTable) error {
+			// user = (who == 'my') ? 'developer' : 'coworker'
+			// user += '_secondary' if remote
+			// @initial_commits_table = table.clone
+			// @original_files = files_in_branches
+			// in_repository user do
+			fmt.Println("gitEnvironment.DeveloperRepo", gitEnvironment.DeveloperRepo)
+			return gitEnvironment.DeveloperRepo.CreateCommits(table)
+		})
 }
 
 // scenarioName returns the name of the given Scenario or ScenarioOutline
@@ -75,95 +157,4 @@ func scenarioName(args interface{}) string {
 		return scenarioOutline.Name
 	}
 	panic("unknown type")
-}
-
-func myWorkspaceIsCurrentlyNotAGitRepository() error {
-	// FileUtils.rm_rf '.git'
-	return nil
-}
-
-func iHaveGitInstalled(arg1 string) error {
-	err := gitEnvironment.DeveloperRepo.AddTempShellOverride(
-		"git",
-		`#!/usr/bin/env bash
-		echo "git version 2.6.2"`)
-	return err
-}
-
-func iHaventConfiguredGitTownYet() error {
-	// delete_main_branch_configuration
-	// delete_perennial_branches_configuration
-	return nil
-}
-
-func iRun(command string) error {
-	lastRunResult = gitEnvironment.DeveloperRepo.RunString(command)
-	return nil
-}
-
-func itPrints(expected *gherkin.DocString) error {
-	if !strings.Contains(lastRunResult.Output, expected.Content) {
-		return fmt.Errorf(`text not found: %s`, expected.Content)
-	}
-	return nil
-}
-
-func itDoesNotPrint(text string) error {
-	if strings.Contains(lastRunResult.Output, text) {
-		return fmt.Errorf(`text found: %s`, text)
-	}
-	return nil
-}
-
-func itPrintsTheError(expected *gherkin.DocString) error {
-	if !strings.Contains(lastRunResult.Output, expected.Content) {
-		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, lastRunResult.Output)
-	}
-	if lastRunResult.Err == nil {
-		return fmt.Errorf("expected error")
-	}
-	return nil
-}
-
-func itRunsTheCommands(table *gherkin.DataTable) error {
-	commands := infra.CommandsInOutput(lastRunResult.Output)
-	return infra.AssertStringSliceMatchesTable(commands, table)
-}
-
-func itRunsNoCommands() error {
-	commands := infra.CommandsInOutput(lastRunResult.Output)
-	if len(commands) > 0 {
-		for _, command := range commands {
-			fmt.Println(command)
-		}
-		return fmt.Errorf("expected no commands but found %d commands", len(commands))
-	}
-	return nil
-}
-
-func theFollowingCommitExistsInMyRepository(table *gherkin.DataTable) error {
-	// user = (who == 'my') ? 'developer' : 'coworker'
-	// user += '_secondary' if remote
-	// @initial_commits_table = table.clone
-	// @original_files = files_in_branches
-	// in_repository user do
-	fmt.Println("gitEnvironment.DeveloperRepo", gitEnvironment.DeveloperRepo)
-	return gitEnvironment.DeveloperRepo.CreateCommits(table)
-}
-
-// nolint:deadcode
-func FeatureContext(s *godog.Suite) {
-	s.BeforeSuite(beforeSuite)
-	s.BeforeScenario(beforeScenario)
-	s.AfterScenario(afterScenario)
-	s.Step(`^I haven\'t configured Git Town yet$`, iHaventConfiguredGitTownYet)
-	s.Step("^my workspace is currently not a Git repository$", myWorkspaceIsCurrentlyNotAGitRepository)
-	s.Step(`^I run "([^"]*)"$`, iRun)
-	s.Step("^it prints$", itPrints)
-	s.Step("^it does not print \"([^\"]*)\"$", itDoesNotPrint)
-	s.Step(`^it prints the error:$`, itPrintsTheError)
-	s.Step(`^I have Git "([^"]*)" installed$`, iHaveGitInstalled)
-	s.Step(`^it runs the commands$`, itRunsTheCommands)
-	s.Step(`^it runs no commands$`, itRunsNoCommands)
-	s.Step(`^the following commit exists in my repository$`, theFollowingCommitExistsInMyRepository)
 }
