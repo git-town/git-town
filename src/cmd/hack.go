@@ -17,16 +17,13 @@ var hackCmd = &cobra.Command{
 	Short: "Creates a new feature branch off the main development branch",
 	Long: `Creates a new feature branch off the main development branch
 
-Syncs the main branch and forks a new feature branch with the given name off it.
+Syncs the main branch,
+forks a new feature branch with the given name off the main branch,
+pushes the new feature branch to the remote repository
+(if and only if "new-branch-push-flag" is true),
+and brings over all uncommitted changes to the new feature branch.
 
-If (and only if) new-branch-push-flag is true,
-pushes the new feature branch to the remote repository.
-
-Finally, brings over all uncommitted changes to the new feature branch.
-
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "new-branch-push-flag" configuration.`,
+See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getHackConfig(args)
 		stepList := getAppendStepList(config)
