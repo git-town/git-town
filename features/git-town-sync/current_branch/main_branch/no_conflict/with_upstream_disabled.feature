@@ -5,8 +5,8 @@ Feature: git-sync: on the main branch with a upstream remote
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE         |
       | main   | local    | local commit    |
-      | main   | remote   | remote commit   |
-      | main   | upstream | upstream commit |
+      |        | remote   | remote commit   |
+      |        | upstream | upstream commit |
     And I am on the "main" branch
     And I have a the git configuration for "git-town.sync-upstream" set to "false"
     And my workspace has an uncommitted file
