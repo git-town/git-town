@@ -26,6 +26,14 @@ type GitRepository struct {
 	ShellRunner
 }
 
+// NewGitRepository provides a new GitRepository instance working in the given directory.
+// The directory must contain an existing Git repo.
+func NewGitRepository(dir string) GitRepository {
+	result := GitRepository{dir: dir}
+	result.ShellRunner = NewShellRunner(dir)
+	return result
+}
+
 // InitGitRepository initializes a new Git repository in the given path.
 // The given path must not exist.
 func InitGitRepository(dir string, bare bool) (GitRepository, error) {
@@ -47,7 +55,7 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 	if bare {
 		args = append(args, "--bare")
 	}
-	result := GitRepository{dir: dir}
+	result := NewGitRepository(dir)
 	_, err = result.Run("git", args...)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "error running git %s", strings.Join(args, " "))
@@ -62,7 +70,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %s", parentDir)
 	}
-	result := GitRepository{dir: childDir}
+	result := NewGitRepository(childDir)
 	err = os.Chdir(childDir)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
@@ -81,7 +89,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 
 // LoadGitRepository returns a GitRepository instance that manages the given existing folder
 func LoadGitRepository(dir string) GitRepository {
-	return GitRepository{dir: dir}
+	return NewGitRepository(dir)
 }
 
 // CommitTableEntry contains the elements of a Gherkin table defining commit data.

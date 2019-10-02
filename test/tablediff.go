@@ -7,7 +7,7 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
-// EqualsStringSlice compares the given string slice to the given Gherkin table.
+// AssertStringSliceMatchesTable compares the given string slice to the given Gherkin table.
 // If they don't match, it returns an error
 // and might print additional information to the console.
 // The comparison ignores whitespace around strings.
