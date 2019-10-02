@@ -87,11 +87,6 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// LoadGitRepository returns a GitRepository instance that manages the given existing folder
-func LoadGitRepository(dir string) GitRepository {
-	return NewGitRepository(dir)
-}
-
 // CommitTableEntry contains the elements of a Gherkin table defining commit data.
 type CommitTableEntry struct {
 	branch      string

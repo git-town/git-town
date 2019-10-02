@@ -36,8 +36,8 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	result := GitEnvironment{
 		dir:           dir,
-		DeveloperRepo: LoadGitRepository(path.Join(dir, "developer")),
-		OriginRepo:    LoadGitRepository(path.Join(dir, "origin")),
+		DeveloperRepo: NewGitRepository(path.Join(dir, "developer")),
+		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
 	}
 	return &result, nil
 }
