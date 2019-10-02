@@ -10,6 +10,7 @@ import (
 )
 
 // CopyDirectory copies all files in the given src dirctory into the given dst directory.
+// Both the source and the destination directory must exist.
 func CopyDirectory(src, dst string) error {
 	return filepath.Walk(src, func(srcPath string, fi os.FileInfo, err error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
@@ -27,16 +28,16 @@ func CopyDirectory(src, dst string) error {
 		sourceContent, err := os.Open(srcPath)
 		defer sourceContent.Close()
 		if err != nil {
-			return errors.Wrapf(err, "cannot read source file '%s'", srcPath)
+			return errors.Wrapf(err, "cannot read source file %q", srcPath)
 		}
 		destFile, err := os.OpenFile(dstPath, os.O_CREATE|os.O_WRONLY, fi.Mode())
 		defer destFile.Close()
 		if err != nil {
-			return errors.Wrapf(err, "Cannot create target file '%s'", srcPath)
+			return errors.Wrapf(err, "Cannot create target file %q", srcPath)
 		}
 		_, err = io.Copy(destFile, sourceContent)
 		if err != nil {
-			return errors.Wrapf(err, "cannot copy '%s' into '%s'", srcPath, dstPath)
+			return errors.Wrapf(err, "cannot copy %q into %q", srcPath, dstPath)
 		}
 		return nil
 	})

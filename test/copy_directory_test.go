@@ -7,11 +7,12 @@ import (
 	"testing"
 
 	"github.com/Originate/exit"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCopyDirectory(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "")
-	exit.If(err)
+	assert.Nil(t, err)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
 
@@ -22,7 +23,7 @@ func TestCopyDirectory(t *testing.T) {
 
 	// copy them
 	err = CopyDirectory(srcDir, dstDir)
-	exit.If(err)
+	assert.Nil(t, err)
 
 	// verify that the destination exists
 	assertFileExists(dstDir, "one.txt", t)
@@ -32,7 +33,7 @@ func TestCopyDirectory(t *testing.T) {
 
 func TestCopyGitRepo(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "")
-	exit.If(err)
+	assert.Nil(t, err)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
 
@@ -42,7 +43,7 @@ func TestCopyGitRepo(t *testing.T) {
 
 	// copy them
 	err = CopyDirectory(srcDir, dstDir)
-	exit.If(err)
+	assert.Nil(t, err)
 
 	// verify that the destination exists
 	assertFileExists(dstDir, "one.txt", t)
