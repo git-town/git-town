@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// createFile creates a file with the given filename in the given directory.
 func createFile(t *testing.T, dir, filename string) {
 	filePath := path.Join(dir, filename)
 	err := os.MkdirAll(path.Dir(filePath), 0744)

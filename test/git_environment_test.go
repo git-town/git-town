@@ -40,14 +40,14 @@ func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
 	}
 	runResult := runner.Run("git", "branch")
 	if runResult.Err != nil {
-		log.Fatalf("cannot run 'git branch' in '%s': %s", devDir, runResult.Err)
+		log.Fatalf("cannot run 'git branch' in %q: %s", devDir, runResult.Err)
 	}
 	dmp := diffmatchpatch.New()
 	expected := "* main"
 	diffs := dmp.DiffMain(strings.TrimSpace(expected), strings.TrimSpace(runResult.Output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder '%s' has the wrong Git branches", gitEnvRootDir)
+		log.Fatalf("folder %q has the wrong Git branches", gitEnvRootDir)
 	}
 }
 
@@ -91,13 +91,13 @@ func verifyHasGitBranches(dir, expectedBranches string) {
 	}
 	runResult := runner.Run("git", "branch")
 	if runResult.Err != nil {
-		log.Fatalf("cannot run 'git status' in '%s': %s", dir, runResult.Err)
+		log.Fatalf("cannot run 'git status' in %q: %s", dir, runResult.Err)
 	}
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(strings.TrimSpace(expectedBranches), strings.TrimSpace(runResult.Output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder '%s' has the wrong Git branches", dir)
+		log.Fatalf("folder %q has the wrong Git branches", dir)
 	}
 }
 
@@ -121,6 +121,6 @@ refs`
 	diffs := dmp.DiffMain(strings.TrimSpace(expected), strings.TrimSpace(runResult.Output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder '%s' is not a bare Git repo", dir)
+		log.Fatalf("folder %q is not a bare Git repo", dir)
 	}
 }
