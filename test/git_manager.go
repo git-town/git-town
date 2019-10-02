@@ -10,7 +10,7 @@ import (
 
 /*
 GitManager manages the Git setup for the entire test suite.
-In particular, it creates the Git setup for individual feature specs.
+In particular, it creates the Git setup for individual feature specs (GitEnvironment).
 */
 type GitManager struct {
 
