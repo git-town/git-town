@@ -26,9 +26,9 @@ func TestCopyDirectory(t *testing.T) {
 	assert.Nil(t, err)
 
 	// verify that the destination exists
-	assertFileExists(dstDir, "one.txt", t)
-	assertFileExists(dstDir, "f1/a.txt", t)
-	assertFileExists(dstDir, "f2/b.txt", t)
+	assertFileExists(t, dstDir, "one.txt")
+	assertFileExists(t, dstDir, "f1/a.txt")
+	assertFileExists(t, dstDir, "f2/b.txt")
 }
 
 func TestCopyGitRepo(t *testing.T) {
@@ -46,8 +46,8 @@ func TestCopyGitRepo(t *testing.T) {
 	assert.Nil(t, err)
 
 	// verify that the destination exists
-	assertFileExists(dstDir, "one.txt", t)
-	assertFileExistsWithContent(dstDir, ".git/HEAD", "ref: refs/heads/master\n", t)
+	assertFileExists(t, dstDir, "one.txt")
+	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
 }
 
 func createFile(dir, filename string) {
@@ -56,17 +56,4 @@ func createFile(dir, filename string) {
 	exit.If(err)
 	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0644)
 	exit.If(err)
-}
-
-func assertFileExists(dir, filename string, t *testing.T) {
-	assertFileExistsWithContent(dir, filename, filename+" content", t)
-}
-
-func assertFileExistsWithContent(dir, filename, expectedContent string, t *testing.T) {
-	fileContent, err := ioutil.ReadFile(path.Join(dir, filename))
-	exit.If(err)
-	actualContent := string(fileContent)
-	if actualContent != expectedContent {
-		t.Fatalf("expected '%s' to equal '%s'", actualContent, expectedContent)
-	}
 }
