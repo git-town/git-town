@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// GitEnvironment is the complete Git environment for one test scenario.
+// GitEnvironment is the complete Git environment for a test scenario.
 type GitEnvironment struct {
 
 	// dir is the directory that this environment is in.
@@ -48,18 +48,18 @@ func (ge GitEnvironment) Populate() error {
 
 	// create the origin repo
 	var err error
-	ge.OriginRepo, err = InitGitRepository(ge.repositoryPath("origin"), true)
+	ge.OriginRepo, err = InitGitRepository(ge.originRepoPath(), true)
 	if err != nil {
-		return errors.Wrapf(err, "cannot initialize origin directory at %q", ge.repositoryPath("origin"))
+		return errors.Wrapf(err, "cannot initialize origin directory at %q", ge.originRepoPath())
 	}
 
 	// set "main" as the default branch
 	ge.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
 
 	// git-clone the "developer" repo
-	ge.DeveloperRepo, err = CloneGitRepository(ge.repositoryPath("origin"), ge.repositoryPath("developer"))
+	ge.DeveloperRepo, err = CloneGitRepository(ge.originRepoPath(), ge.developerRepoPath())
 	if err != nil {
-		return errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", ge.repositoryPath("origin"), ge.repositoryPath("developer"))
+		return errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", ge.originRepoPath(), ge.developerRepoPath())
 	}
 
 	// Initialize the main branch
@@ -71,7 +71,12 @@ func (ge GitEnvironment) Populate() error {
 	return err
 }
 
-// repositoryPath returns the full path to the Git repository with the given name.
-func (ge GitEnvironment) repositoryPath(repoName string) string {
-	return path.Join(ge.dir, repoName)
+// developerRepoPath provides the full path to the Git repository with the given name.
+func (ge GitEnvironment) developerRepoPath() string {
+	return path.Join(ge.dir, "developer")
+}
+
+// originRepoPath provides the full path to the Git repository with the given name.
+func (ge GitEnvironment) originRepoPath() string {
+	return path.Join(ge.dir, "origin")
 }
