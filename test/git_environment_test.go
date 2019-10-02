@@ -47,5 +47,5 @@ func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	devDir := path.Join(dir, "cloned", "developer")
 	assertFolderExists(t, devDir)
 	assertFolderExists(t, path.Join(dir, "cloned", "developer", ".git"))
-	assertHasGitBranches(t, devDir, "* main")
+	assertHasGitBranch(t, devDir, "* main")
 }
