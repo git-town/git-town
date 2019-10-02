@@ -1,15 +1,11 @@
 package test
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
-	"strings"
 	"testing"
 
-	"github.com/sergi/go-diff/diffmatchpatch"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,13 +29,7 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 	assert.Nil(t, err, "cannot enter developer dir of GitEnvironment")
 	runResult := runner.Run("git", "branch")
 	assert.Nilf(t, runResult.Err, "cannot run 'git branch' in %q", devDir)
-	dmp := diffmatchpatch.New()
-	expected := "* main"
-	diffs := dmp.DiffMain(expected, strings.TrimSpace(runResult.Output), false)
-	if len(diffs) > 1 {
-		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder %q has the wrong Git branches", gitEnvRootDir)
-	}
+	assert.Contains(t, runResult.Output, "* main")
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
