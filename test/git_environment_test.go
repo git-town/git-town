@@ -35,7 +35,7 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 	assert.Nilf(t, runResult.Err, "cannot run 'git branch' in %q", devDir)
 	dmp := diffmatchpatch.New()
 	expected := "* main"
-	diffs := dmp.DiffMain(strings.TrimSpace(expected), strings.TrimSpace(runResult.Output), false)
+	diffs := dmp.DiffMain(expected, strings.TrimSpace(runResult.Output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
 		log.Fatalf("folder %q has the wrong Git branches", gitEnvRootDir)
