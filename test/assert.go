@@ -2,6 +2,7 @@ package test
 
 import (
 	"io/ioutil"
+	"os"
 	"path"
 	"testing"
 
@@ -9,7 +10,10 @@ import (
 )
 
 func assertFileExists(t *testing.T, dir, filename string) {
-	assertFileExistsWithContent(t, dir, filename, filename+" content")
+	filePath := path.Join(dir, filename)
+	info, err := os.Stat(filePath)
+	assert.Nilf(t, err, "file %q does not exist", filePath)
+	assert.Falsef(t, info.IsDir(), "%q is a directory", filePath)
 }
 
 func assertFileExistsWithContent(t *testing.T, dir, filename, expectedContent string) {
