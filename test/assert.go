@@ -32,9 +32,7 @@ func assertFolderExists(t *testing.T, dir string) {
 }
 
 func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
-	runner := ShellRunner{}
-	err := os.Chdir(dir)
-	assert.Nil(t, err)
+	runner := NewShellRunner(dir)
 	output, err := runner.Run("git", "branch")
 	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
 	dmp := diffmatchpatch.New()

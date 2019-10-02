@@ -2,7 +2,6 @@ package test
 
 import (
 	"io/ioutil"
-	"os"
 	"path"
 	"testing"
 
@@ -26,9 +25,7 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 
 	// verify the "developer" folder contains a Git repo with a main branch
 	assertFolderExists(t, path.Join(devDir, ".git"))
-	runner := ShellRunner{}
-	err = os.Chdir(devDir)
-	assert.Nil(t, err, "cannot enter developer dir of GitEnvironment")
+	runner := NewShellRunner(devDir)
 	output, err := runner.Run("git", "branch")
 	assert.Nilf(t, err, "cannot run 'git branch' in %q", devDir)
 	assert.Contains(t, output, "* main")

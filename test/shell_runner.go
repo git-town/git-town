@@ -8,14 +8,22 @@ import (
 	"strings"
 )
 
-// ShellRunner runs shell commands in a customizable environment.
+// ShellRunner runs shell commands in a particular directory, using a customizable environment.
 // Possible customizations:
 // - override certain shell commands permanently or temporary
 type ShellRunner struct {
 
+	// dir contains the directory in which this runner runs.
+	dir string
+
 	// tempShellOverrideDirDir contains the path of the directory in which the temp shell overrides exist.
 	// This variable is only populated when temp shell overrides are set.
 	tempShellOverridesDir string
+}
+
+// NewShellRunner provides a new ShellRunner instance that runs in the given directory.
+func NewShellRunner(dir string) ShellRunner {
+	return ShellRunner{dir: dir}
 }
 
 // AddTempShellOverride adds a temporary mock of a shell command
@@ -70,14 +78,14 @@ func (r *ShellRunner) Run(name string, arguments ...string) (output string, err 
 				break
 			}
 		}
+		defer r.RemoveTempShellOverrides()
 	}
 
 	// run the command inside the custom environment
 	cmd := exec.Command(name, arguments...)
+	cmd.Dir = r.dir
 	cmd.Env = customEnv
 	rawOutput, err := cmd.CombinedOutput()
-
-	r.RemoveTempShellOverrides()
 
 	return string(rawOutput), err
 }
