@@ -57,14 +57,11 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
 func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
-	// clone the repo
 	runner := ShellRunner{}
 	_, err := runner.Run("git", "clone", parentDir, childDir)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %s", parentDir)
 	}
-
-	// configure the repo
 	result := GitRepository{dir: childDir}
 	err = os.Chdir(childDir)
 	if err != nil {
