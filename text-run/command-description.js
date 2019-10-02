@@ -14,15 +14,25 @@ function getMd(activity) {
       .map(nodeContent)
       .map(text => text.trim())
       .join("\n")
-      .replace(/\n<\/?a>\n/g, " ")
+      // Internal links should be quoted in CLI help strings,
+      // while external should not
+      .replace(/\n<a internal>/g, " ")
+      .replace(/<\/a internal>\n/g, " ")
+      .replace(/\n<\/?a external>\n/g, " ")
       .replace(/ \./g, ".")
       .replace(/ \,/g, ",")
   )
 }
 
 function nodeContent(node) {
-  if (node.type === "link_open") return "<a>"
-  if (node.type === "link_close") return "</a>"
+  if (node.type === "link_open") {
+    if (node.attributes.href[0] == ".") return "<a internal>"
+    else return "<a external>"
+  }
+  if (node.type === "link_close") {
+    if (node.attributes.href[0] == ".") return "</a internal>"
+    else return "</a external>"
+  }
   return node.content
 }
 
