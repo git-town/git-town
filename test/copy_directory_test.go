@@ -2,11 +2,9 @@ package test
 
 import (
 	"io/ioutil"
-	"os"
 	"path"
 	"testing"
 
-	"github.com/Originate/exit"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,9 +15,9 @@ func TestCopyDirectory(t *testing.T) {
 	dstDir := path.Join(tmpDir, "dst")
 
 	// create a few files and folders
-	createFile(srcDir, "one.txt")
-	createFile(srcDir, "f1/a.txt")
-	createFile(srcDir, "f2/b.txt")
+	createFile(t, srcDir, "one.txt")
+	createFile(t, srcDir, "f1/a.txt")
+	createFile(t, srcDir, "f2/b.txt")
 
 	// copy them
 	err = CopyDirectory(srcDir, dstDir)
@@ -39,7 +37,7 @@ func TestCopyGitRepo(t *testing.T) {
 
 	// create a few files and folders
 	InitGitRepository(srcDir, false)
-	createFile(srcDir, "one.txt")
+	createFile(t, srcDir, "one.txt")
 
 	// copy them
 	err = CopyDirectory(srcDir, dstDir)
@@ -48,12 +46,4 @@ func TestCopyGitRepo(t *testing.T) {
 	// verify that the destination exists
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
-}
-
-func createFile(dir, filename string) {
-	filePath := path.Join(dir, filename)
-	err := os.MkdirAll(path.Dir(filePath), 0744)
-	exit.If(err)
-	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0644)
-	exit.If(err)
 }
