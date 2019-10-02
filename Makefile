@@ -75,13 +75,15 @@ lint-ruby:  # lints the Ruby files
 
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	go get -u github.com/onsi/ginkgo/ginkgo github.com/golangci/golangci-lint/cmd/golangci-lint
+	go get -u github.com/onsi/ginkgo/ginkgo
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.18.0
 	bundle install
 	yarn install
 
-spec: lint tests cuke  # runs all the tests
+test: lint unit cuke  # runs all the tests
+.PHONY: test
 
-tests:  # runs the unit tests
+unit:  # runs the unit tests
 	ginkgo src/...
 
 update:  # updates all dependencies
