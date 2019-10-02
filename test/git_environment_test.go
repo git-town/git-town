@@ -14,7 +14,9 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 	assert.Nil(t, err, "cannot create TempDir")
 	gitEnv, err := NewGitEnvironment(gitEnvRootDir)
 	assert.Nil(t, err, "cannot create new GitEnvironment")
+
 	err = gitEnv.Populate()
+
 	assert.Nil(t, err, "cannot populate GitEnvironment")
 	assertIsBareGitRepo(t, path.Join(gitEnvRootDir, "origin"))
 
@@ -39,10 +41,10 @@ func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	assert.Nil(t, err, "cannot create memoized GitEnvironment")
 	err = memoizedGitEnv.Populate()
 	assert.Nil(t, err, "cannot populate memoized GitEnvironment")
-	_, err = CloneGitEnvironment(memoizedGitEnv, path.Join(dir, "cloned"))
-	assert.Nil(t, err, "cannot clone GitEnvironment")
 
-	// verify that the GitEnvironment was properly cloned
+	_, err = CloneGitEnvironment(memoizedGitEnv, path.Join(dir, "cloned"))
+
+	assert.Nil(t, err, "cannot clone GitEnvironment")
 	assertIsBareGitRepo(t, path.Join(dir, "cloned", "origin"))
 	devDir := path.Join(dir, "cloned", "developer")
 	assertFolderExists(t, devDir)

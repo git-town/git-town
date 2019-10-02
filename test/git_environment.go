@@ -20,8 +20,8 @@ type GitEnvironment struct {
 	DeveloperRepo GitRepository
 }
 
-// NewGitEnvironment provides a Git environment instance located in the given directory.
-// The directory must not exist.
+// NewGitEnvironment provides a Git environment instance located in the given directory path.
+// Missing directories are created as needed.
 func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 	err := os.MkdirAll(baseDir, 0777)
 	return &GitEnvironment{dir: baseDir}, err
