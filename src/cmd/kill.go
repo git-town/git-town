@@ -90,7 +90,7 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 	case !git.IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	default:
-		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
+		fmt.Printf("Cannot delete remote branch %q in offline mode", config.TargetBranch)
 		os.Exit(1)
 	}
 	result.Wrap(steps.WrapOptions{
