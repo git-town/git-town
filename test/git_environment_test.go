@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGitEnvironmentCreateScenarioSetup(t *testing.T) {
+func TestGitEnvironmentPopulate(t *testing.T) {
 	gitEnvRootDir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create TempDir")
 	gitEnv, err := NewGitEnvironment(gitEnvRootDir)
