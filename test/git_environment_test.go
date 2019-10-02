@@ -27,9 +27,9 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 	runner := ShellRunner{}
 	err = os.Chdir(devDir)
 	assert.Nil(t, err, "cannot enter developer dir of GitEnvironment")
-	runResult := runner.Run("git", "branch")
-	assert.Nilf(t, runResult.Err, "cannot run 'git branch' in %q", devDir)
-	assert.Contains(t, runResult.Output, "* main")
+	output, err := runner.Run("git", "branch")
+	assert.Nilf(t, err, "cannot run 'git branch' in %q", devDir)
+	assert.Contains(t, output, "* main")
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {

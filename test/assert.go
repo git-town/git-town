@@ -35,10 +35,10 @@ func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	runner := ShellRunner{}
 	err := os.Chdir(dir)
 	assert.Nil(t, err)
-	runResult := runner.Run("git", "branch")
-	assert.Nilf(t, runResult.Err, "cannot run 'git status' in %q", dir)
+	output, err := runner.Run("git", "branch")
+	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(strings.TrimSpace(expectedBranch), strings.TrimSpace(runResult.Output), false)
+	diffs := dmp.DiffMain(strings.TrimSpace(expectedBranch), strings.TrimSpace(output), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
 		log.Fatalf("folder %q has the wrong Git branches", dir)

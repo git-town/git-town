@@ -9,4 +9,7 @@ var gitManager *test.GitManager
 var gitEnvironment *test.GitEnvironment
 
 // the result of the last run of Git Town
-var lastRunResult test.RunResult
+var lastRunOutput string
+
+// the error of the last run of Git Town
+var lastRunErr error

@@ -8,21 +8,22 @@ import (
 	"github.com/Originate/git-town/test"
 )
 
+// RunSteps defines Gherkin step implementations around running things in subshells.
 func RunSteps(s *godog.Suite) {
 	s.Step(`^I run "([^"]*)"$`, func(command string) error {
-		lastRunResult = gitEnvironment.DeveloperRepo.RunString(command)
+		lastRunOutput, lastRunErr = gitEnvironment.DeveloperRepo.RunString(command)
 		return nil
 	})
 
 	s.Step(`^it runs the commands$`,
 		func(table *gherkin.DataTable) error {
-			commands := test.CommandsInOutput(lastRunResult.Output)
+			commands := test.CommandsInOutput(lastRunOutput)
 			return test.AssertStringSliceMatchesTable(commands, table)
 		})
 
 	s.Step(`^it runs no commands$`,
 		func() error {
-			commands := test.CommandsInOutput(lastRunResult.Output)
+			commands := test.CommandsInOutput(lastRunOutput)
 			if len(commands) > 0 {
 				for _, command := range commands {
 					fmt.Println(command)

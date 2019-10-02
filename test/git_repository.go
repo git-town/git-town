@@ -16,29 +16,30 @@ import (
 // GitRepository is a Git repository that exists inside a Git environment.
 type GitRepository struct {
 
-	// dir contains the path of the directory that this repository is in
+	// dir contains the path of the directory that this repository is in.
 	dir string
 
-	// originalCommits contains the commits in this repository before the test ran
+	// originalCommits contains the commits in this repository before the test ran.
 	originalCommits []CommitTableEntry
 
-	// Runner enables to run console commands in this repo
+	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
 }
 
-// InitGitRepository initializes a new Git repository in the given folder.
+// InitGitRepository initializes a new Git repository in the given path.
+// The given path must not exist.
 func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 	// create the folder
 	err := os.MkdirAll(dir, 0777)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot create directory %s", dir)
+		return GitRepository{}, errors.Wrapf(err, "cannot create directory %q", dir)
 	}
 
 	// cd into the folder
 	err = os.Chdir(dir)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot cd into dir %s", dir)
+		return GitRepository{}, errors.Wrapf(err, "cannot cd into dir %q", dir)
 	}
 
 	// initialize the repo in the folder
@@ -46,25 +47,26 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 	if bare {
 		args = append(args, "--bare")
 	}
-	runner := ShellRunner{}
-	result := runner.Run("git", args...)
-	if result.Err != nil {
-		return GitRepository{}, errors.Wrap(result.Err, "error running git "+strings.Join(args, " "))
+	result := GitRepository{dir: dir}
+	_, err = result.Run("git", args...)
+	if err != nil {
+		return GitRepository{}, errors.Wrapf(err, "error running git %s", strings.Join(args, " "))
 	}
-	return GitRepository{dir: dir}, nil
+	return result, nil
 }
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
 func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	// clone the repo
 	runner := ShellRunner{}
-	result := runner.Run("git", "clone", parentDir, childDir)
-	if result.Err != nil {
-		return GitRepository{}, errors.Wrapf(result.Err, "cannot clone repo %s", parentDir)
+	_, err := runner.Run("git", "clone", parentDir, childDir)
+	if err != nil {
+		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %s", parentDir)
 	}
 
 	// configure the repo
-	err := os.Chdir(childDir)
+	result := GitRepository{dir: childDir}
+	err = os.Chdir(childDir)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
 	}
@@ -77,7 +79,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 		[]string{"git", "config", "git-town.main-branch-name", "main"},
 		[]string{"git", "config", "git-town.perennial-branch-names", ""},
 	})
-	return GitRepository{dir: childDir}, err
+	return result, err
 }
 
 // LoadGitRepository returns a GitRepository instance that manages the given existing folder
@@ -85,6 +87,7 @@ func LoadGitRepository(dir string) GitRepository {
 	return GitRepository{dir: dir}
 }
 
+// CommitTableEntry contains the elements of a Gherkin table defining commit data.
 type CommitTableEntry struct {
 	branch      string
 	location    string
@@ -93,7 +96,7 @@ type CommitTableEntry struct {
 	fileContent string
 }
 
-// NewCommitTableEntry creates a new CommitTableEntry with default values
+// NewCommitTableEntry provides a new CommitTableEntry with default values
 func NewCommitTableEntry() CommitTableEntry {
 	return CommitTableEntry{
 		fileName:    "default_file_name_" + uniuri.NewLen(10),
@@ -104,6 +107,7 @@ func NewCommitTableEntry() CommitTableEntry {
 	}
 }
 
+// CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 	err := os.Chdir(gr.dir)
 	if err != nil {
@@ -126,13 +130,13 @@ func (gr *GitRepository) createCommit(commit CommitTableEntry) error {
 	}
 	dir, err := os.Getwd()
 	fmt.Println("CWD", dir, err)
-	runResult := gr.Run("git", "add", commit.fileName)
-	if runResult.Err != nil {
-		return errors.Wrapf(runResult.Err, "cannot add file to commit: %s", runResult.Output)
+	output, err := gr.Run("git", "add", commit.fileName)
+	if err != nil {
+		return errors.Wrapf(err, "cannot add file to commit: %s", output)
 	}
-	runResult = gr.Run("git", "commit", "-m", commit.message)
-	if runResult.Err != nil {
-		return errors.Wrapf(runResult.Err, "cannot commit")
+	_, err = gr.Run("git", "commit", "-m", commit.message)
+	if err != nil {
+		return errors.Wrapf(err, "cannot commit")
 	}
 	return nil
 }

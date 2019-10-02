@@ -18,12 +18,6 @@ type ShellRunner struct {
 	tempShellOverridesDir string
 }
 
-// RunResult represents the outcomes of a command that was run.
-type RunResult struct {
-	Output string
-	Err    error
-}
-
 // AddTempShellOverride adds a temporary mock of a shell command
 // with the given name and file content.
 func (r *ShellRunner) AddTempShellOverride(name, content string) error {
@@ -42,6 +36,7 @@ func (r *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) st
 	return path.Join(r.tempShellOverridesDir, shellOverrideFilename)
 }
 
+// RemoveTempShellOverrides removes all custom shell overrides.
 func (r *ShellRunner) RemoveTempShellOverrides() {
 	os.RemoveAll(r.tempShellOverridesDir)
 	r.tempShellOverridesDir = ""
@@ -62,7 +57,7 @@ func (r *ShellRunner) hasTempShellOverride() bool {
 
 // Run runs the given command with the given argv-like arguments in the current directory
 // and stores the output and error for later analysis.
-func (r *ShellRunner) Run(name string, arguments ...string) RunResult {
+func (r *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
 
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
@@ -84,7 +79,7 @@ func (r *ShellRunner) Run(name string, arguments ...string) RunResult {
 
 	r.RemoveTempShellOverrides()
 
-	return RunResult{string(rawOutput), err}
+	return string(rawOutput), err
 }
 
 func (r *ShellRunner) hasTempShellOverrides() bool {
@@ -96,7 +91,7 @@ func (r *ShellRunner) hasTempShellOverrides() bool {
 //
 // Currently this splits the string by space,
 // this only works for simple commands without quotes.
-func (r *ShellRunner) RunString(command string) RunResult {
+func (r *ShellRunner) RunString(command string) (output string, err error) {
 	parts := strings.Fields(command)
 	command, args := parts[0], parts[1:]
 	return r.Run(command, args...)
@@ -107,9 +102,9 @@ func (r *ShellRunner) RunString(command string) RunResult {
 func (r *ShellRunner) RunMany(commands [][]string) error {
 	for _, commandList := range commands {
 		command, args := commandList[0], commandList[1:]
-		result := r.Run(command, args...)
-		if result.Err != nil {
-			return result.Err
+		_, err := r.Run(command, args...)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
