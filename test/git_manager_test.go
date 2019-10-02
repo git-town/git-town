@@ -5,25 +5,32 @@ import (
 	"os"
 	"path"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
-	if err != nil {
-		t.Errorf("cannot find temp dir: %s", err)
-	}
+	assert.Nil(t, err, "cannot find temp dir: %s", err)
 	gm := NewGitManager(dir)
+
 	err = gm.CreateMemoizedEnvironment()
 
-	// verify error
-	if err != nil {
-		t.Errorf("creating memoized environment failed: %s", err)
-	}
-
-	// verify memoized folder exists
+	assert.Nil(t, err, "creating memoized environment failed")
 	memoizedPath := path.Join(dir, "memoized")
-	if _, err := os.Stat(memoizedPath); os.IsNotExist(err) {
-		t.Errorf("memoized directory (%s) not found", memoizedPath)
-	}
+	_, err = os.Stat(memoizedPath)
+	assert.Falsef(t, os.IsNotExist(err), "memoized directory %q not found", memoizedPath)
+}
 
+func TestGitManagerCreateScenarioEnvironment(t *testing.T) {
+	dir, err := ioutil.TempDir("", "")
+	assert.Nil(t, err, "cannot find temp dir")
+	gm := NewGitManager(dir)
+	err = gm.CreateMemoizedEnvironment()
+	assert.Nil(t, err, "creating memoized environment failed")
+
+	result, err := gm.CreateScenarioEnvironment("foo")
+
+	_, err = os.Stat(result.DeveloperRepo.dir)
+	assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DeveloperRepo.dir)
 }
