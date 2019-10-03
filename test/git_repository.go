@@ -37,7 +37,7 @@ func NewGitRepository(dir string) GitRepository {
 func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 	// create the folder
-	err := os.MkdirAll(dir, 0777)
+	err := os.MkdirAll(dir, 0744)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot create directory %q", dir)
 	}
