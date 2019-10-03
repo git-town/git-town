@@ -8,17 +8,11 @@ Creates a new feature branch as the parent of the current branch
 Syncs the parent branch,
 forks a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
-pushes the new feature branch to the remote repository,
+pushes the new feature branch to the remote repository
+(if and only if [new-branch-push-flag](./new-branch-push-flag.md) is true),
 and brings over all uncommitted changes to the new feature branch.
 
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "new-branch-push-flag" configuration:
-
-```
-git town new-branch-push-flag false
-```
-
+See [sync](./sync.md) for information regarding remote upstream.
 </a>
 
 #### Usage
