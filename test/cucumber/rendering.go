@@ -4,45 +4,24 @@ import (
 	"fmt"
 
 	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/test/helpers"
 )
 
 // RenderSlice returns the Gherkin table representation of the given slice
-func RenderSlice(data []string) string {
-
-	// determine the width of the longest string
-	width := 0
-	for _, text := range data {
-		if len(text) > width {
-			width = len(text)
-		}
-	}
-
-	// render
-	result := ""
+func RenderSlice(data []string) (result string) {
+	width := helpers.LongestString(data)
 	formatStr := fmt.Sprintf("| %%-%dv |\n", width)
-	for _, text := range data {
-		result += fmt.Sprintf(formatStr, text)
+	for i := range data {
+		result += fmt.Sprintf(formatStr, data[i])
 	}
 	return result
 }
 
 // RenderTable returns the Gherkin representation of the given Gherkin table
 func RenderTable(table *gherkin.DataTable) string {
-
-	// determine the width of the table
-	width := 0
-	for _, row := range table.Rows {
-		cellWidth := len(row.Cells[0].Value)
-		if (cellWidth) > width {
-			width = cellWidth
-		}
-	}
-
-	// convert table to slice
 	slice := []string{}
 	for i := 1; i < len(table.Rows); i++ {
 		slice = append(slice, table.Rows[i].Cells[0].Value)
 	}
-
 	return RenderSlice(slice)
 }
