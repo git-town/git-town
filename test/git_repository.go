@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -9,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/dchest/uniuri"
 	"github.com/pkg/errors"
 )
 
@@ -87,32 +85,8 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// CommitTableEntry contains the elements of a Gherkin table defining commit data.
-type CommitTableEntry struct {
-	branch      string
-	location    string
-	message     string
-	fileName    string
-	fileContent string
-}
-
-// NewCommitTableEntry provides a new CommitTableEntry with default values
-func NewCommitTableEntry() CommitTableEntry {
-	return CommitTableEntry{
-		fileName:    "default_file_name_" + uniuri.NewLen(10),
-		message:     "default commit message",
-		location:    "local and remote",
-		branch:      "main",
-		fileContent: "default file content",
-	}
-}
-
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	err := os.Chdir(gr.dir)
-	if err != nil {
-		return errors.Wrapf(err, "cannot cd into root dir of repo: %s", gr.dir)
-	}
 	gr.originalCommits = gr.parseCommitsTable(table)
 	for _, commit := range gr.originalCommits {
 		err := gr.createCommit(commit)
@@ -124,12 +98,10 @@ func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 }
 
 func (gr *GitRepository) createCommit(commit CommitTableEntry) error {
-	err := ioutil.WriteFile(commit.fileName, []byte(commit.fileContent), 0744)
+	err := gr.createFile(path.Join(gr.dir, commit.fileName), commit.fileContent)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create file '%s' to commit", commit.fileName)
+		return err
 	}
-	dir, err := os.Getwd()
-	fmt.Println("CWD", dir, err)
 	output, err := gr.Run("git", "add", commit.fileName)
 	if err != nil {
 		return errors.Wrapf(err, "cannot add file to commit: %s", output)
@@ -137,6 +109,15 @@ func (gr *GitRepository) createCommit(commit CommitTableEntry) error {
 	_, err = gr.Run("git", "commit", "-m", commit.message)
 	if err != nil {
 		return errors.Wrapf(err, "cannot commit")
+	}
+	return nil
+}
+
+// createFile creates a file with the given name and content in this repository.
+func (gr *GitRepository) createFile(name, content string) error {
+	err := ioutil.WriteFile(path.Join(gr.dir, name), []byte(content), 0744)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create file %q", name)
 	}
 	return nil
 }
