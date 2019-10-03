@@ -42,12 +42,6 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 		return GitRepository{}, errors.Wrapf(err, "cannot create directory %q", dir)
 	}
 
-	// cd into the folder
-	err = os.Chdir(dir)
-	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot cd into dir %q", dir)
-	}
-
 	// initialize the repo in the folder
 	args := []string{"init"}
 	if bare {
