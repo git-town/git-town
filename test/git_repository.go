@@ -77,7 +77,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	repo.originalCommits = cucumber.ParseCommitsTable(table)
+	repo.originalCommits = cucumber.ParseGherkinTable(table)
 	for _, commit := range repo.originalCommits {
 		err := repo.createCommit(commit)
 		if err != nil {

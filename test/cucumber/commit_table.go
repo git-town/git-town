@@ -27,8 +27,8 @@ func NewCommitTableEntry() CommitTableEntry {
 	}
 }
 
-// ParseCommitsTable provides a CommitTableEntry slice describing the given Gherkin table.
-func ParseCommitsTable(table *gherkin.DataTable) []CommitTableEntry {
+// ParseGherkinTable provides a CommitTableEntry slice describing the given Gherkin table.
+func ParseGherkinTable(table *gherkin.DataTable) []CommitTableEntry {
 	result := []CommitTableEntry{}
 	columnNames := []string{}
 	for _, cell := range table.Rows[0].Cells {
