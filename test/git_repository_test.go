@@ -9,32 +9,28 @@ import (
 )
 
 func TestNewGitRepository(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
+	dir := createTempDir(t)
 	_ = NewGitRepository(dir)
 }
 
 func TestInitBareGitRepository(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
+	dir := createTempDir(t)
 	result, err := InitGitRepository(dir, true)
 	assert.Nil(t, err, "cannot initialize bare GitRepository")
 	assertIsBareGitRepo(t, result.dir)
 }
 
 func TestInitNormalGitRepository(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
+	dir := createTempDir(t)
 	result, err := InitGitRepository(dir, false)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, result.dir)
 }
 
 func TestCloneGitRepository(t *testing.T) {
-	rootDir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
+	rootDir := createTempDir(t)
 	originPath := path.Join(rootDir, "origin")
-	_, err = InitGitRepository(originPath, true)
+	_, err := InitGitRepository(originPath, true)
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := path.Join(rootDir, "cloned")
 
@@ -45,8 +41,7 @@ func TestCloneGitRepository(t *testing.T) {
 }
 
 func TestGitRepositoryCreateFile(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
+	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, false)
 	assert.Nil(t, err, "cannot initialize Git repo")
 

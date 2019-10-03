@@ -1,7 +1,6 @@
 package test
 
 import (
-	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -10,11 +9,10 @@ import (
 )
 
 func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot find temp dir")
+	dir := createTempDir(t)
 	gm := NewGitManager(dir)
 
-	err = gm.CreateMemoizedEnvironment()
+	err := gm.CreateMemoizedEnvironment()
 
 	assert.Nil(t, err, "creating memoized environment failed")
 	memoizedPath := path.Join(dir, "memoized")
@@ -23,10 +21,9 @@ func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
 }
 
 func TestGitManagerCreateScenarioEnvironment(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot find temp dir")
+	dir := createTempDir(t)
 	gm := NewGitManager(dir)
-	err = gm.CreateMemoizedEnvironment()
+	err := gm.CreateMemoizedEnvironment()
 	assert.Nil(t, err, "creating memoized environment failed")
 
 	result, err := gm.CreateScenarioEnvironment("foo")

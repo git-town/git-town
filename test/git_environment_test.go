@@ -1,7 +1,6 @@
 package test
 
 import (
-	"io/ioutil"
 	"path"
 	"testing"
 
@@ -9,10 +8,8 @@ import (
 )
 
 func TestNewStandardGitEnvironment(t *testing.T) {
-	gitEnvRootDir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create TempDir")
-
-	_, err = NewStandardGitEnvironment(gitEnvRootDir)
+	gitEnvRootDir := createTempDir(t)
+	_, err := NewStandardGitEnvironment(gitEnvRootDir)
 
 	assert.Nil(t, err, "cannot create new GitEnvironment")
 	assertIsBareGitRepo(t, path.Join(gitEnvRootDir, "origin"))
@@ -30,8 +27,7 @@ func TestNewStandardGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
-	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot create temp dir")
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(path.Join(dir, "memoized"))
 	assert.Nil(t, err, "cannot create memoized GitEnvironment")
 
