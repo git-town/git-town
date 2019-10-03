@@ -2,12 +2,12 @@ package test
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/test/cucumber"
 	"github.com/pkg/errors"
 )
 
@@ -18,7 +18,7 @@ type GitRepository struct {
 	dir string
 
 	// originalCommits contains the commits in this repository before the test ran.
-	originalCommits []CommitTableEntry
+	originalCommits []cucumber.CommitTableEntry
 
 	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
@@ -77,7 +77,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	repo.originalCommits = repo.parseCommitsTable(table)
+	repo.originalCommits = cucumber.ParseCommitsTable(table)
 	for _, commit := range repo.originalCommits {
 		err := repo.createCommit(commit)
 		if err != nil {
@@ -87,16 +87,16 @@ func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
-func (repo *GitRepository) createCommit(commit CommitTableEntry) error {
-	err := repo.createFile(path.Join(repo.dir, commit.fileName), commit.fileContent)
+func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error {
+	err := repo.createFile(path.Join(repo.dir, commit.FileName), commit.FileContent)
 	if err != nil {
 		return err
 	}
-	output, err := repo.Run("git", "add", commit.fileName)
+	output, err := repo.Run("git", "add", commit.FileName)
 	if err != nil {
 		return errors.Wrapf(err, "cannot add file to commit: %s", output)
 	}
-	_, err = repo.Run("git", "commit", "-m", commit.message)
+	_, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
 		return errors.Wrapf(err, "cannot commit")
 	}
@@ -110,29 +110,4 @@ func (repo *GitRepository) createFile(name, content string) error {
 		return errors.Wrapf(err, "cannot create file %q", name)
 	}
 	return nil
-}
-
-func (repo *GitRepository) parseCommitsTable(table *gherkin.DataTable) []CommitTableEntry {
-	result := []CommitTableEntry{}
-	columnNames := []string{}
-	for _, cell := range table.Rows[0].Cells {
-		columnNames = append(columnNames, cell.Value)
-	}
-	for _, row := range table.Rows[1:] {
-		commit := NewCommitTableEntry()
-		for i, cell := range row.Cells {
-			switch columnNames[i] {
-			case "BRANCH":
-				commit.branch = cell.Value
-			case "LOCATION":
-				commit.location = cell.Value
-			case "MESSAGE":
-				commit.message = cell.Value
-			default:
-				log.Fatalf("GitRepository.parseCommitsTable: unknown column name: %s", columnNames[i])
-			}
-		}
-		result = append(result, commit)
-	}
-	return result
 }

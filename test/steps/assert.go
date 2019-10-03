@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/test"
+	"github.com/Originate/git-town/test/cucumber"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -23,7 +23,7 @@ func AssertStringSliceMatchesTable(actual []string, expected *gherkin.DataTable)
 
 	// render the slice
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(test.RenderSlice(actual), test.RenderTable(expected), false)
+	diffs := dmp.DiffMain(cucumber.RenderSlice(actual), cucumber.RenderTable(expected), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
 		return fmt.Errorf("Found %d differences", len(diffs))
