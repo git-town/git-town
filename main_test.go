@@ -1,13 +1,5 @@
 package main_test
 
-/*
-Test setup:
-- by default, each scenario runs in a directory called "developer"
-	that has a "main" branch and a valid Git Town configuration
-- at script startup, it creates a memoized repo with that setup
-- before each scenario, it copies that memoized repo over into the "developer" repo
-*/
-
 import (
 	"github.com/DATA-DOG/godog"
 	"github.com/Originate/git-town/test/steps"
