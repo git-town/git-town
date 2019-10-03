@@ -86,7 +86,6 @@ func (r *ShellRunner) Run(name string, arguments ...string) (output string, err 
 	cmd.Dir = r.dir
 	cmd.Env = customEnv
 	rawOutput, err := cmd.CombinedOutput()
-
 	return string(rawOutput), err
 }
 

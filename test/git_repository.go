@@ -33,7 +33,7 @@ func NewGitRepository(dir string) GitRepository {
 }
 
 // InitGitRepository initializes a new Git repository in the given path.
-// The given path must not exist.
+// Creates missing folders as needed.
 func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 
 	// create the folder
@@ -66,13 +66,9 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	runner := NewShellRunner(".")
 	_, err := runner.Run("git", "clone", parentDir, childDir)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %s", parentDir)
+		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", parentDir)
 	}
 	result := NewGitRepository(childDir)
-	err = os.Chdir(childDir)
-	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot cd into %s", childDir)
-	}
 	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
 	err = runner.RunMany([][]string{
 		[]string{"git", "config", "user.name", userName},

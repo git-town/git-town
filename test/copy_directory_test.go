@@ -13,17 +13,13 @@ func TestCopyDirectory(t *testing.T) {
 	assert.Nil(t, err)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
-
-	// create a few files and folders
 	createFile(t, srcDir, "one.txt")
 	createFile(t, srcDir, "f1/a.txt")
 	createFile(t, srcDir, "f2/b.txt")
 
-	// copy them
 	err = CopyDirectory(srcDir, dstDir)
-	assert.Nil(t, err)
 
-	// verify that the destination exists
+	assert.Nil(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExists(t, dstDir, "f1/a.txt")
 	assertFileExists(t, dstDir, "f2/b.txt")
@@ -34,16 +30,12 @@ func TestCopyGitRepo(t *testing.T) {
 	assert.Nil(t, err)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
-
-	// create a few files and folders
 	InitGitRepository(srcDir, false)
 	createFile(t, srcDir, "one.txt")
 
-	// copy them
 	err = CopyDirectory(srcDir, dstDir)
-	assert.Nil(t, err)
 
-	// verify that the destination exists
+	assert.Nil(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
 }

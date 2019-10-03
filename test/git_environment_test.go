@@ -11,7 +11,9 @@ import (
 func TestNewStandardGitEnvironment(t *testing.T) {
 	gitEnvRootDir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create TempDir")
+
 	_, err = NewStandardGitEnvironment(gitEnvRootDir)
+
 	assert.Nil(t, err, "cannot create new GitEnvironment")
 	assertIsBareGitRepo(t, path.Join(gitEnvRootDir, "origin"))
 
