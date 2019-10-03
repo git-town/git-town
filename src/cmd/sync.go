@@ -34,7 +34,8 @@ When run on the main branch or a perennial branch
 - pushes tags
 
 Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.`,
+the main branch is synced with its upstream counterpart.
+This can be disabled with "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getSyncConfig()
 		stepList := getSyncStepList(config)
