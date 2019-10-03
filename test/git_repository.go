@@ -50,7 +50,7 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 	result := NewGitRepository(dir)
 	_, err = result.Run("git", args...)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "error running git %s", strings.Join(args, " "))
+		return result, errors.Wrapf(err, "error running git %s", strings.Join(args, " "))
 	}
 	return result, nil
 }
@@ -64,7 +64,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	}
 	result := NewGitRepository(childDir)
 	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
-	err = runner.RunMany([][]string{
+	err = result.RunMany([][]string{
 		[]string{"git", "config", "user.name", userName},
 		[]string{"git", "config", "user.email", userName + "@example.com"},
 		[]string{"git", "config", "push.default", "simple"},
@@ -87,10 +87,11 @@ func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
+// createCommit creates a commit with the given properties in this Git repo.
 func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error {
 	err := repo.createFile(path.Join(repo.dir, commit.FileName), commit.FileContent)
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
 	output, err := repo.Run("git", "add", commit.FileName)
 	if err != nil {
@@ -98,7 +99,7 @@ func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error 
 	}
 	_, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
-		return errors.Wrapf(err, "cannot commit")
+		return errors.Wrapf(err, "cannot commit: %s", output)
 	}
 	return nil
 }

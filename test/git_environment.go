@@ -38,7 +38,7 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // NewGitEnvironment provides a Git environment instance located in the given directory path.
 // Missing directories are created as needed.
 func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
-	err := os.MkdirAll(baseDir, 0777)
+	err := os.MkdirAll(baseDir, 0744)
 	return &GitEnvironment{dir: baseDir}, err
 }
 
