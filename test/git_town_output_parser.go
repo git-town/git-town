@@ -39,7 +39,7 @@ func parseLine(line string) (command, branch string) {
 	branchName := ""
 	if line[0] == '[' {
 		// line contains a branch name
-		line = line[1:len(line)] // remove the leading "["
+		line = line[1:] // remove the leading "["
 		parts := strings.SplitN(line, "]", 2)
 		branchName = parts[0]
 		line = parts[1]

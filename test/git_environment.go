@@ -57,7 +57,10 @@ func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
 	}
 
 	// set "main" as the default branch
-	result.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
+	_, err = result.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
+	if err != nil {
+		return result, errors.Wrap(err, "cannot set main as the default branch")
+	}
 
 	// git-clone the "developer" repo
 	result.DeveloperRepo, err = CloneGitRepository(result.originRepoPath(), result.developerRepoPath())

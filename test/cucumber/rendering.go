@@ -9,7 +9,7 @@ import (
 
 // RenderSlice returns the Gherkin table representation of the given slice
 func RenderSlice(data []string) (result string) {
-	width := helpers.LongestString(data)
+	width := helpers.LongestStringLength(data)
 	formatStr := fmt.Sprintf("| %%-%dv |\n", width)
 	for i := range data {
 		result += fmt.Sprintf(formatStr, data[i])

@@ -5,7 +5,7 @@ import (
 	"github.com/Originate/git-town/test/steps"
 )
 
-// nolint:deadcode
+// nolint:deadcode,unused
 func FeatureContext(s *godog.Suite) {
 	steps.SuiteSteps(s)
 	steps.ConfigurationSteps(s)

@@ -89,10 +89,6 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	return string(rawOutput), err
 }
 
-func (runner *ShellRunner) hasTempShellOverrides() bool {
-	return len(runner.tempShellOverridesDir) > 0
-}
-
 // RunString runs the given command (that can contain arguments) in the current directory
 // and stores the output and error for later analysis.
 //

@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLongestString(t *testing.T) {
+func TestLongestStringLength(t *testing.T) {
 	testData := map[int][]string{
 		5: []string{"one", "two", "three"},
+		0: []string{},
 	}
 	for expected, input := range testData {
-		actual := LongestString(input)
-		assert.Equal(t, expected, actual)
+		assert.Equal(t, expected, LongestStringLength(input))
 	}
 }
