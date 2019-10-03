@@ -42,33 +42,36 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	return &result, nil
 }
 
-// Populate instantiates the underlying folder content so that this GitEnvironment is ready for action.
-// The name "populate" indicates that this takes a while.
-func (ge GitEnvironment) Populate() error {
+// NewStandardGitEnvironment provides a GitEnvironment in the given directory,
+// fully populated as a standardized setup for scenarios.
+func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
+	result, err = NewGitEnvironment(dir)
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot create a new standard environment")
+	}
 
 	// create the origin repo
-	var err error
-	ge.OriginRepo, err = InitGitRepository(ge.originRepoPath(), true)
+	result.OriginRepo, err = InitGitRepository(result.originRepoPath(), true)
 	if err != nil {
-		return errors.Wrapf(err, "cannot initialize origin directory at %q", ge.originRepoPath())
+		return result, errors.Wrapf(err, "cannot initialize origin directory at %q", result.originRepoPath())
 	}
 
 	// set "main" as the default branch
-	ge.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
+	result.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
 
 	// git-clone the "developer" repo
-	ge.DeveloperRepo, err = CloneGitRepository(ge.originRepoPath(), ge.developerRepoPath())
+	result.DeveloperRepo, err = CloneGitRepository(result.originRepoPath(), result.developerRepoPath())
 	if err != nil {
-		return errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", ge.originRepoPath(), ge.developerRepoPath())
+		return result, errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", result.originRepoPath(), result.developerRepoPath())
 	}
 
 	// Initialize the main branch
-	err = ge.DeveloperRepo.RunMany([][]string{
+	err = result.DeveloperRepo.RunMany([][]string{
 		[]string{"git", "checkout", "--orphan", "main"},
 		[]string{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		[]string{"git", "push", "-u", "origin", "main"},
 	})
-	return err
+	return result, err
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.

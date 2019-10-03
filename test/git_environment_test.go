@@ -8,15 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGitEnvironmentPopulate(t *testing.T) {
+func TestNewStandardGitEnvironment(t *testing.T) {
 	gitEnvRootDir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create TempDir")
-	gitEnv, err := NewGitEnvironment(gitEnvRootDir)
+	_, err = NewStandardGitEnvironment(gitEnvRootDir)
 	assert.Nil(t, err, "cannot create new GitEnvironment")
-
-	err = gitEnv.Populate()
-
-	assert.Nil(t, err, "cannot populate GitEnvironment")
 	assertIsBareGitRepo(t, path.Join(gitEnvRootDir, "origin"))
 
 	// verify the new GitEnvironment has a "developer" folder
@@ -34,10 +30,8 @@ func TestGitEnvironmentPopulate(t *testing.T) {
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create temp dir")
-	memoizedGitEnv, err := NewGitEnvironment(path.Join(dir, "memoized"))
+	memoizedGitEnv, err := NewStandardGitEnvironment(path.Join(dir, "memoized"))
 	assert.Nil(t, err, "cannot create memoized GitEnvironment")
-	err = memoizedGitEnv.Populate()
-	assert.Nil(t, err, "cannot populate memoized GitEnvironment")
 
 	_, err = CloneGitEnvironment(memoizedGitEnv, path.Join(dir, "cloned"))
 

@@ -30,13 +30,9 @@ func NewGitManager(baseDir string) *GitManager {
 // that makes cloning new GitEnvironment instances faster.
 func (gm *GitManager) CreateMemoizedEnvironment() error {
 	var err error
-	gm.memoized, err = NewGitEnvironment(path.Join(gm.dir, "memoized"))
+	gm.memoized, err = NewStandardGitEnvironment(path.Join(gm.dir, "memoized"))
 	if err != nil {
 		return errors.Wrapf(err, "cannot create memoized environment")
-	}
-	err = gm.memoized.Populate()
-	if err != nil {
-		return errors.Wrapf(err, "cannot populate memoized environment")
 	}
 	return nil
 }
