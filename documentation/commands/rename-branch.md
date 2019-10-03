@@ -25,8 +25,7 @@ When there is a tracking branch
 When run on a perennial branch
 
 - Requires the use of the "-f" option
-- Reconfigures git town locally for the perennial branch
-  </a>
+- Reconfigures git town locally for the perennial branch </a>
 
 #### Usage
 

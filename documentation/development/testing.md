@@ -1,12 +1,12 @@
 # Testing
 
-Tests are written in [Ruby](https://www.ruby-lang.org)
-for historical reasons and because that allows running them
+Tests are written in [Ruby](https://www.ruby-lang.org) for historical reasons
+and because that allows running them
 [in parallel](https://github.com/grosser/parallel_tests).
 
-The end-to-end tests are located in [features](../../features)
-and written in [Cucumber](https://github.com/cucumber/cucumber-ruby).
-Unit tests are written as normal Go tests using [Ginkgo](https://github.com/onsi/ginkgo).
+The end-to-end tests are located in [features](../../features) and written in
+[Cucumber](https://github.com/cucumber/cucumber-ruby). Unit tests are written as
+normal Go tests using [Ginkgo](https://github.com/onsi/ginkgo).
 
 ## Running Tests
 
@@ -29,10 +29,9 @@ make cuke [cucumber parameters]
 make fix
 ```
 
-Git Town's [CI server](https://circleci.com/gh/Originate/git-town)
-automatically tests all commits and pull requests,
-and notifies you via email and through status badges in pull requests
-about problems.
+Git Town's [CI server](https://circleci.com/gh/Originate/git-town) automatically
+tests all commits and pull requests, and notifies you via email and through
+status badges in pull requests about problems.
 
 ## Debugging
 
@@ -52,23 +51,19 @@ Scenario: foo bar baz
   Given ...
 ```
 
-For even more detailed output, you can use the `DEBUG` variable or tag
-in a similar fashion.
-If set, Git Town prints every shell command executed during the tests
-(includes setup, inspection of the Git status, and the Git commands),
-and the respective console output.
+For even more detailed output, you can use the `DEBUG` variable or tag in a
+similar fashion. If set, Git Town prints every shell command executed during the
+tests (includes setup, inspection of the Git status, and the Git commands), and
+the respective console output.
 
 ## Mocking
 
-Certain tests require the Git remote to be set to a real value
-on GitHub or Bitbucket.
-This causes `git push` operations to go to GitHub during testing,
-which is undesirable.
-To circumvent this problem, Git Town allows to mock the Git remote
-by setting the Git configuration value
-`git-town.testing.remote-url` to the respective value.
-To keep this behavior clean and secure,
-this also requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
+Certain tests require the Git remote to be set to a real value on GitHub or
+Bitbucket. This causes `git push` operations to go to GitHub during testing,
+which is undesirable. To circumvent this problem, Git Town allows to mock the
+Git remote by setting the Git configuration value `git-town.testing.remote-url`
+to the respective value. To keep this behavior clean and secure, this also
+requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
 
 ## Auto-running tests
 

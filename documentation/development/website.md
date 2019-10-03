@@ -1,7 +1,7 @@
 # Website
 
-The Git Town website can be found at <https://www.git-town.com>.
-It is hosted with [GitHub pages](https://pages.github.com/)
+The Git Town website can be found at <https://www.git-town.com>. It is hosted
+with [GitHub pages](https://pages.github.com/)
 
 ## Requirements
 

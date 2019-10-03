@@ -19,10 +19,9 @@ When run on the main branch or a perennial branch:
 - pulls and pushes updates for the current branch
 - pushes tags
 
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled with `git config git-town.sync-upstream false`.
-</a>
+Additionally, when there is a remote upstream, the main branch is synced with
+its upstream counterpart. This can be disabled with
+`git config git-town.sync-upstream false`. </a>
 
 #### Usage
 
