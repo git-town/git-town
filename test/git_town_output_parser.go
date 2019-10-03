@@ -4,8 +4,8 @@ import (
 	"strings"
 )
 
-// GitTownCommandsInOutput provides the Git Town commands in the given output string
-func GitTownCommandsInOutput(output string) []string {
+// GitCommandsInGitTownOutput provides the executed Git commands in the given Git Town output.
+func GitCommandsInGitTownOutput(output string) []string {
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.TrimSpace(line)

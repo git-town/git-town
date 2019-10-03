@@ -18,13 +18,13 @@ func RunSteps(s *godog.Suite) {
 
 	s.Step(`^it runs the commands$`,
 		func(table *gherkin.DataTable) error {
-			commands := test.GitTownCommandsInOutput(lastRunOutput)
+			commands := test.GitCommandsInGitTownOutput(lastRunOutput)
 			return cucumber.AssertStringSliceMatchesTable(commands, table)
 		})
 
 	s.Step(`^it runs no commands$`,
 		func() error {
-			commands := test.GitTownCommandsInOutput(lastRunOutput)
+			commands := test.GitCommandsInGitTownOutput(lastRunOutput)
 			if len(commands) > 0 {
 				for _, command := range commands {
 					fmt.Println(command)

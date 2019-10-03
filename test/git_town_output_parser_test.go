@@ -7,16 +7,16 @@ import (
 )
 
 func TestCommandsInOutput(t *testing.T) {
-	actual := GitTownCommandsInOutput("\x1b[1m[mybranch] foo bar")
+	actual := GitCommandsInGitTownOutput("\x1b[1m[mybranch] foo bar")
 	assert.Equal(t, actual, []string{"foo bar"})
 }
 
 func TestCommandsInOutputMultiline(t *testing.T) {
-	actual := GitTownCommandsInOutput("\x1b[1m[branch1] command one\n\n\x1b[1m[branch2] command two\n\n")
+	actual := GitCommandsInGitTownOutput("\x1b[1m[branch1] command one\n\n\x1b[1m[branch2] command two\n\n")
 	assert.Equal(t, actual, []string{"command one", "command two"})
 }
 
 func TestCommandsInOutputNoBranch(t *testing.T) {
-	actual := GitTownCommandsInOutput("\x1b[1mcommand one")
+	actual := GitCommandsInGitTownOutput("\x1b[1mcommand one")
 	assert.Equal(t, actual, []string{"command one"})
 }
