@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"os"
 	"path"
 
@@ -23,6 +24,7 @@ type GitEnvironment struct {
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
 func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
+	fmt.Println(original)
 	err := CopyDirectory(original.dir, dir)
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot clone GitEnvironment %q to folder %q", original.dir, dir)
