@@ -32,7 +32,7 @@ func parseLine(line string) (command, branch string) {
 	// NOTE: implementing this without regex
 	// because the regex has gotten very complex and hard to maintain
 
-	// remove the bold formatting
+	// remove the prefix
 	line = strings.Replace(line, linePrefix, "", 1)
 
 	// extract branch name if it exists
