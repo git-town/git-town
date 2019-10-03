@@ -75,11 +75,11 @@ func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.
-func (ge GitEnvironment) developerRepoPath() string {
-	return path.Join(ge.dir, "developer")
+func (env GitEnvironment) developerRepoPath() string {
+	return path.Join(env.dir, "developer")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.
-func (ge GitEnvironment) originRepoPath() string {
-	return path.Join(ge.dir, "origin")
+func (env GitEnvironment) originRepoPath() string {
+	return path.Join(env.dir, "origin")
 }

@@ -76,10 +76,10 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	gr.originalCommits = gr.parseCommitsTable(table)
-	for _, commit := range gr.originalCommits {
-		err := gr.createCommit(commit)
+func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
+	repo.originalCommits = repo.parseCommitsTable(table)
+	for _, commit := range repo.originalCommits {
+		err := repo.createCommit(commit)
 		if err != nil {
 			return err
 		}
@@ -87,16 +87,16 @@ func (gr *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
-func (gr *GitRepository) createCommit(commit CommitTableEntry) error {
-	err := gr.createFile(path.Join(gr.dir, commit.fileName), commit.fileContent)
+func (repo *GitRepository) createCommit(commit CommitTableEntry) error {
+	err := repo.createFile(path.Join(repo.dir, commit.fileName), commit.fileContent)
 	if err != nil {
 		return err
 	}
-	output, err := gr.Run("git", "add", commit.fileName)
+	output, err := repo.Run("git", "add", commit.fileName)
 	if err != nil {
 		return errors.Wrapf(err, "cannot add file to commit: %s", output)
 	}
-	_, err = gr.Run("git", "commit", "-m", commit.message)
+	_, err = repo.Run("git", "commit", "-m", commit.message)
 	if err != nil {
 		return errors.Wrapf(err, "cannot commit")
 	}
@@ -104,15 +104,15 @@ func (gr *GitRepository) createCommit(commit CommitTableEntry) error {
 }
 
 // createFile creates a file with the given name and content in this repository.
-func (gr *GitRepository) createFile(name, content string) error {
-	err := ioutil.WriteFile(path.Join(gr.dir, name), []byte(content), 0744)
+func (repo *GitRepository) createFile(name, content string) error {
+	err := ioutil.WriteFile(path.Join(repo.dir, name), []byte(content), 0744)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q", name)
 	}
 	return nil
 }
 
-func (gr *GitRepository) parseCommitsTable(table *gherkin.DataTable) []CommitTableEntry {
+func (repo *GitRepository) parseCommitsTable(table *gherkin.DataTable) []CommitTableEntry {
 	result := []CommitTableEntry{}
 	columnNames := []string{}
 	for _, cell := range table.Rows[0].Cells {

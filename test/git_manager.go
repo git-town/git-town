@@ -28,9 +28,9 @@ func NewGitManager(baseDir string) *GitManager {
 
 // CreateMemoizedEnvironment creates the Git environment cache
 // that makes cloning new GitEnvironment instances faster.
-func (gm *GitManager) CreateMemoizedEnvironment() error {
+func (manager *GitManager) CreateMemoizedEnvironment() error {
 	var err error
-	gm.memoized, err = NewStandardGitEnvironment(path.Join(gm.dir, "memoized"))
+	manager.memoized, err = NewStandardGitEnvironment(path.Join(manager.dir, "memoized"))
 	if err != nil {
 		return errors.Wrapf(err, "cannot create memoized environment")
 	}
@@ -38,7 +38,7 @@ func (gm *GitManager) CreateMemoizedEnvironment() error {
 }
 
 // CreateScenarioEnvironment creates a new GitEnvironment for the scenario with the given name
-func (gm GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
-	envPath := path.Join(gm.dir, strconv.Itoa(rand.Intn(9999))+scenarioName)
-	return CloneGitEnvironment(gm.memoized, envPath)
+func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
+	envPath := path.Join(manager.dir, strconv.Itoa(rand.Intn(9999))+scenarioName)
+	return CloneGitEnvironment(manager.memoized, envPath)
 }
