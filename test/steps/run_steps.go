@@ -18,7 +18,7 @@ func RunSteps(s *godog.Suite) {
 	s.Step(`^it runs the commands$`,
 		func(table *gherkin.DataTable) error {
 			commands := test.CommandsInOutput(lastRunOutput)
-			return test.AssertStringSliceMatchesTable(commands, table)
+			return AssertStringSliceMatchesTable(commands, table)
 		})
 
 	s.Step(`^it runs no commands$`,
