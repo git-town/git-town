@@ -33,7 +33,7 @@ func DeleteParentBranch(branchName string) {
 
 // EnsureIsFeatureBranch asserts that the given branch is a feature branch.
 func EnsureIsFeatureBranch(branchName, errorSuffix string) {
-	util.Ensure(IsFeatureBranch(branchName), fmt.Sprintf("The branch %q is not a feature branch. %s", branchName, errorSuffix))
+	util.Ensure(IsFeatureBranch(branchName), fmt.Sprintf("The branch '%s' is not a feature branch. %s", branchName, errorSuffix))
 }
 
 // GetAncestorBranches returns the names of all parent branches for the given branch,
