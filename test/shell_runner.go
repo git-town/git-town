@@ -38,8 +38,7 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
 }
 
-// tempShellOverrideFilePath returns the path where to store the given
-// temp shell override on disk.
+// tempShellOverrideFilePath provides the path where to store the given temp shell command override.
 func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
 	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }

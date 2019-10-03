@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-// GitCommandsInGitTownOutput provides the executed Git commands in the given Git Town output.
+// GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) []string {
 	result := []string{}
 	for _, line := range strings.Split(output, "\n") {
@@ -22,12 +22,12 @@ func GitCommandsInGitTownOutput(output string) []string {
 
 var linePrefix = "\x1b[1m" // "\e[1m"
 
-// lineContainsGitTownCommand indicates whether the given line contains a Git Town command
+// lineContainsGitTownCommand indicates whether the given line contains a Git Town command.
 func lineContainsGitTownCommand(line string) bool {
 	return strings.HasPrefix(line, linePrefix)
 }
 
-// parseLine returns the Git Town command and branchname in the given line
+// parseLine provides the Git Town command and branchname in the given line.
 func parseLine(line string) (command, branch string) {
 	// NOTE: implementing this without regex
 	// because the regex has gotten very complex and hard to maintain

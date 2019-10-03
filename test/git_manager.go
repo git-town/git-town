@@ -21,7 +21,7 @@ type GitManager struct {
 	memoized *GitEnvironment
 }
 
-// NewGitManager creates a new GitManager instance.
+// NewGitManager provides a new GitManager instance operating in the given directory.
 func NewGitManager(baseDir string) *GitManager {
 	return &GitManager{dir: baseDir}
 }
@@ -37,7 +37,7 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 	return nil
 }
 
-// CreateScenarioEnvironment creates a new GitEnvironment for the scenario with the given name
+// CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
 	envPath := path.Join(manager.dir, strconv.Itoa(rand.Intn(9999))+scenarioName)
 	return CloneGitEnvironment(manager.memoized, envPath)
