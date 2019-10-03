@@ -11,6 +11,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// SuiteSteps provides global lifecycle step implementations for Cucumber.
 func SuiteSteps(s *godog.Suite) {
 	s.BeforeSuite(func() {
 

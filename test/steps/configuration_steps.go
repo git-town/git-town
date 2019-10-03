@@ -4,6 +4,7 @@ import (
 	"github.com/DATA-DOG/godog"
 )
 
+// ConfigurationSteps provides Cucumber step implementations around configuration.
 func ConfigurationSteps(s *godog.Suite) {
 
 	s.Step(`^I haven\'t configured Git Town yet$`, func() error {

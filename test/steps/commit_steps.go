@@ -7,6 +7,7 @@ import (
 	"github.com/DATA-DOG/godog/gherkin"
 )
 
+// CommitSteps provides Cucumber step implementations around commits.
 func CommitSteps(s *godog.Suite) {
 	s.Step(`^the following commit exists in my repository$`,
 		func(table *gherkin.DataTable) error {
