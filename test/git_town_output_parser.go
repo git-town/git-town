@@ -20,7 +20,6 @@ func GitTownCommandsInOutput(output string) []string {
 	return result
 }
 
-// TODO: make decimal
 var linePrefix = "\x1b[1m" // "\e[1m"
 
 // lineContainsGitTownCommand indicates whether the given line contains a Git Town command
