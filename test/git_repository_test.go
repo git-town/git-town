@@ -9,20 +9,17 @@ import (
 )
 
 func TestNewGitRepository(t *testing.T) {
-	dir := createTempDir(t)
-	_ = NewGitRepository(dir)
+	_ = NewGitRepository(createTempDir(t))
 }
 
 func TestInitBareGitRepository(t *testing.T) {
-	dir := createTempDir(t)
-	result, err := InitGitRepository(dir, true)
+	result, err := InitGitRepository(createTempDir(t), true)
 	assert.Nil(t, err, "cannot initialize bare GitRepository")
 	assertIsBareGitRepo(t, result.dir)
 }
 
 func TestInitNormalGitRepository(t *testing.T) {
-	dir := createTempDir(t)
-	result, err := InitGitRepository(dir, false)
+	result, err := InitGitRepository(createTempDir(t), false)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, result.dir)
 }
