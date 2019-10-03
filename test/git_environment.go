@@ -20,13 +20,6 @@ type GitEnvironment struct {
 	DeveloperRepo GitRepository
 }
 
-// NewGitEnvironment provides a Git environment instance located in the given directory path.
-// Missing directories are created as needed.
-func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
-	err := os.MkdirAll(baseDir, 0777)
-	return &GitEnvironment{dir: baseDir}, err
-}
-
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
 func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
@@ -40,6 +33,13 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
 	}
 	return &result, nil
+}
+
+// NewGitEnvironment provides a Git environment instance located in the given directory path.
+// Missing directories are created as needed.
+func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
+	err := os.MkdirAll(baseDir, 0777)
+	return &GitEnvironment{dir: baseDir}, err
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
@@ -65,7 +65,7 @@ func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
 		return result, errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", result.originRepoPath(), result.developerRepoPath())
 	}
 
-	// Initialize the main branch
+	// initialize the main branch
 	err = result.DeveloperRepo.RunMany([][]string{
 		[]string{"git", "checkout", "--orphan", "main"},
 		[]string{"git", "commit", "--allow-empty", "-m", "Initial commit"},
