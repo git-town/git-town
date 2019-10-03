@@ -58,7 +58,7 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 	return err
 }
 
-// hasTempShellOverrideDir returns whether a folder for the temp shell overrides was already created.
+// hasTempShellOverrideDir indicates whether a folder for the temp shell overrides was already created.
 func (runner *ShellRunner) hasTempShellOverride() bool {
 	return runner.tempShellOverridesDir != ""
 }
