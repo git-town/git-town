@@ -1,15 +1,11 @@
 package test
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path"
-	"strings"
 	"testing"
 
-	"github.com/sergi/go-diff/diffmatchpatch"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,12 +31,7 @@ func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	runner := NewShellRunner(dir)
 	output, err := runner.Run("git", "branch")
 	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
-	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(strings.TrimSpace(expectedBranch), strings.TrimSpace(output), false)
-	if len(diffs) > 1 {
-		fmt.Println(dmp.DiffPrettyText(diffs))
-		log.Fatalf("folder %q has the wrong Git branches", dir)
-	}
+	assert.Contains(t, output, expectedBranch, "doesn't have Git branch")
 }
 
 func assertIsBareGitRepo(t *testing.T, dir string) {
