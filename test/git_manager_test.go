@@ -11,7 +11,7 @@ import (
 
 func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err, "cannot find temp dir: %s", err)
+	assert.Nil(t, err, "cannot find temp dir")
 	gm := NewGitManager(dir)
 
 	err = gm.CreateMemoizedEnvironment()
