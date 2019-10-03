@@ -23,7 +23,7 @@ func TestCopyDirectory(t *testing.T) {
 	assertFileExists(t, dstDir, "f2/b.txt")
 }
 
-func TestCopyGitRepo(t *testing.T) {
+func TestCopyDirectoryGitRepo(t *testing.T) {
 	tmpDir := createTempDir(t)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
