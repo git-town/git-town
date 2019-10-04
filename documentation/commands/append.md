@@ -12,8 +12,7 @@ pushes the new feature branch to the remote repository
 (if and only if [new-branch-push-flag](./new-branch-push-flag.md) is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See [sync](./sync.md) for information regarding remote upstream.
-</a>
+See [sync](./sync.md) for information regarding remote upstream. </a>
 
 #### Usage
 

@@ -8,8 +8,7 @@ Removes an obsolete feature branch
 Deletes the current branch, or the given one if a branch name is provided,
 from the local and remote repositories.
 
-Does not delete perennial branches nor the main branch.
-</a>
+Does not delete perennial branches nor the main branch. </a>
 
 #### Usage
 
