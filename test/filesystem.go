@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// CopyDirectory copies all files in the given src dirctory into the given dst directory.
+// CopyDirectory copies all files in the given src directory into the given dst directory.
 // Both the source and the destination directory must exist.
 func CopyDirectory(src, dst string) error {
 	return filepath.Walk(src, func(srcPath string, fi os.FileInfo, e error) error {

@@ -65,12 +65,12 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	result := NewGitRepository(childDir)
 	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
 	err = result.RunMany([][]string{
-		[]string{"git", "config", "user.name", userName},
-		[]string{"git", "config", "user.email", userName + "@example.com"},
-		[]string{"git", "config", "push.default", "simple"},
-		[]string{"git", "config", "core.editor", "vim"},
-		[]string{"git", "config", "git-town.main-branch-name", "main"},
-		[]string{"git", "config", "git-town.perennial-branch-names", ""},
+		{"git", "config", "user.name", userName},
+		{"git", "config", "user.email", userName + "@example.com"},
+		{"git", "config", "push.default", "simple"},
+		{"git", "config", "core.editor", "vim"},
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
 	return result, err
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/Originate/git-town/test/helpers"
 )
 
-// RenderSlice provides the Gherkin table representation of the given slice
+// RenderSlice provides the textual Gherkin table representation of the given slice.
 func RenderSlice(data []string) (result string) {
 	width := helpers.LongestStringLength(data)
 	formatStr := fmt.Sprintf("| %%-%dv |\n", width)
@@ -17,7 +17,7 @@ func RenderSlice(data []string) (result string) {
 	return result
 }
 
-// RenderTable provides the Gherkin representation of the given Gherkin table
+// RenderTable provides the textual Gherkin representation of the given Gherkin table.
 func RenderTable(table *gherkin.DataTable) string {
 	slice := []string{}
 	for i := 1; i < len(table.Rows); i++ {

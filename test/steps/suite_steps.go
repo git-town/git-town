@@ -61,6 +61,10 @@ func (gtf *GitTownFeature) beforeScenario(args interface{}) {
 	}
 }
 
-func (gtf *GitTownFeature) afterScenario(args interface{}, err error) {
-	// TODO: delete scenario environment
+func (gtf *GitTownFeature) afterScenario(args interface{}, e error) {
+	// remove the GitEnvironment of the scenario
+	err := gtf.gitEnvironment.Remove()
+	if err != nil {
+		log.Fatalf("error in afterScenario: %v", err)
+	}
 }

@@ -8,8 +8,8 @@ import (
 
 func TestLongestStringLength(t *testing.T) {
 	testData := map[int][]string{
-		5: []string{"one", "two", "three"},
-		0: []string{},
+		5: {"one", "two", "three"},
+		0: {},
 	}
 	for expected, input := range testData {
 		assert.Equal(t, expected, LongestStringLength(input))

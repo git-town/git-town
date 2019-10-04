@@ -70,11 +70,16 @@ func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
 
 	// initialize the main branch
 	err = result.DeveloperRepo.RunMany([][]string{
-		[]string{"git", "checkout", "--orphan", "main"},
-		[]string{"git", "commit", "--allow-empty", "-m", "Initial commit"},
-		[]string{"git", "push", "-u", "origin", "main"},
+		{"git", "checkout", "--orphan", "main"},
+		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
+		{"git", "push", "-u", "origin", "main"},
 	})
 	return result, err
+}
+
+// Remove deletes all files used by this GitEnvironment from disk.
+func (env GitEnvironment) Remove() error {
+	return os.RemoveAll(env.dir)
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.

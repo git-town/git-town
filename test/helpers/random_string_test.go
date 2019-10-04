@@ -7,7 +7,8 @@ import (
 )
 
 func TestRandomString(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		assert.Equal(t, i, len(RandomString(i)))
+	testData := []int{0, 1, 10, 100}
+	for _, input := range testData {
+		assert.Equal(t, input, len(RandomString(input)))
 	}
 }
