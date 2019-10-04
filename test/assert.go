@@ -1,3 +1,6 @@
+// This file defines general assertions for testing.
+// Assertions take a *testing.T object and fail the test using it.
+
 package test
 
 import (

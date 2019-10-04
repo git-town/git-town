@@ -23,7 +23,7 @@ func (gtf *GitTownFeature) iRun(command string) error {
 
 func (gtf *GitTownFeature) itRunsTheCommands(table *gherkin.DataTable) error {
 	commands := test.GitCommandsInGitTownOutput(gtf.lastRunOutput)
-	return cucumber.AssertStringSliceMatchesTable(commands, table)
+	return cucumber.EnsureStringSliceMatchesTable(commands, table)
 }
 
 func (gtf *GitTownFeature) itRunsNoCommands() error {

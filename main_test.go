@@ -8,7 +8,6 @@ import (
 // nolint:deadcode,unused
 func FeatureContext(s *godog.Suite) {
 	gtf := &steps.GitTownFeature{}
-
 	steps.SuiteSteps(s, gtf)
 	steps.ConfigurationSteps(s, gtf)
 	steps.InstallationSteps(s, gtf)

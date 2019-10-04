@@ -1,3 +1,6 @@
+// This file defines functions that verify state in Cucumber steps.
+// Ensure functions return an error if they fail.
+
 package cucumber
 
 import (
@@ -7,11 +10,11 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
-// AssertStringSliceMatchesTable compares the given string slice to the given Gherkin table.
+// EnsureStringSliceMatchesTable compares the given string slice to the given Gherkin table.
 // If they don't match, it returns an error
 // and might print additional information to the console.
 // The comparison ignores whitespace around strings.
-func AssertStringSliceMatchesTable(actual []string, expected *gherkin.DataTable) error {
+func EnsureStringSliceMatchesTable(actual []string, expected *gherkin.DataTable) error {
 	if len(expected.Rows) == 0 {
 		return fmt.Errorf("Empty table given")
 	}
