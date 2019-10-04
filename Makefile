@@ -35,10 +35,13 @@ deploy:  # deploys the website
 	git push
 	git checkout master
 
-fix: fix-cucumber fix-ruby fix-markdown  # auto-fixes lint issues in all languages
+fix: fix-cucumber fix-go fix-ruby fix-markdown  # auto-fixes lint issues in all languages
 
 fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
+
+fix-go:  # auto-fixes all Go lint issues
+	gofmt -s -w ./src
 
 fix-markdown:  # auto-fixes all Markdown lint issues
 	@find . -type f \( \
