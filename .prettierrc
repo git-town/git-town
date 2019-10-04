@@ -1,2 +1,2 @@
 semi: false
-proseWrap: true
+proseWrap: always
