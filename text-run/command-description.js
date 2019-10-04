@@ -34,17 +34,15 @@ function getMd(activity) {
         break
       case "paragraph_open":
       case "paragraph_close":
-        text += "\n\n"
+      case "list_item_open":
+      case "ordered_list_open":
+        text += "\n"
         break
       case "anchor_open":
       case "anchor_close":
       case "bullet_list_open":
       case "bullet_list_close":
       case "list_item_close":
-        break
-      case "list_item_open":
-      case "ordered_list_open":
-        text += "\n"
         break
       default:
         throw new Error("unknown node type: " + node.type)
