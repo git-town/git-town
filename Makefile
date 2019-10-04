@@ -90,7 +90,7 @@ test: lint unit cuke  # runs all the tests
 
 unit:  # runs the unit tests
 	ginkgo src/...
-	go test github.com/Originate/git-town/test
+	go test ./test
 
 update:  # updates all dependencies
 	dep ensure -update
