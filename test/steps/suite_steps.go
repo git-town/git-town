@@ -3,6 +3,7 @@ package steps
 import (
 	"io/ioutil"
 	"log"
+	"sync"
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
@@ -11,23 +12,25 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
+// mux ensures that we run BeforeSuite only once globally.
+var mux sync.Mutex
+
 // SuiteSteps provides global lifecycle step implementations for Cucumber.
 func SuiteSteps(s *godog.Suite, gtf *GitTownFeature) {
 	s.BeforeSuite(func() {
-
-		// create the directory to put the GitEnvironments ino
-		baseDir, err := ioutil.TempDir("", "")
-		if err != nil {
-			log.Fatalf("cannot create base directory: %s", err)
-		}
-
-		// create the GitManager
-		gitManager = test.NewGitManager(baseDir)
-
-		// create the memoized environment
-		err = gitManager.CreateMemoizedEnvironment()
-		if err != nil {
-			log.Fatalf("Cannot create memoized environment: %s", err)
+		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
+		mux.Lock()
+		defer mux.Unlock()
+		if gitManager == nil {
+			baseDir, err := ioutil.TempDir("", "")
+			if err != nil {
+				log.Fatalf("cannot create base directory: %s", err)
+			}
+			gitManager = test.NewGitManager(baseDir)
+			err = gitManager.CreateMemoizedEnvironment()
+			if err != nil {
+				log.Fatalf("Cannot create memoized environment: %s", err)
+			}
 		}
 	})
 
