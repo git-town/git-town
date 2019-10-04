@@ -7,10 +7,12 @@ import (
 
 // nolint:deadcode,unused
 func FeatureContext(s *godog.Suite) {
-	steps.SuiteSteps(s)
-	steps.ConfigurationSteps(s)
-	steps.InstallationSteps(s)
-	steps.PrintSteps(s)
-	steps.RunSteps(s)
-	steps.WorkspaceSteps(s)
+	gtf := &steps.GitTownFeature{}
+
+	steps.SuiteSteps(s, gtf)
+	steps.ConfigurationSteps(s, gtf)
+	steps.InstallationSteps(s, gtf)
+	steps.PrintSteps(s, gtf)
+	steps.RunSteps(s, gtf)
+	steps.WorkspaceSteps(s, gtf)
 }

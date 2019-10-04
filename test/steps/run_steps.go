@@ -10,28 +10,29 @@ import (
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
-func RunSteps(s *godog.Suite) {
-	s.Step(`^I run "([^"]*)"$`, func(command string) error {
-		lastRunOutput, lastRunErr = gitEnvironment.DeveloperRepo.RunString(command)
-		return nil
-	})
+func RunSteps(s *godog.Suite, gtf *GitTownFeature) {
+	s.Step(`^I run "([^"]*)"$`, gtf.iRun)
+	s.Step(`^it runs the commands$`, gtf.itRunsTheCommands)
+	s.Step(`^it runs no commands$`, gtf.itRunsNoCommands)
+}
 
-	s.Step(`^it runs the commands$`,
-		func(table *gherkin.DataTable) error {
-			commands := test.GitCommandsInGitTownOutput(lastRunOutput)
-			return cucumber.AssertStringSliceMatchesTable(commands, table)
-		})
+func (gtf *GitTownFeature) iRun(command string) error {
+	gtf.lastRunOutput, gtf.lastRunErr = gtf.gitEnvironment.DeveloperRepo.RunString(command)
+	return nil
+}
 
-	s.Step(`^it runs no commands$`,
-		func() error {
-			commands := test.GitCommandsInGitTownOutput(lastRunOutput)
-			if len(commands) > 0 {
-				for _, command := range commands {
-					fmt.Println(command)
-				}
-				return fmt.Errorf("expected no commands but found %d commands", len(commands))
-			}
-			return nil
-		})
+func (gtf *GitTownFeature) itRunsTheCommands(table *gherkin.DataTable) error {
+	commands := test.GitCommandsInGitTownOutput(gtf.lastRunOutput)
+	return cucumber.AssertStringSliceMatchesTable(commands, table)
+}
 
+func (gtf *GitTownFeature) itRunsNoCommands() error {
+	commands := test.GitCommandsInGitTownOutput(gtf.lastRunOutput)
+	if len(commands) > 0 {
+		for _, command := range commands {
+			fmt.Println(command)
+		}
+		return fmt.Errorf("expected no commands but found %d commands", len(commands))
+	}
+	return nil
 }
