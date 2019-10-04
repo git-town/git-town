@@ -53,7 +53,7 @@ func scenarioName(args interface{}) string {
 
 func (gtf *GitTownFeature) beforeScenario(args interface{}) {
 	// create a GitEnvironment for the scenario
-	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + helpers.RandomString(10)
+	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + helpers.RandomNumberString(10)
 	var err error
 	gtf.gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
 	if err != nil {
