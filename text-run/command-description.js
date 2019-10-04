@@ -9,48 +9,70 @@ module.exports = async function(activity) {
 }
 
 function getMd(activity) {
-  return normalize(
-    activity.nodes
-      .map(nodeContent)
-      .map(text => text.trim())
-      .join("\n")
-      // Internal links should be quoted in CLI help strings,
-      // while external should not
-      .replace(/\n<a internal>/g, " ")
-      .replace(/<\/a internal>\n/g, " ")
-      .replace(/\n<\/?a external>\n/g, " ")
-      .replace(/ \./g, ".")
-      .replace(/ \,/g, ",")
-  )
-}
-
-function nodeContent(node) {
-  if (node.type === "link_open") {
-    if (node.attributes.href[0] == ".") return "<a internal>"
-    else return "<a external>"
+  let text = ""
+  let isInternalLink = false
+  for (node of activity.nodes) {
+    switch (node.type) {
+      case "text":
+        text += node.content + " "
+        break
+      case "link_open":
+        if (node.attributes.href[0] == ".") {
+          isInternalLink = true
+          text += '"'
+        }
+        break
+      case "link_close":
+        if (isInternalLink) {
+          text += '"'
+          isInternalLink = false
+        }
+        break
+      case "code_open":
+      case "code_close":
+        text += '"'
+        break
+      case "paragraph_open":
+      case "paragraph_close":
+      case "list_item_open":
+      case "ordered_list_open":
+        text += "\n"
+        break
+      case "anchor_open":
+      case "anchor_close":
+      case "bullet_list_open":
+      case "bullet_list_close":
+      case "list_item_close":
+        break
+      default:
+        throw new Error("unknown node type: " + node.type)
+    }
   }
-  if (node.type === "link_close") {
-    if (node.attributes.href[0] == ".") return "</a internal>"
-    else return "</a external>"
-  }
-  return node.content
+  return normalize(text.replace(/ ,/g, ",").replace(/ \./g, "."))
 }
 
 function getCliDesc(activity) {
   const command = getCommand(activity.file)
   const output = child_process.execSync(`git-town help ${command}`).toString()
   const matches = output.match(/^.*\n\n([\s\S]*)\n\nUsage:\n/m)
-  return normalize(matches[1].replace(/- /g, "\n").replace(/[0-9]\./g, "\n"))
+  return normalize(
+    matches[1]
+      .replace(/- /g, "\n")
+      .replace(/[0-9]\./g, "\n")
+      .replace(/\n\n/g, "<br>")
+      .replace(/\n/g, " ")
+      .replace(/<br>/g, "\n")
+  )
 }
 
 function normalize(text) {
   return text
+    .replace(/[ ]+/g, " ")
     .replace(/\./g, ".\n")
     .replace(/\,/g, ",\n")
-    .replace(/[ ]+/g, " ")
-    .replace(/\n+/g, "\n")
-    .replace(/"/g, "\n")
     .replace(/:/g, "\n")
+    .replace(/"/g, "\n")
+    .replace(/\n+/g, "\n")
     .replace(/^\s+/gm, "")
     .replace(/\s+$/gm, "")
     .trim()
