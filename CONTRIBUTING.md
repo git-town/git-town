@@ -53,22 +53,26 @@ when developing Git Town.
 - source code and test files must pass the linters
 - See [here](./documentation/development/testing.md) for how to run the tests
 
-In the Go-based Cucumber setup,
-a [GitManager](test/git_manager.go) manages all Git operations.
-It provides a standardized [GitEnvironment](test/git_environment.go) for each scenario:
-a developer [GitRepository](test/git_repository.go) with the `main` branch set as the main branch, and having a remote `origin` repo.
+In the Go-based Cucumber setup, a [GitManager](test/git_manager.go) manages all
+Git operations. It provides a standardized
+[GitEnvironment](test/git_environment.go) for each scenario: a developer
+[GitRepository](test/git_repository.go) with the `main` branch set as the main
+branch, and having a remote `origin` repo.
 
 The standardized GitEnvironment for scenarios looks like this:
 
-- The "developer" GitRepository contains the local workspace repo.
-  This is where the feature specs run.
-- The "origin" GitRepository contains the remote repo for the workspace repo in the "developer" folder.
-  This is where pushes from "developer" go to.
-- All repos contain a "main" branch that is configured as Git Town's main branch.
+- The "developer" GitRepository contains the local workspace repo. This is where
+  the feature specs run.
+- The "origin" GitRepository contains the remote repo for the workspace repo in
+  the "developer" folder. This is where pushes from "developer" go to.
+- All repos contain a "main" branch that is configured as Git Town's main
+  branch.
 
-Setting up a GitEnvironment takes a while because it requires several Git operations.
-As a performance optimization, the GitManager creates a "memoized" environment as a cache of an entirely set up GitEnvironment for a scenario at startup.
-To provide a GitEnvironment for a scenario, the GitManager simply copies this memoized environment into the place it needs to be.
+Setting up a GitEnvironment takes a while because it requires several Git
+operations. As a performance optimization, the GitManager creates a "memoized"
+environment as a cache of an entirely set up GitEnvironment for a scenario at
+startup. To provide a GitEnvironment for a scenario, the GitManager simply
+copies this memoized environment into the place it needs to be.
 
 ## Developing
 
