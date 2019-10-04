@@ -65,7 +65,7 @@ The former allows to develop and ship features completely independent of each ot
 The latter allows to build on top of currently unshipped features.
 
 `
-var parentBranchPromptTemplate = "Please specify the parent branch of %q:"
+var parentBranchPromptTemplate = "Please specify the parent branch of '%s':"
 var perennialBranchOption = "<none> (perennial branch)"
 
 func filterOutSelfAndDescendants(branchName string, choices []string) []string {
