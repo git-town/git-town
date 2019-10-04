@@ -16,16 +16,16 @@ import (
 // The comparison ignores whitespace around strings.
 func EnsureStringSliceMatchesTable(actual []string, expected *gherkin.DataTable) error {
 	if len(expected.Rows) == 0 {
-		return fmt.Errorf("Empty table given")
+		return fmt.Errorf("empty table given")
 	}
 	if len(expected.Rows[0].Cells) != 1 {
-		return fmt.Errorf("Table with more than one column given")
+		return fmt.Errorf("table with more than one column given")
 	}
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(RenderSlice(actual), RenderTable(expected), false)
 	if len(diffs) > 1 {
 		fmt.Println(dmp.DiffPrettyText(diffs))
-		return fmt.Errorf("Found %d differences", len(diffs))
+		return fmt.Errorf("found %d differences", len(diffs))
 	}
 	return nil
 }

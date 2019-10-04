@@ -6,33 +6,37 @@ import (
 	"os/exec"
 	"path"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
-// ShellRunner runs shell commands in a particular directory, using a customizable environment.
+// ShellRunner runs shell commands in the given directory, using a customizable environment.
 // Possible customizations:
-// - override certain shell commands permanently or temporary
+// - Temporarily override certain shell commands with mock implementations.
+//   Temporary mocks are only valid for the next command being run.
 type ShellRunner struct {
 
 	// dir contains the directory in which this runner runs.
 	dir string
 
-	// tempShellOverrideDirDir contains the path of the directory in which the temp shell overrides exist.
-	// This variable is only populated when temp shell overrides are set.
+	// tempShellOverrideDirDir contains the directory path that stores the mock shell command implementations.
+	// This variable is populated when shell overrides are being set,
+	// an empty string indicates that no shell overrides are set.
 	tempShellOverridesDir string
 }
 
-// NewShellRunner provides a new ShellRunner instance that runs in the given directory.
+// NewShellRunner provides a new ShellRunner instance that executes in the given directory.
 func NewShellRunner(dir string) ShellRunner {
 	return ShellRunner{dir: dir}
 }
 
-// AddTempShellOverride adds a temporary mock of a shell command
-// with the given name and file content.
+// AddTempShellOverride temporarily mocks the shell command with the given name
+// with a Bash file with the given file content.
 func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
-	if !runner.hasTempShellOverride() {
+	if !runner.hasTempShellOverrides() {
 		err := runner.createTempShellOverridesDir()
 		if err != nil {
-			return err
+			return errors.Wrap(err, "cannot create temp shell overrides dir")
 		}
 	}
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
@@ -57,18 +61,17 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 	return err
 }
 
-// hasTempShellOverrideDir indicates whether a folder for the temp shell overrides was already created.
-func (runner *ShellRunner) hasTempShellOverride() bool {
+// hasTempShellOverrides indicates whether temp shell overrides have been set.
+func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
 }
 
 // Run runs the given command with the given argv-like arguments in the current directory
 // and stores the output and error for later analysis.
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
-
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
-	if runner.hasTempShellOverride() {
+	if runner.hasTempShellOverrides() {
 		for i, entry := range customEnv {
 			if strings.HasPrefix(entry, "PATH=") {
 				parts := strings.SplitN(entry, "=", 2)

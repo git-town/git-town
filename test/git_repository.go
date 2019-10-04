@@ -35,7 +35,6 @@ func NewGitRepository(dir string) GitRepository {
 // InitGitRepository initializes a new Git repository in the given path.
 // Creates missing folders as needed.
 func InitGitRepository(dir string, bare bool) (GitRepository, error) {
-
 	// create the folder
 	err := os.MkdirAll(dir, 0744)
 	if err != nil {
