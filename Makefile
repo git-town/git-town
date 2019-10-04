@@ -41,7 +41,7 @@ fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
 fix-go:  # auto-fixes all Go lint issues
-	gofmt -s -w ./src
+	gofmt -s -w ./src ./test
 
 fix-markdown:  # auto-fixes all Markdown lint issues
 	@find . -type f \( \
