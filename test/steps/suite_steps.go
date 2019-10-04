@@ -8,7 +8,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test"
-	"github.com/dchest/uniuri"
+	"github.com/Originate/git-town/test/helpers"
 	"github.com/iancoleman/strcase"
 )
 
@@ -53,7 +53,7 @@ func scenarioName(args interface{}) string {
 
 func (gtf *GitTownFeature) beforeScenario(args interface{}) {
 	// create a GitEnvironment for the scenario
-	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + string(uniuri.NewLen(10))
+	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + helpers.RandomString(10)
 	var err error
 	gtf.gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
 	if err != nil {

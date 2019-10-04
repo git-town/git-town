@@ -1,10 +1,9 @@
 package test
 
 import (
-	"math/rand"
 	"path"
-	"strconv"
 
+	"github.com/Originate/git-town/test/helpers"
 	"github.com/pkg/errors"
 )
 
@@ -39,6 +38,6 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
-	envPath := path.Join(manager.dir, strconv.Itoa(rand.Intn(9999))+scenarioName)
+	envPath := path.Join(manager.dir, helpers.RandomString(10)+scenarioName)
 	return CloneGitEnvironment(manager.memoized, envPath)
 }

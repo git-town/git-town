@@ -37,14 +37,6 @@
   version = "v1.1.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:fdae1c338ec6667687fb3fdbde842b3c421c930163981b5d441502b240b7f50b"
-  name = "github.com/dchest/uniuri"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "8902c56451e9b58ff940bbe5fec35d5f9c04584a"
-
-[[projects]]
   digest = "1:ee7fe6a68ba9f21bc748293d4e1e66ad327f64a89b0f5ba2d021430babd4b8c9"
   name = "github.com/dustin/go-humanize"
   packages = ["."]
@@ -316,7 +308,6 @@
     "github.com/DATA-DOG/godog/gherkin",
     "github.com/Originate/exit",
     "github.com/acarl005/stripansi",
-    "github.com/dchest/uniuri",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
     "github.com/google/go-github/github",

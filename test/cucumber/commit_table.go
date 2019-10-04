@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/dchest/uniuri"
+	"github.com/Originate/git-town/test/helpers"
 )
 
 // CommitTableEntry contains the elements of a Gherkin table defining commit data.
@@ -19,7 +19,7 @@ type CommitTableEntry struct {
 // NewCommitTableEntry provides a new CommitTableEntry with default values
 func NewCommitTableEntry() CommitTableEntry {
 	return CommitTableEntry{
-		FileName:    "default_file_name_" + uniuri.NewLen(10),
+		FileName:    "default_file_name_" + helpers.RandomString(10),
 		Message:     "default commit message",
 		Location:    "local and remote",
 		Branch:      "main",
