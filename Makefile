@@ -80,8 +80,7 @@ lint-ruby:  # lints the Ruby files
 
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	go get -u github.com/onsi/ginkgo/ginkgo \
-						github.com/DATA-DOG/godog/cmd/godog
+	go get -u github.com/onsi/ginkgo/ginkgo github.com/DATA-DOG/godog/cmd/godog
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.18.0
 	bundle install
 	yarn install
