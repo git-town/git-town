@@ -15,13 +15,13 @@ func TestNewGitRepository(t *testing.T) {
 func TestInitBareGitRepository(t *testing.T) {
 	result, err := InitGitRepository(createTempDir(t), true)
 	assert.Nil(t, err, "cannot initialize bare GitRepository")
-	assertIsBareGitRepo(t, result.dir)
+	assertIsBareGitRepo(t, result.Dir)
 }
 
 func TestInitNormalGitRepository(t *testing.T) {
 	result, err := InitGitRepository(createTempDir(t), false)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
-	assertIsNormalGitRepo(t, result.dir)
+	assertIsNormalGitRepo(t, result.Dir)
 }
 
 func TestCloneGitRepository(t *testing.T) {

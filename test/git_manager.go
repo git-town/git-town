@@ -3,6 +3,8 @@ package test
 import (
 	"path"
 
+	"github.com/Originate/git-town/test/helpers"
+	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
 )
 
@@ -37,6 +39,7 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
-	envPath := path.Join(manager.dir, scenarioName)
+	envDirName := strcase.ToSnake(scenarioName) + "_" + helpers.RandomNumberString(10)
+	envPath := path.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)
 }

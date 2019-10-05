@@ -10,7 +10,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 }
 
 func (fs *FeatureState) iHaventConfiguredGitTownYet() error {
-	// NOTE: nothing to do here yes, since we don't configure Git Town in Go specs at this point.
+	// NOTE: nothing to do here yet, since we don't configure Git Town in Go specs at this point.
 	// In the future:
 	// - delete_main_branch_configuration
 	// - delete_perennial_branches_configuration

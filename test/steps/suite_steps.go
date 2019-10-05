@@ -8,14 +8,12 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test"
-	"github.com/Originate/git-town/test/helpers"
-	"github.com/iancoleman/strcase"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
 var beforeSuiteMux sync.Mutex
 
-// the GitManager instance to use
+// the global GitManager instance
 var gitManager *test.GitManager
 
 // SuiteSteps defines global lifecycle step implementations for Cucumber.
@@ -42,8 +40,7 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 
 func (fs *FeatureState) beforeScenario(args interface{}) {
 	// create a GitEnvironment for the scenario
-	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + helpers.RandomNumberString(10)
-	gitEnvironment, err := gitManager.CreateScenarioEnvironment(environmentName)
+	gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
 	if err != nil {
 		log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(args), err)
 	}
@@ -68,5 +65,5 @@ func scenarioName(args interface{}) string {
 	if ok {
 		return scenarioOutline.Name
 	}
-	panic("unknown type")
+	panic("unknown scenario type")
 }

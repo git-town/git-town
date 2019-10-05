@@ -29,6 +29,6 @@ func TestGitManagerCreateScenarioEnvironment(t *testing.T) {
 	result, err := gm.CreateScenarioEnvironment("foo")
 	assert.Nil(t, err, "cannot create scenario environment")
 
-	_, err = os.Stat(result.DeveloperRepo.dir)
-	assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DeveloperRepo.dir)
+	_, err = os.Stat(result.DeveloperRepo.Dir)
+	assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DeveloperRepo.Dir)
 }

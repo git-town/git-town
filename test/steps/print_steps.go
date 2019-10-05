@@ -10,21 +10,21 @@ import (
 
 // PrintSteps defines Gherkin steps around printing things to the terminal.
 func PrintSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step("^it prints$", fs.itPrints)
-	suite.Step("^it does not print \"([^\"]*)\"$", fs.itDoesNotPrint)
+	suite.Step(`^it prints$`, fs.itPrints)
+	suite.Step(`^it does not print "([^\"]*)"$`, fs.itDoesNotPrint)
 	suite.Step(`^it prints the error:$`, fs.itPrintsTheError)
 }
 
 func (fs *FeatureState) itPrints(expected *gherkin.DocString) error {
 	if !strings.Contains(fs.activeScenarioState.lastRunOutput, expected.Content) {
-		return fmt.Errorf(`text not found: %s`, expected.Content)
+		return fmt.Errorf("text not found:\n\n%q\n\noutput is:\n\n%q", expected.Content, fs.activeScenarioState.lastRunOutput)
 	}
 	return nil
 }
 
 func (fs *FeatureState) itDoesNotPrint(text string) error {
 	if strings.Contains(fs.activeScenarioState.lastRunOutput, text) {
-		return fmt.Errorf(`text found: %s`, text)
+		return fmt.Errorf("text found: %q", text)
 	}
 	return nil
 }

@@ -14,8 +14,8 @@ import (
 // GitRepository is a Git repository that exists inside a Git environment.
 type GitRepository struct {
 
-	// dir contains the path of the directory that this repository is in.
-	dir string
+	// Dir contains the path of the directory that this repository is in.
+	Dir string
 
 	// originalCommits contains the commits in this repository before the test ran.
 	originalCommits []cucumber.CommitTableEntry
@@ -27,7 +27,7 @@ type GitRepository struct {
 // NewGitRepository provides a new GitRepository instance working in the given directory.
 // The directory must contain an existing Git repo.
 func NewGitRepository(dir string) GitRepository {
-	result := GitRepository{dir: dir}
+	result := GitRepository{Dir: dir}
 	result.ShellRunner = NewShellRunner(dir)
 	return result
 }
@@ -88,7 +88,7 @@ func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 
 // createCommit creates a commit with the given properties in this Git repo.
 func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error {
-	err := repo.createFile(path.Join(repo.dir, commit.FileName), commit.FileContent)
+	err := repo.createFile(path.Join(repo.Dir, commit.FileName), commit.FileContent)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
@@ -105,7 +105,7 @@ func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error 
 
 // createFile creates a file with the given name and content in this repository.
 func (repo *GitRepository) createFile(name, content string) error {
-	err := ioutil.WriteFile(path.Join(repo.dir, name), []byte(content), 0744)
+	err := ioutil.WriteFile(path.Join(repo.Dir, name), []byte(content), 0744)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q", name)
 	}
