@@ -11,28 +11,24 @@ import (
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^I run "([^"]*)"$`, fs.iRun)
-	suite.Step(`^it runs the commands$`, fs.itRunsTheCommands)
-	suite.Step(`^it runs no commands$`, fs.itRunsNoCommands)
-}
+	suite.Step(`^I run "([^"]*)"$`, func(command string) error {
+		fs.activeScenarioState.lastRunOutput, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
+		return nil
+	})
 
-func (fs *FeatureState) iRun(command string) error {
-	fs.activeScenarioState.lastRunOutput, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
-	return nil
-}
+	suite.Step(`^it runs the commands$`, func(table *gherkin.DataTable) error {
+		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
+		return cucumber.EnsureStringSliceMatchesTable(commands, table)
+	})
 
-func (fs *FeatureState) itRunsTheCommands(table *gherkin.DataTable) error {
-	commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
-	return cucumber.EnsureStringSliceMatchesTable(commands, table)
-}
-
-func (fs *FeatureState) itRunsNoCommands() error {
-	commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
-	if len(commands) > 0 {
-		for _, command := range commands {
-			fmt.Println(command)
+	suite.Step(`^it runs no commands$`, func() error {
+		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
+		if len(commands) > 0 {
+			for _, command := range commands {
+				fmt.Println(command)
+			}
+			return fmt.Errorf("expected no commands but found %d commands", len(commands))
 		}
-		return fmt.Errorf("expected no commands but found %d commands", len(commands))
-	}
-	return nil
+		return nil
+	})
 }
