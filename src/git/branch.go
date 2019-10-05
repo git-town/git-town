@@ -59,7 +59,7 @@ func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, in
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically
 func GetLocalBranches() (result []string) {
-	for _, line := range strings.Split(command.New("git", "branch").Output(), "\n") {
+	for _, line := range command.New("git", "branch").OutputLines() {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
@@ -82,7 +82,7 @@ func GetLocalBranchesWithoutMain() (result []string) {
 // GetLocalBranchesWithDeletedTrackingBranches returns the names of all branches
 // whose remote tracking branches have been deleted
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
-	for _, line := range strings.Split(command.New("git", "branch", "-vv").Output(), "\n") {
+	for _, line := range command.New("git", "branch", "-vv").OutputLines() {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branchName := parts[0]
@@ -127,7 +127,7 @@ func GetTrackingBranchName(branchName string) string {
 // HasBranch returns whether the repository contains a branch with the given name.
 // The branch does not have to be present on the local repository.
 func HasBranch(branchName string) bool {
-	for _, line := range strings.Split(command.New("git", "branch", "-a").Output(), "\n") {
+	for _, line := range command.New("git", "branch", "-a").OutputLines() {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -182,7 +182,7 @@ var remoteBranchesInitialized bool
 
 func getRemoteBranches() []string {
 	if !remoteBranchesInitialized {
-		remoteBranches = strings.Split(command.New("git", "branch", "-r").Output(), "\n")
+		remoteBranches = command.New("git", "branch", "-r").OutputLines()
 		remoteBranchesInitialized = true
 	}
 	return remoteBranches
