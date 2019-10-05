@@ -41,10 +41,12 @@ func assertIsBareGitRepo(t *testing.T, dir string) {
 	assertFolderExists(t, dir)
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
-	testData := []string{"HEAD", "branches", "config", "description", "hooks", "info", "objects", "refs"}
-	for i, expected := range testData {
-		assert.Equal(t, expected, entries[i].Name())
+	entryNames := make([]string, len(entries))
+	for i, entry := range entries {
+		entryNames[i] = entry.Name()
 	}
+	testData := []string{"HEAD", "branches", "config", "description", "hooks", "info", "objects", "refs"}
+	assert.Equal(t, testData, entryNames)
 }
 
 func assertIsNormalGitRepo(t *testing.T, dir string) {
