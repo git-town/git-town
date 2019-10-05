@@ -6,12 +6,12 @@ import (
 )
 
 // nolint:deadcode,unused
-func FeatureContext(s *godog.Suite) {
+func FeatureContext(suite *godog.Suite) {
 	state := &steps.FeatureState{}
-	steps.SuiteSteps(s, state)
-	steps.ConfigurationSteps(s, state)
-	steps.InstallationSteps(s, state)
-	steps.PrintSteps(s, state)
-	steps.RunSteps(s, state)
-	steps.WorkspaceSteps(s, state)
+	steps.SuiteSteps(suite, state)
+	steps.ConfigurationSteps(suite, state)
+	steps.InstallationSteps(suite, state)
+	steps.PrintSteps(suite, state)
+	steps.RunSteps(suite, state)
+	steps.WorkspaceSteps(suite, state)
 }

@@ -15,6 +15,9 @@ import (
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
 var beforeSuiteMux sync.Mutex
 
+// the GitManager instance to use
+var gitManager *test.GitManager
+
 // SuiteSteps defines global lifecycle step implementations for Cucumber.
 func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.BeforeSuite(func() {
@@ -24,7 +27,7 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		if gitManager == nil {
 			baseDir, err := ioutil.TempDir("", "")
 			if err != nil {
-				log.Fatalf("cannot create base directory: %s", err)
+				log.Fatalf("cannot create base directory for feature specs: %s", err)
 			}
 			gitManager = test.NewGitManager(baseDir)
 			err = gitManager.CreateMemoizedEnvironment()
@@ -33,22 +36,8 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 			}
 		}
 	})
-
 	suite.BeforeScenario(fs.beforeScenario)
 	suite.AfterScenario(fs.afterScenario)
-}
-
-// scenarioName returns the name of the given Scenario or ScenarioOutline
-func scenarioName(args interface{}) string {
-	scenario, ok := args.(*gherkin.Scenario)
-	if ok {
-		return scenario.Name
-	}
-	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
-	if ok {
-		return scenarioOutline.Name
-	}
-	panic("unknown type")
 }
 
 func (fs *FeatureState) beforeScenario(args interface{}) {
@@ -67,4 +56,17 @@ func (fs *FeatureState) afterScenario(args interface{}, e error) {
 	if err != nil {
 		log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(args), err)
 	}
+}
+
+// scenarioName returns the name of the given Scenario or ScenarioOutline
+func scenarioName(args interface{}) string {
+	scenario, ok := args.(*gherkin.Scenario)
+	if ok {
+		return scenario.Name
+	}
+	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
+	if ok {
+		return scenarioOutline.Name
+	}
+	panic("unknown type")
 }
