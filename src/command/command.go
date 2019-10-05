@@ -26,52 +26,52 @@ func New(command ...string) *Command {
 // Run runs this command.
 // Doesn't run again if it ran already.
 // Stores the outcome in fields of the instance.
-func (r *Command) Run() {
-	if r.ran {
+func (c *Command) Run() {
+	if c.ran {
 		return
 	}
 
-	logRun(r)
-	subProcess := exec.Command(r.name, r.args...) // #nosec
+	logRun(c)
+	subProcess := exec.Command(c.name, c.args...) // #nosec
 	output, err := subProcess.CombinedOutput()
-	r.output = stripansi.Strip(strings.TrimSpace(string(output)))
-	r.err = err
-	r.ran = true
+	c.output = stripansi.Strip(strings.TrimSpace(string(output)))
+	c.err = err
+	c.ran = true
 }
 
 // Output returns the output of this command.
 // Runs if it hasn't so far.
-func (r *Command) Output() string {
-	r.Run()
-	return r.output
+func (c *Command) Output() string {
+	c.Run()
+	return c.output
 }
 
 // OutputLines returns the output of this command, split into lines.
 // Runs if it hasn't so far.
-func (r *Command) OutputLines() []string {
-	return strings.Split(r.Output(), "\n")
+func (c *Command) OutputLines() []string {
+	return strings.Split(c.Output(), "\n")
 }
 
 // Err returns the error that this command encountered.
 // Runs the command if it hasn't so far.
-func (r *Command) Err() error {
-	r.Run()
-	return r.err
+func (c *Command) Err() error {
+	c.Run()
+	return c.err
 }
 
 // OutputContainsLine returns whether the output of this command
 // contains the given line
-func (r *Command) OutputContainsLine(line string) bool {
-	return util.DoesStringArrayContain(r.OutputLines(), line)
+func (c *Command) OutputContainsLine(line string) bool {
+	return util.DoesStringArrayContain(c.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command
 // contains the given text
-func (r *Command) OutputContainsText(text string) bool {
-	r.Run()
-	return strings.Contains(r.output, text)
+func (c *Command) OutputContainsText(text string) bool {
+	c.Run()
+	return strings.Contains(c.output, text)
 }
 
-func (r Command) String() string {
-	return fmt.Sprintf("%s %s", r.name, strings.Join(r.args, " "))
+func (c Command) String() string {
+	return fmt.Sprintf("%s %s", c.name, strings.Join(c.args, " "))
 }
