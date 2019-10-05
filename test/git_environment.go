@@ -10,8 +10,8 @@ import (
 // GitEnvironment is the complete Git environment for a test scenario.
 type GitEnvironment struct {
 
-	// dir is the directory that this environment is in.
-	dir string
+	// Dir is the directory that this environment is in.
+	Dir string
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
 	OriginRepo GitRepository
@@ -23,12 +23,12 @@ type GitEnvironment struct {
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
 // containing a copy of the given GitEnvironment.
 func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
-	err := CopyDirectory(original.dir, dir)
+	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot clone GitEnvironment %q to folder %q", original.dir, dir)
+		return nil, errors.Wrapf(err, "cannot clone GitEnvironment %q to folder %q", original.Dir, dir)
 	}
 	result := GitEnvironment{
-		dir:           dir,
+		Dir:           dir,
 		DeveloperRepo: NewGitRepository(path.Join(dir, "developer")),
 		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
 	}
@@ -39,7 +39,7 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // Missing directories are created as needed.
 func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 	err := os.MkdirAll(baseDir, 0744)
-	return &GitEnvironment{dir: baseDir}, err
+	return &GitEnvironment{Dir: baseDir}, err
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
@@ -79,15 +79,15 @@ func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
 
 // Remove deletes all files used by this GitEnvironment from disk.
 func (env GitEnvironment) Remove() error {
-	return os.RemoveAll(env.dir)
+	return os.RemoveAll(env.Dir)
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) developerRepoPath() string {
-	return path.Join(env.dir, "developer")
+	return path.Join(env.Dir, "developer")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
-	return path.Join(env.dir, "origin")
+	return path.Join(env.Dir, "origin")
 }
