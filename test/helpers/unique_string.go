@@ -6,7 +6,7 @@ import (
 )
 
 // scenarioCounter counts the currently executed scenario
-var scenarioCounter uint32 = 0
+var scenarioCounter uint32
 
 // UniqueString provides a globally unique number.
 func UniqueString() string {
