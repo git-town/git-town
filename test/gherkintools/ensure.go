@@ -1,7 +1,7 @@
 // This file defines functions that verify state in Cucumber steps.
 // Ensure functions return an error if they fail.
 
-package cucumber
+package gherkintools
 
 import (
 	"fmt"

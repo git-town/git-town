@@ -1,4 +1,4 @@
-package cucumber
+package gherkintools
 
 import (
 	"log"

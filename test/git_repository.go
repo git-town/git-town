@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/test/cucumber"
+	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
 
@@ -18,7 +18,7 @@ type GitRepository struct {
 	Dir string
 
 	// originalCommits contains the commits in this repository before the test ran.
-	originalCommits []cucumber.CommitTableEntry
+	originalCommits []gherkintools.CommitTableEntry
 
 	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
@@ -76,7 +76,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	repo.originalCommits = cucumber.ParseGherkinTable(table)
+	repo.originalCommits = gherkintools.ParseGherkinTable(table)
 	for _, commit := range repo.originalCommits {
 		err := repo.createCommit(commit)
 		if err != nil {
@@ -87,7 +87,7 @@ func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 }
 
 // createCommit creates a commit with the given properties in this Git repo.
-func (repo *GitRepository) createCommit(commit cucumber.CommitTableEntry) error {
+func (repo *GitRepository) createCommit(commit gherkintools.CommitTableEntry) error {
 	err := repo.createFile(path.Join(repo.Dir, commit.FileName), commit.FileContent)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
