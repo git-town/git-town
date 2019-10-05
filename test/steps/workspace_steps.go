@@ -4,12 +4,12 @@ import (
 	"github.com/DATA-DOG/godog"
 )
 
-// WorkspaceSteps provides Cucumber step implementations around Git workspace management.
-func WorkspaceSteps(s *godog.Suite, gtf *GitTownFeature) {
-	s.Step("^my workspace is currently not a Git repository$", gtf.myWorkspaceIsCurrentlyNotAGitRepository)
+// WorkspaceSteps defines Cucumber step implementations around Git workspace management.
+func WorkspaceSteps(s *godog.Suite, state *FeatureState) {
+	s.Step("^my workspace is currently not a Git repository$", state.myWorkspaceIsCurrentlyNotAGitRepository)
 }
 
-func (gtf *GitTownFeature) myWorkspaceIsCurrentlyNotAGitRepository() error {
+func (state *FeatureState) myWorkspaceIsCurrentlyNotAGitRepository() error {
 	// FileUtils.rm_rf '.git'
 	return nil
 }

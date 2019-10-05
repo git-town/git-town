@@ -15,8 +15,8 @@ import (
 // mux ensures that we run BeforeSuite only once globally.
 var mux sync.Mutex
 
-// SuiteSteps provides global lifecycle step implementations for Cucumber.
-func SuiteSteps(s *godog.Suite, gtf *GitTownFeature) {
+// SuiteSteps defines global lifecycle step implementations for Cucumber.
+func SuiteSteps(s *godog.Suite, state *FeatureState) {
 	s.BeforeSuite(func() {
 		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
 		mux.Lock()
@@ -34,8 +34,8 @@ func SuiteSteps(s *godog.Suite, gtf *GitTownFeature) {
 		}
 	})
 
-	s.BeforeScenario(gtf.beforeScenario)
-	s.AfterScenario(gtf.afterScenario)
+	s.BeforeScenario(state.beforeScenario)
+	s.AfterScenario(state.afterScenario)
 }
 
 // scenarioName returns the name of the given Scenario or ScenarioOutline
@@ -51,19 +51,19 @@ func scenarioName(args interface{}) string {
 	panic("unknown type")
 }
 
-func (gtf *GitTownFeature) beforeScenario(args interface{}) {
+func (state *FeatureState) beforeScenario(args interface{}) {
 	// create a GitEnvironment for the scenario
 	environmentName := strcase.ToSnake(scenarioName(args)) + "_" + helpers.RandomNumberString(10)
 	var err error
-	gtf.gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
+	state.gitEnvironment, err = gitManager.CreateScenarioEnvironment(environmentName)
 	if err != nil {
 		log.Fatalf("cannot create environment for scenario '%s': %s", environmentName, err)
 	}
 }
 
-func (gtf *GitTownFeature) afterScenario(args interface{}, e error) {
+func (state *FeatureState) afterScenario(args interface{}, e error) {
 	// remove the GitEnvironment of the scenario
-	err := gtf.gitEnvironment.Remove()
+	err := state.gitEnvironment.Remove()
 	if err != nil {
 		log.Fatalf("error in afterScenario: %v", err)
 	}

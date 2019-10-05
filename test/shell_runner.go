@@ -69,7 +69,7 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 
 // Run runs the given command with the given argv-like arguments
 // in this ShellRunner's directory.
-// Shell overrides will be used and removed.
+// Shell overrides will be used and removed when done.
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
@@ -95,7 +95,7 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
-// Shell overrides will be used and removed.
+// Shell overrides will be used and removed when done.
 //
 // The current implementation splits the string by space
 // and therefore only works for simple commands without quoted arguments.
@@ -109,13 +109,15 @@ func (runner *ShellRunner) RunString(command string) (output string, err error) 
 }
 
 // RunMany runs all given commands in current directory.
-// Failed commands cause abortion of the function with the received error.
+// Commands are provided as a list of argv-style strings.
+// Shell overrides apply for the first command only.
+// Failed commands abort immediately with the encountered error.
 func (runner *ShellRunner) RunMany(commands [][]string) error {
-	for _, commandList := range commands {
-		command, args := commandList[0], commandList[1:]
-		_, err := runner.Run(command, args...)
+	for _, argv := range commands {
+		command, args := argv[0], argv[1:]
+		output, err := runner.Run(command, args...)
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "error running command %q: %s", argv, output)
 		}
 	}
 	return nil

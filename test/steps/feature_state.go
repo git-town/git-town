@@ -2,8 +2,8 @@ package steps
 
 import "github.com/Originate/git-town/test"
 
-// GitTownFeature contains state that is shared by step implementations.
-type GitTownFeature struct {
+// FeatureState contains state that is shared by step implementations.
+type FeatureState struct {
 
 	// the GitEnvironment used in the current scenario
 	gitEnvironment *test.GitEnvironment

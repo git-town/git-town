@@ -2,13 +2,13 @@ package steps
 
 import "github.com/DATA-DOG/godog"
 
-// InstallationSteps provides Cucumber step implementations around installation of Git Town.
-func InstallationSteps(s *godog.Suite, gtf *GitTownFeature) {
-	s.Step(`^I have Git "([^"]*)" installed$`, gtf.iHaveGitInstalled)
+// InstallationSteps defines Cucumber step implementations around installation of Git Town.
+func InstallationSteps(s *godog.Suite, state *FeatureState) {
+	s.Step(`^I have Git "([^"]*)" installed$`, state.iHaveGitInstalled)
 }
 
-func (gtf *GitTownFeature) iHaveGitInstalled(arg1 string) error {
-	err := gtf.gitEnvironment.DeveloperRepo.AddTempShellOverride(
+func (state *FeatureState) iHaveGitInstalled(arg1 string) error {
+	err := state.gitEnvironment.DeveloperRepo.AddTempShellOverride(
 		"git",
 		`#!/usr/bin/env bash
 		echo "git version 2.6.2"`)
