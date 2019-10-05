@@ -10,24 +10,24 @@ import (
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
-func RunSteps(s *godog.Suite, state *FeatureState) {
-	s.Step(`^I run "([^"]*)"$`, state.iRun)
-	s.Step(`^it runs the commands$`, state.itRunsTheCommands)
-	s.Step(`^it runs no commands$`, state.itRunsNoCommands)
+func RunSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^I run "([^"]*)"$`, fs.iRun)
+	suite.Step(`^it runs the commands$`, fs.itRunsTheCommands)
+	suite.Step(`^it runs no commands$`, fs.itRunsNoCommands)
 }
 
-func (state *FeatureState) iRun(command string) error {
-	state.lastRunOutput, state.lastRunErr = state.gitEnvironment.DeveloperRepo.RunString(command)
+func (fs *FeatureState) iRun(command string) error {
+	fs.activeScenarioState.lastRunOutput, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
 	return nil
 }
 
-func (state *FeatureState) itRunsTheCommands(table *gherkin.DataTable) error {
-	commands := test.GitCommandsInGitTownOutput(state.lastRunOutput)
+func (fs *FeatureState) itRunsTheCommands(table *gherkin.DataTable) error {
+	commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
 	return cucumber.EnsureStringSliceMatchesTable(commands, table)
 }
 
-func (state *FeatureState) itRunsNoCommands() error {
-	commands := test.GitCommandsInGitTownOutput(state.lastRunOutput)
+func (fs *FeatureState) itRunsNoCommands() error {
+	commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
 	if len(commands) > 0 {
 		for _, command := range commands {
 			fmt.Println(command)

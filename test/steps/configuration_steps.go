@@ -5,11 +5,11 @@ import (
 )
 
 // ConfigurationSteps defines Cucumber step implementations around configuration.
-func ConfigurationSteps(s *godog.Suite, state *FeatureState) {
-	s.Step(`^I haven\'t configured Git Town yet$`, state.iHaventConfiguredGitTownYet)
+func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^I haven\'t configured Git Town yet$`, fs.iHaventConfiguredGitTownYet)
 }
 
-func (state *FeatureState) iHaventConfiguredGitTownYet() error {
+func (fs *FeatureState) iHaventConfiguredGitTownYet() error {
 	// delete_main_branch_configuration
 	// delete_perennial_branches_configuration
 	return nil

@@ -1,16 +1,10 @@
 package steps
 
-import "github.com/Originate/git-town/test"
-
-// FeatureState contains state that is shared by step implementations.
+// FeatureState contains state that is shared by all scenarios in a feature.
 type FeatureState struct {
 
-	// the GitEnvironment used in the current scenario
-	gitEnvironment *test.GitEnvironment
-
-	// the result of the last run of Git Town
-	lastRunOutput string
-
-	// the error of the last run of Git Town
-	lastRunErr error
+	// activeScenarioState contains the state for the currently executing scenario in this feature.
+	// Godog executes each feature concurrently, but the scenarios in a feature sequentially.
+	// This means there is always only one active scenario for each feature.
+	activeScenarioState scenarioState
 }

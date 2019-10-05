@@ -9,31 +9,31 @@ import (
 )
 
 // PrintSteps defines Gherkin steps around printing things to the terminal.
-func PrintSteps(s *godog.Suite, state *FeatureState) {
-	s.Step("^it prints$", state.itPrints)
-	s.Step("^it does not print \"([^\"]*)\"$", state.itDoesNotPrint)
-	s.Step(`^it prints the error:$`, state.itPrintsTheError)
+func PrintSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step("^it prints$", fs.itPrints)
+	suite.Step("^it does not print \"([^\"]*)\"$", fs.itDoesNotPrint)
+	suite.Step(`^it prints the error:$`, fs.itPrintsTheError)
 }
 
-func (state *FeatureState) itPrints(expected *gherkin.DocString) error {
-	if !strings.Contains(state.lastRunOutput, expected.Content) {
+func (fs *FeatureState) itPrints(expected *gherkin.DocString) error {
+	if !strings.Contains(fs.activeScenarioState.lastRunOutput, expected.Content) {
 		return fmt.Errorf(`text not found: %s`, expected.Content)
 	}
 	return nil
 }
 
-func (state *FeatureState) itDoesNotPrint(text string) error {
-	if strings.Contains(state.lastRunOutput, text) {
+func (fs *FeatureState) itDoesNotPrint(text string) error {
+	if strings.Contains(fs.activeScenarioState.lastRunOutput, text) {
 		return fmt.Errorf(`text found: %s`, text)
 	}
 	return nil
 }
 
-func (state *FeatureState) itPrintsTheError(expected *gherkin.DocString) error {
-	if !strings.Contains(state.lastRunOutput, expected.Content) {
-		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, state.lastRunOutput)
+func (fs *FeatureState) itPrintsTheError(expected *gherkin.DocString) error {
+	if !strings.Contains(fs.activeScenarioState.lastRunOutput, expected.Content) {
+		return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, fs.activeScenarioState.lastRunOutput)
 	}
-	if state.lastRunErr == nil {
+	if fs.activeScenarioState.lastRunErr == nil {
 		return fmt.Errorf("expected error")
 	}
 	return nil

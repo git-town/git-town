@@ -8,16 +8,16 @@ import (
 )
 
 // CommitSteps defines Cucumber step implementations around commits.
-func CommitSteps(s *godog.Suite, state *FeatureState) {
-	s.Step(`^the following commit exists in my repository$`, state.theFollowingCommitExistsInMyRepository)
+func CommitSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^the following commit exists in my repository$`, fs.theFollowingCommitExistsInMyRepository)
 }
 
-func (state *FeatureState) theFollowingCommitExistsInMyRepository(table *gherkin.DataTable) error {
+func (fs *FeatureState) theFollowingCommitExistsInMyRepository(table *gherkin.DataTable) error {
 	// user = (who == 'my') ? 'developer' : 'coworker'
 	// user += '_secondary' if remote
 	// @initial_commits_table = table.clone
 	// @original_files = files_in_branches
 	// in_repository user do
-	fmt.Println("gitEnvironment.DeveloperRepo", state.gitEnvironment.DeveloperRepo)
-	return state.gitEnvironment.DeveloperRepo.CreateCommits(table)
+	fmt.Println("gitEnvironment.DeveloperRepo", fs.activeScenarioState.gitEnvironment.DeveloperRepo)
+	return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateCommits(table)
 }
