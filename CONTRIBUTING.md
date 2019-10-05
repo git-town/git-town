@@ -62,17 +62,17 @@ that looks like this:
   the feature specs run.
 - The "origin" GitRepository contains the remote repo for the workspace repo in
   the "developer" folder. This is where pushes from "developer" go to.
-- All repos contain a "main" branch that is configured as Git Town's main
-  branch.
+- All repos are preconfigured:
+  - there exists a "main" branch
+  - this branch is configured as Git Town's main branch.
 
 Setting up a GitEnvironment takes a while because it requires several Git
-operations. As a performance optimization, the GitManager creates a "memoized"
-environment as a cache of an entirely set up GitEnvironment for a scenario at
-startup. To provide a GitEnvironment for a scenario, the GitManager simply
-copies this memoized environment into the place it needs to be.
+operations, and it has to be done for every scenario run. As a performance
+optimization, the GitManager creates a "memoized" environment, i.e. a cache of
+an entirely set up GitEnvironment and makes copies of it for scenarios.
 
 When running Go-based Cucumber concurrently, it creates only one global
-GitManager instance, which all threads use.
+GitManager instance that is shared by all threads.
 
 ## Developing
 
