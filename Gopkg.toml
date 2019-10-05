@@ -52,3 +52,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/kballard/go-shellquote"
+
+[[constraint]]
+  name = "github.com/DATA-DOG/godog"
+  version = "0.7.13"
