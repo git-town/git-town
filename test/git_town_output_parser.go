@@ -33,7 +33,7 @@ func parseLine(line string) (command, branch string) {
 	// NOTE: implementing this without regex
 	// because the regex has gotten very complex and hard to maintain
 
-	// remove the color codes at the begining
+	// remove the color codes at the beginning
 	line = strings.Replace(line, gitCommandLineBeginning, "", 1)
 
 	// extract branch name if it exists
