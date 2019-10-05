@@ -19,7 +19,7 @@ type CommitTableEntry struct {
 // NewCommitTableEntry provides a new CommitTableEntry with default values
 func NewCommitTableEntry() CommitTableEntry {
 	return CommitTableEntry{
-		FileName:    "default_file_name_" + helpers.RandomNumberString(10),
+		FileName:    "default_file_name_" + helpers.UniqueString(),
 		Message:     "default commit message",
 		Location:    "local and remote",
 		Branch:      "main",
