@@ -42,6 +42,10 @@
   unused-packages = true
 
 [[constraint]]
+  name = "github.com/DATA-DOG/godog"
+  version = "0.7.13"
+
+[[constraint]]
   name = "github.com/stretchr/testify"
   version = "1.3.0"
 
@@ -52,7 +56,3 @@
 [[constraint]]
   branch = "master"
   name = "github.com/kballard/go-shellquote"
-
-[[constraint]]
-  name = "github.com/DATA-DOG/godog"
-  version = "0.7.13"
