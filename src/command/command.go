@@ -46,6 +46,12 @@ func (r *Command) Output() string {
 	return r.output
 }
 
+// OutputLines returns the output of this command, split into lines.
+// Runs if it hasn't so far.
+func (r *Command) OutputLines() []string {
+	return strings.Split(r.Output(), "\n")
+}
+
 // Err returns the error that this command encountered.
 // Runs the command if it hasn't so far.
 func (r *Command) Err() error {
@@ -56,9 +62,7 @@ func (r *Command) Err() error {
 // OutputContainsLine returns whether the output of this command
 // contains the given line
 func (r *Command) OutputContainsLine(line string) bool {
-	r.Run()
-	lines := strings.Split(r.output, "\n")
-	return util.DoesStringArrayContain(lines, line)
+	return util.DoesStringArrayContain(r.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command

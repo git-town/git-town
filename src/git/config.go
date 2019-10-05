@@ -310,7 +310,7 @@ var remotesInitialized bool
 
 func getRemotes() []string {
 	if !remotesInitialized {
-		remotes = strings.Split(command.New("git", "remote").Output(), "\n")
+		remotes = command.New("git", "remote").OutputLines()
 		remotesInitialized = true
 	}
 	return remotes
