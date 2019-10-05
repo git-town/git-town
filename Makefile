@@ -91,8 +91,7 @@ test: lint unit cuke  # runs all the tests
 .PHONY: test
 
 unit:  # runs the unit tests
-	ginkgo src/...
-	go test ./...
+	go test ./src/... ./test/...
 
 update:  # updates all dependencies
 	dep ensure -update
