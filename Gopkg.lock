@@ -89,6 +89,14 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:400e113a367b511b9b09ca642ee11d9885485a93838526d697033af334a2fdde"
+  name = "github.com/kballard/go-shellquote"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "95032a82bc518f77982ea72343cc1ade730072f0"
+
+[[projects]]
   digest = "1:31fcf8f5f8f6cc36ef11182c0a0f63ba464e1a7ad9f0e92a7cf46f38bfc0adfd"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
@@ -312,6 +320,7 @@
     "github.com/fatih/color",
     "github.com/google/go-github/github",
     "github.com/iancoleman/strcase",
+    "github.com/kballard/go-shellquote",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/pkg/errors",

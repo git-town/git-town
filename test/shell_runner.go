@@ -7,6 +7,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 )
 
@@ -16,12 +17,12 @@ import (
 //   Temporary mocks are only valid for the next command being run.
 type ShellRunner struct {
 
-	// dir contains the directory in which this runner runs.
+	// dir contains the directory path in which this runner runs.
 	dir string
 
 	// tempShellOverrideDirDir contains the directory path that stores the mock shell command implementations.
-	// This variable is populated when shell overrides are being set,
-	// an empty string indicates that no shell overrides are set.
+	// This variable is populated when shell overrides are being set.
+	// An empty string indicates that no shell overrides have been set.
 	tempShellOverridesDir string
 }
 
@@ -31,7 +32,7 @@ func NewShellRunner(dir string) ShellRunner {
 }
 
 // AddTempShellOverride temporarily mocks the shell command with the given name
-// with a Bash file with the given file content.
+// with the given Bash script.
 func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	if !runner.hasTempShellOverrides() {
 		err := runner.createTempShellOverridesDir()
@@ -42,7 +43,7 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
 }
 
-// tempShellOverrideFilePath provides the path where to store the given temp shell command override.
+// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
 func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
 	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }
@@ -61,20 +62,21 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 	return err
 }
 
-// hasTempShellOverrides indicates whether temp shell overrides have been set.
+// hasTempShellOverrides indicates whether there are temp shell overrides for the next command.
 func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
 }
 
-// Run runs the given command with the given argv-like arguments in the current directory
-// and stores the output and error for later analysis.
+// Run runs the given command with the given argv-like arguments
+// in this ShellRunner's directory.
+// Shell overrides will be used and removed.
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
 	if runner.hasTempShellOverrides() {
-		for i, entry := range customEnv {
-			if strings.HasPrefix(entry, "PATH=") {
-				parts := strings.SplitN(entry, "=", 2)
+		for i := range customEnv {
+			if strings.HasPrefix(customEnv[i], "PATH=") {
+				parts := strings.SplitN(customEnv[i], "=", 2)
 				parts[1] = runner.tempShellOverridesDir + ":" + parts[1]
 				customEnv[i] = strings.Join(parts, "=")
 				break
@@ -91,13 +93,17 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	return string(rawOutput), err
 }
 
-// RunString runs the given command (that can contain arguments) in the current directory
-// and stores the output and error for later analysis.
+// RunString runs the given command (including possible arguments)
+// in this ShellRunner's directory.
+// Shell overrides will be used and removed.
 //
-// Currently this splits the string by space,
-// this only works for simple commands without quotes.
+// The current implementation splits the string by space
+// and therefore only works for simple commands without quoted arguments.
 func (runner *ShellRunner) RunString(command string) (output string, err error) {
-	parts := strings.Fields(command)
+	parts, err := shellquote.Split(command)
+	if err != nil {
+		return "", errors.Wrapf(err, "cannot split command: %q", command)
+	}
 	command, args := parts[0], parts[1:]
 	return runner.Run(command, args...)
 }
