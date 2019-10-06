@@ -35,7 +35,10 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		DeveloperRepo: NewGitRepository(path.Join(dir, "developer")),
 		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
 	}
-	return &result, nil
+	// NOTE: since we copied the files from the memoized directory,
+	// we have to set the "origin" remote to the copied origin repo here.
+	err = result.DeveloperRepo.SetRemote(result.OriginRepo.Dir)
+	return &result, err
 }
 
 // NewGitEnvironment provides a Git environment instance located in the given directory path.
@@ -100,6 +103,16 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	}
 	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
 	env.OriginRepo.CheckoutBranch("master")
+	return nil
+}
+
+// HasCommits checks whether this repo has the commits in the given Gherkin table.
+// If there are mismatches, the returned error is set.
+func (env GitEnvironment) HasCommits(table *gherkin.DataTable) error {
+	// commits, err := gherkintools.FromGherkinTable(table)
+	// if err != nil {
+	// 	return errors.Wrap(err, "cannot parse Gherkin table")
+	// }
 	return nil
 }
 

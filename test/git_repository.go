@@ -131,3 +131,11 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 	}
 	return true, nil
 }
+
+// SetRemote sets the remote of this Git repository to the given target.
+func (repo *GitRepository) SetRemote(target string) error {
+	return repo.RunMany([][]string{
+		{"git", "remote", "remove", "origin"},
+		{"git", "remote", "add", "origin", target},
+	})
+}
