@@ -4,17 +4,22 @@ import (
 	"strings"
 )
 
+// ExecutedGitCommand describes a Git command that was executed by Git Town during testing.
+type ExecutedGitCommand struct {
+	Command string
+	Branch  string
+}
+
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
-func GitCommandsInGitTownOutput(output string) []string {
-	result := []string{}
-	for _, line := range strings.Split(output, "\n") {
-		line = strings.TrimSpace(line)
+func GitCommandsInGitTownOutput(output string) (result []ExecutedGitCommand) {
+	lines := strings.Split(output, "\n")
+	for i := range lines {
+		line := strings.TrimSpace(lines[i])
 		if line == "" {
 			continue
 		}
 		if lineContainsGitTownCommand(line) {
-			command, _ := parseLine(line)
-			result = append(result, command)
+			result = append(result, parseLine(line))
 		}
 	}
 	return result
@@ -29,7 +34,7 @@ func lineContainsGitTownCommand(line string) bool {
 }
 
 // parseLine provides the Git Town command and branchname in the given line.
-func parseLine(line string) (command, branch string) {
+func parseLine(line string) ExecutedGitCommand {
 	// NOTE: implementing this without regex
 	// because the regex has gotten very complex and hard to maintain
 
@@ -46,5 +51,5 @@ func parseLine(line string) (command, branch string) {
 		line = parts[1]
 	}
 
-	return strings.TrimSpace(line), branchName
+	return ExecutedGitCommand{Command: strings.TrimSpace(line), Branch: branchName}
 }

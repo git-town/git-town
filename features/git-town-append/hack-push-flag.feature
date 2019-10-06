@@ -5,12 +5,12 @@ Feature: push branch to remote upon creation
 
   Background:
     Given the "new-branch-push-flag" configuration is set to "true"
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town append new-child`
+    When I run "git-town append new-child"
 
 
   Scenario: inserting a branch into the branch ancestry
@@ -38,13 +38,13 @@ Feature: push branch to remote upon creation
   Scenario: Undo
     When I run `git-town undo`
     Then it runs the commands
-        | BRANCH    | COMMAND                    |
-        | new-child | git add -A                 |
-        |           | git stash                  |
-        |           | git push origin :new-child |
-        |           | git checkout main          |
-        | main      | git branch -d new-child    |
-        |           | git stash pop              |
+      | BRANCH    | COMMAND                    |
+      | new-child | git add -A                 |
+      |           | git stash                  |
+      |           | git push origin :new-child |
+      |           | git checkout main          |
+      | main      | git branch -d new-child    |
+      |           | git stash pop              |
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits

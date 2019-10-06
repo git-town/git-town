@@ -18,7 +18,7 @@ type GitRepository struct {
 	Dir string
 
 	// originalCommits contains the commits in this repository before the test ran.
-	originalCommits []gherkintools.CommitTableEntry
+	originalCommits []gherkintools.Commit
 
 	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
@@ -76,7 +76,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	repo.originalCommits = gherkintools.ParseGherkinTable(table)
+	repo.originalCommits = gherkintools.FromGherkinTable(table)
 	for _, commit := range repo.originalCommits {
 		err := repo.createCommit(commit)
 		if err != nil {
@@ -87,8 +87,8 @@ func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
 }
 
 // createCommit creates a commit with the given properties in this Git repo.
-func (repo *GitRepository) createCommit(commit gherkintools.CommitTableEntry) error {
-	err := repo.createFile(path.Join(repo.Dir, commit.FileName), commit.FileContent)
+func (repo *GitRepository) createCommit(commit gherkintools.Commit) error {
+	err := repo.CreateFile(commit.FileName, commit.FileContent)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
@@ -103,8 +103,8 @@ func (repo *GitRepository) createCommit(commit gherkintools.CommitTableEntry) er
 	return nil
 }
 
-// createFile creates a file with the given name and content in this repository.
-func (repo *GitRepository) createFile(name, content string) error {
+// CreateFile creates a file with the given name and content in this repository.
+func (repo *GitRepository) CreateFile(name, content string) error {
 	err := ioutil.WriteFile(path.Join(repo.Dir, name), []byte(content), 0744)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q", name)

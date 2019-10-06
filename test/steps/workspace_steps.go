@@ -9,6 +9,11 @@ import (
 
 // WorkspaceSteps defines Cucumber step implementations around Git workspace management.
 func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^my workspace has an uncommitted file$`, func() error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile("uncommitted file", "uncommitted content")
+		return nil
+	})
+
 	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
 		os.RemoveAll(path.Join(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir, ".git"))
 		return nil

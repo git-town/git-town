@@ -42,7 +42,7 @@ func TestGitRepositoryCreateFile(t *testing.T) {
 	repo, err := InitGitRepository(dir, false)
 	assert.Nil(t, err, "cannot initialize Git repo")
 
-	err = repo.createFile("filename", "content")
+	err = repo.CreateFile("filename", "content")
 
 	assert.Nil(t, err, "cannot create file in repo")
 	content, err := ioutil.ReadFile(path.Join(dir, "filename"))

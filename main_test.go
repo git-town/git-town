@@ -9,6 +9,8 @@ import (
 func FeatureContext(suite *godog.Suite) {
 	state := &steps.FeatureState{}
 	steps.SuiteSteps(suite, state)
+	steps.BranchSteps(suite, state)
+	steps.CommitSteps(suite, state)
 	steps.ConfigurationSteps(suite, state)
 	steps.InstallationSteps(suite, state)
 	steps.PrintSteps(suite, state)

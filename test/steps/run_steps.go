@@ -6,7 +6,6 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test"
-	"github.com/Originate/git-town/test/gherkintools"
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
@@ -18,7 +17,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^it runs the commands$`, func(table *gherkin.DataTable) error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
-		return gherkintools.EnsureStringSliceMatchesTable(commands, table)
+		return test.EnsureExecutedGitCommandsMatchTable(commands, table)
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
