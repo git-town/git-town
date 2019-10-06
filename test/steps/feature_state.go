@@ -7,4 +7,7 @@ type FeatureState struct {
 	// Godog executes each feature concurrently, but the scenarios in a feature sequentially.
 	// This means there is always only one active scenario for each feature.
 	activeScenarioState scenarioState
+
+	// debug indicates whether this entire feature should be debugged.
+	debug bool
 }

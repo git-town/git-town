@@ -6,7 +6,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
@@ -34,7 +33,7 @@ func NewGitRepository(dir string) GitRepository {
 
 // InitGitRepository initializes a new Git repository in the given path.
 // Creates missing folders as needed.
-func InitGitRepository(dir string, bare bool) (GitRepository, error) {
+func InitGitRepository(dir string) (GitRepository, error) {
 	// create the folder
 	err := os.MkdirAll(dir, 0744)
 	if err != nil {
@@ -42,14 +41,10 @@ func InitGitRepository(dir string, bare bool) (GitRepository, error) {
 	}
 
 	// initialize the repo in the folder
-	args := []string{"init"}
-	if bare {
-		args = append(args, "--bare")
-	}
 	result := NewGitRepository(dir)
-	_, err = result.Run("git", args...)
+	output, err := result.Run("git", "init")
 	if err != nil {
-		return result, errors.Wrapf(err, "error running git %s", strings.Join(args, " "))
+		return result, errors.Wrapf(err, "error running git init in %q: %s", dir, output)
 	}
 	return result, nil
 }
@@ -74,21 +69,23 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (repo *GitRepository) CreateCommits(table *gherkin.DataTable) error {
-	repo.originalCommits = gherkintools.FromGherkinTable(table)
-	for _, commit := range repo.originalCommits {
-		err := repo.createCommit(commit)
-		if err != nil {
-			return err
-		}
+// CheckoutBranch checks out the Git branch with the given name in this repo.
+func (repo *GitRepository) CheckoutBranch(name string) error {
+	output, err := repo.Run("git", "checkout", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %s", name, repo.dir, output)
 	}
 	return nil
 }
 
 // createCommit creates a commit with the given properties in this Git repo.
 func (repo *GitRepository) createCommit(commit gherkintools.Commit) error {
-	err := repo.CreateFile(commit.FileName, commit.FileContent)
+	repo.originalCommits = append(repo.originalCommits, commit)
+	err := repo.CheckoutBranch(commit.Branch)
+	if err != nil {
+		return errors.Wrapf(err, "cannot checkout branch %q", commit.Branch)
+	}
+	err = repo.CreateFile(commit.FileName, commit.FileContent)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
@@ -110,4 +107,13 @@ func (repo *GitRepository) CreateFile(name, content string) error {
 		return errors.Wrapf(err, "cannot create file %q", name)
 	}
 	return nil
+}
+
+// CurrentBranch provides the currently checked out branch for this repo.
+func (repo *GitRepository) CurrentBranch() (result string, err error) {
+	output, err := repo.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
+	}
+	return strings.TrimSpace(output), nil
 }

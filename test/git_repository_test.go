@@ -12,14 +12,8 @@ func TestNewGitRepository(t *testing.T) {
 	_ = NewGitRepository(createTempDir(t))
 }
 
-func TestInitBareGitRepository(t *testing.T) {
-	result, err := InitGitRepository(createTempDir(t), true)
-	assert.Nil(t, err, "cannot initialize bare GitRepository")
-	assertIsBareGitRepo(t, result.Dir)
-}
-
 func TestInitNormalGitRepository(t *testing.T) {
-	result, err := InitGitRepository(createTempDir(t), false)
+	result, err := InitGitRepository(createTempDir(t))
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, result.Dir)
 }
@@ -27,7 +21,7 @@ func TestInitNormalGitRepository(t *testing.T) {
 func TestCloneGitRepository(t *testing.T) {
 	rootDir := createTempDir(t)
 	originPath := path.Join(rootDir, "origin")
-	_, err := InitGitRepository(originPath, true)
+	_, err := InitGitRepository(originPath)
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := path.Join(rootDir, "cloned")
 
@@ -39,7 +33,7 @@ func TestCloneGitRepository(t *testing.T) {
 
 func TestGitRepositoryCreateFile(t *testing.T) {
 	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, false)
+	repo, err := InitGitRepository(dir)
 	assert.Nil(t, err, "cannot initialize Git repo")
 
 	err = repo.CreateFile("filename", "content")

@@ -9,21 +9,23 @@ import (
 
 func TestNewStandardGitEnvironment(t *testing.T) {
 	gitEnvRootDir := createTempDir(t)
-	_, err := NewStandardGitEnvironment(gitEnvRootDir)
 
-	assert.Nil(t, err, "cannot create new GitEnvironment")
-	assertIsBareGitRepo(t, path.Join(gitEnvRootDir, "origin"))
+	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 
-	// verify the new GitEnvironment has a "developer" folder
-	devDir := path.Join(gitEnvRootDir, "developer")
-	assertFolderExists(t, devDir)
+	assert.Nil(t, err)
 
-	// verify the "developer" folder contains a Git repo with a main branch
-	assertFolderExists(t, path.Join(devDir, ".git"))
-	runner := NewShellRunner(devDir)
-	output, err := runner.Run("git", "branch")
-	assert.Nilf(t, err, "cannot run 'git branch' in %q", devDir)
-	assert.Contains(t, output, "* main")
+	// verify the origin repo
+	assertIsGitRepo(t, path.Join(gitEnvRootDir, "origin"))
+	branch, err := result.OriginRepo.CurrentBranch()
+	assert.Nil(t, err)
+	// the origin should be at the master branch so that we can push to it
+	assert.Equal(t, "master", branch)
+
+	// verify the developer repo
+	assertIsGitRepo(t, path.Join(gitEnvRootDir, "developer"))
+	branch, err = result.DeveloperRepo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "main", branch)
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
@@ -34,9 +36,7 @@ func TestGitEnvironmentCloneEnvironment(t *testing.T) {
 	_, err = CloneGitEnvironment(memoizedGitEnv, path.Join(dir, "cloned"))
 
 	assert.Nil(t, err, "cannot clone GitEnvironment")
-	assertIsBareGitRepo(t, path.Join(dir, "cloned", "origin"))
-	devDir := path.Join(dir, "cloned", "developer")
-	assertFolderExists(t, devDir)
-	assertFolderExists(t, path.Join(dir, "cloned", "developer", ".git"))
-	assertHasGitBranch(t, devDir, "* main")
+	assertIsGitRepo(t, path.Join(dir, "cloned", "origin"))
+	assertIsGitRepo(t, path.Join(dir, "cloned", "developer"))
+	assertHasGitBranch(t, path.Join(dir, "cloned", "developer"), "main")
 }

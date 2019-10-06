@@ -12,4 +12,7 @@ type scenarioState struct {
 
 	// the error of the last run of Git Town
 	lastRunErr error
+
+	// debug indicates whether the user requested to see debug output.
+	debug bool
 }

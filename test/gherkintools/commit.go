@@ -5,6 +5,7 @@ import (
 
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
+	"github.com/pkg/errors"
 )
 
 // Commit describes a Git commit.
@@ -28,8 +29,7 @@ func DefaultCommit() Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *gherkin.DataTable) []Commit {
-	result := []Commit{}
+func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 	columnNames := []string{}
 	for _, cell := range table.Rows[0].Cells {
 		columnNames = append(columnNames, cell.Value)
@@ -37,16 +37,19 @@ func FromGherkinTable(table *gherkin.DataTable) []Commit {
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for i, cell := range row.Cells {
-			commit.Set(columnNames[i], cell.Value)
+			err := commit.Set(columnNames[i], cell.Value)
+			if err != nil {
+				return result, errors.Wrapf(err, "cannot set property %q to %q", columnNames[i], cell.Value)
+			}
 		}
 		result = append(result, commit)
 	}
-	return result
+	return result, nil
 }
 
 // Set assigns the given value to the property with the given name.
 func (commit *Commit) Set(name, value string) (err error) {
-	switch value {
+	switch name {
 	case "BRANCH":
 		commit.Branch = value
 	case "LOCATION":
@@ -54,7 +57,7 @@ func (commit *Commit) Set(name, value string) (err error) {
 	case "MESSAGE":
 		commit.Message = value
 	default:
-		err = fmt.Errorf("unknown CommitData property: %s", name)
+		return fmt.Errorf("unknown Commit property: %s", name)
 	}
-	return err
+	return nil
 }

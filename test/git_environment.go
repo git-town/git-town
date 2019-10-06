@@ -1,9 +1,12 @@
 package test
 
 import (
+	"fmt"
 	"os"
 	"path"
 
+	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
 
@@ -44,37 +47,60 @@ func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
 // fully populated as a standardized setup for scenarios.
-func NewStandardGitEnvironment(dir string) (result *GitEnvironment, err error) {
-	result, err = NewGitEnvironment(dir)
+func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
+	gitEnv, err = NewGitEnvironment(dir)
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot create a new standard environment")
+		return gitEnv, errors.Wrapf(err, "cannot create a new standard environment")
 	}
 
 	// create the origin repo
-	result.OriginRepo, err = InitGitRepository(result.originRepoPath(), true)
+	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath())
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot initialize origin directory at %q", result.originRepoPath())
+		return gitEnv, errors.Wrapf(err, "cannot initialize origin directory at %q", gitEnv.originRepoPath())
 	}
-
-	// set "main" as the default branch
-	_, err = result.OriginRepo.Run("git", "symbolic-ref", "HEAD", "refs/heads/main")
-	if err != nil {
-		return result, errors.Wrap(err, "cannot set main as the default branch")
-	}
-
-	// git-clone the "developer" repo
-	result.DeveloperRepo, err = CloneGitRepository(result.originRepoPath(), result.developerRepoPath())
-	if err != nil {
-		return result, errors.Wrapf(err, "cannot clone developer repo (%q) from origin (%q)", result.originRepoPath(), result.developerRepoPath())
-	}
-
-	// initialize the main branch
-	err = result.DeveloperRepo.RunMany([][]string{
-		{"git", "checkout", "--orphan", "main"},
-		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
-		{"git", "push", "-u", "origin", "main"},
+	err = gitEnv.OriginRepo.RunMany([][]string{
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
+		{"git", "checkout", "-b", "main"},
+		{"git", "checkout", "master"},
 	})
-	return result, err
+	if err != nil {
+		return gitEnv, err
+	}
+
+	// clone the "developer" repo
+	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath())
+	if err != nil {
+		return gitEnv, errors.Wrapf(err, "cannot clone developer repo %q from origin %q", gitEnv.originRepoPath(), gitEnv.developerRepoPath())
+	}
+	err = gitEnv.DeveloperRepo.RunMany([][]string{
+		{"git", "checkout", "main"},
+	})
+	return gitEnv, err
+}
+
+// CreateCommits creates the commits described by the given Gherkin table in this Git repository.
+func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
+	commits, err := gherkintools.FromGherkinTable(table)
+	if err != nil {
+		return errors.Wrap(err, "cannot parse Gherkin table")
+	}
+	for _, commit := range commits {
+		var err error
+		switch commit.Location {
+		case "remote":
+			err = env.OriginRepo.createCommit(commit)
+		case "local":
+			err = env.DeveloperRepo.createCommit(commit)
+		default:
+			return fmt.Errorf("unknown commit location %q", commit.Location)
+		}
+		if err != nil {
+			return err
+		}
+	}
+	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
+	env.OriginRepo.CheckoutBranch("master")
+	return nil
 }
 
 // Remove deletes all files used by this GitEnvironment from disk.

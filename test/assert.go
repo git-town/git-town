@@ -37,7 +37,7 @@ func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	assert.Contains(t, output, expectedBranch, "doesn't have Git branch")
 }
 
-func assertIsBareGitRepo(t *testing.T, dir string) {
+func assertIsGitRepo(t *testing.T, dir string) {
 	assertFolderExists(t, dir)
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
@@ -45,12 +45,7 @@ func assertIsBareGitRepo(t *testing.T, dir string) {
 	for i := range entries {
 		entryNames[i] = entries[i].Name()
 	}
-	assert.Contains(t, entryNames, "HEAD")
-	assert.Contains(t, entryNames, "config")
-	assert.Contains(t, entryNames, "description")
-	assert.Contains(t, entryNames, "hooks")
-	assert.Contains(t, entryNames, "objects")
-	assert.Contains(t, entryNames, "refs")
+	assert.Contains(t, entryNames, ".git")
 }
 
 func assertIsNormalGitRepo(t *testing.T, dir string) {

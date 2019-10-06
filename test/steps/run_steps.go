@@ -12,6 +12,9 @@ import (
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "([^"]*)"$`, func(command string) error {
 		fs.activeScenarioState.lastRunOutput, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
+		if fs.activeScenarioState.debug {
+			fmt.Println("DEBUG:\n", fs.activeScenarioState.lastRunOutput)
+		}
 		return nil
 	})
 
