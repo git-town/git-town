@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  digest = "1:8eacd45a4fb9c351d20c6050ae91783a844f171e65470fca0380c30a5eabb726"
+  name = "github.com/DATA-DOG/godog"
+  packages = [
+    ".",
+    "colors",
+    "gherkin",
+  ]
+  pruneopts = "UT"
+  revision = "8e7bc15e741c4f6c93c0fc2e797ed869cbc1b8f7"
+  version = "v0.7.13"
+
+[[projects]]
   digest = "1:2a1c007a3aa4b3efd5e90eb321cf405e62bec9f0a4f5e81b0a175d9d45e1993a"
   name = "github.com/Originate/exit"
   packages = ["."]
@@ -15,6 +27,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "5a71ef0e047df0427e87a79f27009029921f1f9b"
+
+[[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  pruneopts = "UT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
 
 [[projects]]
   digest = "1:ee7fe6a68ba9f21bc748293d4e1e66ad327f64a89b0f5ba2d021430babd4b8c9"
@@ -53,12 +73,28 @@
   revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
+  branch = "master"
+  digest = "1:be3bd107094de27145a9a92e9e5e2b3eb03d3d92a5dec68da31b8eba4e4c6ae2"
+  name = "github.com/iancoleman/strcase"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e506e3ef73653e84c592ba44aab577a46678f68c"
+
+[[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   pruneopts = "UT"
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
   version = "v1.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:400e113a367b511b9b09ca642ee11d9885485a93838526d697033af334a2fdde"
+  name = "github.com/kballard/go-shellquote"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "95032a82bc518f77982ea72343cc1ade730072f0"
 
 [[projects]]
   digest = "1:31fcf8f5f8f6cc36ef11182c0a0f63ba464e1a7ad9f0e92a7cf46f38bfc0adfd"
@@ -137,6 +173,22 @@
   version = "v0.8.0"
 
 [[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  pruneopts = "UT"
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:d917313f309bda80d27274d53985bc65651f81a5b66b820749ac7f8ef061fd04"
+  name = "github.com/sergi/go-diff"
+  packages = ["diffmatchpatch"]
+  pruneopts = "UT"
+  revision = "1744e2970ca51c86172c8190fadad617561ed6e7"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:716ae4d5ab908a88497f3b5dd25a3bc270160481bdf7ce0108c3d648fcd5ddf1"
   name = "github.com/spf13/cobra"
   packages = ["."]
@@ -149,6 +201,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "1ce0cc6db4029d97571db82f85092fccedb572ce"
+
+[[projects]]
+  digest = "1:972c2427413d41a1e06ca4897e8528e5a1622894050e2f527b38ddf0f343f759"
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  pruneopts = "UT"
+  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:feddc98e0b022efc832f56907f78e51c89f8f079232a3fe6b4db13ae6d691c1a"
@@ -252,14 +312,21 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/DATA-DOG/godog",
+    "github.com/DATA-DOG/godog/gherkin",
     "github.com/Originate/exit",
     "github.com/acarl005/stripansi",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
     "github.com/google/go-github/github",
+    "github.com/iancoleman/strcase",
+    "github.com/kballard/go-shellquote",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
+    "github.com/pkg/errors",
+    "github.com/sergi/go-diff/diffmatchpatch",
     "github.com/spf13/cobra",
+    "github.com/stretchr/testify/assert",
     "golang.org/x/oauth2",
     "gopkg.in/AlecAivazis/survey.v1",
     "gopkg.in/AlecAivazis/survey.v1/core",

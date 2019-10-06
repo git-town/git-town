@@ -8,7 +8,7 @@ Feature: show help screen when Git Town is not configured
 
 
   Scenario Outline:
-    When I run `<COMMAND>`
+    When I run "<COMMAND>"
     Then it prints
       """
       Usage:

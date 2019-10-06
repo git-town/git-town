@@ -53,6 +53,27 @@ when developing Git Town.
 - source code and test files must pass the linters
 - See [here](./documentation/development/testing.md) for how to run the tests
 
+In the Go-based Cucumber setup, a [GitManager](test/git_manager.go) manages the
+setup of the Git repositories for testing Git Town. For each scenario,
+GitManager provides a standardized [GitEnvironment](test/git_environment.go)
+that looks like this:
+
+- The "developer" GitRepository contains the local workspace repo. This is where
+  the feature specs run.
+- The "origin" GitRepository contains the remote repo for the workspace repo in
+  the "developer" folder. This is where pushes from "developer" go to.
+- All repos are preconfigured:
+  - there exists a "main" branch
+  - this branch is configured as Git Town's main branch.
+
+Setting up a GitEnvironment takes a while because it requires several Git
+operations, and it has to be done for every scenario run. As a performance
+optimization, the GitManager creates a "memoized" environment, i.e. a cache of
+an entirely set up GitEnvironment and makes copies of it for scenarios.
+
+When running Go-based Cucumber concurrently, it creates only one global
+GitManager instance that is shared by all threads.
+
 ## Developing
 
 - all dependencies are located in the [vendor](vendor) folder, which is checked

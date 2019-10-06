@@ -12,9 +12,13 @@ cross-compile:  # builds the binary for all platforms
 	gox -ldflags "-X github.com/Originate/git-town/src/cmd.version=${TRAVIS_TAG} -X github.com/Originate/git-town/src/cmd.buildDate=${date}" \
 			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
 
-cuke: build  # runs the feature tests
-	bundle exec parallel_cucumber $(DIR)
-DIR = $(if $(dir),$(dir),"features")
+cuke: cuke-go cuke-ruby  # runs the feature tests
+
+cuke-go: build   # runs the new Godog-based feature tests
+	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias
+
+cuke-ruby: build   # runs the old Ruby-based feature tests
+	bundle exec parallel_cucumber features/git-town-append features/git-town-config features/git-town-hack features/git-town-install-fish-autocompletion features/git-town-kill features/git-town-main_branch features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
 
 deploy:  # deploys the website
 	git checkout gh-pages
@@ -36,7 +40,7 @@ fix-cucumber:  # auto-fixes all Cucumber lint issues
 	bundle exec cucumber_lint --fix
 
 fix-go:  # auto-fixes all Go lint issues
-	gofmt -s -w ./src
+	gofmt -s -w ./src ./test
 
 fix-markdown:  # auto-fixes all Markdown lint issues
 	@find . -type f \( \
@@ -60,7 +64,7 @@ lint-cucumber:  # lints the Cucumber files
 	bundle exec cucumber_lint
 
 lint-go:  # lints the Go files
-	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits
+	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits src/... test/...
 
 lint-markdown: build  # lints the Markdown files
 	@find . -type f \( \
@@ -78,7 +82,7 @@ lint-ruby:  # lints the Ruby files
 
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	go get -u github.com/onsi/ginkgo/ginkgo
+	go get -u github.com/onsi/ginkgo/ginkgo github.com/DATA-DOG/godog/cmd/godog
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.18.0
 	bundle install
 	yarn install
@@ -87,7 +91,7 @@ test: lint unit cuke  # runs all the tests
 .PHONY: test
 
 unit:  # runs the unit tests
-	ginkgo src/...
+	go test ./src/... ./test/...
 
 update:  # updates all dependencies
 	dep ensure -update

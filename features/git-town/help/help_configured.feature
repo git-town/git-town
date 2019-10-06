@@ -5,13 +5,8 @@ Feature: show help screen when Git Town is configured
   So that I can refresh my memory quickly and move on to what I actually wanted to do.
 
 
-  Background:
-    Given the main branch is configured as "main"
-    And the perennial branches are configured as "qa" and "staging"
-
-
   Scenario Outline:
-    When I run `<COMMAND>`
+    When I run "<COMMAND>"
     Then it prints
       """
       Usage:
