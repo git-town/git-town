@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -116,4 +117,17 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
 	}
 	return strings.TrimSpace(output), nil
+}
+
+// HasFile indicates whether this repository contains a file with the given name and content.
+func (repo *GitRepository) HasFile(name, content string) (result bool, err error) {
+	rawContent, err := ioutil.ReadFile(path.Join(repo.Dir, name))
+	if err != nil {
+		return result, errors.Wrapf(err, "repo doesn't have file %q", name)
+	}
+	actualContent := string(rawContent)
+	if actualContent != content {
+		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
+	}
+	return true, nil
 }
