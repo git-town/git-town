@@ -1,8 +1,6 @@
 package steps
 
 import (
-	"fmt"
-
 	"github.com/DATA-DOG/godog"
 	"github.com/pkg/errors"
 )
@@ -13,9 +11,6 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		output, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "checkout", branchName)
 		if err != nil {
 			return errors.Wrapf(err, "cannot change to branch %q: %s", branchName, output)
-		}
-		if fs.activeScenarioState.debug {
-			fmt.Println(output)
 		}
 		return nil
 	})

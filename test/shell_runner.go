@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -90,7 +91,13 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	cmd.Dir = runner.dir
 	cmd.Env = customEnv
 	rawOutput, err := cmd.CombinedOutput()
-	return string(rawOutput), err
+	output = string(rawOutput)
+	if Debug {
+		fmt.Printf("In %q:\n", path.Base(runner.dir))
+		fmt.Println(">", name, strings.Join(arguments, " "))
+		fmt.Println(output)
+	}
+	return output, err
 }
 
 // RunString runs the given command (including possible arguments)

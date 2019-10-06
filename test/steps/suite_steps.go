@@ -37,22 +37,22 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.BeforeFeature(func(feature *gherkin.Feature) {
 		if hasFeatureTag(feature, "@debug") {
-			fs.debug = true
+			test.Debug = true
 		}
 	})
 
 	suite.BeforeScenario(func(args interface{}) {
-		// create a GitEnvironment for the scenario
 		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(args), err)
 		}
-
-		fs.activeScenarioState = scenarioState{gitEnvironment: gitEnvironment, debug: fs.debug || hasScenarioTag(args, "@debug")}
+		fs.activeScenarioState = scenarioState{gitEnvironment: gitEnvironment}
+		if hasScenarioTag(args, "@debug") {
+			test.Debug = true
+		}
 	})
 
 	suite.AfterScenario(func(args interface{}, e error) {
-		// remove the GitEnvironment of the scenario
 		err := fs.activeScenarioState.gitEnvironment.Remove()
 		if err != nil {
 			log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(args), err)
