@@ -10,11 +10,13 @@ import (
 
 // Commit describes a Git commit.
 type Commit struct {
+	Author      string
 	Branch      string
-	Location    string
-	Message     string
-	FileName    string
 	FileContent string
+	FileName    string
+	Location    []string
+	Message     string
+	SHA         string
 }
 
 // DefaultCommit provides a new Commit instance populated with the default values used in the absence of value specified by the test.
@@ -22,7 +24,7 @@ func DefaultCommit() Commit {
 	return Commit{
 		FileName:    "default_file_name_" + helpers.UniqueString(),
 		Message:     "default commit message",
-		Location:    "local and remote",
+		Location:    []string{"local", "remote"},
 		Branch:      "main",
 		FileContent: "default file content",
 	}
@@ -49,11 +51,12 @@ func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 
 // Set assigns the given value to the property with the given name.
 func (commit *Commit) Set(name, value string) (err error) {
+	fmt.Printf("setting %q to %q\n", name, value)
 	switch name {
 	case "BRANCH":
 		commit.Branch = value
 	case "LOCATION":
-		commit.Location = value
+		commit.Location = []string{value}
 	case "MESSAGE":
 		commit.Message = value
 	default:

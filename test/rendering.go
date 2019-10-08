@@ -6,30 +6,30 @@ import (
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.
-func RenderExecutedGitCommands(commands []ExecutedGitCommand) string {
-	renderer := gherkintools.TableRenderer{}
-	renderer.AddLine("BRANCH", "COMMAND")
+func RenderExecutedGitCommands(commands []ExecutedGitCommand) gherkintools.Mortadella {
+	morta := gherkintools.Mortadella{}
+	morta.AddRow("BRANCH", "COMMAND")
 	lastBranch := ""
 	for _, cmd := range commands {
 		if cmd.Branch == lastBranch {
-			renderer.AddLine("", cmd.Command)
+			morta.AddRow("", cmd.Command)
 		} else {
-			renderer.AddLine(cmd.Branch, cmd.Command)
+			morta.AddRow(cmd.Branch, cmd.Command)
 		}
 		lastBranch = cmd.Branch
 	}
-	return renderer.String()
+	return morta
 }
 
 // RenderTable provides the textual Gherkin representation of the given Gherkin table.
 func RenderTable(table *gherkin.DataTable) string {
-	renderer := gherkintools.TableRenderer{}
+	morta := gherkintools.Mortadella{}
 	for _, row := range table.Rows {
 		values := []string{}
 		for _, cell := range row.Cells {
 			values = append(values, cell.Value)
 		}
-		renderer.AddLine(values...)
+		morta.AddRow(values...)
 	}
-	return renderer.String()
+	return morta.String()
 }

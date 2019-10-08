@@ -7,11 +7,11 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
-func TestTableRenderer(t *testing.T) {
-	r := TableRenderer{}
-	r.AddLine("ALPHA", "BETA")
-	r.AddLine("1", "2")
-	r.AddLine("longer text", "even longer text")
+func TestMortadella(t *testing.T) {
+	r := Mortadella{}
+	r.AddRow("ALPHA", "BETA")
+	r.AddRow("1", "2")
+	r.AddRow("longer text", "even longer text")
 	expected := `| ALPHA       | BETA             |
 | 1           | 2                |
 | longer text | even longer text |

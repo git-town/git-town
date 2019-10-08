@@ -88,14 +88,17 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 		return errors.Wrap(err, "cannot parse Gherkin table")
 	}
 	for _, commit := range commits {
+		fmt.Println(1111111111, commit.Location)
 		var err error
-		switch commit.Location {
-		case "remote":
-			err = env.OriginRepo.createCommit(commit)
-		case "local":
-			err = env.DeveloperRepo.createCommit(commit)
-		default:
-			return fmt.Errorf("unknown commit location %q", commit.Location)
+		for _, location := range commit.Location {
+			switch location {
+			case "remote":
+				err = env.OriginRepo.createCommit(commit)
+			case "local":
+				err = env.DeveloperRepo.createCommit(commit)
+			default:
+				return fmt.Errorf("unknown commit location %q", commit.Location)
+			}
 		}
 		if err != nil {
 			return err

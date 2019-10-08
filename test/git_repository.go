@@ -70,6 +70,22 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
+// AllBranches provides the names of the local and remote branches in this Git repository.
+func (repo *GitRepository) AllBranches() (result []string, err error) {
+	output, err := repo.Run("git", "branch", "-a")
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot run 'git branch -a' in repo %q", repo.dir)
+	}
+	output = strings.TrimSpace(output)
+	for _, line := range strings.Split(output, "\n") {
+		line = strings.Replace(line, "* ", "", 1)
+		line = strings.Replace(line, "remotes/origin/", "origin/", 1)
+		line = strings.TrimSpace(line)
+		result = append(result, line)
+	}
+	return result, nil
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (repo *GitRepository) CheckoutBranch(name string) error {
 	output, err := repo.Run("git", "checkout", name)
@@ -117,6 +133,41 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
 	}
 	return strings.TrimSpace(output), nil
+}
+
+// Commits provides a tabular list of the commits in this Git repository with the given fields.
+func (repo *GitRepository) Commits(fields []string) (result gherkintools.Mortadella, err error) {
+	commitList := NewCommitListBuilder()
+	branches, err := repo.AllBranches()
+	if err != nil {
+		return result, errors.Wrap(err, "cannot determine the Git branches")
+	}
+	for _, branch := range branches {
+		commits, err := repo.CommitsInBranch(branch)
+		if err != nil {
+			return result, err
+		}
+		commitList.AddAll(commits)
+	}
+	return commitList.Table(fields), nil
+}
+
+// CommitsInBranch provides all commits in the given Git branch.
+func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools.Commit, err error) {
+	output, err := repo.Run("git", "log", branch, "--format='%h|%s|%an <%ae>'", "--topo-order", "--reverse")
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
+	}
+	output = strings.TrimSpace(output)
+	for _, line := range strings.Split(output, "\n") {
+		parts := strings.Split(line, "|")
+		commit := gherkintools.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
+		if strings.EqualFold(commit.Message, "initial commit") {
+			continue
+		}
+		result = append(result, commit)
+	}
+	return result, nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.

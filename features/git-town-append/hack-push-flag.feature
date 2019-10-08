@@ -1,3 +1,4 @@
+@debug
 Feature: push branch to remote upon creation
 
   (see ../git-town-hack/hack_push_flag.feature)
@@ -26,7 +27,7 @@ Feature: push branch to remote upon creation
       |           | git stash pop                |
     And I end up on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH    | LOCATION         | MESSAGE     |
       | main      | local and remote | main_commit |
       | new-child | local and remote | main_commit |
