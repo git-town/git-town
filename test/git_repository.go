@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"sort"
 	"strings"
 
 	"github.com/Originate/git-town/test/gherkintools"
@@ -71,6 +72,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 }
 
 // Branches provides the names of the local and remote branches in this Git repository.
+// The results are sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
 	output, err := repo.Run("git", "branch")
 	if err != nil {
@@ -82,7 +84,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 		line = strings.TrimSpace(line)
 		result = append(result, line)
 	}
-	return result, nil
+	return sort.StringSlice(result), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
