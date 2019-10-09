@@ -1,4 +1,3 @@
-@debug
 Feature: push branch to remote upon creation
 
   (see ../git-town-hack/hack_push_flag.feature)
@@ -28,9 +27,9 @@ Feature: push branch to remote upon creation
     And I end up on the "new-child" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH    | LOCATION         | MESSAGE     |
-      | main      | local and remote | main_commit |
-      | new-child | local and remote | main_commit |
+      | BRANCH    | LOCATION      | MESSAGE     |
+      | main      | local, remote | main_commit |
+      | new-child | local, remote | main_commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT |
       | new-child | main   |

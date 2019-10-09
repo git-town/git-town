@@ -17,7 +17,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^my repository now has the following commits$`, func(table *gherkin.DataTable) error {
 		fields := gherkintools.TableFields(table)
-		commits, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Commits(fields)
+		commits, err := fs.activeScenarioState.gitEnvironment.Commits(fields)
 		if err != nil {
 			return errors.Wrap(err, "cannot determine commits in the developer repo")
 		}

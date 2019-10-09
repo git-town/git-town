@@ -70,16 +70,15 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// AllBranches provides the names of the local and remote branches in this Git repository.
-func (repo *GitRepository) AllBranches() (result []string, err error) {
-	output, err := repo.Run("git", "branch", "-a")
+// Branches provides the names of the local and remote branches in this Git repository.
+func (repo *GitRepository) Branches() (result []string, err error) {
+	output, err := repo.Run("git", "branch")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot run 'git branch -a' in repo %q", repo.dir)
 	}
 	output = strings.TrimSpace(output)
 	for _, line := range strings.Split(output, "\n") {
 		line = strings.Replace(line, "* ", "", 1)
-		line = strings.Replace(line, "remotes/origin/", "origin/", 1)
 		line = strings.TrimSpace(line)
 		result = append(result, line)
 	}
@@ -136,9 +135,8 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 }
 
 // Commits provides a tabular list of the commits in this Git repository with the given fields.
-func (repo *GitRepository) Commits(fields []string) (result gherkintools.Mortadella, err error) {
-	commitList := NewCommitListBuilder()
-	branches, err := repo.AllBranches()
+func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
+	branches, err := repo.Branches()
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine the Git branches")
 	}
@@ -147,9 +145,9 @@ func (repo *GitRepository) Commits(fields []string) (result gherkintools.Mortade
 		if err != nil {
 			return result, err
 		}
-		commitList.AddAll(commits)
+		result = append(result, commits...)
 	}
-	return commitList.Table(fields), nil
+	return result, nil
 }
 
 // CommitsInBranch provides all commits in the given Git branch.

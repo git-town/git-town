@@ -88,7 +88,6 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 		return errors.Wrap(err, "cannot parse Gherkin table")
 	}
 	for _, commit := range commits {
-		fmt.Println(1111111111, commit.Location)
 		var err error
 		for _, location := range commit.Location {
 			switch location {
@@ -109,14 +108,27 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
-// HasCommits checks whether this repo has the commits in the given Gherkin table.
-// If there are mismatches, the returned error is set.
-func (env GitEnvironment) HasCommits(table *gherkin.DataTable) error {
-	// commits, err := gherkintools.FromGherkinTable(table)
-	// if err != nil {
-	// 	return errors.Wrap(err, "cannot parse Gherkin table")
-	// }
-	return nil
+// Commits provides a table for all commits in this Git environment, containing only the given fields.
+func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadella, err error) {
+	builder := NewCommitListBuilder()
+
+	localCommits, err := env.DeveloperRepo.Commits()
+	if err != nil {
+		return result, errors.Wrap(err, "cannot determine commits in the developer repo")
+	}
+	for _, localCommit := range localCommits {
+		builder.Add(localCommit, "local")
+	}
+
+	remoteCommits, err := env.OriginRepo.Commits()
+	if err != nil {
+		return result, errors.Wrap(err, "cannot determine commits in the origin repo")
+	}
+	for _, remoteCommit := range remoteCommits {
+		builder.Add(remoteCommit, "remote")
+	}
+
+	return builder.Table(fields), nil
 }
 
 // Remove deletes all files used by this GitEnvironment from disk.
