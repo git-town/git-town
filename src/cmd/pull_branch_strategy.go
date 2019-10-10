@@ -35,11 +35,11 @@ for the main branch and perennial branches.`,
 }
 
 func printPullBranchStrategy() {
-	cfmt.Println(git.GetPullBranchStrategy())
+	cfmt.Println(git.Config.GetPullBranchStrategy())
 }
 
 func setPullBranchStrategy(value string) {
-	git.SetPullBranchStrategy(value)
+	git.Config.SetPullBranchStrategy(value)
 }
 
 func init() {

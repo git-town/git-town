@@ -45,7 +45,7 @@ func Run(runState *RunState) {
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				runState.MarkAsUnfinished()
-				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName())) {
+				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.Config.IsMainBranch(git.GetCurrentBranchName())) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
 				SaveRunState(runState)

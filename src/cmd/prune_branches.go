@@ -32,7 +32,7 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func checkPruneBranchesPreconditions() {
-	if git.HasRemote("origin") {
+	if git.Config.HasRemote("origin") {
 		script.Fetch()
 	}
 }
@@ -41,18 +41,18 @@ func getPruneBranchesStepList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
-			result.Append(&steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
+			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config.GetMainBranch()})
 		}
 
-		parent := git.GetParentBranch(branchName)
+		parent := git.Config.GetParentBranch(branchName)
 		if parent != "" {
-			for _, child := range git.GetChildBranches(branchName) {
+			for _, child := range git.Config.GetChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
 
-		if git.IsPerennialBranch(branchName) {
+		if git.Config.IsPerennialBranch(branchName) {
 			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
 		}
 

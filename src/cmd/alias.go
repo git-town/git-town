@@ -64,7 +64,7 @@ func getAliasValue(command string) string {
 
 func removeAlias(command string) {
 	key := getAliasKey(command)
-	previousAlias := git.GetGlobalConfigurationValue(key)
+	previousAlias := git.Config.GetGlobalConfigurationValue(key)
 	if previousAlias == getAliasValue(command) {
 		script.RunCommandSafe("git", "config", "--global", "--unset", key)
 	}

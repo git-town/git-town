@@ -12,10 +12,10 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
+		if git.Config.IsMainBranch(branchName) || git.Config.IsPerennialBranch(branchName) || git.Config.HasParentBranch(branchName) {
 			continue
 		}
-		AskForBranchAncestry(branchName, git.GetMainBranch())
+		AskForBranchAncestry(branchName, git.Config.GetMainBranch())
 		if parentBranchHeaderShown {
 			fmt.Println()
 		}
@@ -26,17 +26,17 @@ func EnsureKnowsParentBranches(branchNames []string) {
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
 	for {
-		parent := git.GetParentBranch(current)
+		parent := git.Config.GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
 			parent = AskForBranchParent(current, defaultBranchName)
 			if parent == perennialBranchOption {
-				git.AddToPerennialBranches(current)
+				git.Config.AddToPerennialBranches(current)
 				break
 			}
-			git.SetParentBranch(current, parent)
+			git.Config.SetParentBranch(current, parent)
 		}
-		if parent == git.GetMainBranch() || git.IsPerennialBranch(parent) {
+		if parent == git.Config.GetMainBranch() || git.Config.IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -71,7 +71,7 @@ var perennialBranchOption = "<none> (perennial branch)"
 func filterOutSelfAndDescendants(branchName string, choices []string) []string {
 	result := []string{}
 	for _, choice := range choices {
-		if choice == branchName || git.IsAncestorBranch(choice, branchName) {
+		if choice == branchName || git.Config.IsAncestorBranch(choice, branchName) {
 			continue
 		}
 		result = append(result, choice)
@@ -82,6 +82,6 @@ func filterOutSelfAndDescendants(branchName string, choices []string) []string {
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cfmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
+		cfmt.Printf(parentBranchHeaderTemplate, git.Config.GetMainBranch())
 	}
 }

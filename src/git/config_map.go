@@ -17,8 +17,8 @@ type ConfigMap struct {
 }
 
 // NewConfigMap returns a new config map
-func NewConfigMap(global bool) *ConfigMap {
-	return &ConfigMap{
+func NewConfigMap(global bool) ConfigMap {
+	return ConfigMap{
 		data:        map[string]string{},
 		global:      global,
 		initialized: false,
