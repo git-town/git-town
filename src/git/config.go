@@ -25,15 +25,18 @@ var Config *Configuration
 type Configuration struct {
 
 	// localConfig is a cache of the Git configuration in the local directory.
-	localConfig ConfigMap
+	localConfig ConfigCache
 
 	// globalConfig is a cache of the global Git configuration
-	globalConfig ConfigMap
+	globalConfig ConfigCache
 }
 
 // NewConfiguration provides Configuration instances.
 func NewConfiguration() *Configuration {
-	return &Configuration{localConfig: NewConfigMap(false), globalConfig: NewConfigMap(true)}
+	return &Configuration{
+		localConfig:  NewConfigCache(false),
+		globalConfig: NewConfigCache(true),
+	}
 }
 
 // AddAlias adds an alias for the given Git Town command.

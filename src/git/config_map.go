@@ -8,17 +8,18 @@ import (
 	"github.com/Originate/git-town/src/command"
 )
 
-// ConfigMap represents the data from a call to
+// ConfigCache represents the data from a call to
 // `git config -l` or `git config -l --global`
-type ConfigMap struct {
+// TODO: move the initialize method to the place where this is used
+type ConfigCache struct {
 	data        map[string]string
 	global      bool
 	initialized bool
 }
 
-// NewConfigMap returns a new config map
-func NewConfigMap(global bool) ConfigMap {
-	return ConfigMap{
+// NewConfigCache returns a new config map
+func NewConfigCache(global bool) ConfigCache {
+	return ConfigCache{
 		data:        map[string]string{},
 		global:      global,
 		initialized: false,
@@ -26,7 +27,7 @@ func NewConfigMap(global bool) ConfigMap {
 }
 
 // KeysMatching returns the keys that match the given regexp
-func (c *ConfigMap) KeysMatching(re *regexp.Regexp) (result []string) {
+func (c *ConfigCache) KeysMatching(re *regexp.Regexp) (result []string) {
 	c.initialize()
 	for key := range c.data {
 		if re.MatchString(key) {
@@ -37,31 +38,31 @@ func (c *ConfigMap) KeysMatching(re *regexp.Regexp) (result []string) {
 }
 
 // Delete deletes the given key
-func (c *ConfigMap) Delete(key string) {
+func (c *ConfigCache) Delete(key string) {
 	c.initialize()
 	delete(c.data, key)
 }
 
 // Get returns the value for the given key
-func (c *ConfigMap) Get(key string) string {
+func (c *ConfigCache) Get(key string) string {
 	c.initialize()
 	return c.data[key]
 }
 
 // Set updates a key/value pair of the data
-func (c *ConfigMap) Set(key, value string) {
+func (c *ConfigCache) Set(key, value string) {
 	c.initialize()
 	c.data[key] = value
 }
 
 // Reset resets the configuration map
-func (c *ConfigMap) Reset() {
+func (c *ConfigCache) Reset() {
 	c.initialized = false
 }
 
 // Helpers
 
-func (c *ConfigMap) initialize() {
+func (c *ConfigCache) initialize() {
 	if c.initialized {
 		return
 	}
