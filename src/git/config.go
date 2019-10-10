@@ -31,12 +31,15 @@ type Configuration struct {
 	globalConfig ConfigCache
 }
 
-// NewConfiguration provides Configuration instances.
-func NewConfiguration() *Configuration {
-	return &Configuration{
+// NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
+func NewConfiguration(dir string) *Configuration {
+	result := &Configuration{
 		localConfig:  NewConfigCache(false),
 		globalConfig: NewConfigCache(true),
 	}
+	result.initializeCache(false, result.localConfig)
+	result.initializeCache(true, result.globalConfig)
+	return result
 }
 
 // AddAlias adds an alias for the given Git Town command.
@@ -333,6 +336,29 @@ func (c *Configuration) getConfigurationKeysMatching(toMatch string) (result []s
 	return c.localConfig.KeysMatching(re)
 }
 
+func (c *Configuration) initializeCache(global bool, cache ConfigCache) {
+	cmdArgs := []string{"git", "config", "-lz"}
+	if global {
+		cmdArgs = append(cmdArgs, "--global")
+	}
+	cmd := command.New(cmdArgs...)
+	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
+		return
+	}
+	exit.If(cmd.Err())
+	if cmd.Output() == "" {
+		return
+	}
+	for _, line := range strings.Split(cmd.Output(), "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
+		key, value := parts[0], parts[1]
+		cache.data[key] = value
+	}
+}
+
 func (c *Configuration) setConfigurationValue(key, value string) {
 	command.New("git", "config", key, value).Run()
 	c.localConfig.Set(key, value)
@@ -365,5 +391,5 @@ func (c *Configuration) getRemotes() []string {
 // Init
 
 func init() {
-	Config = NewConfiguration()
+	Config = NewConfiguration(".")
 }

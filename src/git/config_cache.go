@@ -2,49 +2,20 @@ package git
 
 import (
 	"regexp"
-	"strings"
-
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/command"
 )
 
 // ConfigCache represents the data from a call to
 // `git config -l` or `git config -l --global`
 // TODO: move the initialize method to the place where this is used
 type ConfigCache struct {
-	data        map[string]string
-	global      bool
-	initialized bool
+	data map[string]string
 }
 
 // NewConfigCache returns a new config map
 func NewConfigCache(global bool) ConfigCache {
-	result := ConfigCache{
-		data:        map[string]string{},
-		global:      global,
-		initialized: false,
+	return ConfigCache{
+		data: map[string]string{},
 	}
-	cmdArgs := []string{"git", "config", "-lz"}
-	if global {
-		cmdArgs = append(cmdArgs, "--global")
-	}
-	cmd := command.New(cmdArgs...)
-	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
-		return result
-	}
-	exit.If(cmd.Err())
-	if cmd.Output() == "" {
-		return result
-	}
-	for _, line := range strings.Split(cmd.Output(), "\x00") {
-		if len(line) == 0 {
-			continue
-		}
-		parts := strings.SplitN(line, "\n", 2)
-		key, value := parts[0], parts[1]
-		result.data[key] = value
-	}
-	return result
 }
 
 // KeysMatching returns the keys that match the given regexp
