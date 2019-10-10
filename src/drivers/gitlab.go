@@ -51,7 +51,7 @@ func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *gitlabCodeHostingDriver) GetAPITokenKey() string {
+func (d *gitlabCodeHostingDriver) GetAPIToken() string {
 	return ""
 }
 

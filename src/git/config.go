@@ -71,12 +71,27 @@ func (c *Configuration) GetAncestorBranches(branchName string) (result []string)
 	}
 }
 
+// GetCodeHostingDriver provides the type of driver to use to talk to the code hosting service.
+func (c *Configuration) GetCodeHostingDriver() string {
+	return c.localConfig.Get("git-town.code-hosting-driver")
+}
+
+// GetCodeHostingOriginHostname provides the hostname of the code hosting server to use.
+func (c *Configuration) GetCodeHostingOriginHostname() string {
+	return c.localConfig.Get("git-town.code-hosting-origin-hostname")
+}
+
+// GetGithubAPIToken provides the API token to talk to the GitHub API.
+func (c *Configuration) GetGithubAPIToken() string {
+	return c.localConfig.Get("git-town.github-token")
+}
+
 // GetParentBranchMap returns a map from branch name to its parent branch
 func (c *Configuration) GetParentBranchMap() map[string]string {
 	result := map[string]string{}
 	for _, key := range c.getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := c.GetConfigurationValue(key)
+		parent := c.localConfig.Get(key)
 		result[child] = parent
 	}
 	return result
@@ -86,20 +101,13 @@ func (c *Configuration) GetParentBranchMap() map[string]string {
 // is a parent.
 func (c *Configuration) GetChildBranches(branchName string) (result []string) {
 	for _, key := range c.getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := c.GetConfigurationValue(key)
+		parent := c.localConfig.Get(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
 		}
 	}
 	return
-}
-
-// GetConfigurationValue returns the given configuration value,
-// from either global or local Git configuration
-// TODO: replace this with the proper named method?
-func (c *Configuration) GetConfigurationValue(key string) (result string) {
-	return c.localConfig.Get(key)
 }
 
 // GetGlobalConfigurationValue returns the global git configuration value for the given key
@@ -109,17 +117,17 @@ func (c *Configuration) GetGlobalConfigurationValue(key string) string {
 
 // GetMainBranch returns the name of the main branch.
 func (c *Configuration) GetMainBranch() string {
-	return c.GetConfigurationValue("git-town.main-branch-name")
+	return c.localConfig.Get("git-town.main-branch-name")
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
 func (c *Configuration) GetParentBranch(branchName string) string {
-	return c.GetConfigurationValue("git-town-branch." + branchName + ".parent")
+	return c.localConfig.Get("git-town-branch." + branchName + ".parent")
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
 func (c *Configuration) GetPerennialBranches() []string {
-	result := c.GetConfigurationValue("git-town.perennial-branch-names")
+	result := c.localConfig.Get("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -135,7 +143,7 @@ func (c *Configuration) GetPullBranchStrategy() string {
 // In tests this value can be stubbed.
 func (c *Configuration) GetRemoteOriginURL() string {
 	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := c.GetConfigurationValue("git-town.testing.remote-url")
+		mockRemoteURL := c.localConfig.Get("git-town.testing.remote-url")
 		if mockRemoteURL != "" {
 			return mockRemoteURL
 		}
@@ -146,6 +154,11 @@ func (c *Configuration) GetRemoteOriginURL() string {
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func (c *Configuration) GetRemoteUpstreamURL() string {
 	return command.New("git", "remote", "get-url", "upstream").Output()
+}
+
+// GetSyncUpstream indicates whether this repository is configured to sync to its upstream remote.
+func (c *Configuration) GetSyncUpstream() bool {
+	return c.localConfig.Get("git-town.sync-upstream") != "false"
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -292,7 +305,7 @@ func (c *Configuration) getGlobalConfigurationValueWithDefault(key, defaultValue
 }
 
 func (c *Configuration) getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := c.GetConfigurationValue(key)
+	value := c.localConfig.Get(key)
 	if value == "" {
 		return defaultValue
 	}

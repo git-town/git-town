@@ -52,7 +52,7 @@ func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *bitbucketCodeHostingDriver) GetAPITokenKey() string {
+func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
 	return ""
 }
 
