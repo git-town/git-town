@@ -116,6 +116,13 @@ var _ = Describe("OutputContainsLine", func() {
 	})
 })
 
+var _ = Describe("NewInDir", func() {
+	It("returns a new instance with the dir set to the given value", func() {
+		cmd := command.NewInDir("dir", "foo", "bar")
+		Expect(cmd.Dir()).To(Equal("dir"))
+	})
+})
+
 var _ = Describe("Err", func() {
 
 	Context("command not found", func() {

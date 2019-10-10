@@ -27,6 +27,9 @@ type Configuration struct {
 	// localConfigCache is a cache of the Git configuration in the local directory.
 	localConfigCache map[string]string
 
+	// localDir contains the directory in which the local Git repo exists.
+	localDir string
+
 	// globalConfigCache is a cache of the global Git configuration
 	globalConfigCache map[string]string
 }
@@ -342,10 +345,13 @@ func (c *Configuration) getConfigurationKeysMatching(toMatch string) (result []s
 
 func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 	cmdArgs := []string{"git", "config", "-lz"}
+	var cmd *command.Command
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
+		cmd = command.New(cmdArgs...)
+	} else {
+		cmd = command.NewInDir(c.localDir, cmdArgs...)
 	}
-	cmd := command.New(cmdArgs...)
 	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
 		return
 	}
@@ -372,6 +378,7 @@ func (c *Configuration) setGlobalConfigurationValue(key, value string) {
 	command.New("git", "config", "--global", key, value).Run()
 	c.globalConfigCache[key] = value
 	c.localConfigCache = map[string]string{} // Need to reset config in case it was inheriting
+	c.initializeCache(false, c.localConfigCache)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.

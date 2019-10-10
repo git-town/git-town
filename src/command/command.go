@@ -13,6 +13,7 @@ import (
 type Command struct {
 	name   string
 	args   []string
+	dir    string
 	ran    bool
 	err    error
 	output string
@@ -21,6 +22,18 @@ type Command struct {
 // New creates a new Command instance
 func New(command ...string) *Command {
 	return &Command{name: command[0], args: command[1:]}
+}
+
+// NewInDir creates a new Command instance that runs in the given directory.
+func NewInDir(dir string, command ...string) *Command {
+	result := New(command...)
+	result.dir = dir
+	return result
+}
+
+// Dir provides the directory in which this command is supposed to run.
+func (c *Command) Dir() string {
+	return c.dir
 }
 
 // Run runs this command.
@@ -33,6 +46,9 @@ func (c *Command) Run() {
 
 	logRun(c)
 	subProcess := exec.Command(c.name, c.args...) // #nosec
+	if c.dir != "" {
+		subProcess.Dir = c.dir
+	}
 	output, err := subProcess.CombinedOutput()
 	c.output = stripansi.Strip(strings.TrimSpace(string(output)))
 	c.err = err
