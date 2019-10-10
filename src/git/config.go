@@ -341,7 +341,7 @@ func (c *Configuration) setConfigurationValue(key, value string) {
 func (c *Configuration) setGlobalConfigurationValue(key, value string) {
 	command.New("git", "config", "--global", key, value).Run()
 	c.globalConfig.Set(key, value)
-	c.localConfig.Reset() // Need to reset config in case it was inheriting
+	c.localConfig = NewConfigCache(false) // Need to reset config in case it was inheriting
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
