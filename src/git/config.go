@@ -36,6 +36,14 @@ func NewConfiguration() *Configuration {
 	return &Configuration{localConfig: NewConfigMap(false), globalConfig: NewConfigMap(true)}
 }
 
+// AddAlias adds an alias for the given Git Town command.
+func (c *Configuration) AddAlias(cmd string) {
+	key := "alias." + cmd
+	value := "town " + cmd
+	c.globalConfig.Set(key, value)
+	command.New("git", "config", "--global", key, value).Output()
+}
+
 // AddToPerennialBranches adds the given branch as a perennial branch
 func (c *Configuration) AddToPerennialBranches(branchName string) {
 	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
@@ -108,11 +116,6 @@ func (c *Configuration) GetChildBranches(branchName string) (result []string) {
 		}
 	}
 	return
-}
-
-// GetGlobalConfigurationValue returns the global git configuration value for the given key
-func (c *Configuration) GetGlobalConfigurationValue(key string) string {
-	return c.globalConfig.Get(key)
 }
 
 // GetMainBranch returns the name of the main branch.
@@ -224,6 +227,15 @@ func (c *Configuration) IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
+// RemoveAlias removes the global alias for the given Git Town command.
+func (c *Configuration) RemoveAlias(cmd string) {
+	key := "alias." + cmd
+	previousAlias := c.globalConfig.Get(key)
+	if previousAlias == "town "+cmd {
+		command.New("git", "config", "--global", "--unset", key).Output()
+	}
+}
+
 // RemoveAllConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveAllConfiguration() {
 	command.New("git", "config", "--remove-section", "git-town").Output()
@@ -297,7 +309,7 @@ func (c *Configuration) UpdateGlobalShouldNewBranchPush(value bool) {
 // Helpers
 
 func (c *Configuration) getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := c.GetGlobalConfigurationValue(key)
+	value := c.globalConfig.Get(key)
 	if value == "" {
 		return defaultValue
 	}
