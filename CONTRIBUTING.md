@@ -85,6 +85,28 @@ GitManager instance that is shared by all threads.
   - your pull request for the feature that requires the new library should
     contain the updated `Gopkg.*` files and vendor folder
 
+## Debugging
+
+To debug a Go-based feature test in VSCode:
+
+- compile a binary for Godog: `godog -o specs`
+- open `launch.json`: Debug > Open Configurations
+- add this configuration
+
+  ```
+  {
+    "name": "Godog",
+    "type": "go",
+    "request": "launch",
+    "mode": "exec",
+    "program": "${workspaceFolder}/specs",
+    "env": {},
+    "args": [
+      "${workspaceFolder}/features/git-town-append/hack-push-flag.feature:17"
+    ]
+  }
+  ```
+
 ## Command documentation
 
 Every Git Town command

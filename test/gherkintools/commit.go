@@ -51,7 +51,6 @@ func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 
 // Set assigns the given value to the property with the given name.
 func (commit *Commit) Set(name, value string) (err error) {
-	fmt.Printf("setting %q to %q\n", name, value)
 	switch name {
 	case "BRANCH":
 		commit.Branch = value

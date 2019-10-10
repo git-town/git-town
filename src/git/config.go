@@ -38,6 +38,7 @@ type Configuration struct {
 func NewConfiguration(dir string) *Configuration {
 	result := &Configuration{
 		localConfigCache:  map[string]string{},
+		localDir:          dir,
 		globalConfigCache: map[string]string{},
 	}
 	result.initializeCache(false, result.localConfigCache)
@@ -350,16 +351,18 @@ func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 		cmdArgs = append(cmdArgs, "--global")
 		cmd = command.New(cmdArgs...)
 	} else {
+		cmdArgs = append(cmdArgs, "--local")
 		cmd = command.NewInDir(c.localDir, cmdArgs...)
 	}
 	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
 		return
 	}
 	exit.If(cmd.Err())
-	if cmd.Output() == "" {
+	output := cmd.Output()
+	if output == "" {
 		return
 	}
-	for _, line := range strings.Split(cmd.Output(), "\x00") {
+	for _, line := range strings.Split(output, "\x00") {
 		if len(line) == 0 {
 			continue
 		}
