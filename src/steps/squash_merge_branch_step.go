@@ -32,16 +32,16 @@ func (step *SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
 // Run executes this step.
 func (step *SquashMergeBranchStep) Run() error {
 	script.SquashMerge(step.BranchName)
-	commitCmd := []string{"git", "commit"}
+	commitArgs := []string{"commit"}
 	if step.CommitMessage != "" {
-		commitCmd = append(commitCmd, "-m", step.CommitMessage)
+		commitArgs = append(commitArgs, "-m", step.CommitMessage)
 	}
 	author := prompt.GetSquashCommitAuthor(step.BranchName)
 	if author != git.GetLocalAuthor() {
-		commitCmd = append(commitCmd, "--author", author)
+		commitArgs = append(commitArgs, "--author", author)
 	}
 	git.CommentOutSquashCommitMessage("")
-	return script.RunCommand(commitCmd...)
+	return script.RunCommand("git", commitArgs...)
 }
 
 // ShouldAutomaticallyAbortOnError returns whether this step should cause the command to

@@ -54,7 +54,7 @@ func (morta *Mortadella) Equal(table *gherkin.DataTable) (diff string, errorCoun
 	}
 	gherk := NewMortadellaFromGherkin(table)
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(morta.String(), gherk.String(), false)
+	diffs := dmp.DiffMain(gherk.String(), morta.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}

@@ -10,34 +10,40 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	command []string
+	command string
+	args    []string
 	err     error
 	output  string
 }
 
 // Run executes the command given in argv notation.
-func Run(argv ...string) *Result {
-	return RunInDir("", argv...)
+func Run(cmd string, args ...string) *Result {
+	return RunInDir("", cmd, args...)
 }
 
 // RunInDir executes the given command in the given directory.
-func RunInDir(dir string, argv ...string) *Result {
-	name, args := argv[0], argv[1:]
-	logRun(argv...)
-	subProcess := exec.Command(name, args...) // #nosec
+func RunInDir(dir string, cmd string, args ...string) *Result {
+	logRun(cmd, args...)
+	subProcess := exec.Command(cmd, args...) // #nosec
 	if dir != "." {
 		subProcess.Dir = dir
 	}
 	output, err := subProcess.CombinedOutput()
 	return &Result{
-		command: argv,
+		command: cmd,
+		args:    args,
 		err:     err,
 		output:  stripansi.Strip(strings.TrimSpace(string(output))),
 	}
 }
 
+// Args provids the arguments used when running the command.
+func (c *Result) Args() []string {
+	return c.args
+}
+
 // Command provides the command run that led to this result.
-func (c *Result) Command() []string {
+func (c *Result) Command() string {
 	return c.command
 }
 

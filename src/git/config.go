@@ -356,14 +356,14 @@ func (c *Configuration) getConfigurationKeysMatching(toMatch string) (result []s
 }
 
 func (c *Configuration) initializeCache(global bool, cache map[string]string) {
-	cmdArgs := []string{"git", "config", "-lz"}
+	cmdArgs := []string{"config", "-lz"}
 	var res *command.Result
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
-		res = command.Run(cmdArgs...)
+		res = command.Run("git", cmdArgs...)
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
-		res = command.RunInDir(c.localDir, cmdArgs...)
+		res = command.RunInDir(c.localDir, "git", cmdArgs...)
 	}
 	if res.Err() != nil && strings.Contains(res.Output(), "No such file or directory") {
 		return
