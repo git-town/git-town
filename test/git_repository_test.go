@@ -32,7 +32,7 @@ func TestCloneGitRepository(t *testing.T) {
 }
 
 func TestGitRepositoryBranches(t *testing.T) {
-	repo := createTestGitRepo(t)
+	repo := createTestRepo(t)
 	assert.Nil(t, repo.CreateBranch("branch3"), "cannot create branch3")
 	assert.Nil(t, repo.CreateBranch("branch2"), "cannot create branch2")
 	assert.Nil(t, repo.CreateBranch("branch1"), "cannot create branch1")
@@ -43,14 +43,12 @@ func TestGitRepositoryBranches(t *testing.T) {
 }
 
 func TestGitRepositoryCreateFile(t *testing.T) {
-	dir := CreateTempDir(t)
-	repo, err := InitGitRepository(dir)
-	assert.Nil(t, err, "cannot initialize Git repo")
+	repo := createTestRepo(t)
 
-	err = repo.CreateFile("filename", "content")
+	err := repo.CreateFile("filename", "content")
 
 	assert.Nil(t, err, "cannot create file in repo")
-	content, err := ioutil.ReadFile(path.Join(dir, "filename"))
+	content, err := ioutil.ReadFile(path.Join(repo.Dir, "filename"))
 	assert.Nil(t, err, "cannot read file")
 	assert.Equal(t, "content", string(content))
 }
@@ -58,7 +56,7 @@ func TestGitRepositoryCreateFile(t *testing.T) {
 // HELPERS
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
-func createTestGitRepo(t *testing.T) GitRepository {
+func createTestRepo(t *testing.T) GitRepository {
 	dir := CreateTempDir(t)
 	repo, err := InitGitRepository(dir)
 	assert.Nil(t, err, "cannot initialize Git repow")
