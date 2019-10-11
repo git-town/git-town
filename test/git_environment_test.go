@@ -18,8 +18,7 @@ func TestNewStandardGitEnvironment(t *testing.T) {
 	assertIsGitRepo(t, path.Join(gitEnvRootDir, "origin"))
 	branch, err := result.OriginRepo.CurrentBranch()
 	assert.Nil(t, err)
-	// the origin should be at the master branch so that we can push to it
-	assert.Equal(t, "master", branch)
+	assert.Equal(t, "master", branch, "the origin should be at the master branch so that we can push to it")
 
 	// verify the developer repo
 	assertIsGitRepo(t, path.Join(gitEnvRootDir, "developer"))
