@@ -32,6 +32,9 @@ type Configuration struct {
 
 	// globalConfigCache is a cache of the global Git configuration
 	globalConfigCache map[string]string
+
+	remotes            []string
+	remotesInitialized bool
 }
 
 // Config provides the current configuration.
@@ -399,14 +402,10 @@ func (c *Configuration) removeLocalConfigurationValue(key string) {
 	delete(c.localConfigCache, key)
 }
 
-// Remotes are cached in order to minimize the number of git commands run
-var remotes []string
-var remotesInitialized bool
-
 func (c *Configuration) getRemotes() []string {
-	if !remotesInitialized {
-		remotes = command.Run("git", "remote").OutputLines()
-		remotesInitialized = true
+	if !c.remotesInitialized {
+		c.remotes = command.Run("git", "remote").OutputLines()
+		c.remotesInitialized = true
 	}
-	return remotes
+	return c.remotes
 }
