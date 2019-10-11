@@ -11,7 +11,7 @@ import (
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return command.New("git", "log", Config.GetMainBranch()+".."+branchName).Output() != ""
+	return command.Run("git", "log", Config.GetMainBranch()+".."+branchName).Output() != ""
 }
 
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
@@ -59,7 +59,7 @@ func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, in
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically
 func GetLocalBranches() (result []string) {
-	for _, line := range command.New("git", "branch").OutputLines() {
+	for _, line := range command.Run("git", "branch").OutputLines() {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		result = append(result, line)
@@ -82,7 +82,7 @@ func GetLocalBranchesWithoutMain() (result []string) {
 // GetLocalBranchesWithDeletedTrackingBranches returns the names of all branches
 // whose remote tracking branches have been deleted
 func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
-	for _, line := range command.New("git", "branch", "-vv").OutputLines() {
+	for _, line := range command.Run("git", "branch", "-vv").OutputLines() {
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branchName := parts[0]
@@ -111,7 +111,7 @@ func GetLocalBranchesWithMainBranchFirst() (result []string) {
 
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch
 func GetPreviouslyCheckedOutBranch() string {
-	cmd := command.New("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	cmd := command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
 	if cmd.Err() != nil {
 		return ""
 	}
@@ -127,7 +127,7 @@ func GetTrackingBranchName(branchName string) string {
 // HasBranch returns whether the repository contains a branch with the given name.
 // The branch does not have to be present on the local repository.
 func HasBranch(branchName string) bool {
-	for _, line := range command.New("git", "branch", "-a").OutputLines() {
+	for _, line := range command.Run("git", "branch", "-a").OutputLines() {
 		line = strings.Trim(line, "* ")
 		line = strings.TrimSpace(line)
 		line = strings.Replace(line, "remotes/origin/", "", 1)
@@ -170,7 +170,7 @@ func IsBranchInSync(branchName string) bool {
 // contains commits that have not been pushed to the remote.
 func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
-	cmd := command.New("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
+	cmd := command.Run("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
 	return cmd.Output() != ""
 }
 
@@ -182,7 +182,7 @@ var remoteBranchesInitialized bool
 
 func getRemoteBranches() []string {
 	if !remoteBranchesInitialized {
-		remoteBranches = command.New("git", "branch", "-r").OutputLines()
+		remoteBranches = command.Run("git", "branch", "-r").OutputLines()
 		remoteBranchesInitialized = true
 	}
 	return remoteBranches

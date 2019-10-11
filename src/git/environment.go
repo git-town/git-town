@@ -35,7 +35,7 @@ var isRepositoryInitialized bool
 // IsRepository returns whether or not the current directory is in a repository
 func IsRepository() bool {
 	if !isRepositoryInitialized {
-		isRepository = command.New("git", "rev-parse").Err() == nil
+		isRepository = command.Run("git", "rev-parse").Err() == nil
 		isRepositoryInitialized = true
 	}
 	return isRepository
