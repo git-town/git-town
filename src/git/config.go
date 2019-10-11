@@ -198,8 +198,7 @@ func (c *Configuration) GetURLHostname(url string) string {
 // GetURLRepositoryName returns the repository name contains within the given Git URL.
 func (c *Configuration) GetURLRepositoryName(url string) string {
 	hostname := c.GetURLHostname(url)
-	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
-	exit.IfWrap(err, "Error compiling repository name regular expression")
+	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
 	matches := repositoryNameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
