@@ -9,7 +9,6 @@ import (
 
 func TestNewStandardGitEnvironment(t *testing.T) {
 	gitEnvRootDir := CreateTempDir(t)
-	_, err := NewStandardGitEnvironment(gitEnvRootDir)
 
 	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 
