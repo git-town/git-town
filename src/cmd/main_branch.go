@@ -31,7 +31,7 @@ func printMainBranch() {
 
 func setMainBranch(branchName string) {
 	git.EnsureHasBranch(branchName)
-	git.Config.SetMainBranch(branchName)
+	git.Config().SetMainBranch(branchName)
 }
 
 func init() {

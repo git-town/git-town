@@ -35,9 +35,9 @@ Note that this can conflict with other tools that also define additional Git com
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
-				git.Config.AddAlias(command)
+				git.Config().AddAlias(command)
 			} else {
-				git.Config.RemoveAlias(command)
+				git.Config().RemoveAlias(command)
 			}
 		}
 	},

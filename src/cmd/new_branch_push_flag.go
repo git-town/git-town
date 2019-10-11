@@ -34,7 +34,7 @@ if and only if "new-branch-push-flag" is true. The default value is false.`,
 
 func printNewBranchPushFlag() {
 	if globalFlag {
-		cfmt.Println(git.Config.GetGlobalNewBranchPushFlag())
+		cfmt.Println(git.Config().GetGlobalNewBranchPushFlag())
 	} else {
 		cfmt.Println(git.GetPrintableNewBranchPushFlag())
 	}
@@ -42,9 +42,9 @@ func printNewBranchPushFlag() {
 
 func setNewBranchPushFlag(value bool) {
 	if globalFlag {
-		git.Config.UpdateGlobalShouldNewBranchPush(value)
+		git.Config().UpdateGlobalShouldNewBranchPush(value)
 	} else {
-		git.Config.UpdateShouldNewBranchPush(value)
+		git.Config().UpdateShouldNewBranchPush(value)
 	}
 }
 

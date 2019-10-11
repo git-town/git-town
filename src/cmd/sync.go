@@ -54,7 +54,7 @@ This can be disabled with "git config git-town.sync-upstream false".`,
 }
 
 func getSyncConfig() (result syncConfig) {
-	if git.Config.HasRemote("origin") && !git.IsOffline() {
+	if git.Config().HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
@@ -65,8 +65,8 @@ func getSyncConfig() (result syncConfig) {
 		result.ShouldPushTags = true
 	} else {
 		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(git.Config.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
-		result.ShouldPushTags = !git.Config.IsFeatureBranch(result.InitialBranch)
+		result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+		result.ShouldPushTags = !git.Config().IsFeatureBranch(result.InitialBranch)
 	}
 	return
 }
@@ -76,7 +76,7 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.Config.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
+	if git.Config().HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
 		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

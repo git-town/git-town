@@ -17,8 +17,8 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-// Config provides access to the Git Town configuration.
-var Config *Configuration
+// config provides access to the Git Town configuration.
+var config *Configuration
 
 // Configuration manages the Git Town configuration,
 // stored in Git metadata in the local repo and in the global Git configuration.
@@ -32,6 +32,14 @@ type Configuration struct {
 
 	// globalConfigCache is a cache of the global Git configuration
 	globalConfigCache map[string]string
+}
+
+// Config provides the current configuration.
+func Config() *Configuration {
+	if config == nil {
+		config = NewConfiguration(".")
+	}
+	return config
 }
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
@@ -400,10 +408,4 @@ func (c *Configuration) getRemotes() []string {
 		remotesInitialized = true
 	}
 	return remotes
-}
-
-// Init
-
-func init() {
-	Config = NewConfiguration(".")
 }

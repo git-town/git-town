@@ -10,7 +10,7 @@ type DeleteParentBranchStep struct {
 
 // CreateUndoStepBeforeRun returns the undo step for this step before it is run.
 func (step *DeleteParentBranchStep) CreateUndoStepBeforeRun() Step {
-	parent := git.Config.GetParentBranch(step.BranchName)
+	parent := git.Config().GetParentBranch(step.BranchName)
 	if parent == "" {
 		return &NoOpStep{}
 	}
@@ -19,6 +19,6 @@ func (step *DeleteParentBranchStep) CreateUndoStepBeforeRun() Step {
 
 // Run executes this step.
 func (step *DeleteParentBranchStep) Run() error {
-	git.Config.DeleteParentBranch(step.BranchName)
+	git.Config().DeleteParentBranch(step.BranchName)
 	return nil
 }

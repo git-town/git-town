@@ -9,7 +9,7 @@ import (
 
 // IsOffline returns whether Git Town is currently in offline mode
 func IsOffline() bool {
-	return util.StringToBool(Config.getConfigurationValueWithDefault("git-town.offline", "false"))
+	return util.StringToBool(Config().getConfigurationValueWithDefault("git-town.offline", "false"))
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode

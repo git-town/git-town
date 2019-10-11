@@ -10,7 +10,7 @@ import (
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
 func EnsureIsConfigured() {
-	if git.Config.GetMainBranch() == "" {
+	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		ConfigureMainBranch()
@@ -23,9 +23,9 @@ func ConfigureMainBranch() {
 	newMainBranch := askForBranch(askForBranchOptions{
 		branchNames:       git.GetLocalBranches(),
 		prompt:            getMainBranchPrompt(),
-		defaultBranchName: git.Config.GetMainBranch(),
+		defaultBranchName: git.Config().GetMainBranch(),
 	})
-	git.Config.SetMainBranch(newMainBranch)
+	git.Config().SetMainBranch(newMainBranch)
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches
@@ -37,16 +37,16 @@ func ConfigurePerennialBranches() {
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
 		prompt:             getPerennialBranchesPrompt(),
-		defaultBranchNames: git.Config.GetPerennialBranches(),
+		defaultBranchNames: git.Config().GetPerennialBranches(),
 	})
-	git.Config.SetPerennialBranches(newPerennialBranches)
+	git.Config().SetPerennialBranches(newPerennialBranches)
 }
 
 // Helpers
 
 func getMainBranchPrompt() (result string) {
 	result += "Please specify the main development branch:"
-	currentMainBranch := git.Config.GetMainBranch()
+	currentMainBranch := git.Config().GetMainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)
@@ -56,7 +56,7 @@ func getMainBranchPrompt() (result string) {
 
 func getPerennialBranchesPrompt() (result string) {
 	result += "Please specify perennial branches:"
-	currentPerennialBranches := git.Config.GetPerennialBranches()
+	currentPerennialBranches := git.Config().GetPerennialBranches()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)

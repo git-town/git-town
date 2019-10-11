@@ -46,7 +46,7 @@ See "sync" for information regarding remote upstream.`,
 func getAppendConfig(args []string) (result appendConfig) {
 	result.ParentBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.Config.HasRemote("origin") && !git.IsOffline() {
+	if git.Config().HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)

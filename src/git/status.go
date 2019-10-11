@@ -45,7 +45,7 @@ func HasOpenChanges() bool {
 // HasShippableChanges returns whether the supplied branch has an changes
 // not currently on the main branchName
 func HasShippableChanges(branchName string) bool {
-	return command.Run("git", "diff", Config.GetMainBranch()+".."+branchName).Output() != ""
+	return command.Run("git", "diff", Config().GetMainBranch()+".."+branchName).Output() != ""
 }
 
 // IsMergeInProgress returns whether the local repository is in the middle of

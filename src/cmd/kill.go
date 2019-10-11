@@ -51,14 +51,14 @@ func getKillConfig(args []string) (result killConfig) {
 		result.TargetBranch = args[0]
 	}
 
-	git.Config.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
+	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
 
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if git.Config.HasRemote("origin") && !git.IsOffline() {
+	if git.Config().HasRemote("origin") && !git.IsOffline() {
 		script.Fetch()
 	}
 
@@ -72,7 +72,7 @@ func getKillConfig(args []string) (result killConfig) {
 func getKillStepList(config killConfig) (result steps.StepList) {
 	switch {
 	case config.IsTargetBranchLocal:
-		targetBranchParent := git.Config.GetParentBranch(config.TargetBranch)
+		targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
@@ -83,7 +83,7 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range git.Config.GetChildBranches(config.TargetBranch) {
+		for _, child := range git.Config().GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
