@@ -25,7 +25,7 @@ func Run(cmd string, args ...string) *Result {
 func RunInDir(dir string, cmd string, args ...string) *Result {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
-	if dir != "." {
+	if dir != "" {
 		subProcess.Dir = dir
 	}
 	output, err := subProcess.CombinedOutput()

@@ -40,7 +40,7 @@ type Configuration struct {
 // Config provides the current configuration.
 func Config() *Configuration {
 	if config == nil {
-		config = NewConfiguration(".")
+		config = NewConfiguration("")
 	}
 	return config
 }

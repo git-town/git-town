@@ -68,7 +68,7 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
 }
 
-// Run runs the given command with the given argv-like arguments
+// Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
