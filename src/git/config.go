@@ -55,11 +55,11 @@ func NewConfiguration(dir string) *Configuration {
 }
 
 // AddAlias adds an alias for the given Git Town command.
-func (c *Configuration) AddAlias(cmd string) {
+func (c *Configuration) AddAlias(cmd string) *command.Result {
 	key := "alias." + cmd
 	value := "town " + cmd
 	c.globalConfigCache[key] = value
-	command.Run("git", "config", "--global", key, value).Output()
+	return command.Run("git", "config", "--global", key, value)
 }
 
 // AddToPerennialBranches adds the given branch as a perennial branch

@@ -10,8 +10,9 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	err    error
-	output string
+	commandRun []string
+	err        error
+	output     string
 }
 
 // Run executes the command given in argv notation.
@@ -28,7 +29,16 @@ func RunInDir(dir string, argv ...string) *Result {
 		subProcess.Dir = dir
 	}
 	output, err := subProcess.CombinedOutput()
-	return &Result{err: err, output: stripansi.Strip(strings.TrimSpace(string(output)))}
+	return &Result{
+		commandRun: argv,
+		err:        err,
+		output:     stripansi.Strip(strings.TrimSpace(string(output))),
+	}
+}
+
+// CommandRun provides the command run that led to this result.
+func (c *Result) CommandRun() []string {
+	return c.commandRun
 }
 
 // Output returns the output of this command.

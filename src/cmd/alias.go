@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/src/git"
+	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,8 @@ Note that this can conflict with other tools that also define additional Git com
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
-				git.Config().AddAlias(command)
+				result := git.Config().AddAlias(command)
+				script.PrintCommand(result.CommandRun()...)
 			} else {
 				git.Config().RemoveAlias(command)
 			}
