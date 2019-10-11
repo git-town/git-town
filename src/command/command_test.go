@@ -1,6 +1,10 @@
 package command_test
 
 import (
+	"io/ioutil"
+	"os"
+	"path"
+
 	"github.com/Originate/git-town/src/command"
 
 	. "github.com/onsi/ginkgo"
@@ -50,10 +54,15 @@ var _ = Describe("OutputContainsLine", func() {
 	})
 })
 
-var _ = Describe("NewInDir", func() {
-	It("returns a new instance with the dir set to the given value", func() {
-		cmd := command.NewInDir("dir", "foo", "bar")
-		Expect(cmd.Dir()).To(Equal("dir"))
+var _ = Describe("RunInDir", func() {
+	It("runs in the given directory", func() {
+		dir, err := ioutil.TempDir("", "")
+		Expect(err).To(BeNil())
+		dirPath := path.Join(dir, "mydir")
+		os.Mkdir(dirPath, 0744)
+		ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
+		res := command.RunInDir(dirPath, "ls", "-1")
+		Expect(res.Output()).To(Equal("one"))
 	})
 })
 
