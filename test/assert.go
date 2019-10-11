@@ -52,8 +52,6 @@ func assertIsNormalGitRepo(t *testing.T, dir string) {
 	assertFolderExists(t, dir)
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
-	testData := []string{".git"}
-	for i, expected := range testData {
-		assert.Equal(t, expected, entries[i].Name())
-	}
+	assert.Equal(t, 1, len(entries))
+	assert.Equal(t, ".git", entries[0].Name())
 }

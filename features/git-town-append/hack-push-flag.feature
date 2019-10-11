@@ -36,7 +36,7 @@ Feature: push branch to remote upon creation
 
 
   Scenario: Undo
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
       | BRANCH    | COMMAND                    |
       | new-child | git add -A                 |
@@ -47,6 +47,6 @@ Feature: push branch to remote upon creation
       |           | git stash pop              |
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH | LOCATION         | MESSAGE     |
-      | main   | local and remote | main_commit |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main_commit |

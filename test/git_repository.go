@@ -71,7 +71,7 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// Branches provides the names of the local and remote branches in this Git repository.
+// Branches provides the names of the local branches in this Git repository.
 // The results are sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
 	output, err := repo.Run("git", "branch")
@@ -168,6 +168,15 @@ func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools
 		result = append(result, commit)
 	}
 	return result, nil
+}
+
+// CreateBranch creates a branch with the given name in this Git repository.
+func (repo *GitRepository) CreateBranch(name string) error {
+	output, err := repo.Run("git", "checkout", "-b", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create branch %q: %s", name, output)
+	}
+	return nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
