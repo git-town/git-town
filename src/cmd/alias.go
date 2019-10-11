@@ -37,11 +37,11 @@ Note that this can conflict with other tools that also define additional Git com
 		for _, command := range commandsToAlias {
 			if toggle {
 				outcome := git.Config().AddAlias(command)
-				script.PrintCommand(outcome.CommandRun()...)
+				script.PrintCommand(outcome.Command()...)
 			} else {
 				outcome := git.Config().RemoveAlias(command)
 				if outcome != nil {
-					script.PrintCommand(outcome.CommandRun()...)
+					script.PrintCommand(outcome.Command()...)
 				}
 			}
 		}
