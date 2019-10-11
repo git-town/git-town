@@ -51,7 +51,7 @@ func (c *Configuration) AddAlias(cmd string) {
 	key := "alias." + cmd
 	value := "town " + cmd
 	c.globalConfigCache[key] = value
-	command.New("git", "config", "--global", key, value).Output()
+	command.Run("git", "config", "--global", key, value).Output()
 }
 
 // AddToPerennialBranches adds the given branch as a perennial branch
@@ -242,7 +242,7 @@ func (c *Configuration) RemoveAlias(cmd string) {
 	key := "alias." + cmd
 	previousAlias := c.globalConfigCache[key]
 	if previousAlias == "town "+cmd {
-		command.New("git", "config", "--global", "--unset", key).Output()
+		command.Run("git", "config", "--global", "--unset", key).Output()
 	}
 }
 
@@ -346,19 +346,19 @@ func (c *Configuration) getConfigurationKeysMatching(toMatch string) (result []s
 
 func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 	cmdArgs := []string{"git", "config", "-lz"}
-	var cmd *command.Command
+	var res *command.Result
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
-		cmd = command.New(cmdArgs...)
+		res = command.Run(cmdArgs...)
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
-		cmd = command.NewInDir(c.localDir, cmdArgs...)
+		res = command.RunInDir(c.localDir, cmdArgs...)
 	}
-	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
+	if res.Err() != nil && strings.Contains(res.Output(), "No such file or directory") {
 		return
 	}
-	exit.If(cmd.Err())
-	output := cmd.Output()
+	exit.If(res.Err())
+	output := res.Output()
 	if output == "" {
 		return
 	}
