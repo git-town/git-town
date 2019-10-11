@@ -14,7 +14,7 @@ import (
 // and might print additional information to the console.
 // The comparison ignores whitespace around strings.
 func EnsureExecutedGitCommandsMatchTable(actual []ExecutedGitCommand, expected *gherkin.DataTable) error {
-	morta := RenderExecutedGitCommands(actual)
+	morta := RenderExecutedGitCommands(actual, expected)
 	diff, errorCount := morta.Equal(expected)
 	if errorCount != 0 {
 		fmt.Println(diff)

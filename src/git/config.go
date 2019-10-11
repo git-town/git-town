@@ -246,12 +246,13 @@ func (c *Configuration) IsPerennialBranch(branchName string) bool {
 }
 
 // RemoveAlias removes the global alias for the given Git Town command.
-func (c *Configuration) RemoveAlias(cmd string) {
+func (c *Configuration) RemoveAlias(cmd string) *command.Result {
 	key := "alias." + cmd
 	previousAlias := c.globalConfigCache[key]
 	if previousAlias == "town "+cmd {
-		command.Run("git", "config", "--global", "--unset", key).Output()
+		return command.Run("git", "config", "--global", "--unset", key)
 	}
+	return nil
 }
 
 // RemoveAllConfiguration removes all Git Town configuration
