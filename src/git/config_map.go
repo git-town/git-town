@@ -69,7 +69,7 @@ func (c *ConfigMap) initialize() {
 	if c.global {
 		cmdArgs = append(cmdArgs, "--global")
 	}
-	cmd := command.New(cmdArgs...)
+	cmd := command.Run(cmdArgs...)
 	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
 		return
 	}

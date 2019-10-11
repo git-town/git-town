@@ -17,8 +17,8 @@ func (step *PreserveCheckoutHistoryStep) Run() error {
 	expectedPreviouslyCheckedOutBranch := git.GetExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
 	if expectedPreviouslyCheckedOutBranch != git.GetPreviouslyCheckedOutBranch() {
 		currentBranch := git.GetCurrentBranchName()
-		command.New("git", "checkout", expectedPreviouslyCheckedOutBranch).Run()
-		command.New("git", "checkout", currentBranch).Run()
+		command.Run("git", "checkout", expectedPreviouslyCheckedOutBranch)
+		command.Run("git", "checkout", currentBranch)
 	}
 	return nil
 }

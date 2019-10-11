@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 
@@ -9,69 +8,47 @@ import (
 	"github.com/acarl005/stripansi"
 )
 
-// Command runs commands on the command line
-type Command struct {
-	name   string
-	args   []string
-	ran    bool
+// Result contains the results of a command run in a subshell.
+type Result struct {
 	err    error
 	output string
 }
 
-// New creates a new Command instance
-func New(command ...string) *Command {
-	return &Command{name: command[0], args: command[1:]}
-}
-
-// Run runs this command.
-// Doesn't run again if it ran already.
-// Stores the outcome in fields of the instance.
-func (c *Command) Run() {
-	if c.ran {
-		return
-	}
-
-	logRun(c)
-	subProcess := exec.Command(c.name, c.args...) // #nosec
+// Run executes the command given in argv notation.
+func Run(argv ...string) *Result {
+	name, args := argv[0], argv[1:]
+	logRun(argv...)
+	subProcess := exec.Command(name, args...) // #nosec
 	output, err := subProcess.CombinedOutput()
-	c.output = stripansi.Strip(strings.TrimSpace(string(output)))
-	c.err = err
-	c.ran = true
+	return &Result{err: err, output: stripansi.Strip(strings.TrimSpace(string(output)))}
 }
 
 // Output returns the output of this command.
 // Runs if it hasn't so far.
-func (c *Command) Output() string {
-	c.Run()
+func (c *Result) Output() string {
 	return c.output
 }
 
 // OutputLines returns the output of this command, split into lines.
 // Runs if it hasn't so far.
-func (c *Command) OutputLines() []string {
+func (c *Result) OutputLines() []string {
 	return strings.Split(c.Output(), "\n")
 }
 
 // Err returns the error that this command encountered.
 // Runs the command if it hasn't so far.
-func (c *Command) Err() error {
-	c.Run()
+func (c *Result) Err() error {
 	return c.err
 }
 
 // OutputContainsLine returns whether the output of this command
 // contains the given line
-func (c *Command) OutputContainsLine(line string) bool {
+func (c *Result) OutputContainsLine(line string) bool {
 	return util.DoesStringArrayContain(c.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command
 // contains the given text
-func (c *Command) OutputContainsText(text string) bool {
-	c.Run()
+func (c *Result) OutputContainsText(text string) bool {
 	return strings.Contains(c.output, text)
-}
-
-func (c Command) String() string {
-	return fmt.Sprintf("%s %s", c.name, strings.Join(c.args, " "))
 }
