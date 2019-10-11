@@ -1,6 +1,7 @@
 package command
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -23,11 +24,17 @@ func Run(cmd string, args ...string) *Result {
 
 // RunInDir executes the given command in the given directory.
 func RunInDir(dir string, cmd string, args ...string) *Result {
+	return RunDirEnv(dir, os.Environ(), cmd, args...)
+}
+
+// RunDirEnv runs the given command in the given directory with the given environment.
+func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if dir != "" {
 		subProcess.Dir = dir
 	}
+	subProcess.Env = env
 	output, err := subProcess.CombinedOutput()
 	return &Result{
 		command: cmd,
