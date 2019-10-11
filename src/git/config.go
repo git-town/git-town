@@ -123,12 +123,12 @@ func GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.New("git", "remote", "get-url", "origin").Output()
+	return command.Run("git", "remote", "get-url", "origin").Output()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func GetRemoteUpstreamURL() string {
-	return command.New("git", "remote", "get-url", "upstream").Output()
+	return command.Run("git", "remote", "get-url", "upstream").Output()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -155,7 +155,7 @@ func GetURLRepositoryName(url string) string {
 
 // HasGlobalConfigurationValue returns whether there is a global git configuration for the given key
 func HasGlobalConfigurationValue(key string) bool {
-	return command.New("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
+	return command.Run("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
 }
 
 // HasParentBranch returns whether or not the given branch has a parent
@@ -196,7 +196,7 @@ func IsPerennialBranch(branchName string) bool {
 
 // RemoveAllConfiguration removes all Git Town configuration
 func RemoveAllConfiguration() {
-	command.New("git", "config", "--remove-section", "git-town").Output()
+	command.Run("git", "config", "--remove-section", "git-town").Output()
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
@@ -289,18 +289,18 @@ func getConfigurationKeysMatching(toMatch string) (result []string) {
 }
 
 func setConfigurationValue(key, value string) {
-	command.New("git", "config", key, value).Run()
+	command.Run("git", "config", key, value)
 	configMap.Set(key, value)
 }
 
 func setGlobalConfigurationValue(key, value string) {
-	command.New("git", "config", "--global", key, value).Run()
+	command.Run("git", "config", "--global", key, value)
 	globalConfigMap.Set(key, value)
 	configMap.Reset() // Need to reset config in case it was inheriting
 }
 
 func removeConfigurationValue(key string) {
-	command.New("git", "config", "--unset", key).Run()
+	command.Run("git", "config", "--unset", key)
 	configMap.Delete(key)
 }
 
@@ -310,7 +310,7 @@ var remotesInitialized bool
 
 func getRemotes() []string {
 	if !remotesInitialized {
-		remotes = command.New("git", "remote").OutputLines()
+		remotes = command.Run("git", "remote").OutputLines()
 		remotesInitialized = true
 	}
 	return remotes
