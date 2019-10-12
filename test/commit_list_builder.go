@@ -1,6 +1,7 @@
 package test
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/Originate/git-town/test/gherkintools"
@@ -62,7 +63,15 @@ func (builder *CommitListBuilder) Add(commit gherkintools.Commit, location strin
 // Table provides the data accumulated by this CommitListBuilder as a Mortadella table.
 func (builder *CommitListBuilder) Table(fields []string) (result gherkintools.Mortadella) {
 	result.AddRow(fields...)
-	for branch, SHAs := range builder.commitsInBranch {
+	// Note: need to create a sorted list of branch names here,
+	// because iterating builder.commitsInBranch directly provides the branch names in random order.
+	branchNames := make([]string, 0, len(builder.commitsInBranch))
+	for branch := range builder.commitsInBranch {
+		branchNames = append(branchNames, branch)
+	}
+	sortedBranches := sort.StringSlice(branchNames)
+	for _, branch := range sortedBranches {
+		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
 			commit := builder.commits[SHA]
 			row := []string{}
