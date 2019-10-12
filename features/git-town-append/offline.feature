@@ -1,6 +1,6 @@
 Feature: git append: offline mode
 
-  When having no internet connection
+    When having no internet connection
   I want that new branches are created without attempting network accesses
   So that I don't see unnecessary errors.
 
@@ -9,8 +9,8 @@ Feature: git append: offline mode
     Given Git Town is in offline mode
     And my repository has a feature branch named "existing-feature"
     And the following commits exist in my repository
-      | BRANCH           | LOCATION         | MESSAGE                 |
-      | existing-feature | local and remote | existing feature commit |
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | existing-feature | local, remote | existing feature commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
 

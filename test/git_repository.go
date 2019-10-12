@@ -96,6 +96,49 @@ func (repo *GitRepository) CheckoutBranch(name string) error {
 	return nil
 }
 
+// Commits provides a tabular list of the commits in this Git repository with the given fields.
+func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
+	branches, err := repo.Branches()
+	if err != nil {
+		return result, errors.Wrap(err, "cannot determine the Git branches")
+	}
+	for _, branch := range branches {
+		commits, err := repo.CommitsInBranch(branch)
+		if err != nil {
+			return result, err
+		}
+		result = append(result, commits...)
+	}
+	return result, nil
+}
+
+// CommitsInBranch provides all commits in the given Git branch.
+func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools.Commit, err error) {
+	output, err := repo.Run("git", "log", branch, "--format='%h|%s|%an <%ae>'", "--topo-order", "--reverse")
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
+	}
+	output = strings.TrimSpace(output)
+	for _, line := range strings.Split(output, "\n") {
+		parts := strings.Split(line, "|")
+		commit := gherkintools.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
+		if strings.EqualFold(commit.Message, "initial commit") {
+			continue
+		}
+		result = append(result, commit)
+	}
+	return result, nil
+}
+
+// CreateBranch creates a branch with the given name in this repository.
+func (repo *GitRepository) CreateBranch(name string) error {
+	output, err := repo.Run("git", "checkout", "-b", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
+	}
+	return nil
+}
+
 // createCommit creates a commit with the given properties in this Git repo.
 func (repo *GitRepository) createCommit(commit gherkintools.Commit) error {
 	repo.originalCommits = append(repo.originalCommits, commit)
@@ -134,49 +177,6 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
 	}
 	return strings.TrimSpace(output), nil
-}
-
-// Commits provides a tabular list of the commits in this Git repository with the given fields.
-func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
-	branches, err := repo.Branches()
-	if err != nil {
-		return result, errors.Wrap(err, "cannot determine the Git branches")
-	}
-	for _, branch := range branches {
-		commits, err := repo.CommitsInBranch(branch)
-		if err != nil {
-			return result, err
-		}
-		result = append(result, commits...)
-	}
-	return result, nil
-}
-
-// CommitsInBranch provides all commits in the given Git branch.
-func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools.Commit, err error) {
-	output, err := repo.Run("git", "log", branch, "--format='%h|%s|%an <%ae>'", "--topo-order", "--reverse")
-	if err != nil {
-		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
-	}
-	output = strings.TrimSpace(output)
-	for _, line := range strings.Split(output, "\n") {
-		parts := strings.Split(line, "|")
-		commit := gherkintools.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
-		if strings.EqualFold(commit.Message, "initial commit") {
-			continue
-		}
-		result = append(result, commit)
-	}
-	return result, nil
-}
-
-// CreateBranch creates a branch with the given name in this Git repository.
-func (repo *GitRepository) CreateBranch(name string) error {
-	output, err := repo.Run("git", "checkout", "-b", name)
-	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q: %s", name, output)
-	}
-	return nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
