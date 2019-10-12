@@ -139,8 +139,8 @@ func (repo *GitRepository) CreateBranch(name string) error {
 	return nil
 }
 
-// createCommit creates a commit with the given properties in this Git repo.
-func (repo *GitRepository) createCommit(commit gherkintools.Commit) error {
+// CreateCommit creates a commit with the given properties in this Git repo.
+func (repo *GitRepository) CreateCommit(commit gherkintools.Commit, push bool) error {
 	repo.originalCommits = append(repo.originalCommits, commit)
 	err := repo.CheckoutBranch(commit.Branch)
 	if err != nil {
@@ -154,9 +154,15 @@ func (repo *GitRepository) createCommit(commit gherkintools.Commit) error {
 	if err != nil {
 		return errors.Wrapf(err, "cannot add file to commit: %s", output)
 	}
-	_, err = repo.Run("git", "commit", "-m", commit.Message)
+	output, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
 		return errors.Wrapf(err, "cannot commit: %s", output)
+	}
+	if push {
+		output, err = repo.Run("git", "push", "-u", "origin", commit.Branch)
+		if err != nil {
+			return errors.Wrapf(err, "cannot push commit: %s", output)
+		}
 	}
 	return nil
 }
@@ -190,6 +196,11 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
 	}
 	return true, nil
+}
+
+// RegisterOriginalCommit tracks the given commit as existing in this repo before the system under test executed.
+func (repo *GitRepository) RegisterOriginalCommit(commit gherkintools.Commit) {
+	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
 // SetRemote sets the remote of this Git repository to the given target.
