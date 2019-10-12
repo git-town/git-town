@@ -130,9 +130,9 @@ func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools
 	return result, nil
 }
 
-// CreateBranch creates a branch with the given name in this repository.
-func (repo *GitRepository) CreateBranch(name string) error {
-	output, err := repo.Run("git", "checkout", "-b", name)
+// CreateFeatureBranch creates a branch with the given name in this repository.
+func (repo *GitRepository) CreateFeatureBranch(name string) error {
+	output, err := repo.Run("git", "town", "hack", name)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
 	}

@@ -1,3 +1,4 @@
+@debug
 Feature: git append: offline mode
 
     When having no internet connection
@@ -22,18 +23,17 @@ Feature: git append: offline mode
       | existing-feature | git add -A                                  |
       |                  | git stash                                   |
       |                  | git checkout main                           |
-      | main             | git rebase origin/main                      |
-      |                  | git checkout existing-feature               |
+      | main             | git checkout existing-feature               |
       | existing-feature | git merge --no-edit origin/existing-feature |
       |                  | git merge --no-edit main                    |
       |                  | git branch new-feature existing-feature     |
       |                  | git checkout new-feature                    |
       | new-feature      | git stash pop                               |
     And I end up on the "new-feature" branch
-    And my repository has the following commits
-      | BRANCH           | LOCATION         | MESSAGE                 |
-      | existing-feature | local and remote | existing feature commit |
-      | new-feature      | local            | existing feature commit |
+    And my repository now has the following commits
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | existing-feature | local, remote | existing feature commit |
+      | new-feature      | local         | existing feature commit |
 
 
   Scenario: Undo
