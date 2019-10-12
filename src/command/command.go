@@ -40,7 +40,7 @@ func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
 		command: cmd,
 		args:    args,
 		err:     err,
-		output:  stripansi.Strip(strings.TrimSpace(string(output))),
+		output:  string(output),
 	}
 }
 
@@ -63,7 +63,12 @@ func (c *Result) Output() string {
 // OutputLines returns the output of this command, split into lines.
 // Runs if it hasn't so far.
 func (c *Result) OutputLines() []string {
-	return strings.Split(c.Output(), "\n")
+	return strings.Split(c.OutputSanitized(), "\n")
+}
+
+// OutputSanitized provides the output without ANSI color codes.
+func (c *Result) OutputSanitized() string {
+	return strings.TrimSpace(stripansi.Strip(c.output))
 }
 
 // Err returns the error that this command encountered.

@@ -27,7 +27,7 @@ var rootDirectory string
 // i.e. the directory that contains the ".git" folder.
 func GetRootDirectory() string {
 	if rootDirectory == "" {
-		rootDirectory = command.Run("git", "rev-parse", "--show-toplevel").Output()
+		rootDirectory = command.Run("git", "rev-parse", "--show-toplevel").OutputSanitized()
 	}
 	return rootDirectory
 }
@@ -39,13 +39,13 @@ func HasConflicts() bool {
 
 // HasOpenChanges returns whether the local repository contains uncommitted changes.
 func HasOpenChanges() bool {
-	return command.Run("git", "status", "--porcelain").Output() != ""
+	return command.Run("git", "status", "--porcelain").OutputSanitized() != ""
 }
 
 // HasShippableChanges returns whether the supplied branch has an changes
 // not currently on the main branchName
 func HasShippableChanges(branchName string) bool {
-	return command.Run("git", "diff", Config().GetMainBranch()+".."+branchName).Output() != ""
+	return command.Run("git", "diff", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
 }
 
 // IsMergeInProgress returns whether the local repository is in the middle of

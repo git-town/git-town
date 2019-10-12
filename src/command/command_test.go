@@ -16,7 +16,7 @@ var res *command.Result
 var _ = Describe("Run", func() {
 	It("Runs the given command", func() {
 		res = command.Run("echo", "foo")
-		Expect(res.Output()).To(Equal("foo"))
+		Expect(res.OutputSanitized()).To(Equal("foo"))
 	})
 })
 
@@ -62,7 +62,7 @@ var _ = Describe("RunInDir", func() {
 		os.Mkdir(dirPath, 0744)
 		ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
 		res := command.RunInDir(dirPath, "ls", "-1")
-		Expect(res.Output()).To(Equal("one"))
+		Expect(res.OutputSanitized()).To(Equal("one"))
 	})
 })
 

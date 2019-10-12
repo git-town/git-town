@@ -11,7 +11,7 @@ import (
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return command.Run("git", "log", Config().GetMainBranch()+".."+branchName).Output() != ""
+	return command.Run("git", "log", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
 }
 
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
@@ -115,7 +115,7 @@ func GetPreviouslyCheckedOutBranch() string {
 	if cmd.Err() != nil {
 		return ""
 	}
-	return cmd.Output()
+	return cmd.OutputSanitized()
 }
 
 // GetTrackingBranchName returns the name of the remote branch
@@ -171,7 +171,7 @@ func IsBranchInSync(branchName string) bool {
 func ShouldBranchBePushed(branchName string) bool {
 	trackingBranchName := GetTrackingBranchName(branchName)
 	cmd := command.Run("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName)
-	return cmd.Output() != ""
+	return cmd.OutputSanitized() != ""
 }
 
 // Helpers

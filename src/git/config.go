@@ -172,12 +172,12 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.Run("git", "remote", "get-url", "origin").Output()
+	return command.Run("git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func (c *Configuration) GetRemoteUpstreamURL() string {
-	return command.Run("git", "remote", "get-url", "upstream").Output()
+	return command.Run("git", "remote", "get-url", "upstream").OutputSanitized()
 }
 
 // GetSyncUpstream indicates whether this repository is configured to sync to its upstream remote.
@@ -259,7 +259,7 @@ func (c *Configuration) RemoveAlias(cmd string) *command.Result {
 
 // RemoveAllConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveAllConfiguration() {
-	command.Run("git", "config", "--remove-section", "git-town").Output()
+	command.Run("git", "config", "--remove-section", "git-town").OutputSanitized()
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
@@ -365,7 +365,7 @@ func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 		cmdArgs = append(cmdArgs, "--local")
 		res = command.RunInDir(c.localDir, "git", cmdArgs...)
 	}
-	if res.Err() != nil && strings.Contains(res.Output(), "No such file or directory") {
+	if res.Err() != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
 		return
 	}
 	exit.If(res.Err())
