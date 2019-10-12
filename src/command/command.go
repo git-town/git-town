@@ -27,7 +27,7 @@ func RunInDir(dir string, cmd string, args ...string) *Result {
 	return RunDirEnv(dir, os.Environ(), cmd, args...)
 }
 
-// RunDirEnv runs the given command in the given directory with the given environment.
+// RunDirEnv executes the given command in the given directory, using the given environment variables.
 func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
