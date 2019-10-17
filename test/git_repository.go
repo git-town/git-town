@@ -114,7 +114,7 @@ func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools.Commit, err error) {
-	output, err := repo.Run("git", "log", branch, "--format='%h|%s|%an <%ae>'", "--topo-order", "--reverse")
+	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
 	}

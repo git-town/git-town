@@ -127,17 +127,15 @@ func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadel
 		builder.Add(localCommit, "local")
 	}
 
-	fmt.Println("CHECKING ORIGIN COMMITS")
 	remoteCommits, err := env.OriginRepo.Commits()
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine commits in the origin repo")
 	}
 	for _, remoteCommit := range remoteCommits {
-		fmt.Println("remote commit:", remoteCommit)
 		builder.Add(remoteCommit, "remote")
 	}
-	fmt.Println("DONE CHECKING ORIGIN COMMITS")
 
+	fmt.Printf("\n%#v\n", builder.locations)
 	return builder.Table(fields), nil
 }
 

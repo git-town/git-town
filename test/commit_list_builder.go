@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -58,6 +59,16 @@ func (builder *CommitListBuilder) Add(commit gherkintools.Commit, location strin
 		builder.locations[commit.SHA] = &helpers.OrderedStringSet{}
 	}
 	builder.locations[commit.SHA].Add(location)
+	fmt.Printf("COMMIT %s LOC %s\n", commit.Message, builder.locations[commit.SHA])
+}
+
+// branches provides the names of the branches known to this CommitListBuilder.
+func (builder *CommitListBuilder) branches() []string {
+	result := make([]string, 0, len(builder.commitsInBranch))
+	for branch := range builder.commitsInBranch {
+		result = append(result, branch)
+	}
+	return sort.StringSlice(result)
 }
 
 // Table provides the data accumulated by this CommitListBuilder as a Mortadella table.
@@ -65,12 +76,7 @@ func (builder *CommitListBuilder) Table(fields []string) (result gherkintools.Mo
 	result.AddRow(fields...)
 	// Note: need to create a sorted list of branch names here,
 	// because iterating builder.commitsInBranch directly provides the branch names in random order.
-	branchNames := make([]string, 0, len(builder.commitsInBranch))
-	for branch := range builder.commitsInBranch {
-		branchNames = append(branchNames, branch)
-	}
-	sortedBranches := sort.StringSlice(branchNames)
-	for _, branch := range sortedBranches {
+	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
 			commit := builder.commits[SHA]

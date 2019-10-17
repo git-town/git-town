@@ -1,5 +1,7 @@
 package helpers
 
+import "strings"
+
 // OrderedStringSet is a Set for strings that provides the accumulated strings in the order they were received.
 // The zero value is a fully functional empty set.
 type OrderedStringSet struct {
@@ -27,4 +29,8 @@ func (set *OrderedStringSet) Contains(text string) bool {
 // Slice provides the elements of this set in the order they were received.
 func (set *OrderedStringSet) Slice() []string {
 	return set.elements
+}
+
+func (set *OrderedStringSet) String() string {
+	return strings.Join(set.elements, ", ")
 }
