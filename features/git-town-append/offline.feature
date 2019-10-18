@@ -1,4 +1,3 @@
-@debug
 Feature: git append: offline mode
 
   When having no internet connection
