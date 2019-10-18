@@ -15,7 +15,7 @@ cross-compile:  # builds the binary for all platforms
 cuke: cuke-go cuke-ruby  # runs the feature tests
 
 cuke-go: build   # runs the new Godog-based feature tests
-	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias
+	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias features/git-town-append/hack-push-flag.feature features/git-town-append/offline.feature
 
 cuke-ruby: build   # runs the old Ruby-based feature tests
 	bundle exec parallel_cucumber features/git-town-config features/git-town-hack features/git-town-install-fish-autocompletion features/git-town-kill features/git-town-main_branch features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
