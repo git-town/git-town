@@ -123,7 +123,6 @@ func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadel
 		return result, errors.Wrap(err, "cannot determine commits in the developer repo")
 	}
 	for _, localCommit := range localCommits {
-		fmt.Println("local commit:", localCommit)
 		builder.Add(localCommit, "local")
 	}
 
@@ -135,7 +134,6 @@ func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadel
 		builder.Add(remoteCommit, "remote")
 	}
 
-	fmt.Printf("\n%#v\n", builder.locations)
 	return builder.Table(fields), nil
 }
 

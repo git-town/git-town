@@ -52,9 +52,9 @@ func (morta *Mortadella) Equal(table *gherkin.DataTable) (diff string, errorCoun
 	if len(morta.cells) == 0 {
 		return "your data is empty", 1
 	}
-	gherk := NewMortadellaFromGherkin(table)
+	gherkinTable := NewMortadellaFromGherkin(table)
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(gherk.String(), morta.String(), false)
+	diffs := dmp.DiffMain(gherkinTable.String(), morta.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}

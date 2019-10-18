@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 
@@ -29,8 +28,8 @@ type CommitListBuilder struct {
 	// locations stores which commits occur in which repositories.
 	//
 	// Structure (key  =>  value):
-	//   commit 1 SHA  =>  ["local"]
-	//   commit 2 SHA  =>  ["local", "remote"]
+	//   commit 1 SHA + branch 1 name  =>  ["local"]
+	//   commit 1 SHA + branch 2 name  =>  ["local", "remote"]
 	locations map[string]*helpers.OrderedStringSet
 }
 
@@ -54,12 +53,12 @@ func (builder *CommitListBuilder) Add(commit gherkintools.Commit, location strin
 	}
 	builder.commitsInBranch[commit.Branch].Add(commit.SHA)
 
-	_, exists = builder.locations[commit.SHA]
+	locationKey := commit.SHA + commit.Branch
+	_, exists = builder.locations[locationKey]
 	if !exists {
-		builder.locations[commit.SHA] = &helpers.OrderedStringSet{}
+		builder.locations[locationKey] = &helpers.OrderedStringSet{}
 	}
-	builder.locations[commit.SHA].Add(location)
-	fmt.Printf("COMMIT %s LOC %s\n", commit.Message, builder.locations[commit.SHA])
+	builder.locations[locationKey].Add(location)
 }
 
 // branches provides the names of the branches known to this CommitListBuilder.
@@ -87,7 +86,7 @@ func (builder *CommitListBuilder) Table(fields []string) (result gherkintools.Mo
 				case "BRANCH":
 					row = append(row, branch)
 				case "LOCATION":
-					locations := builder.locations[SHA]
+					locations := builder.locations[SHA+branch]
 					row = append(row, strings.Join(locations.Slice(), ", "))
 				case "MESSAGE":
 					row = append(row, commit.Message)
