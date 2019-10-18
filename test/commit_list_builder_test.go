@@ -20,6 +20,7 @@ func TestCommitListBuilder(t *testing.T) {
 	expected := `| BRANCH  | LOCATION      | MESSAGE |
 | branch1 | local, remote | commit1 |
 | branch2 | local         | commit2 |
-| branch3 | remote        | commit3 |`
+| branch3 | remote        | commit3 |
+`
 	assert.Equal(t, expected, table.String())
 }
