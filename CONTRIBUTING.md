@@ -87,25 +87,11 @@ GitManager instance that is shared by all threads.
 
 ## Debugging
 
-To debug a Go-based feature test in VSCode:
+To debug a Go-based Cucumber spec in VSCode:
 
-- compile a binary for Godog: `godog -o specs`
-- open `launch.json`: Debug > Open Configurations
-- add this configuration
-
-  ```
-  {
-    "name": "Godog",
-    "type": "go",
-    "request": "launch",
-    "mode": "exec",
-    "program": "${workspaceFolder}/specs",
-    "env": {},
-    "args": [
-      "${workspaceFolder}/features/git-town-append/hack-push-flag.feature:17"
-    ]
-  }
-  ```
+- open `main_test.go`
+- change the path of the test to execute
+- run the `debug a test` configuration in the debugger
 
 ## Command documentation
 
