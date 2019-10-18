@@ -68,7 +68,8 @@ func (builder *CommitListBuilder) branches() []string {
 	for branch := range builder.commitsInBranch {
 		result = append(result, branch)
 	}
-	return sort.StringSlice(result)
+	sort.Strings(result)
+	return result
 }
 
 // Table provides the data accumulated by this CommitListBuilder as a Mortadella table.

@@ -32,10 +32,10 @@ func TestCloneGitRepository(t *testing.T) {
 }
 
 func TestGitRepositoryBranches(t *testing.T) {
-	repo := createTestRepo(t)
-	assert.Nil(t, repo.CreateBranch("branch3"), "cannot create branch3")
-	assert.Nil(t, repo.CreateBranch("branch2"), "cannot create branch2")
-	assert.Nil(t, repo.CreateBranch("branch1"), "cannot create branch1")
+	repo := createTestGitTownRepo(t)
+	assert.Nil(t, repo.CreateFeatureBranch("branch3"), "cannot create branch3")
+	assert.Nil(t, repo.CreateFeatureBranch("branch2"), "cannot create branch2")
+	assert.Nil(t, repo.CreateFeatureBranch("branch1"), "cannot create branch1")
 
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
@@ -62,5 +62,15 @@ func createTestRepo(t *testing.T) GitRepository {
 	assert.Nil(t, err, "cannot initialize Git repow")
 	output, err := repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
 	assert.Nilf(t, err, "cannot create initial commit: %s", output)
+	return repo
+}
+
+func createTestGitTownRepo(t *testing.T) GitRepository {
+	repo := createTestRepo(t)
+	err := repo.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "master"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
+	})
+	assert.Nil(t, err)
 	return repo
 }
