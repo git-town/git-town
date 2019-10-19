@@ -48,7 +48,7 @@ func GetPrintableNewBranchPushFlag() string {
 // GetPrintableBranchTree returns a user printable branch tree
 func GetPrintableBranchTree(branchName string) (result string) {
 	result += branchName
-	childBranches := GetChildBranches(branchName)
+	childBranches := Config().GetChildBranches(branchName)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
 		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch), 1)

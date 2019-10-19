@@ -53,7 +53,7 @@ func getPrependConfig(args []string) (result prependConfig) {
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
 	git.Config().EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.ParentBranch = git.GetParentBranch(result.InitialBranch)
+	result.ParentBranch = git.Config().GetParentBranch(result.InitialBranch)
 	return
 }
 

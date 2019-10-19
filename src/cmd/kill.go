@@ -72,7 +72,7 @@ func getKillConfig(args []string) (result killConfig) {
 func getKillStepList(config killConfig) (result steps.StepList) {
 	switch {
 	case config.IsTargetBranchLocal:
-		targetBranchParent := git.GetParentBranch(config.TargetBranch)
+		targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
@@ -83,7 +83,7 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range git.GetChildBranches(config.TargetBranch) {
+		for _, child := range git.Config().GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})

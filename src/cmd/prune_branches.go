@@ -44,9 +44,9 @@ func getPruneBranchesStepList() (result steps.StepList) {
 			result.Append(&steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
 		}
 
-		parent := git.GetParentBranch(branchName)
+		parent := git.Config().GetParentBranch(branchName)
 		if parent != "" {
-			for _, child := range git.GetChildBranches(branchName) {
+			for _, child := range git.Config().GetChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})

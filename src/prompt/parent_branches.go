@@ -12,7 +12,7 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
+		if git.IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.Config().HasParentBranch(branchName) {
 			continue
 		}
 		AskForBranchAncestry(branchName, git.GetMainBranch())
@@ -26,7 +26,7 @@ func EnsureKnowsParentBranches(branchNames []string) {
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
 	for {
-		parent := git.GetParentBranch(current)
+		parent := git.Config().GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
 			parent = AskForBranchParent(current, defaultBranchName)
@@ -34,7 +34,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 				git.Config().AddToPerennialBranches(current)
 				break
 			}
-			git.SetParentBranch(current, parent)
+			git.Config().SetParentBranch(current, parent)
 		}
 		if parent == git.GetMainBranch() || git.Config().IsPerennialBranch(parent) {
 			break

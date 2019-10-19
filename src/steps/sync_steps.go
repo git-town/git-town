@@ -39,7 +39,7 @@ func getSyncFeatureBranchSteps(branchName string) (result StepList) {
 	if git.HasTrackingBranch(branchName) {
 		result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
 	}
-	result.Append(&MergeBranchStep{BranchName: git.GetParentBranch(branchName)})
+	result.Append(&MergeBranchStep{BranchName: git.Config().GetParentBranch(branchName)})
 	return
 }
 

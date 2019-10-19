@@ -42,7 +42,7 @@ func validateBooleanArgument(arg string) error {
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
-	git.RemoveOutdatedConfiguration()
+	git.Config().RemoveOutdatedConfiguration()
 	return nil
 }
 

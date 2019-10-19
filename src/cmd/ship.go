@@ -83,7 +83,7 @@ func gitShipConfig(args []string) (result shipConfig) {
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := git.GetParentBranch(branchName)
+	parentBranch := git.Config().GetParentBranch(branchName)
 	if !git.IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
 		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
@@ -98,7 +98,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 func getShipStepList(config shipConfig) steps.StepList {
 	result := steps.StepList{}
 	var isOffline = git.IsOffline()
-	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
+	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
@@ -115,7 +115,7 @@ func getShipStepList(config shipConfig) steps.StepList {
 	if git.HasRemote("origin") && !isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
-	childBranches := git.GetChildBranches(config.BranchToShip)
+	childBranches := git.Config().GetChildBranches(config.BranchToShip)
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}

@@ -26,11 +26,11 @@ var setParentBranchCommand = &cobra.Command{
 func promptForParentBranch() {
 	branchName := git.GetCurrentBranchName()
 	git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
-	defaultParentBranch := git.GetParentBranch(branchName)
+	defaultParentBranch := git.Config().GetParentBranch(branchName)
 	if defaultParentBranch == "" {
 		defaultParentBranch = git.GetMainBranch()
 	}
-	git.DeleteParentBranch(branchName)
+	git.Config().DeleteParentBranch(branchName)
 	prompt.AskForBranchAncestry(branchName, defaultParentBranch)
 }
 

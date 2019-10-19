@@ -89,9 +89,9 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(&steps.AddToPerennialBranches{BranchName: config.NewBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.GetParentBranch(config.OldBranchName)})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.Config().GetParentBranch(config.OldBranchName)})
 	}
-	for _, child := range git.GetChildBranches(config.OldBranchName) {
+	for _, child := range git.Config().GetChildBranches(config.OldBranchName) {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
 	}
 	if git.HasTrackingBranch(config.OldBranchName) && !git.IsOffline() {

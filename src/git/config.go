@@ -117,7 +117,7 @@ func (c *Configuration) setGlobalConfigValue(key, value string) {
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
-func (c *Configuration) removeLocalConfigurationValue(key string) {
+func (c *Configuration) removeLocalConfigValue(key string) {
 	command.RunInDir(c.localDir, "git", "config", "--unset", key)
 	delete(c.localConfigCache, key)
 }
@@ -131,8 +131,8 @@ func (c *Configuration) AddToPerennialBranches(branchName string) {
 
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
-func DeleteParentBranch(branchName string) {
-	removeConfigurationValue("git-town-branch." + branchName + ".parent")
+func (c *Configuration) DeleteParentBranch(branchName string) {
+	c.removeLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // EnsureIsFeatureBranch asserts that the given branch is a feature branch.
@@ -144,7 +144,7 @@ func (c *Configuration) EnsureIsFeatureBranch(branchName, errorSuffix string) {
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
 func (c *Configuration) GetAncestorBranches(branchName string) (result []string) {
-	parentBranchMap := GetParentBranchMap()
+	parentBranchMap := c.GetParentBranchMap()
 	current := branchName
 	for {
 		if IsMainBranch(current) || c.IsPerennialBranch(current) {
@@ -160,11 +160,11 @@ func (c *Configuration) GetAncestorBranches(branchName string) (result []string)
 }
 
 // GetParentBranchMap returns a map from branch name to its parent branch
-func GetParentBranchMap() map[string]string {
+func (c *Configuration) GetParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
+	for _, key := range c.getLocalConfigKeysMatching("^git-town-branch\\..*\\.parent$") {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
-		parent := GetConfigurationValue(key)
+		parent := c.getLocalConfigValue(key)
 		result[child] = parent
 	}
 	return result
@@ -172,9 +172,9 @@ func GetParentBranchMap() map[string]string {
 
 // GetChildBranches returns the names of all branches for which the given branch
 // is a parent.
-func GetChildBranches(branchName string) (result []string) {
-	for _, key := range getConfigurationKeysMatching("^git-town-branch\\..*\\.parent$") {
-		parent := GetConfigurationValue(key)
+func (c *Configuration) GetChildBranches(branchName string) (result []string) {
+	for _, key := range c.getLocalConfigKeysMatching("^git-town-branch\\..*\\.parent$") {
+		parent := c.getLocalConfigValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 			result = append(result, child)
@@ -200,8 +200,8 @@ func GetMainBranch() string {
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
-func GetParentBranch(branchName string) string {
-	return GetConfigurationValue("git-town-branch." + branchName + ".parent")
+func (c *Configuration) GetParentBranch(branchName string) string {
+	return c.getLocalConfigValue("git-town-branch." + branchName + ".parent")
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
@@ -263,8 +263,8 @@ func HasGlobalConfigurationValue(key string) bool {
 }
 
 // HasParentBranch returns whether or not the given branch has a parent
-func HasParentBranch(branchName string) bool {
-	return GetParentBranch(branchName) != ""
+func (c *Configuration) HasParentBranch(branchName string) bool {
+	return c.GetParentBranch(branchName) != ""
 }
 
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
@@ -304,10 +304,10 @@ func RemoveAllConfiguration() {
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
-func RemoveOutdatedConfiguration() {
-	for child, parent := range GetParentBranchMap() {
+func (c *Configuration) RemoveOutdatedConfiguration() {
+	for child, parent := range c.GetParentBranchMap() {
 		if !HasBranch(child) || !HasBranch(parent) {
-			DeleteParentBranch(child)
+			c.DeleteParentBranch(child)
 		}
 	}
 }
@@ -325,8 +325,8 @@ func SetMainBranch(branchName string) {
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func SetParentBranch(branchName, parentBranchName string) {
-	setConfigurationValue("git-town-branch."+branchName+".parent", parentBranchName)
+func (c *Configuration) SetParentBranch(branchName, parentBranchName string) {
+	c.setLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches
@@ -386,10 +386,14 @@ func getConfigurationValueWithDefault(key, defaultValue string) string {
 	return value
 }
 
-func getConfigurationKeysMatching(toMatch string) (result []string) {
-	re, err := regexp.Compile(toMatch)
-	exit.IfWrapf(err, "Error compiling configuration regular expression (%s): %v", toMatch, err)
-	return configMap.KeysMatching(re)
+func (c *Configuration) getLocalConfigKeysMatching(toMatch string) (result []string) {
+	re := regexp.MustCompile(toMatch)
+	for key := range c.localConfigCache {
+		if re.MatchString(key) {
+			result = append(result, key)
+		}
+	}
+	return result
 }
 
 func setConfigurationValue(key, value string) {
