@@ -222,14 +222,14 @@ func (c *Configuration) GetPullBranchStrategy() string {
 
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
-func GetRemoteOriginURL() string {
+func (c *Configuration) GetRemoteOriginURL() string {
 	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := GetConfigurationValue("git-town.testing.remote-url")
+		mockRemoteURL := c.getLocalConfigValue("git-town.testing.remote-url")
 		if mockRemoteURL != "" {
 			return mockRemoteURL
 		}
 	}
-	return command.Run("git", "remote", "get-url", "origin").OutputSanitized()
+	return command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
