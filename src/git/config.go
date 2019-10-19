@@ -86,6 +86,25 @@ func loadCache(dir string, global bool) map[string]string {
 	return result
 }
 
+// getLocalConfigValue provides the configuration value with the given key from the local Git configuration.
+func (c *Configuration) getLocalConfigValue(key string) string {
+	return c.localConfigCache[key]
+}
+
+// getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
+func (c *Configuration) getGlobalConfigValue(key string) string {
+	return c.globalConfigCache[key]
+}
+
+// getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
+func (c *Configuration) getLocalOrGlobalConfigValue(key string) string {
+	local := c.getLocalConfigValue(key)
+	if local != "" {
+		return local
+	}
+	return c.getGlobalConfigValue(key)
+}
+
 // setConfigurationValue sets the local configuration with the given key to the given value.
 func (c *Configuration) setConfigurationValue(key, value string) {
 	command.RunInDir(c.localDir, "git", "config", key, value)
