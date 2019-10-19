@@ -300,8 +300,8 @@ func (c *Configuration) IsPerennialBranch(branchName string) bool {
 }
 
 // RemoveAllConfiguration removes all Git Town configuration
-func RemoveAllConfiguration() {
-	command.Run("git", "config", "--remove-section", "git-town").OutputSanitized()
+func (c *Configuration) RemoveAllConfiguration() {
+	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration

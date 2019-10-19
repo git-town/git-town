@@ -60,7 +60,7 @@ func printConfig() {
 }
 
 func resetConfig() {
-	git.RemoveAllConfiguration()
+	git.Config().RemoveAllConfiguration()
 }
 
 func setupConfig() {
