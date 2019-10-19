@@ -39,7 +39,7 @@ func printPullBranchStrategy() {
 }
 
 func setPullBranchStrategy(value string) {
-	git.SetPullBranchStrategy(value)
+	git.Config().SetPullBranchStrategy(value)
 }
 
 func init() {

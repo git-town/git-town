@@ -326,8 +326,8 @@ func (c *Configuration) SetPerennialBranches(branchNames []string) {
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-func SetPullBranchStrategy(strategy string) {
-	setConfigurationValue("git-town.pull-branch-strategy", strategy)
+func (c *Configuration) SetPullBranchStrategy(strategy string) {
+	c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 
 // ShouldNewBranchPush returns whether the current repository is configured to push
