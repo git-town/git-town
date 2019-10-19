@@ -317,9 +317,9 @@ func (c *Configuration) removeGlobalConfigValue(key string) {
 	command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
 }
 
-// RemoveAllConfiguration removes all Git Town configuration
+// RemoveLocalGitConfiguration removes all Git Town configuration
 // TODO: rename to RemoveLocalGitConfiguration
-func (c *Configuration) RemoveAllConfiguration() {
+func (c *Configuration) RemoveLocalGitConfiguration() {
 	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
 }
 
