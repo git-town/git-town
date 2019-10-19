@@ -76,7 +76,7 @@ func gitShipConfig(args []string) (result shipConfig) {
 	if result.BranchToShip != result.InitialBranch {
 		git.EnsureHasBranch(result.BranchToShip)
 	}
-	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
+	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
@@ -84,8 +84,8 @@ func gitShipConfig(args []string) (result shipConfig) {
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	parentBranch := git.GetParentBranch(branchName)
-	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
-		ancestors := git.GetAncestorBranches(branchName)
+	if !git.IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
+		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(

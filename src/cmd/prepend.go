@@ -51,14 +51,14 @@ func getPrependConfig(args []string) (result prependConfig) {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
-	git.EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
+	git.Config().EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
 	result.ParentBranch = git.GetParentBranch(result.InitialBranch)
 	return
 }
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
-	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
+	for _, branchName := range git.Config().GetAncestorBranches(config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})

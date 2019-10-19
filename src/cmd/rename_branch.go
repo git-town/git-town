@@ -84,7 +84,7 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 	if git.GetCurrentBranchName() == config.OldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.NewBranchName})
 	}
-	if git.IsPerennialBranch(config.OldBranchName) {
+	if git.Config().IsPerennialBranch(config.OldBranchName) {
 		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
 		result.Append(&steps.AddToPerennialBranches{BranchName: config.NewBranchName})
 	} else {

@@ -52,7 +52,7 @@ func getPruneBranchesStepList() (result steps.StepList) {
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
 
-		if git.IsPerennialBranch(branchName) {
+		if git.Config().IsPerennialBranch(branchName) {
 			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
 		}
 

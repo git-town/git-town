@@ -37,9 +37,9 @@ func ConfigurePerennialBranches() {
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
 		prompt:             getPerennialBranchesPrompt(),
-		defaultBranchNames: git.GetPerennialBranches(),
+		defaultBranchNames: git.Config().GetPerennialBranches(),
 	})
-	git.SetPerennialBranches(newPerennialBranches)
+	git.Config().SetPerennialBranches(newPerennialBranches)
 }
 
 // Helpers
@@ -56,7 +56,7 @@ func getMainBranchPrompt() (result string) {
 
 func getPerennialBranchesPrompt() (result string) {
 	result += "Please specify perennial branches:"
-	currentPerennialBranches := git.GetPerennialBranches()
+	currentPerennialBranches := git.Config().GetPerennialBranches()
 	if len(currentPerennialBranches) > 0 {
 		coloredBranchNames := color.New(color.Bold).Add(color.FgCyan).Sprintf(strings.Join(currentPerennialBranches, ", "))
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchNames)

@@ -36,12 +36,12 @@ func EnsureIsNotMainBranch(branchName, errorMessage string) {
 
 // EnsureIsNotPerennialBranch enforces that a branch with the given name is not a perennial branch
 func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(!IsPerennialBranch(branchName), errorMessage)
+	util.Ensure(!Config().IsPerennialBranch(branchName), errorMessage)
 }
 
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(IsPerennialBranch(branchName), errorMessage)
+	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch

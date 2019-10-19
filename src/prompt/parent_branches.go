@@ -12,7 +12,7 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
+		if git.IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.HasParentBranch(branchName) {
 			continue
 		}
 		AskForBranchAncestry(branchName, git.GetMainBranch())
@@ -31,12 +31,12 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 			printParentBranchHeader()
 			parent = AskForBranchParent(current, defaultBranchName)
 			if parent == perennialBranchOption {
-				git.AddToPerennialBranches(current)
+				git.Config().AddToPerennialBranches(current)
 				break
 			}
 			git.SetParentBranch(current, parent)
 		}
-		if parent == git.GetMainBranch() || git.IsPerennialBranch(parent) {
+		if parent == git.GetMainBranch() || git.Config().IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -71,7 +71,7 @@ var perennialBranchOption = "<none> (perennial branch)"
 func filterOutSelfAndDescendants(branchName string, choices []string) []string {
 	result := []string{}
 	for _, choice := range choices {
-		if choice == branchName || git.IsAncestorBranch(choice, branchName) {
+		if choice == branchName || git.Config().IsAncestorBranch(choice, branchName) {
 			continue
 		}
 		result = append(result, choice)

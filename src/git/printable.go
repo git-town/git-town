@@ -21,7 +21,7 @@ func GetPrintableMainBranch() string {
 
 // GetPrintablePerennialBranches returns a user printable list of perennial branches
 func GetPrintablePerennialBranches() string {
-	output := strings.Join(GetPerennialBranches(), "\n")
+	output := strings.Join(Config().GetPerennialBranches(), "\n")
 	if output == "" {
 		return noneString
 	}
@@ -31,7 +31,7 @@ func GetPrintablePerennialBranches() string {
 // GetPrintablePerennialBranchTrees returns a user printable list of perennial branches trees
 func GetPrintablePerennialBranchTrees() string {
 	trees := []string{}
-	for _, perennialBranch := range GetPerennialBranches() {
+	for _, perennialBranch := range Config().GetPerennialBranches() {
 		trees = append(trees, GetPrintableBranchTree(perennialBranch))
 	}
 	if len(trees) == 0 {

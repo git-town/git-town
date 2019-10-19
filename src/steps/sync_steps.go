@@ -8,7 +8,7 @@ import (
 
 // GetSyncBranchSteps returns the steps to sync the branch with the given name.
 func GetSyncBranchSteps(branchName string, pushBranch bool) (result StepList) {
-	isFeature := git.IsFeatureBranch(branchName)
+	isFeature := git.Config().IsFeatureBranch(branchName)
 	hasRemoteOrigin := git.HasRemote("origin")
 
 	if !hasRemoteOrigin && !isFeature {

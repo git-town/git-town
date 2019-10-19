@@ -106,12 +106,12 @@ func (c *Configuration) getLocalOrGlobalConfigValue(key string) string {
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
-func (c *Configuration) setConfigurationValue(key, value string) {
+func (c *Configuration) setLocalConfigValue(key, value string) {
 	command.RunInDir(c.localDir, "git", "config", key, value)
 	c.localConfigCache[key] = value
 }
 
-func (c *Configuration) setGlobalConfigurationValue(key, value string) {
+func (c *Configuration) setGlobalConfigValue(key, value string) {
 	command.RunInDir(c.localDir, "git", "config", "--global", key, value)
 	c.globalConfigCache[key] = value
 }
@@ -122,12 +122,12 @@ func (c *Configuration) removeLocalConfigurationValue(key string) {
 	delete(c.localConfigCache, key)
 }
 
-// ===================================================================================
-
 // AddToPerennialBranches adds the given branch as a perennial branch
-func AddToPerennialBranches(branchName string) {
-	SetPerennialBranches(append(GetPerennialBranches(), branchName))
+func (c *Configuration) AddToPerennialBranches(branchName string) {
+	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
 }
+
+// ===================================================================================
 
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
@@ -136,18 +136,18 @@ func DeleteParentBranch(branchName string) {
 }
 
 // EnsureIsFeatureBranch asserts that the given branch is a feature branch.
-func EnsureIsFeatureBranch(branchName, errorSuffix string) {
-	util.Ensure(IsFeatureBranch(branchName), fmt.Sprintf("The branch '%s' is not a feature branch. %s", branchName, errorSuffix))
+func (c *Configuration) EnsureIsFeatureBranch(branchName, errorSuffix string) {
+	util.Ensure(c.IsFeatureBranch(branchName), fmt.Sprintf("The branch '%s' is not a feature branch. %s", branchName, errorSuffix))
 }
 
 // GetAncestorBranches returns the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.
-func GetAncestorBranches(branchName string) (result []string) {
+func (c *Configuration) GetAncestorBranches(branchName string) (result []string) {
 	parentBranchMap := GetParentBranchMap()
 	current := branchName
 	for {
-		if IsMainBranch(current) || IsPerennialBranch(current) {
+		if IsMainBranch(current) || c.IsPerennialBranch(current) {
 			return
 		}
 		parent := parentBranchMap[current]
@@ -205,8 +205,8 @@ func GetParentBranch(branchName string) string {
 }
 
 // GetPerennialBranches returns all branches that are marked as perennial.
-func GetPerennialBranches() []string {
-	result := GetConfigurationValue("git-town.perennial-branch-names")
+func (c *Configuration) GetPerennialBranches() []string {
+	result := c.getLocalOrGlobalConfigValue("git-town.perennial-branch-names")
 	if result == "" {
 		return []string{}
 	}
@@ -268,8 +268,8 @@ func HasParentBranch(branchName string) bool {
 }
 
 // IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
-func IsAncestorBranch(branchName, ancestorBranchName string) bool {
-	ancestorBranches := GetAncestorBranches(branchName)
+func (c *Configuration) IsAncestorBranch(branchName, ancestorBranchName string) bool {
+	ancestorBranches := c.GetAncestorBranches(branchName)
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
 
@@ -281,8 +281,8 @@ func HasRemote(name string) bool {
 
 // IsFeatureBranch returns whether the branch with the given name is
 // a feature branch.
-func IsFeatureBranch(branchName string) bool {
-	return !IsMainBranch(branchName) && !IsPerennialBranch(branchName)
+func (c *Configuration) IsFeatureBranch(branchName string) bool {
+	return !IsMainBranch(branchName) && !c.IsPerennialBranch(branchName)
 }
 
 // IsMainBranch returns whether the branch with the given name
@@ -293,8 +293,8 @@ func IsMainBranch(branchName string) bool {
 
 // IsPerennialBranch returns whether the branch with the given name is
 // a perennial branch.
-func IsPerennialBranch(branchName string) bool {
-	perennialBranches := GetPerennialBranches()
+func (c *Configuration) IsPerennialBranch(branchName string) bool {
+	perennialBranches := c.GetPerennialBranches()
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
@@ -313,8 +313,8 @@ func RemoveOutdatedConfiguration() {
 }
 
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
-func RemoveFromPerennialBranches(branchName string) {
-	SetPerennialBranches(util.RemoveStringFromSlice(GetPerennialBranches(), branchName))
+func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
+	c.SetPerennialBranches(util.RemoveStringFromSlice(c.GetPerennialBranches(), branchName))
 }
 
 // SetMainBranch marks the given branch as the main branch
@@ -330,8 +330,8 @@ func SetParentBranch(branchName, parentBranchName string) {
 }
 
 // SetPerennialBranches marks the given branches as perennial branches
-func SetPerennialBranches(branchNames []string) {
-	setConfigurationValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
+func (c *Configuration) SetPerennialBranches(branchNames []string) {
+	c.setLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
