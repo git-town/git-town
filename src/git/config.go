@@ -20,13 +20,13 @@ import (
 
 // Configuration manages the Git Town configuration
 // stored in Git metadata in the given local repo and the global Git configuration.
-// This class is aware which config values are stored in local vs global settings.
+// This class manages which config values are stored in local vs global settings.
 type Configuration struct {
 
 	// localDir contains the directory of the local Git repo.
 	localDir string
 
-	// localConfigCache is a cache of the Git configuration in the local directory.
+	// localConfigCache is a cache of the Git configuration in the local Git repo.
 	localConfigCache map[string]string
 
 	// globalConfigCache is a cache of the global Git configuration.
@@ -34,6 +34,8 @@ type Configuration struct {
 }
 
 // Config provides the current configuration.
+// This is used in the Git Town business logic, which runs in the current directory.
+// The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
 func Config() *Configuration {
 	if currentDirConfig == nil {
 		currentDirConfig = NewConfiguration("")
@@ -41,7 +43,7 @@ func Config() *Configuration {
 	return currentDirConfig
 }
 
-// currentDirConfig provides access to the Git Town configuration in the current working directory.
+// currentDirConfig contains the Git Town configuration in the current working directory.
 var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
