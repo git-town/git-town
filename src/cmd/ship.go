@@ -70,7 +70,7 @@ func gitShipConfig(args []string) (result shipConfig) {
 	if result.BranchToShip == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
-	if git.Config().HasRemote("origin") && !git.IsOffline() {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		script.Fetch()
 	}
 	if result.BranchToShip != result.InitialBranch {
@@ -97,7 +97,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 
 func getShipStepList(config shipConfig) steps.StepList {
 	result := steps.StepList{}
-	var isOffline = git.IsOffline()
+	var isOffline = git.Config().IsOffline()
 	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
@@ -135,7 +135,7 @@ func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
 	if !git.Config().HasRemote("origin") {
 		return false, ""
 	}
-	if git.IsOffline() {
+	if git.Config().IsOffline() {
 		return false, ""
 	}
 	driver := drivers.GetActiveDriver()

@@ -83,7 +83,7 @@ func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
 }
 
 func (d *githubCodeHostingDriver) GetAPIToken() string {
-	return git.Config().GetGithubAPIToken()
+	return git.Config().GetGitHubToken()
 }
 
 func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {

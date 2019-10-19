@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
-
 	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 )

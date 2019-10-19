@@ -9,7 +9,7 @@ import (
 // GetSyncBranchSteps returns the steps to sync the branch with the given name.
 func GetSyncBranchSteps(branchName string, pushBranch bool) (result StepList) {
 	isFeature := git.Config().IsFeatureBranch(branchName)
-	hasRemoteOrigin := git.Config().HasRemote("origin")
+	hasRemoteOrigin := git.HasRemote("origin")
 
 	if !hasRemoteOrigin && !isFeature {
 		return
@@ -22,7 +22,7 @@ func GetSyncBranchSteps(branchName string, pushBranch bool) (result StepList) {
 		result.AppendList(getSyncNonFeatureBranchSteps(branchName))
 	}
 
-	if pushBranch && hasRemoteOrigin && !git.IsOffline() {
+	if pushBranch && hasRemoteOrigin && !git.Config().IsOffline() {
 		if git.HasTrackingBranch(branchName) {
 			result.Append(&PushBranchStep{BranchName: branchName})
 		} else {
@@ -53,7 +53,7 @@ func getSyncNonFeatureBranchSteps(branchName string) (result StepList) {
 	}
 
 	mainBranchName := git.Config().GetMainBranch()
-	if mainBranchName == branchName && git.Config().HasRemote("upstream") && git.Config().GetSyncUpstream() {
+	if mainBranchName == branchName && git.HasRemote("upstream") && git.Config().ShouldSyncUpstream() {
 		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}

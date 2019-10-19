@@ -54,6 +54,19 @@ Note that this can conflict with other tools that also define additional Git com
 	},
 }
 
+func addAlias(command string) {
+	result := git.Config().AddGitAlias(command)
+	script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
+}
+
+func removeAlias(command string) {
+	existingAlias := git.Config().GetGitAlias(command)
+	if existingAlias == "town "+command {
+		result := git.Config().RemoveGitAlias(command)
+		script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
+	}
+}
+
 func init() {
 	RootCmd.AddCommand(aliasCommand)
 }
