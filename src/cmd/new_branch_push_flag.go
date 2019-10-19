@@ -44,7 +44,7 @@ func setNewBranchPushFlag(value bool) {
 	if globalFlag {
 		git.UpdateGlobalShouldNewBranchPush(value)
 	} else {
-		git.UpdateShouldNewBranchPush(value)
+		git.Config().UpdateShouldNewBranchPush(value)
 	}
 }
 

@@ -367,8 +367,8 @@ func (c *Configuration) UpdateOffline(value bool) {
 
 // UpdateShouldNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func UpdateShouldNewBranchPush(value bool) {
-	setConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+func (c *Configuration) UpdateShouldNewBranchPush(value bool) {
+	c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
 // UpdateGlobalShouldNewBranchPush updates global whether to push
