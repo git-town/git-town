@@ -55,7 +55,7 @@ func printConfig() {
 		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}
 
-	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
+	util.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 	util.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
 }
 

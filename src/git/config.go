@@ -127,8 +127,6 @@ func (c *Configuration) AddToPerennialBranches(branchName string) {
 	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
 }
 
-// ===================================================================================
-
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func (c *Configuration) DeleteParentBranch(branchName string) {
@@ -214,8 +212,12 @@ func (c *Configuration) GetPerennialBranches() []string {
 }
 
 // GetPullBranchStrategy returns the currently configured pull branch strategy.
-func GetPullBranchStrategy() string {
-	return getConfigurationValueWithDefault("git-town.pull-branch-strategy", "rebase")
+func (c *Configuration) GetPullBranchStrategy() string {
+	config := c.getLocalOrGlobalConfigValue("git-town.pull-branch-strategy")
+	if config != "" {
+		return config
+	}
+	return "rebase"
 }
 
 // GetRemoteOriginURL returns the URL for the "origin" remote.
