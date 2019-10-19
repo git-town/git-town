@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"github.com/Originate/git-town/src/script"
+
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -33,11 +36,14 @@ When adding aliases, no existing aliases will be overwritten.
 Note that this can conflict with other tools that also define additional Git commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle := util.StringToBool(args[0])
-		for _, command := range commandsToAlias {
+		for _, commandToAlias := range commandsToAlias {
+			var result *command.Result
 			if toggle {
-				git.Config().SetGitAlias(command)
+				result = git.Config().SetGitAlias(commandToAlias)
+				ran := append([]string{result.Command()}, result.Args()...)
+				script.PrintCommand(ran...)
 			} else {
-				git.Config().RemoveGitAlias(command)
+				git.Config().RemoveGitAlias(commandToAlias)
 			}
 		}
 	},

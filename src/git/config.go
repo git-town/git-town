@@ -120,9 +120,9 @@ func (c *Configuration) setLocalConfigValue(key, value string) {
 	c.localConfigCache[key] = value
 }
 
-func (c *Configuration) setGlobalConfigValue(key, value string) {
-	command.RunInDir(c.localDir, "git", "config", "--global", key, value)
+func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
+	return command.RunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
@@ -338,8 +338,8 @@ func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 }
 
 // SetGitAlias sets the given Git alias.
-func (c *Configuration) SetGitAlias(command string) {
-	c.setGlobalConfigValue("alias."+command, "town "+command)
+func (c *Configuration) SetGitAlias(command string) *command.Result {
+	return c.setGlobalConfigValue("alias."+command, "town "+command)
 }
 
 // SetMainBranch marks the given branch as the main branch
