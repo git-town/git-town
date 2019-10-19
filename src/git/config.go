@@ -251,25 +251,25 @@ func (c *Configuration) HasParentBranch(branchName string) bool {
 	return c.GetParentBranch(branchName) != ""
 }
 
-// IsAncestorBranch returns whether the given branch is an ancestor of the other given branch.
+// IsAncestorBranch indicates whether the given branch is an ancestor of the other given branch.
 func (c *Configuration) IsAncestorBranch(branchName, ancestorBranchName string) bool {
 	ancestorBranches := c.GetAncestorBranches(branchName)
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
 
-// IsFeatureBranch returns whether the branch with the given name is
+// IsFeatureBranch indicates whether the branch with the given name is
 // a feature branch.
 func (c *Configuration) IsFeatureBranch(branchName string) bool {
 	return !c.IsMainBranch(branchName) && !c.IsPerennialBranch(branchName)
 }
 
-// IsMainBranch returns whether the branch with the given name
+// IsMainBranch indicates whether the branch with the given name
 // is the main branch of the repository.
 func (c *Configuration) IsMainBranch(branchName string) bool {
 	return branchName == c.GetMainBranch()
 }
 
-// IsOffline returns whether Git Town is currently in offline mode
+// IsOffline indicates whether Git Town is currently in offline mode
 func (c *Configuration) IsOffline() bool {
 	config := c.getGlobalConfigValue("git-town.offline")
 	if config != "" {
@@ -278,7 +278,7 @@ func (c *Configuration) IsOffline() bool {
 	return false
 }
 
-// IsPerennialBranch returns whether the branch with the given name is
+// IsPerennialBranch indicates whether the branch with the given name is
 // a perennial branch.
 func (c *Configuration) IsPerennialBranch(branchName string) bool {
 	perennialBranches := c.GetPerennialBranches()
