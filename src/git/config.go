@@ -367,14 +367,12 @@ func (c *Configuration) UpdateOffline(value bool) {
 
 // UpdateShouldNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func (c *Configuration) UpdateShouldNewBranchPush(value bool) {
-	c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-}
-
-// UpdateGlobalShouldNewBranchPush updates global whether to push
-// freshly created branches up to the origin remote.
-func UpdateGlobalShouldNewBranchPush(value bool) {
-	setGlobalConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+func (c *Configuration) UpdateShouldNewBranchPush(value bool, global bool) {
+	if global {
+		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	} else {
+		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	}
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode

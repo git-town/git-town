@@ -41,11 +41,7 @@ func printNewBranchPushFlag() {
 }
 
 func setNewBranchPushFlag(value bool) {
-	if globalFlag {
-		git.UpdateGlobalShouldNewBranchPush(value)
-	} else {
-		git.Config().UpdateShouldNewBranchPush(value)
-	}
+	git.Config().UpdateShouldNewBranchPush(value, globalFlag)
 }
 
 func init() {
