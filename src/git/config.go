@@ -354,6 +354,16 @@ func (c *Configuration) SetMainBranch(branchName string) {
 	c.setLocalConfigValue("git-town.main-branch-name", branchName)
 }
 
+// SetNewBranchPush updates whether the current repository is configured to push
+// freshly created branches up to the origin remote.
+func (c *Configuration) SetNewBranchPush(value bool, global bool) {
+	if global {
+		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	} else {
+		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	}
+}
+
 // SetOffline updates whether Git Town is in offline mode
 func (c *Configuration) SetOffline(value bool) {
 	c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
@@ -373,16 +383,6 @@ func (c *Configuration) SetPerennialBranches(branchNames []string) {
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Configuration) SetPullBranchStrategy(strategy string) {
 	c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
-}
-
-// SetShouldNewBranchPush updates whether the current repository is configured to push
-// freshly created branches up to the origin remote.
-func (c *Configuration) SetShouldNewBranchPush(value bool, global bool) {
-	if global {
-		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	} else {
-		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	}
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push

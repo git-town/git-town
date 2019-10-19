@@ -43,7 +43,7 @@ func printNewBranchPushFlag() {
 }
 
 func setNewBranchPushFlag(value bool) {
-	git.Config().SetShouldNewBranchPush(value, globalFlag)
+	git.Config().SetNewBranchPush(value, globalFlag)
 }
 
 func init() {
