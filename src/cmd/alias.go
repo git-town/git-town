@@ -35,11 +35,11 @@ When adding aliases, no existing aliases will be overwritten.
 Note that this can conflict with other tools that also define additional Git commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle := util.StringToBool(args[0])
-		for _, commandToAlias := range commandsToAlias {
+		for _, command := range commandsToAlias {
 			if toggle {
-				addAlias(commandToAlias)
+				addAlias(command)
 			} else {
-				removeAlias(commandToAlias)
+				removeAlias(command)
 			}
 		}
 	},
@@ -51,15 +51,15 @@ Note that this can conflict with other tools that also define additional Git com
 	},
 }
 
-func addAlias(commandToAlias string) {
-	result := git.Config().SetGitAlias(commandToAlias)
+func addAlias(command string) {
+	result := git.Config().SetGitAlias(command)
 	script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
 }
 
-func removeAlias(commandToAlias string) {
-	existingAlias := git.Config().GetGitAlias(commandToAlias)
-	if existingAlias == "town "+commandToAlias {
-		result := git.Config().RemoveGitAlias(commandToAlias)
+func removeAlias(command string) {
+	existingAlias := git.Config().GetGitAlias(command)
+	if existingAlias == "town "+command {
+		result := git.Config().RemoveGitAlias(command)
 		script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
 	}
 }
