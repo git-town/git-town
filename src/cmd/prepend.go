@@ -47,7 +47,7 @@ See "sync" for information regarding remote upstream.`,
 func getPrependConfig(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") && !git.IsOffline() {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
@@ -65,7 +65,7 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.Config().ShouldNewBranchPush() && !git.IsOffline() {
+	if git.HasRemote("origin") && git.Config().ShouldNewBranchPush() && !git.Config().IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

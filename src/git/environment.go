@@ -4,21 +4,7 @@ import (
 	"errors"
 
 	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/util"
 )
-
-// IsOffline returns whether Git Town is currently in offline mode
-func IsOffline() bool {
-	return util.StringToBool(getConfigurationValueWithDefault("git-town.offline", "false"))
-}
-
-// ValidateIsOnline asserts that Git Town is not in offline mode
-func ValidateIsOnline() error {
-	if IsOffline() {
-		return errors.New("this command requires an active internet connection")
-	}
-	return nil
-}
 
 // ValidateIsRepository asserts that the current directory is in a repository
 func ValidateIsRepository() error {

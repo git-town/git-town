@@ -54,7 +54,7 @@ This can be disabled with "git config git-town.sync-upstream false".`,
 }
 
 func getSyncConfig() (result syncConfig) {
-	if git.HasRemote("origin") && !git.IsOffline() {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		script.Fetch()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
@@ -76,7 +76,7 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
+	if git.HasRemote("origin") && config.ShouldPushTags && !git.Config().IsOffline() {
 		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

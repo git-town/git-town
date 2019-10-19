@@ -22,7 +22,7 @@ func GetSyncBranchSteps(branchName string, pushBranch bool) (result StepList) {
 		result.AppendList(getSyncNonFeatureBranchSteps(branchName))
 	}
 
-	if pushBranch && hasRemoteOrigin && !git.IsOffline() {
+	if pushBranch && hasRemoteOrigin && !git.Config().IsOffline() {
 		if git.HasTrackingBranch(branchName) {
 			result.Append(&PushBranchStep{BranchName: branchName})
 		} else {

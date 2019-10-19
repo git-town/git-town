@@ -26,7 +26,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		return util.FirstError(
 			git.ValidateIsRepository,
 			validateIsConfigured,
-			git.ValidateIsOnline,
+			git.Config().ValidateIsOnline,
 		)
 	},
 }

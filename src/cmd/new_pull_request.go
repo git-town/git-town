@@ -45,7 +45,7 @@ where hostname matches what is in your ssh config file.`,
 		return util.FirstError(
 			git.ValidateIsRepository,
 			validateIsConfigured,
-			git.ValidateIsOnline,
+			git.Config().ValidateIsOnline,
 			drivers.ValidateHasDriver,
 		)
 	},

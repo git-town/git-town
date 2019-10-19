@@ -6,6 +6,7 @@ inside Git's metadata storage for the repository.
 package git
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -282,6 +283,15 @@ func (c *Configuration) IsMainBranch(branchName string) bool {
 	return branchName == c.GetMainBranch()
 }
 
+// IsOffline returns whether Git Town is currently in offline mode
+func (c *Configuration) IsOffline() bool {
+	config := c.getGlobalConfigValue("git-town.offline")
+	if config != "" {
+		return util.StringToBool(config)
+	}
+	return false
+}
+
 // IsPerennialBranch returns whether the branch with the given name is
 // a perennial branch.
 func (c *Configuration) IsPerennialBranch(branchName string) bool {
@@ -351,8 +361,8 @@ func (c *Configuration) GetGlobalNewBranchPushFlag() string {
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
-func UpdateOffline(value bool) {
-	setGlobalConfigurationValue("git-town.offline", strconv.FormatBool(value))
+func (c *Configuration) UpdateOffline(value bool) {
+	c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
 // UpdateShouldNewBranchPush updates whether the current repository is configured to push
@@ -365,6 +375,14 @@ func UpdateShouldNewBranchPush(value bool) {
 // freshly created branches up to the origin remote.
 func UpdateGlobalShouldNewBranchPush(value bool) {
 	setGlobalConfigurationValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+}
+
+// ValidateIsOnline asserts that Git Town is not in offline mode
+func (c *Configuration) ValidateIsOnline() error {
+	if c.IsOffline() {
+		return errors.New("this command requires an active internet connection")
+	}
+	return nil
 }
 
 // Helpers
