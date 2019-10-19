@@ -233,7 +233,7 @@ func (c *Configuration) GetRemoteOriginURL() string {
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
-func GetURLHostname(url string) string {
+func (c *Configuration) GetURLHostname(url string) string {
 	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
 	matches := hostnameRegex.FindStringSubmatch(url)
 	if matches == nil {
@@ -243,8 +243,8 @@ func GetURLHostname(url string) string {
 }
 
 // GetURLRepositoryName returns the repository name contains within the given Git URL.
-func GetURLRepositoryName(url string) string {
-	hostname := GetURLHostname(url)
+func (c *Configuration) GetURLRepositoryName(url string) string {
+	hostname := c.GetURLHostname(url)
 	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
 	exit.IfWrap(err, "Error compiling repository name regular expression")
 	matches := repositoryNameRegex.FindStringSubmatch(url)
