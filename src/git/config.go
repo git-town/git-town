@@ -342,8 +342,12 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 
 // GetGlobalNewBranchPushFlag returns the global configuration for to push
 // freshly created branches up to the origin remote.
-func GetGlobalNewBranchPushFlag() string {
-	return getGlobalConfigurationValueWithDefault("git-town.new-branch-push-flag", "false")
+func (c *Configuration) GetGlobalNewBranchPushFlag() string {
+	config := c.getLocalOrGlobalConfigValue("git-town.new-branch-push-flag")
+	if config != "" {
+		return config
+	}
+	return "false"
 }
 
 // UpdateOffline updates whether Git Town is in offline mode
