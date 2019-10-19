@@ -270,12 +270,6 @@ func (c *Configuration) IsAncestorBranch(branchName, ancestorBranchName string) 
 	return util.DoesStringArrayContain(ancestorBranches, ancestorBranchName)
 }
 
-// HasRemote returns whether the current repository contains a Git remote
-// with the given name.
-func HasRemote(name string) bool {
-	return util.DoesStringArrayContain(getRemotes(), name)
-}
-
 // IsFeatureBranch returns whether the branch with the given name is
 // a feature branch.
 func (c *Configuration) IsFeatureBranch(branchName string) bool {
@@ -407,18 +401,6 @@ func setGlobalConfigurationValue(key, value string) {
 func removeConfigurationValue(key string) {
 	command.Run("git", "config", "--unset", key)
 	configMap.Delete(key)
-}
-
-// Remotes are cached in order to minimize the number of git commands run
-var remotes []string
-var remotesInitialized bool
-
-func getRemotes() []string {
-	if !remotesInitialized {
-		remotes = command.Run("git", "remote").OutputLines()
-		remotesInitialized = true
-	}
-	return remotes
 }
 
 // Init
