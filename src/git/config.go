@@ -20,6 +20,71 @@ import (
 var configMap *ConfigMap
 var globalConfigMap *ConfigMap
 
+// Configuration manages the Git Town configuration,
+// stored in Git metadata in the given local repo and the global Git configuration.
+type Configuration struct {
+
+	// localDir contains the directory of the local Git repo.
+	localDir string
+
+	// localConfigCache is a cache of the Git configuration in the local directory.
+	localConfigCache map[string]string
+
+	// globalConfigCache is a cache of the global Git configuration.
+	globalConfigCache map[string]string
+}
+
+// Config provides the current configuration.
+func Config() *Configuration {
+	if currentDirConfig == nil {
+		currentDirConfig = NewConfiguration("")
+	}
+	return currentDirConfig
+}
+
+// currentDirConfig provides access to the Git Town configuration in the current working directory.
+var currentDirConfig *Configuration
+
+// NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
+func NewConfiguration(dir string) *Configuration {
+	result := &Configuration{
+		localDir:          dir,
+		localConfigCache:  loadCache(dir, false),
+		globalConfigCache: loadCache(dir, true),
+	}
+	return result
+}
+
+func loadCache(dir string, global bool) map[string]string {
+	result := map[string]string{}
+	cmdArgs := []string{"config", "-lz"}
+	var res *command.Result
+	if global {
+		cmdArgs = append(cmdArgs, "--global")
+		res = command.RunInDir(dir, "git", cmdArgs...)
+	} else {
+		cmdArgs = append(cmdArgs, "--local")
+		res = command.RunInDir(dir, "git", cmdArgs...)
+	}
+	if res.Err() != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
+		return result
+	}
+	exit.If(res.Err())
+	output := res.Output()
+	if output == "" {
+		return result
+	}
+	for _, line := range strings.Split(output, "\x00") {
+		if len(line) == 0 {
+			continue
+		}
+		parts := strings.SplitN(line, "\n", 2)
+		key, value := parts[0], parts[1]
+		result[key] = value
+	}
+	return result
+}
+
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
 	SetPerennialBranches(append(GetPerennialBranches(), branchName))
