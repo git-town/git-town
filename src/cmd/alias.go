@@ -36,13 +36,9 @@ Note that this can conflict with other tools that also define additional Git com
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
-				outcome := git.Config().AddAlias(command)
-				script.PrintCommand(outcome.Command(), outcome.Args()...)
+				addAlias(command)
 			} else {
-				outcome := git.Config().RemoveAlias(command)
-				if outcome != nil {
-					script.PrintCommand(outcome.Command(), outcome.Args()...)
-				}
+				removeAlias(command)
 			}
 		}
 	},
@@ -56,14 +52,14 @@ Note that this can conflict with other tools that also define additional Git com
 
 func addAlias(command string) {
 	result := git.Config().AddGitAlias(command)
-	script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
+	script.PrintCommand(result.Command(), result.Args()...)
 }
 
 func removeAlias(command string) {
 	existingAlias := git.Config().GetGitAlias(command)
 	if existingAlias == "town "+command {
 		result := git.Config().RemoveGitAlias(command)
-		script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
+		script.PrintCommand(result.Command(), result.Args()...)
 	}
 }
 

@@ -32,7 +32,7 @@ This usually means the branch was shipped or killed on another machine.`,
 }
 
 func checkPruneBranchesPreconditions() {
-	if git.Config().HasRemote("origin") {
+	if git.HasRemote("origin") {
 		script.Fetch()
 	}
 }

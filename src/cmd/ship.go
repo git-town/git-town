@@ -112,7 +112,7 @@ func getShipStepList(config shipConfig) steps.StepList {
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
-	if git.Config().HasRemote("origin") && !isOffline {
+	if git.HasRemote("origin") && !isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
@@ -132,7 +132,7 @@ func getShipStepList(config shipConfig) steps.StepList {
 }
 
 func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
-	if !git.Config().HasRemote("origin") {
+	if !git.HasRemote("origin") {
 		return false, ""
 	}
 	if git.Config().IsOffline() {

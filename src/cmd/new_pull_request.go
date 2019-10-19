@@ -52,7 +52,7 @@ where hostname matches what is in your ssh config file.`,
 }
 
 func getNewPullRequestConfig() (result newPullRequestConfig) {
-	if git.Config().HasRemote("origin") {
+	if git.HasRemote("origin") {
 		script.Fetch()
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
