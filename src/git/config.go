@@ -232,11 +232,6 @@ func (c *Configuration) GetRemoteOriginURL() string {
 	return command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
-// GetRemoteUpstreamURL returns the URL of the "upstream" remote.
-func GetRemoteUpstreamURL() string {
-	return command.Run("git", "remote", "get-url", "upstream").OutputSanitized()
-}
-
 // GetURLHostname returns the hostname contained within the given Git URL.
 func GetURLHostname(url string) string {
 	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
