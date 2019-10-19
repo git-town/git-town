@@ -46,15 +46,15 @@ var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
 func NewConfiguration(dir string) *Configuration {
-	result := &Configuration{
+	return &Configuration{
 		localDir:          dir,
-		localConfigCache:  loadCache(dir, false),
-		globalConfigCache: loadCache(dir, true),
+		localConfigCache:  loadGitConfig(dir, false),
+		globalConfigCache: loadGitConfig(dir, true),
 	}
-	return result
 }
 
-func loadCache(dir string, global bool) map[string]string {
+// loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
+func loadGitConfig(dir string, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	var res *command.Result
