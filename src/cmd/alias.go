@@ -51,7 +51,7 @@ Note that this can conflict with other tools that also define additional Git com
 }
 
 func addAlias(command string) {
-	result := git.Config().SetGitAlias(command)
+	result := git.Config().AddGitAlias(command)
 	script.PrintCommand(append([]string{result.Command()}, result.Args()...)...)
 }
 

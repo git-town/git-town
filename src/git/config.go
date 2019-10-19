@@ -91,6 +91,11 @@ func (c *Configuration) AddToPerennialBranches(branchName string) {
 	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
 }
 
+// AddGitAlias sets the given Git alias.
+func (c *Configuration) AddGitAlias(command string) *command.Result {
+	return c.setGlobalConfigValue("alias."+command, "town "+command)
+}
+
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func (c *Configuration) DeleteParentBranch(branchName string) {
@@ -330,11 +335,6 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 			c.DeleteParentBranch(child)
 		}
 	}
-}
-
-// SetGitAlias sets the given Git alias.
-func (c *Configuration) SetGitAlias(command string) *command.Result {
-	return c.setGlobalConfigValue("alias."+command, "town "+command)
 }
 
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
