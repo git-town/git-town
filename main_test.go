@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 		FeatureContext(s)
 	}, godog.Options{
 		Format: "progress",
-		Paths:  []string{"features/git-town-append/on-child-branch.feature"},
+		Paths:  []string{"features/git-town-append/on-perennial-branch.feature"},
 	})
 	if st := m.Run(); st > status {
 		status = st

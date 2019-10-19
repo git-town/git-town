@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
@@ -24,6 +25,10 @@ type GitRepository struct {
 
 	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
+
+	// configCache contains the Git Town configuration to use.
+	// This value is lazy loaded. Please use Configuration() to access it.
+	configCache *git.Configuration
 }
 
 // NewGitRepository provides a new GitRepository instance working in the given directory.
@@ -145,11 +150,21 @@ func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (resu
 	return result, nil
 }
 
-// CreateFeatureBranch creates a branch with the given name in this repository.
-func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	output, err := repo.Run("git", "town", "hack", name)
+// Configuration lazy-loads the Git-Town configuration for this repo.
+func (repo *GitRepository) Configuration() *git.Configuration {
+	if repo.configCache == nil {
+		repo.configCache = git.NewConfiguration(repo.Dir)
+	}
+	return repo.configCache
+}
+
+// CreateBranch creates a new branch with the given name.
+// The created branch is a normal branch.
+// To create feature branches, use CreateFeatureBranch.
+func (repo *GitRepository) CreateBranch(name string) error {
+	output, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
+		return errors.Wrapf(err, "cannot create branch %q: %s", name, output)
 	}
 	return nil
 }
@@ -182,12 +197,33 @@ func (repo *GitRepository) CreateCommit(commit gherkintools.Commit, push bool) e
 	return nil
 }
 
+// CreateFeatureBranch creates a branch with the given name in this repository.
+func (repo *GitRepository) CreateFeatureBranch(name string) error {
+	output, err := repo.Run("git", "town", "hack", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
+	}
+	return nil
+}
+
 // CreateFile creates a file with the given name and content in this repository.
 func (repo *GitRepository) CreateFile(name, content string) error {
 	err := ioutil.WriteFile(path.Join(repo.Dir, name), []byte(content), 0744)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q", name)
 	}
+	return nil
+}
+
+// CreatePerennialBranches creates perennial branches with the given names in this repository.
+func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
+	for _, name := range names {
+		err := repo.CreateBranch(name)
+		if err != nil {
+			return errors.Wrapf(err, "cannot create perennial branch %q in repo %q", name, repo.Dir)
+		}
+	}
+	repo.Configuration().AddToPerennialBranches(names...)
 	return nil
 }
 
@@ -229,6 +265,15 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
 	}
 	return true, nil
+}
+
+// PushBranch pushes the branch with the given name to the remote.
+func (repo *GitRepository) PushBranch(name string) error {
+	output, err := repo.Run("git", "push", "-u", "origin", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot push branch %q in repo %q to origin: %s", name, repo.Dir, output)
+	}
+	return nil
 }
 
 // RegisterOriginalCommit tracks the given commit as existing in this repo before the system under test executed.

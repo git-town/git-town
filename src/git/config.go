@@ -62,12 +62,12 @@ func (c *Configuration) AddAlias(cmd string) *command.Result {
 	key := "alias." + cmd
 	value := "town " + cmd
 	c.globalConfigCache[key] = value
-	return command.Run("git", "config", "--global", key, value)
+	return command.RunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // AddToPerennialBranches adds the given branch as a perennial branch
-func (c *Configuration) AddToPerennialBranches(branchName string) {
-	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
+func (c *Configuration) AddToPerennialBranches(names ...string) {
+	c.SetPerennialBranches(append(c.GetPerennialBranches(), names...))
 }
 
 // DeleteParentBranch removes the parent branch entry for the given branch
@@ -172,12 +172,12 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.Run("git", "remote", "get-url", "origin").OutputSanitized()
+	return command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func (c *Configuration) GetRemoteUpstreamURL() string {
-	return command.Run("git", "remote", "get-url", "upstream").OutputSanitized()
+	return command.RunInDir(c.localDir, "git", "remote", "get-url", "upstream").OutputSanitized()
 }
 
 // GetSyncUpstream indicates whether this repository is configured to sync to its upstream remote.
@@ -208,7 +208,7 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 
 // HasGlobalConfigurationValue returns whether there is a global git configuration for the given key
 func (c *Configuration) HasGlobalConfigurationValue(key string) bool {
-	return command.Run("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
+	return command.RunInDir(c.localDir, "git", "config", "-l", "--global", "--name").OutputContainsLine(key)
 }
 
 // HasParentBranch returns whether or not the given branch has a parent
@@ -252,14 +252,14 @@ func (c *Configuration) RemoveAlias(cmd string) *command.Result {
 	key := "alias." + cmd
 	previousAlias := c.globalConfigCache[key]
 	if previousAlias == "town "+cmd {
-		return command.Run("git", "config", "--global", "--unset", key)
+		return command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
 	}
 	return nil
 }
 
 // RemoveAllConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveAllConfiguration() {
-	command.Run("git", "config", "--remove-section", "git-town").OutputSanitized()
+	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
@@ -360,7 +360,7 @@ func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 	var res *command.Result
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
-		res = command.Run("git", cmdArgs...)
+		res = command.RunInDir(c.localDir, "git", cmdArgs...)
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 		res = command.RunInDir(c.localDir, "git", cmdArgs...)
@@ -384,12 +384,12 @@ func (c *Configuration) initializeCache(global bool, cache map[string]string) {
 }
 
 func (c *Configuration) setConfigurationValue(key, value string) {
-	command.Run("git", "config", key, value)
+	command.RunInDir(c.localDir, "git", "config", key, value)
 	c.localConfigCache[key] = value
 }
 
 func (c *Configuration) setGlobalConfigurationValue(key, value string) {
-	command.Run("git", "config", "--global", key, value)
+	command.RunInDir(c.localDir, "git", "config", "--global", key, value)
 	c.globalConfigCache[key] = value
 	c.localConfigCache = map[string]string{} // Need to reset config in case it was inheriting
 	c.initializeCache(false, c.localConfigCache)
@@ -397,13 +397,13 @@ func (c *Configuration) setGlobalConfigurationValue(key, value string) {
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (c *Configuration) removeLocalConfigurationValue(key string) {
-	command.Run("git", "config", "--unset", key)
+	command.RunInDir(c.localDir, "git", "config", "--unset", key)
 	delete(c.localConfigCache, key)
 }
 
 func (c *Configuration) getRemotes() []string {
 	if !c.remotesInitialized {
-		c.remotes = command.Run("git", "remote").OutputLines()
+		c.remotes = command.RunInDir(c.localDir, "git", "remote").OutputLines()
 		c.remotesInitialized = true
 	}
 	return c.remotes
