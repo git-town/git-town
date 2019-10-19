@@ -85,14 +85,6 @@ GitManager instance that is shared by all threads.
   - your pull request for the feature that requires the new library should
     contain the updated `Gopkg.*` files and vendor folder
 
-## Debugging
-
-To debug a Go-based Cucumber spec in VSCode:
-
-- open `main_test.go`
-- in this file, change the path of the test to execute
-- run the `debug a test` configuration in the debugger
-
 ## Command documentation
 
 Every Git Town command
