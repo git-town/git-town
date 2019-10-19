@@ -200,6 +200,11 @@ func (c *Configuration) GetChildBranches(branchName string) (result []string) {
 	return
 }
 
+// GetGitAlias provides the currently set alias for the given Git Town command.
+func (c *Configuration) GetGitAlias(command string) string {
+	return c.getGlobalConfigValue("alias." + command)
+}
+
 // GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
 func (c *Configuration) GitHubToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.github-token")
@@ -307,14 +312,13 @@ func (c *Configuration) IsPerennialBranch(branchName string) bool {
 }
 
 // RemoveGitAlias removes the given Git alias.
-func (c *Configuration) RemoveGitAlias(command string) {
-	c.removeGlobalConfigValue("alias." + command)
-
+func (c *Configuration) RemoveGitAlias(command string) *command.Result {
+	return c.removeGlobalConfigValue("alias." + command)
 }
 
-func (c *Configuration) removeGlobalConfigValue(key string) {
+func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	return command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration

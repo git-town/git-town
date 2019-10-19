@@ -37,13 +37,18 @@ Note that this can conflict with other tools that also define additional Git com
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle := util.StringToBool(args[0])
 		for _, commandToAlias := range commandsToAlias {
-			var result *command.Result
+			var result *command.Result = nil
 			if toggle {
 				result = git.Config().SetGitAlias(commandToAlias)
+			} else {
+				existingAlias := git.Config().GetGitAlias(commandToAlias)
+				if existingAlias == "town "+commandToAlias {
+					result = git.Config().RemoveGitAlias(commandToAlias)
+				}
+			}
+			if result != nil {
 				ran := append([]string{result.Command()}, result.Args()...)
 				script.PrintCommand(ran...)
-			} else {
-				git.Config().RemoveGitAlias(commandToAlias)
 			}
 		}
 	},
