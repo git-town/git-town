@@ -89,16 +89,6 @@ func (c *Configuration) AddToPerennialBranches(branchName string) {
 	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
 }
 
-// CodeHostingDriverName provides the name of the code hosting driver to use.
-func (c *Configuration) CodeHostingDriverName() string {
-	return c.getLocalOrGlobalConfigValue("git-town.code-hosting-driver")
-}
-
-// CodeHostingOriginHostname provides the host name of the code hosting server.
-func (c *Configuration) CodeHostingOriginHostname() string {
-	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
-}
-
 // DeleteParentBranch removes the parent branch entry for the given branch
 // from the Git configuration.
 func (c *Configuration) DeleteParentBranch(branchName string) {
@@ -140,6 +130,16 @@ func (c *Configuration) GetChildBranches(branchName string) (result []string) {
 		}
 	}
 	return
+}
+
+// GetCodeHostingDriverName provides the name of the code hosting driver to use.
+func (c *Configuration) GetCodeHostingDriverName() string {
+	return c.getLocalOrGlobalConfigValue("git-town.code-hosting-driver")
+}
+
+// GetCodeHostingOriginHostname provides the host name of the code hosting server.
+func (c *Configuration) GetCodeHostingOriginHostname() string {
+	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
 // getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
@@ -362,6 +362,11 @@ func (c *Configuration) SetMainBranch(branchName string) {
 	c.setLocalConfigValue("git-town.main-branch-name", branchName)
 }
 
+// SetOffline updates whether Git Town is in offline mode
+func (c *Configuration) SetOffline(value bool) {
+	c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (c *Configuration) SetParentBranch(branchName, parentBranchName string) {
@@ -378,6 +383,16 @@ func (c *Configuration) SetPullBranchStrategy(strategy string) {
 	c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 
+// SetShouldNewBranchPush updates whether the current repository is configured to push
+// freshly created branches up to the origin remote.
+func (c *Configuration) SetShouldNewBranchPush(value bool, global bool) {
+	if global {
+		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	} else {
+		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+	}
+}
+
 // ShouldNewBranchPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func (c *Configuration) ShouldNewBranchPush() bool {
@@ -391,21 +406,6 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
 func (c *Configuration) ShouldSyncUpstream() bool {
 	return c.getLocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
-}
-
-// UpdateOffline updates whether Git Town is in offline mode
-func (c *Configuration) UpdateOffline(value bool) {
-	c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
-}
-
-// UpdateShouldNewBranchPush updates whether the current repository is configured to push
-// freshly created branches up to the origin remote.
-func (c *Configuration) UpdateShouldNewBranchPush(value bool, global bool) {
-	if global {
-		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	} else {
-		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	}
 }
 
 // ValidateIsOnline asserts that Git Town is not in offline mode

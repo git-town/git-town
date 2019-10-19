@@ -12,9 +12,9 @@ var activeDriver CodeHostingDriver
 func GetActiveDriver() CodeHostingDriver {
 	if activeDriver == nil {
 		activeDriver = GetDriver(DriverOptions{
-			DriverType:     git.Config().CodeHostingDriverName(),
+			DriverType:     git.Config().GetCodeHostingDriverName(),
 			OriginURL:      git.Config().GetRemoteOriginURL(),
-			OriginHostname: git.Config().CodeHostingOriginHostname(),
+			OriginHostname: git.Config().GetCodeHostingOriginHostname(),
 		})
 		if activeDriver != nil {
 			activeDriver.SetAPIToken(activeDriver.GetAPIToken())
