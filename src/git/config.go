@@ -20,8 +20,9 @@ import (
 var configMap *ConfigMap
 var globalConfigMap *ConfigMap
 
-// Configuration manages the Git Town configuration,
+// Configuration manages the Git Town configuration
 // stored in Git metadata in the given local repo and the global Git configuration.
+// This class is aware which config values are stored in local vs global settings.
 type Configuration struct {
 
 	// localDir contains the directory of the local Git repo.
@@ -84,6 +85,25 @@ func loadCache(dir string, global bool) map[string]string {
 	}
 	return result
 }
+
+// setConfigurationValue sets the local configuration with the given key to the given value.
+func (c *Configuration) setConfigurationValue(key, value string) {
+	command.RunInDir(c.localDir, "git", "config", key, value)
+	c.localConfigCache[key] = value
+}
+
+func (c *Configuration) setGlobalConfigurationValue(key, value string) {
+	command.RunInDir(c.localDir, "git", "config", "--global", key, value)
+	c.globalConfigCache[key] = value
+}
+
+// removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
+func (c *Configuration) removeLocalConfigurationValue(key string) {
+	command.RunInDir(c.localDir, "git", "config", "--unset", key)
+	delete(c.localConfigCache, key)
+}
+
+// ===================================================================================
 
 // AddToPerennialBranches adds the given branch as a perennial branch
 func AddToPerennialBranches(branchName string) {
