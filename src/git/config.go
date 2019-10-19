@@ -18,6 +18,8 @@ import (
 )
 
 // config provides access to the Git Town configuration.
+// This value is lazy loaded to allow running Git Town outside of a Git repository.
+// Please use Config() to access it.
 var config *Configuration
 
 // Configuration manages the Git Town configuration,
