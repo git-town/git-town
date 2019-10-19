@@ -18,10 +18,10 @@ func (step *ResetToShaStep) Run() error {
 	if step.Sha == git.GetCurrentSha() {
 		return nil
 	}
-	cmd := []string{"git", "reset"}
+	args := []string{"reset"}
 	if step.Hard {
-		cmd = append(cmd, "--hard")
+		args = append(args, "--hard")
 	}
-	cmd = append(cmd, step.Sha)
-	return script.RunCommand(cmd...)
+	args = append(args, step.Sha)
+	return script.RunCommand("git", args...)
 }
