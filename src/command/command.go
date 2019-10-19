@@ -1,6 +1,7 @@
 package command
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -10,17 +11,47 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	err    error
-	output string
+	command string
+	args    []string
+	err     error
+	output  string
 }
 
 // Run executes the command given in argv notation.
-func Run(argv ...string) *Result {
-	name, args := argv[0], argv[1:]
-	logRun(argv...)
-	subProcess := exec.Command(name, args...) // #nosec
+func Run(cmd string, args ...string) *Result {
+	return RunInDir("", cmd, args...)
+}
+
+// RunInDir executes the given command in the given directory.
+func RunInDir(dir string, cmd string, args ...string) *Result {
+	return RunDirEnv(dir, os.Environ(), cmd, args...)
+}
+
+// RunDirEnv executes the given command in the given directory, using the given environment variables.
+func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
+	logRun(cmd, args...)
+	subProcess := exec.Command(cmd, args...) // #nosec
+	if dir != "" {
+		subProcess.Dir = dir
+	}
+	subProcess.Env = env
 	output, err := subProcess.CombinedOutput()
-	return &Result{err: err, output: stripansi.Strip(strings.TrimSpace(string(output)))}
+	return &Result{
+		command: cmd,
+		args:    args,
+		err:     err,
+		output:  string(output),
+	}
+}
+
+// Args provids the arguments used when running the command.
+func (c *Result) Args() []string {
+	return c.args
+}
+
+// Command provides the command run that led to this result.
+func (c *Result) Command() string {
+	return c.command
 }
 
 // Output returns the output of this command.
@@ -32,7 +63,12 @@ func (c *Result) Output() string {
 // OutputLines returns the output of this command, split into lines.
 // Runs if it hasn't so far.
 func (c *Result) OutputLines() []string {
-	return strings.Split(c.Output(), "\n")
+	return strings.Split(c.OutputSanitized(), "\n")
+}
+
+// OutputSanitized provides the output without ANSI color codes.
+func (c *Result) OutputSanitized() string {
+	return strings.TrimSpace(stripansi.Strip(c.output))
 }
 
 // Err returns the error that this command encountered.
