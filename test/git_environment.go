@@ -118,7 +118,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadella, err error) {
 	builder := NewCommitListBuilder()
 
-	localCommits, err := env.DeveloperRepo.Commits()
+	localCommits, err := env.DeveloperRepo.Commits(fields)
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine commits in the developer repo")
 	}
@@ -126,7 +126,7 @@ func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadel
 		builder.Add(localCommit, "local")
 	}
 
-	remoteCommits, err := env.OriginRepo.Commits()
+	remoteCommits, err := env.OriginRepo.Commits(fields)
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine commits in the origin repo")
 	}

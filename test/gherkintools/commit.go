@@ -58,6 +58,10 @@ func (commit *Commit) Set(name, value string) (err error) {
 		commit.Location = []string{value}
 	case "MESSAGE":
 		commit.Message = value
+	case "FILE NAME":
+		commit.FileName = value
+	case "FILE CONTENT":
+		commit.FileContent = value
 	default:
 		return fmt.Errorf("unknown Commit property: %s", name)
 	}

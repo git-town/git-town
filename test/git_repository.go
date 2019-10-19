@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Originate/git-town/src/util"
 	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
@@ -97,13 +98,13 @@ func (repo *GitRepository) CheckoutBranch(name string) error {
 }
 
 // Commits provides a tabular list of the commits in this Git repository with the given fields.
-func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
+func (repo *GitRepository) Commits(fields []string) (result []gherkintools.Commit, err error) {
 	branches, err := repo.Branches()
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine the Git branches")
 	}
 	for _, branch := range branches {
-		commits, err := repo.CommitsInBranch(branch)
+		commits, err := repo.CommitsInBranch(branch, fields)
 		if err != nil {
 			return result, err
 		}
@@ -113,7 +114,7 @@ func (repo *GitRepository) Commits() (result []gherkintools.Commit, err error) {
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools.Commit, err error) {
+func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (result []gherkintools.Commit, err error) {
 	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
@@ -124,6 +125,20 @@ func (repo *GitRepository) CommitsInBranch(branch string) (result []gherkintools
 		commit := gherkintools.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
+		}
+		if util.DoesStringArrayContain(fields, "FILE NAME") {
+			filenames, err := repo.FilesInCommit(commit.SHA)
+			if err != nil {
+				return result, err
+			}
+			commit.FileName = strings.Join(filenames, ", ")
+		}
+		if util.DoesStringArrayContain(fields, "FILE CONTENT") {
+			filecontent, err := repo.FileContentInCommit(commit.SHA, commit.FileName)
+			if err != nil {
+				return result, err
+			}
+			commit.FileContent = filecontent
 		}
 		result = append(result, commit)
 	}
@@ -183,6 +198,24 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
 	}
 	return strings.TrimSpace(output), nil
+}
+
+// FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
+func (repo *GitRepository) FileContentInCommit(sha string, filename string) (result string, err error) {
+	output, err := repo.Run("git", "show", sha+":"+filename)
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot determine the content for file %q in commit %q", filename, sha)
+	}
+	return output, nil
+}
+
+// FilesInCommit provides the names of the files that the commit with the given SHA changes.
+func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error) {
+	output, err := repo.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+	if err != nil {
+		return result, errors.Wrapf(err, "cannot get files for commit %q", sha)
+	}
+	return strings.Split(strings.TrimSpace(output), "\n"), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.

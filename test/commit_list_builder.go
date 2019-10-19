@@ -90,6 +90,10 @@ func (builder *CommitListBuilder) Table(fields []string) (result gherkintools.Mo
 					row = append(row, strings.Join(locations.Slice(), ", "))
 				case "MESSAGE":
 					row = append(row, commit.Message)
+				case "FILE NAME":
+					row = append(row, commit.FileName)
+				case "FILE CONTENT":
+					row = append(row, commit.FileContent)
 				default:
 					panic("unknown table field: " + field)
 				}
