@@ -162,7 +162,7 @@ func (c *Configuration) GetAncestorBranches(branchName string) (result []string)
 // GetParentBranchMap returns a map from branch name to its parent branch
 func (c *Configuration) GetParentBranchMap() map[string]string {
 	result := map[string]string{}
-	for _, key := range c.getLocalConfigKeysMatching("^git-town-branch\\..*\\.parent$") {
+	for _, key := range c.getLocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
 		parent := c.getLocalConfigValue(key)
 		result[child] = parent
@@ -173,7 +173,7 @@ func (c *Configuration) GetParentBranchMap() map[string]string {
 // GetChildBranches returns the names of all branches for which the given branch
 // is a parent.
 func (c *Configuration) GetChildBranches(branchName string) (result []string) {
-	for _, key := range c.getLocalConfigKeysMatching("^git-town-branch\\..*\\.parent$") {
+	for _, key := range c.getLocalConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
 		parent := c.getLocalConfigValue(key)
 		if parent == branchName {
 			child := strings.TrimSuffix(strings.TrimPrefix(key, "git-town-branch."), ".parent")
