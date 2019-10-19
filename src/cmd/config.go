@@ -50,7 +50,7 @@ func printConfig() {
 	util.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
 	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
 
-	mainBranch := git.GetMainBranch()
+	mainBranch := git.Config().GetMainBranch()
 	if mainBranch != "" {
 		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}

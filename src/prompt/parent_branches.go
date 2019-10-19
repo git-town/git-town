@@ -12,10 +12,10 @@ import (
 // Missing ancestry information is queried from the user.
 func EnsureKnowsParentBranches(branchNames []string) {
 	for _, branchName := range branchNames {
-		if git.IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.Config().HasParentBranch(branchName) {
+		if git.Config().IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.Config().HasParentBranch(branchName) {
 			continue
 		}
-		AskForBranchAncestry(branchName, git.GetMainBranch())
+		AskForBranchAncestry(branchName, git.Config().GetMainBranch())
 		if parentBranchHeaderShown {
 			fmt.Println()
 		}
@@ -36,7 +36,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 			}
 			git.Config().SetParentBranch(current, parent)
 		}
-		if parent == git.GetMainBranch() || git.Config().IsPerennialBranch(parent) {
+		if parent == git.Config().GetMainBranch() || git.Config().IsPerennialBranch(parent) {
 			break
 		}
 		current = parent
@@ -82,6 +82,6 @@ func filterOutSelfAndDescendants(branchName string, choices []string) []string {
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cfmt.Printf(parentBranchHeaderTemplate, git.GetMainBranch())
+		cfmt.Printf(parentBranchHeaderTemplate, git.Config().GetMainBranch())
 	}
 }

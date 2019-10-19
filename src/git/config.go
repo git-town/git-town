@@ -145,7 +145,7 @@ func (c *Configuration) GetAncestorBranches(branchName string) (result []string)
 	parentBranchMap := c.GetParentBranchMap()
 	current := branchName
 	for {
-		if IsMainBranch(current) || c.IsPerennialBranch(current) {
+		if c.IsMainBranch(current) || c.IsPerennialBranch(current) {
 			return
 		}
 		parent := parentBranchMap[current]
@@ -193,8 +193,8 @@ func GetGlobalConfigurationValue(key string) string {
 }
 
 // GetMainBranch returns the name of the main branch.
-func GetMainBranch() string {
-	return GetConfigurationValue("git-town.main-branch-name")
+func (c *Configuration) GetMainBranch() string {
+	return c.getLocalOrGlobalConfigValue("git-town.main-branch-name")
 }
 
 // GetParentBranch returns the name of the parent branch of the given branch.
@@ -273,13 +273,13 @@ func (c *Configuration) IsAncestorBranch(branchName, ancestorBranchName string) 
 // IsFeatureBranch returns whether the branch with the given name is
 // a feature branch.
 func (c *Configuration) IsFeatureBranch(branchName string) bool {
-	return !IsMainBranch(branchName) && !c.IsPerennialBranch(branchName)
+	return !c.IsMainBranch(branchName) && !c.IsPerennialBranch(branchName)
 }
 
 // IsMainBranch returns whether the branch with the given name
 // is the main branch of the repository.
-func IsMainBranch(branchName string) bool {
-	return branchName == GetMainBranch()
+func (c *Configuration) IsMainBranch(branchName string) bool {
+	return branchName == c.GetMainBranch()
 }
 
 // IsPerennialBranch returns whether the branch with the given name is
@@ -310,8 +310,8 @@ func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func SetMainBranch(branchName string) {
-	setConfigurationValue("git-town.main-branch-name", branchName)
+func (c *Configuration) SetMainBranch(branchName string) {
+	c.setLocalConfigValue("git-town.main-branch-name", branchName)
 }
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch

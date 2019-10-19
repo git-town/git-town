@@ -28,7 +28,7 @@ func promptForParentBranch() {
 	git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
 	defaultParentBranch := git.Config().GetParentBranch(branchName)
 	if defaultParentBranch == "" {
-		defaultParentBranch = git.GetMainBranch()
+		defaultParentBranch = git.Config().GetMainBranch()
 	}
 	git.Config().DeleteParentBranch(branchName)
 	prompt.AskForBranchAncestry(branchName, defaultParentBranch)

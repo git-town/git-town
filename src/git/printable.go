@@ -12,7 +12,7 @@ var noneString = "[none]"
 
 // GetPrintableMainBranch returns a user printable main branch
 func GetPrintableMainBranch() string {
-	output := GetMainBranch()
+	output := Config().GetMainBranch()
 	if output == "" {
 		return noneString
 	}

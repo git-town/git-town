@@ -41,7 +41,7 @@ func getPruneBranchesStepList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
-			result.Append(&steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
+			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config().GetMainBranch()})
 		}
 
 		parent := git.Config().GetParentBranch(branchName)

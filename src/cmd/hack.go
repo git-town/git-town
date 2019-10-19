@@ -41,11 +41,11 @@ See "sync" for information regarding remote upstream.`,
 
 func getParentBranch(targetBranch string) string {
 	if promptForParent {
-		parentBranch := prompt.AskForBranchParent(targetBranch, git.GetMainBranch())
+		parentBranch := prompt.AskForBranchParent(targetBranch, git.Config().GetMainBranch())
 		prompt.EnsureKnowsParentBranches([]string{parentBranch})
 		return parentBranch
 	}
-	return git.GetMainBranch()
+	return git.Config().GetMainBranch()
 }
 
 func getHackConfig(args []string) (result appendConfig) {

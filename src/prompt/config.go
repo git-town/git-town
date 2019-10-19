@@ -10,7 +10,7 @@ import (
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
 func EnsureIsConfigured() {
-	if git.GetMainBranch() == "" {
+	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		ConfigureMainBranch()
@@ -23,9 +23,9 @@ func ConfigureMainBranch() {
 	newMainBranch := askForBranch(askForBranchOptions{
 		branchNames:       git.GetLocalBranches(),
 		prompt:            getMainBranchPrompt(),
-		defaultBranchName: git.GetMainBranch(),
+		defaultBranchName: git.Config().GetMainBranch(),
 	})
-	git.SetMainBranch(newMainBranch)
+	git.Config().SetMainBranch(newMainBranch)
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches
@@ -46,7 +46,7 @@ func ConfigurePerennialBranches() {
 
 func getMainBranchPrompt() (result string) {
 	result += "Please specify the main development branch:"
-	currentMainBranch := git.GetMainBranch()
+	currentMainBranch := git.Config().GetMainBranch()
 	if currentMainBranch != "" {
 		coloredBranchName := color.New(color.Bold).Add(color.FgCyan).Sprintf(currentMainBranch)
 		result += fmt.Sprintf(" (current value: %s)", coloredBranchName)

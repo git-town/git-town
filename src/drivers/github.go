@@ -44,7 +44,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
-	if parentBranch != git.GetMainBranch() {
+	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))

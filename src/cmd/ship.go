@@ -84,7 +84,7 @@ func gitShipConfig(args []string) (result shipConfig) {
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	parentBranch := git.Config().GetParentBranch(branchName)
-	if !git.IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
+	if !git.Config().IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
 		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
