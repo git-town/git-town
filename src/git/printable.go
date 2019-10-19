@@ -42,7 +42,7 @@ func GetPrintablePerennialBranchTrees() string {
 
 // GetPrintableNewBranchPushFlag returns a user printable new branch push flag
 func GetPrintableNewBranchPushFlag() string {
-	return strconv.FormatBool(ShouldNewBranchPush())
+	return strconv.FormatBool(Config().ShouldNewBranchPush())
 }
 
 // GetPrintableBranchTree returns a user printable branch tree

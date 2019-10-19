@@ -332,8 +332,12 @@ func (c *Configuration) SetPullBranchStrategy(strategy string) {
 
 // ShouldNewBranchPush returns whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func ShouldNewBranchPush() bool {
-	return util.StringToBool(getConfigurationValueWithDefault("git-town.new-branch-push-flag", "false"))
+func (c *Configuration) ShouldNewBranchPush() bool {
+	config := c.getLocalOrGlobalConfigValue("git-town.new-branch-push-flag")
+	if config == "" {
+		return false
+	}
+	return util.StringToBool(config)
 }
 
 // GetGlobalNewBranchPushFlag returns the global configuration for to push
