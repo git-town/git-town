@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strconv"
+
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
@@ -34,7 +36,7 @@ if and only if "new-branch-push-flag" is true. The default value is false.`,
 
 func printNewBranchPushFlag() {
 	if globalFlag {
-		cfmt.Println(git.Config().GetGlobalNewBranchPushFlag())
+		cfmt.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
 		cfmt.Println(git.GetPrintableNewBranchPushFlag())
 	}

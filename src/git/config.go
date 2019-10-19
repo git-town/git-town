@@ -184,16 +184,6 @@ func (c *Configuration) GetGitHubToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.github-token")
 }
 
-// GetGlobalNewBranchPushFlag returns the global configuration for to push
-// freshly created branches up to the origin remote.
-func (c *Configuration) GetGlobalNewBranchPushFlag() string {
-	config := c.getLocalOrGlobalConfigValue("git-town.new-branch-push-flag")
-	if config != "" {
-		return config
-	}
-	return "false"
-}
-
 // GetMainBranch returns the name of the main branch.
 func (c *Configuration) GetMainBranch() string {
 	return c.getLocalOrGlobalConfigValue("git-town.main-branch-name")
@@ -395,7 +385,7 @@ func (c *Configuration) SetShouldNewBranchPush(value bool, global bool) {
 	}
 }
 
-// ShouldNewBranchPush returns whether the current repository is configured to push
+// ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func (c *Configuration) ShouldNewBranchPush() bool {
 	config := c.getLocalOrGlobalConfigValue("git-town.new-branch-push-flag")
@@ -403,6 +393,13 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 		return false
 	}
 	return util.StringToBool(config)
+}
+
+// ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
+// freshly created branches up to the origin remote.
+func (c *Configuration) ShouldNewBranchPushGlobal() bool {
+	config := c.getGlobalConfigValue("git-town.new-branch-push-flag")
+	return config == "true"
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
