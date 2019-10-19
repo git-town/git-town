@@ -32,8 +32,8 @@ type CodeHostingDriver interface {
 	// SetOriginHostname configures the driver with the origin hostname of the Git repo
 	SetOriginHostname(originHostname string)
 
-	// GetAPITokenKey returns the git config key value that the API token is stored under
-	GetAPITokenKey() string
+	// GetAPIToken returns the git config key value that the API token is stored under
+	GetAPIToken() string
 
 	// SetAPIToken configures the driver with API token
 	SetAPIToken(apiToken string)

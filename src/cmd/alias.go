@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
 )
@@ -36,9 +35,9 @@ Note that this can conflict with other tools that also define additional Git com
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
-				addAlias(command)
+				git.Config().SetGitAlias(command)
 			} else {
-				removeAlias(command)
+				git.Config().RemoveGitAlias(command)
 			}
 		}
 	},
@@ -48,26 +47,6 @@ Note that this can conflict with other tools that also define additional Git com
 		}
 		return cobra.ExactArgs(1)(cmd, args)
 	},
-}
-
-func addAlias(command string) {
-	script.RunCommandSafe("git", "config", "--global", getAliasKey(command), getAliasValue(command))
-}
-
-func getAliasKey(command string) string {
-	return "alias." + command
-}
-
-func getAliasValue(command string) string {
-	return "town " + command
-}
-
-func removeAlias(command string) {
-	key := getAliasKey(command)
-	previousAlias := git.GetGlobalConfigurationValue(key)
-	if previousAlias == getAliasValue(command) {
-		script.RunCommandSafe("git", "config", "--global", "--unset", key)
-	}
 }
 
 func init() {

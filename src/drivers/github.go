@@ -82,8 +82,8 @@ func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *githubCodeHostingDriver) GetAPITokenKey() string {
-	return "git-town.github-token"
+func (d *githubCodeHostingDriver) GetAPIToken() string {
+	return git.Config().GitHubToken()
 }
 
 func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {

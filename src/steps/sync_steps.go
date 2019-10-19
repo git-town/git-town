@@ -53,7 +53,7 @@ func getSyncNonFeatureBranchSteps(branchName string) (result StepList) {
 	}
 
 	mainBranchName := git.Config().GetMainBranch()
-	if mainBranchName == branchName && git.HasRemote("upstream") && git.GetConfigurationValue("git-town.sync-upstream") != "false" {
+	if mainBranchName == branchName && git.HasRemote("upstream") && git.Config().ShouldSyncUpstream() {
 		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}

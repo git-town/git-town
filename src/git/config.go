@@ -18,9 +18,6 @@ import (
 	"github.com/Originate/git-town/src/util"
 )
 
-var configMap *ConfigMap
-var globalConfigMap *ConfigMap
-
 // Configuration manages the Git Town configuration
 // stored in Git metadata in the given local repo and the global Git configuration.
 // This class is aware which config values are stored in local vs global settings.
@@ -87,6 +84,17 @@ func loadCache(dir string, global bool) map[string]string {
 	return result
 }
 
+// getLocalConfigKeysMatching provides the names of the Git Town configuration keys matching the given RegExp string.
+func (c *Configuration) getLocalConfigKeysMatching(toMatch string) (result []string) {
+	re := regexp.MustCompile(toMatch)
+	for key := range c.localConfigCache {
+		if re.MatchString(key) {
+			result = append(result, key)
+		}
+	}
+	return result
+}
+
 // getLocalConfigValue provides the configuration value with the given key from the local Git configuration.
 func (c *Configuration) getLocalConfigValue(key string) string {
 	return c.localConfigCache[key]
@@ -126,6 +134,16 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 // AddToPerennialBranches adds the given branch as a perennial branch
 func (c *Configuration) AddToPerennialBranches(branchName string) {
 	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
+}
+
+// CodeHostingDriverName provides the name of the code hosting driver to use.
+func (c *Configuration) CodeHostingDriverName() string {
+	return c.getLocalOrGlobalConfigValue("git-town.code-hosting-driver")
+}
+
+// CodeHostingOriginHostname provides the host name of the code hosting server.
+func (c *Configuration) CodeHostingOriginHostname() string {
+	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
 // DeleteParentBranch removes the parent branch entry for the given branch
@@ -182,15 +200,9 @@ func (c *Configuration) GetChildBranches(branchName string) (result []string) {
 	return
 }
 
-// GetConfigurationValue returns the given configuration value,
-// from either global or local Git configuration
-func GetConfigurationValue(key string) (result string) {
-	return configMap.Get(key)
-}
-
-// GetGlobalConfigurationValue returns the global git configuration value for the given key
-func GetGlobalConfigurationValue(key string) string {
-	return globalConfigMap.Get(key)
+// GitHubToken provides the content of the GitHub API token stored in the local or global Git Town configuration.
+func (c *Configuration) GitHubToken() string {
+	return c.getLocalOrGlobalConfigValue("git-town.github-token")
 }
 
 // GetMainBranch returns the name of the main branch.
@@ -255,11 +267,6 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 	return strings.TrimSuffix(matches[1], ".git")
 }
 
-// HasGlobalConfigurationValue returns whether there is a global git configuration for the given key
-func HasGlobalConfigurationValue(key string) bool {
-	return command.Run("git", "config", "-l", "--global", "--name").OutputContainsLine(key)
-}
-
 // HasParentBranch returns whether or not the given branch has a parent
 func (c *Configuration) HasParentBranch(branchName string) bool {
 	return c.GetParentBranch(branchName) != ""
@@ -299,7 +306,19 @@ func (c *Configuration) IsPerennialBranch(branchName string) bool {
 	return util.DoesStringArrayContain(perennialBranches, branchName)
 }
 
+// RemoveGitAlias removes the given Git alias.
+func (c *Configuration) RemoveGitAlias(command string) {
+	c.removeGlobalConfigValue("alias." + command)
+
+}
+
+func (c *Configuration) removeGlobalConfigValue(key string) {
+	delete(c.globalConfigCache, key)
+	command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+}
+
 // RemoveAllConfiguration removes all Git Town configuration
+// TODO: rename to RemoveLocalGitConfiguration
 func (c *Configuration) RemoveAllConfiguration() {
 	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
 }
@@ -316,6 +335,11 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
 func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 	c.SetPerennialBranches(util.RemoveStringFromSlice(c.GetPerennialBranches(), branchName))
+}
+
+// SetGitAlias sets the given Git alias.
+func (c *Configuration) SetGitAlias(command string) {
+	c.setGlobalConfigValue("alias."+command, "town "+command)
 }
 
 // SetMainBranch marks the given branch as the main branch
@@ -350,6 +374,11 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 	return util.StringToBool(config)
 }
 
+// ShouldSyncUpstream indicates whether this repo should sync with its upstream.
+func (c *Configuration) ShouldSyncUpstream() bool {
+	return c.getLocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
+}
+
 // GetGlobalNewBranchPushFlag returns the global configuration for to push
 // freshly created branches up to the origin remote.
 func (c *Configuration) GetGlobalNewBranchPushFlag() string {
@@ -381,55 +410,4 @@ func (c *Configuration) ValidateIsOnline() error {
 		return errors.New("this command requires an active internet connection")
 	}
 	return nil
-}
-
-// Helpers
-
-func getGlobalConfigurationValueWithDefault(key, defaultValue string) string {
-	value := GetGlobalConfigurationValue(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
-func getConfigurationValueWithDefault(key, defaultValue string) string {
-	value := GetConfigurationValue(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
-func (c *Configuration) getLocalConfigKeysMatching(toMatch string) (result []string) {
-	re := regexp.MustCompile(toMatch)
-	for key := range c.localConfigCache {
-		if re.MatchString(key) {
-			result = append(result, key)
-		}
-	}
-	return result
-}
-
-func setConfigurationValue(key, value string) {
-	command.Run("git", "config", key, value)
-	configMap.Set(key, value)
-}
-
-func setGlobalConfigurationValue(key, value string) {
-	command.Run("git", "config", "--global", key, value)
-	globalConfigMap.Set(key, value)
-	configMap.Reset() // Need to reset config in case it was inheriting
-}
-
-func removeConfigurationValue(key string) {
-	command.Run("git", "config", "--unset", key)
-	configMap.Delete(key)
-}
-
-// Init
-
-func init() {
-	configMap = NewConfigMap(false)
-	globalConfigMap = NewConfigMap(true)
 }
