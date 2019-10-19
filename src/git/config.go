@@ -276,7 +276,7 @@ func (c *Configuration) IsMainBranch(branchName string) bool {
 
 // IsOffline indicates whether Git Town is currently in offline mode
 func (c *Configuration) IsOffline() bool {
-	config := c.getGlobalConfigValue("git-town.offline")
+	config := c.getLocalOrGlobalConfigValue("git-town.offline")
 	if config != "" {
 		return util.StringToBool(config)
 	}
