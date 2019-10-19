@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewStandardGitEnvironment(t *testing.T) {
-	gitEnvRootDir := CreateTempDir(t)
+	gitEnvRootDir := createTempDir(t)
 
 	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 
@@ -28,7 +28,7 @@ func TestNewStandardGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironmentCloneEnvironment(t *testing.T) {
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(path.Join(dir, "memoized"))
 	assert.Nil(t, err, "cannot create memoized GitEnvironment")
 
