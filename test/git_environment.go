@@ -35,7 +35,7 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		DeveloperRepo: NewGitRepository(path.Join(dir, "developer")),
 		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
 	}
-	// NOTE: since we copied the files from the memoized directory,
+	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
 	err = result.DeveloperRepo.SetRemote(result.OriginRepo.Dir)
 	return &result, err
@@ -98,6 +98,8 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 				if err != nil {
 					return err
 				}
+				// The developer repo has created and pushed the commit to origin already,
+				// so all we need to do here is register the commit in the list of existing commits in origin.
 				env.OriginRepo.RegisterOriginalCommit(commit)
 			case "remote":
 				err = env.OriginRepo.CreateCommit(commit, false)
@@ -114,7 +116,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
-// Commits provides a table for all commits in this Git environment, containing only the given fields.
+// Commits provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadella, err error) {
 	builder := NewCommitTableBuilder()
 
