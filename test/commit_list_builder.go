@@ -8,8 +8,9 @@ import (
 	"github.com/Originate/git-town/test/helpers"
 )
 
-// CommitListBuilder provides lists of existing commits in Git repositories.
-type CommitListBuilder struct {
+// CommitTableBuilder collects data about commits in Git repositories
+// the same way Gherkin tables do.
+type CommitTableBuilder struct {
 
 	// commits stores data about commits.
 	//
@@ -33,9 +34,9 @@ type CommitListBuilder struct {
 	locations map[string]*helpers.OrderedStringSet
 }
 
-// NewCommitListBuilder provides a fully initialized instance of commitListBuilder.
-func NewCommitListBuilder() CommitListBuilder {
-	result := CommitListBuilder{
+// NewCommitTableBuilder provides a fully initialized instance of commitListBuilder.
+func NewCommitTableBuilder() CommitTableBuilder {
+	result := CommitTableBuilder{
 		commits:         make(map[string]gherkintools.Commit),
 		commitsInBranch: make(map[string]*helpers.OrderedStringSet),
 		locations:       make(map[string]*helpers.OrderedStringSet),
@@ -44,7 +45,7 @@ func NewCommitListBuilder() CommitListBuilder {
 }
 
 // Add inserts the given commit from the given location into this list.
-func (builder *CommitListBuilder) Add(commit gherkintools.Commit, location string) {
+func (builder *CommitTableBuilder) Add(commit gherkintools.Commit, location string) {
 	builder.commits[commit.SHA] = commit
 
 	_, exists := builder.commitsInBranch[commit.Branch]
@@ -62,7 +63,7 @@ func (builder *CommitListBuilder) Add(commit gherkintools.Commit, location strin
 }
 
 // branches provides the names of the branches known to this CommitListBuilder.
-func (builder *CommitListBuilder) branches() []string {
+func (builder *CommitTableBuilder) branches() []string {
 	result := make([]string, 0, len(builder.commitsInBranch))
 	for branch := range builder.commitsInBranch {
 		result = append(result, branch)
@@ -72,7 +73,7 @@ func (builder *CommitListBuilder) branches() []string {
 }
 
 // Table provides the data accumulated by this CommitListBuilder as a Mortadella table.
-func (builder *CommitListBuilder) Table(fields []string) (result gherkintools.Mortadella) {
+func (builder *CommitTableBuilder) Table(fields []string) (result gherkintools.Mortadella) {
 	result.AddRow(fields...)
 	// Note: need to create a sorted list of branch names here,
 	// because iterating builder.commitsInBranch directly provides the branch names in random order.

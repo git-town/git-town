@@ -116,7 +116,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 
 // Commits provides a table for all commits in this Git environment, containing only the given fields.
 func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadella, err error) {
-	builder := NewCommitListBuilder()
+	builder := NewCommitTableBuilder()
 
 	localCommits, err := env.DeveloperRepo.Commits(fields)
 	if err != nil {
