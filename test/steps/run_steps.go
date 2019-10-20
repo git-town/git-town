@@ -17,7 +17,13 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^it runs the commands$`, func(table *gherkin.DataTable) error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
-		return test.EnsureExecutedGitCommandsMatchTable(commands, table)
+		morta := test.RenderExecutedGitCommands(commands, table)
+		diff, errorCount := morta.Equal(table)
+		if errorCount != 0 {
+			fmt.Println(diff)
+			return fmt.Errorf("found %d differences", errorCount)
+		}
+		return nil
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
