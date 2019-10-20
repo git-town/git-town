@@ -84,3 +84,15 @@ func hasScenarioTag(args interface{}, name string) bool {
 	}
 	return false
 }
+
+func scenarioTags(args interface{}) []*gherkin.Tag {
+	scenario, ok := args.(*gherkin.Scenario)
+	if ok {
+		return scenario.Tags
+	}
+	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
+	if ok {
+		return scenarioOutline.Tags
+	}
+	panic("unknown scenario type")
+}
