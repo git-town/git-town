@@ -12,7 +12,7 @@ var res *command.Result
 var _ = Describe("Run", func() {
 	It("Runs the given command", func() {
 		res = command.Run("echo", "foo")
-		Expect(res.Output()).To(Equal("foo"))
+		Expect(res.OutputSanitized()).To(Equal("foo"))
 	})
 })
 
