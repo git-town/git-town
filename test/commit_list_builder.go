@@ -9,28 +9,28 @@ import (
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
-// the same way Gherkin tables do.
+// in the same way that our Gherkin tables describing commits in repos are organized.
 type CommitTableBuilder struct {
 
 	// commits stores data about commits.
 	//
-	// Structure (key  =>  value):
-	//   commit 1 SHA  =>  commit 1
-	//   commit 2 SHA  =>  commit 2
+	// Structure:
+	//   commit 1 SHA:  commit 1
+	//   commit 2 SHA:  commit 2
 	commits map[string]gherkintools.Commit
 
 	// commitsInBranch stores which branches contain which commits.
 	//
-	// Structure (key  =>  value):
-	//   branch 1 name  =>  [commit 1 SHA, commit 2 SHA]
-	//   branch 2 name  =>  [commit 1 SHA, commit 3 SHA]
+	// Structure:
+	//   branch 1 name: [commit 1 SHA, commit 2 SHA]
+	//   branch 2 name: [commit 1 SHA, commit 3 SHA]
 	commitsInBranch map[string]*helpers.OrderedStringSet
 
 	// locations stores which commits occur in which repositories.
 	//
-	// Structure (key  =>  value):
-	//   commit 1 SHA + branch 1 name  =>  ["local"]
-	//   commit 1 SHA + branch 2 name  =>  ["local", "remote"]
+	// Structure:
+	//   commit 1 SHA + branch 1 name:  ["local"]
+	//   commit 1 SHA + branch 2 name:  ["local", "remote"]
 	locations map[string]*helpers.OrderedStringSet
 }
 
