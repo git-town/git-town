@@ -5,7 +5,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/test/gherkintools"
+	"github.com/Originate/git-town/test/helpers"
 	"github.com/pkg/errors"
 )
 
@@ -26,7 +26,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 }
 
 func compareCommits(fs *FeatureState, table *gherkin.DataTable) error {
-	fields := gherkintools.TableFields(table)
+	fields := helpers.TableFields(table)
 	commits, err := fs.activeScenarioState.gitEnvironment.Commits(fields)
 	if err != nil {
 		return errors.Wrap(err, "cannot determine commits in the developer repo")

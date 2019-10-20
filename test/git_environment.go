@@ -6,7 +6,6 @@ import (
 	"path"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
 
@@ -117,7 +116,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 }
 
 // Commits provides a table for all commits in this Git environment containing only the given fields.
-func (env GitEnvironment) Commits(fields []string) (result gherkintools.Mortadella, err error) {
+func (env GitEnvironment) Commits(fields []string) (result Mortadella, err error) {
 	builder := NewCommitTableBuilder()
 
 	localCommits, err := env.DeveloperRepo.Commits(fields)

@@ -6,7 +6,7 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/test/gherkintools"
+	"github.com/Originate/git-town/test"
 	"github.com/pkg/errors"
 )
 
@@ -15,7 +15,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(data *gherkin.DataTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
-		mortadella := gherkintools.Mortadella{}
+		mortadella := test.Mortadella{}
 		mortadella.AddRow("BRANCH", "PARENT")
 		for _, row := range data.Rows[1:] {
 			branch := row.Cells[0].Value

@@ -4,7 +4,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/Originate/git-town/test/helpers"
 )
 
@@ -76,7 +75,7 @@ func (builder *CommitTableBuilder) branches() []string {
 }
 
 // Table provides the data accumulated by this CommitTableBuilder as a Mortadella table.
-func (builder *CommitTableBuilder) Table(fields []string) (result gherkintools.Mortadella) {
+func (builder *CommitTableBuilder) Table(fields []string) (result Mortadella) {
 	result.AddRow(fields...)
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]

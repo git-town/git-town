@@ -1,4 +1,4 @@
-package gherkintools
+package helpers
 
 import (
 	"github.com/DATA-DOG/godog/gherkin"

@@ -1,4 +1,4 @@
-package gherkintools
+package test
 
 import (
 	"fmt"
