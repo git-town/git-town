@@ -91,17 +91,21 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 		for _, location := range commit.Locations {
 			switch location {
 			case "local":
-				err = env.DeveloperRepo.CreateCommit(commit, false)
+				err = env.DeveloperRepo.CreateCommit(commit)
 			case "local, remote":
-				err = env.DeveloperRepo.CreateCommit(commit, true)
+				err = env.DeveloperRepo.CreateCommit(commit)
 				if err != nil {
-					return err
+					return errors.Wrap(err, "cannot create local commit")
+				}
+				err = env.DeveloperRepo.PushBranch(commit.Branch)
+				if err != nil {
+					return errors.Wrapf(err, "cannot push branch %q after creating commit", commit.Branch)
 				}
 				// The developer repo has created and pushed the commit to origin already,
 				// so all we need to do here is register the commit in the list of existing commits in origin.
 				env.OriginRepo.RegisterOriginalCommit(commit)
 			case "remote":
-				err = env.OriginRepo.CreateCommit(commit, false)
+				err = env.OriginRepo.CreateCommit(commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}

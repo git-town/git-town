@@ -166,7 +166,7 @@ func (repo *GitRepository) CreateBranch(name string) error {
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (repo *GitRepository) CreateCommit(commit Commit, push bool) error {
+func (repo *GitRepository) CreateCommit(commit Commit) error {
 	repo.originalCommits = append(repo.originalCommits, commit)
 	err := repo.CheckoutBranch(commit.Branch)
 	if err != nil {
@@ -183,12 +183,6 @@ func (repo *GitRepository) CreateCommit(commit Commit, push bool) error {
 	output, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
 		return errors.Wrapf(err, "cannot commit: %s", output)
-	}
-	if push {
-		output, err = repo.Run("git", "push", "-u", "origin", commit.Branch)
-		if err != nil {
-			return errors.Wrapf(err, "cannot push commit: %s", output)
-		}
 	}
 	return nil
 }
