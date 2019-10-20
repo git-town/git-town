@@ -65,16 +65,16 @@ func (c *ConfigMap) initialize() {
 	if c.initialized {
 		return
 	}
-	cmdArgs := []string{"git", "config", "-lz"}
+	cmdArgs := []string{"config", "-lz"}
 	if c.global {
 		cmdArgs = append(cmdArgs, "--global")
 	}
-	cmd := command.Run(cmdArgs...)
+	cmd := command.Run("git", cmdArgs...)
 	if cmd.Err() != nil && strings.Contains(cmd.Output(), "No such file or directory") {
 		return
 	}
 	exit.If(cmd.Err())
-	if cmd.Output() == "" {
+	if cmd.OutputSanitized() == "" {
 		return
 	}
 	for _, line := range strings.Split(cmd.Output(), "\x00") {
