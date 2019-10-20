@@ -10,7 +10,7 @@ import (
 )
 
 // CreateFile creates a file with the given name and content inside the given directory.
-func CreateFile(t *testing.T, dir, filename, content string) {
+func CreateFile(t *testing.T, dir, filename, content string) error {
 	assert.Nilf(t, os.MkdirAll(dir, 0744), "cannot create directory %q", dir)
-	ioutil.WriteFile(path.Join(dir, filename), []byte(content), 0744)
+	return ioutil.WriteFile(path.Join(dir, filename), []byte(content), 0744)
 }

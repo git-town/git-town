@@ -111,7 +111,10 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 		}
 	}
 	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
-	env.OriginRepo.CheckoutBranch("master")
+	err = env.OriginRepo.CheckoutBranch("master")
+	if err != nil {
+		return errors.Wrap(err, "cannot change origin repo back to master")
+	}
 	return nil
 }
 

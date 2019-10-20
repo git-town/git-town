@@ -324,7 +324,6 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
-// TODO: rename to RemoveLocalGitConfiguration
 func (c *Configuration) RemoveLocalGitConfiguration() {
 	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
 }

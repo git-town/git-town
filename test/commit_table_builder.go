@@ -74,7 +74,7 @@ func (builder *CommitTableBuilder) branches() []string {
 	return result
 }
 
-// Table provides the data accumulated by this CommitTableBuilder as a DataTable table.
+// Table provides the data accumulated by this CommitTableBuilder as a DataTable.
 func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 	result.AddRow(fields...)
 	for _, branch := range builder.branches() {
