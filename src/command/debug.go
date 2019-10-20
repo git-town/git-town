@@ -15,10 +15,10 @@ func SetDebug(value bool) {
 	debug = value
 }
 
-func logRun(argv ...string) {
+func logRun(cmd string, args ...string) {
 	if debug {
 		count++
-		_, err := color.New(color.FgBlue).Printf("DEBUG (%d): %s\n", count, strings.Join(argv, " "))
+		_, err := color.New(color.FgBlue).Printf("DEBUG (%d): %s %s\n", count, cmd, strings.Join(args, " "))
 		exit.If(err)
 	}
 }
