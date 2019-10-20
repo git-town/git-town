@@ -5,10 +5,10 @@ import (
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.
-// The Mortadella table matches the structure of the given Gherkin table.
-func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.DataTable) Mortadella {
+// The DataTable table matches the structure of the given Gherkin table.
+func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.DataTable) DataTable {
 	tableHasBranches := table.Rows[0].Cells[0].Value == "BRANCH"
-	morta := Mortadella{}
+	morta := DataTable{}
 	if tableHasBranches {
 		morta.AddRow("BRANCH", "COMMAND")
 	} else {
@@ -32,7 +32,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.Dat
 
 // RenderTable provides the textual Gherkin representation of the given Gherkin table.
 func RenderTable(table *gherkin.DataTable) string {
-	morta := Mortadella{}
+	morta := DataTable{}
 	for _, row := range table.Rows {
 		values := []string{}
 		for _, cell := range row.Cells {

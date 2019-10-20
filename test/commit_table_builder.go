@@ -74,8 +74,8 @@ func (builder *CommitTableBuilder) branches() []string {
 	return result
 }
 
-// Table provides the data accumulated by this CommitTableBuilder as a Mortadella table.
-func (builder *CommitTableBuilder) Table(fields []string) (result Mortadella) {
+// Table provides the data accumulated by this CommitTableBuilder as a DataTable table.
+func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 	result.AddRow(fields...)
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]

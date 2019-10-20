@@ -15,7 +15,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(data *gherkin.DataTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
-		mortadella := test.Mortadella{}
+		mortadella := test.DataTable{}
 		mortadella.AddRow("BRANCH", "PARENT")
 		for _, row := range data.Rows[1:] {
 			branch := row.Cells[0].Value

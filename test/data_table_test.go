@@ -7,8 +7,8 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
-func TestMortadella(t *testing.T) {
-	r := Mortadella{}
+func TestDataTable(t *testing.T) {
+	r := DataTable{}
 	r.AddRow("ALPHA", "BETA")
 	r.AddRow("1", "2")
 	r.AddRow("longer text", "even longer text")
