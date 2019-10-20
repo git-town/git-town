@@ -56,10 +56,11 @@ similar fashion. If set, Git Town prints every shell command executed during the
 tests (includes setup, inspection of the Git status, and the Git commands), and
 the respective console output.
 
-**debug a Go-based Cucumber spec in VSCode:**
+**debug a Godog Cucumber spec in VSCode:**
 
 - open `main_test.go`
 - in this file, change the path of the test to execute
+- set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
 ## Mocking
