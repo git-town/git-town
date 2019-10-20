@@ -8,9 +8,9 @@ import (
 // GitTownSteps defines Cucumber step implementations around the Git Town setup.
 func GitTownSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is in offline mode$`, func() error {
-		output, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "config", "git-town.offline", "true")
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.SetOffline(true)
 		if err != nil {
-			return errors.Wrapf(err, "cannot enable offline mode: %s", output)
+			return errors.Wrap(err, "cannot enable offline mode")
 		}
 		return nil
 	})

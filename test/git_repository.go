@@ -277,6 +277,15 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
+// SetOffline enables or disables offline mode for this GitRepository.
+func (repo *GitRepository) SetOffline(enabled bool) error {
+	output, err := repo.Run("git", "config", "git-town.offline", "true")
+	if err != nil {
+		return errors.Wrapf(err, "cannot set offline mode in repo %q: %s", repo.Dir, output)
+	}
+	return nil
+}
+
 // SetRemote sets the remote of this Git repository to the given target.
 func (repo *GitRepository) SetRemote(target string) error {
 	return repo.RunMany([][]string{
