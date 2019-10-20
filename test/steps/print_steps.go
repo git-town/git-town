@@ -12,7 +12,7 @@ import (
 func PrintSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^it prints$`, func(expected *gherkin.DocString) error {
 		if !strings.Contains(fs.activeScenarioState.lastRunOutput, expected.Content) {
-			return fmt.Errorf("text not found:\n\n%q\n\noutput is:\n\n%q", expected.Content, fs.activeScenarioState.lastRunOutput)
+			return fmt.Errorf("text not found:\n\nEXPECTED: %q\n\nACTUAL:\n\n%q", expected.Content, fs.activeScenarioState.lastRunOutput)
 		}
 		return nil
 	})
