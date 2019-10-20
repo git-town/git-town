@@ -30,9 +30,9 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I am on the "([^"]*)" branch$`, func(branchName string) error {
-		output, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "checkout", branchName)
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(branchName)
 		if err != nil {
-			return errors.Wrapf(err, "cannot change to branch %q: %s", branchName, output)
+			return errors.Wrapf(err, "cannot change to branch %q", branchName)
 		}
 		return nil
 	})
