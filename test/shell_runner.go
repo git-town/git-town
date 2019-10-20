@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path"
 	"strings"
 
+	"github.com/Originate/git-town/src/command"
 	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 )
@@ -68,7 +68,7 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
 }
 
-// Run runs the given command with the given argv-like arguments
+// Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
@@ -87,17 +87,13 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	}
 
 	// run the command inside the custom environment
-	cmd := exec.Command(name, arguments...)
-	cmd.Dir = runner.dir
-	cmd.Env = customEnv
-	rawOutput, err := cmd.CombinedOutput()
-	output = string(rawOutput)
+	outcome := command.RunDirEnv(runner.dir, customEnv, name, arguments...)
 	if Debug {
 		fmt.Printf("In %q:\n", path.Base(runner.dir))
 		fmt.Println(">", name, strings.Join(arguments, " "))
-		fmt.Println(output)
+		fmt.Println(outcome.Output())
 	}
-	return output, err
+	return outcome.Output(), outcome.Err()
 }
 
 // RunString runs the given command (including possible arguments)

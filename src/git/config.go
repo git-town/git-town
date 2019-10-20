@@ -123,12 +123,12 @@ func GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.Run("git", "remote", "get-url", "origin").Output()
+	return command.Run("git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetRemoteUpstreamURL returns the URL of the "upstream" remote.
 func GetRemoteUpstreamURL() string {
-	return command.Run("git", "remote", "get-url", "upstream").Output()
+	return command.Run("git", "remote", "get-url", "upstream").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -196,7 +196,7 @@ func IsPerennialBranch(branchName string) bool {
 
 // RemoveAllConfiguration removes all Git Town configuration
 func RemoveAllConfiguration() {
-	command.Run("git", "config", "--remove-section", "git-town").Output()
+	command.Run("git", "config", "--remove-section", "git-town").OutputSanitized()
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
