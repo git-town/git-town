@@ -75,6 +75,16 @@ func scenarioName(args interface{}) string {
 	panic("unknown scenario type")
 }
 
+// hasFeatureTag indicates whether the given feature has a tag with the given name.
+func hasFeatureTag(feature *gherkin.Feature, name string) bool {
+	for _, tag := range feature.Tags {
+		if tag.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 // hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
 func hasScenarioTag(args interface{}, name string) bool {
 	for _, tag := range scenarioTags(args) {
