@@ -21,10 +21,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			parentBranch := gitConfig.GetParentBranch(branch)
 			mortadella.AddRow(branch, parentBranch)
 		}
-		diff, count := mortadella.Equal(data)
-		if count > 0 {
+		diff, errCount := mortadella.Equal(data)
+		if errCount > 0 {
 			fmt.Println(diff)
-			return fmt.Errorf("%d differences", count)
+			return fmt.Errorf("%d differences", errCount)
 		}
 		return nil
 	})
