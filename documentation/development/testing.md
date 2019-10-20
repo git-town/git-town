@@ -56,10 +56,6 @@ similar fashion. If set, Git Town prints every shell command executed during the
 tests (includes setup, inspection of the Git status, and the Git commands), and
 the respective console output.
 
-**See the CLI output of Go specs:**
-
-- add a tag `@debug` to see the output of all shell commands
-
 **debug a Go-based Cucumber spec in VSCode:**
 
 - open `main_test.go`
