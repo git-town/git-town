@@ -130,14 +130,14 @@ func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (resu
 		if util.DoesStringArrayContain(fields, "FILE NAME") {
 			filenames, err := repo.FilesInCommit(commit.SHA)
 			if err != nil {
-				return result, err
+				return result, errors.Wrapf(err, "cannot determine file name for commit %q in branch %q", commit.SHA, branch)
 			}
 			commit.FileName = strings.Join(filenames, ", ")
 		}
 		if util.DoesStringArrayContain(fields, "FILE CONTENT") {
 			filecontent, err := repo.FileContentInCommit(commit.SHA, commit.FileName)
 			if err != nil {
-				return result, err
+				return result, errors.Wrapf(err, "cannot determine file content for commit %q in branch %q", commit.SHA, branch)
 			}
 			commit.FileContent = filecontent
 		}
