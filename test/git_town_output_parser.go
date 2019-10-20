@@ -12,9 +12,8 @@ type ExecutedGitCommand struct {
 
 // GitCommandsInGitTownOutput provides the Git commands mentioned in the given Git Town output.
 func GitCommandsInGitTownOutput(output string) (result []ExecutedGitCommand) {
-	lines := strings.Split(output, "\n")
-	for i := range lines {
-		line := strings.TrimSpace(lines[i])
+	for _, line := range strings.Split(output, "\n") {
+		line := strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
