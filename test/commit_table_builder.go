@@ -24,22 +24,22 @@ type CommitTableBuilder struct {
 	// Structure:
 	//   branch 1 name: [commit 1 SHA, commit 2 SHA]
 	//   branch 2 name: [commit 1 SHA, commit 3 SHA]
-	commitsInBranch map[string]*helpers.OrderedStringSet
+	commitsInBranch map[string]helpers.OrderedStringSet
 
 	// locations stores which commits occur in which repositories.
 	//
 	// Structure:
 	//   commit 1 SHA + branch 1 name:  ["local"]
 	//   commit 1 SHA + branch 2 name:  ["local", "remote"]
-	locations map[string]*helpers.OrderedStringSet
+	locations map[string]helpers.OrderedStringSet
 }
 
 // NewCommitTableBuilder provides a fully initialized instance of commitListBuilder.
 func NewCommitTableBuilder() CommitTableBuilder {
 	result := CommitTableBuilder{
 		commits:         make(map[string]gherkintools.Commit),
-		commitsInBranch: make(map[string]*helpers.OrderedStringSet),
-		locations:       make(map[string]*helpers.OrderedStringSet),
+		commitsInBranch: make(map[string]helpers.OrderedStringSet),
+		locations:       make(map[string]helpers.OrderedStringSet),
 	}
 	return result
 }
@@ -48,18 +48,20 @@ func NewCommitTableBuilder() CommitTableBuilder {
 func (builder *CommitTableBuilder) Add(commit gherkintools.Commit, location string) {
 	builder.commits[commit.SHA] = commit
 
-	_, exists := builder.commitsInBranch[commit.Branch]
-	if !exists {
-		builder.commitsInBranch[commit.Branch] = &helpers.OrderedStringSet{}
+	commitsInBranch, exists := builder.commitsInBranch[commit.Branch]
+	if exists {
+		builder.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
+	} else {
+		builder.commitsInBranch[commit.Branch] = helpers.NewOrderedStringSet(commit.SHA)
 	}
-	builder.commitsInBranch[commit.Branch].Add(commit.SHA)
 
 	locationKey := commit.SHA + commit.Branch
-	_, exists = builder.locations[locationKey]
-	if !exists {
-		builder.locations[locationKey] = &helpers.OrderedStringSet{}
+	locations, exists := builder.locations[locationKey]
+	if exists {
+		builder.locations[locationKey] = locations.Add(location)
+	} else {
+		builder.locations[locationKey] = helpers.NewOrderedStringSet(location)
 	}
-	builder.locations[locationKey].Add(location)
 }
 
 // branches provides the names of the branches known to this CommitListBuilder.
