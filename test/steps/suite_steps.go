@@ -36,12 +36,6 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 	})
 
-	suite.BeforeFeature(func(feature *gherkin.Feature) {
-		if hasFeatureTag(feature, "@debug") {
-			test.Debug = true
-		}
-	})
-
 	suite.BeforeScenario(func(args interface{}) {
 		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
 		if err != nil {
