@@ -35,8 +35,8 @@ status badges in pull requests about problems.
 
 ## Debugging
 
-**For Ruby specs:** To see the output of the Git commands run in tests, you can
-set the `DEBUG_COMMANDS` environment variable while running your specs:
+To see the output of the Git commands run in tests, you can set the
+`DEBUG_COMMANDS` environment variable while running your specs:
 
 ```bash
 $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
@@ -55,10 +55,6 @@ For even more detailed output, you can use the `DEBUG` variable or tag in a
 similar fashion. If set, Git Town prints every shell command executed during the
 tests (includes setup, inspection of the Git status, and the Git commands), and
 the respective console output.
-
-**For Go specs:**
-
-- add a tag `@debug` to see the output of all shell commands
 
 ## Mocking
 
