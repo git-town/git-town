@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -88,11 +87,6 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 
 	// run the command inside the custom environment
 	outcome := command.RunDirEnv(runner.dir, customEnv, name, arguments...)
-	if Debug {
-		fmt.Printf("In %q:\n", path.Base(runner.dir))
-		fmt.Println(">", name, strings.Join(arguments, " "))
-		fmt.Println(outcome.Output())
-	}
 	return outcome.Output(), outcome.Err()
 }
 
