@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCommitListBuilder(t *testing.T) {
-	builder := NewCommitListBuilder()
+func TestCommitTableBuilder(t *testing.T) {
+	builder := NewCommitTableBuilder()
 	commit1 := gherkintools.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
 	commit2 := gherkintools.Commit{SHA: "sha2", Branch: "branch2", Message: "commit2"}
 	commit3 := gherkintools.Commit{SHA: "sha3", Branch: "branch3", Message: "commit3"}
