@@ -85,8 +85,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 	}
 	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
-		line = strings.TrimSpace(line)
-		result = append(result, line)
+		result = append(result, strings.TrimSpace(line))
 	}
 	return sort.StringSlice(result), nil
 }
