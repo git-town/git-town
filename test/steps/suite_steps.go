@@ -42,9 +42,6 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(args), err)
 		}
 		fs.activeScenarioState = scenarioState{gitEnvironment: gitEnvironment}
-		if hasScenarioTag(args, "@debug") {
-			test.Debug = true
-		}
 	})
 
 	suite.AfterScenario(func(args interface{}, e error) {
