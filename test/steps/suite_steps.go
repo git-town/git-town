@@ -96,13 +96,12 @@ func hasScenarioTag(args interface{}, name string) bool {
 }
 
 func scenarioTags(args interface{}) []*gherkin.Tag {
-	scenario, ok := args.(*gherkin.Scenario)
-	if ok {
-		return scenario.Tags
+	switch typed := args.(type) {
+	case *gherkin.Scenario:
+		return typed.Tags
+	case *gherkin.ScenarioOutline:
+		return typed.Tags
+	default:
+		panic("unknown scenario type")
 	}
-	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
-	if ok {
-		return scenarioOutline.Tags
-	}
-	panic("unknown scenario type")
 }
