@@ -14,7 +14,7 @@ type Commit struct {
 	Branch      string
 	FileContent string
 	FileName    string
-	Location    []string
+	Locations   []string
 	Message     string
 	SHA         string
 }
@@ -24,7 +24,7 @@ func DefaultCommit() Commit {
 	return Commit{
 		FileName:    "default_file_name_" + helpers.UniqueString(),
 		Message:     "default commit message",
-		Location:    []string{"local", "remote"},
+		Locations:   []string{"local", "remote"},
 		Branch:      "main",
 		FileContent: "default file content",
 	}
@@ -55,7 +55,7 @@ func (commit *Commit) Set(name, value string) (err error) {
 	case "BRANCH":
 		commit.Branch = value
 	case "LOCATION":
-		commit.Location = []string{value}
+		commit.Locations = []string{value}
 	case "MESSAGE":
 		commit.Message = value
 	case "FILE NAME":

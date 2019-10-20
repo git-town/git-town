@@ -89,7 +89,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	}
 	for _, commit := range commits {
 		var err error
-		for _, location := range commit.Location {
+		for _, location := range commit.Locations {
 			switch location {
 			case "local":
 				err = env.DeveloperRepo.CreateCommit(commit, false)
@@ -102,7 +102,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 			case "remote":
 				err = env.OriginRepo.CreateCommit(commit, false)
 			default:
-				return fmt.Errorf("unknown commit location %q", commit.Location)
+				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
 		}
 		if err != nil {
