@@ -121,8 +121,7 @@ func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (resu
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
 	}
-	output = strings.TrimSpace(output)
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
 		parts := strings.Split(line, "|")
 		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
