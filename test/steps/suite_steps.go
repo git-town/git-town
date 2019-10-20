@@ -56,16 +56,6 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 }
 
-// hasFeatureTag indicates whether the given feature has a tag with the given name.
-func hasFeatureTag(feature *gherkin.Feature, name string) bool {
-	for _, tag := range feature.Tags {
-		if tag.Name == name {
-			return true
-		}
-	}
-	return false
-}
-
 // scenarioName returns the name of the given Scenario or ScenarioOutline
 func scenarioName(args interface{}) string {
 	scenario, ok := args.(*gherkin.Scenario)
