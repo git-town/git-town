@@ -83,8 +83,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot run 'git branch -a' in repo %q", repo.dir)
 	}
-	output = strings.TrimSpace(output)
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
 		line = strings.TrimSpace(line)
 		result = append(result, line)
