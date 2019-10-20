@@ -34,7 +34,7 @@ type CommitTableBuilder struct {
 	locations map[string]helpers.OrderedStringSet
 }
 
-// NewCommitTableBuilder provides a fully initialized instance of commitListBuilder.
+// NewCommitTableBuilder provides a fully initialized instance of CommitTableBuilder.
 func NewCommitTableBuilder() CommitTableBuilder {
 	result := CommitTableBuilder{
 		commits:         make(map[string]gherkintools.Commit),
@@ -44,7 +44,7 @@ func NewCommitTableBuilder() CommitTableBuilder {
 	return result
 }
 
-// Add inserts the given commit from the given location into this list.
+// Add registers the given commit from the given location into this table.
 func (builder *CommitTableBuilder) Add(commit gherkintools.Commit, location string) {
 	builder.commits[commit.SHA] = commit
 
@@ -64,7 +64,8 @@ func (builder *CommitTableBuilder) Add(commit gherkintools.Commit, location stri
 	}
 }
 
-// branches provides the names of the branches known to this CommitListBuilder.
+// branches provides the names of the all branches known to this CommitTableBuilder,
+// sorted alphabetically.
 func (builder *CommitTableBuilder) branches() []string {
 	result := make([]string, 0, len(builder.commitsInBranch))
 	for branch := range builder.commitsInBranch {
@@ -74,11 +75,9 @@ func (builder *CommitTableBuilder) branches() []string {
 	return result
 }
 
-// Table provides the data accumulated by this CommitListBuilder as a Mortadella table.
+// Table provides the data accumulated by this CommitTableBuilder as a Mortadella table.
 func (builder *CommitTableBuilder) Table(fields []string) (result gherkintools.Mortadella) {
 	result.AddRow(fields...)
-	// Note: need to create a sorted list of branch names here,
-	// because iterating builder.commitsInBranch directly provides the branch names in random order.
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
