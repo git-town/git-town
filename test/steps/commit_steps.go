@@ -17,15 +17,17 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository is left with my original commits$`, func() error {
-		return compareCommits(fs, fs.activeScenarioState.originalCommitTable)
+		return compareExistingCommits(fs, fs.activeScenarioState.originalCommitTable)
 	})
 
 	suite.Step(`^my repository now has the following commits$`, func(table *gherkin.DataTable) error {
-		return compareCommits(fs, table)
+		return compareExistingCommits(fs, table)
 	})
 }
 
-func compareCommits(fs *FeatureState, table *gherkin.DataTable) error {
+// compareExistingCommits compares the commits in the Git environment of the given FeatureState
+// against the given Gherkin table.
+func compareExistingCommits(fs *FeatureState, table *gherkin.DataTable) error {
 	fields := helpers.TableFields(table)
 	commitTable, err := fs.activeScenarioState.gitEnvironment.CommitTable(fields)
 	if err != nil {

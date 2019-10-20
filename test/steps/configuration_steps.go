@@ -1,6 +1,8 @@
 package steps
 
 import (
+	"strconv"
+
 	"github.com/DATA-DOG/godog"
 	"github.com/pkg/errors"
 )
@@ -15,10 +17,14 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the "([^"]+)" configuration is set to "([^"]+)"$`, func(name, value string) error {
-		output, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "config", "git-town."+name, value)
+	suite.Step(`^the new-branch-push-flag configuration is set to "(true|false)"$`, func(value string) error {
+		b, err := strconv.ParseBool(value)
 		if err != nil {
-			return errors.Wrapf(err, "cannot set Git configuration %q to %q: %s", name, value, output)
+			return errors.Wrapf(err, "cannot parse %q into bool", value)
+		}
+		outcome := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetNewBranchPush(b, false)
+		if outcome.Err() != nil {
+			return errors.Wrapf(err, "cannot set new-branch-push-flag configuration to %q: %s", value, outcome.Output())
 		}
 		return err
 	})

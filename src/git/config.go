@@ -343,9 +343,9 @@ func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result 
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
-func (c *Configuration) setLocalConfigValue(key, value string) {
-	command.RunInDir(c.localDir, "git", "config", key, value)
+func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
+	return command.RunInDir(c.localDir, "git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
@@ -356,12 +356,11 @@ func (c *Configuration) SetMainBranch(branchName string) {
 
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func (c *Configuration) SetNewBranchPush(value bool, global bool) {
+func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Result {
 	if global {
-		c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
-	} else {
-		c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		return c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 	}
+	return c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
 // SetOffline updates whether Git Town is in offline mode

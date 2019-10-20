@@ -40,7 +40,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I end up on the "([^"]*)" branch$`, func(expected string) error {
 		actual, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
 		if err != nil {
-			return err
+			return errors.Wrap(err, "cannot determine current branch of developer repo")
 		}
 		if actual != expected {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
@@ -48,19 +48,19 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
-	})
-
 	suite.Step(`^my code base has the perennial branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "cannot create perennial branches")
 		}
 		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "cannot push branch %q", branch1)
 		}
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
+	})
+
+	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
 	})
 }
