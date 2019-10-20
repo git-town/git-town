@@ -1,9 +1,10 @@
-package gherkintools
+package test
 
 import (
 	"fmt"
 
 	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/Originate/git-town/test/helpers"
 	"github.com/pkg/errors"
 )
@@ -32,7 +33,7 @@ func DefaultCommit() Commit {
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
 func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
-	columnNames := TableFields(table)
+	columnNames := gherkintools.TableFields(table)
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for i, cell := range row.Cells {

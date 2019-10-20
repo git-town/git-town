@@ -10,7 +10,6 @@ import (
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
-	"github.com/Originate/git-town/test/gherkintools"
 	"github.com/pkg/errors"
 )
 
@@ -21,7 +20,7 @@ type GitRepository struct {
 	Dir string
 
 	// originalCommits contains the commits in this repository before the test ran.
-	originalCommits []gherkintools.Commit
+	originalCommits []Commit
 
 	// ShellRunner enables to run console commands in this repo.
 	ShellRunner
@@ -77,8 +76,8 @@ func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
 	return result, err
 }
 
-// Branches provides the names of the local branches in this Git repository.
-// The results are sorted alphabetically.
+// Branches provides the names of the local branches in this Git repository,
+// sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
 	output, err := repo.Run("git", "branch")
 	if err != nil {
@@ -103,7 +102,7 @@ func (repo *GitRepository) CheckoutBranch(name string) error {
 }
 
 // Commits provides a tabular list of the commits in this Git repository with the given fields.
-func (repo *GitRepository) Commits(fields []string) (result []gherkintools.Commit, err error) {
+func (repo *GitRepository) Commits(fields []string) (result []Commit, err error) {
 	branches, err := repo.Branches()
 	if err != nil {
 		return result, errors.Wrap(err, "cannot determine the Git branches")
@@ -119,7 +118,7 @@ func (repo *GitRepository) Commits(fields []string) (result []gherkintools.Commi
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (result []gherkintools.Commit, err error) {
+func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (result []Commit, err error) {
 	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
@@ -127,7 +126,7 @@ func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (resu
 	output = strings.TrimSpace(output)
 	for _, line := range strings.Split(output, "\n") {
 		parts := strings.Split(line, "|")
-		commit := gherkintools.Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
+		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
 			continue
 		}
@@ -170,7 +169,7 @@ func (repo *GitRepository) CreateBranch(name string) error {
 }
 
 // CreateCommit creates a commit with the given properties in this Git repo.
-func (repo *GitRepository) CreateCommit(commit gherkintools.Commit, push bool) error {
+func (repo *GitRepository) CreateCommit(commit Commit, push bool) error {
 	repo.originalCommits = append(repo.originalCommits, commit)
 	err := repo.CheckoutBranch(commit.Branch)
 	if err != nil {
@@ -277,7 +276,7 @@ func (repo *GitRepository) PushBranch(name string) error {
 }
 
 // RegisterOriginalCommit tracks the given commit as existing in this repo before the system under test executed.
-func (repo *GitRepository) RegisterOriginalCommit(commit gherkintools.Commit) {
+func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 	repo.originalCommits = append(repo.originalCommits, commit)
 }
 

@@ -17,7 +17,7 @@ type CommitTableBuilder struct {
 	// Structure:
 	//   commit 1 SHA:  commit 1
 	//   commit 2 SHA:  commit 2
-	commits map[string]gherkintools.Commit
+	commits map[string]Commit
 
 	// commitsInBranch stores which branches contain which commits.
 	//
@@ -37,7 +37,7 @@ type CommitTableBuilder struct {
 // NewCommitTableBuilder provides a fully initialized instance of CommitTableBuilder.
 func NewCommitTableBuilder() CommitTableBuilder {
 	result := CommitTableBuilder{
-		commits:         make(map[string]gherkintools.Commit),
+		commits:         make(map[string]Commit),
 		commitsInBranch: make(map[string]helpers.OrderedStringSet),
 		locations:       make(map[string]helpers.OrderedStringSet),
 	}
@@ -45,7 +45,7 @@ func NewCommitTableBuilder() CommitTableBuilder {
 }
 
 // Add registers the given commit from the given location into this table.
-func (builder *CommitTableBuilder) Add(commit gherkintools.Commit, location string) {
+func (builder *CommitTableBuilder) Add(commit Commit, location string) {
 	builder.commits[commit.SHA] = commit
 
 	commitsInBranch, exists := builder.commitsInBranch[commit.Branch]

@@ -83,7 +83,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
-	commits, err := gherkintools.FromGherkinTable(table)
+	commits, err := FromGherkinTable(table)
 	if err != nil {
 		return errors.Wrap(err, "cannot parse Gherkin table")
 	}
