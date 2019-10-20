@@ -74,3 +74,13 @@ func scenarioName(args interface{}) string {
 	}
 	panic("unknown scenario type")
 }
+
+// hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
+func hasScenarioTag(args interface{}, name string) bool {
+	for _, tag := range scenarioTags(args) {
+		if tag.Name == name {
+			return true
+		}
+	}
+	return false
+}
