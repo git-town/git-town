@@ -66,16 +66,6 @@ func hasFeatureTag(feature *gherkin.Feature, name string) bool {
 	return false
 }
 
-// hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
-func hasScenarioTag(args interface{}, name string) bool {
-	for _, tag := range scenarioTags(args) {
-		if tag.Name == name {
-			return true
-		}
-	}
-	return false
-}
-
 // scenarioName returns the name of the given Scenario or ScenarioOutline
 func scenarioName(args interface{}) string {
 	scenario, ok := args.(*gherkin.Scenario)
