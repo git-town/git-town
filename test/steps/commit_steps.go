@@ -27,11 +27,11 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 
 func compareCommits(fs *FeatureState, table *gherkin.DataTable) error {
 	fields := helpers.TableFields(table)
-	commits, err := fs.activeScenarioState.gitEnvironment.Commits(fields)
+	commitTable, err := fs.activeScenarioState.gitEnvironment.CommitTable(fields)
 	if err != nil {
 		return errors.Wrap(err, "cannot determine commits in the developer repo")
 	}
-	diff, errorCount := commits.Equal(table)
+	diff, errorCount := commitTable.Equal(table)
 	if errorCount != 0 {
 		fmt.Println(diff)
 		return fmt.Errorf("found %d differences", errorCount)

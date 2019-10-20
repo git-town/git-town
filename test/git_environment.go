@@ -118,8 +118,8 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
-// Commits provides a table for all commits in this Git environment containing only the given fields.
-func (env GitEnvironment) Commits(fields []string) (result DataTable, err error) {
+// CommitTable provides a table for all commits in this Git environment containing only the given fields.
+func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
 
 	localCommits, err := env.DeveloperRepo.Commits(fields)
