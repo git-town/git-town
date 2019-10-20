@@ -52,7 +52,7 @@ func InitGitRepository(dir string) (GitRepository, error) {
 	result := NewGitRepository(dir)
 	output, err := result.Run("git", "init")
 	if err != nil {
-		return result, errors.Wrapf(err, "error running git init in %q: %s", dir, output)
+		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, dir, output)
 	}
 	return result, nil
 }
