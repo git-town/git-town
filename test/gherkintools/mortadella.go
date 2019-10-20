@@ -45,8 +45,8 @@ func (morta *Mortadella) columns() (result [][]string) {
 }
 
 // Equal indicates whether this Mortadella instance is equal to the given Gherkin table.
-// If both are equal, it returns an empty string.
-// If they are not equal, it returns a string containing a diff.
+// If both are equal it returns an empty string,
+// otherwise a diff printable on the console.
 func (morta *Mortadella) Equal(table *gherkin.DataTable) (diff string, errorCount int) {
 	if len(morta.cells) == 0 {
 		return "your data is empty", 1
@@ -60,7 +60,7 @@ func (morta *Mortadella) Equal(table *gherkin.DataTable) (diff string, errorCoun
 	return dmp.DiffPrettyText(diffs), len(diffs)
 }
 
-// String provides this table formatted into Gherkin format.
+// String provides the data in this Mortadella instance formatted in Gherkin table format.
 func (morta *Mortadella) String() (result string) {
 	// determine how to format each column
 	formatStrings := []string{}
