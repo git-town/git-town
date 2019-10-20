@@ -46,13 +46,13 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.AfterScenario(func(args interface{}, e error) {
-		if e != nil {
-			fmt.Printf("failed scenario, investigate state in %q\n", fs.activeScenarioState.gitEnvironment.Dir)
-		} else {
+		if e == nil {
 			err := fs.activeScenarioState.gitEnvironment.Remove()
 			if err != nil {
 				log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(args), err)
 			}
+		} else {
+			fmt.Printf("failed scenario, investigate state in %q\n", fs.activeScenarioState.gitEnvironment.Dir)
 		}
 	})
 }
