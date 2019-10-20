@@ -11,13 +11,12 @@ import (
 
 // Mortadella compares Gherkin tables with user-generated data.
 type Mortadella struct {
-	// cells contains table data
-	// organized as rows and columns
+	// cells contains table data organized as rows and columns
 	cells [][]string
 }
 
-// NewMortadellaFromGherkin provides a Mortadella instance populated with data from the given Gherkin table.
-func NewMortadellaFromGherkin(table *gherkin.DataTable) (result Mortadella) {
+// FromGherkin provides a Mortadella instance populated with data from the given Gherkin table.
+func FromGherkin(table *gherkin.DataTable) (result Mortadella) {
 	for _, tableRow := range table.Rows {
 		mortaRow := make([]string, len(tableRow.Cells))
 		for i, tableCell := range tableRow.Cells {
@@ -52,7 +51,7 @@ func (morta *Mortadella) Equal(table *gherkin.DataTable) (diff string, errorCoun
 	if len(morta.cells) == 0 {
 		return "your data is empty", 1
 	}
-	gherkinTable := NewMortadellaFromGherkin(table)
+	gherkinTable := FromGherkin(table)
 	dmp := diffmatchpatch.New()
 	diffs := dmp.DiffMain(gherkinTable.String(), morta.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
