@@ -90,6 +90,8 @@ setup:  # the setup steps necessary on developer machines
 test: lint unit cuke  # runs all the tests
 .PHONY: test
 
+test-go: build unit cuke-go lint-go  # runs all tests for Golang
+
 unit:  # runs the unit tests
 	go test ./src/... ./test/...
 
