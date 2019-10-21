@@ -36,6 +36,12 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 	})
 
+	suite.BeforeFeature(func(feature *gherkin.Feature) {
+		if hasFeatureTag(feature, "@debug") {
+			test.Debug = true
+		}
+	})
+
 	suite.BeforeScenario(func(args interface{}) {
 		// create a GitEnvironment for the scenario
 		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
@@ -43,6 +49,9 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(args), err)
 		}
 		fs.activeScenarioState = scenarioState{gitEnvironment: gitEnvironment}
+		if hasScenarioTag(args, "@debug") {
+			test.Debug = true
+		}
 	})
 
 	suite.AfterScenario(func(args interface{}, e error) {
@@ -68,4 +77,35 @@ func scenarioName(args interface{}) string {
 		return scenarioOutline.Name
 	}
 	panic("unknown scenario type")
+}
+
+// hasFeatureTag indicates whether the given feature has a tag with the given name.
+func hasFeatureTag(feature *gherkin.Feature, name string) bool {
+	for _, tag := range feature.Tags {
+		if tag.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+// hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
+func hasScenarioTag(args interface{}, name string) bool {
+	for _, tag := range scenarioTags(args) {
+		if tag.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func scenarioTags(args interface{}) []*gherkin.Tag {
+	switch typed := args.(type) {
+	case *gherkin.Scenario:
+		return typed.Tags
+	case *gherkin.ScenarioOutline:
+		return typed.Tags
+	default:
+		panic("unknown scenario type")
+	}
 }
