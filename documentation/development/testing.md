@@ -35,8 +35,8 @@ status badges in pull requests about problems.
 
 ## Debugging
 
-To see the output of the Git commands run in tests, you can set the
-`DEBUG_COMMANDS` environment variable while running your specs:
+**See the CLI output of Ruby specs:** set the `DEBUG_COMMANDS` environment
+variable while running your specs:
 
 ```bash
 $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
@@ -55,6 +55,13 @@ For even more detailed output, you can use the `DEBUG` variable or tag in a
 similar fashion. If set, Git Town prints every shell command executed during the
 tests (includes setup, inspection of the Git status, and the Git commands), and
 the respective console output.
+
+**debug a Godog Cucumber spec in VSCode:**
+
+- open `main_test.go`
+- in this file, change the path of the test to execute
+- set a breakpoint in your test code
+- run the `debug a test` configuration in the debugger
 
 ## Mocking
 
