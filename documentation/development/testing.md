@@ -35,8 +35,8 @@ status badges in pull requests about problems.
 
 ## Debugging
 
-To see the output of the Git commands run in tests, you can set the
-`DEBUG_COMMANDS` environment variable while running your specs:
+**See the CLI output of Ruby specs:** set the `DEBUG_COMMANDS` environment
+variable while running your specs:
 
 ```bash
 $ DEBUG_COMMANDS=true cucumber <filename>[:<lineno>]
@@ -59,6 +59,13 @@ the respective console output.
 **See the CLI output of Go specs:**
 
 - add a tag `@debug` to see the output of all shell commands
+
+**debug a Godog Cucumber spec in VSCode:**
+
+- open `main_test.go`
+- in this file, change the path of the test to execute
+- set a breakpoint in your test code
+- run the `debug a test` configuration in the debugger
 
 ## Mocking
 
