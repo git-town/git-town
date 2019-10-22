@@ -51,14 +51,14 @@ func getKillConfig(args []string) (result killConfig) {
 		result.TargetBranch = args[0]
 	}
 
-	git.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
+	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
 
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if git.HasRemote("origin") && !git.IsOffline() {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		script.Fetch()
 	}
 
@@ -72,8 +72,8 @@ func getKillConfig(args []string) (result killConfig) {
 func getKillStepList(config killConfig) (result steps.StepList) {
 	switch {
 	case config.IsTargetBranchLocal:
-		targetBranchParent := git.GetParentBranch(config.TargetBranch)
-		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
+		targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
+		if git.HasTrackingBranch(config.TargetBranch) && !git.Config().IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
@@ -83,11 +83,11 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range git.GetChildBranches(config.TargetBranch) {
+		for _, child := range git.Config().GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-	case !git.IsOffline():
+	case !git.Config().IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	default:
 		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)

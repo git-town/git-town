@@ -11,7 +11,7 @@ import (
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
 // contains commits that are not merged into the main branch
 func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return command.Run("git", "log", GetMainBranch()+".."+branchName).OutputSanitized() != ""
+	return command.Run("git", "log", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
 }
 
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
@@ -31,17 +31,17 @@ func EnsureHasBranch(branchName string) {
 
 // EnsureIsNotMainBranch enforces that a branch with the given name is not the main branch
 func EnsureIsNotMainBranch(branchName, errorMessage string) {
-	util.Ensure(!IsMainBranch(branchName), errorMessage)
+	util.Ensure(!Config().IsMainBranch(branchName), errorMessage)
 }
 
 // EnsureIsNotPerennialBranch enforces that a branch with the given name is not a perennial branch
 func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(!IsPerennialBranch(branchName), errorMessage)
+	util.Ensure(!Config().IsPerennialBranch(branchName), errorMessage)
 }
 
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(IsPerennialBranch(branchName), errorMessage)
+	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
 }
 
 // GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
@@ -53,7 +53,7 @@ func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, in
 		}
 		return initialBranch
 	}
-	return GetMainBranch()
+	return Config().GetMainBranch()
 }
 
 // GetLocalBranches returns the names of all branches in the local repository,
@@ -70,7 +70,7 @@ func GetLocalBranches() (result []string) {
 // GetLocalBranchesWithoutMain returns the names of all branches in the local repository,
 // ordered alphabetically without the main branch
 func GetLocalBranchesWithoutMain() (result []string) {
-	mainBranch := GetMainBranch()
+	mainBranch := Config().GetMainBranch()
 	for _, branch := range GetLocalBranches() {
 		if branch != mainBranch {
 			result = append(result, branch)
@@ -99,7 +99,7 @@ func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
 // ordered to have the name of the main branch first,
 // then the names of the branches, ordered alphabetically
 func GetLocalBranchesWithMainBranchFirst() (result []string) {
-	mainBranch := GetMainBranch()
+	mainBranch := Config().GetMainBranch()
 	result = append(result, mainBranch)
 	for _, branch := range GetLocalBranches() {
 		if branch != mainBranch {
