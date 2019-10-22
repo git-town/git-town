@@ -37,9 +37,9 @@ func OpenBrowser(url string) {
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(cmd ...string) {
-	header := ""
-	for index, part := range cmd {
+func PrintCommand(cmd string, args ...string) {
+	header := cmd + " "
+	for index, part := range args {
 		if strings.Contains(part, " ") {
 			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
 		}
@@ -48,7 +48,7 @@ func PrintCommand(cmd ...string) {
 		}
 		header += part
 	}
-	if strings.HasPrefix(header, "git") && git.IsRepository() {
+	if cmd == "git" && git.IsRepository() {
 		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
 	}
 	fmt.Println()
@@ -57,20 +57,21 @@ func PrintCommand(cmd ...string) {
 }
 
 // RunCommand executes the given command-line operation.
-func RunCommand(cmd ...string) error {
-	PrintCommand(cmd...)
+func RunCommand(cmd string, args ...string) error {
+	PrintCommand(cmd, args...)
 	if dryrun.IsActive() {
-		if len(cmd) == 3 && cmd[0] == "git" && cmd[1] == "checkout" {
-			dryrun.SetCurrentBranchName(cmd[2])
+		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
+			dryrun.SetCurrentBranchName(args[1])
 		}
 		return nil
 	}
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
 	if runtime.GOOS == "windows" {
-		cmd = append([]string{"cmd", "/C"}, cmd...)
+		args = append([]string{"/C", cmd}, args...)
+		cmd = "cmd"
 	}
-	subProcess := exec.Command(cmd[0], cmd[1:]...) // #nosec
+	subProcess := exec.Command(cmd, args...) // #nosec
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
 	subProcess.Stdout = os.Stdout
@@ -78,7 +79,7 @@ func RunCommand(cmd ...string) error {
 }
 
 // RunCommandSafe executes the given command-line operation, exiting if the command errors
-func RunCommandSafe(cmd ...string) {
-	err := RunCommand(cmd...)
+func RunCommandSafe(cmd string, args ...string) {
+	err := RunCommand(cmd, args...)
 	exit.If(err)
 }

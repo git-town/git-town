@@ -47,25 +47,25 @@ See "sync" for information regarding remote upstream.`,
 func getPrependConfig(args []string) (result prependConfig) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") && !git.IsOffline() {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		script.Fetch()
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
-	git.EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
+	git.Config().EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.ParentBranch = git.GetParentBranch(result.InitialBranch)
+	result.ParentBranch = git.Config().GetParentBranch(result.InitialBranch)
 	return
 }
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
-	for _, branchName := range git.GetAncestorBranches(config.InitialBranch) {
+	for _, branchName := range git.Config().GetAncestorBranches(config.InitialBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
+	if git.HasRemote("origin") && git.Config().ShouldNewBranchPush() && !git.Config().IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

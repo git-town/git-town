@@ -51,22 +51,15 @@ Note that this can conflict with other tools that also define additional Git com
 }
 
 func addAlias(command string) {
-	script.RunCommandSafe("git", "config", "--global", getAliasKey(command), getAliasValue(command))
-}
-
-func getAliasKey(command string) string {
-	return "alias." + command
-}
-
-func getAliasValue(command string) string {
-	return "town " + command
+	result := git.Config().AddGitAlias(command)
+	script.PrintCommand(result.Command(), result.Args()...)
 }
 
 func removeAlias(command string) {
-	key := getAliasKey(command)
-	previousAlias := git.GetGlobalConfigurationValue(key)
-	if previousAlias == getAliasValue(command) {
-		script.RunCommandSafe("git", "config", "--global", "--unset", key)
+	existingAlias := git.Config().GetGitAlias(command)
+	if existingAlias == "town "+command {
+		result := git.Config().RemoveGitAlias(command)
+		script.PrintCommand(result.Command(), result.Args()...)
 	}
 }
 

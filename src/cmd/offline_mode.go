@@ -35,7 +35,7 @@ func printOfflineFlag() {
 }
 
 func setOfflineFlag(value bool) {
-	git.UpdateOffline(value)
+	git.Config().SetOffline(value)
 }
 
 func init() {

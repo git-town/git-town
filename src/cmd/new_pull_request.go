@@ -45,7 +45,7 @@ where hostname matches what is in your ssh config file.`,
 		return util.FirstError(
 			git.ValidateIsRepository,
 			validateIsConfigured,
-			git.ValidateIsOnline,
+			git.Config().ValidateIsOnline,
 			drivers.ValidateHasDriver,
 		)
 	},
@@ -57,7 +57,7 @@ func getNewPullRequestConfig() (result newPullRequestConfig) {
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+	result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }
 

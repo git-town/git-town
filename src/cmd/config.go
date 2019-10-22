@@ -50,17 +50,17 @@ func printConfig() {
 	util.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
 	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
 
-	mainBranch := git.GetMainBranch()
+	mainBranch := git.Config().GetMainBranch()
 	if mainBranch != "" {
 		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}
 
-	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
+	util.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 	util.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
 }
 
 func resetConfig() {
-	git.RemoveAllConfiguration()
+	git.Config().RemoveLocalGitConfiguration()
 }
 
 func setupConfig() {

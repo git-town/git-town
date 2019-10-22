@@ -43,15 +43,15 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.GetURLHostname(originURL)
-	d.repository = git.GetURLRepositoryName(originURL)
+	d.hostname = git.Config().GetURLHostname(originURL)
+	d.repository = git.Config().GetURLRepositoryName(originURL)
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *gitlabCodeHostingDriver) GetAPITokenKey() string {
+func (d *gitlabCodeHostingDriver) GetAPIToken() string {
 	return ""
 }
 
