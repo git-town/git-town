@@ -36,7 +36,7 @@ func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for i, cell := range row.Cells {
-			err := commit.Set(columnNames[i], cell.Value)
+			err := commit.set(columnNames[i], cell.Value)
 			if err != nil {
 				return result, errors.Wrapf(err, "cannot set property %q to %q", columnNames[i], cell.Value)
 			}
@@ -47,7 +47,7 @@ func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 }
 
 // Set assigns the given value to the property with the given name.
-func (commit *Commit) Set(name, value string) (err error) {
+func (commit *Commit) set(name, value string) (err error) {
 	switch name {
 	case "BRANCH":
 		commit.Branch = value
