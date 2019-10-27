@@ -74,6 +74,15 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 func (runner *ShellRunner) Run(name string, arguments ...string) (output string, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
+
+	// set HOME to the current directory so that Git puts the global configuration there.
+	for i := range customEnv {
+		if strings.HasPrefix(customEnv[i], "HOME=") {
+			customEnv[i] = fmt.Sprintf("HOME=%s", runner.dir)
+		}
+	}
+
+	// enable shell overrides
 	if runner.hasTempShellOverrides() {
 		for i := range customEnv {
 			if strings.HasPrefix(customEnv[i], "PATH=") {

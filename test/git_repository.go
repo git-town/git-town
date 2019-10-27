@@ -273,7 +273,7 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	output, err := repo.Run("git", "config", "git-town.offline", "true")
+	output, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
 	if err != nil {
 		return errors.Wrapf(err, "cannot set offline mode in repo %q: %s", repo.Dir, output)
 	}
