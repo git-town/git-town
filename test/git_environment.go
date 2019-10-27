@@ -31,8 +31,8 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	result := GitEnvironment{
 		Dir:           dir,
-		DeveloperRepo: NewGitRepository(path.Join(dir, "developer")),
-		OriginRepo:    NewGitRepository(path.Join(dir, "origin")),
+		DeveloperRepo: NewGitRepository(path.Join(dir, "developer"), dir),
+		OriginRepo:    NewGitRepository(path.Join(dir, "origin"), dir),
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -56,11 +56,13 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	}
 
 	// create the origin repo
-	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath())
+	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
 	if err != nil {
 		return gitEnv, errors.Wrapf(err, "cannot initialize origin directory at %q", gitEnv.originRepoPath())
 	}
 	err = gitEnv.OriginRepo.RunMany([][]string{
+		{"git", "config", "user.name", "user"},
+		{"git", "config", "user.email", "email@example.com"},
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 		{"git", "checkout", "-b", "main"},
 		{"git", "checkout", "master"},
@@ -70,11 +72,17 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	}
 
 	// clone the "developer" repo
-	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath())
+	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir)
 	if err != nil {
 		return gitEnv, errors.Wrapf(err, "cannot clone developer repo %q from origin %q", gitEnv.originRepoPath(), gitEnv.developerRepoPath())
 	}
 	err = gitEnv.DeveloperRepo.RunMany([][]string{
+		{"git", "config", "--global", "user.name", "user"},
+		{"git", "config", "--global", "user.email", "email@example.com"},
+		// {"git", "config", "--global", "push.default", "simple"},
+		{"git", "config", "--global", "core.editor", "vim"},
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
 	})
 	return gitEnv, err

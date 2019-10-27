@@ -32,15 +32,15 @@ type GitRepository struct {
 
 // NewGitRepository provides a new GitRepository instance working in the given directory.
 // The directory must contain an existing Git repo.
-func NewGitRepository(dir string) GitRepository {
+func NewGitRepository(dir string, globalDir string) GitRepository {
 	result := GitRepository{Dir: dir}
-	result.ShellRunner = NewShellRunner(dir)
+	result.ShellRunner = NewShellRunner(dir, globalDir)
 	return result
 }
 
 // InitGitRepository initializes a new Git repository in the given path.
 // Creates missing folders as needed.
-func InitGitRepository(dir string) (GitRepository, error) {
+func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
 	// create the folder
 	err := os.MkdirAll(dir, 0744)
 	if err != nil {
@@ -48,7 +48,7 @@ func InitGitRepository(dir string) (GitRepository, error) {
 	}
 
 	// initialize the repo in the folder
-	result := NewGitRepository(dir)
+	result := NewGitRepository(dir, globalDir)
 	output, err := result.Run("git", "init")
 	if err != nil {
 		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, dir, output)
@@ -57,19 +57,14 @@ func InitGitRepository(dir string) (GitRepository, error) {
 }
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
-func CloneGitRepository(parentDir, childDir string) (GitRepository, error) {
-	runner := NewShellRunner(".")
+func CloneGitRepository(parentDir, childDir, globalDir string) (GitRepository, error) {
+	runner := NewShellRunner(".", globalDir)
 	_, err := runner.Run("git", "clone", parentDir, childDir)
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", parentDir)
 	}
-	result := NewGitRepository(childDir)
-	userName := strings.Replace(path.Base(childDir), "_secondary", "", 1)
+	result := NewGitRepository(childDir, globalDir)
 	err = result.RunMany([][]string{
-		{"git", "config", "user.name", userName},
-		{"git", "config", "user.email", userName + "@example.com"},
-		{"git", "config", "push.default", "simple"},
-		{"git", "config", "core.editor", "vim"},
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})

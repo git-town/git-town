@@ -21,6 +21,9 @@ type ShellRunner struct {
 	// dir contains the directory path in which this runner runs.
 	dir string
 
+	// globalDir contains the path that contains the global Git configuration.
+	globalDir string
+
 	// tempShellOverrideDirDir contains the directory path that stores the mock shell command implementations.
 	// This variable is populated when shell overrides are being set.
 	// An empty string indicates that no shell overrides have been set.
@@ -28,8 +31,8 @@ type ShellRunner struct {
 }
 
 // NewShellRunner provides a new ShellRunner instance that executes in the given directory.
-func NewShellRunner(dir string) ShellRunner {
-	return ShellRunner{dir: dir}
+func NewShellRunner(dir string, globalDir string) ShellRunner {
+	return ShellRunner{dir: dir, globalDir: globalDir}
 }
 
 // AddTempShellOverride temporarily mocks the shell command with the given name
@@ -78,7 +81,7 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	// set HOME to the current directory so that Git puts the global configuration there.
 	for i := range customEnv {
 		if strings.HasPrefix(customEnv[i], "HOME=") {
-			customEnv[i] = fmt.Sprintf("HOME=%s", runner.dir)
+			customEnv[i] = fmt.Sprintf("HOME=%s", runner.globalDir)
 		}
 	}
 

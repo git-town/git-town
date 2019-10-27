@@ -22,6 +22,7 @@ func TestNewStandardGitEnvironment(t *testing.T) {
 
 	// verify the developer repo
 	assertIsNormalGitRepo(t, path.Join(gitEnvRootDir, "developer"))
+	assertHasGlobalGitConfiguration(t, gitEnvRootDir)
 	branch, err = result.DeveloperRepo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "main", branch)
