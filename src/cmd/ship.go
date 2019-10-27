@@ -97,7 +97,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 
 func getShipStepList(config shipConfig) steps.StepList {
 	result := steps.StepList{}
-	var isOffline = git.Config().IsOffline()
+	isOffline := git.Config().IsOffline()
 	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
