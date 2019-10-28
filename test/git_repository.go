@@ -54,10 +54,11 @@ func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
 		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, dir, output)
 	}
 	err = result.RunMany([][]string{
-		{"git", "config", "user.name", "user"},
-		{"git", "config", "user.email", "email@example.com"},
+		{"git", "config", "--global", "user.name", "user"},
+		{"git", "config", "--global", "user.email", "email@example.com"},
+		{"git", "config", "--global", "core.editor", "vim"},
 	})
-	return result, nil
+	return result, err
 }
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
@@ -67,12 +68,7 @@ func CloneGitRepository(parentDir, childDir, globalDir string) (GitRepository, e
 	if err != nil {
 		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", parentDir)
 	}
-	result := NewGitRepository(childDir, globalDir)
-	err = result.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
-	})
-	return result, err
+	return NewGitRepository(childDir, globalDir), nil
 }
 
 // Branches provides the names of the local branches in this Git repository,
