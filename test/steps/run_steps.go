@@ -15,10 +15,10 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^it runs the commands$`, func(table *gherkin.DataTable) error {
+	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
-		morta := test.RenderExecutedGitCommands(commands, table)
-		diff, errorCount := morta.Equal(table)
+		table := test.RenderExecutedGitCommands(commands, input)
+		diff, errorCount := table.Equal(input)
 		if errorCount != 0 {
 			fmt.Println(diff)
 			return fmt.Errorf("found %d differences", errorCount)
