@@ -43,10 +43,14 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
 // fully populated as a standardized setup for scenarios.
 func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
+
+	// create the folder
 	err = os.MkdirAll(dir, 0744)
 	if err != nil {
 		return gitEnv, errors.Wrapf(err, "cannot create folder %q for Git environment", dir)
 	}
+
+	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 
 	// create the origin repo
@@ -73,7 +77,6 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	err = gitEnv.DeveloperRepo.RunMany([][]string{
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
-		// {"git", "config", "--global", "push.default", "simple"},
 		{"git", "config", "--global", "core.editor", "vim"},
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},

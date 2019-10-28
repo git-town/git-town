@@ -9,7 +9,7 @@ import (
 	"github.com/Originate/git-town/test/helpers"
 )
 
-// DataTable compares Gherkin tables with user-generated data.
+// DataTable allows comparing user-generated data with Gherkin tables.
 type DataTable struct {
 	// cells contains table data organized as rows and columns
 	cells [][]string
