@@ -53,6 +53,10 @@ func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
 	if err != nil {
 		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, dir, output)
 	}
+	err = result.RunMany([][]string{
+		{"git", "config", "user.name", "user"},
+		{"git", "config", "user.email", "email@example.com"},
+	})
 	return result, nil
 }
 

@@ -63,8 +63,6 @@ func createTestRepo(t *testing.T) GitRepository {
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize Git repow")
 	err = repo.RunMany([][]string{
-		{"git", "config", "user.name", "user"},
-		{"git", "config", "user.email", "email@example.com"},
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
 	assert.Nil(t, err, "cannot create initial commit: %s")
