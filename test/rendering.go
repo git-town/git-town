@@ -8,37 +8,37 @@ import (
 // The DataTable table matches the structure of the given Gherkin table.
 func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.DataTable) DataTable {
 	tableHasBranches := table.Rows[0].Cells[0].Value == "BRANCH"
-	morta := DataTable{}
+	result := DataTable{}
 	if tableHasBranches {
-		morta.AddRow("BRANCH", "COMMAND")
+		result.AddRow("BRANCH", "COMMAND")
 	} else {
-		morta.AddRow("COMMAND")
+		result.AddRow("COMMAND")
 	}
 	lastBranch := ""
 	for _, cmd := range commands {
 		if tableHasBranches {
 			if cmd.Branch == lastBranch {
-				morta.AddRow("", cmd.Command)
+				result.AddRow("", cmd.Command)
 			} else {
-				morta.AddRow(cmd.Branch, cmd.Command)
+				result.AddRow(cmd.Branch, cmd.Command)
 			}
 		} else {
-			morta.AddRow(cmd.Command)
+			result.AddRow(cmd.Command)
 		}
 		lastBranch = cmd.Branch
 	}
-	return morta
+	return result
 }
 
 // RenderTable provides the textual Gherkin representation of the given Gherkin table.
 func RenderTable(table *gherkin.DataTable) string {
-	morta := DataTable{}
+	result := DataTable{}
 	for _, row := range table.Rows {
 		values := []string{}
 		for _, cell := range row.Cells {
 			values = append(values, cell.Value)
 		}
-		morta.AddRow(values...)
+		result.AddRow(values...)
 	}
-	return morta.String()
+	return result.String()
 }

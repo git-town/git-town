@@ -38,7 +38,8 @@ func NewGitRepository(dir string, globalDir string) GitRepository {
 	return result
 }
 
-// InitGitRepository initializes a new Git repository in the given path.
+// InitGitRepository initializes a fully functioning Git repository in the given path,
+// including necessary Git configuration.
 // Creates missing folders as needed.
 func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
 	// create the folder
@@ -76,7 +77,7 @@ func CloneGitRepository(parentDir, childDir, globalDir string) (GitRepository, e
 func (repo *GitRepository) Branches() (result []string, err error) {
 	output, err := repo.Run("git", "branch")
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot run 'git branch -a' in repo %q", repo.dir)
+		return result, errors.Wrapf(err, "cannot run 'git branch' in repo %q", repo.dir)
 	}
 	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
@@ -101,7 +102,7 @@ func (repo *GitRepository) Commits(fields []string) (result []Commit, err error)
 		return result, errors.Wrap(err, "cannot determine the Git branches")
 	}
 	for _, branch := range branches {
-		commits, err := repo.CommitsInBranch(branch, fields)
+		commits, err := repo.commitsInBranch(branch, fields)
 		if err != nil {
 			return result, err
 		}
@@ -111,7 +112,7 @@ func (repo *GitRepository) Commits(fields []string) (result []Commit, err error)
 }
 
 // CommitsInBranch provides all commits in the given Git branch.
-func (repo *GitRepository) CommitsInBranch(branch string, fields []string) (result []Commit, err error) {
+func (repo *GitRepository) commitsInBranch(branch string, fields []string) (result []Commit, err error) {
 	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)

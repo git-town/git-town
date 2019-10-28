@@ -12,16 +12,16 @@ import (
 
 // BranchSteps defines Cucumber step implementations around Git branches.
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(data *gherkin.DataTable) error {
+	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *gherkin.DataTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
-		mortadella := test.DataTable{}
-		mortadella.AddRow("BRANCH", "PARENT")
-		for _, row := range data.Rows[1:] {
+		table := test.DataTable{}
+		table.AddRow("BRANCH", "PARENT")
+		for _, row := range input.Rows[1:] {
 			branch := row.Cells[0].Value
 			parentBranch := gitConfig.GetParentBranch(branch)
-			mortadella.AddRow(branch, parentBranch)
+			table.AddRow(branch, parentBranch)
 		}
-		diff, errCount := mortadella.Equal(data)
+		diff, errCount := table.Equal(input)
 		if errCount > 0 {
 			fmt.Println(diff)
 			return fmt.Errorf("%d differences", errCount)

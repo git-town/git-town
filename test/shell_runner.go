@@ -78,7 +78,7 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
 
-	// set HOME to the current directory so that Git puts the global configuration there.
+	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range customEnv {
 		if strings.HasPrefix(customEnv[i], "HOME=") {
 			customEnv[i] = fmt.Sprintf("HOME=%s", runner.globalDir)
