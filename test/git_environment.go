@@ -40,20 +40,14 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	return &result, err
 }
 
-// NewGitEnvironment provides a Git environment instance located in the given directory path.
-// Missing directories are created as needed.
-func NewGitEnvironment(baseDir string) (*GitEnvironment, error) {
-	err := os.MkdirAll(baseDir, 0744)
-	return &GitEnvironment{Dir: baseDir}, err
-}
-
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
 // fully populated as a standardized setup for scenarios.
 func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
-	gitEnv, err = NewGitEnvironment(dir)
+	err = os.MkdirAll(dir, 0744)
 	if err != nil {
-		return gitEnv, errors.Wrapf(err, "cannot create a new standard environment")
+		return gitEnv, errors.Wrapf(err, "cannot create folder %q for Git environment", dir)
 	}
+	gitEnv = &GitEnvironment{Dir: dir}
 
 	// create the origin repo
 	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
