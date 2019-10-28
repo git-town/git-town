@@ -70,6 +70,8 @@ func createTestRepo(t *testing.T) GitRepository {
 func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
 	err := repo.RunMany([][]string{
+		{"git", "config", "user.name", "user"},
+		{"git", "config", "user.email", "email@example.com"},
 		{"git", "config", "git-town.main-branch-name", "master"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
