@@ -62,16 +62,18 @@ func createTestRepo(t *testing.T) GitRepository {
 	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize Git repow")
-	output, err := repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
-	assert.Nilf(t, err, "cannot create initial commit: %s", output)
+	err = repo.RunMany([][]string{
+		{"git", "config", "user.name", "user"},
+		{"git", "config", "user.email", "email@example.com"},
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
+	})
+	assert.Nil(t, err, "cannot create initial commit: %s")
 	return repo
 }
 
 func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
 	err := repo.RunMany([][]string{
-		{"git", "config", "user.name", "user"},
-		{"git", "config", "user.email", "email@example.com"},
 		{"git", "config", "git-town.main-branch-name", "master"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
