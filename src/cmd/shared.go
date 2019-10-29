@@ -55,11 +55,10 @@ func ensureIsNotInUnfinishedState() error {
 			runState.UnfinishedDetails.EndTime,
 			runState.UnfinishedDetails.CanSkip,
 		)
-		if response == prompt.ResponseTypeDiscard {
+		switch response {
+		case prompt.ResponseTypeDiscard:
 			steps.DeletePreviousRunState()
 			return nil
-		}
-		switch response {
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
 			steps.Run(runState)
