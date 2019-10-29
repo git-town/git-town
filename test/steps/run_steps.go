@@ -20,8 +20,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		table := test.RenderExecutedGitCommands(commands, input)
 		diff, errorCount := table.Equal(input)
 		if errorCount != 0 {
-			fmt.Println(diff)
-			return fmt.Errorf("found %d differences", errorCount)
+			return fmt.Errorf("found %d differences:\n%s", errorCount, diff)
 		}
 		return nil
 	})

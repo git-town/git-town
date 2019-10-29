@@ -23,8 +23,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		diff, errCount := table.Equal(input)
 		if errCount > 0 {
-			fmt.Println(diff)
-			return fmt.Errorf("%d differences", errCount)
+			return fmt.Errorf("found %d differences:\n%s", errCount, diff)
 		}
 		return nil
 	})
