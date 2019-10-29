@@ -59,14 +59,12 @@ func NewConfiguration(dir string) *Configuration {
 func loadGitConfig(dir string, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
-	var res *command.Result
 	if global {
 		cmdArgs = append(cmdArgs, "--global")
-		res = command.RunInDir(dir, "git", cmdArgs...)
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
-		res = command.RunInDir(dir, "git", cmdArgs...)
 	}
+	res := command.RunInDir(dir, "git", cmdArgs...)
 	if res.Err() != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
 		return result
 	}
