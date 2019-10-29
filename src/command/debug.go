@@ -3,7 +3,6 @@ package command
 import (
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/fatih/color"
 )
 
@@ -19,6 +18,8 @@ func logRun(cmd string, args ...string) {
 	if debug {
 		count++
 		_, err := color.New(color.FgBlue).Printf("DEBUG (%d): %s %s\n", count, cmd, strings.Join(args, " "))
-		exit.If(err)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
