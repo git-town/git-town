@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/util"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -15,21 +15,31 @@ var installFishAutocompletionCommand = &cobra.Command{
 	Use:   "install-fish-autocompletion",
 	Short: "Installs the autocompletion definition for Fish shell",
 	Run: func(cmd *cobra.Command, args []string) {
-		installFishAutocompletion()
+		err := installFishAutocompletion()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 }
 
-func installFishAutocompletion() {
-	filename := path.Join(os.Getenv("HOME"), ".config", "fish", "completions", "git.fish")
+func installFishAutocompletion() error {
+	folderName := path.Join(os.Getenv("HOME"), ".config", "fish", "completions")
+	filename := path.Join(folderName, "git.fish")
 	err := os.MkdirAll(path.Dir(filename), 0700)
-	exit.If(err)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create folder %q", folderName)
+	}
 	if util.DoesFileExist(filename) {
 		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
 	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0644)
-	exit.If(err)
+	if err != nil {
+		return errors.Wrapf(err, "cannot write file %q", filename)
+	}
 	fmt.Println("Git autocompletion for Fish shell installed")
+	return nil
 }
 
 var fishAutocompletionTemplate = `
