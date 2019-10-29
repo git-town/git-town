@@ -27,7 +27,7 @@ func TestCopyDirectoryWorksWithGitRepo(t *testing.T) {
 	tmpDir := createTempDir(t)
 	srcDir := path.Join(tmpDir, "src")
 	dstDir := path.Join(tmpDir, "dst")
-	_, err := InitGitRepository(srcDir, false)
+	_, err := InitGitRepository(srcDir, tmpDir)
 	assert.Nil(t, err)
 	createFile(t, srcDir, "one.txt")
 

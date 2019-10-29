@@ -84,9 +84,10 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	return result
 }
 
-// AddToPerennialBranches adds the given branch as a perennial branch
-func (c *Configuration) AddToPerennialBranches(branchName string) {
-	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchName))
+// AddToPerennialBranches registers the given branch names as perennial branches.
+// The branches must exist.
+func (c *Configuration) AddToPerennialBranches(branchNames ...string) {
+	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
 }
 
 // AddGitAlias sets the given Git alias.

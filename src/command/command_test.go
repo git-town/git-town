@@ -1,6 +1,10 @@
 package command_test
 
 import (
+	"io/ioutil"
+	"os"
+	"path"
+
 	"github.com/Originate/git-town/src/command"
 
 	. "github.com/onsi/ginkgo"
@@ -47,6 +51,20 @@ var _ = Describe("OutputContainsLine", func() {
 
 	It("returns false if the output does not contains the given line", func() {
 		Expect(res.OutputContainsLine("zonk")).To(BeFalse())
+	})
+})
+
+var _ = Describe("RunInDir", func() {
+	It("runs in the given directory", func() {
+		dir, err := ioutil.TempDir("", "")
+		Expect(err).To(BeNil())
+		dirPath := path.Join(dir, "mydir")
+		err = os.Mkdir(dirPath, 0744)
+		Expect(err).To(BeNil())
+		err = ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
+		Expect(err).To(BeNil())
+		res := command.RunInDir(dirPath, "ls", "-1")
+		Expect(res.OutputSanitized()).To(Equal("one"))
 	})
 })
 
