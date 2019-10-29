@@ -12,7 +12,7 @@ import (
 
 func TestCommandRun(t *testing.T) {
 	res := command.Run("echo", "foo")
-	assert.Equal(t, "foo", res.Output())
+	assert.Equal(t, "foo\n", res.Output())
 }
 
 func TestCommand_RunInDir(t *testing.T) {
