@@ -31,34 +31,26 @@ func assertFolderExists(t *testing.T, dir string) {
 }
 
 func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
-	runner := NewShellRunner(dir)
+	runner := NewShellRunner(dir, dir)
 	output, err := runner.Run("git", "branch")
 	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
 	assert.Contains(t, output, expectedBranch, "doesn't have Git branch")
-}
-
-func assertIsBareGitRepo(t *testing.T, dir string) {
-	assertFolderExists(t, dir)
-	entries, err := ioutil.ReadDir(dir)
-	assert.Nilf(t, err, "cannot list directory %q", dir)
-	entryNames := make([]string, len(entries))
-	for i := range entries {
-		entryNames[i] = entries[i].Name()
-	}
-	assert.Contains(t, entryNames, "HEAD")
-	assert.Contains(t, entryNames, "config")
-	assert.Contains(t, entryNames, "description")
-	assert.Contains(t, entryNames, "hooks")
-	assert.Contains(t, entryNames, "objects")
-	assert.Contains(t, entryNames, "refs")
 }
 
 func assertIsNormalGitRepo(t *testing.T, dir string) {
 	assertFolderExists(t, dir)
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
-	testData := []string{".git"}
-	for i, expected := range testData {
-		assert.Equal(t, expected, entries[i].Name())
+	assert.Equal(t, ".git", entries[0].Name())
+}
+
+func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
+	entries, err := ioutil.ReadDir(dir)
+	assert.Nilf(t, err, "cannot list directory %q", dir)
+	for i := range entries {
+		if entries[i].Name() == ".gitconfig" {
+			return
+		}
 	}
+	t.Fatalf(".gitconfig not found in %q", dir)
 }

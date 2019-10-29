@@ -1,6 +1,9 @@
 package command_test
 
 import (
+	"io/ioutil"
+	"os"
+	"path"
 	"testing"
 
 	"github.com/Originate/git-town/src/command"
@@ -10,6 +13,18 @@ import (
 func TestCommandRun(t *testing.T) {
 	res := command.Run("echo", "foo")
 	assert.Equal(t, "foo", res.Output())
+}
+
+func TestCommand_RunInDir(t *testing.T) {
+	dir, err := ioutil.TempDir("", "")
+	assert.Nil(t, err)
+	dirPath := path.Join(dir, "mydir")
+	err = os.Mkdir(dirPath, 0744)
+	assert.Nil(t, err)
+	err = ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
+	assert.Nil(t, err)
+	res := command.RunInDir(dirPath, "ls", "-1")
+	assert.Equal(t, "one", res.OutputSanitized())
 }
 
 func TestCommandOutputContainsText(t *testing.T) {

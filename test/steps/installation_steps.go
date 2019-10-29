@@ -12,7 +12,9 @@ func InstallationSteps(suite *godog.Suite, fs *FeatureState) {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.AddTempShellOverride(
 			"git",
 			fmt.Sprintf(`#!/usr/bin/env bash
-		echo "git version %s"`, version))
+		if [ "$1" = "version" ]; then
+			echo "git version %s"
+		fi`, version))
 		return err
 	})
 }

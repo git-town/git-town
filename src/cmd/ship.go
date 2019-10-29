@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
@@ -47,7 +48,11 @@ Now anytime you ship a branch with a pull request on GitHub, it will squash merg
 It will also update the base branch for any pull requests against that branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := gitShipConfig(args)
-		stepList := getShipStepList(config)
+		stepList, err := getShipStepList(config)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("ship", stepList)
 		steps.Run(runState)
 	},
@@ -95,7 +100,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) steps.StepList {
+func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result := steps.StepList{}
 	isOffline := git.Config().IsOffline()
 	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
@@ -104,7 +109,10 @@ func getShipStepList(config shipConfig) steps.StepList {
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	canShipWithDriver, defaultCommitMessage, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	if err != nil {
+		return result, err
+	}
 	if canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
@@ -128,23 +136,21 @@ func getShipStepList(config shipConfig) steps.StepList {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
-	return result
+	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
+func getCanShipWithDriver(branch, parentBranch string) (bool, string, error) {
 	if !git.HasRemote("origin") {
-		return false, ""
+		return false, "", nil
 	}
 	if git.Config().IsOffline() {
-		return false, ""
+		return false, "", nil
 	}
 	driver := drivers.GetActiveDriver()
 	if driver == nil {
-		return false, ""
+		return false, "", nil
 	}
-	canMerge, defaultCommitMessage, err := driver.CanMergePullRequest(branch, parentBranch)
-	exit.If(err)
-	return canMerge, defaultCommitMessage
+	return driver.CanMergePullRequest(branch, parentBranch)
 }
 
 func init() {
