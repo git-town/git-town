@@ -18,11 +18,11 @@ import (
 //   Temporary mocks are only valid for the next command being run.
 type ShellRunner struct {
 
-	// dir contains the directory path in which this runner runs.
-	dir string
+	// workingDir contains the directory path in which this runner runs.
+	workingDir string
 
-	// globalDir contains the path that contains the global Git configuration.
-	globalDir string
+	// homeDir contains the path that contains the global Git configuration.
+	homeDir string
 
 	// tempShellOverrideDirDir contains the directory path that stores the mock shell command implementations.
 	// This variable is populated when shell overrides are being set.
@@ -31,8 +31,8 @@ type ShellRunner struct {
 }
 
 // NewShellRunner provides a new ShellRunner instance that executes in the given directory.
-func NewShellRunner(dir string, globalDir string) ShellRunner {
-	return ShellRunner{dir: dir, globalDir: globalDir}
+func NewShellRunner(workingDir string, homeDir string) ShellRunner {
+	return ShellRunner{workingDir: workingDir, homeDir: homeDir}
 }
 
 // AddTempShellOverride temporarily mocks the shell command with the given name
@@ -81,7 +81,7 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range customEnv {
 		if strings.HasPrefix(customEnv[i], "HOME=") {
-			customEnv[i] = fmt.Sprintf("HOME=%s", runner.globalDir)
+			customEnv[i] = fmt.Sprintf("HOME=%s", runner.homeDir)
 		}
 	}
 
@@ -99,9 +99,9 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	}
 
 	// run the command inside the custom environment
-	outcome := command.RunDirEnv(runner.dir, customEnv, name, arguments...)
+	outcome := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
 	if Debug {
-		fmt.Println(path.Base(runner.dir), ">", name, strings.Join(arguments, " "))
+		fmt.Println(path.Base(runner.workingDir), ">", name, strings.Join(arguments, " "))
 		fmt.Println(outcome.Output())
 	}
 	return outcome.Output(), outcome.Err()

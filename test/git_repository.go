@@ -32,27 +32,27 @@ type GitRepository struct {
 
 // NewGitRepository provides a new GitRepository instance working in the given directory.
 // The directory must contain an existing Git repo.
-func NewGitRepository(dir string, globalDir string) GitRepository {
-	result := GitRepository{Dir: dir}
-	result.ShellRunner = NewShellRunner(dir, globalDir)
+func NewGitRepository(workingDir string, homeDir string) GitRepository {
+	result := GitRepository{Dir: workingDir}
+	result.ShellRunner = NewShellRunner(workingDir, homeDir)
 	return result
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
 // including necessary Git configuration.
 // Creates missing folders as needed.
-func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
+func InitGitRepository(workingDir string, homeDir string) (GitRepository, error) {
 	// create the folder
-	err := os.MkdirAll(dir, 0744)
+	err := os.MkdirAll(workingDir, 0744)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot create directory %q", dir)
+		return GitRepository{}, errors.Wrapf(err, "cannot create directory %q", workingDir)
 	}
 
 	// initialize the repo in the folder
-	result := NewGitRepository(dir, globalDir)
+	result := NewGitRepository(workingDir, homeDir)
 	output, err := result.Run("git", "init")
 	if err != nil {
-		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, dir, output)
+		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, workingDir, output)
 	}
 	err = result.RunMany([][]string{
 		{"git", "config", "--global", "user.name", "user"},
@@ -63,13 +63,13 @@ func InitGitRepository(dir string, globalDir string) (GitRepository, error) {
 }
 
 // CloneGitRepository clones the given parent repo into a new GitRepository.
-func CloneGitRepository(parentDir, childDir, globalDir string) (GitRepository, error) {
-	runner := NewShellRunner(".", globalDir)
-	_, err := runner.Run("git", "clone", parentDir, childDir)
+func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
+	runner := NewShellRunner(".", homeDir)
+	_, err := runner.Run("git", "clone", originDir, workingDir)
 	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", parentDir)
+		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", originDir)
 	}
-	return NewGitRepository(childDir, globalDir), nil
+	return NewGitRepository(workingDir, homeDir), nil
 }
 
 // Branches provides the names of the local branches in this Git repository,
@@ -77,7 +77,7 @@ func CloneGitRepository(parentDir, childDir, globalDir string) (GitRepository, e
 func (repo *GitRepository) Branches() (result []string, err error) {
 	output, err := repo.Run("git", "branch")
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot run 'git branch' in repo %q", repo.dir)
+		return result, errors.Wrapf(err, "cannot run 'git branch' in repo %q", repo.workingDir)
 	}
 	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
@@ -90,7 +90,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 func (repo *GitRepository) CheckoutBranch(name string) error {
 	output, err := repo.Run("git", "checkout", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %s", name, repo.dir, output)
+		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %s", name, repo.workingDir, output)
 	}
 	return nil
 }
