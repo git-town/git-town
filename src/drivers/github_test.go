@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"testing"
 
 	. "github.com/Originate/git-town/src/drivers"
+	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 
 	. "github.com/onsi/ginkgo"
@@ -25,40 +27,71 @@ func GetRequestData(request *http.Request) map[string]interface{} {
 	return data
 }
 
-var _ = Describe("CodeHostingDriver - GitHub", func() {
-	pullRequestBaseURL := "https://api.github.com/repos/Originate/git-town/pulls"
-	currentPullRequestURL := pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
-	var driver CodeHostingDriver
+var pullRequestBaseURL = "https://api.github.com/repos/Originate/git-town/pulls"
+var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 
+func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfGithubTokenIsEmpty(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+
+	driver.SetAPIToken("")
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_ReturnsErrorGettingPullRequestNumber(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
+	_, _, err := driver.CanMergePullRequest("feature", "main")
+	assert.Error(t, err)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfNoPullRequestForBranch(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfMultiplePullRequestsForBranch(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
+var _ = Describe("CodeHostingDriver - GitHub", func() {
+	var driver CodeHostingDriver
 	BeforeEach(func() {
 		driver = GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
 		Expect(driver).NotTo(BeNil())
 	})
-
 	Describe("CanMergePullRequest", func() {
-		It("returns false if the environment variable GITHUB_TOKEN is an empty string", func() {
-			driver.SetAPIToken("")
-			canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-			Expect(err).To(BeNil())
-			Expect(canMerge).To(BeFalse())
-		})
-
 		Describe("environment variable GITHUB_TOKEN is a non-empty string", func() {
 			BeforeEach(func() {
 				driver.SetAPIToken("TOKEN")
-			})
-
-			It("returns request errors (getting the pull request number to merge)", func() {
-				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-				_, _, err := driver.CanMergePullRequest("feature", "main")
-				Expect(err).To(HaveOccurred())
-			})
-
-			It("returns false if there is no pull request for the branch", func() {
-				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-				Expect(err).To(BeNil())
-				Expect(canMerge).To(BeFalse())
 			})
 
 			It("returns false if there are multiple pull requests for the branch", func() {
