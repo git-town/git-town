@@ -17,59 +17,7 @@ import (
 var pullRequestBaseURL = "https://api.github.com/repos/Originate/git-town/pulls"
 var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 
-func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfGithubTokenIsEmpty(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
-	assert.NotNil(t, driver)
-
-	driver.SetAPIToken("")
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
-	assert.Nil(t, err)
-	assert.False(t, canMerge)
-}
-
-func TestCodeHostingDriver_CanMergePullRequest_ReturnsErrorGettingPullRequestNumber(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
-	assert.NotNil(t, driver)
-	driver.SetAPIToken("TOKEN")
-	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-	_, _, err := driver.CanMergePullRequest("feature", "main")
-	assert.Error(t, err)
-}
-
-func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfNoPullRequestForBranch(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
-	assert.NotNil(t, driver)
-	driver.SetAPIToken("TOKEN")
-
-	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
-	assert.Nil(t, err)
-	assert.False(t, canMerge)
-}
-
-func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfMultiplePullRequestsForBranch(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
-	assert.NotNil(t, driver)
-	driver.SetAPIToken("TOKEN")
-
-	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
-	assert.Nil(t, err)
-	assert.False(t, canMerge)
-}
-
-func TestCodeHostingDriver_CanMergePullRequest_OnePullRequest(t *testing.T) {
+func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
@@ -84,12 +32,64 @@ func TestCodeHostingDriver_CanMergePullRequest_OnePullRequest(t *testing.T) {
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
 }
 
+func TestCodeHostingDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+
+	driver.SetAPIToken("")
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
+	_, _, err := driver.CanMergePullRequest("feature", "main")
+	assert.Error(t, err)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
+func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
+	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.False(t, canMerge)
+}
+
 var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
 var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
-func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequestIds(t *testing.T) {
+func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
@@ -107,7 +107,7 @@ func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequest
 	Expect(err).ToNot(BeNil())
 }
 
-func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequestToMerge(t *testing.T) {
+func TestCodeHostingDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
@@ -126,7 +126,7 @@ func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequest
 	assert.Error(t, err)
 }
 
-func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForPullRequestNotFound(t *testing.T) {
+func TestCodeHostingDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
@@ -146,7 +146,7 @@ func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForPullRequestNot
 	assert.Equal(t, "no pull request found", err.Error())
 }
 
-func TestCodeHostingDriver_MergePullRequest_ReturnsErrorIfMultiplePullRequestsFound(t *testing.T) {
+func TestCodeHostingDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
