@@ -139,6 +139,26 @@ func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequest
 	assert.Error(t, err)
 }
 
+func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForPullRequestNotFound(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	options := MergePullRequestOptions{
+		Branch:        "feature",
+		CommitMessage: "title\nextra detail1\nextra detail2",
+		ParentBranch:  "main",
+	}
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
+	_, err := driver.MergePullRequest(options)
+
+	assert.Error(t, err)
+	assert.Equal(t, "no pull request found", err.Error())
+}
+
 var _ = Describe("CodeHostingDriver - GitHub", func() {
 	var driver CodeHostingDriver
 	BeforeEach(func() {
@@ -154,14 +174,6 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 				ParentBranch:  "main",
 			}
 			driver.SetAPIToken("TOKEN")
-		})
-
-		It("returns an error if pull request number not found", func() {
-			httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
-			httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-			_, err := driver.MergePullRequest(options)
-			Expect(err).ToNot(BeNil())
-			Expect(err.Error()).To(Equal("no pull request found"))
 		})
 
 		It("returns an error if multiple pull request numbers not found", func() {
