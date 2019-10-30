@@ -120,6 +120,25 @@ func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequest
 	Expect(err).ToNot(BeNil())
 }
 
+func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequestToMerge(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	options := MergePullRequestOptions{
+		Branch:        "feature",
+		CommitMessage: "title\nextra detail1\nextra detail2",
+		ParentBranch:  "main",
+	}
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
+
+	_, err := driver.MergePullRequest(options)
+	assert.Error(t, err)
+}
+
 var _ = Describe("CodeHostingDriver - GitHub", func() {
 	var driver CodeHostingDriver
 	BeforeEach(func() {
@@ -135,13 +154,6 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 				ParentBranch:  "main",
 			}
 			driver.SetAPIToken("TOKEN")
-		})
-
-		It("returns request errors (getting the pull request number to merge)", func() {
-			httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
-			httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
-			Expect(err).ToNot(BeNil())
 		})
 
 		It("returns an error if pull request number not found", func() {
