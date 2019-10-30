@@ -8,7 +8,6 @@ import (
 )
 
 func TestGetDriver_DriverOverride_Bitbucket(t *testing.T) {
-
 	result := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "bitbucket",
 		OriginURL:  "git@self-hosted-bitbucket.com:Originate/git-town.git",
