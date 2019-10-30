@@ -14,19 +14,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func GetRequestData(request *http.Request) map[string]interface{} {
-	dataStr, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		panic(err)
-	}
-	data := map[string]interface{}{}
-	err = json.Unmarshal(dataStr, &data)
-	if err != nil {
-		panic(err)
-	}
-	return data
-}
-
 var pullRequestBaseURL = "https://api.github.com/repos/Originate/git-town/pulls"
 var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
 
@@ -255,3 +242,16 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 		})
 	})
 })
+
+func GetRequestData(request *http.Request) map[string]interface{} {
+	dataStr, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		panic(err)
+	}
+	data := map[string]interface{}{}
+	err = json.Unmarshal(dataStr, &data)
+	if err != nil {
+		panic(err)
+	}
+	return data
+}
