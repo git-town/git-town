@@ -82,42 +82,52 @@ func TestCodeHostingDriver_CanMergePullRequest_ReturnsFalseIfMultiplePullRequest
 	assert.False(t, canMerge)
 }
 
+func TestCodeHostingDriver_CanMergePullRequest_OnePullRequest(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
+	canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
+
+	assert.Nil(t, err)
+	assert.True(t, canMerge)
+	assert.Equal(t, "my title (#1)", defaultCommintMessage)
+}
+
+var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
+var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
+var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
+var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
+
+func TestCodeHostingDriver_MergePullRequest_ReturnsRequestErrorForGetPullRequestIds(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	assert.NotNil(t, driver)
+	options := MergePullRequestOptions{
+		Branch:        "feature",
+		CommitMessage: "title\nextra detail1\nextra detail2",
+		ParentBranch:  "main",
+	}
+	driver.SetAPIToken("TOKEN")
+
+	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(404, ""))
+	_, err := driver.MergePullRequest(options)
+
+	Expect(err).ToNot(BeNil())
+}
+
 var _ = Describe("CodeHostingDriver - GitHub", func() {
 	var driver CodeHostingDriver
 	BeforeEach(func() {
 		driver = GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
 		Expect(driver).NotTo(BeNil())
 	})
-	Describe("CanMergePullRequest", func() {
-		Describe("environment variable GITHUB_TOKEN is a non-empty string", func() {
-			BeforeEach(func() {
-				driver.SetAPIToken("TOKEN")
-			})
-
-			It("returns false if there are multiple pull requests for the branch", func() {
-				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-				canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-				Expect(err).To(BeNil())
-				Expect(canMerge).To(BeFalse())
-			})
-
-			It("returns true (and the default commit message) if there is one pull request for the branch", func() {
-				httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-				canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
-				Expect(err).To(BeNil())
-				Expect(canMerge).To(BeTrue())
-				Expect(defaultCommintMessage).To(Equal("my title (#1)"))
-			})
-		})
-	})
-
 	Describe("MergePullRequest", func() {
-		childPullRequestsURL := pullRequestBaseURL + "?base=feature&state=open"
-		mergePullRequestURL := pullRequestBaseURL + "/1/merge"
-		updatePullRequestBaseURL1 := pullRequestBaseURL + "/2"
-		updatePullRequestBaseURL2 := pullRequestBaseURL + "/3"
 		var options MergePullRequestOptions
-
 		BeforeEach(func() {
 			options = MergePullRequestOptions{
 				Branch:        "feature",
@@ -125,12 +135,6 @@ var _ = Describe("CodeHostingDriver - GitHub", func() {
 				ParentBranch:  "main",
 			}
 			driver.SetAPIToken("TOKEN")
-		})
-
-		It("returns request errors (getting the pull request numbers against the shipped branch)", func() {
-			httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(404, ""))
-			_, err := driver.MergePullRequest(options)
-			Expect(err).ToNot(BeNil())
 		})
 
 		It("returns request errors (getting the pull request number to merge)", func() {
