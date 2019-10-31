@@ -13,6 +13,10 @@ import (
 
 var pullRequestBaseURL = "https://api.github.com/repos/Originate/git-town/pulls"
 var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
+var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
+var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
+var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
+var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
 func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
 	httpmock.Activate()
@@ -48,8 +52,10 @@ func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *test
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
 	assert.NotNil(t, driver)
 	driver.SetAPIToken("TOKEN")
+
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, err := driver.CanMergePullRequest("feature", "main")
+
 	assert.Error(t, err)
 }
 
@@ -80,11 +86,6 @@ func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
 }
-
-var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
-var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
-var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
-var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
 func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	httpmock.Activate()
@@ -186,7 +187,7 @@ func TestCodeHostingDriver_MergePullRequest(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, "abc123", sha)
-	mergeParameters := GetRequestData(mergeRequest)
+	mergeParameters := getRequestData(mergeRequest)
 	assert.Equal(t, "title", mergeParameters["commit_title"])
 	assert.Equal(t, "extra detail1\nextra detail2", mergeParameters["commit_message"])
 	assert.Equal(t, "squash", mergeParameters["merge_method"])
@@ -237,14 +238,15 @@ func TestCodeHostingDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 	httpmock.RegisterResponder("PUT", mergePullRequestURL, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 	_, err := driver.MergePullRequest(options)
+
 	assert.Nil(t, err)
-	updateParameters1 := GetRequestData(updateRequest1)
+	updateParameters1 := getRequestData(updateRequest1)
 	assert.Equal(t, "main", updateParameters1["base"])
-	updateParameters2 := GetRequestData(updateRequest2)
+	updateParameters2 := getRequestData(updateRequest2)
 	assert.Equal(t, "main", updateParameters2["base"])
 }
 
-func GetRequestData(request *http.Request) map[string]interface{} {
+func getRequestData(request *http.Request) map[string]interface{} {
 	dataStr, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		panic(err)
