@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
@@ -41,7 +42,11 @@ When run on a perennial branch
 - Requires the use of the "-f" option
 - Reconfigures git town locally for the perennial branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getRenameBranchConfig(args)
+		config, err := getRenameBranchConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getRenameBranchStepList(config)
 		runState := steps.NewRunState("rename-branch", stepList)
 		steps.Run(runState)
@@ -55,7 +60,7 @@ When run on a perennial branch
 	},
 }
 
-func getRenameBranchConfig(args []string) (result renameBranchConfig) {
+func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
 	if len(args) == 1 {
 		result.OldBranchName = git.GetCurrentBranchName()
 		result.NewBranchName = args[0]
@@ -71,7 +76,10 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig) {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
 	if !git.Config().IsOffline() {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	git.EnsureHasBranch(result.OldBranchName)
 	git.EnsureBranchInSync(result.OldBranchName, "Please sync the branches before renaming.")

@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
@@ -35,7 +38,11 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getNewPullRequestConfig()
+		config, err := getNewPullRequestConfig()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getNewPullRequestStepList(config)
 		runState := steps.NewRunState("new-pull-request", stepList)
 		steps.Run(runState)
@@ -51,9 +58,12 @@ where hostname matches what is in your ssh config file.`,
 	},
 }
 
-func getNewPullRequestConfig() (result newPullRequestConfig) {
+func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	if git.HasRemote("origin") {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})

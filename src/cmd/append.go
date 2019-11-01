@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -29,7 +32,11 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getAppendConfig(args)
+		config, err := getAppendConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getAppendStepList(config)
 		runState := steps.NewRunState("append", stepList)
 		steps.Run(runState)
@@ -43,11 +50,14 @@ See "sync" for information regarding remote upstream.`,
 	},
 }
 
-func getAppendConfig(args []string) (result appendConfig) {
+func getAppendConfig(args []string) (result appendConfig, err error) {
 	result.ParentBranch = git.GetCurrentBranchName()
 	result.TargetBranch = args[0]
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
 	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})

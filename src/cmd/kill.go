@@ -28,7 +28,11 @@ from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getKillConfig(args)
+		config, err := getKillConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getKillStepList(config)
 		runState := steps.NewRunState("kill", stepList)
 		steps.Run(runState)
@@ -42,7 +46,7 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func getKillConfig(args []string) (result killConfig) {
+func getKillConfig(args []string) (result killConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
 
 	if len(args) == 0 {
@@ -59,7 +63,10 @@ func getKillConfig(args []string) (result killConfig) {
 	}
 
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 
 	if result.InitialBranch != result.TargetBranch {

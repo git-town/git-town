@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
@@ -37,7 +40,11 @@ Additionally, when there is a remote upstream,
 the main branch is synced with its upstream counterpart.
 This can be disabled with "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getSyncConfig()
+		config, err := getSyncConfig()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getSyncStepList(config)
 		runState := steps.NewRunState("sync", stepList)
 		steps.Run(runState)
@@ -53,9 +60,12 @@ This can be disabled with "git config git-town.sync-upstream false".`,
 	},
 }
 
-func getSyncConfig() (result syncConfig) {
+func getSyncConfig() (result syncConfig, err error) {
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	if allFlag {
