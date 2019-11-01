@@ -5,6 +5,7 @@ import (
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
+	"github.com/pkg/errors"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch
@@ -48,8 +49,11 @@ func (step *DriverMergePullRequestStep) Run() error {
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
 		script.SquashMerge(step.BranchName)
-		git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
-		err := script.RunCommand("git", "commit")
+		err := git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
+		if err != nil {
+			return errors.Wrap(err, "cannot comment out the squash commit message")
+		}
+		err = script.RunCommand("git", "commit")
 		if err != nil {
 			return err
 		}

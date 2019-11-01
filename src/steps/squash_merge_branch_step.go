@@ -4,6 +4,7 @@ import (
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/prompt"
 	"github.com/Originate/git-town/src/script"
+	"github.com/pkg/errors"
 )
 
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch
@@ -40,7 +41,10 @@ func (step *SquashMergeBranchStep) Run() error {
 	if author != git.GetLocalAuthor() {
 		args = append(args, "--author", author)
 	}
-	git.CommentOutSquashCommitMessage("")
+	err := git.CommentOutSquashCommitMessage("")
+	if err != nil {
+		return errors.Wrap(err, "cannot comment out the squash commit message")
+	}
 	return script.RunCommand("git", args...)
 }
 
