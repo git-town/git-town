@@ -35,7 +35,11 @@ Does not delete perennial branches nor the main branch.`,
 		}
 		stepList := getKillStepList(config)
 		runState := steps.NewRunState("kill", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {

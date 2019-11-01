@@ -40,7 +40,11 @@ See "sync" for information regarding remote upstream.`,
 		}
 		stepList := getPrependStepList(config)
 		runState := steps.NewRunState("prepend", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {

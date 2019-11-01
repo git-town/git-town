@@ -45,7 +45,11 @@ where hostname matches what is in your ssh config file.`,
 		}
 		stepList := getNewPullRequestStepList(config)
 		runState := steps.NewRunState("new-pull-request", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

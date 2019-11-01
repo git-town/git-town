@@ -47,7 +47,11 @@ This can be disabled with "git config git-town.sync-upstream false".`,
 		}
 		stepList := getSyncStepList(config)
 		runState := steps.NewRunState("sync", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

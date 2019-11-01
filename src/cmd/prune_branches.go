@@ -26,7 +26,11 @@ This usually means the branch was shipped or killed on another machine.`,
 		}
 		stepList := getPruneBranchesStepList()
 		runState := steps.NewRunState("prune-branches", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

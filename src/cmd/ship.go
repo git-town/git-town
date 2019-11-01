@@ -58,7 +58,11 @@ It will also update the base branch for any pull requests against that branch.`,
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("ship", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
