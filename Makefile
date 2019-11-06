@@ -10,7 +10,7 @@ build-release: cross-compile  # builds the artifacts for a new release
 cross-compile:  # builds the binary for all platforms
 	go get github.com/mitchellh/gox
 	gox -ldflags "-X github.com/Originate/git-town/src/cmd.version=${TRAVIS_TAG} -X github.com/Originate/git-town/src/cmd.buildDate=${date}" \
-			-output "dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
+			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: cuke-go cuke-ruby  # runs the feature tests
 
