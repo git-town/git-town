@@ -1,5 +1,15 @@
 # Git Town Release Notes
 
+## 7.3.0 (2019-11-05)
+
+#### New Features
+
+- add option to disable auto sync upstream
+
+#### Bug Fixes
+
+- update docs for code-hosting config
+
 ## 7.2.1 (2019-05-06)
 
 #### Bug Fixes
