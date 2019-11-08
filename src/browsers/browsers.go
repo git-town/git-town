@@ -18,8 +18,8 @@ func GetOpenBrowserCommand() string {
 		return "start"
 	}
 	for _, browserCommand := range openBrowserCommands {
-		res := command.Run("which", browserCommand)
-		if res.Err() == nil && res.OutputSanitized() != "" {
+		res, err := command.Run("which", browserCommand)
+		if err == nil && res.ExitCode() == 0 && res.OutputSanitized() != "" {
 			return browserCommand
 		}
 	}

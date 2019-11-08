@@ -64,8 +64,8 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	res := command.RunInDir(dir, "git", cmdArgs...)
-	if res.Err() != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
+	res, err := command.RunInDir(dir, "git", cmdArgs...)
+	if err != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
 		return result
 	}
 	exit.If(res.Err())
@@ -225,7 +225,7 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
+	outcome, err command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
