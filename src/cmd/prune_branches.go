@@ -44,10 +44,7 @@ This usually means the branch was shipped or killed on another machine.`,
 
 func checkPruneBranchesPreconditions() error {
 	if git.HasRemote("origin") {
-		err := script.Fetch()
-		if err != nil {
-			return err
-		}
+		return script.Fetch()
 	}
 	return nil
 }

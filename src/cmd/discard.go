@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/steps"
@@ -17,6 +18,7 @@ var discardCmd = &cobra.Command{
 		err := steps.DeletePreviousRunState()
 		if err != nil {
 			fmt.Printf("cannot delete previous run state: %v", err)
+			os.Exit(1)
 		}
 	},
 	Args: cobra.NoArgs,
