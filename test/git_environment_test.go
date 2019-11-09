@@ -28,7 +28,7 @@ func TestNewStandardGitEnvironment(t *testing.T) {
 	assert.Equal(t, "main", branch)
 }
 
-func TestGitEnvironmentCloneEnvironment(t *testing.T) {
+func TestGitEnvironment_CloneEnvironment(t *testing.T) {
 	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(path.Join(dir, "memoized"))
 	assert.Nil(t, err, "cannot create memoized GitEnvironment")
