@@ -47,14 +47,22 @@ If you are using GitHub, this command can squash merge pull requests via the Git
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := gitShipConfig(args)
+		config, err := gitShipConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList, err := getShipStepList(config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("ship", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -65,7 +73,7 @@ It will also update the base branch for any pull requests against that branch.`,
 	},
 }
 
-func gitShipConfig(args []string) (result shipConfig) {
+func gitShipConfig(args []string) (result shipConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.BranchToShip = result.InitialBranch
@@ -76,7 +84,10 @@ func gitShipConfig(args []string) (result shipConfig) {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		script.Fetch()
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	if result.BranchToShip != result.InitialBranch {
 		git.EnsureHasBranch(result.BranchToShip)

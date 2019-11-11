@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/steps"
@@ -16,10 +19,18 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		checkPruneBranchesPreconditions()
+		err := checkPruneBranchesPreconditions()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList := getPruneBranchesStepList()
 		runState := steps.NewRunState("prune-branches", stepList)
-		steps.Run(runState)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -31,10 +42,11 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 }
 
-func checkPruneBranchesPreconditions() {
+func checkPruneBranchesPreconditions() error {
 	if git.HasRemote("origin") {
-		script.Fetch()
+		return script.Fetch()
 	}
+	return nil
 }
 
 func getPruneBranchesStepList() (result steps.StepList) {
