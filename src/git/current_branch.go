@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/dryrun"
 )
@@ -45,7 +44,9 @@ func UpdateCurrentBranchCache(branchName string) {
 func getCurrentBranchNameDuringRebase() string {
 	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
 	rawContent, err := ioutil.ReadFile(filename)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 	content := strings.TrimSpace(string(rawContent))
 	return strings.Replace(content, "refs/heads/", "", -1)
 }

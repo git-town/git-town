@@ -5,9 +5,9 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
+	"github.com/pkg/errors"
 )
 
 // EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher
@@ -24,8 +24,12 @@ func isVersionRequirementSatisfied() bool {
 		log.Fatal("'git version' returned unexpected output. Please open an issue and supply the output of running 'git version'.")
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
-	exit.IfWrap(err, "Error convering major version to int")
+	if err != nil {
+		panic(errors.Wrapf(err, "cannot convert major version (%v) to int", matches[1]))
+	}
 	minorVersion, err := strconv.Atoi(matches[2])
-	exit.IfWrap(err, "Error convering minor version to int")
+	if err != nil {
+		panic(errors.Wrapf(err, "cannot convert minor version (%v) to int", matches[2]))
+	}
 	return majorVersion == 2 && minorVersion >= 7
 }

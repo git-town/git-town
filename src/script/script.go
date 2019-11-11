@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/browsers"
 	"github.com/Originate/git-town/src/dryrun"
 	"github.com/Originate/git-town/src/git"
@@ -25,7 +24,9 @@ commits not on the remote.
 // ActivateDryRun causes all commands to not be run
 func ActivateDryRun() {
 	_, err := color.New(color.FgBlue).Print(dryRunMessage)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 	dryrun.Activate(git.GetCurrentBranchName())
 }
 
@@ -33,7 +34,9 @@ func ActivateDryRun() {
 func OpenBrowser(url string) {
 	command := browsers.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // PrintCommand prints the given command-line operation on the console.
@@ -53,7 +56,9 @@ func PrintCommand(cmd string, args ...string) {
 	}
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // RunCommand executes the given command-line operation.
@@ -81,5 +86,7 @@ func RunCommand(cmd string, args ...string) error {
 // RunCommandSafe executes the given command-line operation, exiting if the command errors
 func RunCommandSafe(cmd string, args ...string) {
 	err := RunCommand(cmd, args...)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 }
