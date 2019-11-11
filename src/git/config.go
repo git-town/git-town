@@ -13,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
 )
@@ -65,10 +64,12 @@ func loadGitConfig(dir string, global bool) map[string]string {
 		cmdArgs = append(cmdArgs, "--local")
 	}
 	res := command.RunInDir(dir, "git", cmdArgs...)
-	if res.Err() != nil && strings.Contains(res.OutputSanitized(), "No such file or directory") {
-		return result
+	if res.Err() != nil {
+		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
+			return result
+		}
+		panic(res.Err())
 	}
-	exit.If(res.Err())
 	output := res.Output()
 	if output == "" {
 		return result
@@ -241,8 +242,7 @@ func (c *Configuration) GetURLHostname(url string) string {
 // GetURLRepositoryName returns the repository name contains within the given Git URL.
 func (c *Configuration) GetURLRepositoryName(url string) string {
 	hostname := c.GetURLHostname(url)
-	repositoryNameRegex, err := regexp.Compile(".*" + hostname + "[/:](.+)")
-	exit.IfWrap(err, "Error compiling repository name regular expression")
+	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
 	matches := repositoryNameRegex.FindStringSubmatch(url)
 	if matches == nil {
 		return ""
