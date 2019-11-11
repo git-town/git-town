@@ -47,7 +47,11 @@ func validateIsConfigured() error {
 }
 
 func ensureIsNotInUnfinishedState() error {
-	runState := steps.LoadPreviousRunState()
+	runState, err := steps.LoadPreviousRunState()
+	if err != nil {
+		fmt.Printf("cannot load previous run state: %v\n", err)
+		os.Exit(1)
+	}
 	if runState != nil && runState.IsUnfinished() {
 		response := prompt.AskHowToHandleUnfinishedRunState(
 			runState.Command,
@@ -57,17 +61,20 @@ func ensureIsNotInUnfinishedState() error {
 		)
 		switch response {
 		case prompt.ResponseTypeDiscard:
-			steps.DeletePreviousRunState()
-			return nil
+			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
-			steps.Run(runState)
+			err = steps.Run(runState)
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()
-			steps.Run(&abortRunState)
+			err = steps.Run(&abortRunState)
 		case prompt.ResponseTypeSkip:
 			skipRunState := runState.CreateSkipRunState()
-			steps.Run(&skipRunState)
+			err = steps.Run(&skipRunState)
+		}
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
 		os.Exit(0)
 	}

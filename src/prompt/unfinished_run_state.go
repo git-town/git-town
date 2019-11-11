@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/Originate/exit"
 	humanize "github.com/dustin/go-humanize"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
@@ -47,7 +46,9 @@ func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Ti
 	}
 	result := ""
 	err := survey.AskOne(prompt, &result, nil)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 	for responseType, formattedResponseType := range formattedOptions {
 		if formattedResponseType == result {
 			return responseType

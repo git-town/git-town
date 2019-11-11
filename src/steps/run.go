@@ -7,24 +7,31 @@ import (
 	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
+	"github.com/pkg/errors"
 
 	"github.com/fatih/color"
 )
 
 // Run runs the Git Town command described by the given state
-// nolint: gocyclo
-func Run(runState *RunState) {
+// nolint: gocyclo, gocognit
+func Run(runState *RunState) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
 			runState.MarkAsFinished()
 			if runState.IsAbort || runState.isUndo {
-				DeletePreviousRunState()
+				err := DeletePreviousRunState()
+				if err != nil {
+					return errors.Wrap(err, "cannot delete previous run state")
+				}
 			} else {
-				SaveRunState(runState)
+				err := SaveRunState(runState)
+				if err != nil {
+					return errors.Wrap(err, "cannot save run state")
+				}
 			}
 			fmt.Println()
-			return
+			return nil
 		}
 		if getTypeName(step) == "*SkipCurrentBranchSteps" {
 			runState.SkipCurrentBranchSteps()
@@ -40,7 +47,10 @@ func Run(runState *RunState) {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
-				Run(&abortRunState)
+				err := Run(&abortRunState)
+				if err != nil {
+					return errors.Wrap(err, "cannot run the abort steps")
+				}
 				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
@@ -48,7 +58,10 @@ func Run(runState *RunState) {
 				if runState.Command == "sync" && !(git.IsRebaseInProgress() && git.Config().IsMainBranch(git.GetCurrentBranchName())) {
 					runState.UnfinishedDetails.CanSkip = true
 				}
-				SaveRunState(runState)
+				err := SaveRunState(runState)
+				if err != nil {
+					return errors.Wrap(err, "cannot save run state")
+				}
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}

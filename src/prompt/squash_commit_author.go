@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/git"
@@ -34,7 +33,9 @@ func askForAuthor(authors []string) string {
 		Options: authors,
 	}
 	err := survey.AskOne(prompt, &result, nil)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 	return result
 }
 

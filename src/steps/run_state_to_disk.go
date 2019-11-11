@@ -7,40 +7,53 @@ import (
 	"path"
 	"regexp"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
+	"github.com/pkg/errors"
 )
 
 // LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
-func LoadPreviousRunState() *RunState {
+func LoadPreviousRunState() (result *RunState, err error) {
 	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
 		var runState RunState
 		content, err := ioutil.ReadFile(filename)
-		exit.If(err)
+		if err != nil {
+			return result, errors.Wrapf(err, "cannot read file %q", filename)
+		}
 		err = json.Unmarshal(content, &runState)
-		exit.If(err)
-		return &runState
+		if err != nil {
+			return result, errors.Wrapf(err, "cannot parse content of file %q", filename)
+		}
+		return &runState, nil
+	}
+	return nil, nil
+}
+
+// DeletePreviousRunState deletes the previous run state from disk
+func DeletePreviousRunState() error {
+	filename := getRunResultFilename()
+	if util.DoesFileExist(filename) {
+		err := os.Remove(filename)
+		if err != nil {
+			return errors.Wrapf(err, "cannot delete file %q", filename)
+		}
 	}
 	return nil
 }
 
-// DeletePreviousRunState deletes the previous run state from disk
-func DeletePreviousRunState() {
-	filename := getRunResultFilename()
-	if util.DoesFileExist(filename) {
-		exit.If(os.Remove(filename))
-	}
-}
-
 // SaveRunState saves the run state to disk
-func SaveRunState(runState *RunState) {
+func SaveRunState(runState *RunState) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
-	exit.If(err)
+	if err != nil {
+		return errors.Wrap(err, "cannot encode run-state")
+	}
 	filename := getRunResultFilename()
 	err = ioutil.WriteFile(filename, content, 0644)
-	exit.If(err)
+	if err != nil {
+		return errors.Wrapf(err, "cannot write file %q", filename)
+	}
+	return nil
 }
 
 func getRunResultFilename() string {
