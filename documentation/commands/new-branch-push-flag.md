@@ -5,8 +5,10 @@ Displays or sets your new branch push flag
 </blockquote>
 
 <a textrun="command-description">
-Branches created with hack / append / prepend will be pushed upon creation
-if and only if "new-branch-push-flag" is true. The default value is false.
+
+Branches created with hack / append / prepend will be pushed upon creation if
+and only if "new-branch-push-flag" is true. The default value is false.
+
 </a>
 
 #### Usage

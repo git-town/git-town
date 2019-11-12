@@ -36,6 +36,7 @@ function getMd(activity) {
       case "paragraph_close":
       case "list_item_open":
       case "ordered_list_open":
+      case "ordered_list_close":
         text += "\n"
         break
       case "anchor_open":
