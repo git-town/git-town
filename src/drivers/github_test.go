@@ -18,19 +18,21 @@ var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
-func setupDriver(t *testing.T) (CodeHostingDriver, func()) {
+func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
 	httpmock.Activate()
 	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
 	assert.NotNil(t, driver)
+	if token != "" {
+		driver.SetAPIToken(token)
+	}
 	return driver, func() {
 		httpmock.DeactivateAndReset()
 	}
 }
 
 func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
 	canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
@@ -41,7 +43,7 @@ func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
 }
 
 func TestCodeHostingDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "")
 	defer teardown()
 
 	driver.SetAPIToken("")
@@ -52,9 +54,8 @@ func TestCodeHostingDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 }
 
 func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, err := driver.CanMergePullRequest("feature", "main")
@@ -63,9 +64,8 @@ func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *test
 }
 
 func TestCodeHostingDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
@@ -75,9 +75,8 @@ func TestCodeHostingDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing
 }
 
 func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
 	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
@@ -87,14 +86,13 @@ func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *
 }
 
 func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(404, ""))
 	_, err := driver.MergePullRequest(options)
@@ -103,14 +101,13 @@ func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T)
 }
 
 func TestCodeHostingDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
@@ -120,14 +117,13 @@ func TestCodeHostingDriver_MergePullRequest_GetPullRequestToMergeFails(t *testin
 }
 
 func TestCodeHostingDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
@@ -138,14 +134,13 @@ func TestCodeHostingDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 }
 
 func TestCodeHostingDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
@@ -156,14 +151,13 @@ func TestCodeHostingDriver_MergePullRequest_MultiplePullRequestsFound(t *testing
 }
 
 func TestCodeHostingDriver_MergePullRequest(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	var mergeRequest *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
@@ -183,14 +177,13 @@ func TestCodeHostingDriver_MergePullRequest(t *testing.T) {
 }
 
 func TestCodeHostingDriver_MergePullRequest_MergeFails(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
@@ -201,14 +194,13 @@ func TestCodeHostingDriver_MergePullRequest_MergeFails(t *testing.T) {
 }
 
 func TestCodeHostingDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
-	driver, teardown := setupDriver(t)
+	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-	driver.SetAPIToken("TOKEN")
 
 	var updateRequest1, updateRequest2 *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, `[{"number": 2}, {"number": 3}]`))
