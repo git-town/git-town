@@ -5,9 +5,11 @@ Displays or sets your pull branch strategy
 </blockquote>
 
 <a textrun="command-description">
-The pull branch strategy specifies what strategy to use
-when merging remote tracking branches into local branches
-for the main branch and perennial branches.
+
+The pull branch strategy specifies what strategy to use when merging remote
+tracking branches into local branches for the main branch and perennial
+branches.
+
 </a>
 
 #### Usage

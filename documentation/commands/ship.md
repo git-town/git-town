@@ -5,8 +5,9 @@ Deliver a completed feature branch
 </blockquote>
 
 <a textrun="command-description">
-Squash-merges the current branch, or <branch_name> if given,
-into the main branch, resulting in linear history on the main branch.
+
+Squash-merges the current branch, or <branch_name> if given, into the main
+branch, resulting in linear history on the main branch.
 
 - syncs the main branch
 - pulls remote updates for <branch_name>
@@ -28,7 +29,9 @@ GitHub API. Setup:
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global'
    flag) Now anytime you ship a branch with a pull request on GitHub, it will
    squash merge via the GitHub API. It will also update the base branch for any
-   pull requests against that branch. </a>
+   pull requests against that branch.
+
+</a>
 
 #### Usage
 
