@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCommandRun(t *testing.T) {
+func TestCommand_Run(t *testing.T) {
 	res := command.Run("echo", "foo")
 	assert.Equal(t, "foo\n", res.Output())
 }
