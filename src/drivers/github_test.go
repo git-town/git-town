@@ -30,7 +30,7 @@ func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
 	}
 }
 
-func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
+func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 
@@ -42,7 +42,7 @@ func TestCodeHostingDriver_CanMergePullRequest(t *testing.T) {
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
 }
 
-func TestCodeHostingDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
+func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
 
@@ -53,7 +53,7 @@ func TestCodeHostingDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	assert.False(t, canMerge)
 }
 
-func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
+func TestGitHubDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 
@@ -63,7 +63,7 @@ func TestCodeHostingDriver_CanMergePullRequest_GetPullRequestNumberFails(t *test
 	assert.Error(t, err)
 }
 
-func TestCodeHostingDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
+func TestGitHubDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 
@@ -74,7 +74,7 @@ func TestCodeHostingDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing
 	assert.False(t, canMerge)
 }
 
-func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
+func TestGitHubDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 
@@ -85,7 +85,7 @@ func TestCodeHostingDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *
 	assert.False(t, canMerge)
 }
 
-func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -100,7 +100,7 @@ func TestCodeHostingDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T)
 	assert.Error(t, err)
 }
 
-func TestCodeHostingDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -116,7 +116,7 @@ func TestCodeHostingDriver_MergePullRequest_GetPullRequestToMergeFails(t *testin
 	assert.Error(t, err)
 }
 
-func TestCodeHostingDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -133,7 +133,7 @@ func TestCodeHostingDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	assert.Equal(t, "no pull request found", err.Error())
 }
 
-func TestCodeHostingDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -150,7 +150,7 @@ func TestCodeHostingDriver_MergePullRequest_MultiplePullRequestsFound(t *testing
 	assert.Equal(t, "multiple pull requests found: 1, 2", err.Error())
 }
 
-func TestCodeHostingDriver_MergePullRequest(t *testing.T) {
+func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -176,7 +176,7 @@ func TestCodeHostingDriver_MergePullRequest(t *testing.T) {
 	assert.Equal(t, "squash", mergeParameters["merge_method"])
 }
 
-func TestCodeHostingDriver_MergePullRequest_MergeFails(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
@@ -193,7 +193,7 @@ func TestCodeHostingDriver_MergePullRequest_MergeFails(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestCodeHostingDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
+func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
