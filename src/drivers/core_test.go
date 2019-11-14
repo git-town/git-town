@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetDriver_DriverOverride_Bitbucket(t *testing.T) {
+func TestGetDriver_DriverType_Bitbucket(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "bitbucket",
 		OriginURL:  "git@self-hosted-bitbucket.com:Originate/git-town.git",
@@ -18,7 +18,7 @@ func TestGetDriver_DriverOverride_Bitbucket(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-bitbucket.com/Originate/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_DriverOverride_GitHub(t *testing.T) {
+func TestGetDriver_DriverType_GitHub(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "github",
 		OriginURL:  "git@self-hosted-github.com:Originate/git-town.git",
@@ -29,7 +29,7 @@ func TestGetDriver_DriverOverride_GitHub(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-github.com/Originate/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_DriverOverride_GitLab(t *testing.T) {
+func TestGetDriver_DriverType_GitLab(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "gitlab",
 		OriginURL:  "git@self-hosted-gitlab.com:Originate/git-town.git",
@@ -40,7 +40,7 @@ func TestGetDriver_DriverOverride_GitLab(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-gitlab.com/Originate/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_OriginHostnameOverride_Bitbucket(t *testing.T) {
+func TestGetDriver_OriginHostname_Bitbucket(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
 		OriginHostname: "bitbucket.org",
@@ -51,7 +51,7 @@ func TestGetDriver_OriginHostnameOverride_Bitbucket(t *testing.T) {
 	assert.Equal(t, "https://bitbucket.org/Originate/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_OriginHostnameOverride_GitHub(t *testing.T) {
+func TestGetDriver_OriginHostname_GitHub(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
 		OriginHostname: "github.com",
@@ -62,7 +62,7 @@ func TestGetDriver_OriginHostnameOverride_GitHub(t *testing.T) {
 	assert.Equal(t, "https://github.com/Originate/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_OriginHostnameOverride_GitLab(t *testing.T) {
+func TestGetDriver_OriginHostname_GitLab(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		OriginURL:      "git@my-ssh-identity.com:Originate/git-town.git",
 		OriginHostname: "gitlab.com",

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRunState_MarshalJSON(t *testing.T) {
+func TestRunState_Marshal(t *testing.T) {
 	runState := &steps.RunState{
 		AbortStepList: steps.StepList{
 			List: []steps.Step{&steps.ResetToShaStep{Sha: "abc"}},
