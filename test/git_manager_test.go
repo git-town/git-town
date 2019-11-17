@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
+func TestGitManager_CreateMemoizedEnvironment(t *testing.T) {
 	dir := createTempDir(t)
 	gm := NewGitManager(dir)
 
@@ -20,7 +20,7 @@ func TestGitManagerCreateMemoizedEnvironment(t *testing.T) {
 	assert.Falsef(t, os.IsNotExist(err), "memoized directory %q not found", memoizedPath)
 }
 
-func TestGitManagerCreateScenarioEnvironment(t *testing.T) {
+func TestGitManager_CreateScenarioEnvironment(t *testing.T) {
 	dir := createTempDir(t)
 	gm := NewGitManager(dir)
 	err := gm.CreateMemoizedEnvironment()
