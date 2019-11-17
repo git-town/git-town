@@ -13,7 +13,7 @@ func TestNewGitRepository(t *testing.T) {
 	_ = NewGitRepository(dir, dir)
 }
 
-func TestInitNormalGitRepository(t *testing.T) {
+func TestInitGitRepository(t *testing.T) {
 	dir := createTempDir(t)
 	result, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
@@ -33,7 +33,7 @@ func TestCloneGitRepository(t *testing.T) {
 	assertIsNormalGitRepo(t, clonedPath)
 }
 
-func TestGitRepositoryBranches(t *testing.T) {
+func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
 	assert.Nil(t, repo.CreateFeatureBranch("branch3"), "cannot create branch3")
 	assert.Nil(t, repo.CreateFeatureBranch("branch2"), "cannot create branch2")
@@ -44,7 +44,7 @@ func TestGitRepositoryBranches(t *testing.T) {
 	assert.Equal(t, []string{"branch1", "branch2", "branch3", "master"}, branches)
 }
 
-func TestGitRepositoryCreateFile(t *testing.T) {
+func TestGitRepository_CreateFile(t *testing.T) {
 	repo := createTestRepo(t)
 
 	err := repo.CreateFile("filename", "content")

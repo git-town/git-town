@@ -7,7 +7,7 @@ import (
 )
 
 func TestGitCommandsInGitTownOutput(t *testing.T) {
-	testData := map[string][]ExecutedGitCommand{
+	tests := map[string][]ExecutedGitCommand{
 		// simple
 		"\x1b[1m[mybranch] foo bar": {
 			{Command: "foo bar", Branch: "mybranch"}},
@@ -21,7 +21,9 @@ func TestGitCommandsInGitTownOutput(t *testing.T) {
 		"\x1b[1mcommand one": {
 			{Command: "command one", Branch: ""}},
 	}
-	for input, expected := range testData {
-		assert.Equal(t, expected, GitCommandsInGitTownOutput(input))
+	for input, expected := range tests {
+		t.Run(input, func(t *testing.T) {
+			assert.Equal(t, expected, GitCommandsInGitTownOutput(input))
+		})
 	}
 }
