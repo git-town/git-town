@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '2.6.4'
+ruby '2.6.5'
 
 group :development do
   gem 'activesupport'
