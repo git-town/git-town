@@ -5,7 +5,7 @@ language: go
 go: 1.12
 
 install:
-  - rvm install 2.6.4
+  - rvm install 2.6.5
   - npm i -g yarn
   - make setup
 
