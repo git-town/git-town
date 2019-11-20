@@ -11,7 +11,7 @@ var remotesInitialized bool
 
 func getRemotes() []string {
 	if !remotesInitialized {
-		remotes = command.Run("git", "remote").OutputLines()
+		remotes = command.MustRun("git", "remote").OutputLines()
 		remotesInitialized = true
 	}
 	return remotes
