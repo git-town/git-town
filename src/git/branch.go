@@ -111,7 +111,11 @@ func GetLocalBranchesWithMainBranchFirst() (result []string) {
 
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch
 func GetPreviouslyCheckedOutBranch() string {
-	return command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}").OutputSanitized()
+	cmd := command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	if cmd.Err() != nil {
+		return ""
+	}
+	return cmd.OutputSanitized()
 }
 
 // GetTrackingBranchName returns the name of the remote branch
