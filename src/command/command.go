@@ -19,9 +19,9 @@ type Result struct {
 
 // MustRun executes the command given in argv notation.
 func MustRun(cmd string, args ...string) *Result {
-	result, err := RunInDir("", cmd, args...)
-	if err != nil {
-		panic(err)
+	result := RunInDir("", cmd, args...)
+	if result.Err() != nil {
+		panic(result.Err())
 	}
 	return result
 }
