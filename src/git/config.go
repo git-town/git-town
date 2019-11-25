@@ -343,7 +343,7 @@ func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result 
 // setConfigurationValue sets the local configuration with the given key to the given value.
 func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
-	return command.RunInDir(c.localDir, "git", "config", key, value)
+	return command.MustRunInDir(c.localDir, "git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
