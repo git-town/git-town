@@ -226,7 +226,7 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
+	return command.MustRunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
