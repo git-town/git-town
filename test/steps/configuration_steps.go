@@ -22,9 +22,9 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return errors.Wrapf(err, "cannot parse %q into bool", value)
 		}
-		outcome := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetNewBranchPush(b, false)
-		if outcome.Err() != nil {
-			return errors.Wrapf(err, "cannot set new-branch-push-flag configuration to %q: %s", value, outcome.Output())
+		outcome, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetNewBranchPush(b, false)
+		if err != nil {
+			return errors.Wrapf(err, "cannot set new-branch-push-flag configuration to %q: %s", value, err)
 		}
 		return err
 	})

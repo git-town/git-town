@@ -11,8 +11,11 @@ type scenarioState struct {
 	// the GitEnvironment used in the current scenario
 	gitEnvironment *test.GitEnvironment
 
+	// the error of the last run of Git Town
+	lastRunErr error
+
 	// the outcome of the last run of Git Town
-	lastRunResult command.Result
+	lastRunResult *command.Result
 
 	// originalCommitTable describes the commits in this Git environment before the WHEN steps ran.
 	originalCommitTable *gherkin.DataTable

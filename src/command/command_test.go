@@ -11,7 +11,8 @@ import (
 )
 
 func TestCommand_Run(t *testing.T) {
-	res := command.Run("echo", "foo")
+	res, err := command.Run("echo", "foo")
+	assert.Nil(t, err)
 	assert.Equal(t, "foo\n", res.Output())
 }
 
@@ -23,29 +24,33 @@ func TestCommand_RunInDir(t *testing.T) {
 	assert.Nil(t, err)
 	err = ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
 	assert.Nil(t, err)
-	res := command.RunInDir(dirPath, "ls", "-1")
+	res, err := command.RunInDir(dirPath, "ls", "-1")
+	assert.Nil(t, err)
 	assert.Equal(t, "one", res.OutputSanitized())
 }
 
 func TestCommand_OutputContainsText(t *testing.T) {
-	res := command.Run("echo", "hello world how are you?")
+	res, err := command.Run("echo", "hello world how are you?")
+	assert.Nil(t, err)
 	assert.True(t, res.OutputContainsText("world"), "should contain 'world'")
 	assert.False(t, res.OutputContainsText("zonk"), "should not contain 'zonk'")
 }
 
 func TestCommand_OutputContainsLine(t *testing.T) {
-	res := command.Run("echo", "hello world")
+	res, err := command.Run("echo", "hello world")
+	assert.Nil(t, err)
 	assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
 	assert.False(t, res.OutputContainsLine("hello"), `partial match should return false`)
 	assert.False(t, res.OutputContainsLine("zonk"), `should not contain "zonk"`)
 }
 
 func TestCommand_ErrUnknownExecutable(t *testing.T) {
-	res := command.Run("zonk")
-	assert.Error(t, res.Err())
+	_, err := command.Run("zonk")
+	assert.Error(t, err)
 }
 
 func TestCommand_ErrExitCode(t *testing.T) {
-	res := command.Run("bash", "-c", "exit 2")
-	assert.Error(t, res.Err())
+	res, err := command.Run("bash", "-c", "exit 2")
+	assert.Nil(t, err)
+	assert.Equal(t, 2, res.ExitCode())
 }

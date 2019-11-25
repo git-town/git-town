@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
 	"github.com/Originate/git-town/src/util"
@@ -51,7 +54,11 @@ Note that this can conflict with other tools that also define additional Git com
 }
 
 func addAlias(command string) {
-	result := git.Config().AddGitAlias(command)
+	result, err := git.Config().AddGitAlias(command)
+	if err != nil {
+		fmt.Printf("cannot add alias %s: %v\n", command, err)
+		os.Exit(1)
+	}
 	script.PrintCommand(result.Command(), result.Args()...)
 }
 

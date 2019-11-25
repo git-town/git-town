@@ -92,7 +92,7 @@ func (c *Configuration) AddToPerennialBranches(branchNames ...string) {
 }
 
 // AddGitAlias sets the given Git alias.
-func (c *Configuration) AddGitAlias(command string) *command.Result {
+func (c *Configuration) AddGitAlias(command string) (*command.Result, error) {
 	return c.setGlobalConfigValue("alias."+command, "town "+command)
 }
 
@@ -226,7 +226,12 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	outcome, err command.RunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
+	outcome, err := command.RunInDir(c.localDir, "git", "remote", "get-url", "origin")
+	if err != nil {
+		fmt.Println("cannot determine origin URL: %v", err)
+		os.Exit(1)
+	}
+	return outcome.OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -312,7 +317,11 @@ func (c *Configuration) RemoveGitAlias(command string) *command.Result {
 
 func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	return command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	outcome, err := command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	if err != nil {
+		fmt.Println("cannot remove global config value %s: %v", key, err)
+	}
+	return outcome
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
@@ -322,8 +331,12 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
-func (c *Configuration) RemoveLocalGitConfiguration() {
-	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
+func (c *Configuration) RemoveLocalGitConfiguration() error {
+	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
@@ -335,26 +348,26 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 	}
 }
 
-func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
+func (c *Configuration) setGlobalConfigValue(key, value string) (*command.Result, error) {
 	c.globalConfigCache[key] = value
 	return command.RunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
-func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
+func (c *Configuration) setLocalConfigValue(key, value string) (*command.Result, error) {
 	c.localConfigCache[key] = value
 	return command.RunInDir(c.localDir, "git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (c *Configuration) SetMainBranch(branchName string) *command.Result {
+func (c *Configuration) SetMainBranch(branchName string) (*command.Result, error) {
 	return c.setLocalConfigValue("git-town.main-branch-name", branchName)
 }
 
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Result {
+func (c *Configuration) SetNewBranchPush(value bool, global bool) error {
 	if global {
 		return c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 	}
@@ -362,23 +375,23 @@ func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Resul
 }
 
 // SetOffline updates whether Git Town is in offline mode
-func (c *Configuration) SetOffline(value bool) *command.Result {
+func (c *Configuration) SetOffline(value bool) (*command.Result, error) {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *command.Result {
+func (c *Configuration) SetParentBranch(branchName, parentBranchName string) (*command.Result, error) {
 	return c.setLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches
-func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Result {
+func (c *Configuration) SetPerennialBranches(branchNames []string) (*command.Result, error) {
 	return c.setLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
+func (c *Configuration) SetPullBranchStrategy(strategy string) (*command.Result, error) {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 

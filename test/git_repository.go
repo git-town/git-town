@@ -75,11 +75,11 @@ func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, e
 // Branches provides the names of the local branches in this Git repository,
 // sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
-	output, err := repo.Run("git", "branch")
+	outcome, err := repo.Run("git", "branch")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot run 'git branch' in repo %q", repo.workingDir)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
 		result = append(result, strings.TrimSpace(line))
 	}
@@ -113,11 +113,11 @@ func (repo *GitRepository) Commits(fields []string) (result []Commit, err error)
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (repo *GitRepository) commitsInBranch(branch string, fields []string) (result []Commit, err error) {
-	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+	outcome, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
 		parts := strings.Split(line, "|")
 		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
@@ -215,29 +215,29 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (repo *GitRepository) CurrentBranch() (result string, err error) {
-	output, err := repo.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+	outcome, err := repo.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
+		return result, errors.Wrapf(err, "cannot determine the current branch: %s", outcome.Output())
 	}
-	return strings.TrimSpace(output), nil
+	return strings.TrimSpace(outcome.OutputSanitized()), nil
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (repo *GitRepository) FileContentInCommit(sha string, filename string) (result string, err error) {
-	output, err := repo.Run("git", "show", sha+":"+filename)
+	outcome, err := repo.Run("git", "show", sha+":"+filename)
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot determine the content for file %q in commit %q", filename, sha)
 	}
-	return output, nil
+	return outcome.OutputSanitized(), nil
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error) {
-	output, err := repo.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+	outcome, err := repo.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get files for commit %q", sha)
 	}
-	return strings.Split(strings.TrimSpace(output), "\n"), nil
+	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
