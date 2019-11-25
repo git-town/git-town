@@ -312,7 +312,7 @@ func (c *Configuration) RemoveGitAlias(command string) *command.Result {
 
 func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	return command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	return command.MustRunInDir(c.localDir, "git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
@@ -337,7 +337,7 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
-	return command.RunInDir(c.localDir, "git", "config", "--global", key, value)
+	return command.MustRunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
