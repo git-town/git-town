@@ -226,12 +226,7 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	outcome, err := command.RunInDir(c.localDir, "git", "remote", "get-url", "origin")
-	if err != nil {
-		fmt.Println("cannot determine origin URL: %v", err)
-		os.Exit(1)
-	}
-	return outcome.OutputSanitized()
+	return command.MustRunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -317,16 +312,12 @@ func (c *Configuration) RemoveGitAlias(command string) *command.Result {
 
 func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	outcome, err := command.RunInDir(c.localDir, "git", "config", "--global", "--unset", key)
-	if err != nil {
-		fmt.Println("cannot remove global config value %s: %v", key, err)
-	}
-	return outcome
+	return command.MustRunInDir(c.localDir, "git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (c *Configuration) removeLocalConfigValue(key string) {
-	command.RunInDir(c.localDir, "git", "config", "--unset", key)
+	command.MustRunInDir(c.localDir, "git", "config", "--unset", key)
 	delete(c.localConfigCache, key)
 }
 
@@ -350,13 +341,13 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 
 func (c *Configuration) setGlobalConfigValue(key, value string) (*command.Result, error) {
 	c.globalConfigCache[key] = value
-	return command.RunInDir(c.localDir, "git", "config", "--global", key, value)
+	return command.MustRunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
 func (c *Configuration) setLocalConfigValue(key, value string) (*command.Result, error) {
 	c.localConfigCache[key] = value
-	return command.RunInDir(c.localDir, "git", "config", key, value)
+	return command.MustRunInDir(c.localDir, "git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
