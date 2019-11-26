@@ -1,8 +1,10 @@
 package command_test
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path"
 	"testing"
 
@@ -50,7 +52,8 @@ func TestCommand_ErrUnknownExecutable(t *testing.T) {
 }
 
 func TestCommand_ErrExitCode(t *testing.T) {
-	res, err := command.Run("bash", "-c", "exit 2")
-	assert.Nil(t, err)
-	assert.Equal(t, 2, res.ExitCode())
+	_, err := command.Run("bash", "-c", "exit 2")
+	var execError *exec.ExitError
+	assert.True(t, errors.As(err, &execError))
+	assert.Equal(t, 2, execError.ExitCode())
 }

@@ -92,7 +92,7 @@ func (c *Configuration) AddToPerennialBranches(branchNames ...string) {
 }
 
 // AddGitAlias sets the given Git alias.
-func (c *Configuration) AddGitAlias(command string) (*command.Result, error) {
+func (c *Configuration) AddGitAlias(command string) *command.Result {
 	return c.setGlobalConfigValue("alias."+command, "town "+command)
 }
 
@@ -358,7 +358,7 @@ func (c *Configuration) SetMainBranch(branchName string) *command.Result {
 
 // SetNewBranchPush updates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
-func (c *Configuration) SetNewBranchPush(value bool, global bool) error {
+func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Result {
 	if global {
 		return c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 	}
@@ -366,23 +366,23 @@ func (c *Configuration) SetNewBranchPush(value bool, global bool) error {
 }
 
 // SetOffline updates whether Git Town is in offline mode
-func (c *Configuration) SetOffline(value bool) (*command.Result, error) {
+func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
-func (c *Configuration) SetParentBranch(branchName, parentBranchName string) (*command.Result, error) {
+func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *command.Result {
 	return c.setLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
 // SetPerennialBranches marks the given branches as perennial branches
-func (c *Configuration) SetPerennialBranches(branchNames []string) (*command.Result, error) {
+func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Result {
 	return c.setLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
 
 // SetPullBranchStrategy updates the configured pull branch strategy.
-func (c *Configuration) SetPullBranchStrategy(strategy string) (*command.Result, error) {
+func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 

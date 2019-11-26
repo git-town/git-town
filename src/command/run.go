@@ -32,6 +32,7 @@ func MustRunInDir(dir string, cmd string, args ...string) *Result {
 }
 
 // Run executes the command given in argv notation.
+// The returned errors can be:
 func Run(cmd string, args ...string) (*Result, error) {
 	return RunInDir("", cmd, args...)
 }
@@ -54,13 +55,6 @@ func RunDirEnv(dir string, env []string, cmd string, args ...string) (*Result, e
 		command: cmd,
 		args:    args,
 		output:  string(output),
-	}
-	if err != nil {
-		exitError, ok := err.(*exec.ExitError)
-		if ok {
-			result.exitCode = exitError.ExitCode()
-			return result, nil
-		}
 	}
 	return result, err
 }

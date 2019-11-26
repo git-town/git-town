@@ -9,10 +9,9 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	command  string   // the executed command
-	args     []string // arguments for the executed command
-	exitCode int      // the exit code with which the executed command terminated
-	output   string   // the raw output of the command
+	command string   // the executed command
+	args    []string // arguments for the executed command
+	output  string   // the raw output of the command
 }
 
 // Args provides the arguments used when running the command.
@@ -23,12 +22,6 @@ func (c *Result) Args() []string {
 // Command provides the command run that led to this result.
 func (c *Result) Command() string {
 	return c.command
-}
-
-// ExitCode returns the error that this command encountered.
-// Runs the command if it hasn't so far.
-func (c *Result) ExitCode() int {
-	return c.exitCode
 }
 
 // Output returns the output of this command.
