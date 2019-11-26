@@ -339,20 +339,20 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 	}
 }
 
-func (c *Configuration) setGlobalConfigValue(key, value string) (*command.Result, error) {
+func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return command.MustRunInDir(c.localDir, "git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
-func (c *Configuration) setLocalConfigValue(key, value string) (*command.Result, error) {
+func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
 	return command.MustRunInDir(c.localDir, "git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
 // in the Git Town configuration.
-func (c *Configuration) SetMainBranch(branchName string) (*command.Result, error) {
+func (c *Configuration) SetMainBranch(branchName string) *command.Result {
 	return c.setLocalConfigValue("git-town.main-branch-name", branchName)
 }
 
