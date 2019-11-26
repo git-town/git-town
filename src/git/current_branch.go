@@ -21,7 +21,7 @@ func GetCurrentBranchName() string {
 		if IsRebaseInProgress() {
 			currentBranchCache = getCurrentBranchNameDuringRebase()
 		} else {
-			currentBranchCache = command.Run("git", "rev-parse", "--abbrev-ref", "HEAD").OutputSanitized()
+			currentBranchCache = command.MustRun("git", "rev-parse", "--abbrev-ref", "HEAD").OutputSanitized()
 		}
 	}
 	return currentBranchCache

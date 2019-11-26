@@ -27,25 +27,25 @@ var rootDirectory string
 // i.e. the directory that contains the ".git" folder.
 func GetRootDirectory() string {
 	if rootDirectory == "" {
-		rootDirectory = command.Run("git", "rev-parse", "--show-toplevel").OutputSanitized()
+		rootDirectory = command.MustRun("git", "rev-parse", "--show-toplevel").OutputSanitized()
 	}
 	return rootDirectory
 }
 
 // HasConflicts returns whether the local repository currently has unresolved merge conflicts.
 func HasConflicts() bool {
-	return command.Run("git", "status").OutputContainsText("Unmerged paths")
+	return command.MustRun("git", "status").OutputContainsText("Unmerged paths")
 }
 
 // HasOpenChanges returns whether the local repository contains uncommitted changes.
 func HasOpenChanges() bool {
-	return command.Run("git", "status", "--porcelain").OutputSanitized() != ""
+	return command.MustRun("git", "status", "--porcelain").OutputSanitized() != ""
 }
 
 // HasShippableChanges returns whether the supplied branch has an changes
 // not currently on the main branchName
 func HasShippableChanges(branchName string) bool {
-	return command.Run("git", "diff", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
+	return command.MustRun("git", "diff", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
 }
 
 // IsMergeInProgress returns whether the local repository is in the middle of
@@ -58,5 +58,5 @@ func IsMergeInProgress() bool {
 // IsRebaseInProgress returns whether the local repository is in the middle of
 // an unfinished rebase process.
 func IsRebaseInProgress() bool {
-	return command.Run("git", "status").OutputContainsText("rebase in progress")
+	return command.MustRun("git", "status").OutputContainsText("rebase in progress")
 }

@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -15,6 +16,30 @@ type Result struct {
 	args    []string
 	err     error
 	output  string
+}
+
+// MustRun executes an essential subshell command given in argv notation.
+// Essential subshell commands are essential for the functioning of Git Town.
+// If they fail, Git Town ends right there.
+func MustRun(cmd string, args ...string) *Result {
+	result := RunInDir("", cmd, args...)
+	if result.Err() != nil {
+		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), result.Err())
+		os.Exit(1)
+	}
+	return result
+}
+
+// MustRunInDir executes an essential subshell command given in argv notation.
+// Essential subshell commands are essential for the functioning of Git Town.
+// If they fail, Git Town ends right there.
+func MustRunInDir(dir string, cmd string, args ...string) *Result {
+	result := RunInDir(dir, cmd, args...)
+	if result.Err() != nil {
+		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, result.Err())
+		os.Exit(1)
+	}
+	return result
 }
 
 // Run executes the command given in argv notation.
