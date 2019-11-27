@@ -30,12 +30,14 @@ type GitRepository struct {
 	configCache *git.Configuration
 }
 
-// NewGitRepository provides a new GitRepository instance working in the given directory.
-// The directory must contain an existing Git repo.
-func NewGitRepository(workingDir string, homeDir string) GitRepository {
-	result := GitRepository{Dir: workingDir}
-	result.ShellRunner = NewShellRunner(workingDir, homeDir)
-	return result
+// CloneGitRepository clones the given parent repo into a new GitRepository.
+func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
+	runner := NewShellRunner(".", homeDir)
+	_, err := runner.Run("git", "clone", originDir, workingDir)
+	if err != nil {
+		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", originDir)
+	}
+	return NewGitRepository(workingDir, homeDir), nil
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
@@ -62,14 +64,12 @@ func InitGitRepository(workingDir string, homeDir string) (GitRepository, error)
 	return result, err
 }
 
-// CloneGitRepository clones the given parent repo into a new GitRepository.
-func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
-	runner := NewShellRunner(".", homeDir)
-	_, err := runner.Run("git", "clone", originDir, workingDir)
-	if err != nil {
-		return GitRepository{}, errors.Wrapf(err, "cannot clone repo %q", originDir)
-	}
-	return NewGitRepository(workingDir, homeDir), nil
+// NewGitRepository provides a new GitRepository instance working in the given directory.
+// The directory must contain an existing Git repo.
+func NewGitRepository(workingDir string, homeDir string) GitRepository {
+	result := GitRepository{Dir: workingDir}
+	result.ShellRunner = NewShellRunner(workingDir, homeDir)
+	return result
 }
 
 // Branches provides the names of the local branches in this Git repository,

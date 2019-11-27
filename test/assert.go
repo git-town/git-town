@@ -37,13 +37,6 @@ func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	assert.Contains(t, outcome.OutputSanitized(), expectedBranch, "doesn't have Git branch")
 }
 
-func assertIsNormalGitRepo(t *testing.T, dir string) {
-	assertFolderExists(t, dir)
-	entries, err := ioutil.ReadDir(dir)
-	assert.Nilf(t, err, "cannot list directory %q", dir)
-	assert.Equal(t, ".git", entries[0].Name())
-}
-
 func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
 	entries, err := ioutil.ReadDir(dir)
 	assert.Nilf(t, err, "cannot list directory %q", dir)
@@ -53,4 +46,11 @@ func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
 		}
 	}
 	t.Fatalf(".gitconfig not found in %q", dir)
+}
+
+func assertIsNormalGitRepo(t *testing.T, dir string) {
+	assertFolderExists(t, dir)
+	entries, err := ioutil.ReadDir(dir)
+	assert.Nilf(t, err, "cannot list directory %q", dir)
+	assert.Equal(t, ".git", entries[0].Name())
 }

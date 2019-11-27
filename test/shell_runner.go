@@ -47,17 +47,6 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
 }
 
-// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
-func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
-	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
-}
-
-// RemoveTempShellOverrides removes all custom shell overrides.
-func (runner *ShellRunner) RemoveTempShellOverrides() {
-	os.RemoveAll(runner.tempShellOverridesDir)
-	runner.tempShellOverridesDir = ""
-}
-
 // createTempShellOverridesDir creates the folder that will contain the temp shell overrides.
 // It is safe to call this method multiple times.
 func (runner *ShellRunner) createTempShellOverridesDir() error {
@@ -69,6 +58,12 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 // hasTempShellOverrides indicates whether there are temp shell overrides for the next command.
 func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
+}
+
+// RemoveTempShellOverrides removes all custom shell overrides.
+func (runner *ShellRunner) RemoveTempShellOverrides() {
+	os.RemoveAll(runner.tempShellOverridesDir)
+	runner.tempShellOverridesDir = ""
 }
 
 // Run runs the given command with the given arguments
@@ -107,6 +102,21 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (result *comman
 	return result, err
 }
 
+// RunMany runs all given commands in current directory.
+// Commands are provided as a list of argv-style strings.
+// Shell overrides apply for the first command only.
+// Failed commands abort immediately with the encountered error.
+func (runner *ShellRunner) RunMany(commands [][]string) error {
+	for _, argv := range commands {
+		command, args := argv[0], argv[1:]
+		outcome, err := runner.Run(command, args...)
+		if err != nil {
+			return errors.Wrapf(err, "error running command %q: %v", argv, outcome)
+		}
+	}
+	return nil
+}
+
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
@@ -122,17 +132,7 @@ func (runner *ShellRunner) RunString(command string) (result *command.Result, er
 	return runner.Run(command, args...)
 }
 
-// RunMany runs all given commands in current directory.
-// Commands are provided as a list of argv-style strings.
-// Shell overrides apply for the first command only.
-// Failed commands abort immediately with the encountered error.
-func (runner *ShellRunner) RunMany(commands [][]string) error {
-	for _, argv := range commands {
-		command, args := argv[0], argv[1:]
-		outcome, err := runner.Run(command, args...)
-		if err != nil {
-			return errors.Wrapf(err, "error running command %q: %v", argv, outcome)
-		}
-	}
-	return nil
+// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
+func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
+	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }
