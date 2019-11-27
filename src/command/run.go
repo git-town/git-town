@@ -51,10 +51,10 @@ func RunDirEnv(dir string, env []string, cmd string, args ...string) (*Result, e
 	}
 	subProcess.Env = env
 	output, err := subProcess.CombinedOutput()
-	result := &Result{
+	result := Result{
 		command: cmd,
 		args:    args,
 		output:  string(output),
 	}
-	return result, err
+	return &result, err
 }
