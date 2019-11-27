@@ -11,9 +11,9 @@ import (
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRun(cmd string, args ...string) *Result {
-	result := RunInDir("", cmd, args...)
-	if result.Err() != nil {
-		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), result.Err())
+	result, err := RunInDir("", cmd, args...)
+	if err != nil {
+		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
 		os.Exit(1)
 	}
 	return result
@@ -23,26 +23,27 @@ func MustRun(cmd string, args ...string) *Result {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result := RunInDir(dir, cmd, args...)
-	if result.Err() != nil {
-		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, result.Err())
+	result, err := RunInDir(dir, cmd, args...)
+	if err != nil {
+		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, err)
 		os.Exit(1)
 	}
 	return result
 }
 
 // Run executes the command given in argv notation.
-func Run(cmd string, args ...string) *Result {
+// The returned errors can be:
+func Run(cmd string, args ...string) (*Result, error) {
 	return RunInDir("", cmd, args...)
 }
 
 // RunInDir executes the given command in the given directory.
-func RunInDir(dir string, cmd string, args ...string) *Result {
+func RunInDir(dir string, cmd string, args ...string) (*Result, error) {
 	return RunDirEnv(dir, os.Environ(), cmd, args...)
 }
 
 // RunDirEnv executes the given command in the given directory, using the given environment variables.
-func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
+func RunDirEnv(dir string, env []string, cmd string, args ...string) (*Result, error) {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if dir != "" {
@@ -50,10 +51,10 @@ func RunDirEnv(dir string, env []string, cmd string, args ...string) *Result {
 	}
 	subProcess.Env = env
 	output, err := subProcess.CombinedOutput()
-	return &Result{
+	result := &Result{
 		command: cmd,
 		args:    args,
-		err:     err,
 		output:  string(output),
 	}
+	return result, err
 }

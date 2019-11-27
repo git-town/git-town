@@ -63,12 +63,12 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	res := command.RunInDir(dir, "git", cmdArgs...)
-	if res.Err() != nil {
+	res, err := command.RunInDir(dir, "git", cmdArgs...)
+	if err != nil {
 		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
 			return result
 		}
-		panic(res.Err())
+		panic(err)
 	}
 	output := res.Output()
 	if output == "" {

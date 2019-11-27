@@ -99,12 +99,12 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	}
 
 	// run the command inside the custom environment
-	outcome := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
+	outcome, err := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
 	if Debug {
 		fmt.Println(path.Base(runner.workingDir), ">", name, strings.Join(arguments, " "))
 		fmt.Println(outcome.Output())
 	}
-	return outcome.Output(), outcome.Err()
+	return outcome.Output(), err
 }
 
 // RunString runs the given command (including possible arguments)
