@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -87,8 +88,8 @@ func loadGitConfig(dir string, global bool) map[string]string {
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (c *Configuration) AddToPerennialBranches(branchNames ...string) {
-	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
+func (c *Configuration) AddToPerennialBranches(branchNames ...string) *command.Result {
+	return c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
 }
 
 // AddGitAlias sets the given Git alias.
@@ -325,9 +326,14 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 func (c *Configuration) RemoveLocalGitConfiguration() error {
 	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
 	if err != nil {
-		return err
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
+			// Git returns exit code 128 when trying to delete a non-existing config section.
+			// This is not an error condition in this workflow so we can ignore it here.
+			return nil
+		}
 	}
-	return nil
+	return err
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
