@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -324,6 +325,14 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 // RemoveLocalGitConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveLocalGitConfiguration() error {
 	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
+			// Git returns exit code 128 when trying to delete a non-existing config section.
+			// This is not an error condition in this workflow so we can ignore it here.
+			return nil
+		}
+	}
 	return err
 }
 
