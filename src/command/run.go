@@ -9,9 +9,8 @@ import (
 
 // Options defines optional arguments for ShellRunner.RunWith().
 type Options struct {
-	Dir   string   // the directory in which to execute the command
-	Env   []string // environment variables to use, in the format provided by os.Environ()
-	Input []Input  // user input to pipe into the command
+	Dir string   // the directory in which to execute the command
+	Env []string // environment variables to use, in the format provided by os.Environ()
 }
 
 // Input contains user input for a subshell command.
