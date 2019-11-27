@@ -101,7 +101,8 @@ func (runner *ShellRunner) RunString(command string) (result *command.Result, er
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot split command %q", command)
 	}
-	return runner.Run(parts[0], parts[1:]...)
+	command, args := parts[0], parts[1:]
+	return runner.Run(command, args...)
 }
 
 // RunStringWithInput runs the given command (including possible arguments)
@@ -111,7 +112,8 @@ func (runner *ShellRunner) RunStringWithInput(fullCmd string, input []command.In
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot split command %q", fullCmd)
 	}
-	return runner.RunWith(command.Options{Input: input}, parts[0], parts[1:]...)
+	cmd, args := parts[0], parts[1:]
+	return runner.RunWith(command.Options{Input: input}, cmd, args...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
