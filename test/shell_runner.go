@@ -100,17 +100,6 @@ func (runner *ShellRunner) RunString(command string) (result *command.Result, er
 	return runner.Run(command, args...)
 }
 
-// RunStringWithInput runs the given command (including possible arguments)
-// in this ShellRunner's directory and pipes the given input into it.
-func (runner *ShellRunner) RunStringWithInput(fullCmd string, input []command.Input) (result *command.Result, err error) {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return result, errors.Wrapf(err, "cannot split command %q", fullCmd)
-	}
-	cmd, args := parts[0], parts[1:]
-	return runner.RunWith(command.Options{Input: input}, cmd, args...)
-}
-
 // RunWith runs the given command with the given options in this ShellRunner's directory.
 func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
