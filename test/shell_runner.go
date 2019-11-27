@@ -47,17 +47,6 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
 }
 
-// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
-func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
-	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
-}
-
-// RemoveTempShellOverrides removes all custom shell overrides.
-func (runner *ShellRunner) RemoveTempShellOverrides() {
-	os.RemoveAll(runner.tempShellOverridesDir)
-	runner.tempShellOverridesDir = ""
-}
-
 // createTempShellOverridesDir creates the folder that will contain the temp shell overrides.
 // It is safe to call this method multiple times.
 func (runner *ShellRunner) createTempShellOverridesDir() error {
@@ -69,6 +58,12 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 // hasTempShellOverrides indicates whether there are temp shell overrides for the next command.
 func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
+}
+
+// RemoveTempShellOverrides removes all custom shell overrides.
+func (runner *ShellRunner) RemoveTempShellOverrides() {
+	os.RemoveAll(runner.tempShellOverridesDir)
+	runner.tempShellOverridesDir = ""
 }
 
 // Run runs the given command with the given arguments
@@ -153,4 +148,9 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 		fmt.Println(result.Output())
 	}
 	return result, err
+}
+
+// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
+func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
+	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }

@@ -15,16 +15,6 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
-		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
-		table := test.RenderExecutedGitCommands(commands, input)
-		diff, errorCount := table.Equal(input)
-		if errorCount != 0 {
-			return fmt.Errorf("found %d differences:\n%s", errorCount, diff)
-		}
-		return nil
-	})
-
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		if len(commands) > 0 {
@@ -32,6 +22,16 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 				fmt.Println(command)
 			}
 			return fmt.Errorf("expected no commands but found %d commands", len(commands))
+		}
+		return nil
+	})
+
+	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
+		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
+		table := test.RenderExecutedGitCommands(commands, input)
+		diff, errorCount := table.Equal(input)
+		if errorCount != 0 {
+			return fmt.Errorf("found %d differences:\n%s", errorCount, diff)
 		}
 		return nil
 	})
