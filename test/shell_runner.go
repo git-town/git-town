@@ -99,10 +99,9 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 func (runner *ShellRunner) RunString(command string) (result *command.Result, err error) {
 	parts, err := shellquote.Split(command)
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot split command: %q", command)
+		return result, errors.Wrapf(err, "cannot split command %q", command)
 	}
-	command, args := parts[0], parts[1:]
-	return runner.Run(command, args...)
+	return runner.Run(parts[0], parts[1:]...)
 }
 
 // RunStringWithInput runs the given command (including possible arguments)
