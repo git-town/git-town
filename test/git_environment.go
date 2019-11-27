@@ -144,11 +144,6 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	return builder.Table(fields), nil
 }
 
-// Remove deletes all files used by this GitEnvironment from disk.
-func (env GitEnvironment) Remove() error {
-	return os.RemoveAll(env.Dir)
-}
-
 // developerRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) developerRepoPath() string {
 	return path.Join(env.Dir, "developer")
@@ -157,4 +152,9 @@ func (env GitEnvironment) developerRepoPath() string {
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
 	return path.Join(env.Dir, "origin")
+}
+
+// Remove deletes all files used by this GitEnvironment from disk.
+func (env GitEnvironment) Remove() error {
+	return os.RemoveAll(env.Dir)
 }

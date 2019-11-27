@@ -8,18 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewGitRepository(t *testing.T) {
-	dir := createTempDir(t)
-	_ = NewGitRepository(dir, dir)
-}
-
-func TestInitGitRepository(t *testing.T) {
-	dir := createTempDir(t)
-	result, err := InitGitRepository(dir, dir)
-	assert.Nil(t, err, "cannot initialize normal GitRepository")
-	assertIsNormalGitRepo(t, result.Dir)
-}
-
 func TestCloneGitRepository(t *testing.T) {
 	rootDir := createTempDir(t)
 	originPath := path.Join(rootDir, "origin")
@@ -31,6 +19,18 @@ func TestCloneGitRepository(t *testing.T) {
 
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
+}
+
+func TestInitGitRepository(t *testing.T) {
+	dir := createTempDir(t)
+	result, err := InitGitRepository(dir, dir)
+	assert.Nil(t, err, "cannot initialize normal GitRepository")
+	assertIsNormalGitRepo(t, result.Dir)
+}
+
+func TestNewGitRepository(t *testing.T) {
+	dir := createTempDir(t)
+	_ = NewGitRepository(dir, dir)
 }
 
 func TestGitRepository_Branches(t *testing.T) {
