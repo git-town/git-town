@@ -2,16 +2,30 @@ package command
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
 )
 
+// Options defines optional arguments for ShellRunner.RunWith().
+type Options struct {
+	Dir   string   // the directory in which to execute the command
+	Env   []string // environment variables to use, in the format provided by os.Environ()
+	Input []Input  // user input to pipe into the command
+}
+
+// Input contains user input for a subshell command.
+type Input struct {
+	Prompt string
+	Answer string
+}
+
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRun(cmd string, args ...string) *Result {
-	result, err := RunInDir("", cmd, args...)
+	result, err := RunWith(Options{}, cmd, args...)
 	if err != nil {
 		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
 		os.Exit(1)
@@ -23,9 +37,21 @@ func MustRun(cmd string, args ...string) *Result {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result, err := RunInDir(dir, cmd, args...)
+	result, err := RunWith(Options{Dir: dir}, cmd, args...)
 	if err != nil {
 		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, err)
+		os.Exit(1)
+	}
+	return result
+}
+
+// MustRunWith runs an essential subshell command with the given options.
+// Essential subshell commands are essential for the functioning of Git Town.
+// If they fail, Git Town ends right there.
+func MustRunWith(opts Options, cmd string, args ...string) *Result {
+	result, err := RunWith(opts, cmd, args...)
+	if err != nil {
+		fmt.Printf("\n\nError running with options %v: %v", opts, err)
 		os.Exit(1)
 	}
 	return result
@@ -34,27 +60,56 @@ func MustRunInDir(dir string, cmd string, args ...string) *Result {
 // Run executes the command given in argv notation.
 // The returned errors can be:
 func Run(cmd string, args ...string) (*Result, error) {
-	return RunInDir("", cmd, args...)
+	return RunWith(Options{}, cmd, args...)
 }
 
 // RunInDir executes the given command in the given directory.
 func RunInDir(dir string, cmd string, args ...string) (*Result, error) {
-	return RunDirEnv(dir, os.Environ(), cmd, args...)
+	return RunWith(Options{Dir: dir}, cmd, args...)
 }
 
-// RunDirEnv executes the given command in the given directory, using the given environment variables.
-func RunDirEnv(dir string, env []string, cmd string, args ...string) (*Result, error) {
+// RunWith runs the command with the given RunOptions.
+func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
-	if dir != "" {
-		subProcess.Dir = dir
+	if opts.Dir != "" {
+		subProcess.Dir = opts.Dir
 	}
-	subProcess.Env = env
-	output, err := subProcess.CombinedOutput()
-	result := &Result{
+	if opts.Env != nil {
+		subProcess.Env = opts.Env
+	}
+	result := Result{
 		command: cmd,
 		args:    args,
-		output:  string(output),
 	}
-	return result, err
+
+	if len(opts.Input) == 0 {
+		// no input --> simple execution
+		output, err := subProcess.CombinedOutput()
+		result.output = string(output)
+		return &result, err
+	}
+
+	// here we have to run with opts.Input set
+	var input io.WriteCloser
+	input, err := subProcess.StdinPipe()
+	if err != nil {
+		return &result, err
+	}
+	output, err := subProcess.StdoutPipe()
+	if err != nil {
+		return &result, err
+	}
+	scanner := NewByteStreamScanner(output)
+	err = subProcess.Start()
+	if err != nil {
+		return &result, err
+	}
+	for i := range opts.Input {
+		<-scanner.WaitForText(opts.Input[i].Prompt)
+		input.Write([]byte(opts.Input[i].Answer))
+	}
+	err = subProcess.Wait()
+	result.output = scanner.ReceivedText()
+	return &result, err
 }
