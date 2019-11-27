@@ -96,10 +96,10 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (runner *ShellRunner) RunString(command string) (outcome *command.Result, err error) {
+func (runner *ShellRunner) RunString(command string) (result *command.Result, err error) {
 	parts, err := shellquote.Split(command)
 	if err != nil {
-		return outcome, errors.Wrapf(err, "cannot split command: %q", command)
+		return result, errors.Wrapf(err, "cannot split command: %q", command)
 	}
 	command, args := parts[0], parts[1:]
 	return runner.Run(command, args...)
@@ -107,16 +107,16 @@ func (runner *ShellRunner) RunString(command string) (outcome *command.Result, e
 
 // RunStringWithInput runs the given command (including possible arguments)
 // in this ShellRunner's directory and pipes the given input into it.
-func (runner *ShellRunner) RunStringWithInput(fullCmd string, input []command.Input) (outcome *command.Result, err error) {
+func (runner *ShellRunner) RunStringWithInput(fullCmd string, input []command.Input) (result *command.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return outcome, errors.Wrapf(err, "cannot split command %q", fullCmd)
+		return result, errors.Wrapf(err, "cannot split command %q", fullCmd)
 	}
 	return runner.RunWith(command.Options{Input: input}, parts[0], parts[1:]...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
-func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...string) (outcome *command.Result, err error) {
+func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env == nil {
 		opts.Env = os.Environ()
@@ -146,10 +146,10 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 	opts.Dir = runner.workingDir
 
 	// run the command inside the custom environment
-	outcome, err = command.RunWith(opts, cmd, args...)
+	result, err = command.RunWith(opts, cmd, args...)
 	if Debug {
 		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(outcome.Output())
+		fmt.Println(result.Output())
 	}
-	return outcome, err
+	return result, err
 }

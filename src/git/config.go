@@ -323,17 +323,18 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
-func (c *Configuration) RemoveLocalGitConfiguration() error {
+func (c *Configuration) RemoveLocalGitConfiguration() {
 	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
 			// Git returns exit code 128 when trying to delete a non-existing config section.
 			// This is not an error condition in this workflow so we can ignore it here.
-			return nil
+			return
 		}
+		fmt.Printf("Unexpected error while removing the 'git-town' section from the Git configuration: %v\n", err)
+		os.Exit(1)
 	}
-	return err
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration

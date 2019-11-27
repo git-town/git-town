@@ -60,7 +60,7 @@ func printConfig() {
 }
 
 func resetConfig() {
-	_ = git.Config().RemoveLocalGitConfiguration()
+	git.Config().RemoveLocalGitConfiguration()
 }
 
 func setupConfig() {
