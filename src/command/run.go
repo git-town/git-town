@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -78,38 +77,11 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	if opts.Env != nil {
 		subProcess.Env = opts.Env
 	}
+	output, err := subProcess.CombinedOutput()
 	result := Result{
 		command: cmd,
 		args:    args,
+		output:  string(output),
 	}
-
-	if len(opts.Input) == 0 {
-		// no input --> simple execution
-		output, err := subProcess.CombinedOutput()
-		result.output = string(output)
-		return &result, err
-	}
-
-	// here we have to run with opts.Input set
-	var input io.WriteCloser
-	input, err := subProcess.StdinPipe()
-	if err != nil {
-		return &result, err
-	}
-	output, err := subProcess.StdoutPipe()
-	if err != nil {
-		return &result, err
-	}
-	scanner := NewByteStreamScanner(output)
-	err = subProcess.Start()
-	if err != nil {
-		return &result, err
-	}
-	for i := range opts.Input {
-		<-scanner.WaitForText(opts.Input[i].Prompt)
-		input.Write([]byte(opts.Input[i].Answer))
-	}
-	err = subProcess.Wait()
-	result.output = scanner.ReceivedText()
 	return &result, err
 }
