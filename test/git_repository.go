@@ -50,9 +50,9 @@ func InitGitRepository(workingDir string, homeDir string) (GitRepository, error)
 
 	// initialize the repo in the folder
 	result := NewGitRepository(workingDir, homeDir)
-	output, err := result.Run("git", "init")
+	outcome, err := result.Run("git", "init")
 	if err != nil {
-		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, workingDir, output)
+		return result, errors.Wrapf(err, `error running "git init" in %q: %v`, workingDir, outcome)
 	}
 	err = result.RunMany([][]string{
 		{"git", "config", "--global", "user.name", "user"},
@@ -88,9 +88,9 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (repo *GitRepository) CheckoutBranch(name string) error {
-	output, err := repo.Run("git", "checkout", name)
+	outcome, err := repo.Run("git", "checkout", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %s", name, repo.workingDir, output)
+		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %v", name, repo.workingDir, outcome)
 	}
 	return nil
 }
@@ -154,9 +154,9 @@ func (repo *GitRepository) Configuration() *git.Configuration {
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (repo *GitRepository) CreateBranch(name string) error {
-	output, err := repo.Run("git", "checkout", "-b", name)
+	outcome, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q: %s", name, output)
+		return errors.Wrapf(err, "cannot create branch %q: %v", name, outcome)
 	}
 	return nil
 }
@@ -172,22 +172,22 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
-	output, err := repo.Run("git", "add", commit.FileName)
+	outcome, err := repo.Run("git", "add", commit.FileName)
 	if err != nil {
-		return errors.Wrapf(err, "cannot add file to commit: %s", output)
+		return errors.Wrapf(err, "cannot add file to commit: %v", outcome)
 	}
-	output, err = repo.Run("git", "commit", "-m", commit.Message)
+	outcome, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
-		return errors.Wrapf(err, "cannot commit: %s", output)
+		return errors.Wrapf(err, "cannot commit: %v", outcome)
 	}
 	return nil
 }
 
 // CreateFeatureBranch creates a branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	output, err := repo.Run("git", "town", "hack", name)
+	outcome, err := repo.Run("git", "town", "hack", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
+		return errors.Wrapf(err, "cannot create branch %q in repo: %v", name, outcome)
 	}
 	return nil
 }
@@ -255,9 +255,9 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 
 // PushBranch pushes the branch with the given name to the remote.
 func (repo *GitRepository) PushBranch(name string) error {
-	output, err := repo.Run("git", "push", "-u", "origin", name)
+	outcome, err := repo.Run("git", "push", "-u", "origin", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot push branch %q in repo %q to origin: %s", name, repo.Dir, output)
+		return errors.Wrapf(err, "cannot push branch %q in repo %q to origin: %v", name, repo.Dir, outcome)
 	}
 	return nil
 }
@@ -269,9 +269,9 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	output, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
+	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
 	if err != nil {
-		return errors.Wrapf(err, "cannot set offline mode in repo %q: %s", repo.Dir, output)
+		return errors.Wrapf(err, "cannot set offline mode in repo %q: %v", repo.Dir, outcome)
 	}
 	return nil
 }

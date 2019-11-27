@@ -74,7 +74,7 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 // Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (runner *ShellRunner) Run(name string, arguments ...string) (output *command.Result, err error) {
+func (runner *ShellRunner) Run(name string, arguments ...string) (result *command.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	customEnv := os.Environ()
 
@@ -99,12 +99,12 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output *comman
 	}
 
 	// run the command inside the custom environment
-	outcome, err := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
+	result, err = command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
 	if Debug {
 		fmt.Println(path.Base(runner.workingDir), ">", name, strings.Join(arguments, " "))
-		fmt.Println(outcome.Output())
+		fmt.Println(result.Output())
 	}
-	return outcome, err
+	return result, err
 }
 
 // RunString runs the given command (including possible arguments)
@@ -113,10 +113,10 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output *comman
 //
 // The current implementation splits the string by space
 // and therefore only works for simple commands without quoted arguments.
-func (runner *ShellRunner) RunString(command string) (outcome *command.Result, err error) {
+func (runner *ShellRunner) RunString(command string) (result *command.Result, err error) {
 	parts, err := shellquote.Split(command)
 	if err != nil {
-		return outcome, errors.Wrapf(err, "cannot split command: %q", command)
+		return result, errors.Wrapf(err, "cannot split command: %q", command)
 	}
 	command, args := parts[0], parts[1:]
 	return runner.Run(command, args...)
@@ -129,9 +129,9 @@ func (runner *ShellRunner) RunString(command string) (outcome *command.Result, e
 func (runner *ShellRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		output, err := runner.Run(command, args...)
+		outcome, err := runner.Run(command, args...)
 		if err != nil {
-			return errors.Wrapf(err, "error running command %q: %v", argv, output)
+			return errors.Wrapf(err, "error running command %q: %v", argv, outcome)
 		}
 	}
 	return nil
