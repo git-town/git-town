@@ -75,6 +75,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
+		{"git", "branch", "-d", "master"},
 	})
 	return gitEnv, err
 }
