@@ -13,12 +13,6 @@ type Options struct {
 	Env []string // environment variables to use, in the format provided by os.Environ()
 }
 
-// Input contains user input for a subshell command.
-type Input struct {
-	Prompt string
-	Answer string
-}
-
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
