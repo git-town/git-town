@@ -80,9 +80,9 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (*command.Resul
 func (runner *ShellRunner) RunMany(commands [][]string) error {
 	for _, argv := range commands {
 		command, args := argv[0], argv[1:]
-		output, err := runner.Run(command, args...)
+		outcome, err := runner.Run(command, args...)
 		if err != nil {
-			return errors.Wrapf(err, "error running command %q: %s", argv, output)
+			return errors.Wrapf(err, "error running command %q: %v", argv, outcome)
 		}
 	}
 	return nil
