@@ -95,5 +95,8 @@ test-go: build unit cuke-go lint-go  # runs all tests for Golang
 unit:  # runs the unit tests
 	go test ./src/... ./test/...
 
+unit-nocache:  # runs all the unit tests without skipping cached tests
+	go test -count=1 -timeout 1s -race ./src/... ./test/...
+
 update:  # updates all dependencies
 	dep ensure -update
