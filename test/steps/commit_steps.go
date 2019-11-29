@@ -11,17 +11,17 @@ import (
 
 // CommitSteps defines Cucumber step implementations around configuration.
 func CommitSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^the following commits exist in my repository$`, func(table *gherkin.DataTable) error {
-		fs.activeScenarioState.originalCommitTable = table
-		return fs.activeScenarioState.gitEnvironment.CreateCommits(table)
-	})
-
 	suite.Step(`^my repository is left with my original commits$`, func() error {
 		return compareExistingCommits(fs, fs.activeScenarioState.originalCommitTable)
 	})
 
 	suite.Step(`^my repository now has the following commits$`, func(table *gherkin.DataTable) error {
 		return compareExistingCommits(fs, table)
+	})
+
+	suite.Step(`^the following commits exist in my repository$`, func(table *gherkin.DataTable) error {
+		fs.activeScenarioState.originalCommitTable = table
+		return fs.activeScenarioState.gitEnvironment.CreateCommits(table)
 	})
 }
 

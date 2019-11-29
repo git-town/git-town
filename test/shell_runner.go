@@ -47,17 +47,6 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
 }
 
-// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
-func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
-	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
-}
-
-// RemoveTempShellOverrides removes all custom shell overrides.
-func (runner *ShellRunner) RemoveTempShellOverrides() {
-	os.RemoveAll(runner.tempShellOverridesDir)
-	runner.tempShellOverridesDir = ""
-}
-
 // createTempShellOverridesDir creates the folder that will contain the temp shell overrides.
 // It is safe to call this method multiple times.
 func (runner *ShellRunner) createTempShellOverridesDir() error {
@@ -69,6 +58,12 @@ func (runner *ShellRunner) createTempShellOverridesDir() error {
 // hasTempShellOverrides indicates whether there are temp shell overrides for the next command.
 func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
+}
+
+// RemoveTempShellOverrides removes all custom shell overrides.
+func (runner *ShellRunner) RemoveTempShellOverrides() {
+	os.RemoveAll(runner.tempShellOverridesDir)
+	runner.tempShellOverridesDir = ""
 }
 
 // Run runs the given command with the given arguments
@@ -107,18 +102,6 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (output string,
 	return outcome.Output(), outcome.Err()
 }
 
-// RunString runs the given command (including possible arguments)
-// in this ShellRunner's directory.
-// Shell overrides will be used and removed when done.
-func (runner *ShellRunner) RunString(command string) (output string, err error) {
-	parts, err := shellquote.Split(command)
-	if err != nil {
-		return "", errors.Wrapf(err, "cannot split command: %q", command)
-	}
-	command, args := parts[0], parts[1:]
-	return runner.Run(command, args...)
-}
-
 // RunMany runs all given commands in current directory.
 // Commands are provided as a list of argv-style strings.
 // Shell overrides apply for the first command only.
@@ -132,4 +115,21 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 		}
 	}
 	return nil
+}
+
+// RunString runs the given command (including possible arguments)
+// in this ShellRunner's directory.
+// Shell overrides will be used and removed when done.
+func (runner *ShellRunner) RunString(command string) (output string, err error) {
+	parts, err := shellquote.Split(command)
+	if err != nil {
+		return "", errors.Wrapf(err, "cannot split command: %q", command)
+	}
+	command, args := parts[0], parts[1:]
+	return runner.Run(command, args...)
+}
+
+// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
+func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
+	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }
