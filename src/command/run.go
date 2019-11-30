@@ -13,8 +13,19 @@ import (
 
 // Options defines optional arguments for ShellRunner.RunWith().
 type Options struct {
-	Dir   string   // the directory in which to execute the command
-	Env   []string // environment variables to use, in the format provided by os.Environ()
+
+	// Dir contains the directory in which to execute the command.
+	// Runs in the current directory if this option is not provided.
+	Dir string
+
+	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
+	// Uses the environment variables of this process if this option is not provided.
+	Env []string
+
+	// Essential indicates whether this is an essential command.
+	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
+	Essential bool
+
 	Input []string // input into the subprocess
 }
 
@@ -22,11 +33,7 @@ type Options struct {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRun(cmd string, args ...string) *Result {
-	result, err := RunWith(Options{}, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Essential: true}, cmd, args...)
 	return result
 }
 
@@ -34,23 +41,7 @@ func MustRun(cmd string, args ...string) *Result {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result, err := RunWith(Options{Dir: dir}, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, err)
-		os.Exit(1)
-	}
-	return result
-}
-
-// MustRunWith runs an essential subshell command with the given options.
-// Essential subshell commands are essential for the functioning of Git Town.
-// If they fail, Git Town ends right there.
-func MustRunWith(opts Options, cmd string, args ...string) *Result {
-	result, err := RunWith(opts, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running with options %v: %v", opts, err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Dir: dir, Essential: true}, cmd, args...)
 	return result
 }
 
@@ -99,6 +90,10 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		}
 	}
 	err = subProcess.Wait()
+	if opts.Essential && err != nil {
+		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
+		os.Exit(1)
+	}
 	result.output = output.String()
 	return &result, err
 }
