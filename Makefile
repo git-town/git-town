@@ -92,8 +92,11 @@ test: lint unit cuke  # runs all the tests
 
 test-go: build unit cuke-go lint-go  # runs all tests for Golang
 
-unit:  # runs the unit tests
+u:  # runs only the unit tests for changed code
 	go test -timeout 1s ./src/... ./test/...
+
+unit:  # runs all the unit tests with race detector
+	go test -count=1 -timeout 1s -race ./src/... ./test/...
 
 update:  # updates all dependencies
 	dep ensure -update
