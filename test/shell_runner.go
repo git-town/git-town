@@ -94,12 +94,12 @@ func (runner *ShellRunner) Run(name string, arguments ...string) (result *comman
 	}
 
 	// run the command inside the custom environment
-	result, err = command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
+	outcome, err := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
 	if Debug {
 		fmt.Println(path.Base(runner.workingDir), ">", name, strings.Join(arguments, " "))
 		fmt.Println(result.Output())
 	}
-	return result, err
+	return outcome, err
 }
 
 // RunMany runs all given commands in current directory.
