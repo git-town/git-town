@@ -26,8 +26,14 @@ type Options struct {
 	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
 	Essential bool
 
+	// Input contains the user input to enter into the running command.
+	// Input is written to the subprocess one element at a time,
+	// with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
 }
+
+// InputDelay defines how long to wait before writing the next input string into the subprocess.
+const InputDelay = 50 * time.Millisecond
 
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
@@ -82,7 +88,7 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		// Capturing the output and scanning for the actual content needed
 		// would introduce substantial amounts of multi-threaded complexity
 		// for not enough gains.
-		time.Sleep(50 * time.Millisecond)
+		time.Sleep(InputDelay)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
 			result.output = output.String()
