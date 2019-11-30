@@ -318,8 +318,8 @@ func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (c *Configuration) removeLocalConfigValue(key string) {
-	command.MustRunInDir(c.localDir, "git", "config", "--unset", key)
 	delete(c.localConfigCache, key)
+	command.MustRunInDir(c.localDir, "git", "config", "--unset", key)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration

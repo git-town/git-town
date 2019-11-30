@@ -93,7 +93,7 @@ test: lint unit cuke  # runs all the tests
 test-go: build unit cuke-go lint-go  # runs all tests for Golang
 
 unit:  # runs the unit tests
-	go test ./src/... ./test/...
+	go test -timeout 1s ./src/... ./test/...
 
 update:  # updates all dependencies
 	dep ensure -update
