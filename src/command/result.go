@@ -15,7 +15,7 @@ type Result struct {
 	output  string
 }
 
-// Args provids the arguments used when running the command.
+// Args provides the arguments used when running the command.
 func (c *Result) Args() []string {
 	return c.args
 }
