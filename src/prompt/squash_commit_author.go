@@ -41,8 +41,7 @@ func askForAuthor(authors []string) string {
 
 func getBranchAuthors(branchName string) (result []string) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	outcome := command.MustRun("git", "shortlog", "-s", "-n", "-e", git.Config().GetMainBranch()+".."+branchName)
-	for _, line := range outcome.OutputLines() {
+	for _, line := range command.MustRun("git", "shortlog", "-s", "-n", "-e", git.Config().GetMainBranch()+".."+branchName).OutputLines() {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
 		result = append(result, parts[1])

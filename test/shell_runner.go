@@ -91,9 +91,6 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-//
-// The current implementation splits the string by space
-// and therefore only works for simple commands without quoted arguments.
 func (runner *ShellRunner) RunString(command string) (result *command.Result, err error) {
 	parts, err := shellquote.Split(command)
 	if err != nil {
