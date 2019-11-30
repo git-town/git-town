@@ -15,6 +15,16 @@ func TestCommand_Run(t *testing.T) {
 	assert.Equal(t, "foo\n", res.Output())
 }
 
+func TestCommand_Run_UnknownExecutable(t *testing.T) {
+	res := command.Run("zonk")
+	assert.Error(t, res.Err())
+}
+
+func TestCommand_Run_ExitCode(t *testing.T) {
+	res := command.Run("bash", "-c", "exit 2")
+	assert.Error(t, res.Err())
+}
+
 func TestCommand_RunInDir(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err)
@@ -38,14 +48,4 @@ func TestCommand_OutputContainsLine(t *testing.T) {
 	assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
 	assert.False(t, res.OutputContainsLine("hello"), `partial match should return false`)
 	assert.False(t, res.OutputContainsLine("zonk"), `should not contain "zonk"`)
-}
-
-func TestCommand_ErrUnknownExecutable(t *testing.T) {
-	res := command.Run("zonk")
-	assert.Error(t, res.Err())
-}
-
-func TestCommand_ErrExitCode(t *testing.T) {
-	res := command.Run("bash", "-c", "exit 2")
-	assert.Error(t, res.Err())
 }
