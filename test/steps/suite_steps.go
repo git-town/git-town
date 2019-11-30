@@ -19,23 +19,6 @@ var gitManager *test.GitManager
 
 // SuiteSteps defines global lifecycle step implementations for Cucumber.
 func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.BeforeSuite(func() {
-		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
-		beforeSuiteMux.Lock()
-		defer beforeSuiteMux.Unlock()
-		if gitManager == nil {
-			baseDir, err := ioutil.TempDir("", "")
-			if err != nil {
-				log.Fatalf("cannot create base directory for feature specs: %s", err)
-			}
-			gitManager = test.NewGitManager(baseDir)
-			err = gitManager.CreateMemoizedEnvironment()
-			if err != nil {
-				log.Fatalf("Cannot create memoized environment: %s", err)
-			}
-		}
-	})
-
 	suite.BeforeFeature(func(feature *gherkin.Feature) {
 		if hasFeatureTag(feature, "@debug") {
 			test.Debug = true
@@ -54,6 +37,23 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 	})
 
+	suite.BeforeSuite(func() {
+		// NOTE: we want to create only one global GitManager instance with one global memoized environment.
+		beforeSuiteMux.Lock()
+		defer beforeSuiteMux.Unlock()
+		if gitManager == nil {
+			baseDir, err := ioutil.TempDir("", "")
+			if err != nil {
+				log.Fatalf("cannot create base directory for feature specs: %s", err)
+			}
+			gitManager = test.NewGitManager(baseDir)
+			err = gitManager.CreateMemoizedEnvironment()
+			if err != nil {
+				log.Fatalf("Cannot create memoized environment: %s", err)
+			}
+		}
+	})
+
 	suite.AfterScenario(func(args interface{}, e error) {
 		if e == nil {
 			err := fs.activeScenarioState.gitEnvironment.Remove()
@@ -64,19 +64,6 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 			fmt.Printf("failed scenario, investigate state in %q\n", fs.activeScenarioState.gitEnvironment.Dir)
 		}
 	})
-}
-
-// scenarioName returns the name of the given Scenario or ScenarioOutline
-func scenarioName(args interface{}) string {
-	scenario, ok := args.(*gherkin.Scenario)
-	if ok {
-		return scenario.Name
-	}
-	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
-	if ok {
-		return scenarioOutline.Name
-	}
-	panic("unknown scenario type")
 }
 
 // hasFeatureTag indicates whether the given feature has a tag with the given name.
@@ -97,6 +84,19 @@ func hasScenarioTag(args interface{}, name string) bool {
 		}
 	}
 	return false
+}
+
+// scenarioName returns the name of the given Scenario or ScenarioOutline
+func scenarioName(args interface{}) string {
+	scenario, ok := args.(*gherkin.Scenario)
+	if ok {
+		return scenario.Name
+	}
+	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
+	if ok {
+		return scenarioOutline.Name
+	}
+	panic("unknown scenario type")
 }
 
 func scenarioTags(args interface{}) []*gherkin.Tag {
