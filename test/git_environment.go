@@ -42,6 +42,11 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
 // fully populated as a standardized setup for scenarios.
+//
+// The origin repo has the master branch checked out.
+// Git repos cannot receive pushes of the currently checked out branch
+// because that will change files in the current workspace.
+// The tests don't use the master branch.
 func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the folder
 	err = os.MkdirAll(dir, 0744)
@@ -75,6 +80,9 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
+		// NOTE: the developer repo receives the master branch from origin
+		//       but we don't want it here because it isn't used in tests.
+		{"git", "branch", "-d", "master"},
 	})
 	return gitEnv, err
 }
