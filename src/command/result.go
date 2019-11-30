@@ -9,10 +9,9 @@ import (
 
 // Result contains the results of a command run in a subshell.
 type Result struct {
-	command string
-	args    []string
-	err     error
-	output  string
+	command string   // the executed command
+	args    []string // arguments for the executed command
+	output  string   // the raw output of the command
 }
 
 // Args provides the arguments used when running the command.
@@ -40,12 +39,6 @@ func (c *Result) OutputLines() []string {
 // OutputSanitized provides the output without ANSI color codes.
 func (c *Result) OutputSanitized() string {
 	return strings.TrimSpace(stripansi.Strip(c.output))
-}
-
-// Err returns the error that this command encountered.
-// Runs the command if it hasn't so far.
-func (c *Result) Err() error {
-	return c.err
 }
 
 // OutputContainsLine returns whether the output of this command
