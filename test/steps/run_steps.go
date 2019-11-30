@@ -2,9 +2,11 @@ package steps
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/test"
 )
 
@@ -12,6 +14,11 @@ import (
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "([^"]*)"$`, func(command string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *gherkin.DataTable) error {
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
 		return nil
 	})
 
@@ -35,4 +42,18 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		return nil
 	})
+}
+
+func tableToInput(table *gherkin.DataTable) []string {
+	var result []string
+	for i := 1; i < len(table.Rows); i++ {
+		row := table.Rows[i]
+		answer := row.Cells[1].Value
+		answer = strings.ReplaceAll(answer, "[ENTER]", "\n")
+		answer = strings.ReplaceAll(answer, "[DOWN]", "\x1b[B")
+		answer = strings.ReplaceAll(answer, "[UP]", "\x1b[A")
+		answer = strings.ReplaceAll(answer, "[SPACE]", " ")
+		result = append(result, answer)
+	}
+	return result
 }

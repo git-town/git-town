@@ -6,15 +6,15 @@ Feature: listing the configuration
 
 
   Background:
-    Given my repository has the branches "production" and "qa"
+    Given my repository has the feature branches "production" and "qa"
 
 
   Scenario: everything is configured
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa"
-    When I run `git-town config setup` and answer the prompts:
-      | PROMPT                                     | ANSWER                      |
-      | Please specify the main development branch | [ENTER]                     |
-      | Please specify perennial branches          | [SPACE][DOWN][SPACE][ENTER] |
+    When I run "git-town config setup" and answer the prompts:
+      | PROMPT                                     | ANSWER                            |
+      | Please specify the main development branch | [ENTER]                           |
+      | Please specify perennial branches          | [DOWN][SPACE][DOWN][SPACE][ENTER] |
     Then the main branch is now configured as "main"
     And the perennial branches are now configured as "production"

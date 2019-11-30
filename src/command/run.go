@@ -1,16 +1,21 @@
 package command
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
+
+	"github.com/pkg/errors"
 )
 
 // Options defines optional arguments for ShellRunner.RunWith().
 type Options struct {
-	Dir string   // the directory in which to execute the command
-	Env []string // environment variables to use, in the format provided by os.Environ()
+	Dir   string   // the directory in which to execute the command
+	Env   []string // environment variables to use, in the format provided by os.Environ()
+	Input []string // input into the subprocess
 }
 
 // MustRun executes an essential subshell command given in argv notation.
@@ -69,11 +74,31 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	if opts.Env != nil {
 		subProcess.Env = opts.Env
 	}
-	output, err := subProcess.CombinedOutput()
-	result := Result{
-		command: cmd,
-		args:    args,
-		output:  string(output),
+	var output bytes.Buffer
+	subProcess.Stdout = &output
+	subProcess.Stderr = &output
+	result := Result{command: cmd, args: args}
+	input, err := subProcess.StdinPipe()
+	if err != nil {
+		return &result, err
 	}
+	err = subProcess.Start()
+	if err != nil {
+		return &result, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+	}
+	for _, userInput := range opts.Input {
+		// Here we simply wait for some time until the subProcess needs the input.
+		// Capturing the output and scanning for the actual content needed
+		// would introduce substantial amounts of multi-threaded complexity
+		// for not enough gains.
+		time.Sleep(50 * time.Millisecond)
+		_, err := input.Write([]byte(userInput))
+		if err != nil {
+			result.output = output.String()
+			return &result, errors.Wrapf(err, "can't write %q to subprocess '%s %s'", userInput, cmd, strings.Join(args, " "))
+		}
+	}
+	err = subProcess.Wait()
+	result.output = output.String()
 	return &result, err
 }

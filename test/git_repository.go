@@ -142,7 +142,7 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 	return result, nil
 }
 
-// Configuration lazy-loads the Git-Town configuration for this repo.
+// Configuration returns a cached Configuration instance for this repo.
 func (repo *GitRepository) Configuration() *git.Configuration {
 	if repo.configCache == nil {
 		repo.configCache = git.NewConfiguration(repo.Dir)
@@ -157,6 +157,20 @@ func (repo *GitRepository) CreateBranch(name string) error {
 	outcome, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
 		return errors.Wrapf(err, "cannot create branch %q: %v", name, outcome)
+	}
+	return nil
+}
+
+// CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
+// The parent branch must already exist.
+func (repo *GitRepository) CreateChildFeatureBranch(name string, parentBranch string) error {
+	err := repo.CheckoutBranch(parentBranch)
+	if err != nil {
+		return errors.Wrapf(err, "cannot checkout parent branch %q", parentBranch)
+	}
+	outcome, err := repo.Run("git", "town", "append", name)
+	if err != nil {
+		return errors.Wrapf(err, "cannot create child branch %q: %v", name, outcome)
 	}
 	return nil
 }
@@ -238,6 +252,12 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 		return result, errors.Wrapf(err, "cannot get files for commit %q", sha)
 	}
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
+}
+
+// FreshConfiguration returns a fresh instance of the Git-Town configuration for this repo.
+func (repo *GitRepository) FreshConfiguration() *git.Configuration {
+	repo.configCache = nil
+	return repo.Configuration()
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
