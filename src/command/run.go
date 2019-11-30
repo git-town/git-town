@@ -9,19 +9,25 @@ import (
 
 // Options defines optional arguments for ShellRunner.RunWith().
 type Options struct {
-	Dir string   // the directory in which to execute the command
-	Env []string // environment variables to use, in the format provided by os.Environ()
+
+	// Dir contains the directory in which to execute the command.
+	// Runs in the current directory if this option is not provided.
+	Dir string
+
+	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
+	// Uses the environment variables of this process if this option is not provided.
+	Env []string
+
+	// Essential indicates whether this is an essential command.
+	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
+	Essential bool
 }
 
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRun(cmd string, args ...string) *Result {
-	result, err := RunWith(Options{}, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Essential: true}, cmd, args...)
 	return result
 }
 
@@ -70,6 +76,10 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		subProcess.Env = opts.Env
 	}
 	output, err := subProcess.CombinedOutput()
+	if opts.Essential && err != nil {
+		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
+		os.Exit(1)
+	}
 	result := Result{
 		command: cmd,
 		args:    args,
