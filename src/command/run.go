@@ -35,11 +35,7 @@ func MustRun(cmd string, args ...string) *Result {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result, err := RunWith(Options{Dir: dir}, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Dir: dir, Essential: true}, cmd, args...)
 	return result
 }
 
@@ -77,7 +73,7 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	}
 	output, err := subProcess.CombinedOutput()
 	if opts.Essential && err != nil {
-		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
+		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
 		os.Exit(1)
 	}
 	result := Result{
