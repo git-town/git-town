@@ -52,9 +52,9 @@ func InitGitRepository(workingDir string, homeDir string) (GitRepository, error)
 
 	// initialize the repo in the folder
 	result := NewGitRepository(workingDir, homeDir)
-	output, err := result.Run("git", "init")
+	outcome, err := result.Run("git", "init")
 	if err != nil {
-		return result, errors.Wrapf(err, `error running "git init" in %q: %s`, workingDir, output)
+		return result, errors.Wrapf(err, `error running "git init" in %q: %v`, workingDir, outcome)
 	}
 	err = result.RunMany([][]string{
 		{"git", "config", "--global", "user.name", "user"},
@@ -75,11 +75,11 @@ func NewGitRepository(workingDir string, homeDir string) GitRepository {
 // Branches provides the names of the local branches in this Git repository,
 // sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
-	output, err := repo.Run("git", "branch")
+	outcome, err := repo.Run("git", "branch")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot run 'git branch' in repo %q", repo.workingDir)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
 		result = append(result, strings.TrimSpace(line))
 	}
@@ -88,9 +88,9 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (repo *GitRepository) CheckoutBranch(name string) error {
-	output, err := repo.Run("git", "checkout", name)
+	outcome, err := repo.Run("git", "checkout", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %s", name, repo.workingDir, output)
+		return errors.Wrapf(err, "cannot check out branch %q in repo %q: %v", name, repo.workingDir, outcome)
 	}
 	return nil
 }
@@ -113,11 +113,11 @@ func (repo *GitRepository) Commits(fields []string) (result []Commit, err error)
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (repo *GitRepository) commitsInBranch(branch string, fields []string) (result []Commit, err error) {
-	output, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+	outcome, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get commits in branch %q", branch)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(output), "\n") {
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
 		parts := strings.Split(line, "|")
 		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
@@ -154,9 +154,9 @@ func (repo *GitRepository) Configuration() *git.Configuration {
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
 func (repo *GitRepository) CreateBranch(name string) error {
-	output, err := repo.Run("git", "checkout", "-b", name)
+	outcome, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q: %s", name, output)
+		return errors.Wrapf(err, "cannot create branch %q: %v", name, outcome)
 	}
 	return nil
 }
@@ -172,22 +172,22 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	if err != nil {
 		return errors.Wrapf(err, "cannot create file %q needed for commit", commit.FileName)
 	}
-	output, err := repo.Run("git", "add", commit.FileName)
+	outcome, err := repo.Run("git", "add", commit.FileName)
 	if err != nil {
-		return errors.Wrapf(err, "cannot add file to commit: %s", output)
+		return errors.Wrapf(err, "cannot add file to commit: %v", outcome)
 	}
-	output, err = repo.Run("git", "commit", "-m", commit.Message)
+	outcome, err = repo.Run("git", "commit", "-m", commit.Message)
 	if err != nil {
-		return errors.Wrapf(err, "cannot commit: %s", output)
+		return errors.Wrapf(err, "cannot commit: %v", outcome)
 	}
 	return nil
 }
 
 // CreateFeatureBranch creates a branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	output, err := repo.Run("git", "town", "hack", name)
+	outcome, err := repo.Run("git", "town", "hack", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create branch %q in repo: %s", name, output)
+		return errors.Wrapf(err, "cannot create branch %q in repo: %v", name, outcome)
 	}
 	return nil
 }
@@ -215,29 +215,29 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 
 // CurrentBranch provides the currently checked out branch for this repo.
 func (repo *GitRepository) CurrentBranch() (result string, err error) {
-	output, err := repo.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
+	outcome, err := repo.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot determine the current branch: %s", output)
+		return result, errors.Wrapf(err, "cannot determine the current branch: %s", outcome.Output())
 	}
-	return strings.TrimSpace(output), nil
+	return strings.TrimSpace(outcome.OutputSanitized()), nil
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (repo *GitRepository) FileContentInCommit(sha string, filename string) (result string, err error) {
-	output, err := repo.Run("git", "show", sha+":"+filename)
+	outcome, err := repo.Run("git", "show", sha+":"+filename)
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot determine the content for file %q in commit %q", filename, sha)
 	}
-	return output, nil
+	return outcome.OutputSanitized(), nil
 }
 
 // FilesInCommit provides the names of the files that the commit with the given SHA changes.
 func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error) {
-	output, err := repo.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
+	outcome, err := repo.Run("git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha)
 	if err != nil {
 		return result, errors.Wrapf(err, "cannot get files for commit %q", sha)
 	}
-	return strings.Split(strings.TrimSpace(output), "\n"), nil
+	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
@@ -255,9 +255,9 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 
 // PushBranch pushes the branch with the given name to the remote.
 func (repo *GitRepository) PushBranch(name string) error {
-	output, err := repo.Run("git", "push", "-u", "origin", name)
+	outcome, err := repo.Run("git", "push", "-u", "origin", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot push branch %q in repo %q to origin: %s", name, repo.Dir, output)
+		return errors.Wrapf(err, "cannot push branch %q in repo %q to origin: %v", name, repo.Dir, outcome)
 	}
 	return nil
 }
@@ -269,9 +269,9 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	output, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
+	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
 	if err != nil {
-		return errors.Wrapf(err, "cannot set offline mode in repo %q: %s", repo.Dir, output)
+		return errors.Wrapf(err, "cannot set offline mode in repo %q: %v", repo.Dir, outcome)
 	}
 	return nil
 }

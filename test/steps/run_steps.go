@@ -11,12 +11,12 @@ import (
 // RunSteps defines Gherkin step implementations around running things in subshells.
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "([^"]+)"$`, func(command string) error {
-		fs.activeScenarioState.lastRunOutput, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
+		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -27,7 +27,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
-		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunOutput)
+		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		diff, errorCount := table.Equal(input)
 		if errorCount != 0 {

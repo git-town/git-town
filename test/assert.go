@@ -32,9 +32,9 @@ func assertFolderExists(t *testing.T, dir string) {
 
 func assertHasGitBranch(t *testing.T, dir, expectedBranch string) {
 	runner := NewShellRunner(dir, dir)
-	output, err := runner.Run("git", "branch")
+	outcome, err := runner.Run("git", "branch")
 	assert.Nilf(t, err, "cannot run 'git status' in %q", dir)
-	assert.Contains(t, output, expectedBranch, "doesn't have Git branch")
+	assert.Contains(t, outcome.OutputSanitized(), expectedBranch, "doesn't have Git branch")
 }
 
 func assertHasGlobalGitConfiguration(t *testing.T, dir string) {
