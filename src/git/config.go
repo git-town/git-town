@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -63,12 +64,12 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	res := command.RunInDir(dir, "git", cmdArgs...)
-	if res.Err() != nil {
+	res, err := command.RunInDir(dir, "git", cmdArgs...)
+	if err != nil {
 		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
 			return result
 		}
-		panic(res.Err())
+		panic(err)
 	}
 	output := res.Output()
 	if output == "" {
@@ -87,8 +88,8 @@ func loadGitConfig(dir string, global bool) map[string]string {
 
 // AddToPerennialBranches registers the given branch names as perennial branches.
 // The branches must exist.
-func (c *Configuration) AddToPerennialBranches(branchNames ...string) {
-	c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
+func (c *Configuration) AddToPerennialBranches(branchNames ...string) *command.Result {
+	return c.SetPerennialBranches(append(c.GetPerennialBranches(), branchNames...))
 }
 
 // AddGitAlias sets the given Git alias.
@@ -323,7 +324,17 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveLocalGitConfiguration() {
-	command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town").OutputSanitized()
+	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
+	if err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
+			// Git returns exit code 128 when trying to delete a non-existing config section.
+			// This is not an error condition in this workflow so we can ignore it here.
+			return
+		}
+		fmt.Printf("Unexpected error while removing the 'git-town' section from the Git configuration: %v\n", err)
+		os.Exit(1)
+	}
 }
 
 // RemoveOutdatedConfiguration removes outdated Git Town configuration
