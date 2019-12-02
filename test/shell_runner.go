@@ -140,11 +140,11 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 	// run the command inside the custom environment
 	result, err = command.RunWith(opts, cmd, args...)
 	if Debug {
+		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
+		fmt.Println(result.Output())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
 		}
-		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
-		fmt.Println(result.Output())
 	}
 	return result, err
 }
