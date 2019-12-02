@@ -81,7 +81,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
 		if actual[0] != name {
-			return fmt.Errorf("expected %q, got %q", name, actual)
+			return fmt.Errorf("expected %q, got %q", name, actual[0])
 		}
 		return nil
 	})
@@ -91,11 +91,8 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
-		if actual[0] != branch1 {
-			return fmt.Errorf("expected %q, got %q", branch1, actual)
-		}
-		if actual[1] != branch2 {
-			return fmt.Errorf("expected %q, got %q", branch2, actual)
+		if actual[0] != branch1 || actual[1] != branch2 {
+			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
 		return nil
 	})
