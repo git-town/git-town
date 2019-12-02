@@ -7,15 +7,27 @@ import (
 	"strings"
 )
 
+// Options defines optional arguments for ShellRunner.RunWith().
+type Options struct {
+
+	// Dir contains the directory in which to execute the command.
+	// Runs in the current directory if this option is not provided.
+	Dir string
+
+	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
+	// Uses the environment variables of this process if this option is not provided.
+	Env []string
+
+	// Essential indicates whether this is an essential command.
+	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
+	Essential bool
+}
+
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRun(cmd string, args ...string) *Result {
-	result, err := RunInDir("", cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s': %s", cmd, strings.Join(args, " "), err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Essential: true}, cmd, args...)
 	return result
 }
 
@@ -23,33 +35,35 @@ func MustRun(cmd string, args ...string) *Result {
 // Essential subshell commands are essential for the functioning of Git Town.
 // If they fail, Git Town ends right there.
 func MustRunInDir(dir string, cmd string, args ...string) *Result {
-	result, err := RunInDir(dir, cmd, args...)
-	if err != nil {
-		fmt.Printf("\n\nError running '%s %s' in %s: %s", cmd, strings.Join(args, " "), dir, err)
-		os.Exit(1)
-	}
+	result, _ := RunWith(Options{Dir: dir, Essential: true}, cmd, args...)
 	return result
 }
 
 // Run executes the command given in argv notation.
 func Run(cmd string, args ...string) (*Result, error) {
-	return RunInDir("", cmd, args...)
+	return RunWith(Options{}, cmd, args...)
 }
 
 // RunInDir executes the given command in the given directory.
 func RunInDir(dir string, cmd string, args ...string) (*Result, error) {
-	return RunDirEnv(dir, os.Environ(), cmd, args...)
+	return RunWith(Options{Dir: dir}, cmd, args...)
 }
 
-// RunDirEnv executes the given command in the given directory, using the given environment variables.
-func RunDirEnv(dir string, env []string, cmd string, args ...string) (*Result, error) {
+// RunWith runs the command with the given RunOptions.
+func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	logRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
-	if dir != "" {
-		subProcess.Dir = dir
+	if opts.Dir != "" {
+		subProcess.Dir = opts.Dir
 	}
-	subProcess.Env = env
+	if opts.Env != nil {
+		subProcess.Env = opts.Env
+	}
 	output, err := subProcess.CombinedOutput()
+	if opts.Essential && err != nil {
+		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
+		os.Exit(1)
+	}
 	result := Result{
 		command: cmd,
 		args:    args,

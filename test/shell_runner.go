@@ -69,37 +69,8 @@ func (runner *ShellRunner) RemoveTempShellOverrides() {
 // Run runs the given command with the given arguments
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (runner *ShellRunner) Run(name string, arguments ...string) (result *command.Result, err error) {
-	// create an environment with the temp shell overrides directory added to the PATH
-	customEnv := os.Environ()
-
-	// set HOME to the given global directory so that Git puts the global configuration there.
-	for i := range customEnv {
-		if strings.HasPrefix(customEnv[i], "HOME=") {
-			customEnv[i] = fmt.Sprintf("HOME=%s", runner.homeDir)
-		}
-	}
-
-	// enable shell overrides
-	if runner.hasTempShellOverrides() {
-		for i := range customEnv {
-			if strings.HasPrefix(customEnv[i], "PATH=") {
-				parts := strings.SplitN(customEnv[i], "=", 2)
-				parts[1] = runner.tempShellOverridesDir + ":" + parts[1]
-				customEnv[i] = strings.Join(parts, "=")
-				break
-			}
-		}
-		defer runner.RemoveTempShellOverrides()
-	}
-
-	// run the command inside the custom environment
-	outcome, err := command.RunDirEnv(runner.workingDir, customEnv, name, arguments...)
-	if Debug {
-		fmt.Println(path.Base(runner.workingDir), ">", name, strings.Join(arguments, " "))
-		fmt.Println(result.Output())
-	}
-	return outcome, err
+func (runner *ShellRunner) Run(name string, arguments ...string) (*command.Result, error) {
+	return runner.RunWith(command.Options{}, name, arguments...)
 }
 
 // RunMany runs all given commands in current directory.
@@ -127,6 +98,45 @@ func (runner *ShellRunner) RunString(command string) (result *command.Result, er
 	}
 	command, args := parts[0], parts[1:]
 	return runner.Run(command, args...)
+}
+
+// RunWith runs the given command with the given options in this ShellRunner's directory.
+func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
+	// create an environment with the temp shell overrides directory added to the PATH
+	if opts.Env == nil {
+		opts.Env = os.Environ()
+	}
+
+	// set HOME to the given global directory so that Git puts the global configuration there.
+	for i := range opts.Env {
+		if strings.HasPrefix(opts.Env[i], "HOME=") {
+			opts.Env[i] = fmt.Sprintf("HOME=%s", runner.homeDir)
+		}
+	}
+
+	// enable shell overrides
+	if runner.hasTempShellOverrides() {
+		for i := range opts.Env {
+			if strings.HasPrefix(opts.Env[i], "PATH=") {
+				parts := strings.SplitN(opts.Env[i], "=", 2)
+				parts[1] = runner.tempShellOverridesDir + ":" + parts[1]
+				opts.Env[i] = strings.Join(parts, "=")
+				break
+			}
+		}
+		defer runner.RemoveTempShellOverrides()
+	}
+
+	// set the working dir
+	opts.Dir = runner.workingDir
+
+	// run the command inside the custom environment
+	result, err = command.RunWith(opts, cmd, args...)
+	if Debug {
+		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
+		fmt.Println(result.Output())
+	}
+	return result, err
 }
 
 // tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
