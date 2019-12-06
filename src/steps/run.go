@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 	"github.com/pkg/errors"
@@ -76,13 +75,12 @@ func Run(runState *RunState) error {
 func exitWithMessages(canSkip bool) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := messageFmt.Printf("To abort, run \"git-town abort\".\n")
-	exit.If(err)
-	_, err = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
-	exit.If(err)
+	// NOTE: No point in handling the errors while printing here,
+	//       we are exiting with an error anyways.
+	_, _ = messageFmt.Printf("To abort, run \"git-town abort\".\n")
+	_, _ = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
 	if canSkip {
-		_, err = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
-		exit.If(err)
+		_, _ = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
 	}
 	fmt.Println()
 	os.Exit(1)

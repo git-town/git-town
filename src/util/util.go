@@ -33,7 +33,10 @@ var inputReader = bufio.NewReader(os.Stdin)
 // GetUserInput reads input from the user and returns it.
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
-	exit.IfWrap(err, "Error getting user input")
+	if err != nil {
+		fmt.Printf("Error getting user input: %v", err)
+		os.Exit(1)
+	}
 	return strings.TrimSpace(text)
 }
 
