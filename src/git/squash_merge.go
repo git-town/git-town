@@ -1,10 +1,9 @@
 package git
 
 import (
+	"fmt"
 	"io/ioutil"
 	"regexp"
-
-	"github.com/pkg/errors"
 )
 
 var squashMessageFile = ".git/SQUASH_MSG"
@@ -14,7 +13,7 @@ var squashMessageFile = ".git/SQUASH_MSG"
 func CommentOutSquashCommitMessage(prefix string) error {
 	contentBytes, err := ioutil.ReadFile(squashMessageFile)
 	if err != nil {
-		return errors.Wrapf(err, "cannot read squash message file %q", squashMessageFile)
+		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
 	}
 	content := string(contentBytes)
 	if prefix != "" {

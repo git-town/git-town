@@ -1,13 +1,13 @@
 package git
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 	"strconv"
 
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/util"
-	"github.com/pkg/errors"
 )
 
 // EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher
@@ -25,11 +25,11 @@ func isVersionRequirementSatisfied() bool {
 	}
 	majorVersion, err := strconv.Atoi(matches[1])
 	if err != nil {
-		panic(errors.Wrapf(err, "cannot convert major version (%v) to int", matches[1]))
+		panic(fmt.Errorf("cannot convert major version (%v) to int: %w", matches[1], err))
 	}
 	minorVersion, err := strconv.Atoi(matches[2])
 	if err != nil {
-		panic(errors.Wrapf(err, "cannot convert minor version (%v) to int", matches[2]))
+		panic(fmt.Errorf("cannot convert minor version (%v) to int: %w", matches[2], err))
 	}
 	return majorVersion == 2 && minorVersion >= 7
 }

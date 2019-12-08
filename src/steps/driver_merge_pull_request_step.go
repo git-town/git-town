@@ -1,10 +1,11 @@
 package steps
 
 import (
+	"fmt"
+
 	"github.com/Originate/git-town/src/drivers"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/script"
-	"github.com/pkg/errors"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch
@@ -49,11 +50,11 @@ func (step *DriverMergePullRequestStep) Run() error {
 		step.enteredEmptyCommitMessage = true
 		err := script.SquashMerge(step.BranchName)
 		if err != nil {
-			return errors.Wrapf(err, "cannot squash-merge branch %q", step.BranchName)
+			return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
 		}
 		err = git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
 		if err != nil {
-			return errors.Wrap(err, "cannot comment out the squash commit message")
+			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
 		err = script.RunCommand("git", "commit")
 		if err != nil {
@@ -62,7 +63,7 @@ func (step *DriverMergePullRequestStep) Run() error {
 		commitMessage = git.GetLastCommitMessage()
 		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
 		if err != nil {
-			return errors.Wrap(err, "cannot reset the main branch")
+			return fmt.Errorf("cannot reset the main branch: %w", err)
 		}
 		step.enteredEmptyCommitMessage = false
 	}

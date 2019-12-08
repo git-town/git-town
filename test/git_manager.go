@@ -1,11 +1,11 @@
 package test
 
 import (
+	"fmt"
 	"path"
 
 	"github.com/Originate/git-town/test/helpers"
 	"github.com/iancoleman/strcase"
-	"github.com/pkg/errors"
 )
 
 /*
@@ -32,7 +32,7 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 	var err error
 	manager.memoized, err = NewStandardGitEnvironment(path.Join(manager.dir, "memoized"))
 	if err != nil {
-		return errors.Wrapf(err, "cannot create memoized environment")
+		return fmt.Errorf("cannot create memoized environment: %w", err)
 	}
 	return nil
 }

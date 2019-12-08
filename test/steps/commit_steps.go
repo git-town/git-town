@@ -6,7 +6,6 @@ import (
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
-	"github.com/pkg/errors"
 )
 
 // CommitSteps defines Cucumber step implementations around configuration.
@@ -31,7 +30,7 @@ func compareExistingCommits(fs *FeatureState, table *gherkin.DataTable) error {
 	fields := helpers.TableFields(table)
 	commitTable, err := fs.activeScenarioState.gitEnvironment.CommitTable(fields)
 	if err != nil {
-		return errors.Wrap(err, "cannot determine commits in the developer repo")
+		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	diff, errorCount := commitTable.Equal(table)
 	if errorCount != 0 {
