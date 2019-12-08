@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/cfmt"
 	"github.com/fatih/color"
 )
@@ -62,11 +61,11 @@ func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := errHeaderFmt.Println("  Error")
-	exit.If(err)
+	// NOTE: no point checking the error here,
+	//       we are printing an error already.
+	_, _ = errHeaderFmt.Println("  Error")
 	for _, message := range messages {
-		_, err = errMessageFmt.Println("  " + message)
-		exit.If(err)
+		_, _ = errMessageFmt.Println("  " + message)
 	}
 	fmt.Println()
 }
@@ -77,7 +76,10 @@ func PrintError(messages ...string) {
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	_, err := labelFmt.Println(label + ":")
-	exit.If(err)
+	if err != nil {
+		fmt.Printf("cannot print: %v\n", err)
+		os.Exit(1)
+	}
 	cfmt.Println(Indent(value, 1))
 	fmt.Println()
 }
