@@ -16,10 +16,11 @@ import (
 )
 
 type shipConfig struct {
-	BranchToShip  string
-	InitialBranch string
+	BranchToShip  string // the name of the branch to ship
+	InitialBranch string // the name of the branch that was checked out when running this command
 }
 
+// optional commit message provided via the command line
 var commitMessage string
 
 var shipCmd = &cobra.Command{
