@@ -75,12 +75,10 @@ func Run(runState *RunState) error {
 func exitWithMessages(canSkip bool) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	// NOTE: No point in handling the errors while printing here,
-	//       we are exiting with an error anyways.
-	_, _ = messageFmt.Printf("To abort, run \"git-town abort\".\n")
-	_, _ = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
+	util.PrintColor(messageFmt, "To abort, run \"git-town abort\".\n")
+	util.PrintColor(messageFmt, "To continue after having resolved conflicts, run \"git-town continue\".\n")
 	if canSkip {
-		_, _ = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
+		util.PrintColor(messageFmt, "To continue by skipping the current branch, run \"git-town skip\".\n")
 	}
 	fmt.Println()
 	os.Exit(1)

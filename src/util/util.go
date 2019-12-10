@@ -56,6 +56,12 @@ func Pluralize(count, word string) string {
 	return result
 }
 
+// PrintColor prints using the given color function.
+// If that doesn't work, it falls back to printing without color.
+func PrintColor(color *color.Color, messages ...interface{}) {
+	color.Print(messages...)
+}
+
 // PrintError prints the given error message to the console.
 func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
