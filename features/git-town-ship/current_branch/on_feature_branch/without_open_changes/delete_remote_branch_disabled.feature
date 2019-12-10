@@ -4,6 +4,7 @@ Feature: Skip deleting the remote branch when shipping
   I want to be able to tell Git Town to not delete the remote branch
   So that I can use GitHub's feature to automatically delete head branches of pull requests.
 
+
   Background:
     Given my repository has a feature branch named "feature"
     And the following commit exists in my repository
@@ -12,6 +13,7 @@ Feature: Skip deleting the remote branch when shipping
     And I am on the "feature" branch
     And I have a the git configuration for "git-town.delete-remote-branches" set to "false"
     When I run `git-town ship -m "feature done"`
+
 
   Scenario: result
     Then it runs the commands
