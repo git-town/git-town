@@ -125,6 +125,10 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	if err != nil {
 		return result, err
 	}
+	// NOTE: when shipping with a driver, we can always delete the remote branch because:
+	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
+	// - we have updated the PRs of all child branches (because we have API access)
+	// - we know we are online
 	if canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
