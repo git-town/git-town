@@ -1,6 +1,6 @@
 Feature: Skip deleting the remote branch when shipping
 
-  When shipping feature branches
+    When shipping feature branches
   I want to be able to tell Git Town to not delete the remote branch
   So that I can use GitHub's feature to automatically delete head branches of pull requests.
 
@@ -38,3 +38,21 @@ Feature: Skip deleting the remote branch when shipping
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    |
       | main    | local and remote | feature done   | feature_file |
       | feature | remote           | feature commit | feature_file |
+
+
+  Scenario: undo
+    When I run `git-town undo`
+    Then it runs the commands
+      | BRANCH  | COMMAND                                        |
+      | main    | git branch feature <%= sha 'feature commit' %> |
+      |         | git revert <%= sha 'feature done' %>           |
+      |         | git push                                       |
+      |         | git checkout feature                           |
+      | feature | git checkout main                              |
+      | main    | git checkout feature                           |
+    And I end up on the "feature" branch
+    And my repository has the following commits
+      | BRANCH  | LOCATION         | MESSAGE               | FILE NAME    |
+      | main    | local and remote | feature done          | feature_file |
+      |         |                  | Revert "feature done" | feature_file |
+      | feature | local and remote | feature commit        | feature_file |
