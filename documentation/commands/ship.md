@@ -31,6 +31,11 @@ GitHub API. Setup:
    squash merge via the GitHub API. It will also update the base branch for any
    pull requests against that branch.
 
+If you use
+[GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
+set `git-town.delete-remote-branches` to `false` and Git Town will leave it up
+to GitHub to delete the remote branch.
+
 </a>
 
 #### Usage
