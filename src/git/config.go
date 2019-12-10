@@ -150,6 +150,15 @@ func (c *Configuration) GetCodeHostingOriginHostname() string {
 	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
+// GetDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
+func (c *Configuration) GetDeleteRemoteBranch() bool {
+	override := c.getLocalOrGlobalConfigValue("git-town.delete-remote-branch")
+	if override == "" {
+		return true
+	}
+	return util.StringToBool(override)
+}
+
 // getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
 func (c *Configuration) getGlobalConfigValue(key string) string {
 	return c.globalConfigCache[key]
