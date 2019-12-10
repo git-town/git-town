@@ -63,14 +63,12 @@ func PrintError(messages ...string) {
 	fmt.Println()
 	_, err := errHeaderFmt.Println("  Error")
 	if err != nil {
-		fmt.Printf("cannot print: %v", err)
-		os.Exit(1)
+		fmt.Printf("  Error")
 	}
 	for _, message := range messages {
 		_, err = errMessageFmt.Println("  " + message)
 		if err != nil {
-			fmt.Printf("cannot print: %v", err)
-			os.Exit(1)
+			fmt.Println("  " + message)
 		}
 	}
 	fmt.Println()
