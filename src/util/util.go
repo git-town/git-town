@@ -65,20 +65,23 @@ func PrintColor(color *color.Color, messages ...interface{}) {
 	}
 }
 
+// PrintlnColor prints using the given color function.
+// If that doesn't work, it falls back to printing without color.
+func PrintlnColor(color *color.Color, messages ...interface{}) {
+	_, err := color.Println(messages...)
+	if err != nil {
+		fmt.Println(messages...)
+	}
+}
+
 // PrintError prints the given error message to the console.
 func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := errHeaderFmt.Println("  Error")
-	if err != nil {
-		fmt.Printf("  Error")
-	}
+	PrintlnColor(errHeaderFmt, "  Error")
 	for _, message := range messages {
-		_, err = errMessageFmt.Println("  " + message)
-		if err != nil {
-			fmt.Println("  " + message)
-		}
+		PrintlnColor(errMessageFmt, "  "+message)
 	}
 	fmt.Println()
 }
