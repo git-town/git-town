@@ -48,8 +48,8 @@ Now anytime you ship a branch with a pull request on GitHub, it will squash merg
 It will also update the base branch for any pull requests against that branch.
 
 If you use GitHub's feature to automatically delete head branches,
-set "git-town.delete-remote-branches" to "false" and Git Town will leave it up
-to GitHub to delete the remote branch.`,
+set "git-town.delete-remote-branches" to "false" in your local or global Git configuration
+and Git Town will leave it up to GitHub to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := gitShipConfig(args)
 		if err != nil {
