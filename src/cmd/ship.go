@@ -16,9 +16,8 @@ import (
 )
 
 type shipConfig struct {
-	BranchToShip           string // the name of the branch to ship
-	InitialBranch          string // the name of the branch that was checked out when running this command
-	DeleteRemoteBranchFlag bool   // whether to delete the remote branch after shipping
+	BranchToShip  string // the name of the branch to ship
+	InitialBranch string // the name of the branch that was checked out when running this command
 }
 
 // optional commit message provided via the command line
@@ -77,7 +76,6 @@ It will also update the base branch for any pull requests against that branch.`,
 
 func gitShipConfig(args []string) (result shipConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
-	result.DeleteRemoteBranchFlag = git.Config().GetDeleteRemoteBranchFlag()
 	if len(args) == 0 {
 		result.BranchToShip = result.InitialBranch
 	} else {
@@ -143,7 +141,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
-		if git.Config().GetDeleteRemoteBranch() {
+		if git.Config().GetDeleteRemoteBranches() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
 	}
