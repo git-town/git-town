@@ -138,8 +138,14 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
+	// NOTE: when shipping with driver we can always delete the remote branch because
+	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
+	// - we have updated the PRs of all child branches (because we have API access)
+	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		if git.Config().GetDeleteRemoteBranch() {
+			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
