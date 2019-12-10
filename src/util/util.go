@@ -61,11 +61,17 @@ func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	// NOTE: no point checking the error here,
-	//       we are printing an error already.
-	_, _ = errHeaderFmt.Println("  Error")
+	_, err := errHeaderFmt.Println("  Error")
+	if err != nil {
+		fmt.Printf("cannot print: %v", err)
+		os.Exit(1)
+	}
 	for _, message := range messages {
-		_, _ = errMessageFmt.Println("  " + message)
+		_, err = errMessageFmt.Println("  " + message)
+		if err != nil {
+			fmt.Printf("cannot print: %v", err)
+			os.Exit(1)
+		}
 	}
 	fmt.Println()
 }
