@@ -82,11 +82,7 @@ func PrintError(messages ...string) {
 // followed by an empty line
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
-	_, err := labelFmt.Println(label + ":")
-	if err != nil {
-		fmt.Printf("cannot print: %v\n", err)
-		os.Exit(1)
-	}
+	PrintlnColor(labelFmt, label+":")
 	cfmt.Println(Indent(value, 1))
 	fmt.Println()
 }
