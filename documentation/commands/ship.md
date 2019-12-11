@@ -33,7 +33,7 @@ GitHub API. Setup:
 
 If you use
 [GitHub's feature to automatically delete head branches](https://help.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches),
-set `git-town.delete-remote-branches` to `false` in your local or global Git
+set `git-town.ship-delete-remote-branch` to `false` in your local or global Git
 configuration and Git Town will leave it up to GitHub to delete the remote
 branch.
 

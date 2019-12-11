@@ -11,7 +11,7 @@ Feature: Skip deleting the remote branch when shipping
       | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local and remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    And I have a the git configuration for "git-town.delete-remote-branches" set to "false"
+    And I have a the git configuration for "git-town.ship-delete-remote-branch" set to "false"
     When I run `git-town ship -m "feature done"`
 
 
