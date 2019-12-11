@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"strings"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 // Options defines optional arguments for ShellRunner.RunWith().
