@@ -14,13 +14,6 @@
   version = "v0.7.13"
 
 [[projects]]
-  digest = "1:2a1c007a3aa4b3efd5e90eb321cf405e62bec9f0a4f5e81b0a175d9d45e1993a"
-  name = "github.com/Originate/exit"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "8f9dec5ec964dc363624e001efe5e4018f05313e"
-
-[[projects]]
   branch = "master"
   digest = "1:66a87baf099221f7deecf7a3ee301e437d9d93ef3be0bc92645e71400c2e9d31"
   name = "github.com/acarl005/stripansi"
@@ -117,14 +110,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "9520e82c474b0a04dd04f8a40959027271bab992"
-
-[[projects]]
-  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -231,14 +216,12 @@
   input-imports = [
     "github.com/DATA-DOG/godog",
     "github.com/DATA-DOG/godog/gherkin",
-    "github.com/Originate/exit",
     "github.com/acarl005/stripansi",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
     "github.com/google/go-github/github",
     "github.com/iancoleman/strcase",
     "github.com/kballard/go-shellquote",
-    "github.com/pkg/errors",
     "github.com/sergi/go-diff/diffmatchpatch",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
