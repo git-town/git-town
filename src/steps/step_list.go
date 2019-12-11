@@ -2,9 +2,9 @@ package steps
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 )
 
@@ -77,7 +77,10 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 	}
 
 	initialDirectory, err := os.Getwd()
-	exit.If(err)
+	if err != nil {
+		fmt.Printf("cannot get current working directory: %v", err)
+		os.Exit(1)
+	}
 	gitRootDirectory := git.GetRootDirectory()
 
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {

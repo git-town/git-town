@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -9,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +23,7 @@ func CopyDirectory(src, dst string) error {
 		if fi.IsDir() {
 			err := os.Mkdir(dstPath, fi.Mode())
 			if err != nil {
-				return errors.Wrap(err, "cannot create target directory")
+				return fmt.Errorf("cannot create target directory: %w", err)
 			}
 			return nil
 		}
@@ -31,19 +31,19 @@ func CopyDirectory(src, dst string) error {
 		// handle file
 		sourceContent, err := os.Open(srcPath)
 		if err != nil {
-			return errors.Wrapf(err, "cannot read source file %q", srcPath)
+			return fmt.Errorf("cannot read source file %q: %w", srcPath, err)
 		}
 		destFile, err := os.OpenFile(dstPath, os.O_CREATE|os.O_WRONLY, fi.Mode())
 		if err != nil {
-			return errors.Wrapf(err, "Cannot create target file %q", srcPath)
+			return fmt.Errorf("cannot create target file %q: %w", srcPath, err)
 		}
 		_, err = io.Copy(destFile, sourceContent)
 		if err != nil {
-			return errors.Wrapf(err, "cannot copy %q into %q", srcPath, dstPath)
+			return fmt.Errorf("cannot copy %q into %q: %w", srcPath, dstPath, err)
 		}
 		err = sourceContent.Close()
 		if err != nil {
-			return errors.Wrapf(err, "cannot close source file %q", srcPath)
+			return fmt.Errorf("cannot close source file %q: %w", srcPath, err)
 		}
 		err = destFile.Close()
 		return err

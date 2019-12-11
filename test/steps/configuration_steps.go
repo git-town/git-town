@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/DATA-DOG/godog"
-	"github.com/pkg/errors"
 )
 
 // ConfigurationSteps defines Cucumber step implementations around configuration.
@@ -41,7 +40,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the new-branch-push-flag configuration is set to "(true|false)"$`, func(value string) error {
 		b, err := strconv.ParseBool(value)
 		if err != nil {
-			return errors.Wrapf(err, "cannot parse %q into bool", value)
+			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
 		}
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetNewBranchPush(b, false)
 		return nil

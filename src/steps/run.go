@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/exit"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
-	"github.com/pkg/errors"
 
 	"github.com/fatih/color"
 )
@@ -22,12 +20,12 @@ func Run(runState *RunState) error {
 			if runState.IsAbort || runState.isUndo {
 				err := DeletePreviousRunState()
 				if err != nil {
-					return errors.Wrap(err, "cannot delete previous run state")
+					return fmt.Errorf("cannot delete previous run state: %w", err)
 				}
 			} else {
 				err := SaveRunState(runState)
 				if err != nil {
-					return errors.Wrap(err, "cannot save run state")
+					return fmt.Errorf("cannot save run state: %w", err)
 				}
 			}
 			fmt.Println()
@@ -49,7 +47,7 @@ func Run(runState *RunState) error {
 				abortRunState := runState.CreateAbortRunState()
 				err := Run(&abortRunState)
 				if err != nil {
-					return errors.Wrap(err, "cannot run the abort steps")
+					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
 				util.ExitWithErrorMessage(step.GetAutomaticAbortErrorMessage())
 			} else {
@@ -60,7 +58,7 @@ func Run(runState *RunState) error {
 				}
 				err := SaveRunState(runState)
 				if err != nil {
-					return errors.Wrap(err, "cannot save run state")
+					return fmt.Errorf("cannot save run state: %w", err)
 				}
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
@@ -76,13 +74,10 @@ func Run(runState *RunState) error {
 func exitWithMessages(canSkip bool) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := messageFmt.Printf("To abort, run \"git-town abort\".\n")
-	exit.If(err)
-	_, err = messageFmt.Printf("To continue after having resolved conflicts, run \"git-town continue\".\n")
-	exit.If(err)
+	util.PrintlnColor(messageFmt, "To abort, run \"git-town abort\".")
+	util.PrintlnColor(messageFmt, "To continue after having resolved conflicts, run \"git-town continue\".")
 	if canSkip {
-		_, err = messageFmt.Printf("To continue by skipping the current branch, run \"git-town skip\".\n")
-		exit.If(err)
+		util.PrintlnColor(messageFmt, "To continue by skipping the current branch, run \"git-town skip\".")
 	}
 	fmt.Println()
 	os.Exit(1)

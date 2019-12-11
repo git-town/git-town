@@ -9,7 +9,6 @@ import (
 
 	"github.com/Originate/git-town/src/command"
 	"github.com/kballard/go-shellquote"
-	"github.com/pkg/errors"
 )
 
 // ShellRunner runs shell commands in the given directory, using a customizable environment.
@@ -41,7 +40,7 @@ func (runner *ShellRunner) AddTempShellOverride(name, content string) error {
 	if !runner.hasTempShellOverrides() {
 		err := runner.createTempShellOverridesDir()
 		if err != nil {
-			return errors.Wrap(err, "cannot create temp shell overrides dir")
+			return fmt.Errorf("cannot create temp shell overrides dir: %w", err)
 		}
 	}
 	return ioutil.WriteFile(runner.tempShellOverrideFilePath(name), []byte(content), 0744)
@@ -82,7 +81,7 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 		command, args := argv[0], argv[1:]
 		outcome, err := runner.Run(command, args...)
 		if err != nil {
-			return errors.Wrapf(err, "error running command %q: %v", argv, outcome)
+			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
 		}
 	}
 	return nil
@@ -101,7 +100,7 @@ func (runner *ShellRunner) RunString(fullCmd string) (*command.Result, error) {
 func (runner *ShellRunner) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, errors.Wrapf(err, "cannot split command %q", fullCmd)
+		return result, fmt.Errorf("cannot split command %q: %w", command, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return runner.RunWith(opts, cmd, args...)
