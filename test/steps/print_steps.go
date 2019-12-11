@@ -33,4 +33,12 @@ func PrintSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		return nil
 	})
+
+	suite.Step(`^it prints the initial configuration prompt$`, func() error {
+		expected := "Git Town needs to be configured"
+		if !fs.activeScenarioState.lastRunResult.OutputContainsText(expected) {
+			return fmt.Errorf("text not found:\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expected, fs.activeScenarioState.lastRunResult.Output())
+		}
+		return nil
+	})
 }
