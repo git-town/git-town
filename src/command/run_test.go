@@ -21,7 +21,8 @@ func TestCommand_Run(t *testing.T) {
 func TestCommand_Run_UnknownExecutable(t *testing.T) {
 	_, err := command.Run("zonk")
 	assert.Error(t, err)
-	assert.True(t, errors.Is(err, exec.ErrNotFound))
+	var execError *exec.Error
+	assert.True(t, errors.As(err, &execError))
 }
 
 func TestCommand_Run_ExitCode(t *testing.T) {

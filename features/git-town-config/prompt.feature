@@ -9,15 +9,14 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
     Given I haven't configured Git Town yet
 
 
-  @ignore-run-error
   Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
-    When I run `<COMMAND>` and answer the prompts:
+    When I run "<COMMAND>" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
       | Please specify perennial branches          | [ENTER] |
     Then it prints the initial configuration prompt
     And the main branch is now configured as "main"
-    And my repo is configured with no perennial branches
+    And my repo is now configured with no perennial branches
 
     Examples:
       | COMMAND                   |

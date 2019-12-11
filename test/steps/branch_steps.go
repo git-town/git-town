@@ -10,6 +10,7 @@ import (
 )
 
 // BranchSteps defines Cucumber step implementations around Git branches.
+// nolint:funlen
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *gherkin.DataTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
@@ -50,6 +51,22 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
 	})
 
+	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateChildFeatureBranch(childBranch, parentBranch)
+		if err != nil {
+			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
+		}
+		return nil
+	})
+
+	suite.Step(`^my repository has the feature branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch1)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2)
+	})
+
 	suite.Step(`^my repository has the perennial branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
@@ -60,5 +77,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("cannot push branch %q: %w", branch1, err)
 		}
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
+	})
+
+	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().AddToPerennialBranches(name)
+		return nil
 	})
 }
