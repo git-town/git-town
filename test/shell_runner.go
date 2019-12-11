@@ -90,13 +90,20 @@ func (runner *ShellRunner) RunMany(commands [][]string) error {
 // RunString runs the given command (including possible arguments)
 // in this ShellRunner's directory.
 // Shell overrides will be used and removed when done.
-func (runner *ShellRunner) RunString(command string) (result *command.Result, err error) {
-	parts, err := shellquote.Split(command)
+func (runner *ShellRunner) RunString(fullCmd string) (*command.Result, error) {
+	return runner.RunStringWith(fullCmd, command.Options{})
+}
+
+// RunStringWith runs the given command (including possible arguments)
+// in this ShellRunner's directory using the given options.
+// Shell overrides will be used and removed when done.
+func (runner *ShellRunner) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
+	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, fmt.Errorf("cannot split command %q: %w", command, err)
+		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
-	command, args := parts[0], parts[1:]
-	return runner.Run(command, args...)
+	cmd, args := parts[0], parts[1:]
+	return runner.RunWith(opts, cmd, args...)
 }
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
@@ -134,6 +141,9 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 	if Debug {
 		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())
+		if err != nil {
+			fmt.Printf("ERROR: %v\n", err)
+		}
 	}
 	return result, err
 }

@@ -1,10 +1,12 @@
 package command
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 // Options defines optional arguments for ShellRunner.RunWith().
@@ -21,7 +23,15 @@ type Options struct {
 	// Essential indicates whether this is an essential command.
 	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
 	Essential bool
+
+	// Input contains the user input to enter into the running command.
+	// Input is written to the subprocess one element at a time,
+	// with a delay defined by command.InputDelay in between.
+	Input []string // input into the subprocess
 }
+
+// InputDelay defines how long to wait before writing the next input string into the subprocess.
+const InputDelay = 50 * time.Millisecond
 
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
@@ -59,15 +69,36 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 	if opts.Env != nil {
 		subProcess.Env = opts.Env
 	}
-	output, err := subProcess.CombinedOutput()
+	var output bytes.Buffer
+	subProcess.Stdout = &output
+	subProcess.Stderr = &output
+	result := Result{command: cmd, args: args}
+	input, err := subProcess.StdinPipe()
+	if err != nil {
+		return &result, err
+	}
+	err = subProcess.Start()
+	if err != nil {
+		return &result, fmt.Errorf("can't start subprocess '%s %s': %w", cmd, strings.Join(args, " "), err)
+	}
+	for _, userInput := range opts.Input {
+		// Here we simply wait for some time until the subProcess needs the input.
+		// Capturing the output and scanning for the actual content needed
+		// would introduce substantial amounts of multi-threaded complexity
+		// for not enough gains.
+		// https://github.com/Originate/go-execplus could help make this more robust.
+		time.Sleep(InputDelay)
+		_, err := input.Write([]byte(userInput))
+		if err != nil {
+			result.output = output.String()
+			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
+		}
+	}
+	err = subProcess.Wait()
 	if opts.Essential && err != nil {
 		fmt.Printf("\n\nError running '%s %s' in %q: %s", cmd, strings.Join(args, " "), subProcess.Dir, err)
 		os.Exit(1)
 	}
-	result := Result{
-		command: cmd,
-		args:    args,
-		output:  string(output),
-	}
+	result.output = output.String()
 	return &result, err
 }
