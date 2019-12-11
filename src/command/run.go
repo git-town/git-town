@@ -91,7 +91,7 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
 			result.output = output.String()
-			return &result, errors.Wrapf(err, "can't write %q to subprocess '%s %s'", userInput, cmd, strings.Join(args, " "))
+			return &result, fmt.Errorf("can't write %q to subprocess '%s %s': %w", userInput, cmd, strings.Join(args, " "), err)
 		}
 	}
 	err = subProcess.Wait()
