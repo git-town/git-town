@@ -7,7 +7,6 @@ import (
 	"path"
 
 	"github.com/Originate/git-town/src/util"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -29,14 +28,14 @@ func installFishAutocompletion() error {
 	filename := path.Join(folderName, "git.fish")
 	err := os.MkdirAll(path.Dir(filename), 0700)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create folder %q", folderName)
+		return fmt.Errorf("cannot create folder %q: %w", folderName, err)
 	}
 	if util.DoesFileExist(filename) {
 		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
 	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0644)
 	if err != nil {
-		return errors.Wrapf(err, "cannot write file %q", filename)
+		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}
 	fmt.Println("Git autocompletion for Fish shell installed")
 	return nil

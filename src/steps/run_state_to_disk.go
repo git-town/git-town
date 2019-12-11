@@ -2,6 +2,7 @@ package steps
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
-	"github.com/pkg/errors"
 )
 
 // LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
@@ -19,11 +19,11 @@ func LoadPreviousRunState() (result *RunState, err error) {
 		var runState RunState
 		content, err := ioutil.ReadFile(filename)
 		if err != nil {
-			return result, errors.Wrapf(err, "cannot read file %q", filename)
+			return result, fmt.Errorf("cannot read file %q: %w", filename, err)
 		}
 		err = json.Unmarshal(content, &runState)
 		if err != nil {
-			return result, errors.Wrapf(err, "cannot parse content of file %q", filename)
+			return result, fmt.Errorf("cannot parse content of file %q: %w", filename, err)
 		}
 		return &runState, nil
 	}
@@ -36,7 +36,7 @@ func DeletePreviousRunState() error {
 	if util.DoesFileExist(filename) {
 		err := os.Remove(filename)
 		if err != nil {
-			return errors.Wrapf(err, "cannot delete file %q", filename)
+			return fmt.Errorf("cannot delete file %q: %w", filename, err)
 		}
 	}
 	return nil
@@ -46,12 +46,12 @@ func DeletePreviousRunState() error {
 func SaveRunState(runState *RunState) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
-		return errors.Wrap(err, "cannot encode run-state")
+		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
 	filename := getRunResultFilename()
 	err = ioutil.WriteFile(filename, content, 0644)
 	if err != nil {
-		return errors.Wrapf(err, "cannot write file %q", filename)
+		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}
 	return nil
 }

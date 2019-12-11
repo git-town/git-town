@@ -5,7 +5,6 @@ import (
 
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
-	"github.com/pkg/errors"
 )
 
 // Commit describes a Git commit.
@@ -38,7 +37,7 @@ func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
 		for i, cell := range row.Cells {
 			err := commit.set(columnNames[i], cell.Value)
 			if err != nil {
-				return result, errors.Wrapf(err, "cannot set property %q to %q", columnNames[i], cell.Value)
+				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[i], cell.Value, err)
 			}
 		}
 		result = append(result, commit)
