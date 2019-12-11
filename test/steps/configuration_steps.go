@@ -15,10 +15,10 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		outcome, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "config", "--local", "--get-regex", "git-town")
 		exitError := err.(*exec.ExitError)
 		if exitError.ExitCode() != 1 {
-			return errors.New("git config should return exit code 1 if no matching configuration found")
+			return fmt.Errorf("git config should return exit code 1 if no matching configuration found")
 		}
 		if outcome.OutputSanitized() != "" {
-			return errors.Wrapf(err, "expected no local Git Town configuration but got %q", outcome.Output())
+			return fmt.Errorf("expected no local Git Town configuration but got %q: %w", outcome.Output(), err)
 		}
 		return nil
 	})

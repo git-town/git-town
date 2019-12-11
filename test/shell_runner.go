@@ -100,7 +100,7 @@ func (runner *ShellRunner) RunString(fullCmd string) (*command.Result, error) {
 func (runner *ShellRunner) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, fmt.Errorf("cannot split command %q: %w", command, err)
+		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return runner.RunWith(opts, cmd, args...)

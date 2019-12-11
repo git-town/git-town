@@ -165,11 +165,11 @@ func (repo *GitRepository) CreateBranch(name string) error {
 func (repo *GitRepository) CreateChildFeatureBranch(name string, parentBranch string) error {
 	err := repo.CheckoutBranch(parentBranch)
 	if err != nil {
-		return errors.Wrapf(err, "cannot checkout parent branch %q", parentBranch)
+		return fmt.Errorf("cannot checkout parent branch %q: %w", parentBranch, err)
 	}
 	outcome, err := repo.Run("git", "town", "append", name)
 	if err != nil {
-		return errors.Wrapf(err, "cannot create child branch %q: %v", name, outcome)
+		return fmt.Errorf("cannot create child branch %q: %w\n%v", name, err, outcome)
 	}
 	return nil
 }

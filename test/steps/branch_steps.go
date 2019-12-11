@@ -54,7 +54,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
-			return errors.Wrapf(err, "cannot create feature branch %q", childBranch)
+			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
 		return nil
 	})
