@@ -14,13 +14,6 @@
   version = "v0.7.13"
 
 [[projects]]
-  digest = "1:2a1c007a3aa4b3efd5e90eb321cf405e62bec9f0a4f5e81b0a175d9d45e1993a"
-  name = "github.com/Originate/exit"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "8f9dec5ec964dc363624e001efe5e4018f05313e"
-
-[[projects]]
   branch = "master"
   digest = "1:66a87baf099221f7deecf7a3ee301e437d9d93ef3be0bc92645e71400c2e9d31"
   name = "github.com/acarl005/stripansi"
@@ -231,7 +224,6 @@
   input-imports = [
     "github.com/DATA-DOG/godog",
     "github.com/DATA-DOG/godog/gherkin",
-    "github.com/Originate/exit",
     "github.com/acarl005/stripansi",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
