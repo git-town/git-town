@@ -6,7 +6,6 @@ import (
 	"path"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/pkg/errors"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -27,7 +26,7 @@ type GitEnvironment struct {
 func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment, error) {
 	err := CopyDirectory(original.Dir, dir)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot clone GitEnvironment %q to folder %q", original.Dir, dir)
+		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	result := GitEnvironment{
 		Dir:           dir,
@@ -51,7 +50,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the folder
 	err = os.MkdirAll(dir, 0744)
 	if err != nil {
-		return gitEnv, errors.Wrapf(err, "cannot create folder %q for Git environment", dir)
+		return gitEnv, fmt.Errorf("cannot create folder %q for Git environment: %w", dir, err)
 	}
 
 	// create the GitEnvironment
@@ -60,7 +59,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the origin repo
 	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
 	if err != nil {
-		return gitEnv, errors.Wrapf(err, "cannot initialize origin directory at %q", gitEnv.originRepoPath())
+		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
 	err = gitEnv.OriginRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
@@ -74,7 +73,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// clone the "developer" repo
 	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir)
 	if err != nil {
-		return gitEnv, errors.Wrapf(err, "cannot clone developer repo %q from origin %q", gitEnv.originRepoPath(), gitEnv.developerRepoPath())
+		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
 	err = gitEnv.DeveloperRepo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
@@ -91,7 +90,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	commits, err := FromGherkinTable(table)
 	if err != nil {
-		return errors.Wrap(err, "cannot parse Gherkin table")
+		return fmt.Errorf("cannot parse Gherkin table: %w", err)
 	}
 	for _, commit := range commits {
 		var err error
@@ -102,11 +101,11 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 			case "local, remote":
 				err = env.DeveloperRepo.CreateCommit(commit)
 				if err != nil {
-					return errors.Wrap(err, "cannot create local commit")
+					return fmt.Errorf("cannot create local commit: %w", err)
 				}
 				err = env.DeveloperRepo.PushBranch(commit.Branch)
 				if err != nil {
-					return errors.Wrapf(err, "cannot push branch %q after creating commit", commit.Branch)
+					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
 				// The developer repo has created and pushed the commit to origin already,
 				// so all we need to do here is register the commit in the list of existing commits in origin.
@@ -124,7 +123,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
 	err = env.OriginRepo.CheckoutBranch("master")
 	if err != nil {
-		return errors.Wrap(err, "cannot change origin repo back to master")
+		return fmt.Errorf("cannot change origin repo back to master: %w", err)
 	}
 	return nil
 }
@@ -135,7 +134,7 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 
 	localCommits, err := env.DeveloperRepo.Commits(fields)
 	if err != nil {
-		return result, errors.Wrap(err, "cannot determine commits in the developer repo")
+		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	for _, localCommit := range localCommits {
 		builder.Add(localCommit, "local")
@@ -143,7 +142,7 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 
 	remoteCommits, err := env.OriginRepo.Commits(fields)
 	if err != nil {
-		return result, errors.Wrap(err, "cannot determine commits in the origin repo")
+		return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 	}
 	for _, remoteCommit := range remoteCommits {
 		builder.Add(remoteCommit, "remote")
