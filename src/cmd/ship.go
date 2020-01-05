@@ -140,7 +140,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
-		if git.Config().GetDeleteRemoteBranches() {
+		if git.Config().ShouldShipDeleteRemoteBranch() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
 	}

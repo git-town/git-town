@@ -160,15 +160,6 @@ func (c *Configuration) GetCodeHostingOriginHostname() string {
 	return c.getLocalConfigValue("git-town.code-hosting-origin-hostname")
 }
 
-// GetDeleteRemoteBranches indicates whether to delete the remote branch after shipping.
-func (c *Configuration) GetDeleteRemoteBranches() bool {
-	override := c.getLocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
-	if override == "" {
-		return true
-	}
-	return util.StringToBool(override)
-}
-
 // getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
 func (c *Configuration) getGlobalConfigValue(key string) string {
 	return c.globalConfigCache[key]
@@ -427,6 +418,15 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 func (c *Configuration) ShouldNewBranchPushGlobal() bool {
 	config := c.getGlobalConfigValue("git-town.new-branch-push-flag")
 	return config == "true"
+}
+
+// ShouldShipDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
+func (c *Configuration) ShouldShipDeleteRemoteBranch() bool {
+	override := c.getLocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	if override == "" {
+		return true
+	}
+	return util.StringToBool(override)
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
