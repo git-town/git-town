@@ -1,6 +1,6 @@
 Feature: Skip deleting the remote branch when shipping
 
-    When shipping feature branches
+  When shipping feature branches
   I want to be able to tell Git Town to not delete the remote branch
   So that I can use GitHub's feature to automatically delete head branches of pull requests.
 
