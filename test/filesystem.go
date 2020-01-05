@@ -18,7 +18,6 @@ import (
 func CopyDirectory(src, dst string) error {
 	return filepath.Walk(src, func(srcPath string, fi os.FileInfo, e error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
-
 		// handle directory
 		if fi.IsDir() {
 			err := os.Mkdir(dstPath, fi.Mode())
@@ -27,7 +26,6 @@ func CopyDirectory(src, dst string) error {
 			}
 			return nil
 		}
-
 		// handle file
 		sourceContent, err := os.Open(srcPath)
 		if err != nil {
