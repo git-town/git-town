@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/Originate/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -24,9 +24,9 @@ var installFishAutocompletionCommand = &cobra.Command{
 }
 
 func installFishAutocompletion() error {
-	folderName := path.Join(os.Getenv("HOME"), ".config", "fish", "completions")
-	filename := path.Join(folderName, "git.fish")
-	err := os.MkdirAll(path.Dir(filename), 0700)
+	folderName := filepath.Join(os.Getenv("HOME"), ".config", "fish", "completions")
+	filename := filepath.Join(folderName, "git.fish")
+	err := os.MkdirAll(filepath.Dir(filename), 0700)
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %w", folderName, err)
 	}

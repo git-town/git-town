@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"path"
+	"path/filepath"
 
 	"github.com/Originate/git-town/test/helpers"
 	"github.com/iancoleman/strcase"
@@ -30,7 +30,7 @@ func NewGitManager(baseDir string) *GitManager {
 // that makes cloning new GitEnvironment instances faster.
 func (manager *GitManager) CreateMemoizedEnvironment() error {
 	var err error
-	manager.memoized, err = NewStandardGitEnvironment(path.Join(manager.dir, "memoized"))
+	manager.memoized, err = NewStandardGitEnvironment(filepath.Join(manager.dir, "memoized"))
 	if err != nil {
 		return fmt.Errorf("cannot create memoized environment: %w", err)
 	}
@@ -40,6 +40,6 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
 	envDirName := strcase.ToSnake(scenarioName) + "_" + helpers.UniqueString()
-	envPath := path.Join(manager.dir, envDirName)
+	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)
 }

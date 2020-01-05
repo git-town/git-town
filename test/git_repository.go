@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"sort"
 	"strings"
 
@@ -207,7 +207,7 @@ func (repo *GitRepository) CreateFeatureBranch(name string) error {
 
 // CreateFile creates a file with the given name and content in this repository.
 func (repo *GitRepository) CreateFile(name, content string) error {
-	err := ioutil.WriteFile(path.Join(repo.Dir, name), []byte(content), 0744)
+	err := ioutil.WriteFile(filepath.Join(repo.Dir, name), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}
@@ -261,7 +261,7 @@ func (repo *GitRepository) FreshConfiguration() *git.Configuration {
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (repo *GitRepository) HasFile(name, content string) (result bool, err error) {
-	rawContent, err := ioutil.ReadFile(path.Join(repo.Dir, name))
+	rawContent, err := ioutil.ReadFile(filepath.Join(repo.Dir, name))
 	if err != nil {
 		return result, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}

@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/DATA-DOG/godog/gherkin"
 )
@@ -30,8 +30,8 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	result := GitEnvironment{
 		Dir:           dir,
-		DeveloperRepo: NewGitRepository(path.Join(dir, "developer"), dir),
-		OriginRepo:    NewGitRepository(path.Join(dir, "origin"), dir),
+		DeveloperRepo: NewGitRepository(filepath.Join(dir, "developer"), dir),
+		OriginRepo:    NewGitRepository(filepath.Join(dir, "origin"), dir),
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -153,12 +153,12 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 
 // developerRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) developerRepoPath() string {
-	return path.Join(env.Dir, "developer")
+	return filepath.Join(env.Dir, "developer")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
-	return path.Join(env.Dir, "origin")
+	return filepath.Join(env.Dir, "origin")
 }
 
 // Remove deletes all files used by this GitEnvironment from disk.

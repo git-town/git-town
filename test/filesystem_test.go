@@ -1,7 +1,7 @@
 package test
 
 import (
-	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,8 +9,8 @@ import (
 
 func TestCopyDirectory(t *testing.T) {
 	tmpDir := createTempDir(t)
-	srcDir := path.Join(tmpDir, "src")
-	dstDir := path.Join(tmpDir, "dst")
+	srcDir := filepath.Join(tmpDir, "src")
+	dstDir := filepath.Join(tmpDir, "dst")
 	createFile(t, srcDir, "one.txt")
 	createFile(t, srcDir, "f1/a.txt")
 	createFile(t, srcDir, "f2/b.txt")
@@ -25,8 +25,8 @@ func TestCopyDirectory(t *testing.T) {
 
 func TestCopyDirectory_GitRepo(t *testing.T) {
 	tmpDir := createTempDir(t)
-	srcDir := path.Join(tmpDir, "src")
-	dstDir := path.Join(tmpDir, "dst")
+	srcDir := filepath.Join(tmpDir, "src")
+	dstDir := filepath.Join(tmpDir, "dst")
 	_, err := InitGitRepository(srcDir, tmpDir)
 	assert.Nil(t, err)
 	createFile(t, srcDir, "one.txt")
