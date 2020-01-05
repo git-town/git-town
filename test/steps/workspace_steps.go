@@ -3,7 +3,7 @@ package steps
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/DATA-DOG/godog"
 )
@@ -15,7 +15,7 @@ func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
-		os.RemoveAll(path.Join(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir, ".git"))
+		os.RemoveAll(filepath.Join(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir, ".git"))
 		return nil
 	})
 
