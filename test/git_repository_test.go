@@ -2,7 +2,7 @@ package test
 
 import (
 	"io/ioutil"
-	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,10 +10,10 @@ import (
 
 func TestCloneGitRepository(t *testing.T) {
 	rootDir := createTempDir(t)
-	originPath := path.Join(rootDir, "origin")
+	originPath := filepath.Join(rootDir, "origin")
 	_, err := InitGitRepository(originPath, rootDir)
 	assert.Nil(t, err, "cannot initialze origin Git repository")
-	clonedPath := path.Join(rootDir, "cloned")
+	clonedPath := filepath.Join(rootDir, "cloned")
 	_, err = CloneGitRepository(originPath, clonedPath, rootDir)
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
@@ -45,7 +45,7 @@ func TestGitRepository_CreateFile(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
-	content, err := ioutil.ReadFile(path.Join(repo.Dir, "filename"))
+	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "filename"))
 	assert.Nil(t, err, "cannot read file")
 	assert.Equal(t, "content", string(content))
 }

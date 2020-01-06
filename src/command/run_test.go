@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/Originate/git-town/src/command"
@@ -35,10 +35,10 @@ func TestCommand_Run_ExitCode(t *testing.T) {
 func TestCommand_RunInDir(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err)
-	dirPath := path.Join(dir, "mydir")
+	dirPath := filepath.Join(dir, "mydir")
 	err = os.Mkdir(dirPath, 0744)
 	assert.Nil(t, err)
-	err = ioutil.WriteFile(path.Join(dirPath, "one"), []byte{}, 0744)
+	err = ioutil.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0744)
 	assert.Nil(t, err)
 	res, err := command.RunInDir(dirPath, "ls", "-1")
 	assert.Nil(t, err)

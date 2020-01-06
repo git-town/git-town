@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"regexp"
 
 	"github.com/Originate/git-town/src/git"
@@ -59,5 +59,5 @@ func SaveRunState(runState *RunState) error {
 func getRunResultFilename() string {
 	replaceCharacterRegexp := regexp.MustCompile("[[:^alnum:]]")
 	directory := replaceCharacterRegexp.ReplaceAllString(git.GetRootDirectory(), "-")
-	return path.Join(os.TempDir(), directory)
+	return filepath.Join(os.TempDir(), directory)
 }
