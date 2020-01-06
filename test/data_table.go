@@ -4,9 +4,8 @@ import (
 	"fmt"
 
 	"github.com/DATA-DOG/godog/gherkin"
-	"github.com/sergi/go-diff/diffmatchpatch"
-
 	"github.com/Originate/git-town/test/helpers"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
