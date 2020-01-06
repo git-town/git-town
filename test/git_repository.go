@@ -48,7 +48,6 @@ func InitGitRepository(workingDir string, homeDir string) (GitRepository, error)
 	if err != nil {
 		return GitRepository{}, fmt.Errorf("cannot create directory %q: %w", workingDir, err)
 	}
-
 	// initialize the repo in the folder
 	result := NewGitRepository(workingDir, homeDir)
 	outcome, err := result.Run("git", "init")

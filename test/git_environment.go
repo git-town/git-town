@@ -52,10 +52,8 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create folder %q for Git environment: %w", dir, err)
 	}
-
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
-
 	// create the origin repo
 	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
 	if err != nil {
@@ -69,7 +67,6 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, err
 	}
-
 	// clone the "developer" repo
 	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir)
 	if err != nil {
@@ -131,7 +128,6 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
-
 	localCommits, err := env.DeveloperRepo.Commits(fields)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
@@ -139,7 +135,6 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	for _, localCommit := range localCommits {
 		builder.Add(localCommit, "local")
 	}
-
 	remoteCommits, err := env.OriginRepo.Commits(fields)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
@@ -147,7 +142,6 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	for _, remoteCommit := range remoteCommits {
 		builder.Add(remoteCommit, "remote")
 	}
-
 	return builder.Table(fields), nil
 }
 

@@ -46,14 +46,12 @@ func NewCommitTableBuilder() CommitTableBuilder {
 // Add registers the given commit from the given location into this table.
 func (builder *CommitTableBuilder) Add(commit Commit, location string) {
 	builder.commits[commit.SHA] = commit
-
 	commitsInBranch, exists := builder.commitsInBranch[commit.Branch]
 	if exists {
 		builder.commitsInBranch[commit.Branch] = commitsInBranch.Add(commit.SHA)
 	} else {
 		builder.commitsInBranch[commit.Branch] = helpers.NewOrderedStringSet(commit.SHA)
 	}
-
 	locationKey := commit.SHA + commit.Branch
 	locations, exists := builder.locations[locationKey]
 	if exists {

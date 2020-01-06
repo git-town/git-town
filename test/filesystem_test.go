@@ -14,9 +14,7 @@ func TestCopyDirectory(t *testing.T) {
 	createFile(t, srcDir, "one.txt")
 	createFile(t, srcDir, "f1/a.txt")
 	createFile(t, srcDir, "f2/b.txt")
-
 	err := CopyDirectory(srcDir, dstDir)
-
 	assert.Nil(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExists(t, dstDir, "f1/a.txt")
@@ -30,9 +28,7 @@ func TestCopyDirectory_GitRepo(t *testing.T) {
 	_, err := InitGitRepository(srcDir, tmpDir)
 	assert.Nil(t, err)
 	createFile(t, srcDir, "one.txt")
-
 	err = CopyDirectory(srcDir, dstDir)
-
 	assert.Nil(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
