@@ -112,14 +112,12 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 	if opts.Env == nil {
 		opts.Env = os.Environ()
 	}
-
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range opts.Env {
 		if strings.HasPrefix(opts.Env[i], "HOME=") {
 			opts.Env[i] = fmt.Sprintf("HOME=%s", runner.homeDir)
 		}
 	}
-
 	// enable shell overrides
 	if runner.hasTempShellOverrides() {
 		for i := range opts.Env {
@@ -132,10 +130,8 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 		}
 		defer runner.RemoveTempShellOverrides()
 	}
-
 	// set the working dir
 	opts.Dir = runner.workingDir
-
 	// run the command inside the custom environment
 	result, err = command.RunWith(opts, cmd, args...)
 	if Debug {
