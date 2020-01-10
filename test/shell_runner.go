@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
@@ -112,14 +112,12 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 	if opts.Env == nil {
 		opts.Env = os.Environ()
 	}
-
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range opts.Env {
 		if strings.HasPrefix(opts.Env[i], "HOME=") {
 			opts.Env[i] = fmt.Sprintf("HOME=%s", runner.homeDir)
 		}
 	}
-
 	// enable shell overrides
 	if runner.hasTempShellOverrides() {
 		for i := range opts.Env {
@@ -132,14 +130,12 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 		}
 		defer runner.RemoveTempShellOverrides()
 	}
-
 	// set the working dir
 	opts.Dir = runner.workingDir
-
 	// run the command inside the custom environment
 	result, err = command.RunWith(opts, cmd, args...)
 	if Debug {
-		fmt.Println(path.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
+		fmt.Println(filepath.Base(runner.workingDir), ">", cmd, strings.Join(args, " "))
 		fmt.Println(result.Output())
 		if err != nil {
 			fmt.Printf("ERROR: %v\n", err)
@@ -150,5 +146,5 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 
 // tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
 func (runner *ShellRunner) tempShellOverrideFilePath(shellOverrideFilename string) string {
-	return path.Join(runner.tempShellOverridesDir, shellOverrideFilename)
+	return filepath.Join(runner.tempShellOverridesDir, shellOverrideFilename)
 }

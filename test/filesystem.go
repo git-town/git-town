@@ -5,7 +5,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -18,7 +17,6 @@ import (
 func CopyDirectory(src, dst string) error {
 	return filepath.Walk(src, func(srcPath string, fi os.FileInfo, e error) error {
 		dstPath := strings.Replace(srcPath, src, dst, 1)
-
 		// handle directory
 		if fi.IsDir() {
 			err := os.Mkdir(dstPath, fi.Mode())
@@ -27,7 +25,6 @@ func CopyDirectory(src, dst string) error {
 			}
 			return nil
 		}
-
 		// handle file
 		sourceContent, err := os.Open(srcPath)
 		if err != nil {
@@ -52,8 +49,8 @@ func CopyDirectory(src, dst string) error {
 
 // createFile creates a file with the given filename in the given directory.
 func createFile(t *testing.T, dir, filename string) {
-	filePath := path.Join(dir, filename)
-	err := os.MkdirAll(path.Dir(filePath), 0744)
+	filePath := filepath.Join(dir, filename)
+	err := os.MkdirAll(filepath.Dir(filePath), 0744)
 	assert.Nil(t, err)
 	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0644)
 	assert.Nil(t, err)

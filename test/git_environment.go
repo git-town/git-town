@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/DATA-DOG/godog/gherkin"
 )
@@ -30,8 +30,8 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	result := GitEnvironment{
 		Dir:           dir,
-		DeveloperRepo: NewGitRepository(path.Join(dir, "developer"), dir),
-		OriginRepo:    NewGitRepository(path.Join(dir, "origin"), dir),
+		DeveloperRepo: NewGitRepository(filepath.Join(dir, "developer"), dir),
+		OriginRepo:    NewGitRepository(filepath.Join(dir, "origin"), dir),
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -52,10 +52,8 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot create folder %q for Git environment: %w", dir, err)
 	}
-
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
-
 	// create the origin repo
 	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
 	if err != nil {
@@ -69,7 +67,6 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, err
 	}
-
 	// clone the "developer" repo
 	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir)
 	if err != nil {
@@ -131,7 +128,6 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
-
 	localCommits, err := env.DeveloperRepo.Commits(fields)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
@@ -139,7 +135,6 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	for _, localCommit := range localCommits {
 		builder.Add(localCommit, "local")
 	}
-
 	remoteCommits, err := env.OriginRepo.Commits(fields)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
@@ -147,18 +142,17 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	for _, remoteCommit := range remoteCommits {
 		builder.Add(remoteCommit, "remote")
 	}
-
 	return builder.Table(fields), nil
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) developerRepoPath() string {
-	return path.Join(env.Dir, "developer")
+	return filepath.Join(env.Dir, "developer")
 }
 
 // originRepoPath provides the full path to the Git repository with the given name.
 func (env GitEnvironment) originRepoPath() string {
-	return path.Join(env.Dir, "origin")
+	return filepath.Join(env.Dir, "origin")
 }
 
 // Remove deletes all files used by this GitEnvironment from disk.
