@@ -16,7 +16,7 @@ import (
 )
 
 type shipConfig struct {
-	BranchToShip  string // the name of the branch to ship
+	BranchToShip  string
 	InitialBranch string // the name of the branch that was checked out when running this command
 }
 
