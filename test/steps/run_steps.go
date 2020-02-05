@@ -47,7 +47,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 		fmt.Println(diff)
 		if errorCount != 0 {
-			return fmt.Errorf("Mismatching commands run, see diff above")
+			return fmt.Errorf("mismatching commands run, see diff above")
 		}
 		return nil
 	})

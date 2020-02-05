@@ -74,11 +74,12 @@ func (table *DataTable) Expand(rootDir string) (result DataTable) {
 		for col := range table.cells[row] {
 			cell := table.cells[row][col]
 			if strings.Contains(cell, "{{") {
-				if strings.Contains(cell, "{{ root folder }}") {
+				switch {
+				case strings.Contains(cell, "{{ root folder }}"):
 					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
-				} else if strings.Contains(cell, `{{ folder "new_folder" }}`) {
+				case strings.Contains(cell, `{{ folder "new_folder" }}`):
 					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
-				} else {
+				default:
 					panic("DataTable.Expand: unknown template expression: " + cell)
 				}
 			}

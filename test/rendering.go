@@ -17,11 +17,12 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.Dat
 	lastBranch := ""
 	for _, cmd := range commands {
 		if tableHasBranches {
-			if cmd.Branch == lastBranch {
+			switch {
+			case cmd.Branch == lastBranch:
 				result.AddRow("", cmd.Command)
-			} else if cmd.Branch == "" {
+			case cmd.Branch == "":
 				result.AddRow("<none>", cmd.Command)
-			} else {
+			default:
 				result.AddRow(cmd.Branch, cmd.Command)
 			}
 		} else {
