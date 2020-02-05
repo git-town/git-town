@@ -44,9 +44,9 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		dataTable := test.FromGherkin(input)
 		expanded := dataTable.Expand(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
 		diff, errorCount := table.EqualDataTable(expanded)
-		fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
-		fmt.Println(diff)
 		if errorCount != 0 {
+			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
+			fmt.Println(diff)
 			return fmt.Errorf("mismatching commands run, see diff above")
 		}
 		return nil
