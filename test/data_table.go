@@ -11,7 +11,6 @@ import (
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
-// The zero value is an empty DataTable.
 type DataTable struct {
 	// cells contains table data organized as rows and columns
 	cells [][]string
