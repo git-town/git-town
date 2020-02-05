@@ -19,6 +19,8 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.Dat
 		if tableHasBranches {
 			if cmd.Branch == lastBranch {
 				result.AddRow("", cmd.Command)
+			} else if cmd.Branch == "" {
+				result.AddRow("<none>", cmd.Command)
 			} else {
 				result.AddRow(cmd.Branch, cmd.Command)
 			}

@@ -11,6 +11,7 @@ import (
 )
 
 // DataTable allows comparing user-generated data with Gherkin tables.
+// The zero value is an empty DataTable.
 type DataTable struct {
 	// cells contains table data organized as rows and columns
 	cells [][]string
@@ -45,20 +46,25 @@ func (table *DataTable) columns() (result [][]string) {
 	return result
 }
 
-// Equal indicates whether this DataTable instance is equal to the given Gherkin table.
-// If both are equal it returns an empty string,
-// otherwise a diff printable on the console.
-func (table *DataTable) Equal(other *gherkin.DataTable) (diff string, errorCount int) {
-	if len(table.cells) == 0 {
-		return "your data is empty", 1
-	}
-	gherkinTable := FromGherkin(other)
+// EqualDataTable compares this DataTable instance to the given DataTable.
+// If both are equal it returns an empty string, otherwise a diff printable on the console.
+func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount int) {
 	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(gherkinTable.String(), table.String(), false)
+	diffs := dmp.DiffMain(other.String(), table.String(), false)
 	if len(diffs) == 1 && diffs[0].Type == 0 {
 		return "", 0
 	}
 	return dmp.DiffPrettyText(diffs), len(diffs)
+}
+
+// EqualGherkin compares this DataTable instance to the given Gherkin table.
+// If both are equal it returns an empty string, otherwise a diff printable on the console.
+func (table *DataTable) EqualGherkin(other *gherkin.DataTable) (diff string, errorCount int) {
+	if len(table.cells) == 0 {
+		return "your data is empty", 1
+	}
+	dataTable := FromGherkin(other)
+	return table.EqualDataTable(dataTable)
 }
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
@@ -90,7 +96,6 @@ func (table *DataTable) String() (result string) {
 	for _, width := range table.widths() {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
-
 	// render the table using this format
 	for row := range table.cells {
 		for col := range table.cells[row] {
