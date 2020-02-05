@@ -11,7 +11,13 @@ import (
 // WorkspaceSteps defines Cucumber step implementations around Git workspace management.
 func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my workspace has an uncommitted file$`, func() error {
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile("uncommitted file", "uncommitted content")
+		fs.activeScenarioState.uncommittedFileName = "uncommitted file"
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
+	})
+
+	suite.Step(`^my workspace has an uncommitted file with name: "([^"]+)"$`, func(filename string) error {
+		fs.activeScenarioState.uncommittedFileName = filename
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
 	})
 
 	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
@@ -20,7 +26,7 @@ func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my workspace still contains my uncommitted file$`, func() error {
-		hasFile, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasFile("uncommitted file", "uncommitted content")
+		hasFile, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
 		if err != nil {
 			return fmt.Errorf("cannot determine if workspace contains uncommitted file: %w", err)
 		}
