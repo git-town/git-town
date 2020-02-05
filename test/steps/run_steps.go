@@ -37,7 +37,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		diff, errorCount := table.Equal(input)
-		if errorCount > 0 {
+		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching commands run, see diff above")
