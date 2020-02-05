@@ -2,6 +2,8 @@ package test
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
 
 	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
@@ -57,6 +59,28 @@ func (table *DataTable) Equal(other *gherkin.DataTable) (diff string, errorCount
 		return "", 0
 	}
 	return dmp.DiffPrettyText(diffs), len(diffs)
+}
+
+// Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
+func (table *DataTable) Expand(rootDir string) (result DataTable) {
+	for row := range table.cells {
+		cells := []string{}
+		for col := range table.cells[row] {
+			cell := table.cells[row][col]
+			if strings.Contains(cell, "{{") {
+				if strings.Contains(cell, "{{ root folder }}") {
+					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
+				} else if strings.Contains(cell, `{{ folder "new_folder" }}`) {
+					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
+				} else {
+					panic("DataTable.Expand: unknown template expression: " + cell)
+				}
+			}
+			cells = append(cells, cell)
+		}
+		result.AddRow(cells...)
+	}
+	return result
 }
 
 // String provides the data in this DataTable instance formatted in Gherkin table format.
