@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.

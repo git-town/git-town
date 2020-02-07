@@ -6,9 +6,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/DATA-DOG/godog"
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test"
+	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.

@@ -13,8 +13,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/DATA-DOG/godog/colors"
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/colors"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // some snippet formatting regexps
@@ -107,6 +107,14 @@ type Formatter interface {
 	Summary()
 }
 
+// ConcurrentFormatter is an interface for a Concurrent
+// version of the Formatter interface.
+type ConcurrentFormatter interface {
+	Formatter
+	Copy(ConcurrentFormatter)
+	Sync(ConcurrentFormatter)
+}
+
 // FormatterFunc builds a formatter with given
 // suite name and io.Writer to record output
 type FormatterFunc func(string, io.Writer) Formatter
@@ -156,6 +164,7 @@ type stepResult struct {
 	feature *feature
 	owner   interface{}
 	step    *gherkin.Step
+	time    time.Time
 	def     *StepDef
 	err     error
 }
@@ -213,6 +222,8 @@ func (f stepResult) scenarioLine() string {
 }
 
 type basefmt struct {
+	suiteName string
+
 	out    io.Writer
 	owner  interface{}
 	indent int
@@ -228,10 +239,28 @@ type basefmt struct {
 
 func (f *basefmt) Node(n interface{}) {
 	switch t := n.(type) {
-	case *gherkin.TableRow:
-		f.owner = t
 	case *gherkin.Scenario:
 		f.owner = t
+		feature := f.features[len(f.features)-1]
+		feature.Scenarios = append(feature.Scenarios, &scenario{Name: t.Name, time: timeNowFunc()})
+	case *gherkin.ScenarioOutline:
+		feature := f.features[len(f.features)-1]
+		feature.Scenarios = append(feature.Scenarios, &scenario{OutlineName: t.Name})
+	case *gherkin.TableRow:
+		f.owner = t
+
+		feature := f.features[len(f.features)-1]
+		lastExample := feature.Scenarios[len(feature.Scenarios)-1]
+
+		newExample := scenario{OutlineName: lastExample.OutlineName, ExampleNo: lastExample.ExampleNo + 1, time: timeNowFunc()}
+		newExample.Name = fmt.Sprintf("%s #%d", newExample.OutlineName, newExample.ExampleNo)
+
+		const firstExample = 1
+		if newExample.ExampleNo == firstExample {
+			feature.Scenarios[len(feature.Scenarios)-1] = &newExample
+		} else {
+			feature.Scenarios = append(feature.Scenarios, &newExample)
+		}
 	}
 }
 
@@ -240,7 +269,7 @@ func (f *basefmt) Defined(*gherkin.Step, *StepDef) {
 }
 
 func (f *basefmt) Feature(ft *gherkin.Feature, p string, c []byte) {
-	f.features = append(f.features, &feature{Path: p, Feature: ft})
+	f.features = append(f.features, &feature{Path: p, Feature: ft, time: timeNowFunc()})
 }
 
 func (f *basefmt) Passed(step *gherkin.Step, match *StepDef) {
@@ -250,8 +279,11 @@ func (f *basefmt) Passed(step *gherkin.Step, match *StepDef) {
 		step:    step,
 		def:     match,
 		typ:     passed,
+		time:    timeNowFunc(),
 	}
 	f.passed = append(f.passed, s)
+
+	f.features[len(f.features)-1].appendStepResult(s)
 }
 
 func (f *basefmt) Skipped(step *gherkin.Step, match *StepDef) {
@@ -261,8 +293,11 @@ func (f *basefmt) Skipped(step *gherkin.Step, match *StepDef) {
 		step:    step,
 		def:     match,
 		typ:     skipped,
+		time:    timeNowFunc(),
 	}
 	f.skipped = append(f.skipped, s)
+
+	f.features[len(f.features)-1].appendStepResult(s)
 }
 
 func (f *basefmt) Undefined(step *gherkin.Step, match *StepDef) {
@@ -272,8 +307,11 @@ func (f *basefmt) Undefined(step *gherkin.Step, match *StepDef) {
 		step:    step,
 		def:     match,
 		typ:     undefined,
+		time:    timeNowFunc(),
 	}
 	f.undefined = append(f.undefined, s)
+
+	f.features[len(f.features)-1].appendStepResult(s)
 }
 
 func (f *basefmt) Failed(step *gherkin.Step, match *StepDef, err error) {
@@ -284,8 +322,11 @@ func (f *basefmt) Failed(step *gherkin.Step, match *StepDef, err error) {
 		def:     match,
 		err:     err,
 		typ:     failed,
+		time:    timeNowFunc(),
 	}
 	f.failed = append(f.failed, s)
+
+	f.features[len(f.features)-1].appendStepResult(s)
 }
 
 func (f *basefmt) Pending(step *gherkin.Step, match *StepDef) {
@@ -295,8 +336,11 @@ func (f *basefmt) Pending(step *gherkin.Step, match *StepDef) {
 		step:    step,
 		def:     match,
 		typ:     pending,
+		time:    timeNowFunc(),
 	}
 	f.pending = append(f.pending, s)
+
+	f.features[len(f.features)-1].appendStepResult(s)
 }
 
 func (f *basefmt) Summary() {

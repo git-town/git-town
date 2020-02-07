@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // TableFields provides the header fields of the given table.

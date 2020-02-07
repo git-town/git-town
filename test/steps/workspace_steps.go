@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 )
 
 // WorkspaceSteps defines Cucumber step implementations around Git workspace management.

@@ -1,8 +1,10 @@
-[![Build Status](https://travis-ci.org/DATA-DOG/godog.svg?branch=master)](https://travis-ci.org/DATA-DOG/godog)
+[![CircleCI](https://circleci.com/gh/cucumber/godog/tree/master.svg?style=svg)](https://circleci.com/gh/cucumber/godog/tree/master)
 [![GoDoc](https://godoc.org/github.com/DATA-DOG/godog?status.svg)](https://godoc.org/github.com/DATA-DOG/godog)
 [![codecov.io](https://codecov.io/github/DATA-DOG/godog/branch/master/graph/badge.svg)](https://codecov.io/github/DATA-DOG/godog)
 
 # Godog
+
+[🚨🚨🚨 Godog is looking for new maintainers 🚨🚨🚨](https://github.com/cucumber/godog/issues/207)
 
 <p align="center"><img src="/logo.png" alt="Godog logo" style="width:250px;" /></p>
 
@@ -366,9 +368,8 @@ and will be treated cautiously.
 
 ## License
 
-**Godog** is licensed under the [three clause BSD license][license]
-
-**Gherkin** is licensed under the [MIT][gherkin-license] and developed as
+**Godog** is licensed under the [MIT][license]
+**Gherkin** is licensed under the [MIT][license] and developed as
 a part of the [cucumber project][cucumber]
 
 [godoc]: http://godoc.org/github.com/DATA-DOG/godog "Documentation on godoc"
@@ -376,5 +377,4 @@ a part of the [cucumber project][cucumber]
 [behat]: http://docs.behat.org/ "Behavior driven development framework for PHP"
 [cucumber]: https://cucumber.io/ "Behavior driven development framework"
 [gherkin]: https://github.com/cucumber/gherkin-go "Gherkin3 parser for GO"
-[gherkin-license]: https://en.wikipedia.org/wiki/MIT_License "The MIT license"
-[license]: http://en.wikipedia.org/wiki/BSD_licenses "The three clause BSD license"
+[license]: https://en.wikipedia.org/wiki/MIT_License "The MIT license"
