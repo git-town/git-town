@@ -3,7 +3,7 @@ package steps
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 )
 
 // FolderSteps defines Cucumber step implementations around folders.
