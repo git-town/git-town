@@ -1,6 +1,6 @@
 package godog
 
-import "github.com/DATA-DOG/godog/gherkin"
+import "github.com/cucumber/godog/gherkin"
 
 // examples is a helper func to cast gherkin.Examples
 // or gherkin.BaseExamples if its empty

@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 )
 
 // ConfigurationSteps defines Cucumber step implementations around configuration.

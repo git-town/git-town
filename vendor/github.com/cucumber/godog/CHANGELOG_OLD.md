@@ -1,5 +1,12 @@
 # Change LOG
 
+**2020-02-06**
+- move to new [CHANGELOG.md](CHANGELOG.md)
+
+**2020-01-31**
+- change license to MIT and moving project repository to **cucumber**
+  organization.
+
 **2018-11-16**
 - added formatter output test suite, currently mainly pretty format
   tested.
