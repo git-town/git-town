@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/gherkin"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/test"
 )
