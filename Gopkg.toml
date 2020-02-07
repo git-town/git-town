@@ -42,8 +42,8 @@
   unused-packages = true
 
 [[constraint]]
-  name = "github.com/DATA-DOG/godog"
-  version = "0.7.13"
+  name = "github.com/cucumber/godog"
+  version = "0.8.0"
 
 [[constraint]]
   name = "github.com/stretchr/testify"

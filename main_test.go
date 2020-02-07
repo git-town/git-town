@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/DATA-DOG/godog"
 	"github.com/Originate/git-town/test/steps"
+	"github.com/cucumber/godog"
 )
 
 // nolint:deadcode,unused

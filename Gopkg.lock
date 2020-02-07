@@ -2,24 +2,24 @@
 
 
 [[projects]]
-  digest = "1:8eacd45a4fb9c351d20c6050ae91783a844f171e65470fca0380c30a5eabb726"
-  name = "github.com/DATA-DOG/godog"
-  packages = [
-    ".",
-    "colors",
-    "gherkin",
-  ]
-  pruneopts = "UT"
-  revision = "8e7bc15e741c4f6c93c0fc2e797ed869cbc1b8f7"
-  version = "v0.7.13"
-
-[[projects]]
   branch = "master"
   digest = "1:66a87baf099221f7deecf7a3ee301e437d9d93ef3be0bc92645e71400c2e9d31"
   name = "github.com/acarl005/stripansi"
   packages = ["."]
   pruneopts = "UT"
   revision = "5a71ef0e047df0427e87a79f27009029921f1f9b"
+
+[[projects]]
+  digest = "1:236c27db9b2a69e4b84dc1e16833202c2140d0a8775e255150728e33ef8a9c01"
+  name = "github.com/cucumber/godog"
+  packages = [
+    ".",
+    "colors",
+    "gherkin",
+  ]
+  pruneopts = "UT"
+  revision = "d8ff383bf9c7e33538d629741d80ffe852cb6d4a"
+  version = "v0.8.0"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -214,9 +214,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/DATA-DOG/godog",
-    "github.com/DATA-DOG/godog/gherkin",
     "github.com/acarl005/stripansi",
+    "github.com/cucumber/godog",
+    "github.com/cucumber/godog/gherkin",
     "github.com/dustin/go-humanize",
     "github.com/fatih/color",
     "github.com/google/go-github/github",

@@ -4,14 +4,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/DATA-DOG/godog/colors"
+	"github.com/cucumber/godog/colors"
 )
 
 var (
 	red    = colors.Red
 	redb   = colors.Bold(colors.Red)
 	green  = colors.Green
-	black  = colors.Black
+	blackb = colors.Bold(colors.Black)
 	yellow = colors.Yellow
 	cyan   = colors.Cyan
 	cyanb  = colors.Bold(colors.Cyan)

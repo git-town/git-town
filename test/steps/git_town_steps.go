@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 )
 
 // GitTownSteps defines Cucumber step implementations around the Git Town setup.

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/DATA-DOG/godog/colors"
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/colors"
+	"github.com/cucumber/godog/gherkin"
 )
 
 func init() {
@@ -153,8 +153,8 @@ func (f *pretty) Summary() {
 	if len(f.failed) > 0 {
 		fmt.Fprintln(f.out, "\n--- "+red("Failed steps:")+"\n")
 		for _, fail := range f.failed {
-			fmt.Fprintln(f.out, s(2)+red(fail.scenarioDesc())+black(" # "+fail.scenarioLine()))
-			fmt.Fprintln(f.out, s(4)+red(strings.TrimSpace(fail.step.Keyword)+" "+fail.step.Text)+black(" # "+fail.line()))
+			fmt.Fprintln(f.out, s(2)+red(fail.scenarioDesc())+blackb(" # "+fail.scenarioLine()))
+			fmt.Fprintln(f.out, s(4)+red(strings.TrimSpace(fail.step.Keyword)+" "+fail.step.Text)+blackb(" # "+fail.line()))
 			fmt.Fprintln(f.out, s(6)+red("Error: ")+redb(fmt.Sprintf("%+v", fail.err))+"\n")
 		}
 	}
@@ -203,7 +203,7 @@ func (f *pretty) printOutlineExample(outline *gherkin.ScenarioOutline) {
 				} else {
 					text = cyan(ostep.Text)
 				}
-				text += s(f.commentPos-f.length(ostep)+1) + black(fmt.Sprintf("# %s", res.def.definitionID()))
+				text += s(f.commentPos-f.length(ostep)+1) + blackb(fmt.Sprintf("# %s", res.def.definitionID()))
 			} else {
 				text = cyan(ostep.Text)
 			}
@@ -294,7 +294,7 @@ func (f *pretty) printStep(step *gherkin.Step, def *StepDef, c colors.ColorFunc)
 		} else {
 			text += c(step.Text)
 		}
-		text += s(f.commentPos-f.length(step)+1) + black(fmt.Sprintf("# %s", def.definitionID()))
+		text += s(f.commentPos-f.length(step)+1) + blackb(fmt.Sprintf("# %s", def.definitionID()))
 	default:
 		text += c(step.Text)
 	}
@@ -480,7 +480,7 @@ func (f *pretty) longestStep(steps []*gherkin.Step, base int) int {
 
 // a line number representation in feature file
 func (f *pretty) line(loc *gherkin.Location) string {
-	return black(fmt.Sprintf("# %s:%d", f.features[len(f.features)-1].Path, loc.Line))
+	return blackb(fmt.Sprintf("# %s:%d", f.features[len(f.features)-1].Path, loc.Line))
 }
 
 func (f *pretty) length(node interface{}) int {

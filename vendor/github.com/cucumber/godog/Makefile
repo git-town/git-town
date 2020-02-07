@@ -6,8 +6,8 @@ test:
 	@echo "running all tests"
 	@go install ./...
 	@go fmt ./...
-	@golint github.com/DATA-DOG/godog
-	@golint github.com/DATA-DOG/godog/cmd/godog
+	@golint github.com/cucumber/godog
+	@golint github.com/cucumber/godog/cmd/godog
 	go vet ./...
 	go test -race
 	godog -f progress -c 4
@@ -23,7 +23,7 @@ bump:
 	@if [ -z "$(VERSION)" ]; then echo "Provide version like: 'VERSION=$(VERS) make bump'"; exit 1; fi
 	@echo "bumping version from: $(VERS) to $(VERSION)"
 	@sed -i.bak 's/$(VERS)/$(VERSION)/g' godog.go
-	@sed -i.bak 's/$(VERS)/$(VERSION)/g' examples/api/version.feature
+	@sed -i.bak 's/$(VERS)/$(VERSION)/g' examples/api/features/version.feature
 	@find . -name '*.bak' | xargs rm
 
 cover:

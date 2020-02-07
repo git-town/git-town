@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
+	"github.com/cucumber/godog/gherkin"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
