@@ -13,20 +13,19 @@ import (
 type Options struct {
 
 	// Dir contains the directory in which to execute the command.
-	// Runs in the current directory if this option is not provided.
+	// If empty, runs in the current directory.
 	Dir string
 
 	// Env allows to override the environment variables to use in the subshell, in the format provided by os.Environ()
-	// Uses the environment variables of this process if this option is not provided.
+	// If empty, uses the environment variables of this process.
 	Env []string
 
 	// Essential indicates whether this is an essential command.
-	// Essential commands are critically important for Git Town to function., if they fail Git Town ends right there.
+	// Essential commands are critically important for Git Town to function. If they fail Git Town ends right there.
 	Essential bool
 
 	// Input contains the user input to enter into the running command.
-	// Input is written to the subprocess one element at a time,
-	// with a delay defined by command.InputDelay in between.
+	// It is written to the subprocess one element at a time, with a delay defined by command.InputDelay in between.
 	Input []string // input into the subprocess
 }
 
