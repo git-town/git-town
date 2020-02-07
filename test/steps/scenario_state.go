@@ -1,9 +1,9 @@
 package steps
 
 import (
-	"github.com/cucumber/godog/gherkin"
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/test"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // scenarioState constains the state that is shared by all steps within a scenario.
