@@ -26,11 +26,11 @@ var gopaths = filepath.SplitList(build.Default.GOPATH)
 var goarch = build.Default.GOARCH
 var goos = build.Default.GOOS
 
-var godogImportPath = "github.com/DATA-DOG/godog"
+var godogImportPath = "github.com/cucumber/godog"
 var runnerTemplate = template.Must(template.New("testmain").Parse(`package main
 
 import (
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 	{{if .Contexts}}_test "{{.ImportPath}}"{{end}}
 	"os"
 )

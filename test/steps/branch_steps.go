@@ -3,10 +3,10 @@ package steps
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/test"
+	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // BranchSteps defines Cucumber step implementations around Git branches.

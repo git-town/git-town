@@ -3,7 +3,7 @@ package steps
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
 )
 
 // InstallationSteps defines Cucumber step implementations around installation of Git Town.

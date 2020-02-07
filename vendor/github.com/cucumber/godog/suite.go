@@ -12,9 +12,10 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/gherkin"
 )
 
 var errorInterface = reflect.TypeOf((*error)(nil)).Elem()
@@ -22,10 +23,56 @@ var typeOfBytes = reflect.TypeOf([]byte(nil))
 
 type feature struct {
 	*gherkin.Feature
-	Content   []byte `json:"-"`
-	Path      string `json:"path"`
-	scenarios map[int]bool
-	order     int
+
+	Scenarios []*scenario
+
+	time    time.Time
+	Content []byte `json:"-"`
+	Path    string `json:"path"`
+	order   int
+}
+
+func (f feature) startedAt() time.Time {
+	return f.time
+}
+
+func (f feature) finishedAt() time.Time {
+	if len(f.Scenarios) == 0 {
+		return f.startedAt()
+	}
+
+	return f.Scenarios[len(f.Scenarios)-1].finishedAt()
+}
+
+func (f feature) appendStepResult(s *stepResult) {
+	scenario := f.Scenarios[len(f.Scenarios)-1]
+	scenario.Steps = append(scenario.Steps, s)
+}
+
+type sortByName []*feature
+
+func (s sortByName) Len() int           { return len(s) }
+func (s sortByName) Less(i, j int) bool { return s[i].Name < s[j].Name }
+func (s sortByName) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+
+type scenario struct {
+	Name        string
+	OutlineName string
+	ExampleNo   int
+	time        time.Time
+	Steps       []*stepResult
+}
+
+func (s scenario) startedAt() time.Time {
+	return s.time
+}
+
+func (s scenario) finishedAt() time.Time {
+	if len(s.Steps) == 0 {
+		return s.startedAt()
+	}
+
+	return s.Steps[len(s.Steps)-1].time
 }
 
 // ErrUndefined is returned in case if step definition was not found
@@ -610,7 +657,7 @@ func (s *Suite) printStepDefinitions(w io.Writer) {
 		n := utf8.RuneCountInString(def.Expr.String())
 		location := def.definitionID()
 		spaces := strings.Repeat(" ", longest-n)
-		fmt.Fprintln(w, yellow(def.Expr.String())+spaces, black("# "+location))
+		fmt.Fprintln(w, yellow(def.Expr.String())+spaces, blackb("# "+location))
 	}
 	if len(s.steps) == 0 {
 		fmt.Fprintln(w, "there were no contexts registered, could not find any step definition..")
@@ -631,56 +678,93 @@ func extractFeaturePathLine(p string) (string, int) {
 	return retPath, line
 }
 
+func parseFeatureFile(path string) (*feature, error) {
+	reader, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer reader.Close()
+
+	var buf bytes.Buffer
+	ft, err := gherkin.ParseFeature(io.TeeReader(reader, &buf))
+	if err != nil {
+		return nil, fmt.Errorf("%s - %v", path, err)
+	}
+
+	return &feature{
+		Path:    path,
+		Feature: ft,
+		Content: buf.Bytes(),
+	}, nil
+}
+
+func parseFeatureDir(dir string) ([]*feature, error) {
+	var features []*feature
+	return features, filepath.Walk(dir, func(p string, f os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if f.IsDir() {
+			return nil
+		}
+
+		if !strings.HasSuffix(p, ".feature") {
+			return nil
+		}
+
+		feat, err := parseFeatureFile(p)
+		if err != nil {
+			return err
+		}
+		features = append(features, feat)
+		return nil
+	})
+}
+
+func parsePath(path string) ([]*feature, error) {
+	var features []*feature
+	// check if line number is specified
+	var line int
+	path, line = extractFeaturePathLine(path)
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		return features, err
+	}
+
+	if fi.IsDir() {
+		return parseFeatureDir(path)
+	}
+
+	ft, err := parseFeatureFile(path)
+	if err != nil {
+		return features, err
+	}
+
+	// filter scenario by line number
+	var scenarios []interface{}
+	for _, def := range ft.ScenarioDefinitions {
+		var ln int
+		switch t := def.(type) {
+		case *gherkin.Scenario:
+			ln = t.Location.Line
+		case *gherkin.ScenarioOutline:
+			ln = t.Location.Line
+		}
+		if line == -1 || ln == line {
+			scenarios = append(scenarios, def)
+		}
+	}
+	ft.ScenarioDefinitions = scenarios
+	return append(features, ft), nil
+}
+
 func parseFeatures(filter string, paths []string) ([]*feature, error) {
 	byPath := make(map[string]*feature)
 	var order int
-	for _, pat := range paths {
-		// check if line number is specified
-		path, line := extractFeaturePathLine(pat)
-		var err error
-		// parse features
-		err = filepath.Walk(path, func(p string, f os.FileInfo, err error) error {
-			if err == nil && !f.IsDir() && strings.HasSuffix(p, ".feature") {
-				reader, err := os.Open(p)
-				if err != nil {
-					return err
-				}
-				var buf bytes.Buffer
-				ft, err := gherkin.ParseFeature(io.TeeReader(reader, &buf))
-				reader.Close()
-				if err != nil {
-					return fmt.Errorf("%s - %v", p, err)
-				}
-
-				feat := byPath[p]
-				if feat == nil {
-					feat = &feature{
-						Path:      p,
-						Feature:   ft,
-						Content:   buf.Bytes(),
-						scenarios: make(map[int]bool),
-						order:     order,
-					}
-					order++
-					byPath[p] = feat
-				}
-				// filter scenario by line number
-				for _, def := range ft.ScenarioDefinitions {
-					var ln int
-					switch t := def.(type) {
-					case *gherkin.Scenario:
-						ln = t.Location.Line
-					case *gherkin.ScenarioOutline:
-						ln = t.Location.Line
-					}
-					if line == -1 || ln == line {
-						feat.scenarios[ln] = true
-					}
-				}
-			}
-			return err
-		})
-		// check error
+	for _, path := range paths {
+		feats, err := parsePath(path)
 		switch {
 		case os.IsNotExist(err):
 			return nil, fmt.Errorf(`feature path "%s" is not available`, path)
@@ -688,6 +772,16 @@ func parseFeatures(filter string, paths []string) ([]*feature, error) {
 			return nil, fmt.Errorf(`feature path "%s" is not accessible`, path)
 		case err != nil:
 			return nil, err
+		}
+
+		for _, ft := range feats {
+			if _, duplicate := byPath[ft.Path]; duplicate {
+				continue
+			}
+
+			ft.order = order
+			order++
+			byPath[ft.Path] = ft
 		}
 	}
 	return filterFeatures(filter, byPath), nil
@@ -701,20 +795,6 @@ func (s sortByOrderGiven) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 func filterFeatures(tags string, collected map[string]*feature) (features []*feature) {
 	for _, ft := range collected {
-		var scenarios []interface{}
-		for _, def := range ft.ScenarioDefinitions {
-			var ln int
-			switch t := def.(type) {
-			case *gherkin.Scenario:
-				ln = t.Location.Line
-			case *gherkin.ScenarioOutline:
-				ln = t.Location.Line
-			}
-			if ft.scenarios[ln] {
-				scenarios = append(scenarios, def)
-			}
-		}
-		ft.ScenarioDefinitions = scenarios
 		applyTagFilter(tags, ft.Feature)
 		features = append(features, ft)
 	}
