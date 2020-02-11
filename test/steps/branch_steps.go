@@ -23,7 +23,9 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		diff, errCount := table.Equal(input)
 		if errCount > 0 {
-			return fmt.Errorf("found %d differences:\n%s", errCount, diff)
+			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})

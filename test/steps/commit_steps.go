@@ -34,7 +34,9 @@ func compareExistingCommits(fs *FeatureState, table *gherkin.DataTable) error {
 	}
 	diff, errorCount := commitTable.Equal(table)
 	if errorCount != 0 {
-		return fmt.Errorf("found %d differences:\n%s", errorCount, diff)
+		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
+		fmt.Println(diff)
+		return fmt.Errorf("mismatching commits found, see diff above")
 	}
 	return nil
 }
