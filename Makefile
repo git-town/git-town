@@ -87,6 +87,9 @@ setup:  # the setup steps necessary on developer machines
 	bundle install
 	yarn install
 
+stats:  # shows code statistics
+	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs cloc
+
 test: lint unit cuke  # runs all the tests
 .PHONY: test
 
