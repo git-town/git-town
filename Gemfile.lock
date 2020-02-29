@@ -46,7 +46,7 @@ GEM
     powerpack (0.1.1)
     rainbow (2.2.2)
       rake
-    rake (12.0.0)
+    rake (13.0.1)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
