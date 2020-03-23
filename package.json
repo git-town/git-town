@@ -1,10 +1,10 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "assert-no-diff": "3.0.3",
+    "assert-no-diff": "3.0.4",
     "harp": "0.31.0",
-    "prettier": "1.18.2",
+    "prettier": "2.0.1",
     "tertestrial": "0.3.2",
-    "text-runner": "4.0.0"
+    "text-runner": "4.0.2"
   }
 }
