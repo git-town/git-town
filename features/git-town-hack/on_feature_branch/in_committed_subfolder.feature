@@ -7,20 +7,20 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
 
   Background:
     Given my repository has a feature branch named "feature"
-    And the following commit exists in my repository
-      | BRANCH  | LOCATION         | MESSAGE       | FILE NAME        |
-      | main    | local and remote | main commit   | main_file        |
-      | feature | local and remote | folder commit | new_folder/file1 |
+    And the following commits exist in my repository
+      | BRANCH  | LOCATION      | MESSAGE       | FILE NAME        |
+      | main    | local, remote | main commit   | main_file        |
+      | feature | local, remote | folder commit | new_folder/file1 |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature` in the "new_folder" folder
+    When I run "git-town hack new-feature" in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | feature     | git fetch --prune --tags    |
-      | <none>      | cd <%= git_root_folder %>   |
+      | <none>      | cd {{ root folder }}        |
       | feature     | git add -A                  |
       |             | git stash                   |
       |             | git checkout main           |
@@ -31,8 +31,8 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
     And I end up on the "new-feature" branch
     And I am in the project root folder
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE       |
-      | main        | local and remote | main commit   |
-      | feature     | local and remote | folder commit |
-      | new-feature | local            | main commit   |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE       |
+      | main        | local, remote | main commit   |
+      | feature     | local, remote | folder commit |
+      | new-feature | local         | main commit   |

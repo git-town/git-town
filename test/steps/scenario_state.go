@@ -19,4 +19,7 @@ type scenarioState struct {
 
 	// originalCommitTable describes the commits in this Git environment before the WHEN steps ran.
 	originalCommitTable *gherkin.DataTable
+
+	// name of the uncommitted file in the workspace
+	uncommittedFileName string
 }

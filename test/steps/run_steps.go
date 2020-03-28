@@ -22,6 +22,11 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunStringWith(cmd, command.Options{Dir: folderName})
+		return nil
+	})
+
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		if len(commands) > 0 {
@@ -36,7 +41,9 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
-		diff, errorCount := table.Equal(input)
+		dataTable := test.FromGherkin(input)
+		expanded := dataTable.Expand(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
+		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)
 			fmt.Println(diff)

@@ -131,7 +131,8 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 		defer runner.RemoveTempShellOverrides()
 	}
 	// set the working dir
-	opts.Dir = runner.workingDir
+	opts.Dir = filepath.Join(runner.workingDir, opts.Dir)
+
 	// run the command inside the custom environment
 	result, err = command.RunWith(opts, cmd, args...)
 	if Debug {

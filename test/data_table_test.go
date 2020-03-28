@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDataTable(t *testing.T) {
@@ -22,4 +23,12 @@ func TestDataTable(t *testing.T) {
 		fmt.Println(dmp.DiffPrettyText(diffs))
 		t.Fail()
 	}
+}
+
+func TestDataTable_Expand(t *testing.T) {
+	r := DataTable{}
+	r.AddRow("one", "cd {{ root folder }}")
+	actual := r.Expand("/foo/bar")
+	assert.Equal(t, actual.cells[0][0], "one")
+	assert.Equal(t, actual.cells[0][1], "cd /foo/bar")
 }

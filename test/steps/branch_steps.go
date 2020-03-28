@@ -21,7 +21,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			parentBranch := gitConfig.GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
-		diff, errCount := table.Equal(input)
+		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
 			fmt.Println(diff)
