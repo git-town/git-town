@@ -34,7 +34,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |

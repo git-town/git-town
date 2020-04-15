@@ -83,6 +83,7 @@ func (builder *CommitTableBuilder) branches() []string {
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
 func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 	result.AddRow(fields...)
+	lastBranch := ""
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
@@ -91,7 +92,12 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 			for _, field := range fields {
 				switch field {
 				case "BRANCH":
-					row = append(row, branch)
+					if branch == lastBranch {
+						row = append(row, "")
+					} else {
+						row = append(row, branch)
+						lastBranch = branch
+					}
 				case "LOCATION":
 					locations := builder.locations[SHA+branch]
 					row = append(row, strings.Join(locations.Slice(), ", "))

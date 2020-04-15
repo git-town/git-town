@@ -20,6 +20,17 @@ func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
 	})
 
+	suite.Step(`^my workspace has the uncommitted file again$`, func() error {
+		hasFile, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
+		if err != nil {
+			return err
+		}
+		if !hasFile {
+			return fmt.Errorf("expected file %q but didn't find it", fs.activeScenarioState.uncommittedFileName)
+		}
+		return nil
+	})
+
 	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
 		os.RemoveAll(filepath.Join(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir, ".git"))
 		return nil
