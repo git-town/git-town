@@ -125,6 +125,19 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 	return nil
 }
 
+// CreateRemoteBranch creates a branch with the given name only in the remote directory.
+func (env GitEnvironment) CreateRemoteBranch(name string) error {
+	err := env.OriginRepo.CreateBranch(name)
+	if err != nil {
+		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
+	}
+	err = env.OriginRepo.CheckoutBranch("master")
+	if err != nil {
+		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
+	}
+	return nil
+}
+
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
