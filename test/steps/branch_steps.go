@@ -38,7 +38,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^I end up on the "([^"]*)" branch$`, func(expected string) error {
+	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
 		actual, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
