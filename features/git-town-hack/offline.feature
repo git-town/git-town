@@ -1,6 +1,6 @@
 Feature: git town-hack: offline mode
 
-  When having no internet connection
+    When having no internet connection
   I want that new branches are created without attempting network accesses
   So that I don't see unnecessary errors.
 
@@ -8,11 +8,11 @@ Feature: git town-hack: offline mode
   Background:
     Given Git Town is in offline mode
     And the following commits exist in my repository
-      | BRANCH | LOCATION         | MESSAGE     |
-      | main   | local and remote | main commit |
+      | BRANCH | LOCATION      | MESSAGE     |
+      | main   | local, remote | main commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack feature`
+    When I run "git-town hack feature"
 
 
   Scenario: result
@@ -26,7 +26,7 @@ Feature: git town-hack: offline mode
       | feature | git stash pop           |
     And I end up on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE     |
-      | main    | local and remote | main commit |
-      | feature | local            | main commit |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE     |
+      | main    | local, remote | main commit |
+      | feature | local         | main commit |
