@@ -306,6 +306,12 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
+// RemoveRemote deletes the Git remote with the given name.
+func (repo *GitRepository) RemoveRemote(name string) error {
+	_, err := repo.Run("git", "remote", "rm", "origin")
+	return err
+}
+
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
 	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
