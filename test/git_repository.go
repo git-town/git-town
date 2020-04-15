@@ -277,6 +277,15 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 	return true, nil
 }
 
+// HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
+func (repo *GitRepository) HasRebaseInProgress() (result bool, err error) {
+	res, err := repo.Run("git", "status")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine rebase in %q progress: %w", repo.homeDir, err)
+	}
+	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Run("git", "rev-parse", "--show-toplevel")
@@ -312,4 +321,27 @@ func (repo *GitRepository) SetRemote(target string) error {
 		{"git", "remote", "remove", "origin"},
 		{"git", "remote", "add", "origin", target},
 	})
+}
+
+// StashSize provides the number of stashes in this repository.
+func (repo *GitRepository) StashSize() (result int, err error) {
+	res, err := repo.Run("git", "stash", "list")
+	if err != nil {
+		return result, fmt.Errorf("command %q failed: %w", res.FullCmd(), err)
+	}
+	return len(res.OutputLines()), nil
+}
+
+// UncommittedFiles provides the names of the files not committed into Git.
+func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
+	res, err := repo.Run("git", "status", "--porcelain", "--untracked-files=all")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", repo.homeDir, err)
+	}
+	lines := res.OutputLines()
+	for l := range lines {
+		parts := strings.Split(lines[l], " ")
+		result = append(result, parts[1])
+	}
+	return result, nil
 }

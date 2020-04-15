@@ -42,7 +42,7 @@ func UpdateCurrentBranchCache(branchName string) {
 // Helpers
 
 func getCurrentBranchNameDuringRebase() string {
-	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
+	filename := fmt.Sprintf("%s/.git/rebase-merge/head-name", GetRootDirectory())
 	rawContent, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)

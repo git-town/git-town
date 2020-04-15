@@ -13,7 +13,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature`
+    When I run "git-town hack new-feature"
 
 
   Scenario: result
