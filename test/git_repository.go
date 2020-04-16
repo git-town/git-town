@@ -140,12 +140,31 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 	return result, nil
 }
 
+// CommitStagedChanges commits the currently staged changes.
+func (repo *GitRepository) CommitStagedChanges() error {
+	_, err := repo.Run("git", "commit", "-m", "committing staged changes")
+	if err != nil {
+		return fmt.Errorf("cannot commit staged changes: %w", err)
+	}
+	return nil
+}
+
 // Configuration returns a cached Configuration instance for this repo.
 func (repo *GitRepository) Configuration() *git.Configuration {
 	if repo.configCache == nil {
 		repo.configCache = git.NewConfiguration(repo.Dir)
 	}
 	return repo.configCache
+}
+
+// ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
+// The branch must exist.
+func (repo *GitRepository) ConnectTrackingBranch(name string) error {
+	_, err := repo.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
+	if err != nil {
+		return fmt.Errorf("cannot connect tracking branch for %q: %w", name, err)
+	}
+	return nil
 }
 
 // CreateBranch creates a new branch with the given name.
@@ -197,9 +216,17 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 
 // CreateFeatureBranch creates a branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	outcome, err := repo.Run("git", "town", "hack", name)
+	output, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
-		return fmt.Errorf("cannot create branch %q in repo: %w\n%v", name, err, outcome)
+		return fmt.Errorf("cannot create branch %q in repo: %w\n%v", name, err, output)
+	}
+	output, err = repo.Run("git", "push", "-u", "origin", name)
+	if err != nil {
+		return fmt.Errorf("cannot push branch %q to origin: %w\n%v", name, err, output)
+	}
+	output, err = repo.Run("git", "config", "git-town-branch."+name+".parent", "main")
+	if err != nil {
+		return fmt.Errorf("cannot set parent branch for %q: %w\n%v", name, err, output)
 	}
 	return nil
 }
@@ -240,6 +267,15 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	return strings.TrimSpace(outcome.OutputSanitized()), nil
 }
 
+// Fetch retrieves the updates from the remote repo.
+func (repo *GitRepository) Fetch() error {
+	_, err := repo.Run("git", "fetch")
+	if err != nil {
+		return fmt.Errorf("cannot fetch: %w", err)
+	}
+	return nil
+}
+
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (repo *GitRepository) FileContentInCommit(sha string, filename string) (result string, err error) {
 	outcome, err := repo.Run("git", "show", sha+":"+filename)
@@ -262,6 +298,15 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 func (repo *GitRepository) FreshConfiguration() *git.Configuration {
 	repo.configCache = nil
 	return repo.Configuration()
+}
+
+// StageFile adds the file with the given name to the Git index.
+func (repo *GitRepository) StageFile(name string) error {
+	_, err := repo.Run("git", "add", name)
+	if err != nil {
+		return fmt.Errorf("cannot stage file %q: %w", name, err)
+	}
+	return nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.

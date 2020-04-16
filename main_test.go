@@ -15,6 +15,7 @@ func FeatureContext(suite *godog.Suite) {
 	steps.BranchSteps(suite, state)
 	steps.CommitSteps(suite, state)
 	steps.ConfigurationSteps(suite, state)
+	steps.ConflictSteps(suite, state)
 	steps.FileSteps(suite, state)
 	steps.FolderSteps(suite, state)
 	steps.GitTownSteps(suite, state)

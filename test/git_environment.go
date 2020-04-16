@@ -36,6 +36,15 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
 	err = result.DeveloperRepo.SetRemote(result.OriginRepo.Dir)
+	if err != nil {
+		return &result, fmt.Errorf("cannot set remote: %w", err)
+	}
+	err = result.DeveloperRepo.Fetch()
+	if err != nil {
+		return &result, fmt.Errorf("cannot fetch: %w", err)
+	}
+	// and connect the main branches again
+	err = result.DeveloperRepo.ConnectTrackingBranch("main")
 	return &result, err
 }
 
