@@ -16,7 +16,6 @@ Feature: git append: offline mode
 
 
   Scenario: appending a branch in offline mode
-    When I run "git config -l"
     When I run "git-town append new-feature"
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
