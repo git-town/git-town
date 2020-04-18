@@ -142,7 +142,7 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 
 // CommitStagedChanges commits the currently staged changes.
 func (repo *GitRepository) CommitStagedChanges() error {
-	_, err := repo.Run("git", "commit", "-m", "committing staged changes")
+	_, err := repo.Run("git", "commit", "--no-edit")
 	if err != nil {
 		return fmt.Errorf("cannot commit staged changes: %w", err)
 	}
@@ -302,7 +302,7 @@ func (repo *GitRepository) FreshConfiguration() *git.Configuration {
 
 // StageFile adds the file with the given name to the Git index.
 func (repo *GitRepository) StageFile(name string) error {
-	_, err := repo.Run("git", "add", name)
+	_, err := repo.Run("git", "add", ".")
 	if err != nil {
 		return fmt.Errorf("cannot stage file %q: %w", name, err)
 	}
