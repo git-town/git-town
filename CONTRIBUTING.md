@@ -39,6 +39,8 @@ when developing Git Town.
 - optionally install
   [Tertestrial](https://github.com/Originate/tertestrial-server) for
   auto-running tests
+- optionally install [scc](https://github.com/boyter/scc) to see code statistics
+  via <code textrun="verify-make-command">make stats</code>
 
 ## Building
 

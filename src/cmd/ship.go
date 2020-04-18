@@ -17,9 +17,10 @@ import (
 
 type shipConfig struct {
 	BranchToShip  string
-	InitialBranch string
+	InitialBranch string // the name of the branch that was checked out when running this command
 }
 
+// optional commit message provided via the command line
 var commitMessage string
 
 var shipCmd = &cobra.Command{
@@ -139,6 +140,10 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
+	// NOTE: when shipping with a driver, we can always delete the remote branch because:
+	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
+	// - we have updated the PRs of all child branches (because we have API access)
+	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
 		if git.Config().ShouldShipDeleteRemoteBranch() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})

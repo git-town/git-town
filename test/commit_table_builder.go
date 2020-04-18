@@ -62,13 +62,21 @@ func (builder *CommitTableBuilder) Add(commit Commit, location string) {
 }
 
 // branches provides the names of the all branches known to this CommitTableBuilder,
-// sorted alphabetically.
+// sorted alphabetically, with the main branch first.
 func (builder *CommitTableBuilder) branches() []string {
 	result := make([]string, 0, len(builder.commitsInBranch))
+	hasMain := false
 	for branch := range builder.commitsInBranch {
-		result = append(result, branch)
+		if branch == "main" {
+			hasMain = true
+		} else {
+			result = append(result, branch)
+		}
 	}
 	sort.Strings(result)
+	if hasMain {
+		return append([]string{"main"}, result...)
+	}
 	return result
 }
 

@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/DATA-DOG/godog/gherkin"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.
@@ -17,9 +17,12 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.Dat
 	lastBranch := ""
 	for _, cmd := range commands {
 		if tableHasBranches {
-			if cmd.Branch == lastBranch {
+			switch {
+			case cmd.Branch == lastBranch:
 				result.AddRow("", cmd.Command)
-			} else {
+			case cmd.Branch == "":
+				result.AddRow("<none>", cmd.Command)
+			default:
 				result.AddRow(cmd.Branch, cmd.Command)
 			}
 		} else {

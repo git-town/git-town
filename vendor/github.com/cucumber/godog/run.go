@@ -8,8 +8,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 
-	"github.com/DATA-DOG/godog/colors"
+	"github.com/cucumber/godog/colors"
 )
 
 const (
@@ -28,11 +29,22 @@ type runner struct {
 	initializer           initializer
 }
 
-func (r *runner) concurrent(rate int) (failed bool) {
+func (r *runner) concurrent(rate int, formatterFn func() Formatter) (failed bool) {
+	var useFmtCopy bool
+	var copyLock sync.Mutex
+
+	// special mode for concurrent-formatter
+	if _, ok := r.fmt.(ConcurrentFormatter); ok {
+		useFmtCopy = true
+	}
+
 	queue := make(chan int, rate)
 	for i, ft := range r.features {
 		queue <- i // reserve space in queue
+		ft := *ft
+
 		go func(fail *bool, feat *feature) {
+			var fmtCopy Formatter
 			defer func() {
 				<-queue // free a space in queue
 			}()
@@ -46,12 +58,42 @@ func (r *runner) concurrent(rate int) (failed bool) {
 				strict:        r.strict,
 				features:      []*feature{feat},
 			}
+			if useFmtCopy {
+				fmtCopy = formatterFn()
+				suite.fmt = fmtCopy
+
+				concurrentDestFmt, dOk := fmtCopy.(ConcurrentFormatter)
+				concurrentSourceFmt, sOk := r.fmt.(ConcurrentFormatter)
+
+				if dOk && sOk {
+					concurrentDestFmt.Sync(concurrentSourceFmt)
+				}
+			} else {
+				suite.fmt = r.fmt
+			}
+
 			r.initializer(suite)
 			suite.run()
 			if suite.failed {
 				*fail = true
 			}
-		}(&failed, ft)
+			if useFmtCopy {
+				copyLock.Lock()
+
+				concurrentDestFmt, dOk := r.fmt.(ConcurrentFormatter)
+				concurrentSourceFmt, sOk := fmtCopy.(ConcurrentFormatter)
+
+				if dOk && sOk {
+					concurrentDestFmt.Copy(concurrentSourceFmt)
+				} else if !dOk {
+					panic("cant cast dest formatter to progress-typed")
+				} else if !sOk {
+					panic("cant cast source formatter to progress-typed")
+				}
+
+				copyLock.Unlock()
+			}
+		}(&failed, &ft)
 	}
 	// wait until last are processed
 	for i := 0; i < rate; i++ {
@@ -168,7 +210,7 @@ func RunWithOptions(suite string, contextInitializer func(suite *Suite), opt Opt
 
 	var failed bool
 	if opt.Concurrency > 1 {
-		failed = r.concurrent(opt.Concurrency)
+		failed = r.concurrent(opt.Concurrency, func() Formatter { return formatter(suite, output) })
 	} else {
 		failed = r.run()
 	}
@@ -230,13 +272,11 @@ func Run(suite string, contextInitializer func(suite *Suite)) int {
 
 func supportsConcurrency(format string) bool {
 	switch format {
-	case "events":
-	case "junit":
-	case "pretty":
-	case "cucumber":
+	case "progress", "junit":
+		return true
+	case "events", "pretty", "cucumber":
+		return false
 	default:
-		return true // supports concurrency
+		return false
 	}
-
-	return false // does not support concurrency
 }

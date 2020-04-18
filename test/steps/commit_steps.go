@@ -3,9 +3,9 @@ package steps
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/test/helpers"
+	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // CommitSteps defines Cucumber step implementations around configuration.
@@ -32,9 +32,11 @@ func compareExistingCommits(fs *FeatureState, table *gherkin.DataTable) error {
 	if err != nil {
 		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
-	diff, errorCount := commitTable.Equal(table)
+	diff, errorCount := commitTable.EqualGherkin(table)
 	if errorCount != 0 {
-		return fmt.Errorf("found %d differences:\n%s", errorCount, diff)
+		fmt.Printf("\nERROR! Found %d differences in the existing commits\n\n", errorCount)
+		fmt.Println(diff)
+		return fmt.Errorf("mismatching commits found, see diff above")
 	}
 	return nil
 }

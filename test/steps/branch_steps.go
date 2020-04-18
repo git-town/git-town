@@ -3,10 +3,10 @@ package steps
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
-	"github.com/DATA-DOG/godog/gherkin"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/test"
+	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/gherkin"
 )
 
 // BranchSteps defines Cucumber step implementations around Git branches.
@@ -21,9 +21,11 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			parentBranch := gitConfig.GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
-		diff, errCount := table.Equal(input)
+		diff, errCount := table.EqualGherkin(input)
 		if errCount > 0 {
-			return fmt.Errorf("found %d differences:\n%s", errCount, diff)
+			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
 	})

@@ -206,7 +206,13 @@ func (repo *GitRepository) CreateFeatureBranch(name string) error {
 
 // CreateFile creates a file with the given name and content in this repository.
 func (repo *GitRepository) CreateFile(name, content string) error {
-	err := ioutil.WriteFile(filepath.Join(repo.Dir, name), []byte(content), 0744)
+	filePath := filepath.Join(repo.Dir, name)
+	folderPath := filepath.Dir(filePath)
+	err := os.MkdirAll(folderPath, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("cannot create folder %q: %v", folderPath, err)
+	}
+	err = ioutil.WriteFile(filePath, []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}
@@ -269,6 +275,12 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
 	}
 	return true, nil
+}
+
+// LastActiveDir provides the directory that was last used in this repo.
+func (repo *GitRepository) LastActiveDir() (string, error) {
+	res, err := repo.Run("git", "rev-parse", "--show-toplevel")
+	return res.OutputSanitized(), err
 }
 
 // PushBranch pushes the branch with the given name to the remote.

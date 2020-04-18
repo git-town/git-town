@@ -15,10 +15,10 @@ cross-compile:  # builds the binary for all platforms
 cuke: cuke-go cuke-ruby  # runs the feature tests
 
 cuke-go: build   # runs the new Godog-based feature tests
-	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias features/git-town-append features/git-town-config
+	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias features/git-town-append features/git-town-config features/git-town-hack/on_feature_branch/in_committed_subfolder.feature features/git-town-hack/on_feature_branch/with_remote_origin.feature
 
 cuke-ruby: build   # runs the old Ruby-based feature tests
-	bundle exec parallel_cucumber features/git-town-hack features/git-town-install-fish-autocompletion features/git-town-kill features/git-town-main_branch features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
+	bundle exec parallel_cucumber features/git-town-hack/branch_exists_locally.feature features/git-town-hack/branch_exists_remotely.feature features/git-town-hack/branch_name_with_slash.feature features/git-town-hack/hack_push_flag.feature features/git-town-hack/main_branch_rebase_tracking_branch_conflict.feature features/git-town-hack/offline.feature features/git-town-hack/on_feature_branch/in_uncommitted_subfolder.feature features/git-town-hack/on_feature_branch/without_remote_origin.feature features/git-town-hack/on_main_branch/with_upstream.feature features/git-town-hack/on_main_branch/without_remote_origin.feature features/git-town-hack/on_main_branch/in_subfolder.feature features/git-town-hack/prompt_for_parent.feature features/git-town-install-fish-autocompletion features/git-town-kill features/git-town-main_branch features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
 
 deploy:  # deploys the website
 	git checkout gh-pages
@@ -82,10 +82,13 @@ lint-ruby:  # lints the Ruby files
 
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	go get -u github.com/DATA-DOG/godog/cmd/godog
+	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.20.1
 	bundle install
 	yarn install
+
+stats:  # shows code statistics
+	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
 
 test: lint unit cuke  # runs all the tests
 .PHONY: test

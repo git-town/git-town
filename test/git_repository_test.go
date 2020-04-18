@@ -50,6 +50,15 @@ func TestGitRepository_CreateFile(t *testing.T) {
 	assert.Equal(t, "content", string(content))
 }
 
+func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("folder/filename", "content")
+	assert.Nil(t, err, "cannot create file in repo")
+	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "folder/filename"))
+	assert.Nil(t, err, "cannot read file")
+	assert.Equal(t, "content", string(content))
+}
+
 // HELPERS
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
