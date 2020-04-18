@@ -29,7 +29,8 @@ type GitRepository struct {
 	configCache *git.Configuration
 }
 
-// CloneGitRepository clones the given parent repo into a new GitRepository.
+// CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
+// The cloning operation is using the given homeDir as the $HOME.
 func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
 	runner := NewShellRunner(".", homeDir)
 	_, err := runner.Run("git", "clone", originDir, workingDir)
