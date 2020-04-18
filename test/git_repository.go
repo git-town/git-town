@@ -216,14 +216,16 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 }
 
 // CreateFeatureBranch creates a branch with the given name in this repository.
-func (repo *GitRepository) CreateFeatureBranch(name string) error {
+func (repo *GitRepository) CreateFeatureBranch(name string, push bool) error {
 	output, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
 		return fmt.Errorf("cannot create branch %q in repo: %w\n%v", name, err, output)
 	}
-	output, err = repo.Run("git", "push", "-u", "origin", name)
-	if err != nil {
-		return fmt.Errorf("cannot push branch %q to origin: %w\n%v", name, err, output)
+	if push {
+		output, err = repo.Run("git", "push", "-u", "origin", name)
+		if err != nil {
+			return fmt.Errorf("cannot push branch %q to origin: %w\n%v", name, err, output)
+		}
 	}
 	output, err = repo.Run("git", "config", "git-town-branch."+name+".parent", "main")
 	if err != nil {

@@ -37,9 +37,9 @@ func TestNewGitRepository(t *testing.T) {
 
 func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	assert.Nil(t, repo.CreateFeatureBranch("branch3"), "cannot create branch3")
-	assert.Nil(t, repo.CreateFeatureBranch("branch2"), "cannot create branch2")
-	assert.Nil(t, repo.CreateFeatureBranch("branch1"), "cannot create branch1")
+	assert.Nil(t, repo.CreateFeatureBranch("branch3", false), "cannot create branch3")
+	assert.Nil(t, repo.CreateFeatureBranch("branch2", false), "cannot create branch2")
+	assert.Nil(t, repo.CreateFeatureBranch("branch1", false), "cannot create branch1")
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"branch1", "branch2", "branch3", "master"}, branches)
