@@ -302,7 +302,7 @@ func (repo *GitRepository) FreshConfiguration() *git.Configuration {
 
 // StageFile adds the file with the given name to the Git index.
 func (repo *GitRepository) StageFile(name string) error {
-	_, err := repo.Run("git", "add", ".")
+	_, err := repo.Run("git", "add", name)
 	if err != nil {
 		return fmt.Errorf("cannot stage file %q: %w", name, err)
 	}

@@ -74,10 +74,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |             |               | conflicting local commit  | conflicting_file |
       | new-feature | local         | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
-      | BRANCH      | NAME             | CONTENT          |
-      | main        | conflicting_file | resolved content |
-      | new-feature | conflicting_file | resolved content |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase

@@ -84,6 +84,7 @@ func (builder *CommitTableBuilder) branches() []string {
 func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 	result.AddRow(fields...)
 	lastBranch := ""
+	lastLocation := ""
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
@@ -99,8 +100,13 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 						lastBranch = branch
 					}
 				case "LOCATION":
-					locations := builder.locations[SHA+branch]
-					row = append(row, strings.Join(locations.Slice(), ", "))
+					locations := strings.Join(builder.locations[SHA+branch].Slice(), ", ")
+					if locations == lastLocation {
+						row = append(row, "")
+					} else {
+						lastLocation = locations
+						row = append(row, locations)
+					}
 				case "MESSAGE":
 					row = append(row, commit.Message)
 				case "FILE NAME":
