@@ -97,11 +97,10 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 						row = append(row, "")
 					} else {
 						row = append(row, branch)
-						lastBranch = branch
 					}
 				case "LOCATION":
 					locations := strings.Join(builder.locations[SHA+branch].Slice(), ", ")
-					if locations == lastLocation {
+					if locations == lastLocation && branch == lastBranch {
 						row = append(row, "")
 					} else {
 						lastLocation = locations
@@ -119,6 +118,7 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 			}
 			result.AddRow(row...)
 		}
+		lastBranch = branch
 	}
 	return result
 }
