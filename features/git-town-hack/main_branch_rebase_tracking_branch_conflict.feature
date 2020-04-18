@@ -78,7 +78,8 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town continue`
+    When I run "git rebase --continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | main        | git push                    |
@@ -87,13 +88,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main        | local and remote | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-      | new-feature | local            | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
-      | BRANCH      | NAME             | CONTENT          |
-      | main        | conflicting_file | resolved content |
-      | new-feature | conflicting_file | resolved content |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main        | local, remote | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
+      | new-feature | local         | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
