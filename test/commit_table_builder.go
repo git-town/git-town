@@ -117,8 +117,8 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 				}
 			}
 			result.AddRow(row...)
+			lastBranch = branch
 		}
-		lastBranch = branch
 	}
 	return result
 }
