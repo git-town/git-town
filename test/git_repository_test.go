@@ -21,9 +21,13 @@ func TestCloneGitRepository(t *testing.T) {
 
 func TestInitGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	result, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
-	assertIsNormalGitRepo(t, result.Dir)
+	assertIsNormalGitRepo(t, repo.Dir)
+	// ensure the Git repo works, i.e. we can commit into it
+	repo.CreateFile("test.txt", "hello")
+	repo.StageFile("test.txt")
+	repo.CommitStagedChanges()
 }
 
 func TestNewGitRepository(t *testing.T) {
