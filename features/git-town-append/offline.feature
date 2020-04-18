@@ -16,13 +16,15 @@ Feature: git append: offline mode
 
 
   Scenario: appending a branch in offline mode
+    When I run "git config -l"
     When I run "git-town append new-feature"
     Then it runs the commands
       | BRANCH           | COMMAND                                     |
       | existing-feature | git add -A                                  |
       |                  | git stash                                   |
       |                  | git checkout main                           |
-      | main             | git checkout existing-feature               |
+      | main             | git rebase origin/main                      |
+      |                  | git checkout existing-feature               |
       | existing-feature | git merge --no-edit origin/existing-feature |
       |                  | git merge --no-edit main                    |
       |                  | git branch new-feature existing-feature     |
