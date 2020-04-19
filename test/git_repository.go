@@ -143,16 +143,16 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 
 // CommitStagedChanges commits the currently staged changes.
 func (repo *GitRepository) CommitStagedChanges() error {
-	_, err := repo.Run("git", "commit", "--no-edit")
+	out, err := repo.Run("git", "commit", "--no-edit")
 	if err != nil {
-		return fmt.Errorf("cannot commit staged changes: %w", err)
+		return fmt.Errorf("cannot commit staged changes: %w\n%s", err, out)
 	}
 	return nil
 }
 
 // Configuration returns a cached Configuration instance for this repo.
-func (repo *GitRepository) Configuration() *git.Configuration {
-	if repo.configCache == nil {
+func (repo *GitRepository) Configuration(refresh bool) *git.Configuration {
+	if repo.configCache == nil || refresh {
 		repo.configCache = git.NewConfiguration(repo.Dir)
 	}
 	return repo.configCache
@@ -161,9 +161,9 @@ func (repo *GitRepository) Configuration() *git.Configuration {
 // ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
 // The branch must exist.
 func (repo *GitRepository) ConnectTrackingBranch(name string) error {
-	_, err := repo.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
+	out, err := repo.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
 	if err != nil {
-		return fmt.Errorf("cannot connect tracking branch for %q: %w", name, err)
+		return fmt.Errorf("cannot connect tracking branch for %q: %w\n%s", name, err, out)
 	}
 	return nil
 }
@@ -215,7 +215,7 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	return nil
 }
 
-// CreateFeatureBranch creates a branch with the given name in this repository.
+// CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string, push bool) error {
 	output, err := repo.Run("git", "checkout", "-b", name)
 	if err != nil {
@@ -257,7 +257,7 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, repo.Dir, err)
 		}
 	}
-	repo.Configuration().AddToPerennialBranches(names...)
+	repo.Configuration(false).AddToPerennialBranches(names...)
 	return nil
 }
 
@@ -300,7 +300,7 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 // FreshConfiguration returns a fresh instance of the Git-Town configuration for this repo.
 func (repo *GitRepository) FreshConfiguration() *git.Configuration {
 	repo.configCache = nil
-	return repo.Configuration()
+	return repo.Configuration(false)
 }
 
 // StageFile adds the file with the given name to the Git index.
@@ -372,7 +372,6 @@ func (repo *GitRepository) SetOffline(enabled bool) error {
 // SetRemote sets the remote of this Git repository to the given target.
 func (repo *GitRepository) SetRemote(target string) error {
 	return repo.RunMany([][]string{
-		{"git", "remote", "remove", "origin"},
 		{"git", "remote", "add", "origin", target},
 	})
 }
