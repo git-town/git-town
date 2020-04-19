@@ -73,6 +73,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2, true)
 	})
 
+	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1)
+		if err != nil {
+			return fmt.Errorf("cannot create perennial branches: %w", err)
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
+	})
+
 	suite.Step(`^my repository has the perennial branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
