@@ -128,19 +128,22 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.Nil(t, err)
 	// create a few commits
-	cloned.DeveloperRepo.CreateCommit(Commit{
+	err = cloned.DeveloperRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "local-remote.md",
 		FileContent: "one",
 		Message:     "local-remote",
 	})
-	cloned.DeveloperRepo.PushBranch("main")
-	cloned.OriginRepo.CreateCommit(Commit{
+	assert.Nil(t, err)
+	err = cloned.DeveloperRepo.PushBranch("main")
+	assert.Nil(t, err)
+	err = cloned.OriginRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "remote.md",
 		FileContent: "two",
 		Message:     "2",
 	})
+	assert.Nil(t, err)
 	// get the CommitTable
 	table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
@@ -163,18 +166,20 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	err = cloned.AddUpstream()
 	assert.Nil(t, err)
 	// create a few commits
-	cloned.DeveloperRepo.CreateCommit(Commit{
+	err = cloned.DeveloperRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "local.md",
 		FileContent: "one",
 		Message:     "local",
 	})
-	cloned.UpstreamRepo.CreateCommit(Commit{
+	assert.Nil(t, err)
+	err = cloned.UpstreamRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "upstream.md",
 		FileContent: "two",
 		Message:     "2",
 	})
+	assert.Nil(t, err)
 	// get the CommitTable
 	table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)

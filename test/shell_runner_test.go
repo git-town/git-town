@@ -20,7 +20,8 @@ func TestShellRunner_TempShellOverride(t *testing.T) {
 	// create the shellrunner
 	runner := NewShellRunner(workDir, createTempDir(t))
 	// add a shell override for the "foo" command
-	runner.AddTempShellOverride("foo", "echo Foo called")
+	err = runner.AddTempShellOverride("foo", "echo Foo called")
+	assert.Nil(t, err)
 	// first run with shell override
 	res, err := runner.Run(toolPath)
 	assert.Nil(t, err)
@@ -66,10 +67,12 @@ func TestShellRunner_RunString(t *testing.T) {
 func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	dir1 := createTempDir(t)
 	dir2 := filepath.Join(dir1, "subdir")
-	os.Mkdir(dir2, 0744)
+	err := os.Mkdir(dir2, 0744)
+	assert.Nil(t, err)
 	runner := NewShellRunner(dir1, createTempDir(t))
 	toolPath := filepath.Join(dir2, "list-dir")
-	ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0744)
+	err = ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0744)
+	assert.Nil(t, err)
 	res, err := runner.RunStringWith(toolPath, command.Options{Dir: "subdir"})
 	assert.Nil(t, err)
 	assert.Equal(t, "list-dir", res.OutputSanitized())
@@ -79,7 +82,8 @@ func TestShellRunner_RunStringWith_Env(t *testing.T) {
 	workDir := createTempDir(t)
 	runner := NewShellRunner(workDir, createTempDir(t))
 	toolPath := filepath.Join(workDir, "ls-env")
-	ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nenv\n"), 0744)
+	err := ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nenv\n"), 0744)
+	assert.Nil(t, err)
 	res, err := runner.RunStringWith(toolPath, command.Options{Env: []string{"foo=bar"}})
 	assert.Nil(t, err)
 	assert.Contains(t, res.OutputSanitized(), "foo=bar")
@@ -88,14 +92,16 @@ func TestShellRunner_RunStringWith_Env(t *testing.T) {
 func TestShellRunner_RunStringWith_Input(t *testing.T) {
 	dir1 := createTempDir(t)
 	dir2 := filepath.Join(dir1, "subdir")
-	os.Mkdir(dir2, 0744)
+	err := os.Mkdir(dir2, 0744)
+	assert.Nil(t, err)
 	runner := NewShellRunner(dir1, createTempDir(t))
 	toolPath := filepath.Join(dir2, "list-dir")
-	ioutil.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
+	err = ioutil.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
 read i1
 read i2
 echo Hello $i1 and $i2
 `), 0744)
+	assert.Nil(t, err)
 	res, err := runner.RunStringWith(toolPath, command.Options{Input: []string{"one\n", "two\n"}})
 	assert.Nil(t, err)
 	assert.Equal(t, "Hello one and two", res.OutputSanitized())

@@ -66,7 +66,8 @@ func TestGitRepository_CheckoutBranch(t *testing.T) {
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "branch1", currentBranch)
-	repo.CheckoutBranch("master")
+	err = repo.CheckoutBranch("master")
+	assert.Nil(t, err)
 	currentBranch, err = repo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "master", currentBranch)
@@ -74,18 +75,20 @@ func TestGitRepository_CheckoutBranch(t *testing.T) {
 
 func TestGitRepository_Commits(t *testing.T) {
 	repo := createTestRepo(t)
-	repo.CreateCommit(Commit{
+	err := repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "file1",
 		FileContent: "hello",
 		Message:     "first commit",
 	})
-	repo.CreateCommit(Commit{
+	assert.Nil(t, err)
+	err = repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "file2",
 		FileContent: "hello again",
 		Message:     "second commit",
 	})
+	assert.Nil(t, err)
 	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
 	assert.Len(t, commits, 2)
@@ -205,6 +208,7 @@ func TestGitRepository_CreatePerennialBranches(t *testing.T) {
 func TestGitRepository_CurrentBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CheckoutBranch("master")
+	assert.Nil(t, err)
 	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
 	err = repo.CheckoutBranch("b1")
@@ -326,6 +330,7 @@ func TestGitRepository_Remotes(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
 	err := repo.SetRemote(origin.homeDir)
+	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"origin"}, remotes)
@@ -336,7 +341,8 @@ func TestGitRepository_RemoveRemote(t *testing.T) {
 	origin := createTestRepo(t)
 	err := repo.SetRemote(origin.homeDir)
 	assert.Nil(t, err)
-	repo.RemoveRemote("origin")
+	err = repo.RemoveRemote("origin")
+	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
 	assert.Nil(t, err)
 	assert.Len(t, remotes, 0)
@@ -344,11 +350,13 @@ func TestGitRepository_RemoveRemote(t *testing.T) {
 
 func TestGitRepository_SetOffline(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	repo.SetOffline(true)
+	err := repo.SetOffline(true)
+	assert.Nil(t, err)
 	offline, err := repo.IsOffline()
 	assert.Nil(t, err)
 	assert.True(t, offline)
-	repo.SetOffline(false)
+	err = repo.SetOffline(false)
+	assert.Nil(t, err)
 	offline, err = repo.IsOffline()
 	assert.Nil(t, err)
 	assert.False(t, offline)
