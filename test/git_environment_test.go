@@ -153,6 +153,40 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 	assert.Equal(t, table.cells[2][2], "two")
 }
 
+func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
+	// create GitEnvironment instance
+	dir := createTempDir(t)
+	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
+	assert.Nil(t, err)
+	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
+	assert.Nil(t, err)
+	err = cloned.AddUpstream()
+	assert.Nil(t, err)
+	// create a few commits
+	cloned.DeveloperRepo.CreateCommit(Commit{
+		Branch:      "main",
+		FileName:    "local.md",
+		FileContent: "one",
+		Message:     "local",
+	})
+	cloned.UpstreamRepo.CreateCommit(Commit{
+		Branch:      "main",
+		FileName:    "upstream.md",
+		FileContent: "two",
+		Message:     "2",
+	})
+	// get the CommitTable
+	table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, table.cells, 3)
+	assert.Equal(t, table.cells[1][0], "local")
+	assert.Equal(t, table.cells[1][1], "local.md")
+	assert.Equal(t, table.cells[1][2], "one")
+	assert.Equal(t, table.cells[2][0], "upstream")
+	assert.Equal(t, table.cells[2][1], "upstream.md")
+	assert.Equal(t, table.cells[2][2], "two")
+}
+
 func TestGitEnvironment_Remove(t *testing.T) {
 	// create GitEnvironment instance
 	dir := createTempDir(t)
