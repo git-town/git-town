@@ -18,8 +18,8 @@ type GitEnvironment struct {
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
 
-	// UpstreamRepo is the Git repository that contains the upstream for this environment.
-	UpstreamRepo GitRepository
+	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
+	UpstreamRepo *GitRepository
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -96,10 +96,11 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 
 // AddUpstream adds an upstream repository.
 func (env *GitEnvironment) AddUpstream() (err error) {
-	env.UpstreamRepo, err = CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir)
+	repo, err := CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir)
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
+	env.UpstreamRepo = &repo
 	err = env.DeveloperRepo.AddRemote("upstream", env.UpstreamRepo.workingDir)
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
@@ -176,6 +177,15 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	}
 	for _, remoteCommit := range remoteCommits {
 		builder.Add(remoteCommit, "remote")
+	}
+	if env.UpstreamRepo != nil {
+		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
+		if err != nil {
+			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+		}
+		for _, upstreamCommit := range upstreamCommits {
+			builder.Add(upstreamCommit, "upstream")
+		}
 	}
 	return builder.Table(fields), nil
 }
