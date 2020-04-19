@@ -24,6 +24,7 @@ func FeatureContext(suite *godog.Suite) {
 	steps.OriginSteps(suite, state)
 	steps.PrintSteps(suite, state)
 	steps.RebaseSteps(suite, state)
+	steps.RepoSteps(suite, state)
 	steps.RunSteps(suite, state)
 	steps.WorkspaceSteps(suite, state)
 }

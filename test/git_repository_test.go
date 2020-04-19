@@ -38,6 +38,15 @@ func TestNewGitRepository(t *testing.T) {
 	_ = NewGitRepository(dir, dir)
 }
 
+func TestGitRepository_AddRemote(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.AddRemote("foo", "bar")
+	assert.Nil(t, err)
+	remotes, err := repo.Remotes()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"foo"}, remotes)
+}
+
 func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
 	assert.Nil(t, repo.CreateFeatureBranch("branch3", false), "cannot create branch3")

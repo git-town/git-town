@@ -34,13 +34,13 @@ type GitRepository struct {
 
 // CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
 // The cloning operation is using the given homeDir as the $HOME.
-func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
+func CloneGitRepository(originDir, targetDir, homeDir string) (GitRepository, error) {
 	runner := NewShellRunner(".", homeDir)
-	_, err := runner.Run("git", "clone", originDir, workingDir)
+	res, err := runner.Run("git", "clone", originDir, targetDir)
 	if err != nil {
-		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w", originDir, err)
+		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
-	return NewGitRepository(workingDir, homeDir), nil
+	return NewGitRepository(targetDir, homeDir), nil
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
@@ -72,6 +72,15 @@ func NewGitRepository(workingDir string, homeDir string) GitRepository {
 	result := GitRepository{Dir: workingDir}
 	result.ShellRunner = NewShellRunner(workingDir, homeDir)
 	return result
+}
+
+// AddRemote adds the given Git remote to this repository.
+func (repo *GitRepository) AddRemote(name, value string) error {
+	res, err := repo.Run("git", "remote", "add", name, value)
+	if err != nil {
+		return fmt.Errorf("cannot add remote %q --> %q: %w\n%s", name, value, err, res.Output())
+	}
+	return nil
 }
 
 // Branches provides the names of the local branches in this Git repository,

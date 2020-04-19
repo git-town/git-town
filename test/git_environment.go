@@ -17,6 +17,9 @@ type GitEnvironment struct {
 
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
+
+	// UpstreamRepo is the Git repository that contains the upstream for this environment.
+	UpstreamRepo GitRepository
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -91,6 +94,19 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	return gitEnv, err
 }
 
+// AddUpstream adds an upstream repository.
+func (env *GitEnvironment) AddUpstream() (err error) {
+	env.UpstreamRepo, err = CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir)
+	if err != nil {
+		return fmt.Errorf("cannot clone upstream: %w", err)
+	}
+	err = env.DeveloperRepo.AddRemote("upstream", env.UpstreamRepo.workingDir)
+	if err != nil {
+		return fmt.Errorf("cannot set upstream remote: %w", err)
+	}
+	return nil
+}
+
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 	for _, commit := range commits {
@@ -113,6 +129,8 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 				env.OriginRepo.RegisterOriginalCommit(commit)
 			case "remote":
 				err = env.OriginRepo.CreateCommit(commit)
+			case "upstream":
+				err = env.UpstreamRepo.CreateCommit(commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
