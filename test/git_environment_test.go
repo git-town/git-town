@@ -10,12 +10,15 @@ import (
 func TestCloneGitEnvironment(t *testing.T) {
 	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
-	assert.Nil(t, err, "cannot create memoized GitEnvironment")
-	_, err = CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
-	assert.Nil(t, err, "cannot clone GitEnvironment")
+	assert.Nil(t, err)
+	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
+	assert.Nil(t, err)
 	assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "origin"))
 	assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 	assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
+	// check pushing
+	out, err := cloned.DeveloperRepo.Run("git", "push")
+	assert.Nil(t, err, out.Output())
 }
 
 func TestNewStandardGitEnvironment(t *testing.T) {
