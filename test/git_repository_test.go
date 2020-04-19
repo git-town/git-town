@@ -54,7 +54,7 @@ func TestGitRepository_Branches(t *testing.T) {
 	assert.Nil(t, repo.CreateFeatureBranch("branch1", false), "cannot create branch1")
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"branch1", "branch2", "branch3", "master"}, branches)
+	assert.Equal(t, []string{"branch1", "branch2", "branch3", "main", "master"}, branches)
 }
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
@@ -113,7 +113,7 @@ func TestGitRepository_Configuration(t *testing.T) {
 func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
-	err := repo.SetRemote(origin.homeDir)
+	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.Fetch()
 	assert.Nil(t, err)
@@ -137,9 +137,7 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 
 func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	err := repo.CreatePerennialBranches("main")
-	assert.Nil(t, err)
-	err = repo.CreateFeatureBranch("f1", false)
+	err := repo.CreateFeatureBranch("f1", false)
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
 	assert.Nil(t, err)
@@ -168,9 +166,7 @@ func TestGitRepository_CreateCommit(t *testing.T) {
 
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	err := repo.CreatePerennialBranches("main")
-	assert.Nil(t, err)
-	err = repo.CreateFeatureBranch("f1", false)
+	err := repo.CreateFeatureBranch("f1", false)
 	assert.Nil(t, err)
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
 }
@@ -199,7 +195,7 @@ func TestGitRepository_CreatePerennialBranches(t *testing.T) {
 	assert.Nil(t, err)
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"master", "p1", "p2"}, branches)
+	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
 	config := repo.Configuration(true)
 	assert.True(t, config.IsPerennialBranch("p1"))
 	assert.True(t, config.IsPerennialBranch("p2"))
@@ -226,7 +222,7 @@ func TestGitRepository_CurrentBranch(t *testing.T) {
 func TestGitRepository_Fetch(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
-	err := repo.SetRemote(origin.homeDir)
+	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.Fetch()
 	assert.Nil(t, err)
@@ -305,7 +301,7 @@ func TestGitRepository_LastActiveDir(t *testing.T) {
 func TestGitRepository_PushBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
-	err := repo.SetRemote(origin.homeDir)
+	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
@@ -329,7 +325,7 @@ func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
 func TestGitRepository_Remotes(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
-	err := repo.SetRemote(origin.homeDir)
+	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
 	assert.Nil(t, err)
@@ -339,7 +335,7 @@ func TestGitRepository_Remotes(t *testing.T) {
 func TestGitRepository_RemoveRemote(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
-	err := repo.SetRemote(origin.homeDir)
+	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.RemoveRemote("origin")
 	assert.Nil(t, err)
@@ -368,7 +364,7 @@ func TestGitRepository_SetRemote(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, []string{}, remotes)
 	origin := createTestRepo(t)
-	err = repo.SetRemote(origin.homeDir)
+	err = repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	remotes, err = repo.Remotes()
 	assert.Nil(t, err)
@@ -416,8 +412,10 @@ func createTestRepo(t *testing.T) GitRepository {
 
 func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
-	err := repo.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "master"},
+	err := repo.CreateBranch("main", "master")
+	assert.Nil(t, err)
+	err = repo.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
 	assert.Nil(t, err)

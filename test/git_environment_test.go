@@ -86,7 +86,6 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 	// verify remote commits
 	commits, err = cloned.OriginRepo.Commits([]string{"FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
-	fmt.Println(commits)
 	assert.Len(t, commits, 2)
 	assert.Equal(t, "remote commit", commits[0].Message)
 	assert.Equal(t, "remote-file", commits[0].FileName)

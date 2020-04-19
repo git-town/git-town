@@ -405,12 +405,6 @@ func (repo *GitRepository) SetOffline(enabled bool) error {
 	return nil
 }
 
-// SetRemote sets the remote of this Git repository to the given target.
-func (repo *GitRepository) SetRemote(target string) error {
-	_, err := repo.Run("git", "remote", "add", "origin", target)
-	return err
-}
-
 // Stash adds the current files to the Git stash.
 func (repo *GitRepository) Stash() error {
 	out, err := repo.Run("git", "add", ".")
