@@ -148,8 +148,8 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 }
 
 // CreateRemoteBranch creates a branch with the given name only in the remote directory.
-func (env GitEnvironment) CreateRemoteBranch(name string) error {
-	err := env.OriginRepo.CreateBranch(name)
+func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
+	err := env.OriginRepo.CreateBranch(name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
 	}

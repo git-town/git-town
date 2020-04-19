@@ -59,8 +59,10 @@ func TestGitRepository_Branches(t *testing.T) {
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
 	repo := createTestRepo(t)
-	repo.CreateBranch("branch1")
-	repo.CheckoutBranch("branch1")
+	err := repo.CreateBranch("branch1", "master")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("branch1")
+	assert.Nil(t, err)
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "branch1", currentBranch)
@@ -120,7 +122,7 @@ func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 
 func TestGitRepo_CreateBranch(t *testing.T) {
 	repo := createTestRepo(t)
-	err := repo.CreateBranch("branch1")
+	err := repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
@@ -203,7 +205,7 @@ func TestGitRepository_CreatePerennialBranches(t *testing.T) {
 func TestGitRepository_CurrentBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CheckoutBranch("master")
-	err = repo.CreateBranch("b1")
+	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
 	err = repo.CheckoutBranch("b1")
 	assert.Nil(t, err)
@@ -301,7 +303,7 @@ func TestGitRepository_PushBranch(t *testing.T) {
 	origin := createTestRepo(t)
 	err := repo.SetRemote(origin.homeDir)
 	assert.Nil(t, err)
-	err = repo.CreateBranch("b1")
+	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
 	err = repo.PushBranch("b1")
 	assert.Nil(t, err)
