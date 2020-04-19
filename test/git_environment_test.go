@@ -49,21 +49,21 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 	assert.Nil(t, err)
 	// create the commits
 	err = cloned.CreateCommits([]Commit{
-		Commit{
+		{
 			Branch:      "main",
 			FileName:    "local-file",
 			FileContent: "lc",
 			Locations:   []string{"local"},
 			Message:     "local commit",
 		},
-		Commit{
+		{
 			Branch:      "main",
 			FileName:    "remote-file",
 			FileContent: "rc",
 			Locations:   []string{"remote"},
 			Message:     "remote commit",
 		},
-		Commit{
+		{
 			Branch:      "main",
 			FileName:    "loc-rem-file",
 			FileContent: "lrc",

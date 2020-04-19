@@ -58,6 +58,7 @@ func TestShellRunner_RunString(t *testing.T) {
 	workDir := createTempDir(t)
 	runner := NewShellRunner(workDir, createTempDir(t))
 	_, err := runner.RunString("touch first")
+	assert.Nil(t, err)
 	_, err = os.Stat(filepath.Join(workDir, "first"))
 	assert.False(t, os.IsNotExist(err))
 }
