@@ -151,8 +151,8 @@ func (repo *GitRepository) Configuration() *git.Configuration {
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
-func (repo *GitRepository) CreateBranch(name string) error {
-	outcome, err := repo.Run("git", "checkout", "-b", name)
+func (repo *GitRepository) CreateBranch(name, parent string) error {
+	outcome, err := repo.Run("git", "branch", name, parent)
 	if err != nil {
 		return fmt.Errorf("cannot create branch %q: %w\n%v", name, err, outcome)
 	}
@@ -222,7 +222,7 @@ func (repo *GitRepository) CreateFile(name, content string) error {
 // CreatePerennialBranches creates perennial branches with the given names in this repository.
 func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
-		err := repo.CreateBranch(name)
+		err := repo.CreateBranch(name, "main")
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, repo.Dir, err)
 		}
