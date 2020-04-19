@@ -126,7 +126,7 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 	assert.Nil(t, err)
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
-	assert.Equal(t, "branch1", currentBranch)
+	assert.Equal(t, "master", currentBranch)
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"branch1", "master"}, branches)

@@ -89,6 +89,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		// NOTE: the developer repo receives the master branch from origin
 		//       but we don't want it here because it isn't used in tests.
 		{"git", "branch", "-d", "master"},
+		{"git", "remote", "remove", "origin"}, // disconnect the remote here since we copy this and connect to another directory in tests
 	})
 	return gitEnv, err
 }
@@ -150,10 +151,6 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 // CreateRemoteBranch creates a branch with the given name only in the remote directory.
 func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
 	err := env.OriginRepo.CreateBranch(name, parent)
-	if err != nil {
-		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
-	}
-	err = env.OriginRepo.CheckoutBranch("master")
 	if err != nil {
 		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
 	}
