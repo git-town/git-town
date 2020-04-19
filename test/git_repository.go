@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Originate/git-town/src/command"
+
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 )
@@ -142,8 +144,14 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (repo *GitRepository) CommitStagedChanges() error {
-	out, err := repo.Run("git", "commit", "--no-edit")
+func (repo *GitRepository) CommitStagedChanges(message bool) error {
+	var out *command.Result
+	var err error
+	if message {
+		out, err = repo.Run("git", "commit", "-m", "committing")
+	} else {
+		out, err = repo.Run("git", "commit", "--no-edit")
+	}
 	if err != nil {
 		return fmt.Errorf("cannot commit staged changes: %w\n%s", err, out)
 	}
@@ -295,12 +303,6 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 		return result, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
-}
-
-// FreshConfiguration returns a fresh instance of the Git-Town configuration for this repo.
-func (repo *GitRepository) FreshConfiguration() *git.Configuration {
-	repo.configCache = nil
-	return repo.Configuration(false)
 }
 
 // StageFile adds the file with the given name to the Git index.

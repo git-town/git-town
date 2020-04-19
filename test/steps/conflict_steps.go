@@ -13,7 +13,7 @@ func ConflictSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return err
 		}
-		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.CommitStagedChanges()
+		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.CommitStagedChanges(false)
 		return err
 	})
 }

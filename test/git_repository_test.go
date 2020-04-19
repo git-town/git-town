@@ -25,9 +25,12 @@ func TestInitGitRepository(t *testing.T) {
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, repo.Dir)
 	// ensure the Git repo works, i.e. we can commit into it
-	repo.CreateFile("test.txt", "hello")
-	repo.StageFile("test.txt")
-	repo.CommitStagedChanges()
+	err = repo.CreateFile("test.txt", "hello")
+	assert.Nil(t, err)
+	err = repo.StageFile("test.txt")
+	assert.Nil(t, err)
+	err = repo.CommitStagedChanges(true)
+	assert.Nil(t, err)
 }
 
 func TestNewGitRepository(t *testing.T) {
@@ -110,6 +113,9 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateBranch("branch1")
 	assert.Nil(t, err)
+	currentBranch, err := repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "branch1", currentBranch)
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"branch1", "master"}, branches)
@@ -128,13 +134,22 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Equal(t, []string{"f1", "f1a", "main", "master"}, branches)
 }
 
-func TestGitRepository_CreateFile(t *testing.T) {
+func TestGitRepository_CreateCommit(t *testing.T) {
 	repo := createTestRepo(t)
-	err := repo.CreateFile("filename", "content")
-	assert.Nil(t, err, "cannot create file in repo")
-	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "filename"))
-	assert.Nil(t, err, "cannot read file")
-	assert.Equal(t, "content", string(content))
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "test commit",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	assert.Equal(t, "hello.txt", commits[0].FileName)
+	assert.Equal(t, "hello world", commits[0].FileContent)
+	assert.Equal(t, "test commit", commits[0].Message)
+	assert.Equal(t, "master", commits[0].Branch)
 }
 
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
@@ -146,6 +161,15 @@ func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
 }
 
+func TestGitRepository_CreateFile(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("filename", "content")
+	assert.Nil(t, err, "cannot create file in repo")
+	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "filename"))
+	assert.Nil(t, err, "cannot read file")
+	assert.Equal(t, "content", string(content))
+}
+
 func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("folder/filename", "content")
@@ -153,6 +177,81 @@ func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
 	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "folder/filename"))
 	assert.Nil(t, err, "cannot read file")
 	assert.Equal(t, "content", string(content))
+}
+
+func TestGitRepository_CreatePerennialBranches(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.CreatePerennialBranches("p1", "p2")
+	assert.Nil(t, err)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"master", "p1", "p2"}, branches)
+	config := repo.Configuration(true)
+	assert.True(t, config.IsPerennialBranch("p1"))
+	assert.True(t, config.IsPerennialBranch("p2"))
+}
+
+func TestGitRepository_CurrentBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CheckoutBranch("master")
+	err = repo.CreateBranch("b1")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("b1")
+	assert.Nil(t, err)
+	branch, err := repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "b1", branch)
+	err = repo.CheckoutBranch("master")
+	assert.Nil(t, err)
+	branch, err = repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "master", branch)
+}
+
+func TestGitRepository_Fetch(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.SetRemote(origin.homeDir)
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
+}
+
+func TestGitRepository_FileContentInCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "commit",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.commitsInBranch("master", []string{})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	content, err := repo.FileContentInCommit(commits[0].SHA, "hello.txt")
+	assert.Nil(t, err)
+	assert.Equal(t, "hello world", content)
+}
+
+func TestGitRepository_FilesInCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("f1.txt", "one")
+	assert.Nil(t, err)
+	err = repo.CreateFile("f2.txt", "two")
+	assert.Nil(t, err)
+	err = repo.StageFile("f1.txt")
+	assert.Nil(t, err)
+	err = repo.StageFile("f2.txt")
+	assert.Nil(t, err)
+	err = repo.CommitStagedChanges(true)
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	fileNames, err := repo.FilesInCommit(commits[0].SHA)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
 }
 
 // HELPERS
