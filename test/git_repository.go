@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
@@ -336,6 +337,18 @@ func (repo *GitRepository) HasRebaseInProgress() (result bool, err error) {
 	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
 }
 
+// IsOffline indicates whether Git Town is offline.
+func (repo *GitRepository) IsOffline() (result bool, err error) {
+	res, err := repo.Run("git", "config", "--get", "git-town.offline")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine offline status: %w\n%s", err, res.Output())
+	}
+	if res.OutputSanitized() == "true" {
+		return true, nil
+	}
+	return false, nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Run("git", "rev-parse", "--show-toplevel")
@@ -356,15 +369,27 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
+// Remotes provides the names of all Git remotes in this repository.
+func (repo *GitRepository) Remotes() (names []string, err error) {
+	out, err := repo.Run("git", "remote")
+	if err != nil {
+		return names, err
+	}
+	if out.OutputSanitized() == "" {
+		return []string{}, nil
+	}
+	return out.OutputLines(), nil
+}
+
 // RemoveRemote deletes the Git remote with the given name.
 func (repo *GitRepository) RemoveRemote(name string) error {
-	_, err := repo.Run("git", "remote", "rm", "origin")
+	_, err := repo.Run("git", "remote", "rm", name)
 	return err
 }
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
+	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", strconv.FormatBool(enabled))
 	if err != nil {
 		return fmt.Errorf("cannot set offline mode in repo %q: %w\n%v", repo.Dir, err, outcome)
 	}
@@ -378,11 +403,27 @@ func (repo *GitRepository) SetRemote(target string) error {
 	})
 }
 
+// Stash adds the current files to the Git stash.
+func (repo *GitRepository) Stash() error {
+	out, err := repo.Run("git", "add", ".")
+	if err != nil {
+		return fmt.Errorf("cannot stage files: %w\n%s", err, out.Output())
+	}
+	out, err = repo.Run("git", "stash")
+	if err != nil {
+		return fmt.Errorf("cannot stash: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
 // StashSize provides the number of stashes in this repository.
 func (repo *GitRepository) StashSize() (result int, err error) {
 	res, err := repo.Run("git", "stash", "list")
 	if err != nil {
 		return result, fmt.Errorf("command %q failed: %w", res.FullCmd(), err)
+	}
+	if res.OutputSanitized() == "" {
+		return 0, nil
 	}
 	return len(res.OutputLines()), nil
 }
