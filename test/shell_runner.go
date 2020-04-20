@@ -59,8 +59,8 @@ func (runner *ShellRunner) hasTempShellOverrides() bool {
 	return runner.tempShellOverridesDir != ""
 }
 
-// RemoveTempShellOverrides removes all custom shell overrides.
-func (runner *ShellRunner) RemoveTempShellOverrides() {
+// removeTempShellOverrides removes all custom shell overrides.
+func (runner *ShellRunner) removeTempShellOverrides() {
 	os.RemoveAll(runner.tempShellOverridesDir)
 	runner.tempShellOverridesDir = ""
 }
@@ -128,7 +128,7 @@ func (runner *ShellRunner) RunWith(opts command.Options, cmd string, args ...str
 				break
 			}
 		}
-		defer runner.RemoveTempShellOverrides()
+		defer runner.removeTempShellOverrides()
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(runner.workingDir, opts.Dir)
