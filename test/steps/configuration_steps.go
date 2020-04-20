@@ -24,8 +24,8 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I haven't configured Git Town yet$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).DeleteMainBranchConfiguration()
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).DeletePerennialBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeleteMainBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
 		return nil
 	})
 
@@ -42,12 +42,12 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
 		}
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).SetNewBranchPush(b, false)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, false)
 		return nil
 	})
 
 	suite.Step(`^the main branch is configured as "([^"]+)"$`, func(name string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).SetMainBranch(name)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetMainBranch(name)
 		return nil
 	})
 
@@ -60,17 +60,17 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the main branch name is not configured$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).DeleteMainBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeleteMainBranchConfiguration()
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).DeletePerennialBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).AddToPerennialBranches(branch1, branch2)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(branch1, branch2)
 		return nil
 	})
 

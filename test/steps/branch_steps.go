@@ -94,7 +94,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).AddToPerennialBranches(name)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
 		return nil
 	})
 }

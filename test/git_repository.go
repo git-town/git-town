@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
-
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 )
@@ -315,15 +314,6 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
 
-// StageFile adds the file with the given name to the Git index.
-func (repo *GitRepository) StageFile(name string) error {
-	_, err := repo.Run("git", "add", name)
-	if err != nil {
-		return fmt.Errorf("cannot stage file %q: %w", name, err)
-	}
-	return nil
-}
-
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (repo *GitRepository) HasFile(name, content string) (result bool, err error) {
 	rawContent, err := ioutil.ReadFile(filepath.Join(repo.Dir, name))
@@ -441,4 +431,14 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 		result = append(result, parts[1])
 	}
 	return result, nil
+}
+
+// StageFiles adds the file with the given name to the Git index.
+func (repo *GitRepository) StageFiles(names ...string) error {
+	args := append([]string{"add"}, names...)
+	_, err := repo.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
+	}
+	return nil
 }
