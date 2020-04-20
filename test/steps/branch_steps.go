@@ -54,7 +54,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch, false)
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
@@ -66,11 +66,11 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository has the feature branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch1, false)
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch1)
 		if err != nil {
 			return err
 		}
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2, false)
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2)
 	})
 
 	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {

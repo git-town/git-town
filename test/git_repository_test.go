@@ -49,9 +49,9 @@ func TestGitRepository_AddRemote(t *testing.T) {
 
 func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	assert.Nil(t, repo.CreateFeatureBranch("branch3", false))
-	assert.Nil(t, repo.CreateFeatureBranch("branch2", false))
-	assert.Nil(t, repo.CreateFeatureBranch("branch1", false))
+	assert.Nil(t, repo.CreateFeatureBranch("branch3"))
+	assert.Nil(t, repo.CreateFeatureBranch("branch2"))
+	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"branch1", "branch2", "branch3", "main", "master"}, branches)
@@ -137,7 +137,7 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 
 func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	err := repo.CreateFeatureBranch("f1", false)
+	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
 	assert.Nil(t, err)
@@ -166,7 +166,7 @@ func TestGitRepository_CreateCommit(t *testing.T) {
 
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	err := repo.CreateFeatureBranch("f1", false)
+	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
 }
