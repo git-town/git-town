@@ -10,7 +10,6 @@ install:
   - make setup
 
 script:
-  - git --version
   - make test
 
 notifications:
