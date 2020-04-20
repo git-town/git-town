@@ -24,6 +24,13 @@ func TestInitGitRepository(t *testing.T) {
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, repo.Dir)
+	// ensure the Git repo works, i.e. we can commit into it
+	err = repo.CreateFile("test.txt", "hello")
+	assert.Nil(t, err)
+	err = repo.StageFiles("test.txt")
+	assert.Nil(t, err)
+	err = repo.CommitStagedChanges(true)
+	assert.Nil(t, err)
 }
 
 func TestNewGitRepository(t *testing.T) {
