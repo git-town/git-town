@@ -29,14 +29,15 @@ type GitRepository struct {
 	configCache *git.Configuration
 }
 
-// CloneGitRepository clones the given parent repo into a new GitRepository.
-func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
+// CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
+// The cloning operation is using the given homeDir as the $HOME.
+func CloneGitRepository(originDir, targetDir, homeDir string) (GitRepository, error) {
 	runner := NewShellRunner(".", homeDir)
-	_, err := runner.Run("git", "clone", originDir, workingDir)
+	res, err := runner.Run("git", "clone", originDir, targetDir)
 	if err != nil {
-		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w", originDir, err)
+		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
-	return NewGitRepository(workingDir, homeDir), nil
+	return NewGitRepository(targetDir, homeDir), nil
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
