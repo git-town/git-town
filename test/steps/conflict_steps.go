@@ -9,7 +9,7 @@ func ConflictSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return err
 		}
-		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.StageFile(filename)
+		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.StageFiles(filename)
 		if err != nil {
 			return err
 		}
