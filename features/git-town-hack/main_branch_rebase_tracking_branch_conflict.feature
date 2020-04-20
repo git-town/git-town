@@ -29,7 +29,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
 
