@@ -142,8 +142,8 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 }
 
 // Configuration returns a cached Configuration instance for this repo.
-func (repo *GitRepository) Configuration() *git.Configuration {
-	if repo.configCache == nil {
+func (repo *GitRepository) Configuration(refresh bool) *git.Configuration {
+	if repo.configCache == nil || refresh {
 		repo.configCache = git.NewConfiguration(repo.Dir)
 	}
 	return repo.configCache
@@ -228,7 +228,7 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, repo.Dir, err)
 		}
 	}
-	repo.Configuration().AddToPerennialBranches(names...)
+	repo.Configuration(false).AddToPerennialBranches(names...)
 	return nil
 }
 
@@ -257,12 +257,6 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 		return result, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
-}
-
-// FreshConfiguration returns a fresh instance of the Git-Town configuration for this repo.
-func (repo *GitRepository) FreshConfiguration() *git.Configuration {
-	repo.configCache = nil
-	return repo.Configuration()
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
