@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
 )
@@ -139,6 +140,21 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 		result = append(result, commit)
 	}
 	return result, nil
+}
+
+// CommitStagedChanges commits the currently staged changes.
+func (repo *GitRepository) CommitStagedChanges(message bool) error {
+	var out *command.Result
+	var err error
+	if message {
+		out, err = repo.Run("git", "commit", "-m", "committing")
+	} else {
+		out, err = repo.Run("git", "commit", "--no-edit")
+	}
+	if err != nil {
+		return fmt.Errorf("cannot commit staged changes: %w\n%s", err, out)
+	}
+	return nil
 }
 
 // Configuration returns a cached Configuration instance for this repo.
