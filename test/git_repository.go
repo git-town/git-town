@@ -407,13 +407,12 @@ func (repo *GitRepository) SetOffline(enabled bool) error {
 
 // Stash adds the current files to the Git stash.
 func (repo *GitRepository) Stash() error {
-	out, err := repo.Run("git", "add", ".")
+	err := repo.RunMany([][]string{
+		{"git", "add", "."},
+		{"git", "stash"},
+	})
 	if err != nil {
-		return fmt.Errorf("cannot stage files: %w\n%s", err, out.Output())
-	}
-	out, err = repo.Run("git", "stash")
-	if err != nil {
-		return fmt.Errorf("cannot stash: %w\n%s", err, out.Output())
+		return fmt.Errorf("cannot stash: %w", err)
 	}
 	return nil
 }
