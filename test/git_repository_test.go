@@ -50,7 +50,7 @@ func TestGitRepository_Branches(t *testing.T) {
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
 	repo := createTestRepo(t)
-	err := repo.CreateBranch("branch1")
+	err := repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
 	err = repo.CheckoutBranch("branch1")
 	assert.Nil(t, err)
@@ -103,7 +103,7 @@ func TestGitRepository_Configuration(t *testing.T) {
 
 func TestGitRepo_CreateBranch(t *testing.T) {
 	repo := createTestRepo(t)
-	err := repo.CreateBranch("branch1")
+	err := repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
@@ -183,7 +183,7 @@ func TestGitRepository_CurrentBranch(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CheckoutBranch("master")
 	assert.Nil(t, err)
-	err = repo.CreateBranch("b1")
+	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
 	err = repo.CheckoutBranch("b1")
 	assert.Nil(t, err)
@@ -284,7 +284,7 @@ func createTestRepo(t *testing.T) GitRepository {
 
 func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
-	err := repo.CreateBranch("main")
+	err := repo.CreateBranch("main", "master")
 	assert.Nil(t, err)
 	err = repo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
