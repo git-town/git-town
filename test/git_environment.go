@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/cucumber/godog/gherkin"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -84,11 +82,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
-	commits, err := FromGherkinTable(table)
-	if err != nil {
-		return fmt.Errorf("cannot parse Gherkin table: %w", err)
-	}
+func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 	for _, commit := range commits {
 		var err error
 		for _, location := range commit.Locations {
@@ -118,7 +112,7 @@ func (env *GitEnvironment) CreateCommits(table *gherkin.DataTable) error {
 		}
 	}
 	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
-	err = env.OriginRepo.CheckoutBranch("master")
+	err := env.OriginRepo.CheckoutBranch("master")
 	if err != nil {
 		return fmt.Errorf("cannot change origin repo back to master: %w", err)
 	}

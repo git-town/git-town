@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/Originate/git-town/test"
 	"github.com/Originate/git-town/test/helpers"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/gherkin"
@@ -20,7 +21,11 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^the following commits exist in my repository$`, func(table *gherkin.DataTable) error {
 		fs.activeScenarioState.originalCommitTable = table
-		return fs.activeScenarioState.gitEnvironment.CreateCommits(table)
+		commits, err := test.FromGherkinTable(table)
+		if err != nil {
+			return fmt.Errorf("cannot parse Gherkin table: %w", err)
+		}
+		return fs.activeScenarioState.gitEnvironment.CreateCommits(commits)
 	})
 }
 
