@@ -234,13 +234,12 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	output, err := repo.Run("git", "checkout", "-b", name)
+	err := repo.RunMany([][]string{
+		{"git", "checkout", "-b", name},
+		{"git", "config", "git-town-branch." + name + ".parent", "main"},
+	})
 	if err != nil {
-		return fmt.Errorf("cannot create branch %q in repo: %w\n%v", name, err, output)
-	}
-	output, err = repo.Run("git", "config", "git-town-branch."+name+".parent", "main")
-	if err != nil {
-		return fmt.Errorf("cannot set parent branch for %q: %w\n%v", name, err, output)
+		return fmt.Errorf("cannot create feature branch %q: %w", name, err)
 	}
 	return nil
 }
