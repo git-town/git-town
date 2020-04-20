@@ -21,9 +21,9 @@ func TestCloneGitRepository(t *testing.T) {
 
 func TestInitGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	result, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
-	assertIsNormalGitRepo(t, result.Dir)
+	assertIsNormalGitRepo(t, repo.Dir)
 }
 
 func TestNewGitRepository(t *testing.T) {
@@ -33,12 +33,113 @@ func TestNewGitRepository(t *testing.T) {
 
 func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
-	assert.Nil(t, repo.CreateFeatureBranch("branch3"), "cannot create branch3")
-	assert.Nil(t, repo.CreateFeatureBranch("branch2"), "cannot create branch2")
-	assert.Nil(t, repo.CreateFeatureBranch("branch1"), "cannot create branch1")
+	assert.Nil(t, repo.CreateFeatureBranch("branch3"))
+	assert.Nil(t, repo.CreateFeatureBranch("branch2"))
+	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"branch1", "branch2", "branch3", "master"}, branches)
+	assert.Equal(t, []string{"branch1", "branch2", "branch3", "main", "master"}, branches)
+}
+
+func TestGitRepository_CheckoutBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateBranch("branch1")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("branch1")
+	assert.Nil(t, err)
+	currentBranch, err := repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "branch1", currentBranch)
+	err = repo.CheckoutBranch("master")
+	assert.Nil(t, err)
+	currentBranch, err = repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "master", currentBranch)
+}
+
+func TestGitRepository_Commits(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "file1",
+		FileContent: "hello",
+		Message:     "first commit",
+	})
+	assert.Nil(t, err)
+	err = repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "file2",
+		FileContent: "hello again",
+		Message:     "second commit",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 2)
+	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "file1", commits[0].FileName)
+	assert.Equal(t, "hello", commits[0].FileContent)
+	assert.Equal(t, "first commit", commits[0].Message)
+	assert.Equal(t, "master", commits[1].Branch)
+	assert.Equal(t, "file2", commits[1].FileName)
+	assert.Equal(t, "hello again", commits[1].FileContent)
+	assert.Equal(t, "second commit", commits[1].Message)
+}
+
+func TestGitRepository_Configuration(t *testing.T) {
+	repo := createTestRepo(t)
+	config := repo.Configuration(false)
+	assert.NotNil(t, config, "first path: new config")
+	config = repo.Configuration(false)
+	assert.NotNil(t, config, "second path: cached config")
+}
+
+func TestGitRepo_CreateBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateBranch("branch1")
+	assert.Nil(t, err)
+	currentBranch, err := repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "master", currentBranch)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"branch1", "master"}, branches)
+}
+
+func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.CreateFeatureBranch("f1")
+	assert.Nil(t, err)
+	err = repo.CreateChildFeatureBranch("f1a", "f1")
+	assert.Nil(t, err)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"f1", "f1a", "main", "master"}, branches)
+}
+
+func TestGitRepository_CreateCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "test commit",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	assert.Equal(t, "hello.txt", commits[0].FileName)
+	assert.Equal(t, "hello world", commits[0].FileContent)
+	assert.Equal(t, "test commit", commits[0].Message)
+	assert.Equal(t, "master", commits[0].Branch)
+}
+
+func TestGitRepository_CreateFeatureBranch(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.CreateFeatureBranch("f1")
+	assert.Nil(t, err)
+	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
 }
 
 func TestGitRepository_CreateFile(t *testing.T) {
@@ -59,6 +160,109 @@ func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
 	assert.Equal(t, "content", string(content))
 }
 
+func TestGitRepository_CreatePerennialBranches(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.CreatePerennialBranches("p1", "p2")
+	assert.Nil(t, err)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
+	config := repo.Configuration(true)
+	assert.True(t, config.IsPerennialBranch("p1"))
+	assert.True(t, config.IsPerennialBranch("p2"))
+}
+
+func TestGitRepository_CurrentBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CheckoutBranch("master")
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b1")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("b1")
+	assert.Nil(t, err)
+	branch, err := repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "b1", branch)
+	err = repo.CheckoutBranch("master")
+	assert.Nil(t, err)
+	branch, err = repo.CurrentBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "master", branch)
+}
+
+func TestGitRepository_FileContentInCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "commit",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.commitsInBranch("master", []string{})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	content, err := repo.FileContentInCommit(commits[0].SHA, "hello.txt")
+	assert.Nil(t, err)
+	assert.Equal(t, "hello world", content)
+}
+
+func TestGitRepository_FilesInCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("f1.txt", "one")
+	assert.Nil(t, err)
+	err = repo.CreateFile("f2.txt", "two")
+	assert.Nil(t, err)
+	err = repo.StageFile("f1.txt")
+	assert.Nil(t, err)
+	err = repo.StageFile("f2.txt")
+	assert.Nil(t, err)
+	err = repo.CommitStagedChanges(true)
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	fileNames, err := repo.FilesInCommit(commits[0].SHA)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
+}
+
+func TestGitRepository_StageFile(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("f1.txt", "one")
+	assert.Nil(t, err)
+}
+
+func TestGitRepository_HasFile(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("f1.txt", "one")
+	assert.Nil(t, err)
+	has, err := repo.HasFile("f1.txt", "one")
+	assert.Nil(t, err)
+	assert.True(t, has)
+	_, err = repo.HasFile("f1.txt", "zonk")
+	assert.Error(t, err)
+	_, err = repo.HasFile("zonk.txt", "one")
+	assert.Error(t, err)
+}
+
+func TestGitRepository_LastActiveDir(t *testing.T) {
+	repo := createTestRepo(t)
+	dir, err := repo.LastActiveDir()
+	assert.Nil(t, err)
+	assert.Equal(t, repo.homeDir, dir)
+}
+
+func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	assert.Len(t, repo.originalCommits, 0)
+	repo.RegisterOriginalCommit(Commit{
+		FileName: "file",
+	})
+	assert.Len(t, repo.originalCommits, 1)
+	assert.Equal(t, "file", repo.originalCommits[0].FileName)
+}
+
 // HELPERS
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
@@ -75,8 +279,10 @@ func createTestRepo(t *testing.T) GitRepository {
 
 func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
-	err := repo.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "master"},
+	err := repo.CreateBranch("main")
+	assert.Nil(t, err)
+	err = repo.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
 	assert.Nil(t, err)
