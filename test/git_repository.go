@@ -308,3 +308,13 @@ func (repo *GitRepository) SetRemote(target string) error {
 		{"git", "remote", "add", "origin", target},
 	})
 }
+
+// StageFiles adds the file with the given name to the Git index.
+func (repo *GitRepository) StageFiles(names ...string) error {
+	args := append([]string{"add"}, names...)
+	_, err := repo.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
+	}
+	return nil
+}
