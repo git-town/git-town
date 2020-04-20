@@ -288,6 +288,18 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 	return true, nil
 }
 
+// IsOffline indicates whether Git Town is offline.
+func (repo *GitRepository) IsOffline() (result bool, err error) {
+	res, err := repo.Run("git", "config", "--get", "git-town.offline")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine offline status: %w\n%s", err, res.Output())
+	}
+	if res.OutputSanitized() == "true" {
+		return true, nil
+	}
+	return false, nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Run("git", "rev-parse", "--show-toplevel")
