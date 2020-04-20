@@ -96,7 +96,6 @@ func (runner *ShellRunner) RunString(fullCmd string) (*command.Result, error) {
 
 // RunStringWith runs the given command (including possible arguments)
 // in this ShellRunner's directory using the given options.
-// opts.Dir is a directory inside the working directory of this ShellRunner.
 // Shell overrides will be used and removed when done.
 func (runner *ShellRunner) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
