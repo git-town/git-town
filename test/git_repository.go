@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
@@ -322,7 +323,7 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
+	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", strconv.FormatBool(enabled))
 	if err != nil {
 		return fmt.Errorf("cannot set offline mode in repo %q: %w\n%v", repo.Dir, err, outcome)
 	}
