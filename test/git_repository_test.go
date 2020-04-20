@@ -263,6 +263,20 @@ func TestGitRepository_FilesInCommit(t *testing.T) {
 	assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
 }
 
+func TestGitRepository_SetOffline(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.SetOffline(true)
+	assert.Nil(t, err)
+	offline, err := repo.IsOffline()
+	assert.Nil(t, err)
+	assert.True(t, offline)
+	err = repo.SetOffline(false)
+	assert.Nil(t, err)
+	offline, err = repo.IsOffline()
+	assert.Nil(t, err)
+	assert.False(t, offline)
+}
+
 func TestGitRepository_StageFile(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
