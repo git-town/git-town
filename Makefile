@@ -64,7 +64,7 @@ lint-cucumber:  # lints the Cucumber files
 	bundle exec cucumber_lint
 
 lint-go:  # lints the Go files
-	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl src/... test/...
+	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
 
 lint-markdown: build  # lints the Markdown files
 	@find . -type f \( \
@@ -83,7 +83,7 @@ lint-ruby:  # lints the Ruby files
 setup:  # the setup steps necessary on developer machines
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.20.1
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
 	bundle install
 	yarn install
 
