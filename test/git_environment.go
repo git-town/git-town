@@ -120,11 +120,13 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
 	result.AddRow("local", strings.Join(branches, ", "))
-	branches, err = env.OriginRepo.Branches()
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+	if env.OriginRepo != nil {
+		branches, err = env.OriginRepo.Branches()
+		if err != nil {
+			return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+		}
+		result.AddRow("remote", strings.Join(branches, ", "))
 	}
-	result.AddRow("remote", strings.Join(branches, ", "))
 	return result, nil
 }
 

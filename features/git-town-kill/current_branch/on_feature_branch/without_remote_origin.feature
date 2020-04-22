@@ -26,18 +26,18 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And now my repository has the following commits
+    And my repository now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
 
 
   Scenario: Undoing a kill of a local feature branch
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH          | COMMAND                                                        |
-      | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
-      |                 | git checkout current-feature                                   |
-      | current-feature | git reset <%= sha 'current feature commit' %>                  |
+      | BRANCH          | COMMAND                                                       |
+      | main            | git branch current-feature {{ sha 'WIP on current-feature' }} |
+      |                 | git checkout current-feature                                  |
+      | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I end up on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
