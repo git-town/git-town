@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Originate/git-town/test/helpers"
+
 	"github.com/Originate/git-town/src/command"
 	"github.com/Originate/git-town/src/git"
 	"github.com/Originate/git-town/src/util"
@@ -83,7 +85,7 @@ func (repo *GitRepository) AddRemote(name, value string) error {
 }
 
 // Branches provides the names of the local branches in this Git repository,
-// sorted alphabetically.
+// sorted alphabetically, with the "main" branch first.
 func (repo *GitRepository) Branches() (result []string, err error) {
 	outcome, err := repo.Run("git", "branch")
 	if err != nil {
@@ -93,7 +95,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 		line = strings.Replace(line, "* ", "", 1)
 		result = append(result, strings.TrimSpace(line))
 	}
-	return sort.StringSlice(result), nil
+	return helpers.MainFirst(sort.StringSlice(result)), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.

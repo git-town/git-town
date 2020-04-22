@@ -50,6 +50,6 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
     And my repository now has the following commits
-      | BRANCH          | LOCATION         | MESSAGE                |
-      | current-feature | local            | current feature commit |
-      | other-feature   | local and remote | other feature commit   |
+      | BRANCH          | LOCATION      | MESSAGE                |
+      | current-feature | local         | current feature commit |
+      | other-feature   | local, remote | other feature commit   |

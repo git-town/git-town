@@ -54,7 +54,7 @@ func TestGitRepository_Branches(t *testing.T) {
 	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"branch1", "branch2", "branch3", "main", "master"}, branches)
+	assert.Equal(t, []string{"main", "branch1", "branch2", "branch3", "master"}, branches)
 }
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
@@ -143,7 +143,7 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Nil(t, err)
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"f1", "f1a", "main", "master"}, branches)
+	assert.Equal(t, []string{"main", "f1", "f1a", "master"}, branches)
 }
 
 func TestGitRepository_CreateCommit(t *testing.T) {

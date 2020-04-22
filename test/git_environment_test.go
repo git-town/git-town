@@ -57,8 +57,9 @@ func TestGitEnvironment_Branches(t *testing.T) {
 	assert.Nil(t, err)
 	// get branches
 	table, err := cloned.Branches()
+	assert.Nil(t, err)
 	// verify
-	expected := "| REPOSITORY | BRANCHES             |\n| local      | d1, d2, main         |\n| remote     | main, master, o1, o2 |\n"
+	expected := "| REPOSITORY | BRANCHES             |\n| local      | main, d1, d2         |\n| remote     | main, master, o1, o2 |\n"
 	assert.Equal(t, expected, table.String())
 }
 
