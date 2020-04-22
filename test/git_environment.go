@@ -14,7 +14,8 @@ type GitEnvironment struct {
 	Dir string
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
-	OriginRepo GitRepository
+	// If this value is nil, the current test setup has no remote.
+	OriginRepo *GitRepository
 
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
@@ -30,10 +31,11 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	if err != nil {
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
+	originRepo := NewGitRepository(filepath.Join(dir, "origin"), dir)
 	result := GitEnvironment{
 		Dir:           dir,
 		DeveloperRepo: NewGitRepository(filepath.Join(dir, "developer"), dir),
-		OriginRepo:    NewGitRepository(filepath.Join(dir, "origin"), dir),
+		OriginRepo:    &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -66,10 +68,11 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
-	gitEnv.OriginRepo, err = InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
+	originRepo, err := InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
+	gitEnv.OriginRepo = &originRepo
 	err = gitEnv.OriginRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 		{"git", "checkout", "-b", "main"},
@@ -158,9 +161,11 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 		}
 	}
 	// after setting up the commits, check out the "master" branch in the origin repo so that we can git-push to it.
-	err := env.OriginRepo.CheckoutBranch("master")
-	if err != nil {
-		return fmt.Errorf("cannot change origin repo back to master: %w", err)
+	if env.OriginRepo != nil {
+		err := env.OriginRepo.CheckoutBranch("master")
+		if err != nil {
+			return fmt.Errorf("cannot change origin repo back to master: %w", err)
+		}
 	}
 	return nil
 }
@@ -184,12 +189,14 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	for _, localCommit := range localCommits {
 		builder.Add(localCommit, "local")
 	}
-	remoteCommits, err := env.OriginRepo.Commits(fields)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
-	}
-	for _, remoteCommit := range remoteCommits {
-		builder.Add(remoteCommit, "remote")
+	if env.OriginRepo != nil {
+		remoteCommits, err := env.OriginRepo.Commits(fields)
+		if err != nil {
+			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+		}
+		for _, remoteCommit := range remoteCommits {
+			builder.Add(remoteCommit, "remote")
+		}
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
