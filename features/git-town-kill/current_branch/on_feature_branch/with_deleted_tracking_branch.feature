@@ -39,10 +39,10 @@ Feature: git town-kill: killing the current feature branch with a deleted tracki
   Scenario: undoing the kill
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH          | COMMAND                                                        |
-      | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
-      |                 | git checkout current-feature                                   |
-      | current-feature | git reset <%= sha 'current feature commit' %>                  |
+      | BRANCH          | COMMAND                                                       |
+      | main            | git branch current-feature {{ sha 'WIP on current-feature' }} |
+      |                 | git checkout current-feature                                  |
+      | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I end up on the "current-feature" branch
     And my workspace has the uncommitted file again
     And the existing branches are

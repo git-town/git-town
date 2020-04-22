@@ -438,6 +438,15 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 	return result, nil
 }
 
+// ShaForCommit provides the SHA for the commit with the given name.
+func (repo *GitRepository) ShaForCommit(name string) (result string, err error) {
+	res, err := repo.Run("git", "reflog", fmt.Sprintf("--grep-reflog=commit: %s", name), "--format=%H")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
+	}
+	return res.OutputSanitized(), nil
+}
+
 // StageFiles adds the file with the given name to the Git index.
 func (repo *GitRepository) StageFiles(names ...string) error {
 	args := append([]string{"add"}, names...)

@@ -377,6 +377,15 @@ func TestGitRepository_SetRemote(t *testing.T) {
 	assert.Equal(t, []string{"origin"}, remotes)
 }
 
+func TestGitRepository_ShaForCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{Branch: "master", FileName: "foo", FileContent: "bar", Message: "commit"})
+	assert.Nil(t, err)
+	sha, err := repo.ShaForCommit("commit")
+	assert.Nil(t, err)
+	assert.Len(t, sha, 40)
+}
+
 func TestGitRepository_StageFile(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
