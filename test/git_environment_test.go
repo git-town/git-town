@@ -40,6 +40,29 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 	assert.Equal(t, "main", branch)
 }
 
+func TestGitEnvironment_Branches(t *testing.T) {
+	// create GitEnvironment instance
+	dir := createTempDir(t)
+	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
+	assert.Nil(t, err)
+	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
+	assert.Nil(t, err)
+	// create the branches
+	err = cloned.DeveloperRepo.CreateBranch("d1", "main")
+	assert.Nil(t, err)
+	err = cloned.DeveloperRepo.CreateBranch("d2", "main")
+	assert.Nil(t, err)
+	err = cloned.OriginRepo.CreateBranch("o1", "master")
+	assert.Nil(t, err)
+	err = cloned.OriginRepo.CreateBranch("o2", "master")
+	assert.Nil(t, err)
+	// get branches
+	table, err := cloned.Branches()
+	// verify
+	expected := "| REPOSITORY | BRANCHES             |\n| local      | d1, d2, main         |\n| remote     | main, master, o1, o2 |\n"
+	assert.Equal(t, expected, table.String())
+}
+
 func TestGitEnvironment_CreateCommits(t *testing.T) {
 	// create GitEnvironment instance
 	dir := createTempDir(t)

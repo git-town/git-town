@@ -32,3 +32,12 @@ func TestDataTable_Expand(t *testing.T) {
 	assert.Equal(t, actual.cells[0][0], "one")
 	assert.Equal(t, actual.cells[0][1], "cd /foo/bar")
 }
+
+func TestDataTable_Remove(t *testing.T) {
+	r := DataTable{}
+	r.AddRow("local", "main, master, foo")
+	r.AddRow("remote", "master, bar")
+	r.Remove("master, ")
+	expected := "| local  | main, foo |\n| remote | bar       |\n"
+	assert.Equal(t, expected, r.String())
+}

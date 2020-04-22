@@ -324,6 +324,20 @@ func TestGitRepository_Remotes(t *testing.T) {
 	assert.Equal(t, []string{"origin"}, remotes)
 }
 
+func TestGitRepository_RemoveBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"b1", "master"}, branches)
+	err = repo.RemoveBranch("b1")
+	assert.Nil(t, err)
+	branches, err = repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"master"}, branches)
+}
+
 func TestGitRepository_RemoveRemote(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)

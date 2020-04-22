@@ -93,6 +93,26 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
 	})
 
+	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+		return fs.activeScenarioState.gitEnvironment.OriginRepo.RemoveBranch(name)
+	})
+
+	suite.Step(`^the existing branches are$`, func(table *gherkin.DataTable) error {
+		existing, err := fs.activeScenarioState.gitEnvironment.Branches()
+		if err != nil {
+			return err
+		}
+		// remove master branch from remote
+		existing.Remove("master, ")
+		diff, errCount := existing.EqualGherkin(table)
+		if errCount > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
 		return nil

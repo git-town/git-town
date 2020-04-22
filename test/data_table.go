@@ -90,6 +90,15 @@ func (table *DataTable) Expand(rootDir string) (result DataTable) {
 	return result
 }
 
+// Remove deletes the given text from each cell.
+func (table *DataTable) Remove(text string) {
+	for row := range table.cells {
+		for col := range table.cells[row] {
+			table.cells[row][col] = strings.Replace(table.cells[row][col], text, "", 1)
+		}
+	}
+}
+
 // String provides the data in this DataTable instance formatted in Gherkin table format.
 func (table *DataTable) String() (result string) {
 	// determine how to format each column

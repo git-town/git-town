@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -106,6 +107,22 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
 	return nil
+}
+
+// Branches provides a tabular list of all branches in this GitEnvironment.
+func (env *GitEnvironment) Branches() (result DataTable, err error) {
+	result.AddRow("REPOSITORY", "BRANCHES")
+	branches, err := env.DeveloperRepo.Branches()
+	if err != nil {
+		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
+	}
+	result.AddRow("local", strings.Join(branches, ", "))
+	branches, err = env.OriginRepo.Branches()
+	if err != nil {
+		return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
+	}
+	result.AddRow("remote", strings.Join(branches, ", "))
+	return result, nil
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.

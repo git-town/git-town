@@ -373,6 +373,15 @@ func (repo *GitRepository) Remotes() (names []string, err error) {
 	return out.OutputLines(), nil
 }
 
+// RemoveBranch deletes the branch with the given name from this repo.
+func (repo *GitRepository) RemoveBranch(name string) error {
+	res, err := repo.Run("git", "branch", "-D", name)
+	if err != nil {
+		return fmt.Errorf("cannot delete branch %q: %w\n%s", name, err, res.Output())
+	}
+	return nil
+}
+
 // RemoveRemote deletes the Git remote with the given name.
 func (repo *GitRepository) RemoveRemote(name string) error {
 	_, err := repo.Run("git", "remote", "rm", name)
@@ -420,6 +429,9 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 	}
 	lines := res.OutputLines()
 	for l := range lines {
+		if lines[l] == "" {
+			continue
+		}
 		parts := strings.Split(lines[l], " ")
 		result = append(result, parts[1])
 	}
