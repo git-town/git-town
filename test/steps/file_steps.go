@@ -8,7 +8,7 @@ import (
 
 // FileSteps defines Cucumber step implementations around files.
 func FileSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^I don\'t have any uncommitted files$`, func() error {
+	suite.Step(`^I don't have any uncommitted files$`, func() error {
 		files, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.UncommittedFiles()
 		if err != nil {
 			return fmt.Errorf("cannot determine uncommitted files: %w", err)
