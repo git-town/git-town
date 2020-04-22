@@ -104,8 +104,8 @@ func (table *DataTable) Expand(rootDir string, repo *GitRepository) (result Data
 	return result
 }
 
-// Remove deletes the given text from each cell.
-func (table *DataTable) Remove(text string) {
+// RemoveText deletes the given text from each cell.
+func (table *DataTable) RemoveText(text string) {
 	for row := range table.cells {
 		for col := range table.cells[row] {
 			table.cells[row][col] = strings.Replace(table.cells[row][col], text, "", 1)

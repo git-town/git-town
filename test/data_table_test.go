@@ -37,7 +37,7 @@ func TestDataTable_Remove(t *testing.T) {
 	r := DataTable{}
 	r.AddRow("local", "main, master, foo")
 	r.AddRow("remote", "master, bar")
-	r.Remove("master, ")
+	r.RemoveText("master, ")
 	expected := "| local  | main, foo |\n| remote | bar       |\n"
 	assert.Equal(t, expected, r.String())
 }
