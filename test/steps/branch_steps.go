@@ -104,6 +104,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		// remove master branch from remote
 		existing.Remove("master, ")
+		existing.Remove(", master")
 		diff, errCount := existing.EqualGherkin(table)
 		if errCount > 0 {
 			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
