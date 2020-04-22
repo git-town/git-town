@@ -12,6 +12,7 @@ import (
 func FeatureContext(suite *godog.Suite) {
 	state := &steps.FeatureState{}
 	steps.SuiteSteps(suite, state)
+	steps.AutocompletionSteps(suite, state)
 	steps.BranchSteps(suite, state)
 	steps.CommitSteps(suite, state)
 	steps.ConfigurationSteps(suite, state)

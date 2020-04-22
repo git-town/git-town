@@ -6,28 +6,30 @@ Feature: Installing Fish Shell autocomplete definitions
 
 
   Scenario: without existing fish autocompletion folder
-    Given I have no fish autocompletion folder
-    When I run `git-town install-fish-autocompletion`
-    Then it prints "Git autocompletion for Fish shell installed"
-    And I have a Git autocompletion file
+    Given I have no fish autocompletion file
+    When I run "git-town install-fish-autocompletion"
+    Then it prints
+      """
+      Git autocompletion for Fish shell installed
+      """
+    And I now have a Git autocompletion file
 
 
   Scenario: with empty fish autocompletion folder
     Given I have an empty fish autocompletion folder
-    When I run `git-town install-fish-autocompletion`
-    Then it prints "Git autocompletion for Fish shell installed"
-    And I have a Git autocompletion file
+    When I run "git-town install-fish-autocompletion"
+    Then it prints
+      """
+      Git autocompletion for Fish shell installed
+      """
+    And I now have a Git autocompletion file
 
 
   Scenario: with an existing Git autocompletion file
     Given I have an existing Git autocompletion file
-    When I run `git-town install-fish-autocompletion`
-    Then it prints the error "Git autocompletion for Fish shell already exists"
-    And I still have my original Git autocompletion file
-
-
-  Scenario: with existing Git autocompletion symlink
-    Given I have an existing Git autocompletion symlink
-    When I run `git-town install-fish-autocompletion`
-    Then it prints the error "Git autocompletion for Fish shell already exists"
+    When I run "git-town install-fish-autocompletion"
+    Then it prints the error:
+      """
+      Git autocompletion for Fish shell already exists
+      """
     And I still have my original Git autocompletion file
