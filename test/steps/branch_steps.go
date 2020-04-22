@@ -102,7 +102,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return err
 		}
-		// remove master branch from remote
+		// remove the master branch from the remote since it exists only as a performance optimization
 		existing.RemoveText("master, ")
 		existing.RemoveText(", master")
 		diff, errCount := existing.EqualGherkin(table)
