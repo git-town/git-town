@@ -32,6 +32,7 @@ func ActivateDryRun() {
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) {
+  fmt.Printf("Opening URL: %s\n", url)
 	command := browsers.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
 	if err != nil {
