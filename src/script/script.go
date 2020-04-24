@@ -31,12 +31,13 @@ func ActivateDryRun() {
 }
 
 // OpenBrowser opens the default browser with the given URL.
-func OpenBrowser(url string) {
+func OpenBrowser(url string) error {
 	command := browsers.GetOpenBrowserCommand()
 	err := RunCommand(command, url)
-	if err != nil {
-		panic(err)
+	if err == nil {
+		return fmt.Errorf("Pull request URL: %s", url)
 	}
+	return nil
 }
 
 // PrintCommand prints the given command-line operation on the console.
