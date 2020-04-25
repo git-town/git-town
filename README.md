@@ -6,12 +6,8 @@
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. You can use it with
-[GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
-[Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
-the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
-[GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most others
-workflows. See this
+teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction
+and this
 [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
@@ -127,6 +123,15 @@ ask about them.
 
 Run `git town` for an overview of the Git Town commands and `git help <command>`
 (e.g. `git help sync`) for help with individual commands.
+
+## Q&A
+
+- **Is this compatible with my workflow?** <br> Yes. Git Town is compatible with
+  [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
+  [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
+  the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
+  [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
+  others workflows.
 
 ## Contributing
 
