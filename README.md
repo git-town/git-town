@@ -133,6 +133,13 @@ Run `git town` for an overview of the Git Town commands and `git help <command>`
   [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
   others workflows.
 
+- **Does my whole team have to use Git Town?** <br> No. Just make sure that all
+  feature branches get
+  [squash-merged](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits),
+  for example by requiring this in your
+  [GitHub settings](https://help.github.com/en/github/administering-a-repository/configuring-commit-squashing-for-pull-requests).
+  If you don't know what squash-merges are, you probably want to enable them.
+
 ## Contributing
 
 Found a bug or have an idea for a new feature?
