@@ -3,9 +3,8 @@ package helpers_test
 import (
 	"testing"
 
+	"github.com/git-town/git-town/test/helpers"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/Originate/git-town/test/helpers"
 )
 
 func TestMainFirst(t *testing.T) {
