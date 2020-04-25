@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Originate/git-town/src/browsers"
-	"github.com/Originate/git-town/src/dryrun"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/browsers"
+	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/git"
 
 	"github.com/fatih/color"
 )

@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/script"
+import "github.com/git-town/git-town/src/script"
 
 // RevertCommitStep reverts the commit with the given sha.
 type RevertCommitStep struct {

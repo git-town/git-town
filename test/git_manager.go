@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/Originate/git-town/test/helpers"
+	"github.com/git-town/git-town/test/helpers"
 	"github.com/iancoleman/strcase"
 )
 

@@ -85,7 +85,7 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		// Capturing the output and scanning for the actual content needed
 		// would introduce substantial amounts of multi-threaded complexity
 		// for not enough gains.
-		// https://github.com/Originate/go-execplus could help make this more robust.
+		// https://github.com/git-town/go-execplus could help make this more robust.
 		time.Sleep(InputDelay)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {
