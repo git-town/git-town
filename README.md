@@ -153,8 +153,404 @@ A big thank to our contributors!
   <tr>
     <td align="center" width="60">
       <a href="https://github.com/kevgo">
-        <img src="https://avatars.githubusercontent.com/u/268934?s=60" width="60px;">
+        <img src="https://avatars.githubusercontent.com/u/268934?s=60" width="60px">
         <sup><b>@kevgo</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/charlierudolph">
+        <img src="https://avatars2.githubusercontent.com/u/1676758?s=60" width="60px">
+        <sup><b>@charlierudolph</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/allewun">
+        <img src="https://avatars2.githubusercontent.com/u/1256911?s=60" width="60px">
+        <sup><b>@allewun</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/ricmatsui">
+        <img src="https://avatars0.githubusercontent.com/u/5288285?s=60" width="60px">
+        <sup><b>@ricmatsui</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/redouglas">
+        <img src="https://avatars3.githubusercontent.com/u/1149609?s=60" width="60px">
+        <sup><b>@redouglas</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/allonsy">
+        <img src="https://avatars2.githubusercontent.com/u/5892756?s=60" width="60px">
+        <sup><b>@allonsy</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/aricahunter">
+        <img src="https://avatars2.githubusercontent.com/u/5395515?s=60" width="60px">
+        <sup><b>@aricahunter</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/jiexi">
+        <img src="https://avatars2.githubusercontent.com/u/918701?s=60" width="60px">
+        <sup><b>@jiexi</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/iamandrewluca">
+        <img src="https://avatars1.githubusercontent.com/u/1881266?s=60" width="60px">
+        <sup><b>@iamandrewluca</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/ChrisMM">
+        <img src="https://avatars0.githubusercontent.com/u/1051777?s=60" width="60px">
+        <sup><b>@ChrisMM</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/zhangwei">
+        <img src="https://avatars2.githubusercontent.com/u/6028709?s=60" width="60px">
+        <sup><b>@zhangwei</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/tallpants">
+        <img src="https://avatars2.githubusercontent.com/u/15325890?s=60" width="60px">
+        <sup><b>@tallpants</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/seanstrom">
+        <img src="https://avatars3.githubusercontent.com/u/2845768?s=60" width="60px">
+        <sup><b>@seanstrom</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/schneems">
+        <img src="https://avatars2.githubusercontent.com/u/59744?s=60" width="60px">
+        <sup><b>@schneems</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/morrme">
+        <img src="https://avatars1.githubusercontent.com/u/26514778?s=60" width="60px">
+        <sup><b>@morrme</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/mjhm">
+        <img src="https://avatars0.githubusercontent.com/u/431925?s=60" width="60px">
+        <sup><b>@mjhm</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/luketlancaster">
+        <img src="https://avatars3.githubusercontent.com/u/8376505?s=60" width="60px">
+        <sup><b>@luketlancaster</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/ecbrodie">
+        <img src="https://avatars1.githubusercontent.com/u/1844664?s=60" width="60px">
+        <sup><b>@ecbrodie</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/doismellburning">
+        <img src="https://avatars1.githubusercontent.com/u/817118?s=60" width="60px">
+        <sup><b>@doismellburning</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/dgjnpr">
+        <img src="https://avatars1.githubusercontent.com/u/1767441?s=60" width="60px">
+        <sup><b>@dgjnpr</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/atilacamurca">
+        <img src="https://avatars1.githubusercontent.com/u/508624?s=60" width="60px">
+        <sup><b>@atilacamurca</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/Zearin">
+        <img src="https://avatars0.githubusercontent.com/u/630124?s=60" width="60px">
+        <sup><b>@Zearin</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/TKAB">
+        <img src="https://avatars3.githubusercontent.com/u/66597?s=60" width="60px">
+        <sup><b>@TKAB</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/Siilwyn">
+        <img src="https://avatars2.githubusercontent.com/u/5701149?s=60" width="60px">
+        <sup><b>@Siilwyn</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
       </a>
     </td>
   </tr>
