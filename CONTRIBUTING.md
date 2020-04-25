@@ -4,7 +4,7 @@ Git Town is a welcoming community, and we'd love for everyone to bring their
 contributions of any size to make it even better.
 
 - Found a bug or have an idea for a new feature? -
-  [Open an issue](https://github.com/Originate/git-town/issues/new)
+  [Open an issue](https://github.com/git-town/git-town/issues/new)
 - Fixed a bug or created a new feature that others will enjoy? -
   [Create a pull request](https://help.github.com/articles/using-pull-requests/)
 
@@ -25,10 +25,10 @@ when developing Git Town.
   - set the environment variable `$GOPATH` to your Go workspace (you can point
     it to any folder on your hard drive, let's assume `~/go` here)
   - add `~/go/bin` to your `$PATH`
-  - create the directory `~/go/src/github.com/Originate`
+  - create the directory `~/go/src/github.com/git-town`
   - cd into that directory, and run
-    `git clone git@github.com:Originate/git-town.git`
-  - cd into `$GOPATH/src/github.com/Originate/git-town`
+    `git clone git@github.com:git-town/git-town.git`
+  - cd into `$GOPATH/src/github.com/git-town/git-town`
 - make sure you have `make` - Mac and Linux users should be okay, Windows users
   should install
   [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
@@ -37,8 +37,8 @@ when developing Git Town.
 - now you can run `git-town` on the command line
 - see https://golang.org/doc/install#testing for details on how to test
 - optionally install
-  [Tertestrial](https://github.com/Originate/tertestrial-server) for
-  auto-running tests
+  [Tertestrial](https://github.com/git-town/tertestrial-server) for auto-running
+  tests
 - optionally install [scc](https://github.com/boyter/scc) to see code statistics
   via <code textrun="verify-make-command">make stats</code>
 
@@ -117,7 +117,7 @@ Please follow the existing code style.
 
 Each pull request (PR) should have the same (optional) description that it will
 have when committed later and include the
-[issue](https://github.com/Originate/git-town/issues) it resolves.
+[issue](https://github.com/git-town/git-town/issues) it resolves.
 
 When merging approved PRs:
 
@@ -140,7 +140,7 @@ Implements #123
 
 ## Release Process
 
-#### Originate/git-town
+#### git-town/git-town
 
 - Create a feature branch which updates `RELEASE_NOTES.md`
 - Get the feature branch reviewed and merged

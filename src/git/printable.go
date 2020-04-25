@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/util"
 )
 
 var noneString = "[none]"
