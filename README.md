@@ -153,8 +153,8 @@ A big thank to our contributors!
   <tr>
     <td align="center" width="60">
       <a href="https://github.com/kevgo">
-        <sub><b>@kevgo</b></sub>
         <img src="https://avatars.githubusercontent.com/u/268934?s=60" width="60px;">
+        <sup><b>@kevgo</b></sup>
       </a>
     </td>
   </tr>
