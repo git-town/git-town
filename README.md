@@ -300,6 +300,168 @@ A big thank to our contributors!
       </a>
     </td>
   </tr>
+  <tr>
+    <td align="center" width="60">
+      <a href="https://github.com/WurmD">
+        <img src="https://avatars2.githubusercontent.com/u/5755747?s=60" width="60px">
+        <sup><b>@WurmD</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/sgarfinkel">
+        <img src="https://avatars3.githubusercontent.com/u/10210461?s=60" width="60px">
+        <sup><b>@sgarfinkel</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/cirego">
+        <img src="https://avatars2.githubusercontent.com/u/551285?s=60" width="60px">
+        <sup><b>@cirego</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/sheldonhull">
+        <img src="https://avatars3.githubusercontent.com/u/3526320?s=60" width="60px">
+        <sup><b>@sheldonhull</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/alphatroya">
+        <img src="https://avatars0.githubusercontent.com/u/4927633?s=60" width="60px">
+        <sup><b>@alphatroya</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/joshRpowell">
+        <img src="https://avatars1.githubusercontent.com/u/6732638?s=60" width="60px">
+        <sup><b>@joshRpowell</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/pattiereaves">
+        <img src="https://avatars1.githubusercontent.com/u/44990?s=60" width="60px">
+        <sup><b>@pattiereaves</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/zenspider">
+        <img src="https://avatars0.githubusercontent.com/u/9832?s=60" width="60px">
+        <sup><b>@zenspider</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/Iron-Ham">
+        <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
+        <sup><b>@Iron-Ham</b></sup>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="60">
+      <a href="https://github.com/grignaak">
+        <img src="https://avatars2.githubusercontent.com/u/110779?s=60" width="60px">
+        <sup><b>@grignaak</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/ericyliu">
+        <img src="https://avatars2.githubusercontent.com/u/8580080?s=60" width="60px">
+        <sup><b>@ericyliu</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/natecox">
+        <img src="https://avatars0.githubusercontent.com/u/2782695?s=60" width="60px">
+        <sup><b>@natecox</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/shadowhand">
+        <img src="https://avatars3.githubusercontent.com/u/38203?s=60" width="60px">
+        <sup><b>@shadowhand</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/hmbrg">
+        <img src="https://avatars3.githubusercontent.com/u/7304269?s=60" width="60px">
+        <sup><b>@hmbrg</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/qrevel">
+        <img src="https://avatars2.githubusercontent.com/u/11804101?s=60" width="60px">
+        <sup><b>@qrevel</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/martinjaime">
+        <img src="https://avatars1.githubusercontent.com/u/10568301?s=60" width="60px">
+        <sup><b>@martinjaime</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/alexw10">
+        <img src="https://avatars1.githubusercontent.com/u/9453636?s=60" width="60px">
+        <sup><b>@alexw10</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/alexdavid">
+        <img src="https://avatars2.githubusercontent.com/u/751581?s=60" width="60px">
+        <sup><b>@alexdavid</b></sup>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="60">
+      <a href="https://github.com/Braunson">
+        <img src="https://avatars1.githubusercontent.com/u/577273?s=60" width="60px">
+        <sup><b>@Braunson</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
+      <a href="https://github.com/">
+        <img src="" width="60px">
+        <sup><b>@</b></sup>
+      </a>
+    </td>
+
 </table>
 
 Found a bug or have an idea for a new feature?
