@@ -419,49 +419,7 @@ A big thank to our contributors!
         <sup><b>@Braunson</b></sup>
       </a>
     </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-
+  </tr>
 </table>
 
 Found a bug or have an idea for a new feature?
