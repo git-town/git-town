@@ -398,6 +398,12 @@ Kudos to our contributors!
       </a>
     </td>
     <td align="center" width="60">
+      <a href="https://github.com/aeneasr">
+        <img src="https://avatars1.githubusercontent.com/u/3372410?s=60" width="60px">
+        <sup><b>@aeneasr</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
       <a href="https://github.com/martinjaime">
         <img src="https://avatars1.githubusercontent.com/u/10568301?s=60" width="60px">
         <sup><b>@martinjaime</b></sup>
