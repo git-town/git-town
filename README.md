@@ -148,7 +148,7 @@ Thanks to our sponsors for their continued support!
   </tr>
 </table>
 
-A round of applause to our contributors!
+Kudos to our contributors!
 
 <table>
   <tr>
