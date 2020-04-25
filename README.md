@@ -261,6 +261,8 @@ A big thank to our contributors!
         <sup><b>@ecbrodie</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/doismellburning">
         <img src="https://avatars1.githubusercontent.com/u/817118?s=60" width="60px">
