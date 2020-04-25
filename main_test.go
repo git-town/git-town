@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Originate/git-town/test/steps"
+	"github.com/git-town/git-town/test/steps"
 	"github.com/cucumber/godog"
 )
 

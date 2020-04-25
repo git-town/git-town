@@ -3,9 +3,9 @@ package steps
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/test/helpers"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // CommitSteps defines Cucumber step implementations around configuration.

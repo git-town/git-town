@@ -1,7 +1,7 @@
-![Git Town](https://originate.github.io/git-town/documentation/logo-horizontal.svg)
+![Git Town](https://git-town.github.io/git-town/documentation/logo-horizontal.svg)
 
-[![Build Status](https://travis-ci.org/Originate/git-town.svg?branch=master)](https://travis-ci.org/Originate/git-town)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Originate/git-town)](https://goreportcard.com/report/github.com/Originate/git-town)
+[![Build Status](https://travis-ci.org/git-town/git-town.svg?branch=master)](https://travis-ci.org/git-town/git-town)
+[![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
 [![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
@@ -136,7 +136,7 @@ command line for an overview of the Git Town commands, or `git help <command>`
 ## Contributing
 
 Found a bug or have an idea for a new feature?
-[Open an issue](https://github.com/Originate/git-town/issues/new) or - even
+[Open an issue](https://github.com/git-town/git-town/issues/new) or - even
 better - get down, go to town, and fire a feature-tested
 [pull request](https://help.github.com/articles/using-pull-requests/) our way!
 Check out our [contributing guide](/CONTRIBUTING.md) to start coding.
