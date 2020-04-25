@@ -7,8 +7,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Originate/git-town/test/helpers"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 

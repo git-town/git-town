@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/util"
 )
 
 // EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher

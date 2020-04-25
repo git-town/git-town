@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Originate/git-town/src/command"
+	"github.com/git-town/git-town/src/command"
 	"github.com/stretchr/testify/assert"
 )
 

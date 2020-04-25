@@ -3,7 +3,7 @@ package git
 import (
 	"errors"
 
-	"github.com/Originate/git-town/src/command"
+	"github.com/git-town/git-town/src/command"
 )
 
 // ValidateIsRepository asserts that the current directory is in a repository
