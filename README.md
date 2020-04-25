@@ -6,12 +6,8 @@
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
 Git Town makes [Git](https://git-scm.com) more efficient, especially for large
-teams. You can use it with
-[GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
-[Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
-the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
-[GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most others
-workflows. See this
+teams. See [this screencast](https://youtu.be/oLaUsUlFfTo) for an introduction
+and this
 [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
@@ -127,6 +123,22 @@ ask about them.
 
 Run `git town` for an overview of the Git Town commands and `git help <command>`
 (e.g. `git help sync`) for help with individual commands.
+
+## Q&A
+
+- **Is this compatible with my workflow?** <br> Yes. Git Town is compatible with
+  [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
+  [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
+  the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
+  [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most
+  others workflows.
+
+- **Does my whole team have to use Git Town?** <br> No. Just make sure that all
+  feature branches get
+  [squash-merged](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-merges#squash-and-merge-your-pull-request-commits),
+  for example by requiring this in your
+  [GitHub settings](https://help.github.com/en/github/administering-a-repository/configuring-commit-squashing-for-pull-requests).
+  If you don't know what squash-merges are, you probably want to enable them.
 
 ## Contributing
 
@@ -353,14 +365,14 @@ Kudos to our contributors!
         <sup><b>@zenspider</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Iron-Ham">
         <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
         <sup><b>@Iron-Ham</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/grignaak">
         <img src="https://avatars2.githubusercontent.com/u/110779?s=60" width="60px">
@@ -398,6 +410,14 @@ Kudos to our contributors!
       </a>
     </td>
     <td align="center" width="60">
+      <a href="https://github.com/aeneasr">
+        <img src="https://avatars1.githubusercontent.com/u/3372410?s=60" width="60px">
+        <sup><b>@aeneasr</b></sup>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="60">
       <a href="https://github.com/martinjaime">
         <img src="https://avatars1.githubusercontent.com/u/10568301?s=60" width="60px">
         <sup><b>@martinjaime</b></sup>
@@ -415,8 +435,6 @@ Kudos to our contributors!
         <sup><b>@alexdavid</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Braunson">
         <img src="https://avatars1.githubusercontent.com/u/577273?s=60" width="60px">
