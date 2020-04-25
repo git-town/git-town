@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Originate/git-town/src/cfmt"
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/cfmt"
 )
 
 // DoesStringArrayContain returns whether the given string slice
