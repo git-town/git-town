@@ -3,7 +3,7 @@ package steps
 import (
 	"os"
 
-	"github.com/Originate/git-town/src/script"
+	"github.com/git-town/git-town/src/script"
 )
 
 // ChangeDirectoryStep changes the current working directory.

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/Originate/git-town/src/cmd"
+import "github.com/git-town/git-town/src/cmd"
 
 func main() {
 	cmd.Execute()

@@ -29,7 +29,7 @@ make cuke [cucumber parameters]
 make fix
 ```
 
-Git Town's [CI server](https://circleci.com/gh/Originate/git-town) automatically
+Git Town's [CI server](https://circleci.com/gh/git-town/git-town) automatically
 tests all commits and pull requests, and notifies you via email and through
 status badges in pull requests about problems.
 
@@ -79,4 +79,4 @@ requires an environment variable `GIT_TOWN_ENV` to be set to `test`.
 ## Auto-running tests
 
 The Git Town code base works with
-[Tertestrial](https://github.com/Originate/tertestrial-server).
+[Tertestrial](https://github.com/git-town/tertestrial-server).
