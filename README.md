@@ -135,13 +135,27 @@ command line for an overview of the Git Town commands, or `git help <command>`
 
 ## Contributing
 
-A big thanks to our sponsors for their continued support!
+Thanks to our sponsors for their continued support!
 
 <table>
   <tr>
     <td>
       <a href="https://www.originate.com" target="_blank">
         <img src="documentation/originate.png" width="146" height="33">
+      </a>
+    </td>
+  </tr>
+</table>
+
+A big thank to our contributors!
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/kevgo">
+        <img src="https://avatars.githubusercontent.com/u/268934?s=60" width="60px;">
+        <br>
+        <sub><b>@kevgo</b></sub>
       </a>
     </td>
   </tr>
