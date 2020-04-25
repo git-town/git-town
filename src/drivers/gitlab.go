@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 )
 
 type gitlabCodeHostingDriver struct {
@@ -34,7 +34,7 @@ func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
 }
 
 func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
-	return "", errors.New("shipping pull requests via the GitLab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
+	return "", errors.New("shipping pull requests via the GitLab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
 func (d *gitlabCodeHostingDriver) HostingServiceName() string {

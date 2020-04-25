@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 )
 

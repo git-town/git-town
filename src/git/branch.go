@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/util"
 )
 
 // DoesBranchHaveUnmergedCommits returns whether the branch with the given name
