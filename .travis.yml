@@ -1,8 +1,8 @@
 sudo: required
-dist: trusty
+dist: bionic
 
 language: go
-go: 1.13
+go: 1.14
 
 install:
   - rvm install 2.6.5
