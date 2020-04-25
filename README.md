@@ -151,10 +151,9 @@ A big thank to our contributors!
 
 <table>
   <tr>
-    <td align="center">
+    <td align="center" width="60">
       <a href="https://github.com/kevgo">
         <img src="https://avatars.githubusercontent.com/u/268934?s=60" width="60px;">
-        <br>
         <sub><b>@kevgo</b></sub>
       </a>
     </td>
