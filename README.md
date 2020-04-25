@@ -135,6 +135,12 @@ command line for an overview of the Git Town commands, or `git help <command>`
 
 ## Contributing
 
+A big thanks to our sponsor Originate for their continued support!
+
+<a href="https://originate.com">
+  <img src="documentation/originate.png" width="146" height="33">
+</a>
+
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or - even
 better - get down, go to town, and fire a feature-tested
