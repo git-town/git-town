@@ -135,6 +135,8 @@ Found a bug or have an idea for a new feature?
 [pull request](https://help.github.com/articles/using-pull-requests/)! Check out
 our [contributing guide](/CONTRIBUTING.md) to get started.
 
+### Sponsors
+
 Thanks to our sponsors for their continued support!
 
 <table>
@@ -146,6 +148,8 @@ Thanks to our sponsors for their continued support!
     </td>
   </tr>
 </table>
+
+### Contributors
 
 Kudos to our contributors!
 
