@@ -140,7 +140,7 @@ A big thanks to our sponsors for their continued support!
 <table>
   <tr>
     <td>
-      <a href="https://originate.com" target="_blank">
+      <a href="https://www.originate.com" target="_blank">
         <img src="documentation/originate.png" width="146" height="33">
       </a>
     </td>
