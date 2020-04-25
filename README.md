@@ -353,14 +353,14 @@ Kudos to our contributors!
         <sup><b>@zenspider</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Iron-Ham">
         <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
         <sup><b>@Iron-Ham</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/grignaak">
         <img src="https://avatars2.githubusercontent.com/u/110779?s=60" width="60px">
@@ -403,6 +403,8 @@ Kudos to our contributors!
         <sup><b>@aeneasr</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/martinjaime">
         <img src="https://avatars1.githubusercontent.com/u/10568301?s=60" width="60px">
@@ -421,8 +423,6 @@ Kudos to our contributors!
         <sup><b>@alexdavid</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Braunson">
         <img src="https://avatars1.githubusercontent.com/u/577273?s=60" width="60px">
