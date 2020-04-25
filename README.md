@@ -244,12 +244,6 @@ A big thank to our contributors!
       </a>
     </td>
     <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
       <a href="https://github.com/mjhm">
         <img src="https://avatars0.githubusercontent.com/u/431925?s=60" width="60px">
         <sup><b>@mjhm</b></sup>
@@ -259,12 +253,6 @@ A big thank to our contributors!
       <a href="https://github.com/luketlancaster">
         <img src="https://avatars3.githubusercontent.com/u/8376505?s=60" width="60px">
         <sup><b>@luketlancaster</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
       </a>
     </td>
     <td align="center" width="60">
@@ -283,12 +271,6 @@ A big thank to our contributors!
       <a href="https://github.com/dgjnpr">
         <img src="https://avatars1.githubusercontent.com/u/1767441?s=60" width="60px">
         <sup><b>@dgjnpr</b></sup>
-      </a>
-    </td>
-    <td align="center" width="60">
-      <a href="https://github.com/">
-        <img src="" width="60px">
-        <sup><b>@</b></sup>
       </a>
     </td>
     <td align="center" width="60">
