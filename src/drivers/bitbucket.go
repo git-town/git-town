@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 )
 
 type bitbucketCodeHostingDriver struct {
@@ -35,7 +35,7 @@ func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
 }
 
 func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/originate/git-town/issues")
+	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {

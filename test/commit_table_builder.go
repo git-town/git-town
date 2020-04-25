@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Originate/git-town/test/helpers"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
