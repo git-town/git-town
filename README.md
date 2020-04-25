@@ -5,16 +5,14 @@
 [![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
 
-Git Town makes software development teams who use Git even more productive and
-happy. It adds Git commands that support
+Git Town makes [Git](https://git-scm.com) more efficient, especially for large
+teams. You can use it with
 [GitHub Flow](http://scottchacon.com/2011/08/31/github-flow.html),
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
-[GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and other
-workflows more directly, and it allows you to perform many common Git operations
-faster and easier.
-
-See [git-town.com](https://www.git-town.com) for documentation and this
+[GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most others
+workflows. See [git-town.com](https://www.git-town.com) for documentation and
+this
 [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
@@ -75,34 +73,33 @@ Git Town provides these additional Git commands:
 
 ## Installation
 
-Since version 4.0, Git Town runs natively on all platforms without any
-dependencies. Check out our
+Since version 4.0, Git Town runs natively and without any dependencies on all
+platforms. See the
 [installation instructions](http://www.git-town.com/install.html) for more
 details.
 
-### Aliasing
+#### Aliasing
 
-Each command can be
-[aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) individually to
-remove the `town` prefix with:
+Git Town commands can be
+[aliased](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) to remove the
+`town` prefix:
+
+```
+git town alias true
+```
+
+After executing this, you can run `git hack` instead of `git town hack`. You can
+also set this manually for individual commands:
 
 ```
 git config --global alias.hack 'town hack'
 ```
 
-Now you can run `git hack` instead of `git town hack`. As a convenience, you can
-add or remove global aliases for all `git-town` commands with:
-
-```
-git town alias <true | false>
-```
-
 ## Configuration
 
-Git Town is configured on a per-repository basis. Upon first use in a
-repository, you will be prompted for the required configuration. Use the
-[git town config](/documentation/commands/config.md) command to view or update
-your configuration at any time.
+Git Town prompts for required configuration information during usage. Use the
+[git town config](/documentation/commands/config.md) command to manage the
+stored configuration.
 
 #### Required configuration
 
@@ -112,16 +109,16 @@ your configuration at any time.
 
 #### Optional Configuration
 
-The following configuration options have defaults, so the configuration wizard
-does not ask about them.
+These configuration options have defaults, so the configuration wizard does not
+ask about them.
 
-- the pull branch strategy
+- pull branch strategy
 
   - how to sync the main branch / perennial branches with their upstream
   - default: `rebase`
   - possible values: `merge`, `rebase`
 
-- the new branch push flag
+- new branch push flag
   - whether or not branches created by hack / append / prepend should be pushed
     to remote repo
   - default: `false`
@@ -129,11 +126,15 @@ does not ask about them.
 
 ## Documentation
 
-In addition to the online documentation here, you can run `git town` on the
-command line for an overview of the Git Town commands, or `git help <command>`
-(e.g. `git help sync`) for help with an individual command.
+Run `git town` for an overview of the Git Town commands and `git help <command>`
+(e.g. `git help sync`) for help with individual commands.
 
 ## Contributing
+
+Found a bug or have an idea for a new feature?
+[Open an issue](https://github.com/git-town/git-town/issues/new) or send a
+[pull request](https://help.github.com/articles/using-pull-requests/)! Check out
+our [contributing guide](/CONTRIBUTING.md) to get started.
 
 Thanks to our sponsors for their continued support!
 
@@ -147,7 +148,7 @@ Thanks to our sponsors for their continued support!
   </tr>
 </table>
 
-A big thank to our contributors!
+A round of applause to our contributors!
 
 <table>
   <tr>
@@ -421,9 +422,3 @@ A big thank to our contributors!
     </td>
   </tr>
 </table>
-
-Found a bug or have an idea for a new feature?
-[Open an issue](https://github.com/git-town/git-town/issues/new) or - even
-better - get down, go to town, and fire a feature-tested
-[pull request](https://help.github.com/articles/using-pull-requests/) our way!
-Check out our [contributing guide](/CONTRIBUTING.md) to start coding.
