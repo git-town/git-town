@@ -11,8 +11,7 @@ teams. You can use it with
 [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow),
 the [Nvie model](https://nvie.com/posts/a-successful-git-branching-model),
 [GitLab Flow](https://about.gitlab.com/2014/09/29/gitlab-flow/), and most others
-workflows. See [git-town.com](https://www.git-town.com) for documentation and
-this
+workflows. See this
 [Softpedia article](https://www.softpedia.com/get/Programming/Other-Programming-Files/Git-Town.shtml)
 for an independent review.
 
