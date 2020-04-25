@@ -57,7 +57,7 @@ Git Town provides these additional Git commands:
 - [git town set-parent-branch](/documentation/commands/set-parent-branch.md) -
   updates a branch's parent
 
-**Other Commands**
+**Git Town Installation**
 
 - [git town alias](/documentation/commands/alias.md) - adds or removes shorter
   aliases for Git Town commands
