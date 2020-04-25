@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/git"
 )
 
 // PreserveCheckoutHistoryStep does stuff

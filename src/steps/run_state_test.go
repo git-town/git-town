@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/Originate/git-town/src/steps"
+	"github.com/git-town/git-town/src/steps"
 	"github.com/stretchr/testify/assert"
 )
 

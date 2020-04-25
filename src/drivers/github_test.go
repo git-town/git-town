@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/Originate/git-town/src/drivers"
+	. "github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-var pullRequestBaseURL = "https://api.github.com/repos/Originate/git-town/pulls"
-var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=Originate%3Afeature&state=open"
+var pullRequestBaseURL = "https://api.github.com/repos/git-town/git-town/pulls"
+var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=git-town%3Afeature&state=open"
 var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
 var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
@@ -20,7 +20,7 @@ var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
 func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:Originate/git-town.git"})
+	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:git-town/git-town.git"})
 	assert.NotNil(t, driver)
 	if token != "" {
 		driver.SetAPIToken(token)
