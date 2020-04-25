@@ -199,14 +199,14 @@ A big thank to our contributors!
         <sup><b>@jiexi</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/iamandrewluca">
         <img src="https://avatars1.githubusercontent.com/u/1881266?s=60" width="60px">
         <sup><b>@iamandrewluca</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/ChrisMM">
         <img src="https://avatars0.githubusercontent.com/u/1051777?s=60" width="60px">
@@ -249,6 +249,8 @@ A big thank to our contributors!
         <sup><b>@mjhm</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/luketlancaster">
         <img src="https://avatars3.githubusercontent.com/u/8376505?s=60" width="60px">
@@ -261,8 +263,6 @@ A big thank to our contributors!
         <sup><b>@ecbrodie</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/doismellburning">
         <img src="https://avatars1.githubusercontent.com/u/817118?s=60" width="60px">
