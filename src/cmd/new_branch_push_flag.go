@@ -3,9 +3,9 @@ package cmd
 import (
 	"strconv"
 
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 

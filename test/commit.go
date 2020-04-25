@@ -3,8 +3,8 @@ package test
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/test/helpers"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // Commit describes a Git commit.

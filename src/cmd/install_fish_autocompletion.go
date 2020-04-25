@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 

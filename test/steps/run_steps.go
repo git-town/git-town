@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/test"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/test"
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.

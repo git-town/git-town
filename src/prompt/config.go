@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/git"
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/git"
 )
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed

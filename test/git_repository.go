@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/util"
 )
 
 // GitRepository is a Git repository that exists inside a Git environment.

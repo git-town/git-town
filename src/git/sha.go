@@ -1,6 +1,6 @@
 package git
 
-import "github.com/Originate/git-town/src/command"
+import "github.com/git-town/git-town/src/command"
 
 // GetBranchSha returns the SHA1 of the latest commit
 // on the branch with the given name.

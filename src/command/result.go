@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/util"
 	"github.com/acarl005/stripansi"
+	"github.com/git-town/git-town/src/util"
 )
 
 // Result contains the results of a command run in a subshell.
