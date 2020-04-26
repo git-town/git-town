@@ -15,8 +15,8 @@ get started hacking on Git Town.
 - [overview](./documentation/development/architecture.md)
 - [branch hierarchy](./documentation/development/branch_hierarchy.md): how Git
   Town sees branches
-- [repository drivers](./documentation/development/drivers.md) - third-party
+- [repository drivers](./documentation/development/drivers.md): third-party
   specific functionality
-- [step lists](./documentation/development/steps_list.md) - how most of the Git
+- [step lists](./documentation/development/steps_list.md): how most of the Git
   Town commands implement automatic, bullet-proof `undo` and `continue` commands
 - [test architecture](test-architecture.md)
