@@ -7,12 +7,12 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
 
   Background:
     Given my repo does not have a remote origin
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE     | FILE NAME |
       | main   | local    | main_commit | main_file |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature`
+    When I run "git-town hack new-feature"
 
 
   Scenario: result
@@ -25,7 +25,7 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH      | LOCATION | MESSAGE     | FILE NAME |
       | main        | local    | main_commit | main_file |
       | new-feature | local    | main_commit | main_file |

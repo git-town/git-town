@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/acarl005/stripansi"
@@ -22,6 +23,11 @@ func (c *Result) Args() []string {
 // Command provides the command run that led to this result.
 func (c *Result) Command() string {
 	return c.command
+}
+
+// FullCmd provides the full command run.
+func (c *Result) FullCmd() string {
+	return fmt.Sprintf("%s %s", c.command, strings.Join(c.args, " "))
 }
 
 // Output returns the output of this command.
