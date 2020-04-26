@@ -1,7 +1,6 @@
 # How to contribute
 
-Git Town is a welcoming community, and we'd love for everyone to help make it
-even better.
+Everybody is welcome to help make Git Town even better.
 
 - Found a bug or have an idea for a new feature? -
   [Open an issue](https://github.com/git-town/git-town/issues/new)
