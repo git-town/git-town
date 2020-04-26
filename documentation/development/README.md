@@ -4,18 +4,19 @@ Welcome to the Git Town developer guide. Hacking on Git Town is easy and a great
 way to learn to work on a medium-sized codebases. These guidelines will help you
 get started hacking on Git Town.
 
-- [developer machine setup](setup.md)
-- [testing](testing.md)
-- [tool development](development.md)
-- [website development](./documentation/development/website.md)
+- [machine setup](setup.md)
+- [run tests](testing.md)
+- [work on the source code](development.md)
+- [work on the website](./documentation/development/website.md)
+- [make a release](release.md)
 
 ## Architecture
 
-- [architecture overview](./documentation/development/architecture.md)
+- [overview](./documentation/development/architecture.md)
 - [branch hierarchy](./documentation/development/branch_hierarchy.md) - how Git
   Town sees branches
-- [drivers](./documentation/development/drivers.md) - third-party specific
-  functionality
-- [steps list](./documentation/development/steps_list.md) - the architecture
-  behind most of the Git Town commands
+- [repository drivers](./documentation/development/drivers.md) - third-party
+  specific functionality
+- [step lists](./documentation/development/steps_list.md) - how most of the Git
+  Town commands implement automatic, bullet-proof `undo` and `continue` commands
 - [test architecture](test-architecture.md)
