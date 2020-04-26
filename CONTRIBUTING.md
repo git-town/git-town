@@ -1,6 +1,7 @@
 # How to contribute
 
-Everybody is welcome to help make Git Town better.
+We are a welcoming community and invite everybody to help make Git Town better.
+No matter how big or small your contribution, thank you!
 
 **I want to fix a bug or add a feature**
 
