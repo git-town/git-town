@@ -1,6 +1,6 @@
 # Releasing new versions of Git Town
 
-#### GitHub
+## GitHub
 
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged
@@ -9,7 +9,7 @@
   - `git push --tags`
 - Travis-CI creates a new release on GitHub and attaches the GT binaries to it
 
-#### Homebrew
+## Homebrew
 
 - fork [Homebrew](https://github.com/Homebrew/homebrew)
 - update `Library/Formula/git-town.rb`
