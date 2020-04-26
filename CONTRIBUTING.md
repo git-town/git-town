@@ -2,12 +2,14 @@
 
 Everybody is welcome to help make Git Town even better.
 
-- Found a bug or have an idea for a new feature? -
-  [Open an issue](https://github.com/git-town/git-town/issues/new)
-- Want to fix a bug or add a feature? - See our
+- **Want to fix a bug or add a feature?** <br> See our
   [developer guidelines](DEVELOPMENT.md) to get started and check in with the
   maintainers by
   [opening an issue](https://github.com/git-town/git-town/issues/new) if you
-  need help or plan something larger
-- Fixed a bug or added a feature that others will enjoy? -
-  [Create a pull request](https://help.github.com/articles/using-pull-requests/)
+  need help or plan something larger,
+  [create a pull request](https://help.github.com/articles/using-pull-requests)
+  when you are ready
+- **Found a bug or need a feature?** <br>
+  [Open an issue](https://github.com/git-town/git-town/issues/new)
+- **Have an idea for a new feature?** <br>
+  [Open an issue](https://github.com/git-town/git-town/issues/new)
