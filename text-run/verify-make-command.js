@@ -5,7 +5,7 @@ const path = require("path")
 const util = require("util")
 const readFile = util.promisify(fs.readFile)
 
-module.exports = async function(activity) {
+module.exports = async function (activity) {
   const expected = activity.nodes
     .text()
     .replace(/make\s+/, "")
