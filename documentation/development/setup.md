@@ -12,14 +12,16 @@ websites for help getting them installed.
   - Windows users should install
     [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
 
-Now clone Git Town into `$GOPATH/src/github.com/git-town/git-town`. Until we
-have enabled Go modules, Git Town must live inside the GOPATH.
+Fork Git Town and clone your fork into
+`$GOPATH/src/github.com/git-town/git-town`. Until we have enabled Go modules,
+Git Town must live inside the GOPATH.
 
-Then, cd into the directory you just cloned, and run
+Cd into the directory you just cloned and run
 <code textrun="verify-make-command">make setup</code> to download additional
 tooling and dependencies.
 
-To make sure everything works:
+To make sure everything works,
 
 - build the tool: <code textrun="verify-make-command">make build</code>
   - now you have `$GOPATH/bin/git-town` compiled from your local source code
+- run the tests: <code textrun="verify-make-command">make test</code>
