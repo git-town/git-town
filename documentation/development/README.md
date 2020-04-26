@@ -10,8 +10,8 @@ get started hacking on Git Town.
 - [work on the website](website.md)
 - [make a release](release.md)
 
-To see all available make tasks: <code textrun="verify-make-command">make
-test</code>
+<code textrun="verify-make-command">make test</code> shows all available make
+tasks.
 
 ## Architecture
 
