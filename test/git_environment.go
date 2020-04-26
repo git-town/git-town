@@ -17,6 +17,9 @@ type GitEnvironment struct {
 
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
+
+	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
+	UpstreamRepo *GitRepository
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -33,7 +36,16 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
-	err = result.DeveloperRepo.SetRemote(result.OriginRepo.Dir)
+	err = result.DeveloperRepo.AddRemote("origin", result.OriginRepo.Dir)
+	if err != nil {
+		return &result, fmt.Errorf("cannot set remote: %w", err)
+	}
+	err = result.DeveloperRepo.Fetch()
+	if err != nil {
+		return &result, fmt.Errorf("cannot fetch: %w", err)
+	}
+	// and connect the main branches again
+	err = result.DeveloperRepo.ConnectTrackingBranch("main")
 	return &result, err
 }
 
@@ -82,6 +94,20 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	return gitEnv, err
 }
 
+// AddUpstream adds an upstream repository.
+func (env *GitEnvironment) AddUpstream() (err error) {
+	repo, err := CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir)
+	if err != nil {
+		return fmt.Errorf("cannot clone upstream: %w", err)
+	}
+	env.UpstreamRepo = &repo
+	err = env.DeveloperRepo.AddRemote("upstream", env.UpstreamRepo.workingDir)
+	if err != nil {
+		return fmt.Errorf("cannot set upstream remote: %w", err)
+	}
+	return nil
+}
+
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
 func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 	for _, commit := range commits {
@@ -104,6 +130,8 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 				env.OriginRepo.RegisterOriginalCommit(commit)
 			case "remote":
 				err = env.OriginRepo.CreateCommit(commit)
+			case "upstream":
+				err = env.UpstreamRepo.CreateCommit(commit)
 			default:
 				return fmt.Errorf("unknown commit location %q", commit.Locations)
 			}
@@ -116,6 +144,15 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 	err := env.OriginRepo.CheckoutBranch("master")
 	if err != nil {
 		return fmt.Errorf("cannot change origin repo back to master: %w", err)
+	}
+	return nil
+}
+
+// CreateRemoteBranch creates a branch with the given name only in the remote directory.
+func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
+	err := env.OriginRepo.CreateBranch(name, parent)
+	if err != nil {
+		return fmt.Errorf("cannot create remote branch %q: %w", name, err)
 	}
 	return nil
 }
@@ -136,6 +173,15 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	}
 	for _, remoteCommit := range remoteCommits {
 		builder.Add(remoteCommit, "remote")
+	}
+	if env.UpstreamRepo != nil {
+		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
+		if err != nil {
+			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
+		}
+		for _, upstreamCommit := range upstreamCommits {
+			builder.Add(upstreamCommit, "upstream")
+		}
 	}
 	return builder.Table(fields), nil
 }

@@ -38,6 +38,15 @@ func TestNewGitRepository(t *testing.T) {
 	_ = NewGitRepository(dir, dir)
 }
 
+func TestGitRepository_AddRemote(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.AddRemote("foo", "bar")
+	assert.Nil(t, err)
+	remotes, err := repo.Remotes()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"foo"}, remotes)
+}
+
 func TestGitRepository_Branches(t *testing.T) {
 	repo := createTestGitTownRepo(t)
 	assert.Nil(t, repo.CreateFeatureBranch("branch3"))
@@ -99,6 +108,19 @@ func TestGitRepository_Configuration(t *testing.T) {
 	assert.NotNil(t, config, "first path: new config")
 	config = repo.Configuration(false)
 	assert.NotNil(t, config, "second path: cached config")
+}
+
+func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
+	err = repo.ConnectTrackingBranch("master")
+	assert.Nil(t, err)
+	err = repo.PushBranch("master")
+	assert.Nil(t, err)
 }
 
 func TestGitRepo_CreateBranch(t *testing.T) {
@@ -197,6 +219,15 @@ func TestGitRepository_CurrentBranch(t *testing.T) {
 	assert.Equal(t, "master", branch)
 }
 
+func TestGitRepository_Fetch(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
+}
+
 func TestGitRepository_FileContentInCommit(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateCommit(Commit{
@@ -245,11 +276,32 @@ func TestGitRepository_HasFile(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestGitRepository_HasRebaseInProgress(t *testing.T) {
+	repo := createTestRepo(t)
+	has, err := repo.HasRebaseInProgress()
+	assert.Nil(t, err)
+	assert.False(t, has)
+}
+
 func TestGitRepository_LastActiveDir(t *testing.T) {
 	repo := createTestRepo(t)
 	dir, err := repo.LastActiveDir()
 	assert.Nil(t, err)
 	assert.Equal(t, repo.homeDir, dir)
+}
+
+func TestGitRepository_PushBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	err = repo.PushBranch("b1")
+	assert.Nil(t, err)
+	branches, err := origin.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"b1", "master"}, branches)
 }
 
 func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
@@ -260,6 +312,28 @@ func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
 	})
 	assert.Len(t, repo.originalCommits, 1)
 	assert.Equal(t, "file", repo.originalCommits[0].FileName)
+}
+
+func TestGitRepository_Remotes(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	remotes, err := repo.Remotes()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"origin"}, remotes)
+}
+
+func TestGitRepository_RemoveRemote(t *testing.T) {
+	repo := createTestRepo(t)
+	origin := createTestRepo(t)
+	err := repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	err = repo.RemoveRemote("origin")
+	assert.Nil(t, err)
+	remotes, err := repo.Remotes()
+	assert.Nil(t, err)
+	assert.Len(t, remotes, 0)
 }
 
 func TestGitRepository_SetOffline(t *testing.T) {
@@ -276,10 +350,48 @@ func TestGitRepository_SetOffline(t *testing.T) {
 	assert.False(t, offline)
 }
 
+func TestGitRepository_SetRemote(t *testing.T) {
+	repo := createTestRepo(t)
+	remotes, err := repo.Remotes()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{}, remotes)
+	origin := createTestRepo(t)
+	err = repo.AddRemote("origin", origin.Dir)
+	assert.Nil(t, err)
+	remotes, err = repo.Remotes()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"origin"}, remotes)
+}
+
 func TestGitRepository_StageFile(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
 	assert.Nil(t, err)
+}
+
+func TestGitRepository_Stash(t *testing.T) {
+	repo := createTestRepo(t)
+	stashSize, err := repo.StashSize()
+	assert.Nil(t, err)
+	assert.Zero(t, stashSize)
+	err = repo.CreateFile("f1.txt", "hello")
+	assert.Nil(t, err)
+	err = repo.Stash()
+	assert.Nil(t, err)
+	stashSize, err = repo.StashSize()
+	assert.Nil(t, err)
+	assert.Equal(t, 1, stashSize)
+}
+
+func TestGitRepository_UncommittedFiles(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateFile("f1.txt", "one")
+	assert.Nil(t, err)
+	err = repo.CreateFile("f2.txt", "two")
+	assert.Nil(t, err)
+	files, err := repo.UncommittedFiles()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{".gitconfig", "f1.txt", "f2.txt"}, files)
 }
 
 // HELPERS

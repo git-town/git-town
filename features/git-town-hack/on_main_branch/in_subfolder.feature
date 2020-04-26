@@ -6,31 +6,31 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
 
 
   Background:
-    Given the following commit exists in my repository
+    Given the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature` in the "new_folder" folder
+    When I run "git-town hack new-feature" in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                           |
-      | main        | git fetch --prune --tags          |
-      | <none>      | cd <%= git_root_folder %>         |
-      | main        | git add -A                        |
-      |             | git stash                         |
-      |             | git rebase origin/main            |
-      |             | git push                          |
-      |             | git branch new-feature main       |
-      |             | git checkout new-feature          |
-      | new-feature | git stash pop                     |
-      | <none>      | cd <%= git_folder "new_folder" %> |
+      | BRANCH      | COMMAND                      |
+      | main        | git fetch --prune --tags     |
+      | <none>      | cd {{ root folder }}         |
+      | main        | git add -A                   |
+      |             | git stash                    |
+      |             | git rebase origin/main       |
+      |             | git push                     |
+      |             | git branch new-feature main  |
+      |             | git checkout new-feature     |
+      | new-feature | git stash pop                |
+      | <none>      | cd {{ folder "new_folder" }} |
     And I am in the project root folder
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE       |
-      | main        | local and remote | folder commit |
-      | new-feature | local            | folder commit |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE       |
+      | main        | local, remote | folder commit |
+      | new-feature | local         | folder commit |

@@ -73,6 +73,15 @@ func NewGitRepository(workingDir string, homeDir string) GitRepository {
 	return result
 }
 
+// AddRemote adds the given Git remote to this repository.
+func (repo *GitRepository) AddRemote(name, value string) error {
+	res, err := repo.Run("git", "remote", "add", name, value)
+	if err != nil {
+		return fmt.Errorf("cannot add remote %q --> %q: %w\n%s", name, value, err, res.Output())
+	}
+	return nil
+}
+
 // Branches provides the names of the local branches in this Git repository,
 // sorted alphabetically.
 func (repo *GitRepository) Branches() (result []string, err error) {
@@ -166,6 +175,16 @@ func (repo *GitRepository) Configuration(refresh bool) *git.Configuration {
 	return repo.configCache
 }
 
+// ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
+// The branch must exist.
+func (repo *GitRepository) ConnectTrackingBranch(name string) error {
+	out, err := repo.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
+	if err != nil {
+		return fmt.Errorf("cannot connect tracking branch for %q: %w\n%s", name, err, out)
+	}
+	return nil
+}
+
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
@@ -213,11 +232,14 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	return nil
 }
 
-// CreateFeatureBranch creates a branch with the given name in this repository.
+// CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
-	outcome, err := repo.Run("git", "town", "hack", name)
+	err := repo.RunMany([][]string{
+		{"git", "checkout", "-b", name},
+		{"git", "config", "git-town-branch." + name + ".parent", "main"},
+	})
 	if err != nil {
-		return fmt.Errorf("cannot create branch %q in repo: %w\n%v", name, err, outcome)
+		return fmt.Errorf("cannot create feature branch %q: %w", name, err)
 	}
 	return nil
 }
@@ -258,6 +280,15 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	return strings.TrimSpace(outcome.OutputSanitized()), nil
 }
 
+// Fetch retrieves the updates from the remote repo.
+func (repo *GitRepository) Fetch() error {
+	_, err := repo.Run("git", "fetch")
+	if err != nil {
+		return fmt.Errorf("cannot fetch: %w", err)
+	}
+	return nil
+}
+
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
 func (repo *GitRepository) FileContentInCommit(sha string, filename string) (result string, err error) {
 	outcome, err := repo.Run("git", "show", sha+":"+filename)
@@ -287,6 +318,15 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 		return result, fmt.Errorf("file %q should have content %q but has %q", name, content, actualContent)
 	}
 	return true, nil
+}
+
+// HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
+func (repo *GitRepository) HasRebaseInProgress() (result bool, err error) {
+	res, err := repo.Run("git", "status")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine rebase in %q progress: %w", repo.homeDir, err)
+	}
+	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
 }
 
 // IsOffline indicates whether Git Town is offline.
@@ -321,6 +361,24 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
+// Remotes provides the names of all Git remotes in this repository.
+func (repo *GitRepository) Remotes() (names []string, err error) {
+	out, err := repo.Run("git", "remote")
+	if err != nil {
+		return names, err
+	}
+	if out.OutputSanitized() == "" {
+		return []string{}, nil
+	}
+	return out.OutputLines(), nil
+}
+
+// RemoveRemote deletes the Git remote with the given name.
+func (repo *GitRepository) RemoveRemote(name string) error {
+	_, err := repo.Run("git", "remote", "rm", name)
+	return err
+}
+
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
 	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", strconv.FormatBool(enabled))
@@ -330,11 +388,42 @@ func (repo *GitRepository) SetOffline(enabled bool) error {
 	return nil
 }
 
-// SetRemote sets the remote of this Git repository to the given target.
-func (repo *GitRepository) SetRemote(target string) error {
-	return repo.RunMany([][]string{
-		{"git", "remote", "add", "origin", target},
+// Stash adds the current files to the Git stash.
+func (repo *GitRepository) Stash() error {
+	err := repo.RunMany([][]string{
+		{"git", "add", "."},
+		{"git", "stash"},
 	})
+	if err != nil {
+		return fmt.Errorf("cannot stash: %w", err)
+	}
+	return nil
+}
+
+// StashSize provides the number of stashes in this repository.
+func (repo *GitRepository) StashSize() (result int, err error) {
+	res, err := repo.Run("git", "stash", "list")
+	if err != nil {
+		return result, fmt.Errorf("command %q failed: %w", res.FullCmd(), err)
+	}
+	if res.OutputSanitized() == "" {
+		return 0, nil
+	}
+	return len(res.OutputLines()), nil
+}
+
+// UncommittedFiles provides the names of the files not committed into Git.
+func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
+	res, err := repo.Run("git", "status", "--porcelain", "--untracked-files=all")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", repo.homeDir, err)
+	}
+	lines := res.OutputLines()
+	for l := range lines {
+		parts := strings.Split(lines[l], " ")
+		result = append(result, parts[1])
+	}
+	return result, nil
 }
 
 // StageFiles adds the file with the given name to the Git index.
