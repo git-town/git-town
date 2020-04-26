@@ -2,7 +2,7 @@ const child_process = require("child_process")
 const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
-module.exports = async function(activity) {
+module.exports = async function (activity) {
   const mdUsage = activity.nodes
     .text()
     .trim()
