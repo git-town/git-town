@@ -8,7 +8,7 @@ Everybody is welcome to help make Git Town better.
 - connect with the maintainers by
   [opening an issue](https://github.com/git-town/git-town/issues/new) if you
   need guidance
-- [create a pull request](https://help.github.com/articles/using-pull-requests)
+- [send a pull request](https://help.github.com/articles/using-pull-requests)
   when you are ready
 
 **I want to report a bug or need a feature** <br> please
