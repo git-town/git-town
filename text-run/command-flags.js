@@ -2,7 +2,7 @@ const child_process = require("child_process")
 const diff = require("assert-no-diff")
 const getCommand = require("./helpers/get-command.js")
 
-module.exports = async function(activity) {
+module.exports = async function (activity) {
   const mdFlags = getMdFlags(activity)
   const cliFlags = getCliFlags(activity)
   diff.trimmedLines(mdFlags, cliFlags)
@@ -18,8 +18,8 @@ function getCliFlags(activity) {
     .toString()
     .match(/\nFlags:\n([\s\S]*)\nGlobal Flags:\n/)[1]
     .split("\n")
-    .filter(line => line)
-    .filter(line => !line.includes("help"))
-    .map(line => line.trim())
+    .filter((line) => line)
+    .filter((line) => !line.includes("help"))
+    .map((line) => line.trim())
     .join("\n")
 }
