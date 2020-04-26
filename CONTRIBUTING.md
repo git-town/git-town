@@ -5,7 +5,7 @@ No matter how big or small your contribution, thank you!
 
 **I want to fix a bug or add a feature**
 
-- see our [developer guidelines](DEVELOPMENT.md) to get started
+- see our developer guidelines to get started
 - connect with the maintainers by
   [opening an issue](https://github.com/git-town/git-town/issues/new) if you
   need guidance
