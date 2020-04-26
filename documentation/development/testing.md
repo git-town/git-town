@@ -31,12 +31,13 @@ make fix
 
 ## Debugging
 
-To see the CLI output of Cucumber tests, add a tag `@debug` above the feature or
-scenario you want to debug. Here is an example:
+To see the CLI output of commands in Cucumber tests, add a tag `@debug` above
+the feature or scenario you want to debug. Here is an example:
 
 ```cucumber
 @debug
-Feature: A foo walks into a bar
+Scenario: A foo walks into a bar
+  Given ...
 ```
 
 To debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
