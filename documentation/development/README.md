@@ -1,7 +1,8 @@
 # Git Town Development
 
-Welcome to the Git Town developer guide. Hacking on Git Town is super easy.
-These guidelines will help you get started hacking on Git Town.
+Welcome to the Git Town developer guide. Hacking on Git Town is easy and a great
+way to learn to work on a medium-sized codebases. These guidelines will help you
+get started hacking on Git Town.
 
 - [developer machine setup](setup.md)
 - [testing](testing.md)
