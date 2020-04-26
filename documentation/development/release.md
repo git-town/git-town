@@ -1,4 +1,4 @@
-## Releasing new versions of Git Town
+# Releasing new versions of Git Town
 
 This guide is for maintainers only.
 
