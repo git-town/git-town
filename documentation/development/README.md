@@ -7,7 +7,7 @@ get started hacking on Git Town.
 - [machine setup](setup.md)
 - [run tests](testing.md)
 - [work on the source code](development.md)
-- [work on the website](./documentation/development/website.md)
+- [work on the website](website.md)
 - [make a release](release.md)
 
 ## Architecture
