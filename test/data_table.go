@@ -3,7 +3,9 @@ package test
 import (
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/cucumber/godog/gherkin"
 	"github.com/git-town/git-town/test/helpers"
@@ -67,18 +69,30 @@ func (table *DataTable) EqualGherkin(other *gherkin.DataTable) (diff string, err
 	return table.EqualDataTable(dataTable)
 }
 
+var templateRE *regexp.Regexp
+var templateOnce sync.Once
+
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string) (result DataTable) {
+func (table *DataTable) Expand(rootDir string, repo *GitRepository) (result DataTable) {
 	for row := range table.cells {
 		cells := []string{}
 		for col := range table.cells[row] {
 			cell := table.cells[row][col]
 			if strings.Contains(cell, "{{") {
+				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
+				match := templateRE.FindString(cell)
 				switch {
-				case strings.Contains(cell, "{{ root folder }}"):
+				case match == "{{ root folder }}":
 					cell = strings.Replace(cell, "{{ root folder }}", rootDir, 1)
-				case strings.Contains(cell, `{{ folder "new_folder" }}`):
+				case match == `{{ folder "new_folder" }}`:
 					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
+				case strings.HasPrefix(match, "{{ sha "):
+					commitName := match[8 : len(match)-4]
+					sha, err := repo.ShaForCommit(commitName)
+					if err != nil {
+						panic(fmt.Errorf("cannot determine SHA: %v", err))
+					}
+					cell = strings.Replace(cell, match, sha, 1)
 				default:
 					panic("DataTable.Expand: unknown template expression: " + cell)
 				}
@@ -88,6 +102,15 @@ func (table *DataTable) Expand(rootDir string) (result DataTable) {
 		result.AddRow(cells...)
 	}
 	return result
+}
+
+// RemoveText deletes the given text from each cell.
+func (table *DataTable) RemoveText(text string) {
+	for row := range table.cells {
+		for col := range table.cells[row] {
+			table.cells[row][col] = strings.Replace(table.cells[row][col], text, "", 1)
+		}
+	}
 }
 
 // String provides the data in this DataTable instance formatted in Gherkin table format.

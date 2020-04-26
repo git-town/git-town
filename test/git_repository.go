@@ -12,6 +12,7 @@ import (
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // GitRepository is a Git repository that exists inside a Git environment.
@@ -83,7 +84,7 @@ func (repo *GitRepository) AddRemote(name, value string) error {
 }
 
 // Branches provides the names of the local branches in this Git repository,
-// sorted alphabetically.
+// sorted alphabetically, with the "main" branch first.
 func (repo *GitRepository) Branches() (result []string, err error) {
 	outcome, err := repo.Run("git", "branch")
 	if err != nil {
@@ -93,7 +94,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 		line = strings.Replace(line, "* ", "", 1)
 		result = append(result, strings.TrimSpace(line))
 	}
-	return sort.StringSlice(result), nil
+	return helpers.MainFirst(sort.StringSlice(result)), nil
 }
 
 // CheckoutBranch checks out the Git branch with the given name in this repo.
@@ -373,6 +374,15 @@ func (repo *GitRepository) Remotes() (names []string, err error) {
 	return out.OutputLines(), nil
 }
 
+// RemoveBranch deletes the branch with the given name from this repo.
+func (repo *GitRepository) RemoveBranch(name string) error {
+	res, err := repo.Run("git", "branch", "-D", name)
+	if err != nil {
+		return fmt.Errorf("cannot delete branch %q: %w\n%s", name, err, res.Output())
+	}
+	return nil
+}
+
 // RemoveRemote deletes the Git remote with the given name.
 func (repo *GitRepository) RemoveRemote(name string) error {
 	_, err := repo.Run("git", "remote", "rm", name)
@@ -420,10 +430,22 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 	}
 	lines := res.OutputLines()
 	for l := range lines {
+		if lines[l] == "" {
+			continue
+		}
 		parts := strings.Split(lines[l], " ")
 		result = append(result, parts[1])
 	}
 	return result, nil
+}
+
+// ShaForCommit provides the SHA for the commit with the given name.
+func (repo *GitRepository) ShaForCommit(name string) (result string, err error) {
+	res, err := repo.Run("git", "reflog", fmt.Sprintf("--grep-reflog=commit: %s", name), "--format=%H")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
+	}
+	return res.OutputSanitized(), nil
 }
 
 // StageFiles adds the file with the given name to the Git index.

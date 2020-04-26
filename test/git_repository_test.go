@@ -54,7 +54,7 @@ func TestGitRepository_Branches(t *testing.T) {
 	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"branch1", "branch2", "branch3", "main", "master"}, branches)
+	assert.Equal(t, []string{"main", "branch1", "branch2", "branch3", "master"}, branches)
 }
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
@@ -143,7 +143,7 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Nil(t, err)
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"f1", "f1a", "main", "master"}, branches)
+	assert.Equal(t, []string{"main", "f1", "f1a", "master"}, branches)
 }
 
 func TestGitRepository_CreateCommit(t *testing.T) {
@@ -324,6 +324,20 @@ func TestGitRepository_Remotes(t *testing.T) {
 	assert.Equal(t, []string{"origin"}, remotes)
 }
 
+func TestGitRepository_RemoveBranch(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	branches, err := repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"b1", "master"}, branches)
+	err = repo.RemoveBranch("b1")
+	assert.Nil(t, err)
+	branches, err = repo.Branches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"master"}, branches)
+}
+
 func TestGitRepository_RemoveRemote(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)
@@ -361,6 +375,15 @@ func TestGitRepository_SetRemote(t *testing.T) {
 	remotes, err = repo.Remotes()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"origin"}, remotes)
+}
+
+func TestGitRepository_ShaForCommit(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{Branch: "master", FileName: "foo", FileContent: "bar", Message: "commit"})
+	assert.Nil(t, err)
+	sha, err := repo.ShaForCommit("commit")
+	assert.Nil(t, err)
+	assert.Len(t, sha, 40)
 }
 
 func TestGitRepository_StageFile(t *testing.T) {
