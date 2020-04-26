@@ -2,14 +2,10 @@
 
 The Git Town website can be found at <https://www.git-town.com>.
 
-## requirements
-
-- [Node.js](https://nodejs.org)
-- [Harp](http://harpjs.com)
-
 ## setup
 
-run `yarn install` to install the needed dependencies
+Install [Node.js](https://nodejs.org), then run `yarn install` to install the
+needed tools.
 
 ## local development
 
