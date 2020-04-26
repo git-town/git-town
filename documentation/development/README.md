@@ -13,7 +13,7 @@ get started hacking on Git Town.
 ## Architecture
 
 - [overview](./documentation/development/architecture.md)
-- [branch hierarchy](./documentation/development/branch_hierarchy.md) - how Git
+- [branch hierarchy](./documentation/development/branch_hierarchy.md): how Git
   Town sees branches
 - [repository drivers](./documentation/development/drivers.md) - third-party
   specific functionality
