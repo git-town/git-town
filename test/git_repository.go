@@ -6,8 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
 )
@@ -29,14 +31,15 @@ type GitRepository struct {
 	configCache *git.Configuration
 }
 
-// CloneGitRepository clones the given parent repo into a new GitRepository.
-func CloneGitRepository(originDir, workingDir, homeDir string) (GitRepository, error) {
+// CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
+// The cloning operation is using the given homeDir as the $HOME.
+func CloneGitRepository(originDir, targetDir, homeDir string) (GitRepository, error) {
 	runner := NewShellRunner(".", homeDir)
-	_, err := runner.Run("git", "clone", originDir, workingDir)
+	res, err := runner.Run("git", "clone", originDir, targetDir)
 	if err != nil {
-		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w", originDir, err)
+		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
-	return NewGitRepository(workingDir, homeDir), nil
+	return NewGitRepository(targetDir, homeDir), nil
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
@@ -138,6 +141,21 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 		result = append(result, commit)
 	}
 	return result, nil
+}
+
+// CommitStagedChanges commits the currently staged changes.
+func (repo *GitRepository) CommitStagedChanges(message bool) error {
+	var out *command.Result
+	var err error
+	if message {
+		out, err = repo.Run("git", "commit", "-m", "committing")
+	} else {
+		out, err = repo.Run("git", "commit", "--no-edit")
+	}
+	if err != nil {
+		return fmt.Errorf("cannot commit staged changes: %w\n%s", err, out)
+	}
+	return nil
 }
 
 // Configuration returns a cached Configuration instance for this repo.
@@ -271,6 +289,18 @@ func (repo *GitRepository) HasFile(name, content string) (result bool, err error
 	return true, nil
 }
 
+// IsOffline indicates whether Git Town is offline.
+func (repo *GitRepository) IsOffline() (result bool, err error) {
+	res, err := repo.Run("git", "config", "--get", "git-town.offline")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine offline status: %w\n%s", err, res.Output())
+	}
+	if res.OutputSanitized() == "true" {
+		return true, nil
+	}
+	return false, nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Run("git", "rev-parse", "--show-toplevel")
@@ -293,7 +323,7 @@ func (repo *GitRepository) RegisterOriginalCommit(commit Commit) {
 
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepository) SetOffline(enabled bool) error {
-	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", "true")
+	outcome, err := repo.Run("git", "config", "--global", "git-town.offline", strconv.FormatBool(enabled))
 	if err != nil {
 		return fmt.Errorf("cannot set offline mode in repo %q: %w\n%v", repo.Dir, err, outcome)
 	}
@@ -305,4 +335,14 @@ func (repo *GitRepository) SetRemote(target string) error {
 	return repo.RunMany([][]string{
 		{"git", "remote", "add", "origin", target},
 	})
+}
+
+// StageFiles adds the file with the given name to the Git index.
+func (repo *GitRepository) StageFiles(names ...string) error {
+	args := append([]string{"add"}, names...)
+	_, err := repo.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
+	}
+	return nil
 }
