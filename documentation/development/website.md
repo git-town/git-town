@@ -1,4 +1,4 @@
-# Developing the website
+# Website Development Guide
 
 The Git Town website can be found at <https://www.git-town.com>.
 
