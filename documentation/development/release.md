@@ -1,5 +1,7 @@
 # Releasing new versions of Git Town
 
+This guide is for maintainers only.
+
 ## GitHub
 
 - create a feature branch which updates `RELEASE_NOTES.md`
