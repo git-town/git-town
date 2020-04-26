@@ -1,2 +1,4 @@
-semi: false
-proseWrap: always
+{
+  "semi": false,
+  "proseWrap": "always"
+}
