@@ -25,11 +25,11 @@ var installFishAutocompletionCommand = &cobra.Command{
 
 func installFishAutocompletion() error {
 	folderName := filepath.Join(os.Getenv("HOME"), ".config", "fish", "completions")
-	filename := filepath.Join(folderName, "git.fish")
-	err := os.MkdirAll(filepath.Dir(filename), 0700)
+	err := os.MkdirAll(folderName, 0744)
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %w", folderName, err)
 	}
+	filename := filepath.Join(folderName, "git.fish")
 	if util.DoesFileExist(filename) {
 		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
