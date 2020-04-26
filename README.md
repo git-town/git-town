@@ -145,7 +145,8 @@ Run `git town` for an overview of the Git Town commands and `git help <command>`
 Found a bug or have an idea for a new feature?
 [Open an issue](https://github.com/git-town/git-town/issues/new) or send a
 [pull request](https://help.github.com/articles/using-pull-requests/)! Check out
-our [contributing guide](/CONTRIBUTING.md) to get started.
+our [contributing](/CONTRIBUTING.md) and
+[developer guide](documentation/development/README.md) to get started.
 
 ### Sponsors
 
