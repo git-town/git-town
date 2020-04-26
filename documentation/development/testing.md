@@ -1,21 +1,24 @@
 # Testing
 
-Git Town has a very thorough test suite to ensure it works correctly and never
-loses your data. The end-to-end tests use [Cucumber](https://cucumber.io) to
-make them easy to read and reason about. Unit tests are written as normal Go
-tests.
+Git Town has a very comprehensive test suite to ensure it works correctly and
+never loses data. The end-to-end tests use [Cucumber](https://cucumber.io) to
+make them easier to reason about. Unit tests are normal Go tests.
 
 ## Running Tests
 
+To run different test types:
+
 ```bash
-# running the different test types
 make test       # runs all tests
 make test-go    # runs the new Go-based test suite
 make lint       # runs the linters
 make cuke       # runs the feature tests
+```
 
-# running individual scenarios/features
-godog <path to file/folder>
+To run individual scenarios/features:
+
+```bash
+godog [path to file/folder]
 ```
 
 ## Auto-fixing issues
