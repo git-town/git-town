@@ -11,7 +11,7 @@ Everybody is welcome to help make Git Town better.
 - [create a pull request](https://help.github.com/articles/using-pull-requests)
   when you are ready
 
-**I want to report a bug or need a feature** <br>
-[Open an issue](https://github.com/git-town/git-town/issues/new)
+**I want to report a bug or need a feature** <br> please
+[open an issue](https://github.com/git-town/git-town/issues/new)
 
-**I want to praise Git Town** <br> Please tweet or blog about us.
+**I want to praise Git Town** <br> Please tweet or blog about us!
