@@ -1,6 +1,6 @@
 # How to contribute
 
-Everybody is welcome to help make Git Town even better.
+Everybody is welcome to help make Git Town better.
 
 - **Want to fix a bug or add a feature?** <br> See our
   [developer guidelines](DEVELOPMENT.md) to get started and check in with the
