@@ -43,14 +43,7 @@ fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
 
 fix-md:  # auto-fixes all Markdown lint issues
-	@find . -type f \( \
-		-path '**/*.md' -o \
-		-path '**/*.yml' -o \
-		-path '**/*.json' -o \
-		-path '**/*.js' \) | \
-		grep -v node_modules | \
-		grep -v vendor | \
-		xargs node_modules/.bin/prettier --write
+	node_modules/.bin/prettier --write .
 
 fix-rb:  # auto-fixes all Ruby lint issues
 	bundle exec rubocop --auto-correct
@@ -67,14 +60,7 @@ lint-go:  # lints the Go files
 	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
 
 lint-md: build  # lints the Markdown files
-	@find . -type f \( \
-		-path '**/*.md' -o \
-		-path '**/*.yml' -o \
-		-path '**/*.json' -o \
-		-path '**/*.js' \) | \
-		grep -v node_modules | \
-		grep -v vendor | \
-		xargs node_modules/.bin/prettier -l
+	node_modules/.bin/prettier -l .
 	node_modules/.bin/text-run --offline
 
 lint-rb:  # lints the Ruby files
