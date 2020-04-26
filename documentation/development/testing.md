@@ -47,14 +47,13 @@ To debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 - set a breakpoint in your test code
 - run the `debug a test` configuration in the debugger
 
-## Mocking
+## Preventing pushes to GitHub
 
 Certain tests require the Git remote to be set to a real value on GitHub or
-Bitbucket. This causes `git push` operations in this test to also go to GitHub,
-which is undesirable. To prevent this problem, Git Town mocks the Git remote if
-a Git configuration value `git-town.testing.remote-url` exists with the
-respective value. This also requires an environment variable `GIT_TOWN_ENV` set
-to `test`.
+Bitbucket. This causes `git push` operations in this test to also go to GitHub.
+To prevent this, Git Town mocks the Git remote if a Git configuration value
+`git-town.testing.remote-url` exists with the respective value. This also
+requires an environment variable `GIT_TOWN_ENV` set to `test`.
 
 ## Architecture
 
