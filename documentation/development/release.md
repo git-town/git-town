@@ -2,7 +2,7 @@
 
 This guide is for maintainers only.
 
-## GitHub
+### create a GitHub release
 
 - create a feature branch which updates `RELEASE_NOTES.md`
 - get the feature branch reviewed and merged
@@ -11,7 +11,7 @@ This guide is for maintainers only.
   - `git push --tags`
 - Travis-CI creates a new release on GitHub and attaches the GT binaries to it
 
-## Homebrew
+### create a Homebrew release
 
 - fork [Homebrew](https://github.com/Homebrew/homebrew)
 - update `Library/Formula/git-town.rb`
