@@ -13,7 +13,7 @@ script:
   - pwd
   - echo $HOME
   - mv $TRAVIS_BUILD_DIR $HOME
-  - cd $HOME
+  - cd $HOME/git-town
   - make test
 
 notifications:
