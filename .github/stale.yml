@@ -15,7 +15,7 @@ exemptLabels:
   - improvement
   - refactoring
 
-staleLabel: stale
+staleLabel: false
 
 # Comment to post when marking as stale. Set to `false` to disable
 pulls:
