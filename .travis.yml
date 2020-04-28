@@ -11,6 +11,9 @@ install:
 
 script:
   - pwd
+  - echo $HOME
+  - mv $TRAVIS_BUILD_DIR $HOME
+  - cd $HOME
   - make test
 
 notifications:
