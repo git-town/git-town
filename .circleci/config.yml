@@ -1,0 +1,41 @@
+version: 2
+
+jobs:
+  clone:
+    docker:
+      - image: circleci/golang:1.14
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+  golang:
+    docker:
+      - image: circleci/golang:1.14
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: cd cli && make --no-print-directory setup-ci
+      - run: cd cli && make --no-print-directory test-ci
+  nodejs:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: pwd
+      - run: ls -la
+      - run: cd vscode && make --no-print-directory setup
+      - run: cd vscode && make --no-print-directory test-ci
+workflows:
+  version: 2
+  all_tests:
+    jobs:
+      - clone
+      - golang:
+          requires:
+            - clone
+      - nodejs:
+          requires:
+            - clone
