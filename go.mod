@@ -17,13 +17,13 @@ require (
 	github.com/mattn/go-colorable v0.0.8-0.20170210172801-5411d3eea597 // indirect
 	github.com/mattn/go-isatty v0.0.2-0.20170307163044-57fdcb988a5c // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sergi/go-diff v1.0.0
 	github.com/spf13/cobra v0.0.3-0.20180408161736-cd30c2a7e91a
 	github.com/spf13/pflag v1.0.1-0.20180403115518-1ce0cc6db402 // indirect
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/net v0.0.0-20180208041118-f5dfe339be1d // indirect
 	golang.org/x/oauth2 v0.0.0-20180402223937-921ae394b943
+	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
 	golang.org/x/sys v0.0.0-20170213225739-e24f485414ae // indirect
 	google.golang.org/appengine v1.0.1-0.20180405220334-0a24098c0ec6 // indirect
 	gopkg.in/AlecAivazis/survey.v1 v1.4.1

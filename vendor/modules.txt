@@ -43,7 +43,6 @@ github.com/mattn/go-isatty
 ## explicit
 github.com/mgutz/ansi
 # github.com/pmezard/go-difflib v1.0.0
-## explicit
 github.com/pmezard/go-difflib/difflib
 # github.com/sergi/go-diff v1.0.0
 ## explicit
@@ -65,6 +64,8 @@ golang.org/x/net/context/ctxhttp
 ## explicit
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
+# golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
+## explicit
 # golang.org/x/sys v0.0.0-20170213225739-e24f485414ae
 ## explicit
 golang.org/x/sys/unix

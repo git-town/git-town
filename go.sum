@@ -44,6 +44,8 @@ golang.org/x/net v0.0.0-20180208041118-f5dfe339be1d h1:lnO2rP1Eit1fCAJKjYJlnArsH
 golang.org/x/net v0.0.0-20180208041118-f5dfe339be1d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/oauth2 v0.0.0-20180402223937-921ae394b943 h1:hE+k6oRG1aru6/y8A0HI01Zqp65EZcUcKToTkbPsFFM=
 golang.org/x/oauth2 v0.0.0-20180402223937-921ae394b943/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
+golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a h1:WXEvlFVvvGxCJLG6REjsT03iWnKLEWinaScsxF2Vm2o=
+golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sys v0.0.0-20170213225739-e24f485414ae h1:GTtEQDSA+M757ZEFcmC1Z5tEQXeyj0/vKmKeGqKRbP4=
 golang.org/x/sys v0.0.0-20170213225739-e24f485414ae/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 google.golang.org/appengine v1.0.1-0.20180405220334-0a24098c0ec6 h1:alQWZV0HJ9z4mz1t079hHCYXAc5Mo/j52LROpNNpRkg=
