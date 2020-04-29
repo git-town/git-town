@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/test"
 )
 
@@ -19,13 +19,13 @@ var gitManager *test.GitManager
 
 // SuiteSteps defines global lifecycle step implementations for Cucumber.
 func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.BeforeFeature(func(feature *gherkin.Feature) {
+	suite.BeforeScenario(func(feature *messages.Pickle) {
 		if hasFeatureTag(feature, "@debug") {
 			test.Debug = true
 		}
 	})
 
-	suite.BeforeScenario(func(args interface{}) {
+	suite.BeforeScenario(func(args *messages.Pickle) {
 		// create a GitEnvironment for the scenario
 		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
 		if err != nil {
@@ -54,7 +54,7 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 	})
 
-	suite.AfterScenario(func(args interface{}, e error) {
+	suite.AfterScenario(func(args *messages.Pickle, e error) {
 		if e == nil {
 			err := fs.activeScenarioState.gitEnvironment.Remove()
 			if err != nil {
@@ -67,8 +67,8 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 }
 
 // hasFeatureTag indicates whether the given feature has a tag with the given name.
-func hasFeatureTag(feature *gherkin.Feature, name string) bool {
-	for _, tag := range feature.Tags {
+func hasFeatureTag(feature *messages.Pickle, name string) bool {
+	for _, tag := range feature.GetTags() {
 		if tag.Name == name {
 			return true
 		}
@@ -77,8 +77,8 @@ func hasFeatureTag(feature *gherkin.Feature, name string) bool {
 }
 
 // hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
-func hasScenarioTag(args interface{}, name string) bool {
-	for _, tag := range scenarioTags(args) {
+func hasScenarioTag(args *messages.Pickle, name string) bool {
+	for _, tag := range args.GetTags() {
 		if tag.Name == name {
 			return true
 		}
@@ -87,25 +87,6 @@ func hasScenarioTag(args interface{}, name string) bool {
 }
 
 // scenarioName returns the name of the given Scenario or ScenarioOutline
-func scenarioName(args interface{}) string {
-	scenario, ok := args.(*gherkin.Scenario)
-	if ok {
-		return scenario.Name
-	}
-	scenarioOutline, ok := args.(*gherkin.ScenarioOutline)
-	if ok {
-		return scenarioOutline.Name
-	}
-	panic("unknown scenario type")
-}
-
-func scenarioTags(args interface{}) []*gherkin.Tag {
-	switch typed := args.(type) {
-	case *gherkin.Scenario:
-		return typed.Tags
-	case *gherkin.ScenarioOutline:
-		return typed.Tags
-	default:
-		panic("unknown scenario type")
-	}
+func scenarioName(args *messages.Pickle) string {
+	return args.GetName()
 }

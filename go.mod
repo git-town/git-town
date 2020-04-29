@@ -4,8 +4,8 @@ go 1.14
 
 require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
-	github.com/cucumber/godog v0.8.0
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/cucumber/godog v0.9.0
+	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/dustin/go-humanize v0.0.0-20171111073723-bb3d318650d4
 	github.com/fatih/color v1.5.0
 	github.com/golang/protobuf v1.0.1-0.20180202184318-bbd03ef6da3a // indirect
@@ -20,7 +20,7 @@ require (
 	github.com/sergi/go-diff v1.0.0
 	github.com/spf13/cobra v0.0.3-0.20180408161736-cd30c2a7e91a
 	github.com/spf13/pflag v1.0.1-0.20180403115518-1ce0cc6db402 // indirect
-	github.com/stretchr/testify v1.3.0
+	github.com/stretchr/testify v1.5.1
 	golang.org/x/net v0.0.0-20180208041118-f5dfe339be1d // indirect
 	golang.org/x/oauth2 v0.0.0-20180402223937-921ae394b943
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect

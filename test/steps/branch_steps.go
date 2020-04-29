@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/test"
 )
@@ -12,7 +12,7 @@ import (
 // BranchSteps defines Cucumber step implementations around Git branches.
 // nolint:funlen
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *gherkin.DataTable) error {
+	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
 		table := test.DataTable{}
 		table.AddRow("BRANCH", "PARENT")
@@ -97,7 +97,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^the existing branches are$`, func(table *gherkin.DataTable) error {
+	suite.Step(`^the existing branches are$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		existing, err := fs.activeScenarioState.gitEnvironment.Branches()
 		if err != nil {
 			return err

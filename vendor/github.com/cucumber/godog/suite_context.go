@@ -3,6 +3,7 @@ package godog
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"path/filepath"
@@ -11,7 +12,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/gherkin-go/v11"
+	"github.com/cucumber/messages-go/v10"
+
+	"github.com/cucumber/godog/colors"
 )
 
 // SuiteContext provides steps for godog suite execution and
@@ -41,6 +45,7 @@ func SuiteContext(s *Suite, additionalContextInitializers ...func(suite *Suite))
 	s.Step(`^I run feature suite$`, c.iRunFeatureSuite)
 	s.Step(`^I run feature suite with tags "([^"]*)"$`, c.iRunFeatureSuiteWithTags)
 	s.Step(`^I run feature suite with formatter "([^"]*)"$`, c.iRunFeatureSuiteWithFormatter)
+	s.Step(`^(?:I )(allow|disable) variable injection`, c.iSetVariableInjectionTo)
 	s.Step(`^(?:a )?feature "([^"]*)"(?: file)?:$`, c.aFeatureFile)
 	s.Step(`^the suite should have (passed|failed)$`, c.theSuiteShouldHave)
 
@@ -74,6 +79,12 @@ func SuiteContext(s *Suite, additionalContextInitializers ...func(suite *Suite))
 	// Introduced to test formatter/cucumber.feature
 	s.Step(`^the rendered json will be as follows:$`, c.theRenderJSONWillBe)
 
+	// Introduced to test formatter/pretty.feature
+	s.Step(`^the rendered output will be as follows:$`, c.theRenderOutputWillBe)
+
+	// Introduced to test formatter/junit.feature
+	s.Step(`^the rendered xml will be as follows:$`, c.theRenderXMLWillBe)
+
 	s.Step(`^(?:a )?failing multistep$`, func() Steps {
 		return Steps{"passing step", "failing step"}
 	})
@@ -89,6 +100,46 @@ func SuiteContext(s *Suite, additionalContextInitializers ...func(suite *Suite))
 	s.Step(`^(?:a )?failing nested multistep$`, func() Steps {
 		return Steps{"passing step", "passing multistep", "failing multistep"}
 	})
+	// Default recovery step
+	s.Step(`Ignore.*`, func() error {
+		return nil
+	})
+
+	s.BeforeStep(c.inject)
+}
+
+func (s *suiteContext) inject(step *messages.Pickle_PickleStep) {
+	if !s.allowInjection {
+		return
+	}
+
+	step.Text = injectAll(step.Text)
+
+	if table := step.Argument.GetDataTable(); table != nil {
+		for i := 0; i < len(table.Rows); i++ {
+			for n, cell := range table.Rows[i].Cells {
+				table.Rows[i].Cells[n].Value = injectAll(cell.Value)
+			}
+		}
+	}
+
+	if doc := step.Argument.GetDocString(); doc != nil {
+		doc.Content = injectAll(doc.Content)
+	}
+}
+
+func injectAll(src string) string {
+	re := regexp.MustCompile(`{{[^{}]+}}`)
+	return re.ReplaceAllStringFunc(
+		src,
+		func(key string) string {
+			injectRegex := regexp.MustCompile(`^{{.+}}$`)
+			if injectRegex.MatchString(key) {
+				return "someverylonginjectionsoweacanbesureitsurpasstheinitiallongeststeplenghtanditwillhelptestsmethodsafety"
+			}
+			return key
+		},
+	)
 }
 
 type firedEvent struct {
@@ -97,14 +148,15 @@ type firedEvent struct {
 }
 
 type suiteContext struct {
-	paths       []string
-	testedSuite *Suite
-	extraCIs    []func(suite *Suite)
-	events      []*firedEvent
-	out         bytes.Buffer
+	paths          []string
+	testedSuite    *Suite
+	extraCIs       []func(suite *Suite)
+	events         []*firedEvent
+	out            bytes.Buffer
+	allowInjection bool
 }
 
-func (s *suiteContext) ResetBeforeEachScenario(interface{}) {
+func (s *suiteContext) ResetBeforeEachScenario(*messages.Pickle) {
 	// reset whole suite with the state
 	s.out.Reset()
 	s.paths = []string{}
@@ -113,6 +165,12 @@ func (s *suiteContext) ResetBeforeEachScenario(interface{}) {
 	SuiteContext(s.testedSuite, s.extraCIs...)
 	// reset all fired events
 	s.events = []*firedEvent{}
+	s.allowInjection = false
+}
+
+func (s *suiteContext) iSetVariableInjectionTo(to string) error {
+	s.allowInjection = to == "allow"
+	return nil
 }
 
 func (s *suiteContext) iRunFeatureSuiteWithTags(tags string) error {
@@ -120,7 +178,7 @@ func (s *suiteContext) iRunFeatureSuiteWithTags(tags string) error {
 		return err
 	}
 	for _, feat := range s.testedSuite.features {
-		applyTagFilter(tags, feat.Feature)
+		applyTagFilter(tags, feat)
 	}
 	s.testedSuite.fmt = testFormatterFunc("godog", &s.out)
 	s.testedSuite.run()
@@ -133,7 +191,7 @@ func (s *suiteContext) iRunFeatureSuiteWithFormatter(name string) error {
 	if f == nil {
 		return fmt.Errorf(`formatter "%s" is not available`, name)
 	}
-	s.testedSuite.fmt = f("godog", &s.out)
+	s.testedSuite.fmt = f("godog", colors.Uncolored(&s.out))
 	if err := s.parseFeatures(); err != nil {
 		return err
 	}
@@ -142,7 +200,7 @@ func (s *suiteContext) iRunFeatureSuiteWithFormatter(name string) error {
 	return nil
 }
 
-func (s *suiteContext) thereShouldBeEventsFired(doc *gherkin.DocString) error {
+func (s *suiteContext) thereShouldBeEventsFired(doc *messages.PickleStepArgument_PickleDocString) error {
 	actual := strings.Split(strings.TrimSpace(s.out.String()), "\n")
 	expect := strings.Split(strings.TrimSpace(doc.Content), "\n")
 	if len(expect) != len(actual) {
@@ -175,7 +233,7 @@ func (s *suiteContext) cleanupSnippet(snip string) string {
 	return strings.Join(lines, "\n")
 }
 
-func (s *suiteContext) theUndefinedStepSnippetsShouldBe(body *gherkin.DocString) error {
+func (s *suiteContext) theUndefinedStepSnippetsShouldBe(body *messages.PickleStepArgument_PickleDocString) error {
 	f, ok := s.testedSuite.fmt.(*testFormatter)
 	if !ok {
 		return fmt.Errorf("this step requires testFormatter, but there is: %T", s.testedSuite.fmt)
@@ -188,7 +246,7 @@ func (s *suiteContext) theUndefinedStepSnippetsShouldBe(body *gherkin.DocString)
 	return nil
 }
 
-func (s *suiteContext) followingStepsShouldHave(status string, steps *gherkin.DocString) error {
+func (s *suiteContext) followingStepsShouldHave(status string, steps *messages.PickleStepArgument_PickleDocString) error {
 	var expected = strings.Split(steps.Content, "\n")
 	var actual, unmatched, matched []string
 
@@ -198,23 +256,23 @@ func (s *suiteContext) followingStepsShouldHave(status string, steps *gherkin.Do
 	}
 	switch status {
 	case "passed":
-		for _, st := range f.passed {
+		for _, st := range f.findStepResults(passed) {
 			actual = append(actual, st.step.Text)
 		}
 	case "failed":
-		for _, st := range f.failed {
+		for _, st := range f.findStepResults(failed) {
 			actual = append(actual, st.step.Text)
 		}
 	case "skipped":
-		for _, st := range f.skipped {
+		for _, st := range f.findStepResults(skipped) {
 			actual = append(actual, st.step.Text)
 		}
 	case "undefined":
-		for _, st := range f.undefined {
+		for _, st := range f.findStepResults(undefined) {
 			actual = append(actual, st.step.Text)
 		}
 	case "pending":
-		for _, st := range f.pending {
+		for _, st := range f.findStepResults(pending) {
 			actual = append(actual, st.step.Text)
 		}
 	default:
@@ -259,19 +317,23 @@ func (s *suiteContext) allStepsShouldHave(status string) error {
 		return fmt.Errorf("this step requires testFormatter, but there is: %T", s.testedSuite.fmt)
 	}
 
-	total := len(f.passed) + len(f.failed) + len(f.skipped) + len(f.undefined) + len(f.pending)
+	total := len(f.findStepResults(passed)) +
+		len(f.findStepResults(failed)) +
+		len(f.findStepResults(skipped)) +
+		len(f.findStepResults(undefined)) +
+		len(f.findStepResults(pending))
 	var actual int
 	switch status {
 	case "passed":
-		actual = len(f.passed)
+		actual = len(f.findStepResults(passed))
 	case "failed":
-		actual = len(f.failed)
+		actual = len(f.findStepResults(failed))
 	case "skipped":
-		actual = len(f.skipped)
+		actual = len(f.findStepResults(skipped))
 	case "undefined":
-		actual = len(f.undefined)
+		actual = len(f.findStepResults(undefined))
 	case "pending":
-		actual = len(f.pending)
+		actual = len(f.findStepResults(pending))
 	default:
 		return fmt.Errorf("unexpected step status wanted: %s", status)
 	}
@@ -289,22 +351,22 @@ func (s *suiteContext) iAmListeningToSuiteEvents() error {
 	s.testedSuite.AfterSuite(func() {
 		s.events = append(s.events, &firedEvent{"AfterSuite", []interface{}{}})
 	})
-	s.testedSuite.BeforeFeature(func(ft *gherkin.Feature) {
+	s.testedSuite.BeforeFeature(func(ft *messages.GherkinDocument) {
 		s.events = append(s.events, &firedEvent{"BeforeFeature", []interface{}{ft}})
 	})
-	s.testedSuite.AfterFeature(func(ft *gherkin.Feature) {
+	s.testedSuite.AfterFeature(func(ft *messages.GherkinDocument) {
 		s.events = append(s.events, &firedEvent{"AfterFeature", []interface{}{ft}})
 	})
-	s.testedSuite.BeforeScenario(func(scenario interface{}) {
-		s.events = append(s.events, &firedEvent{"BeforeScenario", []interface{}{scenario}})
+	s.testedSuite.BeforeScenario(func(pickle *messages.Pickle) {
+		s.events = append(s.events, &firedEvent{"BeforeScenario", []interface{}{pickle}})
 	})
-	s.testedSuite.AfterScenario(func(scenario interface{}, err error) {
-		s.events = append(s.events, &firedEvent{"AfterScenario", []interface{}{scenario, err}})
+	s.testedSuite.AfterScenario(func(pickle *messages.Pickle, err error) {
+		s.events = append(s.events, &firedEvent{"AfterScenario", []interface{}{pickle, err}})
 	})
-	s.testedSuite.BeforeStep(func(step *gherkin.Step) {
+	s.testedSuite.BeforeStep(func(step *messages.Pickle_PickleStep) {
 		s.events = append(s.events, &firedEvent{"BeforeStep", []interface{}{step}})
 	})
-	s.testedSuite.AfterStep(func(step *gherkin.Step, err error) {
+	s.testedSuite.AfterStep(func(step *messages.Pickle_PickleStep, err error) {
 		s.events = append(s.events, &firedEvent{"AfterStep", []interface{}{step, err}})
 	})
 	return nil
@@ -315,9 +377,10 @@ func (s *suiteContext) aFailingStep() error {
 }
 
 // parse a given feature file body as a feature
-func (s *suiteContext) aFeatureFile(name string, body *gherkin.DocString) error {
-	ft, err := gherkin.ParseFeature(strings.NewReader(body.Content))
-	s.testedSuite.features = append(s.testedSuite.features, &feature{Feature: ft, Path: name})
+func (s *suiteContext) aFeatureFile(path string, body *messages.PickleStepArgument_PickleDocString) error {
+	gd, err := gherkin.ParseGherkinDocument(strings.NewReader(body.Content), (&messages.Incrementing{}).NewId)
+	pickles := gherkin.Pickles(*gd, path, (&messages.Incrementing{}).NewId)
+	s.testedSuite.features = append(s.testedSuite.features, &feature{GherkinDocument: gd, pickles: pickles, Path: path})
 	return err
 }
 
@@ -345,7 +408,7 @@ func (s *suiteContext) theSuiteShouldHave(state string) error {
 	return nil
 }
 
-func (s *suiteContext) iShouldHaveNumFeatureFiles(num int, files *gherkin.DocString) error {
+func (s *suiteContext) iShouldHaveNumFeatureFiles(num int, files *messages.PickleStepArgument_PickleDocString) error {
 	if len(s.testedSuite.features) != num {
 		return fmt.Errorf("expected %d features to be parsed, but have %d", num, len(s.testedSuite.features))
 	}
@@ -390,7 +453,7 @@ func (s *suiteContext) iRunFeatureSuite() error {
 func (s *suiteContext) numScenariosRegistered(expected int) (err error) {
 	var num int
 	for _, ft := range s.testedSuite.features {
-		num += len(ft.ScenarioDefinitions)
+		num += len(ft.pickles)
 	}
 	if num != expected {
 		err = fmt.Errorf("expected %d scenarios to be registered, but got %d", expected, num)
@@ -420,9 +483,7 @@ func (s *suiteContext) thereWasEventTriggeredBeforeScenario(expected string) err
 
 		var name string
 		switch t := event.args[0].(type) {
-		case *gherkin.Scenario:
-			name = t.Name
-		case *gherkin.ScenarioOutline:
+		case *messages.Pickle:
 			name = t.Name
 		}
 		if name == expected {
@@ -439,7 +500,7 @@ func (s *suiteContext) thereWasEventTriggeredBeforeScenario(expected string) err
 	return fmt.Errorf(`expected "%s" scenario, but got these fired %s`, expected, `"`+strings.Join(found, `", "`)+`"`)
 }
 
-func (s *suiteContext) theseEventsHadToBeFiredForNumberOfTimes(tbl *gherkin.DataTable) error {
+func (s *suiteContext) theseEventsHadToBeFiredForNumberOfTimes(tbl *messages.PickleStepArgument_PickleTable) error {
 	if len(tbl.Rows[0].Cells) != 2 {
 		return fmt.Errorf("expected two columns for event table row, got: %d", len(tbl.Rows[0].Cells))
 	}
@@ -456,48 +517,110 @@ func (s *suiteContext) theseEventsHadToBeFiredForNumberOfTimes(tbl *gherkin.Data
 	return nil
 }
 
-func (s *suiteContext) theRenderJSONWillBe(docstring *gherkin.DocString) error {
-	loc := regexp.MustCompile(`"suite_context.go:\d+"`)
+func (s *suiteContext) theRenderJSONWillBe(docstring *messages.PickleStepArgument_PickleDocString) error {
+	suiteCtxReg := regexp.MustCompile(`suite_context.go:\d+`)
+
+	expectedString := docstring.Content
+	expectedString = suiteCtxReg.ReplaceAllString(expectedString, `suite_context.go:0`)
+	actualString := s.out.String()
+	actualString = suiteCtxReg.ReplaceAllString(actualString, `suite_context.go:0`)
+
 	var expected []cukeFeatureJSON
-	if err := json.Unmarshal([]byte(loc.ReplaceAllString(docstring.Content, `"suite_context.go:0"`)), &expected); err != nil {
+	if err := json.Unmarshal([]byte(expectedString), &expected); err != nil {
 		return err
 	}
 
 	var actual []cukeFeatureJSON
-	replaced := loc.ReplaceAllString(s.out.String(), `"suite_context.go:0"`)
-	if err := json.Unmarshal([]byte(replaced), &actual); err != nil {
+	if err := json.Unmarshal([]byte(actualString), &actual); err != nil {
 		return err
 	}
 
 	if !reflect.DeepEqual(expected, actual) {
-		return fmt.Errorf("expected json does not match actual: %s", replaced)
+		return fmt.Errorf("expected json does not match actual: %s", actualString)
+	}
+	return nil
+}
+
+func (s *suiteContext) theRenderOutputWillBe(docstring *messages.PickleStepArgument_PickleDocString) error {
+	suiteCtxReg := regexp.MustCompile(`suite_context.go:\d+`)
+	suiteCtxFuncReg := regexp.MustCompile(`github.com/cucumber/godog.SuiteContext.func(\d+)`)
+
+	expected := trimAllLines(strings.TrimSpace(docstring.Content))
+	expected = suiteCtxReg.ReplaceAllString(expected, "suite_context.go:0")
+	expected = suiteCtxFuncReg.ReplaceAllString(expected, "SuiteContext.func$1")
+
+	actual := trimAllLines(strings.TrimSpace(s.out.String()))
+	actual = suiteCtxReg.ReplaceAllString(actual, "suite_context.go:0")
+	actual = suiteCtxFuncReg.ReplaceAllString(actual, "SuiteContext.func$1")
+
+	if err := match(expected, actual); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *suiteContext) theRenderXMLWillBe(docstring *messages.PickleStepArgument_PickleDocString) error {
+	expectedString := docstring.Content
+	actualString := s.out.String()
+
+	var expected junitPackageSuite
+	if err := xml.Unmarshal([]byte(expectedString), &expected); err != nil {
+		return err
+	}
+
+	var actual junitPackageSuite
+	if err := xml.Unmarshal([]byte(actualString), &actual); err != nil {
+		return err
+	}
+
+	if !reflect.DeepEqual(expected, actual) {
+		return fmt.Errorf("expected json does not match actual: %s", actualString)
 	}
 	return nil
 }
 
 type testFormatter struct {
-	basefmt
-	scenarios []interface{}
+	*basefmt
+	pickles []*messages.Pickle
 }
 
 func testFormatterFunc(suite string, out io.Writer) Formatter {
-	return &testFormatter{
-		basefmt: basefmt{
-			started: timeNowFunc(),
-			indent:  2,
-			out:     out,
-		},
-	}
+	return &testFormatter{basefmt: newBaseFmt(suite, out)}
 }
 
-func (f *testFormatter) Node(node interface{}) {
-	f.basefmt.Node(node)
-	switch t := node.(type) {
-	case *gherkin.Scenario:
-		f.scenarios = append(f.scenarios, t)
-	case *gherkin.ScenarioOutline:
-		f.scenarios = append(f.scenarios, t)
-	}
+func (f *testFormatter) Pickle(p *messages.Pickle) {
+	f.basefmt.Pickle(p)
+	f.pickles = append(f.pickles, p)
 }
 
 func (f *testFormatter) Summary() {}
+
+func match(expected, actual string) error {
+	act := []byte(actual)
+	exp := []byte(expected)
+
+	if len(act) != len(exp) {
+		return fmt.Errorf("content lengths do not match, expected: %d, actual %d, expected output:\n%s, actual output:\n%s", len(exp), len(act), expected, actual)
+	}
+
+	for i := 0; i < len(exp); i++ {
+		if act[i] == exp[i] {
+			continue
+		}
+
+		cpe := make([]byte, len(exp))
+		copy(cpe, exp)
+		e := append(exp[:i], '^')
+		e = append(e, cpe[i:]...)
+
+		cpa := make([]byte, len(act))
+		copy(cpa, act)
+		a := append(act[:i], '^')
+		a = append(a, cpa[i:]...)
+
+		return fmt.Errorf("expected output does not match:\n%s\n\n%s", string(a), string(e))
+	}
+
+	return nil
+}
