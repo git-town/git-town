@@ -34,6 +34,7 @@ jobs:
       - run: ls -la
       - run: mkdir /home/circleci/bin
       - run: cp ./git-town /home/circleci/bin/
+      - run: git-town
       - run: yarn
       - run: make test-md
 workflows:
