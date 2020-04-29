@@ -16,7 +16,7 @@ jobs:
             - project
   go:
     docker:
-      - image: circleci/golang:1.14
+      - image: circleci/golang:1.14.2
     steps:
       - attach_workspace:
           at: /home/circleci
