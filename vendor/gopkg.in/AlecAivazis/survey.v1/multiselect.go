@@ -2,7 +2,6 @@ package survey
 
 import (
 	"errors"
-	"os"
 	"strings"
 
 	"gopkg.in/AlecAivazis/survey.v1/core"
@@ -27,6 +26,10 @@ type MultiSelect struct {
 	Default       []string
 	Help          string
 	PageSize      int
+	VimMode       bool
+	FilterMessage string
+	FilterFn      func(string, []string) []string
+	filter        string
 	selectedIndex int
 	checked       map[string]bool
 	showingHelp   bool
@@ -46,10 +49,10 @@ type MultiSelectTemplateData struct {
 var MultiSelectQuestionTemplate = `
 {{- if .ShowHelp }}{{- color "cyan"}}{{ HelpIcon }} {{ .Help }}{{color "reset"}}{{"\n"}}{{end}}
 {{- color "green+hb"}}{{ QuestionIcon }} {{color "reset"}}
-{{- color "default+hb"}}{{ .Message }}{{color "reset"}}
+{{- color "default+hb"}}{{ .Message }}{{ .FilterMessage }}{{color "reset"}}
 {{- if .ShowAnswer}}{{color "cyan"}} {{.Answer}}{{color "reset"}}{{"\n"}}
 {{- else }}
-  {{- if and .Help (not .ShowHelp)}} {{color "cyan"}}[{{ HelpInputRune }} for help]{{color "reset"}}{{end}}
+	{{- "  "}}{{- color "cyan"}}[Use arrows to move, enter to select, type to filter{{- if and .Help (not .ShowHelp)}}, {{ HelpInputRune }} for more help{{end}}]{{color "reset"}}
   {{- "\n"}}
   {{- range $ix, $option := .PageEntries}}
     {{- if eq $ix $.SelectedIndex}}{{color "cyan"}}{{ SelectFocusIcon }}{{color "reset"}}{{else}} {{end}}
@@ -61,18 +64,21 @@ var MultiSelectQuestionTemplate = `
 
 // OnChange is called on every keypress.
 func (m *MultiSelect) OnChange(line []rune, pos int, key rune) (newLine []rune, newPos int, ok bool) {
-	if key == terminal.KeyArrowUp {
+	options := m.filterOptions()
+	oldFilter := m.filter
+
+	if key == terminal.KeyArrowUp || (m.VimMode && key == 'k') {
 		// if we are at the top of the list
 		if m.selectedIndex == 0 {
 			// go to the bottom
-			m.selectedIndex = len(m.Options) - 1
+			m.selectedIndex = len(options) - 1
 		} else {
 			// decrement the selected index
 			m.selectedIndex--
 		}
-	} else if key == terminal.KeyArrowDown {
+	} else if key == terminal.KeyArrowDown || (m.VimMode && key == 'j') {
 		// if we are at the bottom of the list
-		if m.selectedIndex == len(m.Options)-1 {
+		if m.selectedIndex == len(options)-1 {
 			// start at the top
 			m.selectedIndex = 0
 		} else {
@@ -81,20 +87,48 @@ func (m *MultiSelect) OnChange(line []rune, pos int, key rune) (newLine []rune, 
 		}
 		// if the user pressed down and there is room to move
 	} else if key == terminal.KeySpace {
-		if old, ok := m.checked[m.Options[m.selectedIndex]]; !ok {
-			// otherwise just invert the current value
-			m.checked[m.Options[m.selectedIndex]] = true
-		} else {
-			// otherwise just invert the current value
-			m.checked[m.Options[m.selectedIndex]] = !old
+		if m.selectedIndex < len(options) {
+			if old, ok := m.checked[options[m.selectedIndex]]; !ok {
+				// otherwise just invert the current value
+				m.checked[options[m.selectedIndex]] = true
+			} else {
+				// otherwise just invert the current value
+				m.checked[options[m.selectedIndex]] = !old
+			}
+			m.filter = ""
 		}
 		// only show the help message if we have one to show
 	} else if key == core.HelpInputRune && m.Help != "" {
 		m.showingHelp = true
+	} else if key == terminal.KeyEscape {
+		m.VimMode = !m.VimMode
+	} else if key == terminal.KeyDeleteWord || key == terminal.KeyDeleteLine {
+		m.filter = ""
+	} else if key == terminal.KeyDelete || key == terminal.KeyBackspace {
+		if m.filter != "" {
+			m.filter = m.filter[0 : len(m.filter)-1]
+		}
+	} else if key >= terminal.KeySpace {
+		m.filter += string(key)
+		m.VimMode = false
 	}
 
+	m.FilterMessage = ""
+	if m.filter != "" {
+		m.FilterMessage = " " + m.filter
+	}
+	if oldFilter != m.filter {
+		// filter changed
+		options = m.filterOptions()
+		if len(options) > 0 && len(options) <= m.selectedIndex {
+			m.selectedIndex = len(options) - 1
+		}
+	}
 	// paginate the options
-	opts, idx := paginate(m.PageSize, m.Options, m.selectedIndex)
+
+	// TODO if we have started filtering and were looking at the end of a list
+	// and we have modified the filter then we should move the page back!
+	opts, idx := paginate(m.PageSize, options, m.selectedIndex)
 
 	// render the options
 	m.Render(
@@ -112,6 +146,16 @@ func (m *MultiSelect) OnChange(line []rune, pos int, key rune) (newLine []rune, 
 	return line, 0, true
 }
 
+func (m *MultiSelect) filterOptions() []string {
+	if m.filter == "" {
+		return m.Options
+	}
+	if m.FilterFn != nil {
+		return m.FilterFn(m.filter, m.Options)
+	}
+	return DefaultFilterFn(m.filter, m.Options)
+}
+
 func (m *MultiSelect) Prompt() (interface{}, error) {
 	// compute the default state
 	m.checked = make(map[string]bool)
@@ -119,7 +163,7 @@ func (m *MultiSelect) Prompt() (interface{}, error) {
 	if len(m.Default) > 0 {
 		for _, dflt := range m.Default {
 			for _, opt := range m.Options {
-				// if the option correponds to the default
+				// if the option corresponds to the default
 				if opt == dflt {
 					// we found our initial value
 					m.checked[opt] = true
@@ -136,13 +180,12 @@ func (m *MultiSelect) Prompt() (interface{}, error) {
 		return "", errors.New("please provide options to select from")
 	}
 
-	// hide the cursor
-	terminal.CursorHide()
-	// show the cursor when we're done
-	defer terminal.CursorShow()
-
 	// paginate the options
 	opts, idx := paginate(m.PageSize, m.Options, m.selectedIndex)
+
+	cursor := m.NewCursor()
+	cursor.Hide()       // hide the cursor
+	defer cursor.Show() // show the cursor when we're done
 
 	// ask the question
 	err := m.Render(
@@ -158,7 +201,7 @@ func (m *MultiSelect) Prompt() (interface{}, error) {
 		return "", err
 	}
 
-	rr := terminal.NewRuneReader(os.Stdin)
+	rr := m.NewRuneReader()
 	rr.SetTermMode()
 	defer rr.RestoreTermMode()
 
@@ -176,6 +219,8 @@ func (m *MultiSelect) Prompt() (interface{}, error) {
 		}
 		m.OnChange(nil, 0, r)
 	}
+	m.filter = ""
+	m.FilterMessage = ""
 
 	answers := []string{}
 	for _, option := range m.Options {

@@ -2,7 +2,6 @@ package survey
 
 import (
 	"errors"
-	"os"
 
 	"gopkg.in/AlecAivazis/survey.v1/core"
 	"gopkg.in/AlecAivazis/survey.v1/terminal"
@@ -26,6 +25,10 @@ type Select struct {
 	Default       string
 	Help          string
 	PageSize      int
+	VimMode       bool
+	FilterMessage string
+	FilterFn      func(string, []string) []string
+	filter        string
 	selectedIndex int
 	useDefault    bool
 	showingHelp   bool
@@ -44,10 +47,10 @@ type SelectTemplateData struct {
 var SelectQuestionTemplate = `
 {{- if .ShowHelp }}{{- color "cyan"}}{{ HelpIcon }} {{ .Help }}{{color "reset"}}{{"\n"}}{{end}}
 {{- color "green+hb"}}{{ QuestionIcon }} {{color "reset"}}
-{{- color "default+hb"}}{{ .Message }}{{color "reset"}}
+{{- color "default+hb"}}{{ .Message }}{{ .FilterMessage }}{{color "reset"}}
 {{- if .ShowAnswer}}{{color "cyan"}} {{.Answer}}{{color "reset"}}{{"\n"}}
 {{- else}}
-  {{- if and .Help (not .ShowHelp)}} {{color "cyan"}}[{{ HelpInputRune }} for help]{{color "reset"}}{{end}}
+  {{- "  "}}{{- color "cyan"}}[Use arrows to move, enter to select, type to filter{{- if and .Help (not .ShowHelp)}}, {{ HelpInputRune }} for more help{{end}}]{{color "reset"}}
   {{- "\n"}}
   {{- range $ix, $choice := .PageEntries}}
     {{- if eq $ix $.SelectedIndex}}{{color "cyan+b"}}{{ SelectFocusIcon }} {{else}}{{color "default+hb"}}  {{end}}
@@ -58,26 +61,32 @@ var SelectQuestionTemplate = `
 
 // OnChange is called on every keypress.
 func (s *Select) OnChange(line []rune, pos int, key rune) (newLine []rune, newPos int, ok bool) {
+	options := s.filterOptions()
+	oldFilter := s.filter
+
 	// if the user pressed the enter key
 	if key == terminal.KeyEnter {
-		return []rune(s.Options[s.selectedIndex]), 0, true
-		// if the user pressed the up arrow
-	} else if key == terminal.KeyArrowUp {
+		if s.selectedIndex < len(options) {
+			return []rune(options[s.selectedIndex]), 0, true
+		}
+		// if the user pressed the up arrow or 'k' to emulate vim
+	} else if key == terminal.KeyArrowUp || (s.VimMode && key == 'k') && len(options) > 0 {
 		s.useDefault = false
 
 		// if we are at the top of the list
 		if s.selectedIndex == 0 {
 			// start from the button
-			s.selectedIndex = len(s.Options) - 1
+			s.selectedIndex = len(options) - 1
 		} else {
 			// otherwise we are not at the top of the list so decrement the selected index
 			s.selectedIndex--
 		}
-		// if the user pressed down and there is room to move
-	} else if key == terminal.KeyArrowDown {
+
+		// if the user pressed down or 'j' to emulate vim
+	} else if key == terminal.KeyArrowDown || (s.VimMode && key == 'j') && len(options) > 0 {
 		s.useDefault = false
 		// if we are at the bottom of the list
-		if s.selectedIndex == len(s.Options)-1 {
+		if s.selectedIndex == len(options)-1 {
 			// start from the top
 			s.selectedIndex = 0
 		} else {
@@ -87,10 +96,45 @@ func (s *Select) OnChange(line []rune, pos int, key rune) (newLine []rune, newPo
 		// only show the help message if we have one
 	} else if key == core.HelpInputRune && s.Help != "" {
 		s.showingHelp = true
+		// if the user wants to toggle vim mode on/off
+	} else if key == terminal.KeyEscape {
+		s.VimMode = !s.VimMode
+		// if the user hits any of the keys that clear the filter
+	} else if key == terminal.KeyDeleteWord || key == terminal.KeyDeleteLine {
+		s.filter = ""
+		// if the user is deleting a character in the filter
+	} else if key == terminal.KeyDelete || key == terminal.KeyBackspace {
+		// if there is content in the filter to delete
+		if s.filter != "" {
+			// subtract a line from the current filter
+			s.filter = s.filter[0 : len(s.filter)-1]
+			// we removed the last value in the filter
+		}
+	} else if key >= terminal.KeySpace {
+		s.filter += string(key)
+		// make sure vim mode is disabled
+		s.VimMode = false
+		// make sure that we use the current value in the filtered list
+		s.useDefault = false
+	}
+
+	s.FilterMessage = ""
+	if s.filter != "" {
+		s.FilterMessage = " " + s.filter
+	}
+	if oldFilter != s.filter {
+		// filter changed
+		options = s.filterOptions()
+		if len(options) > 0 && len(options) <= s.selectedIndex {
+			s.selectedIndex = len(options) - 1
+		}
 	}
 
 	// figure out the options and index to render
-	opts, idx := paginate(s.PageSize, s.Options, s.selectedIndex)
+
+	// TODO if we have started filtering and were looking at the end of a list
+	// and we have modified the filter then we should move the page back!
+	opts, idx := paginate(s.PageSize, options, s.selectedIndex)
 
 	// render the options
 	s.Render(
@@ -104,7 +148,20 @@ func (s *Select) OnChange(line []rune, pos int, key rune) (newLine []rune, newPo
 	)
 
 	// if we are not pressing ent
-	return []rune(s.Options[s.selectedIndex]), 0, true
+	if len(options) <= s.selectedIndex {
+		return []rune{}, 0, false
+	}
+	return []rune(options[s.selectedIndex]), 0, true
+}
+
+func (s *Select) filterOptions() []string {
+	if s.filter == "" {
+		return s.Options
+	}
+	if s.FilterFn != nil {
+		return s.FilterFn(s.filter, s.Options)
+	}
+	return DefaultFilterFn(s.filter, s.Options)
 }
 
 func (s *Select) Prompt() (interface{}, error) {
@@ -120,7 +177,7 @@ func (s *Select) Prompt() (interface{}, error) {
 	if s.Default != "" {
 		// find the choice
 		for i, opt := range s.Options {
-			// if the option correponds to the default
+			// if the option corresponds to the default
 			if opt == s.Default {
 				// we found our initial value
 				sel = i
@@ -148,17 +205,17 @@ func (s *Select) Prompt() (interface{}, error) {
 		return "", err
 	}
 
-	// hide the cursor
-	terminal.CursorHide()
-	// show the cursor when we're done
-	defer terminal.CursorShow()
-
 	// by default, use the default value
 	s.useDefault = true
 
-	rr := terminal.NewRuneReader(os.Stdin)
+	rr := s.NewRuneReader()
 	rr.SetTermMode()
 	defer rr.RestoreTermMode()
+
+	cursor := s.NewCursor()
+	cursor.Hide()       // hide the cursor
+	defer cursor.Show() // show the cursor when we're done
+
 	// start waiting for input
 	for {
 		r, _, err := rr.ReadRune()
@@ -176,24 +233,26 @@ func (s *Select) Prompt() (interface{}, error) {
 		}
 		s.OnChange(nil, 0, r)
 	}
+	options := s.filterOptions()
+	s.filter = ""
+	s.FilterMessage = ""
 
 	var val string
 	// if we are supposed to use the default value
-	if s.useDefault {
+	if s.useDefault || s.selectedIndex >= len(options) {
 		// if there is a default value
 		if s.Default != "" {
 			// use the default value
 			val = s.Default
-		} else {
+		} else if len(options) > 0 {
 			// there is no default value so use the first
-			val = s.Options[0]
+			val = options[0]
 		}
 		// otherwise the selected index points to the value
-	} else {
+	} else if s.selectedIndex < len(options) {
 		// the
-		val = s.Options[s.selectedIndex]
+		val = options[s.selectedIndex]
 	}
-
 	return val, err
 }
 
