@@ -1,6 +1,7 @@
 ![Git Town](https://git-town.github.io/git-town/documentation/logo-horizontal.svg)
 
 [![Build Status](https://travis-ci.org/git-town/git-town.svg?branch=master)](https://travis-ci.org/git-town/git-town)
+[![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
 [![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)
 [![Help Contribute to Open Source](https://www.codetriage.com/originate/git-town/badges/users.svg)](https://www.codetriage.com/originate/git-town)
