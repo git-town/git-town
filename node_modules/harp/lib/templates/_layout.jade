@@ -1,0 +1,130 @@
+doctype
+html(lang="en")
+	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+		//- title #{ pkg.name } #{ pkg.version }
+		title Harp
+		meta(name="handheldfriendly", content="true")
+		meta(name="mobileoptimized", content="320")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		meta(http-equiv="cleartype", content="on")
+		style.
+			body {
+				font-family: Verdana;
+				padding:10px 10px;
+			}
+
+			h1, h2, h3, h4, h5, h6{
+				font-weight: 300;
+				line-height: 1.5em;
+			}
+
+			h3 {
+				font-weight: 500;
+				font-size: 1em;
+			}
+
+			p {
+				font-size: 1em;
+				line-height: 1.5em;
+			}
+
+			header{
+				padding:20px 0px;
+			}
+
+			header h1{
+				margin:0;
+			}
+
+			header h3{
+				margin:0;
+			}
+
+			.stacktrace{
+				padding:0px;
+				margin-bottom:20px;
+				margin-top:40px;
+				border:2px solid #a44;
+				background:#a44;
+			}
+
+			.stacktrace h3{
+				padding:22px 0px 20px 10px;
+				color: #fff;
+				margin:0px;
+				font-size:0.75em;
+				line-height:1em;
+				font-weight:600;
+				overflow:auto;
+			}
+
+			pre {
+				padding: 20px 0px;
+				margin:0;
+				background:#f8f8f8;
+				width:100%;
+				overflow:auto;
+			}
+
+			code{
+				line-height: 1.5em;
+				font-size: 1em;
+			}
+
+			footer{
+				background: #f8f8f8;
+				padding:20px 0px 20px 20px;
+				border-top:2px solid #eee;
+			}
+
+			.version{
+				background: #6b919e;
+				padding: 2px 6px;
+				border-radius: 3px;
+				color:#FFF;
+				font-weight: 300;
+			}
+
+			ul.projects {
+				padding: 0;
+			}
+
+			ul.projects li{
+				list-style-type:none;
+				margin-bottom:10px;
+			}
+
+			ul.projects li a{
+				background: #eee;
+				padding:25px 0px 25px 20px;
+				border-left: 4px solid #6b919e;
+				display:block;
+				border-radius: 5px;
+				text-decoration:none;
+			}
+
+			ul.projects li a h2{
+				font-weight:bold;
+				color: #6b919e;
+				margin:0px;
+			}
+
+			ul.projects li a code{
+				margin:0px;
+				color:#666;
+				text-decoration:none;
+			}
+
+			.center {
+				text-align:center;
+				padding-top: 100px;
+				padding-bottom: 100px;
+			}
+
+	body
+		!= yield
+		footer
+			p Harp <span class="version">v#{ pkg.version }</span> &nbsp;
+				a(href="http://harpjs.com/docs/", target="_blank") Documentation

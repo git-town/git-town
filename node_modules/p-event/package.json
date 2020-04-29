@@ -1,0 +1,55 @@
+{
+	"name": "p-event",
+	"version": "4.1.0",
+	"description": "Promisify an event by waiting for it to be emitted",
+	"license": "MIT",
+	"repository": "sindresorhus/p-event",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"promise",
+		"events",
+		"event",
+		"emitter",
+		"eventemitter",
+		"event-emitter",
+		"emit",
+		"emits",
+		"listener",
+		"promisify",
+		"addlistener",
+		"addeventlistener",
+		"wait",
+		"waits",
+		"on",
+		"browser",
+		"dom",
+		"async",
+		"await",
+		"promises",
+		"bluebird"
+	],
+	"dependencies": {
+		"p-timeout": "^2.0.1"
+	},
+	"devDependencies": {
+		"@types/node": "^11.13.0",
+		"ava": "^1.4.1",
+		"delay": "^4.1.0",
+		"tsd": "^0.7.2",
+		"xo": "^0.24.0"
+	}
+}

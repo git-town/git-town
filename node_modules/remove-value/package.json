@@ -1,0 +1,29 @@
+{
+	"name": "remove-value",
+	"version": "1.0.0",
+	"description": "Remove array item(s) by value",
+	"main": "index.js",
+	"keywords": [
+		"remove",
+		"array",
+		"splice",
+		"value"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tjconcept/js-remove-value.git"
+	},
+	"author": {
+		"name": "Thomas Jensen",
+		"email": "thomas@tjconcept.dk",
+		"url": "http://tjconcept.dk"
+	},
+	"devDependencies": {
+		"tap": "~0.4.8"
+	},
+	"scripts": {
+		"test": "./node_modules/.bin/tap test.js"
+	},
+	"readmeFilename": "README.md",
+	"license": "MIT"
+}

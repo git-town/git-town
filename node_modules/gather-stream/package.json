@@ -1,0 +1,24 @@
+{
+  "name": "gather-stream",
+  "version": "1.0.0",
+  "description": "Gather a stream, callback with buffer (or error) when done",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natevw/gather-stream.git"
+  },
+  "keywords": [
+    "stream",
+    "buffer",
+    "pipe"
+  ],
+  "author": "Nathan Vander Wilt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natevw/gather-stream/issues"
+  },
+  "homepage": "https://github.com/natevw/gather-stream"
+}

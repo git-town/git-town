@@ -1,0 +1,45 @@
+{
+	"name": "humanize-string",
+	"version": "2.1.0",
+	"description": "Convert a camelized/dasherized/underscored string into a humanized one: `fooBar-Baz_Faz` → `Foo bar baz faz`",
+	"license": "MIT",
+	"repository": "sindresorhus/humanize-string",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=6"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"humanize",
+		"human",
+		"pretty",
+		"capitalize",
+		"uppercase",
+		"case",
+		"camelcase",
+		"dash",
+		"hyphen",
+		"underscore",
+		"string",
+		"text",
+		"convert"
+	],
+	"dependencies": {
+		"decamelize": "^2.0.0"
+	},
+	"devDependencies": {
+		"ava": "^1.4.1",
+		"tsd": "^0.7.1",
+		"xo": "^0.24.0"
+	}
+}

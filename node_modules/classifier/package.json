@@ -1,0 +1,22 @@
+{
+    "name": "classifier",
+    "description": "Naive Bayesian classifier with Redis backend",
+    "version": "0.1.0",
+    "author": "Heather Arthur <fayearthur@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/harthur/classifier.git"
+    },
+    "main": "./lib/bayesian",
+    "dependencies" : {
+        "underscore" : ">=1.1.0",
+        "redis" : ">=0.7.0"
+    },
+    "devDependencies" : {
+        "mocha"  : ">=1.0.0",
+        "cradle" : ">=0.2.0",
+        "should" : ">=0.6.0",
+        "async" : ">=0.1.18"
+    },
+    "keywords": ["bayesian", "classifier", "machine learning"]
+}

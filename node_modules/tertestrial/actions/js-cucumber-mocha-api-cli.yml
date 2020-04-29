@@ -1,0 +1,97 @@
+# This is an example Tertestrial configuration file.
+# Please adapt it to your project, and then delete this comment.
+
+name: 'JS: Cucumber + Mocha - multi-level with API and CLI test runners'
+actions:
+
+  # Our first action set, called "all".
+  # It runs both the "API" and "CLI" tests.
+  ALL:
+
+    # Here we define what to do when the user wants to run all tests
+    # and the "all" action set is active.
+    - match:
+      command: 'bin/spec'
+
+    # Here we define how to run tests for files that have the extension ".feature"
+    # when the "all" action set is active.
+    - match:
+        filename: '\.feature$'
+      command: 'bin/cuc-api {{filename}} && bin/cuc-cli {{filename}}'
+
+    - match:
+        filename: '\.feature$'
+        line: '\d+'
+      command: 'bin/cuc-api {{filename}}:{{line}} && bin/cuc-cli {{filename}}:{{line}}'
+
+    - match:
+        filename: '\.js$'
+      command: 'node_modules/.bin/mocha {{filename}}'
+
+    - match:
+        filename: '\.coffee$'
+      command: 'node_modules/.bin/mocha --compilers coffee:coffee-script {{filename}}'
+
+    - match:
+        filename: '\.ls$'
+      command: 'node_modules/.bin/mocha --compilers ls:livescript {{filename}}'
+
+
+  # The next action set, called "API". It runs only the API tests
+  API:
+
+    # Here we define what to do when the user wants to run all tests
+    # and the "api" action set is active.
+    - match:
+      command: 'bin/cuc-api'
+
+    # Here we define how to run all tests in a file with extension ".feature"
+    # when the "API" action set is active.
+    - match:
+        filename: '\.feature$'
+      command: 'bin/cuc-api {{filename}}'
+
+    - match:
+        filename: '\.feature$'
+        line: '\d+'
+      command: 'bin/cuc-api {{filename}}:{{line}}'
+
+    - match:
+        filename: '\.js$'
+      command: 'node_modules/.bin/mocha {{filename}}'
+
+    - match:
+        filename: '\.coffee$'
+      command: 'node_modules/.bin/mocha --compilers coffee:coffee-script {{filename}}'
+
+    - match:
+        filename: '\.ls$'
+      command: 'node_modules/.bin/mocha --compilers ls:livescript {{filename}}'
+
+
+  # The next action set, called "CLI". It runs only the CLI tests
+  CLI:
+
+    - match:
+      command: 'bin/cuc-cli'
+
+    - match:
+        filename: '\.feature$'
+      command: 'bin/cuc-cli {{filename}}'
+
+    - match:
+        filename: '\.feature$'
+        line: '\d+'
+      command: 'bin/cuc-cli {{filename}}:{{line}}'
+
+    - match:
+        filename: '\.js$'
+      command: 'node_modules/.bin/mocha {{filename}}'
+
+    - match:
+        filename: '\.coffee$'
+      command: 'node_modules/.bin/mocha --compilers coffee:coffee-script {{filename}}'
+
+    - match:
+        filename: '\.ls$'
+      command: 'node_modules/.bin/mocha --compilers ls:livescript {{filename}}'

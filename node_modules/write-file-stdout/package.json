@@ -1,0 +1,15 @@
+{
+  "name": "write-file-stdout",
+  "repository": "git://github.com/ianstormtaylor/write-file-stdout.git",
+  "description": "Write to a file, falling back to stdout.",
+  "keywords": [
+    "write",
+    "file",
+    "stdout"
+  ],
+  "version": "0.0.2",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "~1.15.1"
+  }
+}

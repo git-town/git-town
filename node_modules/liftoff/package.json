@@ -1,0 +1,48 @@
+{
+  "name": "liftoff",
+  "description": "Launch your command line tool with ease.",
+  "version": "2.3.0",
+  "homepage": "https://github.com/js-cli/js-liftoff",
+  "author": {
+    "name": "Tyler Kellen",
+    "url": "http://goingslowly.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/js-cli/js-liftoff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/js-cli/js-liftoff/issues"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.8"
+  },
+  "scripts": {
+    "test": "jshint lib index.js && jscs lib index.js && mocha -t 5000 -b -R spec test/index"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
+    "istanbul": "^0.4.3",
+    "jscs": "^2.11.0",
+    "jshint": "^2.9.2",
+    "mocha": "^2.4.5",
+    "sinon": "~1.17.4"
+  },
+  "keywords": [
+    "command line"
+  ],
+  "dependencies": {
+    "extend": "^3.0.0",
+    "findup-sync": "^0.4.2",
+    "fined": "^1.0.1",
+    "flagged-respawn": "^0.3.2",
+    "lodash.isplainobject": "^4.0.4",
+    "lodash.isstring": "^4.0.1",
+    "lodash.mapvalues": "^4.4.0",
+    "rechoir": "^0.6.2",
+    "resolve": "^1.1.7"
+  }
+}

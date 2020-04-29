@@ -1,0 +1,9 @@
+{
+  "name": "text-runner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "text-runner": "4.0.2"
+  }
+}

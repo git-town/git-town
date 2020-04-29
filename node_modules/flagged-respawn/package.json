@@ -1,0 +1,40 @@
+{
+  "name": "flagged-respawn",
+  "description": "A tool for respawning node binaries when special flags are present.",
+  "version": "0.3.2",
+  "homepage": "https://github.com/js-cli/js-flagged-respawn",
+  "author": {
+    "name": "Tyler Kellen",
+    "url": "http://goingslowly.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/js-cli/js-flagged-respawn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/js-cli/js-flagged-respawn/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/js-cli/js-flagged-respawn/blob/master/LICENSE"
+    }
+  ],
+  "scripts": {
+    "respawn": "node test/bin/respawner --harmony test",
+    "nospawn": "node test/bin/respawner test",
+    "test": "mocha -R spec test"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "keywords": [
+    "respawn flags"
+  ],
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.21.4",
+    "v8flags": "~1.0.1"
+  }
+}
