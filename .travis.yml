@@ -9,6 +9,9 @@ install:
   - bundle install
 
 script:
+  - pwd
+  - ls -la
+  - echo $HOME
   - mv $TRAVIS_BUILD_DIR $HOME
   - cd $HOME/git-town
   - make lint-rb
