@@ -71,7 +71,7 @@ setup: setup-go  # the setup steps necessary on developer machines
 	yarn install
 
 setup-go:
-	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
+	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.0
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
 
 stats:  # shows code statistics
