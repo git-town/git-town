@@ -1,16 +1,16 @@
 sudo: required
-dist: trusty
+dist: bionic
 
 language: go
-go: 1.13
+go: 1.14
 
 install:
   - rvm install 2.6.5
-  - npm i -g yarn
-  - make setup
+  - bundle install
 
 script:
-  - make test
+  - make lint-rb
+  - make cuke-rb
 
 notifications:
   email: false

@@ -13,7 +13,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       |        | remote   | conflicting remote commit | conflicting_file | remote content |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature`
+    When I run "git-town hack new-feature"
 
 
   Scenario: result
@@ -29,12 +29,12 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH           | COMMAND                       |
       | main             | git rebase --abort            |
@@ -47,15 +47,18 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
-    Then it prints the error "You must resolve the conflicts before continuing"
+    When I run "git-town continue"
+    Then it prints the error:
+      """
+      You must resolve the conflicts before continuing
+      """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | main        | git rebase --continue       |
@@ -65,21 +68,18 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main        | local and remote | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-      | new-feature | local            | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
-      | BRANCH      | NAME             | CONTENT          |
-      | main        | conflicting_file | resolved content |
-      | new-feature | conflicting_file | resolved content |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main        | local, remote | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
+      | new-feature | local         | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town continue`
+    When I run "git rebase --continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH      | COMMAND                     |
       | main        | git push                    |
@@ -88,13 +88,9 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main        | local and remote | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-      | new-feature | local            | conflicting remote commit | conflicting_file |
-      |             |                  | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
-      | BRANCH      | NAME             | CONTENT          |
-      | main        | conflicting_file | resolved content |
-      | new-feature | conflicting_file | resolved content |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main        | local, remote | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |
+      | new-feature | local         | conflicting remote commit | conflicting_file |
+      |             |               | conflicting local commit  | conflicting_file |

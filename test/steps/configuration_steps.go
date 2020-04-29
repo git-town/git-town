@@ -24,13 +24,13 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I haven't configured Git Town yet$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().DeleteMainBranchConfiguration()
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().DeletePerennialBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeleteMainBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
 		return nil
 	})
 
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
-		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FreshConfiguration().GetPerennialBranches()
+		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
 		}
@@ -42,17 +42,17 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
 		}
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetNewBranchPush(b, false)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, false)
 		return nil
 	})
 
 	suite.Step(`^the main branch is configured as "([^"]+)"$`, func(name string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().SetMainBranch(name)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetMainBranch(name)
 		return nil
 	})
 
 	suite.Step(`^the main branch is now configured as "([^"]+)"$`, func(name string) error {
-		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FreshConfiguration().GetMainBranch()
+		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetMainBranch()
 		if actual != name {
 			return fmt.Errorf("expected %q, got %q", name, actual)
 		}
@@ -60,22 +60,22 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the main branch name is not configured$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().DeleteMainBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeleteMainBranchConfiguration()
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().DeletePerennialBranchConfiguration()
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().AddToPerennialBranches(branch1, branch2)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(branch1, branch2)
 		return nil
 	})
 
 	suite.Step(`^the perennial branches are now configured as "([^"]+)"$`, func(name string) error {
-		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FreshConfiguration().GetPerennialBranches()
+		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
 		}
@@ -86,7 +86,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the perennial branches are now configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FreshConfiguration().GetPerennialBranches()
+		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
 		}
@@ -97,7 +97,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
-		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FreshConfiguration().GetPerennialBranches()
+		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(actual) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", actual)
 		}

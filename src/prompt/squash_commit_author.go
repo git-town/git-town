@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/git"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 

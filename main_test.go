@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Originate/git-town/test/steps"
+	"github.com/git-town/git-town/test/steps"
 	"github.com/cucumber/godog"
 )
 
@@ -12,13 +12,19 @@ import (
 func FeatureContext(suite *godog.Suite) {
 	state := &steps.FeatureState{}
 	steps.SuiteSteps(suite, state)
+	steps.AutocompletionSteps(suite, state)
 	steps.BranchSteps(suite, state)
 	steps.CommitSteps(suite, state)
 	steps.ConfigurationSteps(suite, state)
+	steps.ConflictSteps(suite, state)
+	steps.FileSteps(suite, state)
 	steps.FolderSteps(suite, state)
 	steps.GitTownSteps(suite, state)
 	steps.InstallationSteps(suite, state)
+	steps.OriginSteps(suite, state)
 	steps.PrintSteps(suite, state)
+	steps.RebaseSteps(suite, state)
+	steps.RepoSteps(suite, state)
 	steps.RunSteps(suite, state)
 	steps.WorkspaceSteps(suite, state)
 }

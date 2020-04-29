@@ -3,10 +3,10 @@ package steps
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/test"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/test"
 )
 
 // BranchSteps defines Cucumber step implementations around Git branches.
@@ -38,7 +38,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^I end up on the "([^"]*)" branch$`, func(expected string) error {
+	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
 		actual, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
@@ -47,6 +47,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
 		}
 		return nil
+	})
+
+	suite.Step(`^my coworker has a feature branch named "([^"]*)"$`, func(branch string) error {
+		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
@@ -69,6 +73,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2)
 	})
 
+	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1)
+		if err != nil {
+			return fmt.Errorf("cannot create perennial branches: %w", err)
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
+	})
+
 	suite.Step(`^my repository has the perennial branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
@@ -81,8 +93,29 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
 	})
 
+	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
+		return fs.activeScenarioState.gitEnvironment.OriginRepo.RemoveBranch(name)
+	})
+
+	suite.Step(`^the existing branches are$`, func(table *gherkin.DataTable) error {
+		existing, err := fs.activeScenarioState.gitEnvironment.Branches()
+		if err != nil {
+			return err
+		}
+		// remove the master branch from the remote since it exists only as a performance optimization
+		existing.RemoveText("master, ")
+		existing.RemoveText(", master")
+		diff, errCount := existing.EqualGherkin(table)
+		if errCount > 0 {
+			fmt.Printf("\nERROR! Found %d differences in the branches\n\n", errCount)
+			fmt.Println(diff)
+			return fmt.Errorf("mismatching branches found, see the diff above")
+		}
+		return nil
+	})
+
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration().AddToPerennialBranches(name)
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
 		return nil
 	})
 }

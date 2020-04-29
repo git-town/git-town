@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/test"
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/gherkin"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/test"
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
@@ -42,7 +42,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
-		expanded := dataTable.Expand(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
+		expanded := dataTable.Expand(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir, &fs.activeScenarioState.gitEnvironment.DeveloperRepo)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
 			fmt.Printf("\nERROR! Found %d differences in the commands run\n\n", errorCount)

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Originate/git-town/src/command"
+	"github.com/git-town/git-town/src/command"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -96,6 +96,7 @@ func (runner *ShellRunner) RunString(fullCmd string) (*command.Result, error) {
 
 // RunStringWith runs the given command (including possible arguments)
 // in this ShellRunner's directory using the given options.
+// opts.Dir is a relative path inside the working directory of this ShellRunner.
 // Shell overrides will be used and removed when done.
 func (runner *ShellRunner) RunStringWith(fullCmd string, opts command.Options) (result *command.Result, err error) {
 	parts, err := shellquote.Split(fullCmd)
