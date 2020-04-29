@@ -1,0 +1,39 @@
+version: 2
+
+jobs:
+  clone:
+    docker:
+      - image: circleci/golang:1.14
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+  go:
+    docker:
+      - image: circleci/golang:1.14
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: make setup
+      - run: make test-go
+  markdown:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: yarn
+      - run: make test-md
+workflows:
+  version: 2
+  all_tests:
+    jobs:
+      - clone
+      - go:
+          requires:
+            - clone
+      - markdown:
+          requires:
+            - clone

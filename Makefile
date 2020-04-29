@@ -80,6 +80,8 @@ test: lint unit cuke  # runs all the tests
 
 test-go: build unit cuke-go lint-go  # runs all tests for Golang
 
+test-md: lint-md   # runs all Markdown tests
+
 u:  # runs only the unit tests for changed code
 	go test -timeout 3s ./src/... ./test/...
 
