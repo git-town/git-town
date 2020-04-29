@@ -67,12 +67,10 @@ lint-rb:  # lints the Ruby files
 	bundle exec rubocop
 
 setup: setup-go  # the setup steps necessary on developer machines
-	bundle install
-	yarn install
-
-setup-go:  # setup for the Go tests
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
+	bundle install
+	yarn install
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
