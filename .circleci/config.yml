@@ -6,11 +6,10 @@ jobs:
       - image: circleci/golang:1.14
     steps:
       - checkout
+      # build the binary for the Markdown tests
+      # and store it in the workspace
       - run: make build
-      - run: pwd
-      - run: which git-town
       - run: cp /go/bin/git-town /home/circleci/project/
-      - run: ls -la
       - persist_to_workspace:
           root: /home/circleci
           paths:
@@ -29,8 +28,9 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      # move the binary into the PATH
       - run: mkdir /home/circleci/bin
-      - run: cp ./git-town /home/circleci/bin/
+      - run: mv ./git-town /home/circleci/bin/
       - run: yarn
       - run: make test-md
 workflows:
