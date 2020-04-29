@@ -71,7 +71,7 @@ setup: setup-go  # the setup steps necessary on developer machines
 	yarn install
 
 setup-go:
-	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.0
+	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
 
 stats:  # shows code statistics
@@ -88,7 +88,7 @@ u:  # runs only the unit tests for changed code
 	go test -timeout 5s ./src/... ./test/...
 
 unit:  # runs all the unit tests with race detector
-	go test -count=1 -timeout 5s -race ./src/... ./test/...
+	go test -count=1 -timeout 10s -race ./src/... ./test/...
 
 update:  # updates all dependencies
 	go get -u ./...

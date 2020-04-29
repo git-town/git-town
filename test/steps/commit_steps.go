@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/test"
 	"github.com/git-town/git-town/test/helpers"
 )
@@ -15,11 +15,11 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 		return compareExistingCommits(fs, fs.activeScenarioState.originalCommitTable)
 	})
 
-	suite.Step(`^my repository now has the following commits$`, func(table *gherkin.DataTable) error {
+	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(fs, table)
 	})
 
-	suite.Step(`^the following commits exist in my repository$`, func(table *gherkin.DataTable) error {
+	suite.Step(`^the following commits exist in my repository$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fs.activeScenarioState.originalCommitTable = table
 		commits, err := test.FromGherkinTable(table)
 		if err != nil {
@@ -31,7 +31,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 
 // compareExistingCommits compares the commits in the Git environment of the given FeatureState
 // against the given Gherkin table.
-func compareExistingCommits(fs *FeatureState, table *gherkin.DataTable) error {
+func compareExistingCommits(fs *FeatureState, table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
 	commitTable, err := fs.activeScenarioState.gitEnvironment.CommitTable(fields)
 	if err != nil {

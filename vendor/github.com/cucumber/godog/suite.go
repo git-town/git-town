@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -15,16 +14,17 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/gherkin-go/v11"
+	"github.com/cucumber/messages-go/v10"
 )
 
 var errorInterface = reflect.TypeOf((*error)(nil)).Elem()
 var typeOfBytes = reflect.TypeOf([]byte(nil))
 
 type feature struct {
-	*gherkin.Feature
-
-	Scenarios []*scenario
+	*messages.GherkinDocument
+	pickles       []*messages.Pickle
+	pickleResults []*pickleResult
 
 	time    time.Time
 	Content []byte `json:"-"`
@@ -32,47 +32,118 @@ type feature struct {
 	order   int
 }
 
+func (f feature) findScenario(astScenarioID string) *messages.GherkinDocument_Feature_Scenario {
+	for _, child := range f.GherkinDocument.Feature.Children {
+		if sc := child.GetScenario(); sc != nil && sc.Id == astScenarioID {
+			return sc
+		}
+	}
+
+	return nil
+}
+
+func (f feature) findBackground(astScenarioID string) *messages.GherkinDocument_Feature_Background {
+	var bg *messages.GherkinDocument_Feature_Background
+
+	for _, child := range f.GherkinDocument.Feature.Children {
+		if tmp := child.GetBackground(); tmp != nil {
+			bg = tmp
+		}
+
+		if sc := child.GetScenario(); sc != nil && sc.Id == astScenarioID {
+			return bg
+		}
+	}
+
+	return nil
+}
+
+func (f feature) findExample(exampleAstID string) (*messages.GherkinDocument_Feature_Scenario_Examples, *messages.GherkinDocument_Feature_TableRow) {
+	for _, child := range f.GherkinDocument.Feature.Children {
+		if sc := child.GetScenario(); sc != nil {
+			for _, example := range sc.Examples {
+				for _, row := range example.TableBody {
+					if row.Id == exampleAstID {
+						return example, row
+					}
+				}
+			}
+		}
+	}
+
+	return nil, nil
+}
+
+func (f feature) findStep(astStepID string) *messages.GherkinDocument_Feature_Step {
+	for _, child := range f.GherkinDocument.Feature.Children {
+		if sc := child.GetScenario(); sc != nil {
+			for _, step := range sc.GetSteps() {
+				if step.Id == astStepID {
+					return step
+				}
+			}
+		}
+
+		if bg := child.GetBackground(); bg != nil {
+			for _, step := range bg.GetSteps() {
+				if step.Id == astStepID {
+					return step
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
 func (f feature) startedAt() time.Time {
 	return f.time
 }
 
 func (f feature) finishedAt() time.Time {
-	if len(f.Scenarios) == 0 {
+	if len(f.pickleResults) == 0 {
 		return f.startedAt()
 	}
 
-	return f.Scenarios[len(f.Scenarios)-1].finishedAt()
+	return f.pickleResults[len(f.pickleResults)-1].finishedAt()
 }
 
 func (f feature) appendStepResult(s *stepResult) {
-	scenario := f.Scenarios[len(f.Scenarios)-1]
-	scenario.Steps = append(scenario.Steps, s)
+	pickles := f.pickleResults[len(f.pickleResults)-1]
+	pickles.stepResults = append(pickles.stepResults, s)
+}
+
+func (f feature) lastPickleResult() *pickleResult {
+	return f.pickleResults[len(f.pickleResults)-1]
+}
+
+func (f feature) lastStepResult() *stepResult {
+	last := f.lastPickleResult()
+	return last.stepResults[len(last.stepResults)-1]
 }
 
 type sortByName []*feature
 
 func (s sortByName) Len() int           { return len(s) }
-func (s sortByName) Less(i, j int) bool { return s[i].Name < s[j].Name }
+func (s sortByName) Less(i, j int) bool { return s[i].Feature.Name < s[j].Feature.Name }
 func (s sortByName) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
-type scenario struct {
+type pickleResult struct {
 	Name        string
-	OutlineName string
-	ExampleNo   int
 	time        time.Time
-	Steps       []*stepResult
+	stepResults []*stepResult
 }
 
-func (s scenario) startedAt() time.Time {
+func (s pickleResult) startedAt() time.Time {
 	return s.time
 }
 
-func (s scenario) finishedAt() time.Time {
-	if len(s.Steps) == 0 {
+func (s pickleResult) finishedAt() time.Time {
+	if len(s.stepResults) == 0 {
 		return s.startedAt()
 	}
 
-	return s.Steps[len(s.Steps)-1].time
+	return s.stepResults[len(s.stepResults)-1].time
 }
 
 // ErrUndefined is returned in case if step definition was not found
@@ -94,7 +165,7 @@ var ErrPending = fmt.Errorf("step implementation is pending")
 // executions are catching panic error since it may
 // be a context specific error.
 type Suite struct {
-	steps    []*StepDef
+	steps    []*StepDefinition
 	features []*feature
 	fmt      Formatter
 
@@ -105,16 +176,16 @@ type Suite struct {
 
 	// suite event handlers
 	beforeSuiteHandlers    []func()
-	beforeFeatureHandlers  []func(*gherkin.Feature)
-	beforeScenarioHandlers []func(interface{})
-	beforeStepHandlers     []func(*gherkin.Step)
-	afterStepHandlers      []func(*gherkin.Step, error)
-	afterScenarioHandlers  []func(interface{}, error)
-	afterFeatureHandlers   []func(*gherkin.Feature)
+	beforeFeatureHandlers  []func(*messages.GherkinDocument)
+	beforeScenarioHandlers []func(*messages.Pickle)
+	beforeStepHandlers     []func(*messages.Pickle_PickleStep)
+	afterStepHandlers      []func(*messages.Pickle_PickleStep, error)
+	afterScenarioHandlers  []func(*messages.Pickle, error)
+	afterFeatureHandlers   []func(*messages.GherkinDocument)
 	afterSuiteHandlers     []func()
 }
 
-// Step allows to register a *StepDef in Godog
+// Step allows to register a *StepDefinition in Godog
 // feature suite, the definition will be applied
 // to all steps matching the given Regexp expr.
 //
@@ -126,7 +197,7 @@ type Suite struct {
 // the same step, then only the first matched handler
 // will be applied.
 //
-// If none of the *StepDef is matched, then
+// If none of the *StepDefinition is matched, then
 // ErrUndefined error will be returned when
 // running steps.
 func (s *Suite) Step(expr interface{}, stepFunc interface{}) {
@@ -153,7 +224,7 @@ func (s *Suite) Step(expr interface{}, stepFunc interface{}) {
 		panic(fmt.Sprintf("expected handler to return only one value, but it has: %d", typ.NumOut()))
 	}
 
-	def := &StepDef{
+	def := &StepDefinition{
 		Handler: stepFunc,
 		Expr:    regex,
 		hv:      v,
@@ -200,31 +271,31 @@ func (s *Suite) BeforeSuite(fn func()) {
 // scenario to restart it.
 //
 // Use it wisely and avoid sharing state between scenarios.
-func (s *Suite) BeforeFeature(fn func(*gherkin.Feature)) {
+//
+// Deprecated: BeforeFeature will be removed. Depending on
+// your usecase, do setup in BeforeSuite or BeforeScenario.
+func (s *Suite) BeforeFeature(fn func(*messages.GherkinDocument)) {
 	s.beforeFeatureHandlers = append(s.beforeFeatureHandlers, fn)
 }
 
 // BeforeScenario registers a function or method
-// to be run before every scenario or scenario outline.
-//
-// The interface argument may be *gherkin.Scenario
-// or *gherkin.ScenarioOutline
+// to be run before every pickle.
 //
 // It is a good practice to restore the default state
 // before every scenario so it would be isolated from
 // any kind of state.
-func (s *Suite) BeforeScenario(fn func(interface{})) {
+func (s *Suite) BeforeScenario(fn func(*messages.Pickle)) {
 	s.beforeScenarioHandlers = append(s.beforeScenarioHandlers, fn)
 }
 
 // BeforeStep registers a function or method
-// to be run before every scenario
-func (s *Suite) BeforeStep(fn func(*gherkin.Step)) {
+// to be run before every step.
+func (s *Suite) BeforeStep(fn func(*messages.Pickle_PickleStep)) {
 	s.beforeStepHandlers = append(s.beforeStepHandlers, fn)
 }
 
 // AfterStep registers an function or method
-// to be run after every scenario
+// to be run after every step.
 //
 // It may be convenient to return a different kind of error
 // in order to print more state details which may help
@@ -232,22 +303,23 @@ func (s *Suite) BeforeStep(fn func(*gherkin.Step)) {
 //
 // In some cases, for example when running a headless
 // browser, to take a screenshot after failure.
-func (s *Suite) AfterStep(fn func(*gherkin.Step, error)) {
+func (s *Suite) AfterStep(fn func(*messages.Pickle_PickleStep, error)) {
 	s.afterStepHandlers = append(s.afterStepHandlers, fn)
 }
 
 // AfterScenario registers an function or method
-// to be run after every scenario or scenario outline
-//
-// The interface argument may be *gherkin.Scenario
-// or *gherkin.ScenarioOutline
-func (s *Suite) AfterScenario(fn func(interface{}, error)) {
+// to be run after every pickle.
+func (s *Suite) AfterScenario(fn func(*messages.Pickle, error)) {
 	s.afterScenarioHandlers = append(s.afterScenarioHandlers, fn)
 }
 
 // AfterFeature registers a function or method
 // to be run once after feature executed all scenarios.
-func (s *Suite) AfterFeature(fn func(*gherkin.Feature)) {
+//
+// Deprecated: AfterFeature will be removed. Depending on
+// your usecase, do cleanup and teardowns in AfterScenario
+// or AfterSuite.
+func (s *Suite) AfterFeature(fn func(*messages.GherkinDocument)) {
 	s.afterFeatureHandlers = append(s.afterFeatureHandlers, fn)
 }
 
@@ -276,7 +348,7 @@ func (s *Suite) run() {
 	}
 }
 
-func (s *Suite) matchStep(step *gherkin.Step) *StepDef {
+func (s *Suite) matchStep(step *messages.Pickle_PickleStep) *StepDefinition {
 	def := s.matchStepText(step.Text)
 	if def != nil && step.Argument != nil {
 		def.args = append(def.args, step.Argument)
@@ -284,14 +356,14 @@ func (s *Suite) matchStep(step *gherkin.Step) *StepDef {
 	return def
 }
 
-func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
+func (s *Suite) runStep(pickle *messages.Pickle, step *messages.Pickle_PickleStep, prevStepErr error) (err error) {
 	// run before step handlers
 	for _, f := range s.beforeStepHandlers {
 		f(step)
 	}
 
 	match := s.matchStep(step)
-	s.fmt.Defined(step, match)
+	s.fmt.Defined(pickle, step, match)
 
 	// user multistep definitions may panic
 	defer func() {
@@ -312,11 +384,11 @@ func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 
 		switch err {
 		case nil:
-			s.fmt.Passed(step, match)
+			s.fmt.Passed(pickle, step, match)
 		case ErrPending:
-			s.fmt.Pending(step, match)
+			s.fmt.Pending(pickle, step, match)
 		default:
-			s.fmt.Failed(step, match, err)
+			s.fmt.Failed(pickle, step, match, err)
 		}
 
 		// run after step handlers
@@ -329,7 +401,7 @@ func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 		return err
 	} else if len(undef) > 0 {
 		if match != nil {
-			match = &StepDef{
+			match = &StepDefinition{
 				args:      match.args,
 				hv:        match.hv,
 				Expr:      match.Expr,
@@ -338,12 +410,12 @@ func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 				undefined: undef,
 			}
 		}
-		s.fmt.Undefined(step, match)
+		s.fmt.Undefined(pickle, step, match)
 		return ErrUndefined
 	}
 
 	if prevStepErr != nil {
-		s.fmt.Skipped(step, match)
+		s.fmt.Skipped(pickle, step, match)
 		return nil
 	}
 
@@ -408,7 +480,7 @@ func (s *Suite) maybeSubSteps(result interface{}) error {
 	return nil
 }
 
-func (s *Suite) matchStepText(text string) *StepDef {
+func (s *Suite) matchStepText(text string) *StepDefinition {
 	for _, h := range s.steps {
 		if m := h.Expr.FindStringSubmatch(text); len(m) > 0 {
 			var args []interface{}
@@ -418,7 +490,7 @@ func (s *Suite) matchStepText(text string) *StepDef {
 
 			// since we need to assign arguments
 			// better to copy the step definition
-			return &StepDef{
+			return &StepDefinition{
 				args:    args,
 				hv:      h.hv,
 				Expr:    h.Expr,
@@ -430,9 +502,9 @@ func (s *Suite) matchStepText(text string) *StepDef {
 	return nil
 }
 
-func (s *Suite) runSteps(steps []*gherkin.Step) (err error) {
+func (s *Suite) runSteps(pickle *messages.Pickle, steps []*messages.Pickle_PickleStep) (err error) {
 	for _, step := range steps {
-		stepErr := s.runStep(step, err)
+		stepErr := s.runStep(pickle, step, err)
 		switch stepErr {
 		case ErrUndefined:
 			// do not overwrite failed error
@@ -444,110 +516,6 @@ func (s *Suite) runSteps(steps []*gherkin.Step) (err error) {
 		case nil:
 		default:
 			err = stepErr
-		}
-	}
-	return
-}
-
-func (s *Suite) runOutline(outline *gherkin.ScenarioOutline, b *gherkin.Background) (failErr error) {
-	s.fmt.Node(outline)
-
-	for _, ex := range outline.Examples {
-		example, hasExamples := examples(ex)
-		if !hasExamples {
-			// @TODO: may need to print empty example node, but
-			// for backward compatibility, cannot cast to *gherkin.ExamplesBase
-			// at the moment
-			continue
-		}
-
-		s.fmt.Node(example)
-		placeholders := example.TableHeader.Cells
-		groups := example.TableBody
-
-		for _, group := range groups {
-			if !isEmptyScenario(outline) {
-				for _, f := range s.beforeScenarioHandlers {
-					f(outline)
-				}
-			}
-			var steps []*gherkin.Step
-			for _, outlineStep := range outline.Steps {
-				text := outlineStep.Text
-				for i, placeholder := range placeholders {
-					text = strings.Replace(text, "<"+placeholder.Value+">", group.Cells[i].Value, -1)
-				}
-
-				// translate argument
-				arg := outlineStep.Argument
-				switch t := outlineStep.Argument.(type) {
-				case *gherkin.DataTable:
-					tbl := &gherkin.DataTable{
-						Node: t.Node,
-						Rows: make([]*gherkin.TableRow, len(t.Rows)),
-					}
-					for i, row := range t.Rows {
-						cells := make([]*gherkin.TableCell, len(row.Cells))
-						for j, cell := range row.Cells {
-							trans := cell.Value
-							for i, placeholder := range placeholders {
-								trans = strings.Replace(trans, "<"+placeholder.Value+">", group.Cells[i].Value, -1)
-							}
-							cells[j] = &gherkin.TableCell{
-								Node:  cell.Node,
-								Value: trans,
-							}
-						}
-						tbl.Rows[i] = &gherkin.TableRow{
-							Node:  row.Node,
-							Cells: cells,
-						}
-					}
-					arg = tbl
-				case *gherkin.DocString:
-					trans := t.Content
-					for i, placeholder := range placeholders {
-						trans = strings.Replace(trans, "<"+placeholder.Value+">", group.Cells[i].Value, -1)
-					}
-					arg = &gherkin.DocString{
-						Node:        t.Node,
-						Content:     trans,
-						ContentType: t.ContentType,
-						Delimitter:  t.Delimitter,
-					}
-				}
-
-				// clone a step
-				step := &gherkin.Step{
-					Node:     outlineStep.Node,
-					Text:     text,
-					Keyword:  outlineStep.Keyword,
-					Argument: arg,
-				}
-				steps = append(steps, step)
-			}
-
-			// run example table row
-			s.fmt.Node(group)
-
-			if b != nil {
-				steps = append(b.Steps, steps...)
-			}
-
-			err := s.runSteps(steps)
-
-			if !isEmptyScenario(outline) {
-				for _, f := range s.afterScenarioHandlers {
-					f(outline, err)
-				}
-			}
-
-			if s.shouldFail(err) {
-				failErr = err
-				if s.stopOnFailure {
-					return
-				}
-			}
 		}
 	}
 	return
@@ -566,46 +534,24 @@ func (s *Suite) shouldFail(err error) bool {
 }
 
 func (s *Suite) runFeature(f *feature) {
-	if !isEmptyFeature(f.Feature) {
+	if !isEmptyFeature(f.pickles) {
 		for _, fn := range s.beforeFeatureHandlers {
-			fn(f.Feature)
+			fn(f.GherkinDocument)
 		}
 	}
 
-	s.fmt.Feature(f.Feature, f.Path, f.Content)
-
-	// make a local copy of the feature scenario defenitions,
-	// then shuffle it if we are randomizing scenarios
-	scenarios := make([]interface{}, len(f.ScenarioDefinitions))
-	if s.randomSeed != 0 {
-		r := rand.New(rand.NewSource(s.randomSeed))
-		perm := r.Perm(len(f.ScenarioDefinitions))
-		for i, v := range perm {
-			scenarios[v] = f.ScenarioDefinitions[i]
-		}
-	} else {
-		copy(scenarios, f.ScenarioDefinitions)
-	}
+	s.fmt.Feature(f.GherkinDocument, f.Path, f.Content)
 
 	defer func() {
-		if !isEmptyFeature(f.Feature) {
+		if !isEmptyFeature(f.pickles) {
 			for _, fn := range s.afterFeatureHandlers {
-				fn(f.Feature)
+				fn(f.GherkinDocument)
 			}
 		}
 	}()
 
-	for _, scenario := range scenarios {
-		var err error
-		if f.Background != nil {
-			s.fmt.Node(f.Background)
-		}
-		switch t := scenario.(type) {
-		case *gherkin.ScenarioOutline:
-			err = s.runOutline(t, f.Background)
-		case *gherkin.Scenario:
-			err = s.runScenario(t, f.Background)
-		}
+	for _, pickle := range f.pickles {
+		err := s.runPickle(pickle)
 		if s.shouldFail(err) {
 			s.failed = true
 			if s.stopOnFailure {
@@ -615,31 +561,35 @@ func (s *Suite) runFeature(f *feature) {
 	}
 }
 
-func (s *Suite) runScenario(scenario *gherkin.Scenario, b *gherkin.Background) (err error) {
-	if isEmptyScenario(scenario) {
-		s.fmt.Node(scenario)
+func isEmptyFeature(pickles []*messages.Pickle) bool {
+	for _, pickle := range pickles {
+		if len(pickle.Steps) > 0 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (s *Suite) runPickle(pickle *messages.Pickle) (err error) {
+	if len(pickle.Steps) == 0 {
+		s.fmt.Pickle(pickle)
 		return ErrUndefined
 	}
 
 	// run before scenario handlers
 	for _, f := range s.beforeScenarioHandlers {
-		f(scenario)
+		f(pickle)
 	}
 
-	s.fmt.Node(scenario)
-
-	// background
-	steps := scenario.Steps
-	if b != nil {
-		steps = append(b.Steps, steps...)
-	}
+	s.fmt.Pickle(pickle)
 
 	// scenario
-	err = s.runSteps(steps)
+	err = s.runSteps(pickle, pickle.Steps)
 
 	// run after scenario handlers
 	for _, f := range s.afterScenarioHandlers {
-		f(scenario, err)
+		f(pickle, err)
 	}
 
 	return
@@ -678,7 +628,7 @@ func extractFeaturePathLine(p string) (string, int) {
 	return retPath, line
 }
 
-func parseFeatureFile(path string) (*feature, error) {
+func parseFeatureFile(path string, newIDFunc func() string) (*feature, error) {
 	reader, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -686,19 +636,22 @@ func parseFeatureFile(path string) (*feature, error) {
 	defer reader.Close()
 
 	var buf bytes.Buffer
-	ft, err := gherkin.ParseFeature(io.TeeReader(reader, &buf))
+	gherkinDocument, err := gherkin.ParseGherkinDocument(io.TeeReader(reader, &buf), newIDFunc)
 	if err != nil {
 		return nil, fmt.Errorf("%s - %v", path, err)
 	}
 
+	pickles := gherkin.Pickles(*gherkinDocument, path, newIDFunc)
+
 	return &feature{
-		Path:    path,
-		Feature: ft,
-		Content: buf.Bytes(),
+		GherkinDocument: gherkinDocument,
+		pickles:         pickles,
+		Content:         buf.Bytes(),
+		Path:            path,
 	}, nil
 }
 
-func parseFeatureDir(dir string) ([]*feature, error) {
+func parseFeatureDir(dir string, newIDFunc func() string) ([]*feature, error) {
 	var features []*feature
 	return features, filepath.Walk(dir, func(p string, f os.FileInfo, err error) error {
 		if err != nil {
@@ -713,7 +666,7 @@ func parseFeatureDir(dir string) ([]*feature, error) {
 			return nil
 		}
 
-		feat, err := parseFeatureFile(p)
+		feat, err := parseFeatureFile(p, newIDFunc)
 		if err != nil {
 			return err
 		}
@@ -724,39 +677,36 @@ func parseFeatureDir(dir string) ([]*feature, error) {
 
 func parsePath(path string) ([]*feature, error) {
 	var features []*feature
-	// check if line number is specified
-	var line int
-	path, line = extractFeaturePathLine(path)
+
+	path, line := extractFeaturePathLine(path)
 
 	fi, err := os.Stat(path)
 	if err != nil {
 		return features, err
 	}
 
+	newIDFunc := (&messages.Incrementing{}).NewId
+
 	if fi.IsDir() {
-		return parseFeatureDir(path)
+		return parseFeatureDir(path, newIDFunc)
 	}
 
-	ft, err := parseFeatureFile(path)
+	ft, err := parseFeatureFile(path, newIDFunc)
 	if err != nil {
 		return features, err
 	}
 
 	// filter scenario by line number
-	var scenarios []interface{}
-	for _, def := range ft.ScenarioDefinitions {
-		var ln int
-		switch t := def.(type) {
-		case *gherkin.Scenario:
-			ln = t.Location.Line
-		case *gherkin.ScenarioOutline:
-			ln = t.Location.Line
-		}
-		if line == -1 || ln == line {
-			scenarios = append(scenarios, def)
+	var pickles []*messages.Pickle
+	for _, pickle := range ft.pickles {
+		sc := ft.findScenario(pickle.AstNodeIds[0])
+
+		if line == -1 || uint32(line) == sc.Location.Line {
+			pickles = append(pickles, pickle)
 		}
 	}
-	ft.ScenarioDefinitions = scenarios
+	ft.pickles = pickles
+
 	return append(features, ft), nil
 }
 
@@ -784,6 +734,7 @@ func parseFeatures(filter string, paths []string) ([]*feature, error) {
 			byPath[ft.Path] = ft
 		}
 	}
+
 	return filterFeatures(filter, byPath), nil
 }
 
@@ -795,7 +746,7 @@ func (s sortByOrderGiven) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 func filterFeatures(tags string, collected map[string]*feature) (features []*feature) {
 	for _, ft := range collected {
-		applyTagFilter(tags, ft.Feature)
+		applyTagFilter(tags, ft)
 		features = append(features, ft)
 	}
 
@@ -804,81 +755,23 @@ func filterFeatures(tags string, collected map[string]*feature) (features []*fea
 	return features
 }
 
-func applyTagFilter(tags string, ft *gherkin.Feature) {
+func applyTagFilter(tags string, ft *feature) {
 	if len(tags) == 0 {
 		return
 	}
 
-	var scenarios []interface{}
-	for _, scenario := range ft.ScenarioDefinitions {
-		switch t := scenario.(type) {
-		case *gherkin.ScenarioOutline:
-			var allExamples []*gherkin.Examples
-			for _, examples := range t.Examples {
-				if matchesTags(tags, allTags(ft, t, examples)) {
-					allExamples = append(allExamples, examples)
-				}
-			}
-			t.Examples = allExamples
-			if len(t.Examples) > 0 {
-				scenarios = append(scenarios, scenario)
-			}
-		case *gherkin.Scenario:
-			if matchesTags(tags, allTags(ft, t)) {
-				scenarios = append(scenarios, scenario)
-			}
+	var pickles []*messages.Pickle
+	for _, pickle := range ft.pickles {
+		if matchesTags(tags, pickle.Tags) {
+			pickles = append(pickles, pickle)
 		}
 	}
-	ft.ScenarioDefinitions = scenarios
-}
 
-func allTags(nodes ...interface{}) []string {
-	var tags, tmp []string
-	for _, node := range nodes {
-		var gr []*gherkin.Tag
-		switch t := node.(type) {
-		case *gherkin.Feature:
-			gr = t.Tags
-		case *gherkin.ScenarioOutline:
-			gr = t.Tags
-		case *gherkin.Scenario:
-			gr = t.Tags
-		case *gherkin.Examples:
-			gr = t.Tags
-		}
-
-		for _, gtag := range gr {
-			tag := strings.TrimSpace(gtag.Name)
-			if tag[0] == '@' {
-				tag = tag[1:]
-			}
-			copy(tmp, tags)
-			var found bool
-			for _, tg := range tmp {
-				if tg == tag {
-					found = true
-					break
-				}
-			}
-			if !found {
-				tags = append(tags, tag)
-			}
-		}
-	}
-	return tags
-}
-
-func hasTag(tags []string, tag string) bool {
-	for _, t := range tags {
-		if t == tag {
-			return true
-		}
-	}
-	return false
+	ft.pickles = pickles
 }
 
 // based on http://behat.readthedocs.org/en/v2.5/guides/6.cli.html#gherkin-filters
-func matchesTags(filter string, tags []string) (ok bool) {
+func matchesTags(filter string, tags []*messages.Pickle_PickleTag) (ok bool) {
 	ok = true
 	for _, andTags := range strings.Split(filter, "&&") {
 		var okComma bool
@@ -894,4 +787,15 @@ func matchesTags(filter string, tags []string) (ok bool) {
 		ok = ok && okComma
 	}
 	return
+}
+
+func hasTag(tags []*messages.Pickle_PickleTag, tag string) bool {
+	for _, t := range tags {
+		tName := strings.Replace(t.Name, "@", "", -1)
+
+		if tName == tag {
+			return true
+		}
+	}
+	return false
 }

@@ -1,0 +1,4 @@
+../../LICENSE LICENSE
+../../.templates/github/ .github/
+../../.templates/go/ .
+../messages.proto messages.proto
