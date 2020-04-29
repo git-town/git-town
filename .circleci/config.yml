@@ -3,7 +3,7 @@ version: 2
 jobs:
   clone:
     docker:
-      - image: circleci/golang:1.14
+      - image: circleci/golang:1.14.2
     steps:
       - checkout
       # build the binary for the Markdown tests
