@@ -29,6 +29,7 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - run: echo $PATH
+      - run: cp /home/circleci/git-town /home/circleci/bin/
       - run: yarn
       - run: make test-md
 workflows:
