@@ -1,1 +1,0 @@
-browserbuild -g classifier -b ../node_modules/underscore -m bayesian.js * ../node_modules/underscore/underscore.js >classifier.js
