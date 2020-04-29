@@ -1,12 +1,14 @@
 # Developing the Git Town source code
 
-## update dependencies
-
-<code textrun="verify-make-command">make update</code>
-
 ## adding a new Go library
 
-- run `dep ensure --add <package name>`
-- start using it in the code
-- your pull request for the feature that requires the new library should contain
-  the updated `Gopkg.*` files and vendor folder
+- start using the new dependency in the code
+- run `go mod vendor` to vendor it
+
+## updating a single dependency
+
+- `go get <path>`
+
+## update all dependencies
+
+<code textrun="verify-make-command">make update</code>
