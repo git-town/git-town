@@ -16,7 +16,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run: make setup
+      - run: make setup-go
       - run: make test-go
   markdown:
     docker:
