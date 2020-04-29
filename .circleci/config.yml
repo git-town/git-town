@@ -9,6 +9,7 @@ jobs:
       - run: make build
       - run: pwd
       - run: which git-town
+      - run: cp /go/bin/git-town /home/circleci/project/
       - persist_to_workspace:
           root: /home/circleci
           paths:
@@ -27,6 +28,7 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
+      - run: echo $PATH
       - run: yarn
       - run: make test-md
 workflows:
