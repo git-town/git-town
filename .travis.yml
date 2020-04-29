@@ -6,15 +6,13 @@ go: 1.14
 
 install:
   - rvm install 2.6.5
-  - npm i -g yarn
-  - make setup
+  - bundle install
 
 script:
-  - pwd
-  - echo $HOME
   - mv $TRAVIS_BUILD_DIR $HOME
   - cd $HOME/git-town
-  - make test
+  - make lint-rb
+  - make cuke-rb
 
 notifications:
   email: false
