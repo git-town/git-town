@@ -19,20 +19,14 @@ var gitManager *test.GitManager
 
 // SuiteSteps defines global lifecycle step implementations for Cucumber.
 func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.BeforeScenario(func(feature *messages.Pickle) {
-		if hasFeatureTag(feature, "@debug") {
-			test.Debug = true
-		}
-	})
-
-	suite.BeforeScenario(func(args *messages.Pickle) {
+	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a GitEnvironment for the scenario
-		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(args))
+		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(scenario))
 		if err != nil {
-			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(args), err)
+			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(scenario), err)
 		}
 		fs.activeScenarioState = scenarioState{gitEnvironment: gitEnvironment}
-		if hasScenarioTag(args, "@debug") {
+		if hasTag(scenario, "@debug") {
 			test.Debug = true
 		}
 	})
@@ -54,11 +48,11 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 	})
 
-	suite.AfterScenario(func(args *messages.Pickle, e error) {
+	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e == nil {
 			err := fs.activeScenarioState.gitEnvironment.Remove()
 			if err != nil {
-				log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(args), err)
+				log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(scenario), err)
 			}
 		} else {
 			fmt.Printf("failed scenario, investigate state in %q\n", fs.activeScenarioState.gitEnvironment.Dir)
@@ -66,19 +60,9 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 }
 
-// hasFeatureTag indicates whether the given feature has a tag with the given name.
-func hasFeatureTag(feature *messages.Pickle, name string) bool {
-	for _, tag := range feature.GetTags() {
-		if tag.Name == name {
-			return true
-		}
-	}
-	return false
-}
-
-// hasScenarioTag indicates whether the given scenario or scenario outline has a tag of the given name.
-func hasScenarioTag(args *messages.Pickle, name string) bool {
-	for _, tag := range args.GetTags() {
+// hasTag indicates whether the given feature has a tag with the given name.
+func hasTag(scenario *messages.Pickle, name string) bool {
+	for _, tag := range scenario.GetTags() {
 		if tag.Name == name {
 			return true
 		}
