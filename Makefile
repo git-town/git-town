@@ -59,19 +59,20 @@ lint-cucumber:  # lints the Cucumber files
 lint-go:  # lints the Go files
 	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
 
-lint-md: build  # lints the Markdown files
+lint-md:   # lints the Markdown files
 	node_modules/.bin/prettier -l .
 	node_modules/.bin/text-run --offline
 
 lint-rb:  # lints the Ruby files
 	bundle exec rubocop
 
-setup:  # the setup steps necessary on developer machines
-	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
+setup: setup-go  # the setup steps necessary on developer machines
 	bundle install
 	yarn install
+
+setup-go:
+	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.0
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
@@ -81,11 +82,15 @@ test: lint unit cuke  # runs all the tests
 
 test-go: build unit cuke-go lint-go  # runs all tests for Golang
 
+test-md: lint-md   # runs all Markdown tests
+
 u:  # runs only the unit tests for changed code
-	go test -timeout 3s ./src/... ./test/...
+	go test -timeout 5s ./src/... ./test/...
 
 unit:  # runs all the unit tests with race detector
-	go test -count=1 -timeout 3s -race ./src/... ./test/...
+	go test -count=1 -timeout 5s -race ./src/... ./test/...
 
 update:  # updates all dependencies
-	dep ensure -update
+	go get -u ./...
+	go mod tidy
+	go mod vendor

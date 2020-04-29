@@ -12,7 +12,11 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 
 ### Added
 
+- Added initial CircleCI config. ([jaysonesmith])
+
 ### Changed
+
+- Changed code references to DATA-DOG/godog to cucumber/godog to help get things building correctly. ([jaysonesmith])
 
 ### Deprecated
 
