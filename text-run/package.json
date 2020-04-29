@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "assert-no-diff": "3.0.4"
+  }
+}
