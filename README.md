@@ -1,5 +1,3 @@
-<img src="https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg" align="center">
-
 ![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg)
 
 [![Build Status](https://travis-ci.org/git-town/git-town.svg?branch=master)](https://travis-ci.org/git-town/git-town)
