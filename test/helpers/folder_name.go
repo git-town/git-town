@@ -9,13 +9,11 @@ func FolderName(scenarioName string) (result string) {
 	for _, r := range scenarioName {
 		if unicode.IsLetter(r) {
 			r = unicode.ToLower(r)
-			result = result + string(r)
+			result += string(r)
 			lastRune = r
-		} else {
-			if lastRune != '_' {
-				result = result + "_"
-				lastRune = '_'
-			}
+		} else if lastRune != '_' {
+			result += "_"
+			lastRune = '_'
 		}
 	}
 	return result
