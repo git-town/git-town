@@ -281,6 +281,15 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	return strings.TrimSpace(outcome.OutputSanitized()), nil
 }
 
+// DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
+func (repo *GitRepository) DeleteMainBranchConfiguration() error {
+	res, err := repo.Run("git", "config", "--unset", "git-town.main-branch-name")
+	if err != nil {
+		return fmt.Errorf("cannot delete main branch configuration: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (repo *GitRepository) Fetch() error {
 	_, err := repo.Run("git", "fetch")

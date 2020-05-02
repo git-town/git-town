@@ -49,6 +49,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I don\'t have a main branch name configured$`, func() error {
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.DeleteMainBranchConfiguration()
+	})
+
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
 	})
@@ -63,6 +67,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
 		return nil
+	})
+
+	suite.Step(`^my repository has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateBranch(branch1, "main")
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateBranch(branch2, "main")
 	})
 
 	suite.Step(`^my repository has the feature branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
