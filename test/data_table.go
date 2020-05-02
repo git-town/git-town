@@ -73,7 +73,7 @@ var templateRE *regexp.Regexp
 var templateOnce sync.Once
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, repo *GitRepository) (result DataTable) {
+func (table *DataTable) Expand(rootDir string, localRepo *GitRepository, remoteRepo *GitRepository) (result DataTable) {
 	for row := range table.cells {
 		cells := []string{}
 		for col := range table.cells[row] {
@@ -88,9 +88,16 @@ func (table *DataTable) Expand(rootDir string, repo *GitRepository) (result Data
 					cell = strings.Replace(cell, `{{ folder "new_folder" }}`, filepath.Join(rootDir, "new_folder"), 1)
 				case strings.HasPrefix(match, "{{ sha "):
 					commitName := match[8 : len(match)-4]
-					sha, err := repo.ShaForCommit(commitName)
+					sha, err := localRepo.ShaForCommit(commitName)
 					if err != nil {
 						panic(fmt.Errorf("cannot determine SHA: %v", err))
+					}
+					cell = strings.Replace(cell, match, sha, 1)
+				case strings.HasPrefix(match, "{{ sha-in-remote "):
+					commitName := match[18 : len(match)-4]
+					sha, err := remoteRepo.ShaForCommit(commitName)
+					if err != nil {
+						panic(fmt.Errorf("cannot determine SHA in remote: %v", err))
 					}
 					cell = strings.Replace(cell, match, sha, 1)
 				default:
