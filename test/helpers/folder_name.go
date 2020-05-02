@@ -11,7 +11,9 @@ func FolderName(scenarioName string) (result string) {
 			r = unicode.ToLower(r)
 			result += string(r)
 			lastRune = r
-		} else if lastRune != '_' {
+			continue
+		}
+		if lastRune != '_' {
 			result += "_"
 			lastRune = '_'
 		}
