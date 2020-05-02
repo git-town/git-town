@@ -13,7 +13,7 @@ func DebugSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Println(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
 		reader := bufio.NewReader(os.Stdin)
-		reader.ReadString('\n')
+		_, _ = reader.ReadString('\n')
 		return nil
 	})
 }
