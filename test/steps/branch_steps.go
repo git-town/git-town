@@ -49,6 +49,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I don\'t have a main branch name configured$`, func() error {
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.DeleteMainBranchConfiguration()
+	})
+
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
 	})
