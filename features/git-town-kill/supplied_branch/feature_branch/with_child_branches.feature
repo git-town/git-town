@@ -6,15 +6,15 @@ Feature: git town-kill: killing the given branch with child branches
   Background:
     Given my repository has a feature branch named "feature-1"
     And my repository has a feature branch named "feature-2" as a child of "feature-1"
-    And it has a feature branch named "feature-3" as a child of "feature-2"
+    And my repository has a feature branch named "feature-3" as a child of "feature-2"
     And the following commits exist in my repository
-      | BRANCH    | LOCATION         | MESSAGE          |
-      | feature-1 | local and remote | feature 1 commit |
-      | feature-2 | local and remote | feature 2 commit |
-      | feature-3 | local and remote | feature 3 commit |
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, remote | feature 1 commit |
+      | feature-2 | local, remote | feature 2 commit |
+      | feature-3 | local, remote | feature 3 commit |
     And I am on the "feature-3" branch
     And my workspace has an uncommitted file
-    When I run `git-town kill feature-2`
+    When I run "git-town kill feature-2"
 
 
   Scenario: result
@@ -29,10 +29,10 @@ Feature: git town-kill: killing the given branch with child branches
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
-    And my repository has the following commits
-      | BRANCH    | LOCATION         | MESSAGE          |
-      | feature-1 | local and remote | feature 1 commit |
-      | feature-3 | local and remote | feature 3 commit |
+    And my repository now has the following commits
+      | BRANCH    | LOCATION      | MESSAGE          |
+      | feature-1 | local, remote | feature 1 commit |
+      | feature-3 | local, remote | feature 3 commit |
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -40,11 +40,11 @@ Feature: git town-kill: killing the given branch with child branches
 
 
   Scenario: undoing the kill
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH    | COMMAND                                            |
-      | feature-3 | git branch feature-2 <%= sha 'feature 2 commit' %> |
-      |           | git push -u origin feature-2                       |
+      | BRANCH    | COMMAND                                           |
+      | feature-3 | git branch feature-2 {{ sha 'feature 2 commit' }} |
+      |           | git push -u origin feature-2                      |
     And I end up on the "feature-3" branch
     And my workspace has the uncommitted file again
     And the existing branches are
