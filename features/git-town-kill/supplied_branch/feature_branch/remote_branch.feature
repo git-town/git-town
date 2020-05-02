@@ -1,4 +1,3 @@
-@debug
 Feature: git town-kill: killing a remote only branch
 
   Background:
@@ -25,8 +24,8 @@ Feature: git town-kill: killing a remote only branch
   Scenario: undoing the kill
     When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                       |
-      | main   | git push origin {{ sha 'feature commit' }}:refs/heads/feature |
+      | BRANCH | COMMAND                                                                 |
+      | main   | git push origin {{ sha-in-remote 'feature commit' }}:refs/heads/feature |
     And the existing branches are
       | REPOSITORY | BRANCHES      |
       | local      | main          |
