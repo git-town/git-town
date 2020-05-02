@@ -8,8 +8,11 @@ import (
 
 // Required does not allow an empty value
 func Required(val interface{}) error {
+	// the reflect value of the result
+	value := reflect.ValueOf(val)
+
 	// if the value passed in is the zero value of the appropriate type
-	if isZero(reflect.ValueOf(val)) {
+	if isZero(value) && value.Kind() != reflect.Bool {
 		return errors.New("Value is required")
 	}
 	return nil
@@ -21,7 +24,7 @@ func MaxLength(length int) Validator {
 	return func(val interface{}) error {
 		if str, ok := val.(string); ok {
 			// if the string is longer than the given value
-			if len(str) > length {
+			if len([]rune(str)) > length {
 				// yell loudly
 				return fmt.Errorf("value is too long. Max length is %v", length)
 			}
@@ -41,7 +44,7 @@ func MinLength(length int) Validator {
 	return func(val interface{}) error {
 		if str, ok := val.(string); ok {
 			// if the string is shorter than the given value
-			if len(str) < length {
+			if len([]rune(str)) < length {
 				// yell loudly
 				return fmt.Errorf("value is too short. Min length is %v", length)
 			}

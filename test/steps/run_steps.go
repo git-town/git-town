@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/test"
 )
@@ -17,7 +17,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *gherkin.DataTable) error {
+	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperRepo.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
 		return nil
 	})
@@ -38,7 +38,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^it runs the commands$`, func(input *gherkin.DataTable) error {
+	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
@@ -53,7 +53,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 }
 
-func tableToInput(table *gherkin.DataTable) []string {
+func tableToInput(table *messages.PickleStepArgument_PickleTable) []string {
 	var result []string
 	for i := 1; i < len(table.Rows); i++ {
 		row := table.Rows[i]

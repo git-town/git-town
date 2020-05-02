@@ -28,6 +28,7 @@ func GetOpenBrowserCommand() string {
 }
 
 var openBrowserCommands = []string{
+	"wsl-open", // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 	"xdg-open",
 	"open",
 	"cygstart",

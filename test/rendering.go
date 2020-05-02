@@ -1,12 +1,10 @@
 package test
 
-import (
-	"github.com/cucumber/godog/gherkin"
-)
+import "github.com/cucumber/messages-go/v10"
 
 // RenderExecutedGitCommands provides the textual Gherkin table representation of the given executed Git commands.
 // The DataTable table matches the structure of the given Gherkin table.
-func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.DataTable) DataTable {
+func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *messages.PickleStepArgument_PickleTable) DataTable {
 	tableHasBranches := table.Rows[0].Cells[0].Value == "BRANCH"
 	result := DataTable{}
 	if tableHasBranches {
@@ -34,7 +32,7 @@ func RenderExecutedGitCommands(commands []ExecutedGitCommand, table *gherkin.Dat
 }
 
 // RenderTable provides the textual Gherkin representation of the given Gherkin table.
-func RenderTable(table *gherkin.DataTable) string {
+func RenderTable(table *messages.PickleStepArgument_PickleTable) string {
 	result := DataTable{}
 	for _, row := range table.Rows {
 		values := []string{}
