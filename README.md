@@ -1,4 +1,4 @@
-![Git Town](https://git-town.github.io/git-town/documentation/logo-horizontal.svg)
+![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg)
 
 [![Build Status](https://travis-ci.org/git-town/git-town.svg?branch=master)](https://travis-ci.org/git-town/git-town)
 [![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)

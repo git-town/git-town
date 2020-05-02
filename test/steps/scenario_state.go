@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/test"
 )
@@ -18,7 +18,7 @@ type scenarioState struct {
 	lastRunResult *command.Result
 
 	// originalCommitTable describes the commits in this Git environment before the WHEN steps ran.
-	originalCommitTable *gherkin.DataTable
+	originalCommitTable *messages.PickleStepArgument_PickleTable
 
 	// name of the uncommitted file in the workspace
 	uncommittedFileName string

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/test/helpers"
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
@@ -20,7 +20,7 @@ type DataTable struct {
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
-func FromGherkin(table *gherkin.DataTable) (result DataTable) {
+func FromGherkin(table *messages.PickleStepArgument_PickleTable) (result DataTable) {
 	for _, tableRow := range table.Rows {
 		resultRow := make([]string, len(tableRow.Cells))
 		for i, tableCell := range tableRow.Cells {
@@ -61,7 +61,7 @@ func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount
 
 // EqualGherkin compares this DataTable instance to the given Gherkin table.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
-func (table *DataTable) EqualGherkin(other *gherkin.DataTable) (diff string, errorCount int) {
+func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
 	if len(table.cells) == 0 {
 		return "your data is empty", 1
 	}

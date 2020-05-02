@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 )
 
 const nanoSec = 1000000
@@ -16,13 +16,7 @@ func init() {
 }
 
 func eventsFunc(suite string, out io.Writer) Formatter {
-	formatter := &events{
-		basefmt: basefmt{
-			started: timeNowFunc(),
-			indent:  2,
-			out:     out,
-		},
-	}
+	formatter := &events{basefmt: newBaseFmt(suite, out)}
 
 	formatter.event(&struct {
 		Event     string `json:"event"`
@@ -40,15 +34,15 @@ func eventsFunc(suite string, out io.Writer) Formatter {
 }
 
 type events struct {
-	basefmt
+	*basefmt
 
 	// currently running feature path, to be part of id.
 	// this is sadly not passed by gherkin nodes.
 	// it restricts this formatter to run only in synchronous single
 	// threaded execution. Unless running a copy of formatter for each feature
 	path         string
-	stat         stepType // last step status, before skipped
-	outlineSteps int      // number of current outline scenario steps
+	status       stepResultStatus // last step status, before skipped
+	outlineSteps int              // number of current outline scenario steps
 }
 
 func (f *events) event(ev interface{}) {
@@ -59,25 +53,8 @@ func (f *events) event(ev interface{}) {
 	fmt.Fprintln(f.out, string(data))
 }
 
-func (f *events) Node(n interface{}) {
-	f.basefmt.Node(n)
-
-	var id string
-	var undefined bool
-	switch t := n.(type) {
-	case *gherkin.Scenario:
-		id = fmt.Sprintf("%s:%d", f.path, t.Location.Line)
-		undefined = len(t.Steps) == 0
-	case *gherkin.TableRow:
-		id = fmt.Sprintf("%s:%d", f.path, t.Location.Line)
-		undefined = f.outlineSteps == 0
-	case *gherkin.ScenarioOutline:
-		f.outlineSteps = len(t.Steps)
-	}
-
-	if len(id) == 0 {
-		return
-	}
+func (f *events) Pickle(pickle *messages.Pickle) {
+	f.basefmt.Pickle(pickle)
 
 	f.event(&struct {
 		Event     string `json:"event"`
@@ -85,11 +62,11 @@ func (f *events) Node(n interface{}) {
 		Timestamp int64  `json:"timestamp"`
 	}{
 		"TestCaseStarted",
-		id,
+		f.scenarioLocation(pickle.AstNodeIds),
 		timeNowFunc().UnixNano() / nanoSec,
 	})
 
-	if undefined {
+	if len(pickle.Steps) == 0 {
 		// @TODO: is status undefined or passed? when there are no steps
 		// for this scenario
 		f.event(&struct {
@@ -99,14 +76,14 @@ func (f *events) Node(n interface{}) {
 			Status    string `json:"status"`
 		}{
 			"TestCaseFinished",
-			id,
+			f.scenarioLocation(pickle.AstNodeIds),
 			timeNowFunc().UnixNano() / nanoSec,
 			"undefined",
 		})
 	}
 }
 
-func (f *events) Feature(ft *gherkin.Feature, p string, c []byte) {
+func (f *events) Feature(ft *messages.GherkinDocument, p string, c []byte) {
 	f.basefmt.Feature(ft, p, c)
 	f.path = p
 	f.event(&struct {
@@ -115,7 +92,7 @@ func (f *events) Feature(ft *gherkin.Feature, p string, c []byte) {
 		Source   string `json:"source"`
 	}{
 		"TestSource",
-		fmt.Sprintf("%s:%d", p, ft.Location.Line),
+		fmt.Sprintf("%s:%d", p, ft.Feature.Location.Line),
 		string(c),
 	})
 }
@@ -123,10 +100,10 @@ func (f *events) Feature(ft *gherkin.Feature, p string, c []byte) {
 func (f *events) Summary() {
 	// @TODO: determine status
 	status := passed
-	if len(f.failed) > 0 {
+	if len(f.findStepResults(failed)) > 0 {
 		status = failed
-	} else if len(f.passed) == 0 {
-		if len(f.undefined) > len(f.pending) {
+	} else if len(f.findStepResults(passed)) == 0 {
+		if len(f.findStepResults(undefined)) > len(f.findStepResults(pending)) {
 			status = undefined
 		} else {
 			status = pending
@@ -154,6 +131,8 @@ func (f *events) Summary() {
 }
 
 func (f *events) step(res *stepResult) {
+	step := f.findStep(res.step.AstNodeIds[0])
+
 	var errMsg string
 	if res.err != nil {
 		errMsg = res.err.Error()
@@ -166,25 +145,13 @@ func (f *events) step(res *stepResult) {
 		Summary   string `json:"summary,omitempty"`
 	}{
 		"TestStepFinished",
-		fmt.Sprintf("%s:%d", f.path, res.step.Location.Line),
+		fmt.Sprintf("%s:%d", f.path, step.Location.Line),
 		timeNowFunc().UnixNano() / nanoSec,
-		res.typ.String(),
+		res.status.String(),
 		errMsg,
 	})
 
-	// determine if test case has finished
-	var finished bool
-	var line int
-	switch t := f.owner.(type) {
-	case *gherkin.TableRow:
-		line = t.Location.Line
-		finished = f.isLastStep(res.step)
-	case *gherkin.Scenario:
-		line = t.Location.Line
-		finished = f.isLastStep(res.step)
-	}
-
-	if finished {
+	if isLastStep(res.owner, res.step) {
 		f.event(&struct {
 			Event     string `json:"event"`
 			Location  string `json:"location"`
@@ -192,16 +159,18 @@ func (f *events) step(res *stepResult) {
 			Status    string `json:"status"`
 		}{
 			"TestCaseFinished",
-			fmt.Sprintf("%s:%d", f.path, line),
+			f.scenarioLocation(res.owner.AstNodeIds),
 			timeNowFunc().UnixNano() / nanoSec,
-			f.stat.String(),
+			f.status.String(),
 		})
 	}
 }
 
-func (f *events) Defined(step *gherkin.Step, def *StepDef) {
+func (f *events) Defined(pickle *messages.Pickle, pickleStep *messages.Pickle_PickleStep, def *StepDefinition) {
+	step := f.findStep(pickleStep.AstNodeIds[0])
+
 	if def != nil {
-		m := def.Expr.FindStringSubmatchIndex(step.Text)[2:]
+		m := def.Expr.FindStringSubmatchIndex(pickleStep.Text)[2:]
 		var args [][2]int
 		for i := 0; i < len(m)/2; i++ {
 			pair := m[i : i*2+2]
@@ -239,31 +208,47 @@ func (f *events) Defined(step *gherkin.Step, def *StepDef) {
 	})
 }
 
-func (f *events) Passed(step *gherkin.Step, match *StepDef) {
-	f.basefmt.Passed(step, match)
-	f.stat = passed
-	f.step(f.passed[len(f.passed)-1])
+func (f *events) Passed(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.basefmt.Passed(pickle, step, match)
+
+	f.status = passed
+	f.step(f.lastStepResult())
 }
 
-func (f *events) Skipped(step *gherkin.Step, match *StepDef) {
-	f.basefmt.Skipped(step, match)
-	f.step(f.skipped[len(f.skipped)-1])
+func (f *events) Skipped(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.basefmt.Skipped(pickle, step, match)
+
+	f.step(f.lastStepResult())
 }
 
-func (f *events) Undefined(step *gherkin.Step, match *StepDef) {
-	f.basefmt.Undefined(step, match)
-	f.stat = undefined
-	f.step(f.undefined[len(f.undefined)-1])
+func (f *events) Undefined(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.basefmt.Undefined(pickle, step, match)
+
+	f.status = undefined
+	f.step(f.lastStepResult())
 }
 
-func (f *events) Failed(step *gherkin.Step, match *StepDef, err error) {
-	f.basefmt.Failed(step, match, err)
-	f.stat = failed
-	f.step(f.failed[len(f.failed)-1])
+func (f *events) Failed(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition, err error) {
+	f.basefmt.Failed(pickle, step, match, err)
+
+	f.status = failed
+	f.step(f.lastStepResult())
 }
 
-func (f *events) Pending(step *gherkin.Step, match *StepDef) {
-	f.stat = pending
-	f.basefmt.Pending(step, match)
-	f.step(f.pending[len(f.pending)-1])
+func (f *events) Pending(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.basefmt.Pending(pickle, step, match)
+
+	f.status = pending
+	f.step(f.lastStepResult())
+}
+
+func (f *events) scenarioLocation(astNodeIds []string) string {
+	scenario := f.findScenario(astNodeIds[0])
+	line := scenario.Location.Line
+	if len(astNodeIds) == 2 {
+		_, row := f.findExample(astNodeIds[1])
+		line = row.Location.Line
+	}
+
+	return fmt.Sprintf("%s:%d", f.path, line)
 }

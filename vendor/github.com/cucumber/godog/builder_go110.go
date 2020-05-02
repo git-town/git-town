@@ -238,6 +238,9 @@ func maybeVendoredGodog() *build.Package {
 	return nil
 }
 
+func normaliseLocalImportPath(dir string) string {
+	return path.Join("_", strings.Map(makeImportValid, filepath.ToSlash(dir)))
+}
 func importPackage(dir string) *build.Package {
 	pkg, _ := build.ImportDir(dir, 0)
 
@@ -245,7 +248,7 @@ func importPackage(dir string) *build.Package {
 	// taken from go source code
 	// see: https://github.com/golang/go/blob/go1.7rc5/src/cmd/go/pkg.go#L279
 	if pkg != nil && pkg.ImportPath == "." {
-		pkg.ImportPath = path.Join("_", strings.Map(makeImportValid, filepath.ToSlash(dir)))
+		pkg.ImportPath = normaliseLocalImportPath(dir)
 	}
 
 	return pkg
@@ -376,7 +379,7 @@ func parseImport(rawPath, rootPath string) string {
 		return rawPath
 	}
 	// Concatenates the module path with the current sub-folders if needed
-	return mod.Path + filepath.ToSlash(strings.TrimPrefix(strings.TrimPrefix(rawPath, "_"), mod.Dir))
+	return mod.Path + filepath.ToSlash(strings.TrimPrefix(rawPath, normaliseLocalImportPath(mod.Dir)))
 }
 
 // processPackageTestFiles runs through ast of each test
