@@ -20,6 +20,11 @@ func WorkspaceSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
 	})
 
+	suite.Step(`^my workspace has an uncommitted file with name: "([^"]+)" and content: "([^"]+)"$`, func(name, content string) error {
+		fs.activeScenarioState.uncommittedFileName = name
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(name, content)
+	})
+
 	suite.Step(`^my workspace has the uncommitted file again$`, func() error {
 		hasFile, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasFile(fs.activeScenarioState.uncommittedFileName, "uncommitted content")
 		if err != nil {
