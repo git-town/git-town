@@ -22,4 +22,7 @@ type scenarioState struct {
 
 	// name of the uncommitted file in the workspace
 	uncommittedFileName string
+
+	// content of the uncommitted file in the workspace
+	uncommittedContent string
 }
