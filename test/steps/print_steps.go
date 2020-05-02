@@ -24,6 +24,14 @@ func PrintSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^it prints no output$`, func() error {
+		output := fs.activeScenarioState.lastRunResult.OutputSanitized()
+		if output != "" {
+			return fmt.Errorf("expected no output but found %q", output)
+		}
+		return nil
+	})
+
 	suite.Step(`^it prints the error:$`, func(expected *messages.PickleStepArgument_PickleDocString) error {
 		if !strings.Contains(fs.activeScenarioState.lastRunResult.OutputSanitized(), expected.Content) {
 			return fmt.Errorf("text not found: %s\n\nactual text:\n%s", expected.Content, fs.activeScenarioState.lastRunResult.OutputSanitized())

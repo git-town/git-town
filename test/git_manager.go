@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/git-town/git-town/test/helpers"
-	"github.com/iancoleman/strcase"
 )
 
 /*
@@ -39,7 +38,7 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 
 // CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
-	envDirName := strcase.ToSnake(scenarioName) + "_" + helpers.UniqueString()
+	envDirName := helpers.FolderName(scenarioName) + "_" + helpers.UniqueString()
 	envPath := filepath.Join(manager.dir, envDirName)
 	return CloneGitEnvironment(manager.memoized, envPath)
 }
