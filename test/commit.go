@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
 	"github.com/git-town/git-town/test/helpers"
 )
 
@@ -30,7 +30,7 @@ func DefaultCommit() Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []Commit, err error) {
 	columnNames := helpers.TableFields(table)
 	lastBranchName := ""
 	for _, row := range table.Rows[1:] {

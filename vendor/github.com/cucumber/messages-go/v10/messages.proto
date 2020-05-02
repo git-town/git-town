@@ -1,0 +1,730 @@
+syntax = "proto3";
+package io.cucumber.messages;
+option go_package = "messages";
+
+// When removing a field, replace it with reserved, rather than deleting the line.
+// When adding a field, add it to the end and increment the number by one.
+// See https://developers.google.com/protocol-buffers/docs/proto#updating for details
+
+// From https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/timestamp.proto
+message Timestamp {
+  // Represents seconds of UTC time since Unix epoch
+  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+  // 9999-12-31T23:59:59Z inclusive.
+  int64 seconds = 1;
+
+  // Non-negative fractions of a second at nanosecond resolution. Negative
+  // second values with fractions must still have non-negative nanos values
+  // that count forward in time. Must be from 0 to 999,999,999
+  // inclusive.
+  int32 nanos = 2;
+}
+
+// The structure is pretty close of the Timestamp one. For clarity, a second type
+// of message is used.
+message Duration {
+  int64 seconds = 1;
+
+  // Non-negative fractions of a second at nanosecond resolution. Negative
+  // second values with fractions must still have non-negative nanos values
+  // that count forward in time. Must be from 0 to 999,999,999
+  // inclusive.
+  int32 nanos = 2;
+}
+
+/**
+ * All the messages that are passed between different components/processes are Envelope
+ * messages.
+ */
+message Envelope {
+  oneof message {
+    // Gherkin messages
+    Source source = 1;
+    GherkinDocument gherkin_document = 2;
+    Pickle pickle = 3;
+    Attachment attachment = 4;
+    // Execution messages
+    TestCaseStarted test_case_started = 5;
+    TestStepStarted test_step_started = 6;
+    TestStepFinished test_step_finished = 7;
+    TestCaseFinished test_case_finished = 8;
+    PickleAccepted pickle_accepted = 9;
+    PickleRejected pickle_rejected = 10;
+    TestCasePrepared test_case_prepared = 11;
+    TestRunStarted test_run_started = 12;
+    TestRunFinished test_run_finished = 13;
+    // Cucumber-Engine Messages
+    CommandStart command_start = 14;
+    CommandActionComplete command_action_complete = 15;
+    CommandRunBeforeTestRunHooks command_run_before_test_run_hooks = 16;
+    CommandInitializeTestCase command_initialize_test_case = 17;
+    CommandRunBeforeTestCaseHook command_run_before_test_case_hook = 18;
+    CommandRunTestStep command_run_test_step = 19;
+    CommandRunAfterTestCaseHook command_run_after_test_case_hook = 20;
+    CommandRunAfterTestRunHooks command_run_after_test_run_hooks = 21;
+    CommandGenerateSnippet command_generate_snippet = 22;
+    string command_error = 23;
+    TestCase test_case = 24;
+    StepDefinition step_definition = 25;
+    Hook hook = 26;
+    ParameterType parameter_type = 27;
+    UndefinedParameterType undefined_parameter_type = 28;
+  }
+}
+
+
+////// Common types
+
+/**
+ * Points to a line and a column in a text file
+ */
+message Location {
+  uint32 line = 1;
+  uint32 column = 2;
+}
+
+/**
+ * Points to a [Source](#io.cucumber.messages.Source) identified by `uri` and a
+ * [Location](#io.cucumber.messages.Location) within that file.
+ */
+message SourceReference {
+  string uri = 1;
+  Location location = 2;
+}
+
+////// Source
+
+/**
+ * A source file, typically a Gherkin document
+ */
+message Source {
+  /**
+   * The [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier)
+   * of the source, typically a file path relative to the root directory
+   */
+  string uri = 1;
+  // The contents of the file
+  string data = 2;
+  reserved 3;
+  // The media type of the file. Can be used to specify custom types, such as
+  // text/x.cucumber.gherkin+plain
+  string media_type = 4;
+}
+
+////// Gherkin
+
+/**
+ * The [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of a Gherkin document.
+ * Cucumber implementations should *not* depend on `GherkinDocument` or any of its
+ * children for execution - use [Pickle](#io.cucumber.messages.Pickle) instead.
+ *
+ * The only consumers of `GherkinDocument` should only be formatters that produce
+ * "rich" output, resembling the original Gherkin document.
+ */
+message GherkinDocument {
+  /**
+   * The [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier)
+   * of the source, typically a file path relative to the root directory
+   */
+  string uri = 1;
+  Feature feature = 2;
+  // All the comments in the Gherkin document
+  repeated Comment comments = 3;
+
+  /**
+   * A comment in a Gherkin document
+   */
+  message Comment {
+    // The location of the comment
+    Location location = 1;
+    // The text of the comment
+    string text = 2;
+  }
+
+  /**
+   * The top level node in the AST
+   */
+  message Feature {
+    // The location of the `Feature` keyword
+    Location location = 1;
+    // All the tags placed above the `Feature` keyword
+    repeated Tag tags = 2;
+    // The [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) language code of the Gherkin document
+    string language = 3;
+    // The text of the `Feature` keyword (in the language specified by `language`)
+    string keyword = 4;
+    // The name of the feature (the text following the `keyword`)
+    string name = 5;
+    // The line(s) underneath the line with the `keyword` that are used as description
+    string description = 6;
+    // Zero or more children
+    repeated FeatureChild children = 7;
+
+    /**
+     * A tag
+     */
+    message Tag {
+      // Location of the tag
+      Location location = 1;
+      // The name of the tag (including the leading `@`)
+      string name = 2;
+      // Unique ID to be able to reference the Tag from PickleTag
+      string id = 3;
+    }
+
+    /**
+     * A child node of a `Feature` node
+     */
+    message FeatureChild {
+      oneof value {
+        Rule rule = 1;
+        Background background = 2;
+        Scenario scenario = 3;
+      }
+
+      /**
+       * A `Rule` node
+       */
+      message Rule {
+        // The location of the `Rule` keyword
+        Location location = 1;
+        string keyword = 2;
+        string name = 3;
+        string description = 4;
+        repeated RuleChild children = 5;
+      }
+
+      message RuleChild {
+        oneof value {
+          Background background = 1;
+          Scenario scenario = 2;
+        }
+      }
+    }
+
+    message Background {
+      // The location of the `Background` keyword
+      Location location = 1;
+      string keyword = 2;
+      string name = 3;
+      string description = 4;
+      repeated Step steps = 5;
+    }
+
+    message Scenario {
+      // The location of the `Scenario` keyword
+      Location location = 1;
+      repeated Tag tags = 2;
+      string keyword = 3;
+      string name = 4;
+      string description = 5;
+      repeated Step steps = 6;
+      repeated Examples examples = 7;
+      string id = 8;
+
+      message Examples {
+        // The location of the `Examples` keyword
+        Location location = 1;
+        repeated Tag tags = 2;
+        string keyword = 3;
+        string name = 4;
+        string description = 5;
+        TableRow table_header = 6;
+        repeated TableRow table_body = 7;
+      }
+    }
+
+    // A row in a table
+    message TableRow {
+      // The location of the first cell in the row
+      Location location = 1;
+      // Cells in the row
+      repeated TableCell cells = 2;
+      string id = 3;
+
+      // A cell in a `TableRow`
+      message TableCell {
+        // The location of the cell
+        Location location = 1;
+        // The value of the cell
+        string value = 2;
+      }
+    }
+
+    // A step
+    message Step {
+      // The location of the steps' `keyword`
+      Location location = 1;
+      string keyword = 2;
+      string text = 3;
+      oneof argument {
+        DocString doc_string = 5;
+        DataTable data_table = 6;
+      }
+      // Unique ID to be able to reference the Step from PickleStep
+      string id = 7;
+
+      message DataTable {
+        Location location = 1;
+        repeated TableRow rows = 2;
+      }
+
+      message DocString {
+        Location location = 1;
+        string media_type = 2;
+        string content = 3;
+        string delimiter = 4;
+      }
+    }
+  }
+}
+
+////// Attachments (parse errors, execution errors, screenshots, links...)
+
+/**
+ * An attachment represents any kind of data associated with a line in a
+ * [Source](#io.cucumber.messages.Source) file. It can be used for:
+ *
+ * * Syntax errors during parse time
+ * * Screenshots captured and attached during execution
+ * * Logs captured and attached during execution
+ *
+ * It is not to be used for runtime errors raised/thrown during execution. This
+ * is captured in `TestResult`.
+ */
+message Attachment {
+  SourceReference source = 1;
+  reserved 2, 3;
+  string test_step_id = 4;
+  string test_case_started_id = 5;
+  // The body of the attachment
+  oneof body {
+    // For text/* media types
+    string text = 6;
+    // For all non-text/ media types
+    bytes binary = 7;
+  }
+  /**
+   * The media type of the data. This can be any valid
+   * [IANA Media Type](https://www.iana.org/assignments/media-types/media-types.xhtml)
+   * as well as Cucumber-specific media types such as `text/x.cucumber.gherkin+plain`
+   * and `text/x.cucumber.stacktrace+plain`
+   */
+  string media_type = 8;
+}
+
+////// Pickles
+
+/**
+ * A `Pickle` represents a template for a `TestCase`. It is typically derived
+ * from another format, such as [GherkinDocument](#io.cucumber.messages.GherkinDocument).
+ * In the future a `Pickle` may be derived from other formats such as Markdown or
+ * Excel files.
+ *
+ * By making `Pickle` the main data structure Cucumber uses for execution, the
+ * implementation of Cucumber itself becomes simpler, as it doesn't have to deal
+ * with the complex structure of a [GherkinDocument](#io.cucumber.messages.GherkinDocument).
+ *
+ * Each `PickleStep` of a `Pickle` is matched with a `StepDefinition` to create a `TestCase`
+ */
+message Pickle {
+  /**
+   * A unique id for the pickle. This is a [SHA1](https://en.wikipedia.org/wiki/SHA-1) hash
+   * from the source data and the `locations` of the pickle.
+   * This ID will change if source the file is modified.
+   */
+  string id = 1;
+  // The uri of the source file
+  string uri = 2;
+  // The name of the pickle
+  string name = 3;
+  // The language of the pickle
+  string language = 4;
+  // One or more steps
+  repeated PickleStep steps = 5;
+  /**
+   * One or more tags. If this pickle is constructed from a Gherkin document,
+   * It includes inherited tags from the `Feature` as well.
+   */
+  repeated PickleTag tags = 6;
+  /**
+   * Points to the AST node locations of the pickle. The last one represents the unique
+   * id of the pickle. A pickle constructed from `Examples` will have the first
+   * id originating from the `Scenario` AST node, and the second from the `TableRow` AST node.
+   */
+  repeated string ast_node_ids = 7;
+
+  /**
+   * A tag
+   */
+  message PickleTag {
+    string name = 1;
+    // Points to the AST node this was created from
+    string ast_node_id = 2;
+  }
+
+  /**
+   * An executable step
+   */
+  message PickleStep {
+    string text = 1;
+    // An optional argument
+    PickleStepArgument argument = 2;
+    // A unique ID for the PickleStep
+    string id = 3;
+    // References the IDs of the source of the step. For Gherkin, this can be
+    // the ID of a Step, and possibly also the ID of a TableRow
+    repeated string ast_node_ids = 4;
+  }
+}
+
+/**
+ * A wrapper for either a doc string or a table.
+ */
+message PickleStepArgument {
+  oneof message {
+    PickleDocString doc_string = 1;
+    PickleTable data_table = 2;
+  }
+
+  message PickleDocString {
+    string media_type = 1;
+    string content = 2;
+  }
+
+  message PickleTable {
+    repeated PickleTableRow rows = 1;
+
+    message PickleTableRow {
+      repeated PickleTableCell cells = 1;
+
+      message PickleTableCell {
+        string value = 1;
+      }
+    }
+  }
+}
+
+////// TestCases
+
+/**
+ * A `TestCase` contains a sequence of `TestStep`s.
+ */
+message TestCase {
+  string id = 1;
+  // The ID of the `Pickle` this `TestCase` is derived from.
+  string pickle_id = 2;
+  repeated TestStep test_steps = 3;
+
+  /**
+   * A `TestStep` is derived from either a `PickleStep`
+   * combined with a `StepDefinition`, or from a `Hook`.
+   */
+  message TestStep {
+    string id = 1;
+    // Pointer to the `PickleStep` (if derived from a PickleStep)
+    string pickle_step_id = 2;
+    // Pointer to all the matching `StepDefinition`s (if derived from a PickleStep)
+    repeated string step_definition_ids = 3;
+    // A list of list of StepMatchArgument (if derived from a `StepDefinition`).
+    // Each element represents a matching step definition. A size of 0 means `UNDEFINED`,
+    // and a size of 2+ means `AMBIGUOUS`
+    repeated StepMatchArgumentsList step_match_arguments_lists = 4;
+    // Pointer to the `Hook` (if derived from a Hook)
+    string hook_id = 5;
+
+    message StepMatchArgumentsList {
+      repeated StepMatchArgument step_match_arguments = 1;
+    }
+  }
+}
+
+//// Cucumber Engine
+
+////// Filtering
+
+message PickleAccepted {
+  string pickle_id = 1;
+}
+
+message PickleRejected {
+  string pickle_id = 2;
+}
+
+////// Results
+
+message TestRunStarted {
+  Timestamp timestamp = 1;
+}
+
+// DEPRECATED. Use TestCase.TestStep
+message TestCasePreparedStep {
+  SourceReference source_location = 1;
+  SourceReference action_location = 2;
+}
+
+// DEPRECATED. Use TestCase
+message TestCasePrepared {
+  string pickle_id = 1;
+  repeated TestCasePreparedStep steps = 2;
+}
+
+message TestCaseStarted {
+  Timestamp timestamp = 1;
+  Platform platform = 2;
+  /**
+   * The first attempt should have value 0, and for each retry the value
+   * should increase by 1.
+   */
+  uint32 attempt = 3;
+  string test_case_id = 4;
+  /**
+   * Because a `TestCase` can be run multiple times (in case of a retry),
+   * we use this field to group messages relating to the same attempt.
+   */
+  string id = 5;
+
+  message Platform {
+    // The runner implementation. For example "SpecFlow", "Cucumber-JVM", "Behat" etc.
+    string implementation = 1;
+    // The version of the runner
+    string version = 2;
+    // The operating system
+    string os = 3;
+    // The CPU architecture
+    string cpu = 4;
+  }
+}
+
+message TestCaseFinished {
+  Timestamp timestamp = 1;
+  reserved 2;
+  string test_case_started_id = 3;
+}
+
+message TestStepStarted {
+  Timestamp timestamp = 1;
+  string test_step_id = 2;
+  string test_case_started_id = 3;
+}
+
+message TestStepFinished {
+  TestStepResult test_step_result = 1;
+  Timestamp timestamp = 2;
+  string test_step_id = 3;
+  string test_case_started_id = 4;
+}
+
+message TestStepResult {
+  Status status = 1;
+  string message = 2;
+  Duration duration = 3;
+  bool will_be_retried = 4;
+
+  /**
+   * Status of a `TestStep`.
+   *
+   * The ordinal values of statuses are significant. The status of a TestCase
+   * is computed by picking the status with the highest value for all of its steps.
+   *
+   * For example, if a TestCase has steps with statuses passed, undefined and skipped,
+   * then the pickle's status is undefined.
+   */
+  enum Status {
+    // The step hasn't been matched or executed.
+    UNKNOWN = 0;
+    // The step matched one step definition and passed execution.
+    PASSED = 1;
+    // The step matched one step definition but was not executed because the
+    // previous step was not PASSED.
+    SKIPPED = 2;
+    // The step matched one step definition and signalled pending during execution.
+    // This is the default behaviour of generated step definitions, which either
+    // throw a special PendingException, or return a special value indicating that it's
+    // pending. How to signal the pending status depends on the Cucumber implementation.
+    PENDING = 3;
+    // The step matched no step definitions.
+    UNDEFINED = 4;
+    // The step matched two or more step definitions.
+    AMBIGUOUS = 5;
+    // The step matched one step definition and failed execution.
+    FAILED = 6;
+  }
+}
+
+message TestRunFinished {
+  // success = StrictModeEnabled ? (failed_count == 0 && ambiguous_count == 0 && undefined_count == 0 && pending_count == 0) : (failed_count == 0 && ambiguous_count == 0)
+  bool success = 1;
+  // Timestamp when the TestRun is finished
+  Timestamp timestamp = 2;
+  // Error message. Can be a stack trace from a failed `BeforeAll` or `AfterAll`.
+  // If there are undefined parameter types, the message is simply 
+  // "The following parameter type(s() are not defined: xxx, yyy". 
+  // The independent `UndefinedParameterType` messages can be used to generate 
+  // snippets for those parameter types.
+  string message = 3;
+}
+
+////// Commands
+
+message CommandStart {
+  string base_directory = 2;
+  SourcesConfig sources_config = 3;
+  RuntimeConfig runtime_config = 4;
+  SupportCodeConfig support_code_config = 5;
+}
+
+message SourcesConfig {
+  repeated string absolute_paths = 1;
+  string language = 2;
+  SourcesFilterConfig filters = 3;
+  SourcesOrder order = 4;
+}
+
+message SourcesFilterConfig {
+  string tag_expression = 1;
+  repeated string name_regular_expressions = 2;
+  repeated UriToLinesMapping uri_to_lines_mapping = 3;
+}
+
+message UriToLinesMapping {
+  string absolute_path = 1;
+  repeated uint64 lines = 2;
+}
+
+message SourcesOrder {
+  SourcesOrderType type = 1;
+  uint64 seed = 2;
+}
+
+enum SourcesOrderType {
+  ORDER_OF_DEFINITION = 0;
+  RANDOM = 1;
+}
+
+message RuntimeConfig {
+  bool is_fail_fast = 1;
+  bool is_dry_run = 2;
+  bool is_strict = 3;
+  uint64 max_parallel = 4;
+}
+
+message SupportCodeConfig {
+  repeated Hook before_test_case_hooks = 1;
+  repeated Hook after_test_case_hooks = 2;
+  repeated StepDefinition step_definitions = 3;
+  repeated ParameterType parameter_types = 4;
+}
+
+message Hook {
+  string id = 1;
+  string tag_expression = 2;
+  SourceReference source_reference = 3;
+}
+
+message StepDefinition {
+  string id = 1;
+  StepDefinitionPattern pattern = 2;
+  SourceReference source_reference = 3;
+}
+
+message StepDefinitionPattern {
+  string source = 1;
+  StepDefinitionPatternType type = 2;
+}
+
+enum StepDefinitionPatternType {
+  CUCUMBER_EXPRESSION = 0;
+  REGULAR_EXPRESSION = 1;
+}
+
+message ParameterType {
+  // The name is unique, so we don't need an id.
+  string name = 1;
+  repeated string regular_expressions = 2;
+  bool prefer_for_regular_expression_match = 3;
+  bool use_for_snippets = 4;
+}
+
+message UndefinedParameterType {
+  string name = 1;
+  string expression = 2;
+}
+
+message CommandActionComplete {
+  string completed_id = 1;
+
+  oneof result {
+    // Used for responses to CommandRunBeforeTestCaseHook / CommandRunTestStep / CommandRunAfterTestCaseHook
+    TestStepResult test_step_result = 2;
+    // Used for response to CommandGenerateSnippet
+    string snippet = 3;
+  }
+}
+
+message CommandRunBeforeTestRunHooks {
+  string action_id = 1;
+}
+
+message CommandRunAfterTestRunHooks {
+  string action_id = 1;
+}
+
+message CommandInitializeTestCase {
+  string action_id = 1;
+  Pickle pickle = 2;
+}
+
+message CommandRunBeforeTestCaseHook {
+  string action_id = 1;
+  string hook_id = 2;
+  string test_case_id = 3;
+}
+
+message CommandRunAfterTestCaseHook {
+  string action_id = 1;
+  string hook_id = 2;
+  string test_case_id = 3;
+}
+
+message CommandRunTestStep {
+  string action_id = 1;
+  string step_definition_id = 2;
+  repeated StepMatchArgument step_match_arguments = 3;
+  PickleStepArgument pickle_step_argument = 4;
+  string test_case_id = 5;
+}
+
+/**
+ * Represents a single argument extracted from a step match and passed to a step definition.
+ * This is used for the following purposes:
+ * - Construct an argument to pass to a step definition (possibly through a parameter type transform)
+ * - Highlight the matched parameter in rich formatters such as the HTML formatter
+ *
+ * This message closely matches the `Argument` class in the `cucumber-expressions` library.
+ */
+message StepMatchArgument {
+  string parameter_type_name = 1;
+  /**
+   * Represents the outermost capture group of an argument. This message closely matches the
+   * `Group` class in the `cucumber-expressions` library.
+   */
+  Group group = 2;
+
+  message Group {
+    uint32 start = 1;
+    string value = 2;
+    repeated Group children = 3;
+  }
+}
+
+message CommandGenerateSnippet {
+  string action_id = 1;
+  repeated GeneratedExpression generated_expressions = 2;
+  PickleStepArgument pickle_step_argument = 3;
+}
+
+message GeneratedExpression {
+  string text = 1;
+  repeated string parameter_type_names = 2;
+}
