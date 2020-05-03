@@ -5,7 +5,6 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/test"
 )
@@ -14,8 +13,7 @@ import (
 // nolint:funlen
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		shell := command.ShellInDir{Dir: fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir}
-		gitConfig := git.NewConfiguration(&shell, fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
+		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell, fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
 		table := test.DataTable{}
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {

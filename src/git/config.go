@@ -38,7 +38,7 @@ type Configuration struct {
 // The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
 func Config() *Configuration {
 	if currentDirConfig == nil {
-		shell := command.ShellInDir{Dir: ""}
+		shell := command.ShellInCurrentDir{}
 		currentDirConfig = NewConfiguration(&shell, "")
 	}
 	return currentDirConfig
