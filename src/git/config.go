@@ -23,14 +23,14 @@ import (
 // This class manages which config values are stored in local vs global settings.
 type Configuration struct {
 
-	// localDir contains the directory of the local Git repo.
-	localDir string
-
 	// localConfigCache is a cache of the Git configuration in the local Git repo.
 	localConfigCache map[string]string
 
 	// globalConfigCache is a cache of the global Git configuration.
 	globalConfigCache map[string]string
+
+	// for running shell commands
+	shell command.Shell
 }
 
 // Config provides the current configuration.
@@ -38,7 +38,8 @@ type Configuration struct {
 // The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
 func Config() *Configuration {
 	if currentDirConfig == nil {
-		currentDirConfig = NewConfiguration("")
+		shell := command.ShellInDir{Dir: ""}
+		currentDirConfig = NewConfiguration(&shell, "")
 	}
 	return currentDirConfig
 }
@@ -47,9 +48,9 @@ func Config() *Configuration {
 var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(dir string) *Configuration {
+func NewConfiguration(shell command.Shell, dir string) *Configuration {
 	return &Configuration{
-		localDir:          dir,
+		shell:             shell,
 		localConfigCache:  loadGitConfig(dir, false),
 		globalConfigCache: loadGitConfig(dir, true),
 	}
@@ -237,7 +238,7 @@ func (c *Configuration) GetRemoteOriginURL() string {
 			return mockRemoteURL
 		}
 	}
-	return command.MustRunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
+	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -323,18 +324,18 @@ func (c *Configuration) RemoveGitAlias(command string) *command.Result {
 
 func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	return command.MustRunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	return c.shell.MustRun("git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (c *Configuration) removeLocalConfigValue(key string) {
 	delete(c.localConfigCache, key)
-	command.MustRunInDir(c.localDir, "git", "config", "--unset", key)
+	c.shell.MustRun("git", "config", "--unset", key)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveLocalGitConfiguration() {
-	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
+	_, err := c.shell.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
@@ -358,13 +359,13 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
-	return command.MustRunInDir(c.localDir, "git", "config", "--global", key, value)
+	return c.shell.MustRun("git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
 func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
-	return command.MustRunInDir(c.localDir, "git", "config", key, value)
+	return c.shell.MustRun("git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch

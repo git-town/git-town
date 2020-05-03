@@ -2,7 +2,6 @@ package steps
 
 import (
 	"fmt"
-	"os/exec"
 	"strconv"
 
 	"github.com/cucumber/godog"
@@ -12,13 +11,12 @@ import (
 // nolint:funlen
 func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is no longer configured for this repository$`, func() error {
-		outcome, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Run("git", "config", "--local", "--get-regex", "git-town")
-		exitError := err.(*exec.ExitError)
-		if exitError.ExitCode() != 1 {
-			return fmt.Errorf("git config should return exit code 1 if no matching configuration found")
+		res, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasGitTownConfigNow()
+		if err != nil {
+			return err
 		}
-		if outcome.OutputSanitized() != "" {
-			return fmt.Errorf("expected no local Git Town configuration but got %q: %w", outcome.Output(), err)
+		if res {
+			return fmt.Errorf("unexpected Git Town configuration")
 		}
 		return nil
 	})
