@@ -45,3 +45,10 @@ func TestShellInCurrentDir_RunString(t *testing.T) {
 	_, err = os.Stat("first")
 	assert.False(t, os.IsNotExist(err))
 }
+
+func TestShellInCurrentDir_RunStringWith(t *testing.T) {
+	runner := command.ShellInCurrentDir{}
+	res, err := runner.RunStringWith("echo Hello $FOO", command.Options{Env: []string{"FOO=bar"}})
+	assert.Nil(t, err)
+	assert.Equal(t, "Hello bar", res.OutputSanitized())
+}
