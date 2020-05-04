@@ -9,7 +9,7 @@ import (
 )
 
 func TestCloneGitRepository(t *testing.T) {
-	rootDir := CreateTempDir(t)
+	rootDir := createTempDir(t)
 	originPath := filepath.Join(rootDir, "origin")
 	_, err := InitGitRepository(originPath, rootDir)
 	assert.Nil(t, err, "cannot initialze origin Git repository")
@@ -20,7 +20,7 @@ func TestCloneGitRepository(t *testing.T) {
 }
 
 func TestInitGitRepository(t *testing.T) {
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, repo.Dir)
@@ -34,7 +34,7 @@ func TestInitGitRepository(t *testing.T) {
 }
 
 func TestNewGitRepository(t *testing.T) {
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir))
 }
 
@@ -433,7 +433,7 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
 func createTestRepo(t *testing.T) GitRepository {
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize Git repow")
 	err = repo.Shell.RunMany([][]string{

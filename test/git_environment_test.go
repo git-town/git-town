@@ -9,7 +9,7 @@ import (
 )
 
 func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -23,7 +23,7 @@ func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
-	gitEnvRootDir := CreateTempDir(t)
+	gitEnvRootDir := createTempDir(t)
 	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 	assert.Nil(t, err)
 	// verify the origin repo
@@ -41,7 +41,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 
 func TestGitEnvironment_Branches(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -65,7 +65,7 @@ func TestGitEnvironment_Branches(t *testing.T) {
 
 func TestGitEnvironment_CreateCommits(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -123,7 +123,7 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 
 func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -143,7 +143,7 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 
 func TestGitEnvironment_CommitTable(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -179,7 +179,7 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 
 func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -215,7 +215,7 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 
 func TestGitEnvironment_Remove(t *testing.T) {
 	// create GitEnvironment instance
-	dir := CreateTempDir(t)
+	dir := createTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
