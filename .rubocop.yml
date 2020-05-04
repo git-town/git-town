@@ -3,7 +3,7 @@
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
-    - "node_modules/**/*"
+    - "/**/node_modules/**/*"
 
   DisplayCopNames: true
 
