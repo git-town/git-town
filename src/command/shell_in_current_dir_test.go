@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestShellInCurrentDir_MustRun(t *testing.T) {
+	runner := command.ShellInCurrentDir{}
+	res := runner.MustRun("echo", "hello", "world")
+	assert.Equal(t, "hello world", res.OutputSanitized())
+}
+
 func TestShellInCurrentDir_Run_arguments(t *testing.T) {
 	runner := command.ShellInCurrentDir{}
 	res, err := runner.Run("echo", "hello", "world")
