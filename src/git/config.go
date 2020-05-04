@@ -170,7 +170,8 @@ func (c *Configuration) getLocalConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
 
-// getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
+// getLocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
+// Local configuration takes precedence.
 func (c *Configuration) getLocalOrGlobalConfigValue(key string) string {
 	local := c.getLocalConfigValue(key)
 	if local != "" {
