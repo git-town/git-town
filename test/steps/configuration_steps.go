@@ -35,7 +35,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is set to false$`, func() error {
+	suite.Step(`^the global new-branch-push-flag configuration is false$`, func() error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(false, true)
 		return nil
 	})
@@ -54,12 +54,12 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is set to true$`, func() error {
+	suite.Step(`^the global new-branch-push-flag configuration is true$`, func() error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(true, true)
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is set to "(true|false)"$`, func(value string) error {
+	suite.Step(`^the new-branch-push-flag configuration is (true|false)$`, func(value string) error {
 		b, err := strconv.ParseBool(value)
 		if err != nil {
 			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
