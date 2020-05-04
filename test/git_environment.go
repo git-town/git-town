@@ -20,6 +20,9 @@ type GitEnvironment struct {
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
 
+	// DeveloperShell provides a reference to the MockingShell instance used in the DeveloperRepo.
+	DeveloperShell *MockingShell
+
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
 	UpstreamRepo *GitRepository
 }
@@ -31,11 +34,15 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	if err != nil {
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
-	originRepo := NewGitRepository(filepath.Join(dir, "origin"), dir)
+	originDir := filepath.Join(dir, "origin")
+	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir))
+	developerDir := filepath.Join(dir, "developer")
+	developerShell := NewMockingShell(developerDir, dir)
 	result := GitEnvironment{
-		Dir:           dir,
-		DeveloperRepo: NewGitRepository(filepath.Join(dir, "developer"), dir),
-		OriginRepo:    &originRepo,
+		Dir:            dir,
+		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
+		DeveloperShell: developerShell,
+		OriginRepo:     &originRepo,
 	}
 	// Since we copied the files from the memoized directory,
 	// we have to set the "origin" remote to the copied origin repo here.
@@ -73,7 +80,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
 	gitEnv.OriginRepo = &originRepo
-	err = gitEnv.OriginRepo.RunMany([][]string{
+	err = gitEnv.OriginRepo.Shell.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 		{"git", "checkout", "-b", "main"},
 		{"git", "checkout", "master"},
@@ -86,7 +93,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
-	err = gitEnv.DeveloperRepo.RunMany([][]string{
+	err = gitEnv.DeveloperRepo.Shell.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
@@ -105,7 +112,7 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = env.DeveloperRepo.AddRemote("upstream", env.UpstreamRepo.workingDir)
+	err = env.DeveloperRepo.AddRemote("upstream", env.UpstreamRepo.Dir)
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}

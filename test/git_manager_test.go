@@ -9,7 +9,7 @@ import (
 )
 
 func TestGitManager_CreateMemoizedEnvironment(t *testing.T) {
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	gm := NewGitManager(dir)
 	err := gm.CreateMemoizedEnvironment()
 	assert.Nil(t, err, "creating memoized environment failed")
@@ -19,7 +19,7 @@ func TestGitManager_CreateMemoizedEnvironment(t *testing.T) {
 }
 
 func TestGitManager_CreateScenarioEnvironment(t *testing.T) {
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	gm := NewGitManager(dir)
 	err := gm.CreateMemoizedEnvironment()
 	assert.Nil(t, err, "creating memoized environment failed")

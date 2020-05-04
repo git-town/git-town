@@ -8,7 +8,7 @@ import (
 )
 
 func TestCopyDirectory(t *testing.T) {
-	tmpDir := createTempDir(t)
+	tmpDir := CreateTempDir(t)
 	srcDir := filepath.Join(tmpDir, "src")
 	dstDir := filepath.Join(tmpDir, "dst")
 	createFile(t, srcDir, "one.txt")
@@ -22,7 +22,7 @@ func TestCopyDirectory(t *testing.T) {
 }
 
 func TestCopyDirectory_GitRepo(t *testing.T) {
-	tmpDir := createTempDir(t)
+	tmpDir := CreateTempDir(t)
 	srcDir := filepath.Join(tmpDir, "src")
 	dstDir := filepath.Join(tmpDir, "dst")
 	_, err := InitGitRepository(srcDir, tmpDir)
