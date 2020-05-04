@@ -68,7 +68,9 @@ lint-rb:  # lints the Ruby files
 
 setup: setup-go  # the setup steps necessary on developer machines
 	bundle install
-	yarn install
+	cd tools/harp && yarn install
+	cd tools/text-runner && yarn install
+
 
 setup-go:
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
