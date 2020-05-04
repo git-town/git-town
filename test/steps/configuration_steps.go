@@ -35,6 +35,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^the global new-branch-push-flag configuration is set to false$`, func() error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(false, true)
+		return nil
+	})
+
 	suite.Step(`^the global new-branch-push-flag configuration is set to true$`, func() error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(true, true)
 		return nil
