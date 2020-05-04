@@ -56,8 +56,8 @@ func createFile(t *testing.T, dir, filename string) {
 	assert.Nil(t, err)
 }
 
-// CreateTempDir creates a new empty directory in the system's temp directory and provides the path to it.
-func CreateTempDir(t *testing.T) string {
+// createTempDir creates a new empty directory in the system's temp directory and provides the path to it.
+func createTempDir(t *testing.T) string {
 	dir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create TempDir")
 	return dir

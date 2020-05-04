@@ -70,9 +70,7 @@ func InitGitRepository(workingDir string, homeDir string) (GitRepository, error)
 // NewGitRepository provides a new GitRepository instance working in the given directory.
 // The directory must contain an existing Git repo.
 func NewGitRepository(workingDir string, homeDir string, shell command.Shell) GitRepository {
-	result := GitRepository{Dir: workingDir}
-	result.Shell = shell
-	return result
+	return GitRepository{Dir: workingDir, Shell: shell}
 }
 
 // AddRemote adds the given Git remote to this repository.
