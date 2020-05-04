@@ -40,6 +40,20 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^the new-branch-push-flag configuration is now false$`, func() error {
+		if fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush() {
+			return fmt.Errorf("expected global new-branch-push-flag to be false, but was true")
+		}
+		return nil
+	})
+
+	suite.Step(`^the new-branch-push-flag configuration is now true$`, func() error {
+		if !fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush() {
+			return fmt.Errorf("expected global new-branch-push-flag to be true, but was false")
+		}
+		return nil
+	})
+
 	suite.Step(`^the global new-branch-push-flag configuration is set to true$`, func() error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(true, true)
 		return nil
