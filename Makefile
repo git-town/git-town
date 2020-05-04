@@ -37,7 +37,7 @@ deploy:  # deploys the website
 fix: fix-cucumber fix-go fix-rb fix-md  # auto-fixes lint issues in all languages
 
 fix-cucumber:  # auto-fixes all Cucumber lint issues
-	bundle exec cucumber_lint --fix
+	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec cucumber_lint --fix
 
 fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
@@ -54,7 +54,7 @@ help:  # prints all make targets
 lint: lint-cucumber lint-go lint-md lint-rb  # lints all the source code
 
 lint-cucumber:  # lints the Cucumber files
-	bundle exec cucumber_lint
+	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec cucumber_lint
 
 lint-go:  # lints the Go files
 	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
