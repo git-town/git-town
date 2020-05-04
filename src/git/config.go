@@ -51,13 +51,13 @@ var currentDirConfig *Configuration
 func NewConfiguration(shell command.Shell, dir string) *Configuration {
 	return &Configuration{
 		shell:             shell,
-		localConfigCache:  loadGitConfig(dir, false),
-		globalConfigCache: loadGitConfig(dir, true),
+		localConfigCache:  loadGitConfig(shell, false),
+		globalConfigCache: loadGitConfig(shell, true),
 	}
 }
 
 // loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
-func loadGitConfig(dir string, global bool) map[string]string {
+func loadGitConfig(shell command.Shell, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -65,7 +65,7 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	res, err := command.RunInDir(dir, "git", cmdArgs...)
+	res, err := shell.Run("git", cmdArgs...)
 	if err != nil {
 		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
 			return result
