@@ -6,7 +6,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// ShellInCurrentDir is an implementation of the Shell interface that runs commands in a given directory.
+// ShellInCurrentDir is an implementation of the Shell interface that runs commands in the current working directory.
 type ShellInCurrentDir struct {
 }
 
