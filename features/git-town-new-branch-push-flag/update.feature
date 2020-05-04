@@ -9,6 +9,7 @@ Feature: set the new-branch-push-flag
     When I run "git-town new-branch-push-flag true"
     Then the new-branch-push-flag configuration is now true
 
+
   Scenario: update to "false"
     When I run "git-town new-branch-push-flag false"
     Then the new-branch-push-flag configuration is now false
