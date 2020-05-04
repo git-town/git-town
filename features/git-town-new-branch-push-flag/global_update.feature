@@ -2,7 +2,6 @@ Feature: set the global new-branch-push-flag
 
   Scenario: globally update to "true"
     When I run "git-town new-branch-push-flag --global true"
-    When inspect the repo
     Then the new-branch-push-flag configuration is now true
 
 
