@@ -18,7 +18,7 @@ cuke-go: build   # runs the new Godog-based feature tests
 	godog --concurrency=$(shell nproc --all) --format=progress features/git-town features/git-town-alias features/git-town-append features/git-town-config features/git-town-hack features/git-town-install-fish-autocompletion features/git-town-kill features/git-town-main_branch
 
 cuke-rb: build   # runs the old Ruby-based feature tests
-	bundle exec parallel_cucumber features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
+	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec parallel_cucumber features/git-town-new-branch-push-flag features/git-town-new-pull-request features/git-town-offline-mode features/git-town-perennial_branches features/git-town-prepend features/git-town-prune-branches features/git-town-pull_branch_strategy features/git-town-rename-branch features/git-town-repo features/git-town-set-parent-branch features/git-town-ship features/git-town-sync features/git-town-version
 
 deploy:  # deploys the website
 	git checkout gh-pages
@@ -46,7 +46,7 @@ fix-md:  # auto-fixes all Markdown lint issues
 	tools/prettier/node_modules/.bin/prettier --write .
 
 fix-rb:  # auto-fixes all Ruby lint issues
-	bundle exec rubocop --auto-correct
+	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rubocop --auto-correct
 
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -64,7 +64,7 @@ lint-md:   # lints the Markdown files
 	tools/text-runner/node_modules/.bin/text-run --offline
 
 lint-rb:  # lints the Ruby files
-	bundle exec rubocop
+	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rubocop
 
 setup: setup-go  # the setup steps necessary on developer machines
 	bundle install
