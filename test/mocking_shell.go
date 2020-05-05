@@ -44,7 +44,7 @@ func (ms *MockingShell) MockCommand(name string) error {
 	}
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: $*\n", name)
-	ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}

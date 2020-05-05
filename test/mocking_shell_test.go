@@ -13,9 +13,10 @@ import (
 func TestMockingShell_MockCommand(t *testing.T) {
 	workDir := createTempDir(t)
 	devDir := filepath.Join(workDir, "dev")
-	os.Mkdir(devDir, 0744)
+	err := os.Mkdir(devDir, 0744)
+	assert.Nil(t, err)
 	shell := NewMockingShell(devDir, workDir, filepath.Join(workDir, "bin"))
-	err := shell.MockCommand("foo")
+	err = shell.MockCommand("foo")
 	assert.Nil(t, err)
 	// run a program that calls the mocked command
 	res, err := shell.Run("bash", "-c", "foo bar")

@@ -238,8 +238,3 @@ func (env GitEnvironment) originRepoPath() string {
 func (env GitEnvironment) Remove() error {
 	return os.RemoveAll(env.Dir)
 }
-
-// binPath provides the full path to the "bin" directory
-func (env GitEnvironment) toolPath(tool string) string {
-	return filepath.Join(env.binPath(), tool)
-}
