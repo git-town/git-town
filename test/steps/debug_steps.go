@@ -8,7 +8,7 @@ import (
 	"github.com/cucumber/godog"
 )
 
-// DebugSteps defines Gherkin step implementations around merge conflicts.
+// DebugSteps implements Gherkin steps that help debug the test setup.
 func DebugSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^inspect the repo$`, func() error {
 		fmt.Println(fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)

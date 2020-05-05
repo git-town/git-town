@@ -17,7 +17,7 @@ func TestShellRunner_TempShellOverride(t *testing.T) {
 	err := ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nfoo"), 0744)
 	assert.Nil(t, err)
 	// create the shellrunner
-	runner := NewShellRunner(workDir, createTempDir(t))
+	runner := NewMockingShell(workDir, createTempDir(t))
 	// add a shell override for the "foo" command
 	err = runner.AddTempShellOverride("foo", "echo Foo called")
 	assert.Nil(t, err)
@@ -33,7 +33,7 @@ func TestShellRunner_TempShellOverride(t *testing.T) {
 }
 
 func TestShellRunner_Run(t *testing.T) {
-	runner := NewShellRunner(createTempDir(t), createTempDir(t))
+	runner := NewMockingShell(createTempDir(t), createTempDir(t))
 	res, err := runner.Run("echo", "hello", "world")
 	assert.Nil(t, err)
 	assert.Equal(t, "hello world", res.OutputSanitized())
@@ -41,7 +41,7 @@ func TestShellRunner_Run(t *testing.T) {
 
 func TestShellRunner_RunMany(t *testing.T) {
 	workDir := createTempDir(t)
-	runner := NewShellRunner(workDir, createTempDir(t))
+	runner := NewMockingShell(workDir, createTempDir(t))
 	err := runner.RunMany([][]string{
 		{"touch", "first"},
 		{"touch", "second"},
@@ -56,7 +56,7 @@ func TestShellRunner_RunMany(t *testing.T) {
 
 func TestShellRunner_RunString(t *testing.T) {
 	workDir := createTempDir(t)
-	runner := NewShellRunner(workDir, createTempDir(t))
+	runner := NewMockingShell(workDir, createTempDir(t))
 	_, err := runner.RunString("touch first")
 	assert.Nil(t, err)
 	_, err = os.Stat(filepath.Join(workDir, "first"))
@@ -68,7 +68,7 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	dir2 := filepath.Join(dir1, "subdir")
 	err := os.Mkdir(dir2, 0744)
 	assert.Nil(t, err)
-	runner := NewShellRunner(dir1, createTempDir(t))
+	runner := NewMockingShell(dir1, createTempDir(t))
 	toolPath := filepath.Join(dir2, "list-dir")
 	err = ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0744)
 	assert.Nil(t, err)
@@ -79,7 +79,7 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 
 func TestShellRunner_RunStringWith_Env(t *testing.T) {
 	workDir := createTempDir(t)
-	runner := NewShellRunner(workDir, createTempDir(t))
+	runner := NewMockingShell(workDir, createTempDir(t))
 	toolPath := filepath.Join(workDir, "ls-env")
 	err := ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nenv\n"), 0744)
 	assert.Nil(t, err)
@@ -93,7 +93,7 @@ func TestShellRunner_RunStringWith_Input(t *testing.T) {
 	dir2 := filepath.Join(dir1, "subdir")
 	err := os.Mkdir(dir2, 0744)
 	assert.Nil(t, err)
-	runner := NewShellRunner(dir1, createTempDir(t))
+	runner := NewMockingShell(dir1, createTempDir(t))
 	toolPath := filepath.Join(dir2, "list-dir")
 	err = ioutil.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
 read i1
