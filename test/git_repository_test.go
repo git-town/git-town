@@ -35,7 +35,7 @@ func TestInitGitRepository(t *testing.T) {
 
 func TestNewGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	_ = NewGitRepository(dir, dir)
+	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir))
 }
 
 func TestGitRepository_AddRemote(t *testing.T) {
@@ -263,6 +263,18 @@ func TestGitRepository_FilesInCommit(t *testing.T) {
 	assert.Equal(t, []string{"f1.txt", "f2.txt"}, fileNames)
 }
 
+func TestGitRepository_HasGitTownConfigNow(t *testing.T) {
+	repo := createTestRepo(t)
+	res, err := repo.HasGitTownConfigNow()
+	assert.Nil(t, err)
+	assert.False(t, res)
+	err = repo.CreateFeatureBranch("foo")
+	assert.Nil(t, err)
+	res, err = repo.HasGitTownConfigNow()
+	assert.Nil(t, err)
+	assert.True(t, res)
+}
+
 func TestGitRepository_HasFile(t *testing.T) {
 	repo := createTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
@@ -287,7 +299,7 @@ func TestGitRepository_LastActiveDir(t *testing.T) {
 	repo := createTestRepo(t)
 	dir, err := repo.LastActiveDir()
 	assert.Nil(t, err)
-	assert.Equal(t, repo.homeDir, dir)
+	assert.Equal(t, repo.Dir, dir)
 }
 
 func TestGitRepository_PushBranch(t *testing.T) {
@@ -424,7 +436,7 @@ func createTestRepo(t *testing.T) GitRepository {
 	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir)
 	assert.Nil(t, err, "cannot initialize Git repow")
-	err = repo.RunMany([][]string{
+	err = repo.Shell.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
 	assert.Nil(t, err, "cannot create initial commit: %s")
@@ -435,7 +447,7 @@ func createTestGitTownRepo(t *testing.T) GitRepository {
 	repo := createTestRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.Nil(t, err)
-	err = repo.RunMany([][]string{
+	err = repo.Shell.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})
