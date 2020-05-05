@@ -7,7 +7,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
 
   Scenario Outline: normal origin
     Given my repository has a feature branch named "feature"
-    And my repo's remote origin is <ORIGIN>
+    And my repo's origin is "<ORIGIN>"
     And I have "open" installed
     And I am on the "feature" branch
     When I run `git-town new-pull-request`

@@ -389,6 +389,11 @@ func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
+// SetTestOrigin sets the origin to be used for testing.
+func (c *Configuration) SetTestOrigin(value string) {
+	_ = c.setLocalConfigValue("git-town.testing.remote-url", value)
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *command.Result {

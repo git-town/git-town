@@ -8,6 +8,10 @@ import (
 
 // InstallationSteps defines Cucumber step implementations around installation of Git Town.
 func InstallationSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^I have "([^"]*)" installed$`, func(tool string) error {
+		return fs.activeScenarioState.gitEnvironment.InstallTool(tool)
+	})
+
 	suite.Step(`^I have Git "([^"]*)" installed$`, func(version string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperShell.AddTempShellOverride(
 			"git",

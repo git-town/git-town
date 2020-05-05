@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -232,4 +233,36 @@ func (env GitEnvironment) originRepoPath() string {
 // Remove deletes all files used by this GitEnvironment from disk.
 func (env GitEnvironment) Remove() error {
 	return os.RemoveAll(env.Dir)
+}
+
+// InstallTool simulates that the given tool is installed in this GitEnvironment.
+func (env GitEnvironment) InstallTool(tool string) error {
+	err := ioutil.WriteFile(env.toolPath("which"), []byte(env.whichContent(tool)), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create 'which': %w", err)
+	}
+	err = ioutil.WriteFile(env.toolPath(tool), []byte(env.toolContent(tool)), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create %q: %w", tool, err)
+	}
+	return nil
+}
+
+func (env GitEnvironment) toolContent(name string) string {
+	return fmt.Sprintf(`#!/usr/bin/env bash\n\necho "%s called with: $@"\n`, name)
+}
+
+func (env GitEnvironment) whichContent(name string) string {
+	return fmt.Sprintf(`#!/usr/bin/env bash
+
+if [ "$1" == %q ]; then
+	echo %q
+else
+  exit 1
+fi`, name, env.toolPath(name))
+}
+
+// binPath provides the full path to the "bin" directory
+func (env GitEnvironment) toolPath(tool string) string {
+	return filepath.Join(env.Dir, "bin", tool)
 }
