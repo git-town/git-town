@@ -37,7 +37,7 @@ func (ms *MockingShell) MockCommand(name string) error {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ '$1' == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
 	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
@@ -60,7 +60,7 @@ func (ms *MockingShell) MockGit(version string) error {
 		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
 	}
 	// write custom Git command
-	content := fmt.Sprintf(`#!/usr/bin/env bash\n\nif [ "$1" = %q ]; then\n  echo "git version %s"\nfi`, version, version)
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
 	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
