@@ -57,7 +57,7 @@ func (ms *MockingShell) MockGit(version string) error {
 	// create "bin" dir
 	err := os.Mkdir(ms.binDir, 0744)
 	if err != nil {
-		return fmt.Errorf("cannot create mock bin dir: %w", err)
+		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
 	}
 	// write custom Git command
 	content := fmt.Sprintf(`#!/usr/bin/env bash\n\nif [ "$1" = %q ]; then\n  echo "git version %s"\nfi`, version, version)
