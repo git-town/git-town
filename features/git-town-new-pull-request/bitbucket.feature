@@ -1,4 +1,3 @@
-@debug
 Feature: git-new-pull-request when origin is on Bitbucket
 
   As a developer having finished a feature in a repository hosted on Bitbucket
