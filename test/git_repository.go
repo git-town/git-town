@@ -35,26 +35,25 @@ type GitRepository struct {
 
 // CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
 // The cloning operation is using the given homeDir as the $HOME.
-func CloneGitRepository(originDir, targetDir, homeDir string) (GitRepository, error) {
-	shell := NewMockingShell(".", homeDir)
-	res, err := shell.Run("git", "clone", originDir, targetDir)
+func CloneGitRepository(originDir, targetDir, homeDir, binDir string) (GitRepository, error) {
+	res, err := command.Run("git", "clone", originDir, targetDir)
 	if err != nil {
 		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
-	return NewGitRepository(targetDir, homeDir, NewMockingShell(targetDir, homeDir)), nil
+	return NewGitRepository(targetDir, homeDir, NewMockingShell(targetDir, homeDir, binDir)), nil
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,
 // including necessary Git configuration.
 // Creates missing folders as needed.
-func InitGitRepository(workingDir string, homeDir string) (GitRepository, error) {
+func InitGitRepository(workingDir, homeDir, binDir string) (GitRepository, error) {
 	// create the folder
 	err := os.MkdirAll(workingDir, 0744)
 	if err != nil {
 		return GitRepository{}, fmt.Errorf("cannot create directory %q: %w", workingDir, err)
 	}
 	// initialize the repo in the folder
-	result := NewGitRepository(workingDir, homeDir, NewMockingShell(workingDir, homeDir))
+	result := NewGitRepository(workingDir, homeDir, NewMockingShell(workingDir, homeDir, binDir))
 	outcome, err := result.Shell.Run("git", "init")
 	if err != nil {
 		return result, fmt.Errorf(`error running "git init" in %q: %w\n%v`, workingDir, err, outcome)

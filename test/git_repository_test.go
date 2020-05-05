@@ -11,17 +11,17 @@ import (
 func TestCloneGitRepository(t *testing.T) {
 	rootDir := createTempDir(t)
 	originPath := filepath.Join(rootDir, "origin")
-	_, err := InitGitRepository(originPath, rootDir)
+	_, err := InitGitRepository(originPath, rootDir, "")
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := filepath.Join(rootDir, "cloned")
-	_, err = CloneGitRepository(originPath, clonedPath, rootDir)
+	_, err = CloneGitRepository(originPath, clonedPath, rootDir, "")
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
 }
 
 func TestInitGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, repo.Dir)
 	// ensure the Git repo works, i.e. we can commit into it
@@ -35,7 +35,7 @@ func TestInitGitRepository(t *testing.T) {
 
 func TestNewGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir))
+	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir, ""))
 }
 
 func TestGitRepository_AddRemote(t *testing.T) {
@@ -434,7 +434,7 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
 func createTestRepo(t *testing.T) GitRepository {
 	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize Git repow")
 	err = repo.Shell.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
