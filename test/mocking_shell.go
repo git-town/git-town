@@ -17,14 +17,20 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir            string // the directory in which this runner runs
-	homeDir               string // the directory that contains the global Git configuration
-	tempShellOverridesDir string // the directory that stores the mock shell command implementations, ignored if empty
+	workingDir            string   // the directory in which this runner runs
+	homeDir               string   // the directory that contains the global Git configuration
+	tempShellOverridesDir string   // the directory that stores the mock shell command implementations, ignored if empty
+	env                   []string // custom environment variables to use
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
 func NewMockingShell(workingDir string, homeDir string) *MockingShell {
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir}
+}
+
+// AddEnv adds the given environment variable to subsequent runs of commands.
+func (ms *MockingShell) AddEnv(name, content string) {
+	ms.env = append(ms.env, fmt.Sprintf("%s=%s", name, content))
 }
 
 // AddTempShellOverride temporarily mocks the shell command with the given name
@@ -111,8 +117,9 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (res
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
 func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
+	env := os.Environ()
 	// create an environment with the temp shell overrides directory added to the PATH
-	if opts.Env == nil {
+	if opts.Env != nil {
 		opts.Env = os.Environ()
 	}
 	// set HOME to the given global directory so that Git puts the global configuration there.
@@ -120,6 +127,10 @@ func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string
 		if strings.HasPrefix(opts.Env[i], "HOME=") {
 			opts.Env[i] = fmt.Sprintf("HOME=%s", ms.homeDir)
 		}
+	}
+	// add the custom env variables
+	if len(ms.env) > 0 {
+		opts.Env =
 	}
 	// enable shell overrides
 	if ms.hasTempShellOverrides() {
