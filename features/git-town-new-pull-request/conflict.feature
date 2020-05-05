@@ -18,7 +18,6 @@ Feature: Syncing before creating the pull request
     When I run `git-town new-pull-request`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
@@ -54,7 +53,6 @@ Feature: Syncing before creating the pull request
     And my repository is left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town continue`
     Then it runs no commands
