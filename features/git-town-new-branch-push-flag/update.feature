@@ -6,10 +6,10 @@ Feature: set the new-branch-push-flag
 
 
   Scenario: update to "true"
-    When I run `git-town new-branch-push-flag true`
-    Then my repo is now configured with "new-branch-push-flag" set to "true"
+    When I run "git-town new-branch-push-flag true"
+    Then the new-branch-push-flag configuration is now true
 
 
   Scenario: update to "false"
-    When I run `git-town new-branch-push-flag false`
-    Then my repo is now configured with "new-branch-push-flag" set to "false"
+    When I run "git-town new-branch-push-flag false"
+    Then the new-branch-push-flag configuration is now false
