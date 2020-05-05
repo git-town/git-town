@@ -8,28 +8,27 @@ Feature: Syncing before creating the pull request
   Background:
     Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME        | FILE CONTENT    |
-      | main    | local and remote | main commit    | conflicting_file | main_content    |
-      | feature | local            | feature commit | conflicting_file | feature content |
-    And I have "open" installed
-    And my repo's remote origin is git@github.com:git-town/git-town.git
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME        | FILE CONTENT    |
+      | main    | local, remote | main commit    | conflicting_file | main_content    |
+      | feature | local         | feature commit | conflicting_file | feature content |
+    And my computer has the "open" tool installed
+    And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town new-pull-request`
+    When I run "git-town new-pull-request"
 
 
   @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune --tags           |
-      |         | git add -A                         |
-      |         | git stash                          |
-      |         | git checkout main                  |
-      | main    | git rebase origin/main             |
-      |         | git checkout feature               |
-      | feature | git merge --no-edit origin/feature |
-      |         | git merge --no-edit main           |
+      | BRANCH  | COMMAND                  |
+      | feature | git fetch --prune --tags |
+      |         | git add -A               |
+      |         | git stash                |
+      |         | git checkout main        |
+      | main    | git rebase origin/main   |
+      |         | git checkout feature     |
+      | feature | git merge --no-edit main |
     And it prints the error:
       """
       To abort, run "git-town abort".
