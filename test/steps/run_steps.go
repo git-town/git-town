@@ -2,6 +2,7 @@ package steps
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -29,9 +30,11 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^"([^"]*)" launches a new pull request with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
+		want = strings.ReplaceAll(want, "?", `\?`)
+		regex := regexp.MustCompile(want)
 		have := fs.activeScenarioState.lastRunResult.OutputSanitized()
-		if !strings.Contains(have, want) {
-			return fmt.Errorf("expected %q called, got %q", want, have)
+		if !regex.MatchString(have) {
+			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
 		return nil
 	})

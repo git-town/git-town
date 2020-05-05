@@ -38,12 +38,12 @@ func (ms *MockingShell) MockCommand(name string) error {
 	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
 	// write custom command
-	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: $*\n", name)
+	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
 	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
@@ -124,7 +124,7 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (res
 func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env != nil {
-		panic("please implement providing custom options")
+		panic("please implement providing custom environment variables")
 	}
 	opts.Env = os.Environ()
 	// set HOME to the given global directory so that Git puts the global configuration there.
