@@ -112,9 +112,10 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (res
 // RunWith runs the given command with the given options in this ShellRunner's directory.
 func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
 	// create an environment with the temp shell overrides directory added to the PATH
-	if opts.Env == nil {
-		opts.Env = os.Environ()
+	if opts.Env != nil {
+		panic("please implement providing custom options")
 	}
+	opts.Env = os.Environ()
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range opts.Env {
 		if strings.HasPrefix(opts.Env[i], "HOME=") {
