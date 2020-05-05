@@ -17,20 +17,15 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir            string   // the directory in which this runner runs
-	homeDir               string   // the directory that contains the global Git configuration
-	tempShellOverridesDir string   // the directory that stores the mock shell command implementations, ignored if empty
-	env                   []string // custom environment variables to use
+	workingDir            string // the directory in which this runner runs
+	homeDir               string // the directory that contains the global Git configuration
+	tempShellOverridesDir string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin            string // custom environment variables to use
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
 func NewMockingShell(workingDir string, homeDir string) *MockingShell {
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir}
-}
-
-// AddEnv adds the given environment variable to subsequent runs of commands.
-func (ms *MockingShell) AddEnv(name, content string) {
-	ms.env = append(ms.env, fmt.Sprintf("%s=%s", name, content))
 }
 
 // AddTempShellOverride temporarily mocks the shell command with the given name
@@ -117,20 +112,20 @@ func (ms *MockingShell) RunStringWith(fullCmd string, opts command.Options) (res
 
 // RunWith runs the given command with the given options in this ShellRunner's directory.
 func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string) (result *command.Result, err error) {
-	env := os.Environ()
 	// create an environment with the temp shell overrides directory added to the PATH
 	if opts.Env != nil {
-		opts.Env = os.Environ()
+		panic("please implement providing custom options")
 	}
+	opts.Env = os.Environ()
 	// set HOME to the given global directory so that Git puts the global configuration there.
 	for i := range opts.Env {
 		if strings.HasPrefix(opts.Env[i], "HOME=") {
 			opts.Env[i] = fmt.Sprintf("HOME=%s", ms.homeDir)
 		}
 	}
-	// add the custom env variables
-	if len(ms.env) > 0 {
-		opts.Env =
+	// add the custom origin
+	if ms.testOrigin != "" {
+		opts.Env = append(opts.Env, fmt.Sprintf("GIT_TOWN_REMOTE=%s", ms.testOrigin))
 	}
 	// enable shell overrides
 	if ms.hasTempShellOverrides() {
@@ -156,6 +151,11 @@ func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string
 		}
 	}
 	return result, err
+}
+
+// SetTestOrigin adds the given environment variable to subsequent runs of commands.
+func (ms *MockingShell) SetTestOrigin(content string) {
+	ms.testOrigin = content
 }
 
 // tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.

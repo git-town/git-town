@@ -77,17 +77,6 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	assert.Equal(t, "list-dir", res.OutputSanitized())
 }
 
-func TestShellRunner_RunStringWith_Env(t *testing.T) {
-	workDir := createTempDir(t)
-	runner := NewMockingShell(workDir, createTempDir(t))
-	toolPath := filepath.Join(workDir, "ls-env")
-	err := ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nenv\n"), 0744)
-	assert.Nil(t, err)
-	res, err := runner.RunStringWith(toolPath, command.Options{Env: []string{"foo=bar"}})
-	assert.Nil(t, err)
-	assert.Contains(t, res.OutputSanitized(), "foo=bar")
-}
-
 func TestShellRunner_RunStringWith_Input(t *testing.T) {
 	dir1 := createTempDir(t)
 	dir2 := filepath.Join(dir1, "subdir")

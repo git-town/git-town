@@ -14,7 +14,7 @@ func OriginSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repo's origin is "([^"]*)"$`, func(origin string) error {
-		fs.activeScenarioState.gitEnvironment.DeveloperShell.
+		fs.activeScenarioState.gitEnvironment.DeveloperShell.SetTestOrigin(origin)
 		return nil
 	})
 }
