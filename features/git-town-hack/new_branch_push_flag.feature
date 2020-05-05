@@ -6,7 +6,7 @@ Feature: git town-hack: push branch to remote upon creation
 
 
   Background:
-    Given the new-branch-push-flag configuration is set to "true"
+    Given the new-branch-push-flag configuration is true
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE       |
       | main   | remote   | remote commit |
