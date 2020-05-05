@@ -27,6 +27,15 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^"([^"]*)" launches a new pull request with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
+		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
+		have := fs.activeScenarioState.lastRunResult.OutputSanitized()
+		if !strings.Contains(have, want) {
+			return fmt.Errorf("expected %q called, got %q", want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^it runs no commands$`, func() error {
 		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
 		if len(commands) > 0 {

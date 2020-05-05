@@ -120,6 +120,11 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 	return nil
 }
 
+// binPath provides the full path of the folder containing the test tools for this GitEnvironment.
+func (env *GitEnvironment) binPath() string {
+	return filepath.Join(env.Dir, "bin")
+}
+
 // Branches provides a tabular list of all branches in this GitEnvironment.
 func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	result.AddRow("REPOSITORY", "BRANCHES")
@@ -237,6 +242,7 @@ func (env GitEnvironment) Remove() error {
 
 // InstallTool simulates that the given tool is installed in this GitEnvironment.
 func (env GitEnvironment) InstallTool(tool string) error {
+	os.MkdirAll(env.binPath(), 0744)
 	err := ioutil.WriteFile(env.toolPath("which"), []byte(env.whichContent(tool)), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot create 'which': %w", err)
@@ -264,5 +270,5 @@ fi`, name, env.toolPath(name))
 
 // binPath provides the full path to the "bin" directory
 func (env GitEnvironment) toolPath(tool string) string {
-	return filepath.Join(env.Dir, "bin", tool)
+	return filepath.Join(env.binPath(), tool)
 }

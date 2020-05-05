@@ -8,10 +8,10 @@ Feature: git-new-pull-request when origin is on Bitbucket
   Scenario Outline: normal origin
     Given my repository has a feature branch named "feature"
     And my repo's origin is "<ORIGIN>"
-    And I have "open" installed
+    And my computer has the "open" tool installed
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
 			https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
       """

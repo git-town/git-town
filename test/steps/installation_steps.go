@@ -8,7 +8,7 @@ import (
 
 // InstallationSteps defines Cucumber step implementations around installation of Git Town.
 func InstallationSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^I have "([^"]*)" installed$`, func(tool string) error {
+	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
 		return fs.activeScenarioState.gitEnvironment.InstallTool(tool)
 	})
 
