@@ -35,11 +35,6 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is false$`, func() error {
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(false, true)
-		return nil
-	})
-
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
