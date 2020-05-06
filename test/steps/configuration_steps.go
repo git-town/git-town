@@ -8,7 +8,7 @@ import (
 )
 
 // ConfigurationSteps defines Cucumber step implementations around configuration.
-// nolint:funlen
+// nolint:funlen,gocognit
 func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is no longer configured for this repository$`, func() error {
 		res, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasGitTownConfigNow()
@@ -35,27 +35,24 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the global new-branch-push-flag configuration is false$`, func() error {
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(false, true)
-		return nil
-	})
-
-	suite.Step(`^the new-branch-push-flag configuration is now false$`, func() error {
-		if fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush() {
-			return fmt.Errorf("expected global new-branch-push-flag to be false, but was true")
+	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
+		want, err := strconv.ParseBool(text)
+		if err != nil {
+			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
+		}
+		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush()
+		if have != want {
+			return fmt.Errorf("expected global new-branch-push-flag to be %t, but was %t", want, have)
 		}
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is now true$`, func() error {
-		if !fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush() {
-			return fmt.Errorf("expected global new-branch-push-flag to be true, but was false")
+	suite.Step(`^the global new-branch-push-flag configuration is (true|false)$`, func(text string) error {
+		b, err := strconv.ParseBool(text)
+		if err != nil {
+			return err
 		}
-		return nil
-	})
-
-	suite.Step(`^the global new-branch-push-flag configuration is true$`, func() error {
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(true, true)
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, true)
 		return nil
 	})
 
@@ -86,13 +83,12 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is set to false$`, func() error {
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(false, false)
-		return nil
-	})
-
-	suite.Step(`^the new-branch-push-flag configuration is set to true$`, func() error {
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(true, false)
+	suite.Step(`^the new-branch-push-flag configuration is set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
+		if err != nil {
+			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(value, false)
 		return nil
 	})
 

@@ -39,7 +39,7 @@ type Configuration struct {
 func Config() *Configuration {
 	if currentDirConfig == nil {
 		shell := command.ShellInCurrentDir{}
-		currentDirConfig = NewConfiguration(&shell, "")
+		currentDirConfig = NewConfiguration(&shell)
 	}
 	return currentDirConfig
 }
@@ -48,7 +48,7 @@ func Config() *Configuration {
 var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(shell command.Shell, dir string) *Configuration {
+func NewConfiguration(shell command.Shell) *Configuration {
 	return &Configuration{
 		shell:             shell,
 		localConfigCache:  loadGitConfig(shell, false),
