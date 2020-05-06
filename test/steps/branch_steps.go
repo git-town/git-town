@@ -13,7 +13,7 @@ import (
 // nolint:funlen
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell, fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir)
+		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell)
 		table := test.DataTable{}
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {
