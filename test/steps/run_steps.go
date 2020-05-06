@@ -22,6 +22,12 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: []string{}})
+		fmt.Println(fs.activeScenarioState.lastRunResult.Output())
+		return nil
+	})
+
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
 		return nil
