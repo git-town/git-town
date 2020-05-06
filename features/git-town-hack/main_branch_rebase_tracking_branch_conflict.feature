@@ -56,7 +56,6 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And my repo still has a rebase in progress
 
 
-  @debug
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
     When I run "git-town continue" and close the editor
@@ -79,9 +78,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run "git rebase --continue" and answer the prompts:
-      | PROMPT | ANSWER |
-      | foo    | ZZ     |
+    When I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH      | COMMAND                     |

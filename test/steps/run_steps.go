@@ -2,6 +2,7 @@ package steps
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -23,8 +24,8 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: []string{}})
-		fmt.Println(fs.activeScenarioState.lastRunResult.Output())
+		env := append(os.Environ(), "GIT_EDITOR=true")
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
 		return nil
 	})
 
