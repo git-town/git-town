@@ -35,11 +35,11 @@ Feature: Syncing before creating the pull request
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -53,9 +53,12 @@ Feature: Syncing before creating the pull request
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error:
+      """
+      You must resolve the conflicts before continuing
+      """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -63,38 +66,45 @@ Feature: Syncing before creating the pull request
 
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
       | feature | git commit --no-edit                                               |
-      |         | git push                                                           |
+      |         | git push -u origin feature                                         |
       |         | git stash pop                                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And I see a new GitHub pull request for the "feature" branch in the "git-town/git-town" repo in my browser
+    And "open" launches a new pull request with this url in my browser:
+      """
+      https://github.com/git-town/git-town/compare/feature?expand=1
+      """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
-      | main    | local and remote | main commit                      | conflicting_file |
-      | feature | local and remote | feature commit                   | conflicting_file |
-      |         |                  | main commit                      | conflicting_file |
-      |         |                  | Merge branch 'main' into feature |                  |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
+      | main    | local, remote | main commit                      | conflicting_file |
+      | feature | local, remote | feature commit                   | conflicting_file |
+      |         |               | main commit                      | conflicting_file |
+      |         |               | Merge branch 'main' into feature |                  |
 
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town continue`
+    When I run "git commit --no-edit"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                                                            |
-      | feature | git push                                                           |
+      | feature | git push -u origin feature                                         |
       |         | git stash pop                                                      |
       | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
-    And I see a new GitHub pull request for the "feature" branch in the "git-town/git-town" repo in my browser
+    And "open" launches a new pull request with this url in my browser:
+      """
+      https://github.com/git-town/git-town/compare/feature?expand=1
+      """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
-      | main    | local and remote | main commit                      | conflicting_file |
-      | feature | local and remote | feature commit                   | conflicting_file |
-      |         |                  | main commit                      | conflicting_file |
-      |         |                  | Merge branch 'main' into feature |                  |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
+      | main    | local, remote | main commit                      | conflicting_file |
+      | feature | local, remote | feature commit                   | conflicting_file |
+      |         |               | main commit                      | conflicting_file |
+      |         |               | Merge branch 'main' into feature |                  |

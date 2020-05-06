@@ -8,7 +8,7 @@ import (
 
 // RepoSteps defines Gherkin step implementations around running things in subshells.
 func RepoSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^my repo has a merge in progress$`, func() error {
+	suite.Step(`^my repo (?:now|still) has a merge in progress$`, func() error {
 		has, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
 		if err != nil {
 			return err
