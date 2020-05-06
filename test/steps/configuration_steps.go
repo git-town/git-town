@@ -50,7 +50,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the global new-branch-push-flag configuration is (true|false)$`, func(text string) error {
 		b, err := strconv.ParseBool(text)
 		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
+			return err
 		}
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, true)
 		return nil
