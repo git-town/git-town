@@ -13,7 +13,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
+      https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
       """
 
     Examples:
@@ -34,7 +34,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://bitbucket.org/git-town/git-town.github.com/pull-request/new?dest=git-town%2Fgit-town.github.com%3A%3Amain&source=git-town%2Fgit-town.github.com%.*%3Afeature
+      https://bitbucket.org/git-town/git-town.github.com/pull-request/new?dest=git-town%2Fgit-town.github.com%3A%3Amain&source=git-town%2Fgit-town.github.com%.*%3Afeature
       """
 
     Examples:
@@ -55,7 +55,7 @@ Feature: git-new-pull-request when origin is on Bitbucket
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
+      https://bitbucket.org/git-town/git-town/pull-request/new?dest=git-town%2Fgit-town%3A%3Amain&source=git-town%2Fgit-town%.*%3Afeature
       """
 
     Examples:

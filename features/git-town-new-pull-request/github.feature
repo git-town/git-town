@@ -16,7 +16,7 @@ Feature: git-new-pull-request when origin is on GitHub
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town/compare/feature?expand=1
+      https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
     Examples:
@@ -36,7 +36,7 @@ Feature: git-new-pull-request when origin is on GitHub
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
+      https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
       """
 
     Examples:
@@ -74,7 +74,7 @@ Feature: git-new-pull-request when origin is on GitHub
     When I run `git-town new-pull-request`
     Then I see a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town/compare/feature?expand=1
+      https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
     Examples:
