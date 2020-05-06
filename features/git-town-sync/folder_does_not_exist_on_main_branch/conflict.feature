@@ -16,7 +16,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     When I run `git-town sync --all` in the "new_folder" folder
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
@@ -51,7 +50,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And my repository is left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
     When I run `git-town continue`
     Then it runs no commands
