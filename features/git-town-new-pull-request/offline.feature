@@ -1,6 +1,6 @@
 Feature: git new-pull-request: offline mode
 
-    When in offline mode
+  When in offline mode
   I want to be told that Git Town is in offline mode
   So that I know I cannot create new pull requests.
 
