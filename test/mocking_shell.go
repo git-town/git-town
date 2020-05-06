@@ -69,6 +69,23 @@ func (ms *MockingShell) MockGit(version string) error {
 	return nil
 }
 
+// MockNoCommandsInstalled pretends that no commands are installed.
+func (ms *MockingShell) MockNoCommandsInstalled() error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
+	}
+	// write custom "which" command
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nexit 1\n")
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom which command: %w", err)
+	}
+	ms.hasMockCommand = true
+	return nil
+}
+
 // MustRun runs the given command and returns the result. Panics on error.
 func (ms *MockingShell) MustRun(cmd string, args ...string) *command.Result {
 	res, err := ms.RunWith(command.Options{Essential: true}, cmd, args...)
