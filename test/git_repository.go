@@ -170,7 +170,7 @@ func (repo *GitRepository) CommitStagedChanges(message bool) error {
 // Configuration returns a cached Configuration instance for this repo.
 func (repo *GitRepository) Configuration(refresh bool) *git.Configuration {
 	if repo.configCache == nil || refresh {
-		repo.configCache = git.NewConfiguration(repo.Shell, repo.Dir)
+		repo.configCache = git.NewConfiguration(repo.Shell)
 	}
 	return repo.configCache
 }
