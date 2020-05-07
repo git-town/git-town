@@ -10,7 +10,7 @@ type RestoreOpenChangesStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *RestoreOpenChangesStep) CreateUndoStep() Step{
+func (step *RestoreOpenChangesStep) CreateUndoStep() Step {
 	return &StashOpenChangesStep{}
 }
 

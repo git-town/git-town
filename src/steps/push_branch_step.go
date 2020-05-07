@@ -19,7 +19,7 @@ type PushBranchStep struct {
 func (step *PushBranchStep) CreateUndoStep() Step {
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}
-	} 
+	}
 	return &SkipCurrentBranchSteps{}
 }
 

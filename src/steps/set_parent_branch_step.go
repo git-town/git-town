@@ -16,7 +16,7 @@ type SetParentBranchStep struct {
 func (step *SetParentBranchStep) CreateUndoStep() Step {
 	if step.previousParent == "" {
 		return &DeleteParentBranchStep{BranchName: step.BranchName}
-	} 
+	}
 	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}
 }
 

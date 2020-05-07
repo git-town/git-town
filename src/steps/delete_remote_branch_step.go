@@ -15,7 +15,7 @@ type DeleteRemoteBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *DeleteRemoteBranchStep) CreateUndoStep() Step{
+func (step *DeleteRemoteBranchStep) CreateUndoStep() Step {
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{BranchName: step.BranchName}
 	}

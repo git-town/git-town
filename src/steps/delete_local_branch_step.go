@@ -16,7 +16,7 @@ type DeleteLocalBranchStep struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *DeleteLocalBranchStep) CreateUndoStep() Step{
+func (step *DeleteLocalBranchStep) CreateUndoStep() Step {
 	return &CreateBranchStep{BranchName: step.BranchName, StartingPoint: step.branchSha}
 }
 
