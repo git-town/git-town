@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +27,9 @@ var aliasCommand = &cobra.Command{
 
 Global aliases allow Git Town commands to be used like native Git commands.
 When aliases are set, you can run "git hack" instead of having to run "git town hack".
+Example: "git append" becomes equivalent to "git town append".
+
+When adding aliases, no existing aliases will be overwritten.
 
 Note that this can conflict with other tools that also define additional Git commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -48,22 +51,15 @@ Note that this can conflict with other tools that also define additional Git com
 }
 
 func addAlias(command string) {
-	script.RunCommandSafe("git", "config", "--global", getAliasKey(command), getAliasValue(command))
-}
-
-func getAliasKey(command string) string {
-	return "alias." + command
-}
-
-func getAliasValue(command string) string {
-	return "town " + command
+	result := git.Config().AddGitAlias(command)
+	script.PrintCommand(result.Command(), result.Args()...)
 }
 
 func removeAlias(command string) {
-	key := getAliasKey(command)
-	previousAlias := git.GetGlobalConfigurationValue(key)
-	if previousAlias == getAliasValue(command) {
-		script.RunCommandSafe("git", "config", "--global", "--unset", key)
+	existingAlias := git.Config().GetGitAlias(command)
+	if existingAlias == "town "+command {
+		result := git.Config().RemoveGitAlias(command)
+		script.PrintCommand(result.Command(), result.Args()...)
 	}
 }
 

@@ -12,17 +12,16 @@ Feature: Syncing before creating the pull request
       | main    | local and remote | main commit    | conflicting_file | main_content    |
       | feature | local            | feature commit | conflicting_file | feature content |
     And I have "open" installed
-    And my repo's remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:git-town/git-town.git
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run `git-town new-pull-request`
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git add -A                         |
       |         | git stash                          |
       |         | git checkout main                  |
@@ -32,8 +31,8 @@ Feature: Syncing before creating the pull request
       |         | git merge --no-edit main           |
     And it prints the error:
       """
-      To abort, run "git-town new-pull-request --abort".
-      To continue after you have resolved the conflicts, run "git-town new-pull-request --continue".
+      To abort, run "git-town abort".
+      To continue after having resolved conflicts, run "git-town continue".
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -41,7 +40,7 @@ Feature: Syncing before creating the pull request
 
 
   Scenario: aborting
-    When I run `git-town new-pull-request --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -54,9 +53,8 @@ Feature: Syncing before creating the pull request
     And my repository is left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
-    When I run `git-town new-pull-request --continue`
+    When I run `git-town continue`
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
@@ -66,14 +64,14 @@ Feature: Syncing before creating the pull request
 
   Scenario: continuing after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town new-pull-request --continue`
+    When I run `git-town continue`
     Then it runs the commands
-      | BRANCH  | COMMAND                                                             |
-      | feature | git commit --no-edit                                                |
-      |         | git push                                                            |
-      |         | git stash pop                                                       |
-      | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
-    And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+      | BRANCH  | COMMAND                                                            |
+      | feature | git commit --no-edit                                               |
+      |         | git push                                                           |
+      |         | git stash pop                                                      |
+      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+    And I see a new GitHub pull request for the "feature" branch in the "git-town/git-town" repo in my browser
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits
@@ -86,13 +84,13 @@ Feature: Syncing before creating the pull request
 
   Scenario: continuing after resolving conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town new-pull-request --continue`
+    When I run `git commit --no-edit; git-town continue`
     Then it runs the commands
-      | BRANCH  | COMMAND                                                             |
-      | feature | git push                                                            |
-      |         | git stash pop                                                       |
-      | <none>  | open https://github.com/Originate/git-town/compare/feature?expand=1 |
-    And I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+      | BRANCH  | COMMAND                                                            |
+      | feature | git push                                                           |
+      |         | git stash pop                                                      |
+      | <none>  | open https://github.com/git-town/git-town/compare/feature?expand=1 |
+    And I see a new GitHub pull request for the "feature" branch in the "git-town/git-town" repo in my browser
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository has the following commits

@@ -1,9 +1,11 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/util"
+	"strconv"
+
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -34,21 +36,17 @@ if and only if "new-branch-push-flag" is true. The default value is false.`,
 
 func printNewBranchPushFlag() {
 	if globalFlag {
-		cfmt.Println(git.GetGlobalNewBranchPushFlag())
+		cfmt.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
 		cfmt.Println(git.GetPrintableNewBranchPushFlag())
 	}
 }
 
 func setNewBranchPushFlag(value bool) {
-	if globalFlag {
-		git.UpdateGlobalShouldNewBranchPush(value)
-	} else {
-		git.UpdateShouldNewBranchPush(value)
-	}
+	git.Config().SetNewBranchPush(value, globalFlag)
 }
 
 func init() {
-	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets you global new branch push flag")
+	newBranchPushFlagCommand.Flags().BoolVar(&globalFlag, "global", false, "Displays or sets your global new branch push flag")
 	RootCmd.AddCommand(newBranchPushFlagCommand)
 }

@@ -21,7 +21,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git add -A                         |
       |         | git stash                          |
       |         | git checkout main                  |

@@ -6,26 +6,27 @@ Feature: git town-hack: starting a new feature from the main branch (with remote
 
 
   Background:
-    Given the following commit exists in my repository
+    Given the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature`
+    When I run "git-town hack new-feature"
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                          |
-      | main        | git fetch --prune                |
-      |             | git add -A                       |
-      |             | git stash                        |
-      |             | git rebase origin/main           |
-      |             | git checkout -b new-feature main |
-      | new-feature | git stash pop                    |
+      | BRANCH      | COMMAND                     |
+      | main        | git fetch --prune --tags    |
+      |             | git add -A                  |
+      |             | git stash                   |
+      |             | git rebase origin/main      |
+      |             | git branch new-feature main |
+      |             | git checkout new-feature    |
+      | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE     |
-      | main        | local and remote | main_commit |
-      | new-feature | local            | main_commit |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE     |
+      | main        | local, remote | main_commit |
+      | new-feature | local         | main_commit |

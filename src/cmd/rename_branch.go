@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -41,26 +42,20 @@ When run on a perennial branch
 - Requires the use of the "-f" option
 - Reconfigures git town locally for the perennial branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "rename-branch",
-			IsAbort:              false,
-			IsContinue:           false,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getRenameBranchConfig(args)
-				return getRenameBranchStepList(config)
-			},
-		})
-	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
+		config, err := getRenameBranchConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-		return cobra.RangeArgs(1, 2)(cmd, args)
+		stepList := getRenameBranchStepList(config)
+		runState := steps.NewRunState("rename-branch", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
+	Args: cobra.RangeArgs(1, 2),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -69,7 +64,7 @@ When run on a perennial branch
 	},
 }
 
-func getRenameBranchConfig(args []string) (result renameBranchConfig) {
+func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
 	if len(args) == 1 {
 		result.OldBranchName = git.GetCurrentBranchName()
 		result.NewBranchName = args[0]
@@ -84,8 +79,11 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig) {
 	if result.OldBranchName == result.NewBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
-	if !git.IsOffline() {
-		script.Fetch()
+	if !git.Config().IsOffline() {
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	git.EnsureHasBranch(result.OldBranchName)
 	git.EnsureBranchInSync(result.OldBranchName, "Please sync the branches before renaming.")
@@ -98,17 +96,17 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 	if git.GetCurrentBranchName() == config.OldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.NewBranchName})
 	}
-	if git.IsPerennialBranch(config.OldBranchName) {
+	if git.Config().IsPerennialBranch(config.OldBranchName) {
 		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
 		result.Append(&steps.AddToPerennialBranches{BranchName: config.NewBranchName})
 	} else {
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.GetParentBranch(config.OldBranchName)})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.Config().GetParentBranch(config.OldBranchName)})
 	}
-	for _, child := range git.GetChildBranches(config.OldBranchName) {
+	for _, child := range git.Config().GetChildBranches(config.OldBranchName) {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
 	}
-	if git.HasTrackingBranch(config.OldBranchName) && !git.IsOffline() {
+	if git.HasTrackingBranch(config.OldBranchName) && !git.Config().IsOffline() {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
 	}
@@ -118,7 +116,6 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 }
 
 func init() {
-	renameBranchCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	renameBranchCommand.Flags().BoolVar(&forceFlag, "force", false, "Force rename of perennial branch")
 	RootCmd.AddCommand(renameBranchCommand)
 }

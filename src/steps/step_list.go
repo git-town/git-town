@@ -1,10 +1,11 @@
 package steps
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
 
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 )
 
 // StepList is a list of steps
@@ -76,11 +77,39 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 	}
 
 	initialDirectory, err := os.Getwd()
-	exit.If(err)
+	if err != nil {
+		fmt.Printf("cannot get current working directory: %v", err)
+		os.Exit(1)
+	}
 	gitRootDirectory := git.GetRootDirectory()
 
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
+}
+
+// MarshalJSON marshals the step list to JSON
+func (stepList *StepList) MarshalJSON() (b []byte, e error) {
+	jsonSteps := make([]*JSONStep, len(stepList.List))
+	for i, step := range stepList.List {
+		jsonSteps[i] = &JSONStep{Step: step}
+	}
+	return json.Marshal(jsonSteps)
+}
+
+// UnmarshalJSON unmarshals the step list from JSON
+func (stepList *StepList) UnmarshalJSON(b []byte) error {
+	var jsonSteps []JSONStep
+	err := json.Unmarshal(b, &jsonSteps)
+	if err != nil {
+		return err
+	}
+	if len(jsonSteps) > 0 {
+		stepList.List = make([]Step, len(jsonSteps))
+		for i, jsonStep := range jsonSteps {
+			stepList.List[i] = jsonStep.Step
+		}
+	}
+	return nil
 }

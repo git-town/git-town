@@ -16,11 +16,10 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     When I run `git-town sync --all` in the "new_folder" folder
 
 
-  @finishes-with-non-empty-stash
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
-      | current-feature | git fetch --prune                          |
+      | current-feature | git fetch --prune --tags                   |
       | <none>          | cd <%= git_root_folder %>                  |
       | current-feature | git add -A                                 |
       |                 | git stash                                  |
@@ -37,7 +36,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
 
   Scenario: aborting
-    When I run `git-town sync --abort`
+    When I run `git-town abort`
     Then it runs the commands
       | BRANCH          | COMMAND                           |
       | current-feature | git merge --abort                 |
@@ -51,9 +50,8 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And my repository is left with my original commits
 
 
-  @finishes-with-non-empty-stash
   Scenario: continuing without resolving the conflicts
-    When I run `git-town sync --continue`
+    When I run `git-town continue`
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "current-feature" branch
@@ -63,7 +61,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town sync --continue`
+    When I run `git-town continue`
     Then it runs the commands
       | BRANCH          | COMMAND                                  |
       | current-feature | git commit --no-edit                     |

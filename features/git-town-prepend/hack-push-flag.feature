@@ -17,7 +17,7 @@ Feature: push branch to remote upon creation
     When I run `git-town prepend new-parent`
     Then it runs the commands
       | BRANCH           | COMMAND                       |
-      | existing-feature | git fetch --prune             |
+      | existing-feature | git fetch --prune --tags      |
       |                  | git add -A                    |
       |                  | git stash                     |
       |                  | git checkout main             |
@@ -39,7 +39,7 @@ Feature: push branch to remote upon creation
 
   Scenario: Undo
     Given I run `git-town prepend new-parent`
-    When I run `git-town prepend --undo`
+    When I run `git-town undo`
     Then it runs the commands
         | BRANCH           | COMMAND                       |
         | new-parent       | git add -A                    |

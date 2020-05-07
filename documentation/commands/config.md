@@ -1,19 +1,25 @@
-#### NAME
+<h1 textrun="command-heading">Config command</h1>
 
-config - display or resets the Git Town configuration
+<blockquote textrun="command-summary">
+Displays your Git Town configuration
+</blockquote>
 
-#### SYNOPSIS
+#### Usage
 
-```
-git town config [--reset | --setup]
-```
+<pre textrun="command-usage">
+git town config
+git town config [command]
+</pre>
 
-#### OPTIONS
+Available commands:
 
-```
---reset
-    Remove all Git Town configuration from the current repository
-
---setup
-    Start the Git Town configuration wizard
-```
+<table textrun="command-subcommands">
+  <tr>
+    <th>reset</th>
+    <td>Resets your Git Town configuration</td>
+  </tr>
+  <tr>
+    <th>setup</th>
+    <td>Prompts to setup your Git Town configuration</td>
+  </tr>
+</table>

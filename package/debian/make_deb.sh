@@ -6,7 +6,7 @@ TIMESTAMP=$(date "+%a, %d %b %Y %H:%M:%S %z")
 cat << EOF > package/debian/debian/changelog
 gittown ($VER_NUM) RELEASED; urgency=low
 
-  * See https://github.com/Originate/git-town/releases for a complete changelog
+  * See https://github.com/git-town/git-town/releases for a complete changelog
 
  -- allonsy <alec.snyder@originate.com> $TIMESTAMP
 EOF

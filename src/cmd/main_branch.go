@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ func printMainBranch() {
 
 func setMainBranch(branchName string) {
 	git.EnsureHasBranch(branchName)
-	git.SetMainBranch(branchName)
+	git.Config().SetMainBranch(branchName)
 }
 
 func init() {

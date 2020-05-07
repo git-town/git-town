@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -23,30 +23,25 @@ var killCommand = &cobra.Command{
 	Short: "Removes an obsolete feature branch",
 	Long: `Removes an obsolete feature branch
 
-Deletes the current branch, or "<branch_name>" if given,
+Deletes the current branch, or the given one if a branch name is provided,
 from the local and remote repositories.
 
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "kill",
-			IsAbort:              false,
-			IsContinue:           false,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				return getKillStepList(getKillConfig(args))
-			},
-		})
-	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
+		config, err := getKillConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-		return cobra.MaximumNArgs(1)(cmd, args)
+		stepList := getKillStepList(config)
+		runState := steps.NewRunState("kill", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -55,7 +50,7 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func getKillConfig(args []string) (result killConfig) {
+func getKillConfig(args []string) (result killConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
 
 	if len(args) == 0 {
@@ -64,15 +59,18 @@ func getKillConfig(args []string) (result killConfig) {
 		result.TargetBranch = args[0]
 	}
 
-	git.EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
+	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
 
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
 
-	if git.HasRemote("origin") && !git.IsOffline() {
-		script.Fetch()
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 
 	if result.InitialBranch != result.TargetBranch {
@@ -83,9 +81,10 @@ func getKillConfig(args []string) (result killConfig) {
 }
 
 func getKillStepList(config killConfig) (result steps.StepList) {
-	if config.IsTargetBranchLocal {
-		targetBranchParent := git.GetParentBranch(config.TargetBranch)
-		if git.HasTrackingBranch(config.TargetBranch) && !git.IsOffline() {
+	switch {
+	case config.IsTargetBranchLocal:
+		targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
+		if git.HasTrackingBranch(config.TargetBranch) && !git.Config().IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
@@ -95,13 +94,13 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range git.GetChildBranches(config.TargetBranch) {
+		for _, child := range git.Config().GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-	} else if !git.IsOffline() {
+	case !git.Config().IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
-	} else {
+	default:
 		fmt.Printf("Cannot delete remote branch '%s' in offline mode", config.TargetBranch)
 		os.Exit(1)
 	}
@@ -113,6 +112,5 @@ func getKillStepList(config killConfig) (result steps.StepList) {
 }
 
 func init() {
-	killCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(killCommand)
 }

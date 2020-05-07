@@ -5,9 +5,8 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/dryrun"
 )
 
 // The current branch in cached in order to minimize the number of git commands run
@@ -22,7 +21,7 @@ func GetCurrentBranchName() string {
 		if IsRebaseInProgress() {
 			currentBranchCache = getCurrentBranchNameDuringRebase()
 		} else {
-			currentBranchCache = command.New("git", "rev-parse", "--abbrev-ref", "HEAD").Output()
+			currentBranchCache = command.MustRun("git", "rev-parse", "--abbrev-ref", "HEAD").OutputSanitized()
 		}
 	}
 	return currentBranchCache
@@ -43,9 +42,14 @@ func UpdateCurrentBranchCache(branchName string) {
 // Helpers
 
 func getCurrentBranchNameDuringRebase() string {
-	filename := fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory())
-	rawContent, err := ioutil.ReadFile(filename)
-	exit.If(err)
+	rawContent, err := ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-apply/head-name", GetRootDirectory()))
+	if err != nil {
+		// Git 2.26 introduces a new rebase backend, see https://github.com/git/git/blob/master/Documentation/RelNotes/2.26.0.txt
+		rawContent, err = ioutil.ReadFile(fmt.Sprintf("%s/.git/rebase-merge/head-name", GetRootDirectory()))
+		if err != nil {
+			panic(err)
+		}
+	}
 	content := strings.TrimSpace(string(rawContent))
 	return strings.Replace(content, "refs/heads/", "", -1)
 }

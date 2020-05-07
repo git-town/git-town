@@ -1,0 +1,118 @@
+# github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
+## explicit
+github.com/acarl005/stripansi
+# github.com/cucumber/gherkin-go/v11 v11.0.0
+github.com/cucumber/gherkin-go/v11
+# github.com/cucumber/godog v0.9.0
+## explicit
+github.com/cucumber/godog
+github.com/cucumber/godog/colors
+# github.com/cucumber/messages-go/v10 v10.0.3
+## explicit
+github.com/cucumber/messages-go/v10
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
+# github.com/dustin/go-humanize v1.0.0
+## explicit
+github.com/dustin/go-humanize
+# github.com/fatih/color v1.9.0
+## explicit
+github.com/fatih/color
+# github.com/gofrs/uuid v3.2.0+incompatible
+github.com/gofrs/uuid
+# github.com/gogo/protobuf v1.3.1
+github.com/gogo/protobuf/io
+github.com/gogo/protobuf/proto
+# github.com/golang/protobuf v1.4.0
+## explicit
+github.com/golang/protobuf/proto
+# github.com/google/go-github v17.0.0+incompatible
+## explicit
+github.com/google/go-github/github
+# github.com/google/go-querystring v1.0.0
+## explicit
+github.com/google/go-querystring/query
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
+## explicit
+github.com/kballard/go-shellquote
+# github.com/mattn/go-colorable v0.1.6
+## explicit
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.12
+github.com/mattn/go-isatty
+# github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
+github.com/mgutz/ansi
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/sergi/go-diff v1.0.0
+## explicit
+github.com/sergi/go-diff/diffmatchpatch
+# github.com/spf13/cobra v1.0.0
+## explicit
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.5
+## explicit
+github.com/spf13/pflag
+# github.com/stretchr/testify v1.5.1
+## explicit
+github.com/stretchr/testify/assert
+# golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0
+## explicit
+golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
+# golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+## explicit
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
+# golang.org/x/sys v0.0.0-20200428200454-593003d681fa
+## explicit
+golang.org/x/sys/unix
+# google.golang.org/appengine v1.6.6
+## explicit
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch
+# google.golang.org/protobuf v1.21.0
+google.golang.org/protobuf/encoding/prototext
+google.golang.org/protobuf/encoding/protowire
+google.golang.org/protobuf/internal/descfmt
+google.golang.org/protobuf/internal/descopts
+google.golang.org/protobuf/internal/detrand
+google.golang.org/protobuf/internal/encoding/defval
+google.golang.org/protobuf/internal/encoding/messageset
+google.golang.org/protobuf/internal/encoding/tag
+google.golang.org/protobuf/internal/encoding/text
+google.golang.org/protobuf/internal/errors
+google.golang.org/protobuf/internal/fieldnum
+google.golang.org/protobuf/internal/fieldsort
+google.golang.org/protobuf/internal/filedesc
+google.golang.org/protobuf/internal/filetype
+google.golang.org/protobuf/internal/flags
+google.golang.org/protobuf/internal/genname
+google.golang.org/protobuf/internal/impl
+google.golang.org/protobuf/internal/mapsort
+google.golang.org/protobuf/internal/pragma
+google.golang.org/protobuf/internal/set
+google.golang.org/protobuf/internal/strs
+google.golang.org/protobuf/internal/version
+google.golang.org/protobuf/proto
+google.golang.org/protobuf/reflect/protoreflect
+google.golang.org/protobuf/reflect/protoregistry
+google.golang.org/protobuf/runtime/protoiface
+google.golang.org/protobuf/runtime/protoimpl
+# gopkg.in/AlecAivazis/survey.v1 v1.8.8
+## explicit
+gopkg.in/AlecAivazis/survey.v1
+gopkg.in/AlecAivazis/survey.v1/core
+gopkg.in/AlecAivazis/survey.v1/terminal
+# gopkg.in/jarcoal/httpmock.v1 v1.0.0-20180304133419-61bcb58a0752
+## explicit
+gopkg.in/jarcoal/httpmock.v1
+# gopkg.in/yaml.v2 v2.2.8
+gopkg.in/yaml.v2

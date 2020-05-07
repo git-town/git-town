@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import "github.com/git-town/git-town/src/git"
 
 // RemoveFromPerennialBranches removes the branch with the given name as a perennial branch
 type RemoveFromPerennialBranches struct {
@@ -15,6 +15,6 @@ func (step *RemoveFromPerennialBranches) AddUndoSteps(stepList *StepList) {
 
 // Run executes this step.
 func (step *RemoveFromPerennialBranches) Run() error {
-	git.RemoveFromPerennialBranches(step.BranchName)
+	git.Config().RemoveFromPerennialBranches(step.BranchName)
 	return nil
 }

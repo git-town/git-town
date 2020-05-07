@@ -16,8 +16,8 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND           |
-      | main   | git fetch --prune |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
     And it prints the error "There is no branch named 'non-existing-feature'"
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file

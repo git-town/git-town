@@ -1,31 +1,22 @@
-#### NAME
+<h1 textrun="command-heading">Hack command</h1>
 
-hack - create a new feature branch off the main development branch
+<blockquote textrun="command-summary">
+Creates a new feature branch off the main development branch
+</blockquote>
 
-#### SYNOPSIS
+<a textrun="command-description">
 
-```
-git town hack <branch_name>
-git town hack (--abort | --continue)
-```
+Syncs the main branch, forks a new feature branch with the given name off the
+main branch, pushes the new feature branch to the remote repository (if and only
+if [new-branch-push-flag](./new-branch-push-flag.md) is true), and brings over
+all uncommitted changes to the new feature branch.
 
-#### DESCRIPTION
+See [sync](./sync.md) for information regarding remote upstream.
 
-Syncs the main branch,
-forks a new feature branch with the given name off it,
-pushes the new feature branch to the remote repository
-if and only if [new-branch-push-flag](./new-branch-push-flag.md) is true,
-and brings over all uncommitted changes to the new feature branch.
+</a>
 
-#### OPTIONS
+#### Usage
 
-```
-<branch_name>
-    The name of the branch to create.
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
-```
+<pre textrun="command-usage">
+git town hack &lt;branch&gt;
+</pre>

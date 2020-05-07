@@ -1,9 +1,11 @@
-#### NAME
+<h1 textrun="command-heading">Set-parent-branch command</h1>
 
-set-parent-branch - prompts to set the parent branch for the current branch
+<blockquote textrun="command-summary">
+Prompts to set the parent branch for the current branch
+</blockquote>
 
-#### SYNOPSIS
+#### Usage
 
-```
+<pre textrun="command-usage">
 git town set-parent-branch
-```
+</pre>

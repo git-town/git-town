@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
 	"golang.org/x/oauth2"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 )
 
@@ -43,10 +44,10 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
-	if parentBranch != git.GetMainBranch() {
+	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), toCompare)
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
 }
 
 func (d *githubCodeHostingDriver) GetRepositoryURL() string {
@@ -63,14 +64,14 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 }
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
-	return "Github"
+	return "GitHub"
 }
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.GetURLHostname(originURL)
+	d.hostname = git.Config().GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(git.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]
@@ -81,8 +82,8 @@ func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *githubCodeHostingDriver) GetAPITokenKey() string {
-	return "git-town.github-token"
+func (d *githubCodeHostingDriver) GetAPIToken() string {
+	return git.Config().GetGitHubToken()
 }
 
 func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
@@ -115,14 +116,14 @@ func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestO
 		return -1, err
 	}
 	if len(pullRequests) == 0 {
-		return -1, errors.New("No pull request found")
+		return -1, errors.New("no pull request found")
 	}
 	if len(pullRequests) > 1 {
 		pullRequestNumbersAsStrings := make([]string, len(pullRequests))
 		for i, pullRequest := range pullRequests {
 			pullRequestNumbersAsStrings[i] = strconv.Itoa(*pullRequest.Number)
 		}
-		return -1, fmt.Errorf("Multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
+		return -1, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
 	}
 	return *pullRequests[0].Number, nil
 }

@@ -1,11 +1,11 @@
 {
-  "globals" : {
-    "site_name"   : "Git Town",
-    "site_description" : "Git Town.",
-    "site_keywords"    : "git, gittown, town",
-    "facebook_meta"    : {
-      "type"        : "",
-      "image"       : ""
+  "globals": {
+    "site_name": "Git Town",
+    "site_description": "Git Town.",
+    "site_keywords": "git, gittown, town",
+    "facebook_meta": {
+      "type": "",
+      "image": ""
     },
     "page_titles": {
       "index": "Welcome to GitTown",

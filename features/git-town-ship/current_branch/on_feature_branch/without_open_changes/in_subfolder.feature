@@ -17,7 +17,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       | <none>  | cd <%= git_root_folder %>          |
       | feature | git checkout main                  |
       | main    | git rebase origin/main             |
@@ -39,7 +39,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                        |
       | <none>  | cd <%= git_root_folder %>                      |

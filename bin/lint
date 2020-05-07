@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-# Runs all the available linters
-
-bin/lint_go
-bin/lint_ruby
-bin/lint_markdown

@@ -26,9 +26,9 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
   Scenario: result
     Then it runs the commands
-      | BRANCH | COMMAND               |
-      | main   | git fetch --prune     |
-      |        | git branch -D feature |
+      | BRANCH | COMMAND                  |
+      | main   | git fetch --prune --tags |
+      |        | git branch -D feature    |
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
@@ -41,7 +41,7 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town prune-branches --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH | COMMAND                                        |
       | main   | git branch feature <%= sha 'feature commit' %> |

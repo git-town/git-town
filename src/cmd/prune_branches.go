@@ -1,10 +1,13 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"fmt"
+	"os"
+
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -16,49 +19,53 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "prune-branches",
-			IsAbort:              false,
-			IsContinue:           false,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				checkPruneBranchesPreconditions()
-				return getPruneBranchesStepList()
-			},
-		})
+		err := checkPruneBranchesPreconditions()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		stepList := getPruneBranchesStepList()
+		runState := steps.NewRunState("prune-branches", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
 			validateIsConfigured,
-			git.ValidateIsOnline,
+			git.Config().ValidateIsOnline,
 		)
 	},
 }
 
-func checkPruneBranchesPreconditions() {
+func checkPruneBranchesPreconditions() error {
 	if git.HasRemote("origin") {
-		script.Fetch()
+		return script.Fetch()
 	}
+	return nil
 }
 
 func getPruneBranchesStepList() (result steps.StepList) {
 	initialBranchName := git.GetCurrentBranchName()
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
-			result.Append(&steps.CheckoutBranchStep{BranchName: git.GetMainBranch()})
+			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config().GetMainBranch()})
 		}
 
-		parent := git.GetParentBranch(branchName)
+		parent := git.Config().GetParentBranch(branchName)
 		if parent != "" {
-			for _, child := range git.GetChildBranches(branchName) {
+			for _, child := range git.Config().GetChildBranches(branchName) {
 				result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: parent})
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
+		}
+
+		if git.Config().IsPerennialBranch(branchName) {
+			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
 		}
 
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
@@ -68,6 +75,5 @@ func getPruneBranchesStepList() (result steps.StepList) {
 }
 
 func init() {
-	pruneBranchesCommand.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(pruneBranchesCommand)
 }

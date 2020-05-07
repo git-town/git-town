@@ -1,32 +1,23 @@
-#### NAME
+<h1 textrun="command-heading">Append command</h1>
 
-append - create a new feature branch as a direct child of the current branch
+<blockquote textrun="command-summary">
+Creates a new feature branch as a direct child of the current branch.
+</blockquote>
 
-#### SYNOPSIS
+<a textrun="command-description">
 
-```
-git town append <branch_name>
-git town append (--abort | --continue)
-```
+Syncs the current branch, forks a new feature branch with the given name off the
+current branch, makes the new branch a child of the current branch, pushes the
+new feature branch to the remote repository (if and only if
+[new-branch-push-flag](./new-branch-push-flag.md) is true), and brings over all
+uncommitted changes to the new feature branch.
 
-#### DESCRIPTION
+See [sync](./sync.md) for information regarding remote upstream.
 
-Syncs the current branch,
-forks a new feature branch with the given name off the current branch,
-makes the new branch a child of the current branch,
-pushes the new feature branch to the remote repository
-if and only if [new-branch-push-flag](./new-branch-push-flag.md) is true,
-and brings over all uncommitted changes to the new feature branch.
+</a>
 
-#### OPTIONS
+#### Usage
 
-```
-<branch_name>
-    The name of the branch to create.
-
---abort
-    Cancel the operation and reset the workspace to a consistent state.
-
---continue
-    Continue the operation after resolving conflicts.
-```
+<pre textrun="command-usage">
+git town append &lt;branch&gt;
+</pre>

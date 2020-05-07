@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import "github.com/git-town/git-town/src/git"
 
 // AddToPerennialBranches adds the branch with the given name as a perennial branch
 type AddToPerennialBranches struct {
@@ -15,6 +15,6 @@ func (step *AddToPerennialBranches) AddUndoSteps(stepList *StepList) {
 
 // Run executes this step.
 func (step *AddToPerennialBranches) Run() error {
-	git.AddToPerennialBranches(step.BranchName)
+	git.Config().AddToPerennialBranches(step.BranchName)
 	return nil
 }

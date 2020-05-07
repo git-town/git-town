@@ -1,16 +1,11 @@
-#### NAME
+<h1 textrun="command-heading">Main-branch command</h1>
 
-main-branch - display or update the Git Town configuration for the main development branch
+<blockquote textrun="command-summary">
+Displays or sets your main development branch
+</blockquote>
 
-#### SYNOPSIS
+#### Usage
 
-```
-git town main-branch [<branch_name>]
-```
-
-#### OPTIONS
-
-```
-<branch_name>
-    The name of the branch to assign as the main development branch
-```
+<pre textrun="command-usage">
+git town main-branch [&lt;branch&gt;]
+</pre>

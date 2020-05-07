@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ for the main branch and perennial branches.`,
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 && args[0] != "rebase" && args[0] != "merge" {
-			return fmt.Errorf("Invalid value: '%s'", args[0])
+			return fmt.Errorf("invalid value: %q", args[0])
 		}
 		return cobra.MaximumNArgs(1)(cmd, args)
 	},
@@ -35,11 +35,11 @@ for the main branch and perennial branches.`,
 }
 
 func printPullBranchStrategy() {
-	cfmt.Println(git.GetPullBranchStrategy())
+	cfmt.Println(git.Config().GetPullBranchStrategy())
 }
 
 func setPullBranchStrategy(value string) {
-	git.SetPullBranchStrategy(value)
+	git.Config().SetPullBranchStrategy(value)
 }
 
 func init() {

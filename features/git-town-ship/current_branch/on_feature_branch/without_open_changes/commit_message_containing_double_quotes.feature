@@ -17,7 +17,7 @@ Feature: git town-ship: shipping the current feature branch
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                                                |
-      | feature | git fetch --prune                                      |
+      | feature | git fetch --prune --tags                               |
       |         | git checkout main                                      |
       | main    | git rebase origin/main                                 |
       |         | git checkout feature                                   |
@@ -38,7 +38,7 @@ Feature: git town-ship: shipping the current feature branch
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH  | COMMAND                                                    |
       | main    | git branch feature <%= sha 'feature commit' %>             |

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/cfmt"
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/git"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -25,7 +24,7 @@ func GetSquashCommitAuthor(branchName string) string {
 
 // Helpers
 
-var squashCommitAuthorHeaderTemplate = "Multiple people authored the '%s' branch."
+var squashCommitAuthorHeaderTemplate = "Multiple people authored the %q branch."
 
 func askForAuthor(authors []string) string {
 	result := ""
@@ -34,14 +33,15 @@ func askForAuthor(authors []string) string {
 		Options: authors,
 	}
 	err := survey.AskOne(prompt, &result, nil)
-	exit.If(err)
+	if err != nil {
+		panic(err)
+	}
 	return result
 }
 
 func getBranchAuthors(branchName string) (result []string) {
 	// Returns lines of "<number of commits>\t<name and email>"
-	output := command.New("git", "shortlog", "-s", "-n", "-e", git.GetMainBranch()+".."+branchName).Output()
-	for _, line := range strings.Split(output, "\n") {
+	for _, line := range command.MustRun("git", "shortlog", "-s", "-n", "-e", git.Config().GetMainBranch()+".."+branchName).OutputLines() {
 		line = strings.TrimSpace(line)
 		parts := strings.Split(line, "\t")
 		result = append(result, parts[1])

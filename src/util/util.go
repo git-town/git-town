@@ -6,9 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/cfmt"
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/cfmt"
 )
 
 // DoesStringArrayContain returns whether the given string slice
@@ -33,7 +32,10 @@ var inputReader = bufio.NewReader(os.Stdin)
 // GetUserInput reads input from the user and returns it.
 func GetUserInput() string {
 	text, err := inputReader.ReadString('\n')
-	exit.IfWrap(err, "Error getting user input")
+	if err != nil {
+		fmt.Printf("Error getting user input: %v", err)
+		os.Exit(1)
+	}
 	return strings.TrimSpace(text)
 }
 
@@ -49,9 +51,18 @@ func Indent(message string, level int) string {
 func Pluralize(count, word string) string {
 	result := count + " " + word
 	if count != "1" {
-		result = result + "s"
+		result += "s"
 	}
 	return result
+}
+
+// PrintlnColor prints using the given color function.
+// If that doesn't work, it falls back to printing without color.
+func PrintlnColor(color *color.Color, messages ...interface{}) {
+	_, err := color.Println(messages...)
+	if err != nil {
+		fmt.Println(messages...)
+	}
 }
 
 // PrintError prints the given error message to the console.
@@ -59,11 +70,9 @@ func PrintError(messages ...string) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
-	_, err := errHeaderFmt.Println("  Error")
-	exit.If(err)
+	PrintlnColor(errHeaderFmt, "  Error")
 	for _, message := range messages {
-		_, err = errMessageFmt.Println("  " + message)
-		exit.If(err)
+		PrintlnColor(errMessageFmt, "  "+message)
 	}
 	fmt.Println()
 }
@@ -73,8 +82,7 @@ func PrintError(messages ...string) {
 // followed by an empty line
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
-	_, err := labelFmt.Println(label + ":")
-	exit.If(err)
+	PrintlnColor(labelFmt, label+":")
 	cfmt.Println(Indent(value, 1))
 	fmt.Println()
 }

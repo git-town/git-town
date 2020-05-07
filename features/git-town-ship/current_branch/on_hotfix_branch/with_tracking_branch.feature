@@ -18,7 +18,7 @@ Feature: git town-ship: shipping hotfixes
   Scenario: result
     Then it runs the commands
       | BRANCH     | COMMAND                           |
-      | hotfix     | git fetch --prune                 |
+      | hotfix     | git fetch --prune --tags          |
       |            | git checkout production           |
       | production | git rebase origin/production      |
       |            | git checkout hotfix               |

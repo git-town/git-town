@@ -19,7 +19,7 @@ Feature: git town-ship: shipping a parent branch
   Scenario: result
     Then it runs the commands
       | BRANCH         | COMMAND                                   |
-      | parent-feature | git fetch --prune                         |
+      | parent-feature | git fetch --prune --tags                  |
       |                | git checkout main                         |
       | main           | git rebase origin/main                    |
       |                | git checkout parent-feature               |
@@ -42,7 +42,7 @@ Feature: git town-ship: shipping a parent branch
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it runs the commands
       | BRANCH         | COMMAND                                                      |
       | main           | git branch parent-feature <%= sha 'parent feature commit' %> |

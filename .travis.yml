@@ -1,20 +1,21 @@
 sudo: required
-dist: trusty
+dist: bionic
 
 language: go
-go: 1.9
+go: 1.14
 
 install:
-  - rvm install 2.4.1
-  - bin/setup
+  - rvm install 2.7.1
+  - bundle install
 
 script:
-  - bin/spec
+  - make lint-rb
+  - make cuke-rb
 
 notifications:
   email: false
 
-before_deploy: bin/build-release
+before_deploy: make build-release
 deploy:
   api_key:
     secure: lxzr1xWsRnWueR8JCUGV2+9hOxbb6gL9AVR64HIJ1foIPz8eGUXtQUP1mG/NPOtbDq0Dx+dTVV6W5RxiXzkzBvDkK6ygtNmax9ZkAbQv/zNFaJiwtkXJrzwCBSQfeSH/Go7NwpnsJw+ucZ7oj68G4g99PsX2XNbTTJHzfVWmteg=

@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import "github.com/git-town/git-town/src/git"
 
 // SetParentBranchStep registers the branch with the given name as a parent
 // of the branch with the other given name.
@@ -23,7 +23,7 @@ func (step *SetParentBranchStep) AddUndoSteps(stepList *StepList) {
 
 // Run executes this step.
 func (step *SetParentBranchStep) Run() error {
-	step.previousParent = git.GetParentBranch(step.BranchName)
-	git.SetParentBranch(step.BranchName, step.ParentBranchName)
+	step.previousParent = git.Config().GetParentBranch(step.BranchName)
+	git.Config().SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil
 }

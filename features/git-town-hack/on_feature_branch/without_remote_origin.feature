@@ -14,19 +14,20 @@ Feature: git town-hack: starting a new feature from a feature branch (without re
       | existing-feature | local    | existing feature commit |
     And I am on the "existing-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town hack new-feature`
+    When I run "git-town hack new-feature"
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH           | COMMAND                          |
-      | existing-feature | git add -A                       |
-      |                  | git stash                        |
-      |                  | git checkout -b new-feature main |
-      | new-feature      | git stash pop                    |
+      | BRANCH           | COMMAND                     |
+      | existing-feature | git add -A                  |
+      |                  | git stash                   |
+      |                  | git branch new-feature main |
+      |                  | git checkout new-feature    |
+      | new-feature      | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH           | LOCATION | MESSAGE                 |
       | main             | local    | main commit             |
       | existing-feature | local    | existing feature commit |

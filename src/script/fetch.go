@@ -1,10 +1,13 @@
 package script
 
-import "github.com/Originate/exit"
+import "fmt"
 
-// Fetch gets the local Git repo in sync with origin,
+// Fetch gets the local Git repo in sync with origin
 // without modifying the workspace.
-func Fetch() {
-	err := RunCommand("git", "fetch", "--prune")
-	exit.If(err)
+func Fetch() error {
+	err := RunCommand("git", "fetch", "--prune", "--tags")
+	if err != nil {
+		return fmt.Errorf("cannot fetch updates from origin: %w", err)
+	}
+	return nil
 }

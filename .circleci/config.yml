@@ -1,0 +1,46 @@
+version: 2
+
+jobs:
+  clone:
+    docker:
+      - image: circleci/golang:1.14.2
+    steps:
+      - checkout
+      # build the binary for the Markdown tests
+      # and store it in the workspace
+      - run: make build
+      - run: cp /go/bin/git-town /home/circleci/project/
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+  go:
+    docker:
+      - image: circleci/golang:1.14.2
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: make setup-go
+      - run: make test-go
+  markdown:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      # move the binary into the PATH
+      - run: mkdir /home/circleci/bin
+      - run: mv ./git-town /home/circleci/bin/
+      - run: cd tools/text-runner && yarn
+      - run: make test-md
+workflows:
+  version: 2
+  all_tests:
+    jobs:
+      - clone
+      - go:
+          requires:
+            - clone
+      - markdown:
+          requires:
+            - clone

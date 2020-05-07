@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import "github.com/git-town/git-town/src/git"
 
 // DeleteParentBranchStep removes the parent branch entry in the Git Town configuration.
 type DeleteParentBranchStep struct {
@@ -21,6 +21,6 @@ func (step *DeleteParentBranchStep) AddUndoSteps(stepList *StepList) {
 // Run executes this step.
 func (step *DeleteParentBranchStep) Run() error {
 	step.previousParent = git.GetParentBranch(step.BranchName)
-	git.DeleteParentBranch(step.BranchName)
+	git.Config().DeleteParentBranch(step.BranchName)
 	return nil
 }

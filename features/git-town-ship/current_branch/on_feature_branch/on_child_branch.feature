@@ -20,8 +20,8 @@ Feature: git town-ship: shipping a child branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND           |
-      | feature-3 | git fetch --prune |
+      | BRANCH    | COMMAND                  |
+      | feature-3 | git fetch --prune --tags |
     And it prints the error "Shipping this branch would ship feature-1, feature-2 as well."
     And it prints the error "Please ship "feature-1" first."
     And I end up on the "feature-3" branch
@@ -30,7 +30,7 @@ Feature: git town-ship: shipping a child branch
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
 		Then it runs no commands
     And it prints the error "Nothing to undo"
     And I am still on the "feature-3" branch

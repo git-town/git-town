@@ -3,26 +3,41 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
-var resetFlag bool
-var setupFlag bool
-
 var configCommand = &cobra.Command{
 	Use:   "config",
-	Short: "Displays or resets your Git Town configuration",
+	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		if resetFlag {
-			resetConfig()
-		} else if setupFlag {
-			setupConfig()
-		} else {
-			printConfig()
-		}
+		printConfig()
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return git.ValidateIsRepository()
+	},
+}
+
+var resetConfigCommand = &cobra.Command{
+	Use:   "reset",
+	Short: "Resets your Git Town configuration",
+	Run: func(cmd *cobra.Command, args []string) {
+		resetConfig()
+	},
+	Args: cobra.NoArgs,
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		return git.ValidateIsRepository()
+	},
+}
+
+var setupConfigCommand = &cobra.Command{
+	Use:   "setup",
+	Short: "Prompts to setup your Git Town configuration",
+	Run: func(cmd *cobra.Command, args []string) {
+		setupConfig()
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -33,19 +48,19 @@ var configCommand = &cobra.Command{
 func printConfig() {
 	fmt.Println()
 	util.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
+	util.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
 
-	mainBranch := git.GetMainBranch()
+	mainBranch := git.Config().GetMainBranch()
 	if mainBranch != "" {
 		util.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 	}
 
-	util.PrintLabelAndValue("Pull branch strategy", git.GetPullBranchStrategy())
+	util.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 	util.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
 }
 
 func resetConfig() {
-	git.RemoveAllConfiguration()
+	git.Config().RemoveLocalGitConfiguration()
 }
 
 func setupConfig() {
@@ -54,7 +69,7 @@ func setupConfig() {
 }
 
 func init() {
-	configCommand.Flags().BoolVar(&resetFlag, "reset", false, "Remove all Git Town configuration from the current repository")
-	configCommand.Flags().BoolVar(&setupFlag, "setup", false, "Run the Git Town configuration wizard")
+	configCommand.AddCommand(resetConfigCommand)
+	configCommand.AddCommand(setupConfigCommand)
 	RootCmd.AddCommand(configCommand)
 }

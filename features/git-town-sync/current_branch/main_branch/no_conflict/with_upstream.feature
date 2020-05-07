@@ -13,11 +13,11 @@ Feature: git-sync: on the main branch with a upstream remote
   Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                  |
-      | main   | git fetch --prune        |
+      | main   | git fetch --prune --tags |
       |        | git add -A               |
       |        | git stash                |
       |        | git rebase origin/main   |
-      |        | git fetch upstream       |
+      |        | git fetch upstream main  |
       |        | git rebase upstream/main |
       |        | git push                 |
       |        | git push --tags          |

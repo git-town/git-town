@@ -1,22 +1,18 @@
-# Website
+# Website Development Guide
 
-The Git Town website can be found at <http://www.git-town.com>.
-It is hosted with [GitHub pages](https://pages.github.com/)
+The Git Town website can be found at <https://www.git-town.com>.
 
-## Requirements
+## setup
 
-* [Node.js](https://nodejs.org)
-  * on OS X best installed via [Homebrew](http://brew.sh)
-* [Harp](http://harpjs.com)
-  * `npm install -g harp`
+Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com), then run
+`yarn` to install the needed dependencies.
 
-## Local Development
+## local development
 
-* `cd website`
-* `harp server`
-* go to [localhost:9000](http://localhost:9000)
+- `cd website`
+- `harp server`
+- go to [localhost:9000](http://localhost:9000)
 
-## Deployment
+## deployment
 
-* make sure your changes to be deployed are all in `master`
-* `bin/deploy`
+The website auto-updates when changes to the master branch are made.

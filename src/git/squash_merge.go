@@ -1,24 +1,24 @@
 package git
 
 import (
+	"fmt"
 	"io/ioutil"
 	"regexp"
-
-	"github.com/Originate/exit"
 )
 
 var squashMessageFile = ".git/SQUASH_MSG"
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
 // Adds the given prefix with the newline if provided
-func CommentOutSquashCommitMessage(prefix string) {
+func CommentOutSquashCommitMessage(prefix string) error {
 	contentBytes, err := ioutil.ReadFile(squashMessageFile)
-	exit.If(err)
+	if err != nil {
+		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
+	}
 	content := string(contentBytes)
 	if prefix != "" {
 		content = prefix + "\n" + content
 	}
 	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
-	err = ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
-	exit.If(err)
+	return ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
 }

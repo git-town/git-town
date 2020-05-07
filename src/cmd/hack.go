@@ -1,17 +1,19 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"fmt"
+	"os"
+
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
 
-type hackConfig struct {
-	TargetBranch string
-}
+var promptForParent bool
 
 var hackCmd = &cobra.Command{
 	Use:   "hack <branch>",
@@ -19,35 +21,27 @@ var hackCmd = &cobra.Command{
 	Long: `Creates a new feature branch off the main development branch
 
 Syncs the main branch,
-forks a new feature branch with the given name off it,
-pushes the new feature branch to the remote repository,
+forks a new feature branch with the given name off the main branch,
+pushes the new feature branch to the remote repository
+(if and only if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled by toggling the "new-branch-push-flag" configuration:
-$ git town new-branch-push-flag false`,
+See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "hack",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               false,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := getHackConfig(args)
-				return getHackStepList(config)
-			},
-		})
-	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if abortFlag || continueFlag {
-			return cobra.NoArgs(cmd, args)
+		config, err := getHackConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-		return cobra.ExactArgs(1)(cmd, args)
+		stepList := getAppendStepList(config)
+		runState := steps.NewRunState("hack", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
+	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -56,28 +50,29 @@ $ git town new-branch-push-flag false`,
 	},
 }
 
-func getHackConfig(args []string) (result hackConfig) {
+func getParentBranch(targetBranch string) string {
+	if promptForParent {
+		parentBranch := prompt.AskForBranchParent(targetBranch, git.Config().GetMainBranch())
+		prompt.EnsureKnowsParentBranches([]string{parentBranch})
+		return parentBranch
+	}
+	return git.Config().GetMainBranch()
+}
+
+func getHackConfig(args []string) (result appendConfig, err error) {
 	result.TargetBranch = args[0]
-	if git.HasRemote("origin") && !git.IsOffline() {
-		script.Fetch()
+	result.ParentBranch = getParentBranch(result.TargetBranch)
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
 	return
 }
 
-func getHackStepList(config hackConfig) (result steps.StepList) {
-	mainBranchName := git.GetMainBranch()
-	result.AppendList(steps.GetSyncBranchSteps(mainBranchName, true))
-	result.Append(&steps.CreateAndCheckoutBranchStep{BranchName: config.TargetBranch, ParentBranchName: mainBranchName})
-	if git.HasRemote("origin") && git.ShouldNewBranchPush() && !git.IsOffline() {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
-	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return
-}
-
 func init() {
-	hackCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	hackCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
+	hackCmd.Flags().BoolVarP(&promptForParent, "prompt", "p", false, "Prompt for the parent branch")
 	RootCmd.AddCommand(hackCmd)
 }

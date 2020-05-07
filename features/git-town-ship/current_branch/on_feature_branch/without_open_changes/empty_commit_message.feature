@@ -17,7 +17,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
   Scenario: result
     Then it runs the commands
       | BRANCH  | COMMAND                            |
-      | feature | git fetch --prune                  |
+      | feature | git fetch --prune --tags           |
       |         | git checkout main                  |
       | main    | git rebase origin/main             |
       |         | git checkout feature               |
@@ -38,7 +38,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
 
 
   Scenario: undo
-    When I run `git-town ship --undo`
+    When I run `git-town undo`
     Then it prints the error "Nothing to undo"
     And I am still on the "feature" branch
     And my repository still has the following commits

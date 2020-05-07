@@ -18,6 +18,20 @@ Feature: Prompt for parent branch when unknown
       | feature-2 | feature-1 |
 
 
+  Scenario: prompting for parent branch when running git town-hack -p
+    Given my repository has a feature branch named "feature-1" with no parent
+    And I am on the "feature-1" branch
+    When I run `git-town hack -p feature-2` and answer the prompts:
+      | PROMPT                                          | ANSWER        |
+      | Please specify the parent branch of 'feature-2' | [DOWN][ENTER] |
+      | Please specify the parent branch of 'feature-1' | [ENTER]       |
+    Then I end up on the "feature-2" branch
+    And Git Town is now aware of this branch hierarchy
+      | BRANCH    | PARENT    |
+      | feature-1 | main      |
+      | feature-2 | feature-1 |
+
+
   Scenario: prompting for parent branch when running git town-kill
     Given my repository has a feature branch named "feature" with no parent
     And I am on the "feature" branch
@@ -34,12 +48,12 @@ Feature: Prompt for parent branch when unknown
     Given I have "open" installed
     And my repository has a feature branch named "feature"
     And Git Town has no branch hierarchy information for "feature"
-    And my repo's remote origin is git@github.com:Originate/git-town.git
+    And my repo's remote origin is git@github.com:git-town/git-town.git
     And I am on the "feature" branch
     When I run `git-town new-pull-request` and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
-    Then I see a new GitHub pull request for the "feature" branch in the "Originate/git-town" repo in my browser
+    Then I see a new GitHub pull request for the "feature" branch in the "git-town/git-town" repo in my browser
 
 
   Scenario: prompting for parent branch when running git town-sync

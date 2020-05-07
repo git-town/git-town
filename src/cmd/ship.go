@@ -1,24 +1,26 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
-	"github.com/Originate/exit"
-	"github.com/Originate/git-town/src/drivers"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
 
 type shipConfig struct {
 	BranchToShip  string
-	InitialBranch string
+	InitialBranch string // the name of the branch that was checked out when running this command
 }
 
+// optional commit message provided via the command line
 var commitMessage string
 
 var shipCmd = &cobra.Command{
@@ -46,26 +48,24 @@ If you are using GitHub, this command can squash merge pull requests via the Git
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip:              func() bool { return false },
-			Command:              "ship",
-			IsAbort:              abortFlag,
-			IsContinue:           continueFlag,
-			IsSkip:               false,
-			IsUndo:               undoFlag,
-			SkipMessageGenerator: func() string { return "" },
-			StepListGenerator: func() steps.StepList {
-				config := gitShipConfig(args)
-				return getShipStepList(config)
-			},
-		})
-	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if undoFlag {
-			return cobra.NoArgs(cmd, args)
+		config, err := gitShipConfig(args)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-		return cobra.MaximumNArgs(1)(cmd, args)
+		stepList, err := getShipStepList(config)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		runState := steps.NewRunState("ship", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
+	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return util.FirstError(
 			git.ValidateIsRepository,
@@ -74,7 +74,7 @@ It will also update the base branch for any pull requests against that branch.`,
 	},
 }
 
-func gitShipConfig(args []string) (result shipConfig) {
+func gitShipConfig(args []string) (result shipConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.BranchToShip = result.InitialBranch
@@ -84,22 +84,25 @@ func gitShipConfig(args []string) (result shipConfig) {
 	if result.BranchToShip == result.InitialBranch {
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
-	if git.HasRemote("origin") && !git.IsOffline() {
-		script.Fetch()
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	if result.BranchToShip != result.InitialBranch {
 		git.EnsureHasBranch(result.BranchToShip)
 	}
-	git.EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
+	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	return
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
-	parentBranch := git.GetParentBranch(branchName)
-	if !git.IsMainBranch(parentBranch) && !git.IsPerennialBranch(parentBranch) {
-		ancestors := git.GetAncestorBranches(branchName)
+	parentBranch := git.Config().GetParentBranch(branchName)
+	if !git.Config().IsMainBranch(parentBranch) && !git.Config().IsPerennialBranch(parentBranch) {
+		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
 		util.ExitWithErrorMessage(
@@ -109,15 +112,19 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) (result steps.StepList) {
-	var isOffline = git.IsOffline()
-	branchToMergeInto := git.GetParentBranch(config.BranchToShip)
+func getShipStepList(config shipConfig) (steps.StepList, error) {
+	result := steps.StepList{}
+	isOffline := git.Config().IsOffline()
+	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canShipWithDriver, defaultCommitMessage := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	canShipWithDriver, defaultCommitMessage, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	if err != nil {
+		return result, err
+	}
 	if canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
 		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
@@ -128,7 +135,11 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	if git.HasRemote("origin") && !isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
-	childBranches := git.GetChildBranches(config.BranchToShip)
+	childBranches := git.Config().GetChildBranches(config.BranchToShip)
+	// NOTE: when shipping with a driver, we can always delete the remote branch because:
+	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
+	// - we have updated the PRs of all child branches (because we have API access)
+	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 	}
@@ -141,29 +152,24 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
-	return
+	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (bool, string) {
+func getCanShipWithDriver(branch, parentBranch string) (bool, string, error) {
 	if !git.HasRemote("origin") {
-		return false, ""
+		return false, "", nil
 	}
-	if git.IsOffline() {
-		return false, ""
+	if git.Config().IsOffline() {
+		return false, "", nil
 	}
 	driver := drivers.GetActiveDriver()
 	if driver == nil {
-		return false, ""
+		return false, "", nil
 	}
-	canMerge, defaultCommitMessage, err := driver.CanMergePullRequest(branch, parentBranch)
-	exit.If(err)
-	return canMerge, defaultCommitMessage
+	return driver.CanMergePullRequest(branch, parentBranch)
 }
 
 func init() {
-	shipCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
 	shipCmd.Flags().StringVarP(&commitMessage, "message", "m", "", "Specify the commit message for the squash commit")
-	shipCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
-	shipCmd.Flags().BoolVar(&undoFlag, "undo", false, undoFlagDescription)
 	RootCmd.AddCommand(shipCmd)
 }

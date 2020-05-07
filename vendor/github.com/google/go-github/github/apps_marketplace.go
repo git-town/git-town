@@ -29,7 +29,7 @@ type MarketplaceService struct {
 type MarketplacePlan struct {
 	URL                 *string   `json:"url,omitempty"`
 	AccountsURL         *string   `json:"accounts_url,omitempty"`
-	ID                  *int      `json:"id,omitempty"`
+	ID                  *int64    `json:"id,omitempty"`
 	Name                *string   `json:"name,omitempty"`
 	Description         *string   `json:"description,omitempty"`
 	MonthlyPriceInCents *int      `json:"monthly_price_in_cents,omitempty"`
@@ -52,7 +52,7 @@ type MarketplacePurchase struct {
 type MarketplacePlanAccount struct {
 	URL                      *string              `json:"url,omitempty"`
 	Type                     *string              `json:"type,omitempty"`
-	ID                       *int                 `json:"id,omitempty"`
+	ID                       *int64               `json:"id,omitempty"`
 	Login                    *string              `json:"login,omitempty"`
 	Email                    *string              `json:"email,omitempty"`
 	OrganizationBillingEmail *string              `json:"organization_billing_email,omitempty"`
@@ -74,9 +74,6 @@ func (s *MarketplaceService) ListPlans(ctx context.Context, opt *ListOptions) ([
 		return nil, nil, err
 	}
 
-	// TODO: remove custom Accept header when this API fully launches.
-	req.Header.Set("Accept", mediaTypeMarketplacePreview)
-
 	var plans []*MarketplacePlan
 	resp, err := s.client.Do(ctx, req, &plans)
 	if err != nil {
@@ -89,7 +86,7 @@ func (s *MarketplaceService) ListPlans(ctx context.Context, opt *ListOptions) ([
 // ListPlanAccountsForPlan lists all GitHub accounts (user or organization) on a specific plan.
 //
 // GitHub API docs: https://developer.github.com/v3/apps/marketplace/#list-all-github-accounts-user-or-organization-on-a-specific-plan
-func (s *MarketplaceService) ListPlanAccountsForPlan(ctx context.Context, planID int, opt *ListOptions) ([]*MarketplacePlanAccount, *Response, error) {
+func (s *MarketplaceService) ListPlanAccountsForPlan(ctx context.Context, planID int64, opt *ListOptions) ([]*MarketplacePlanAccount, *Response, error) {
 	uri := s.marketplaceURI(fmt.Sprintf("plans/%v/accounts", planID))
 	u, err := addOptions(uri, opt)
 	if err != nil {
@@ -100,9 +97,6 @@ func (s *MarketplaceService) ListPlanAccountsForPlan(ctx context.Context, planID
 	if err != nil {
 		return nil, nil, err
 	}
-
-	// TODO: remove custom Accept header when this API fully launches.
-	req.Header.Set("Accept", mediaTypeMarketplacePreview)
 
 	var accounts []*MarketplacePlanAccount
 	resp, err := s.client.Do(ctx, req, &accounts)
@@ -116,7 +110,7 @@ func (s *MarketplaceService) ListPlanAccountsForPlan(ctx context.Context, planID
 // ListPlanAccountsForAccount lists all GitHub accounts (user or organization) associated with an account.
 //
 // GitHub API docs: https://developer.github.com/v3/apps/marketplace/#check-if-a-github-account-is-associated-with-any-marketplace-listing
-func (s *MarketplaceService) ListPlanAccountsForAccount(ctx context.Context, accountID int, opt *ListOptions) ([]*MarketplacePlanAccount, *Response, error) {
+func (s *MarketplaceService) ListPlanAccountsForAccount(ctx context.Context, accountID int64, opt *ListOptions) ([]*MarketplacePlanAccount, *Response, error) {
 	uri := s.marketplaceURI(fmt.Sprintf("accounts/%v", accountID))
 	u, err := addOptions(uri, opt)
 	if err != nil {
@@ -127,9 +121,6 @@ func (s *MarketplaceService) ListPlanAccountsForAccount(ctx context.Context, acc
 	if err != nil {
 		return nil, nil, err
 	}
-
-	// TODO: remove custom Accept header when this API fully launches.
-	req.Header.Set("Accept", mediaTypeMarketplacePreview)
 
 	var accounts []*MarketplacePlanAccount
 	resp, err := s.client.Do(ctx, req, &accounts)
@@ -158,9 +149,6 @@ func (s *MarketplaceService) ListMarketplacePurchasesForUser(ctx context.Context
 	if err != nil {
 		return nil, nil, err
 	}
-
-	// TODO: remove custom Accept header when this API fully launches.
-	req.Header.Set("Accept", mediaTypeMarketplacePreview)
 
 	var purchases []*MarketplacePurchase
 	resp, err := s.client.Do(ctx, req, &purchases)

@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
-	"github.com/Originate/git-town/src/script"
-	"github.com/Originate/git-town/src/steps"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -36,24 +37,21 @@ When run on the main branch or a perennial branch
 - pushes tags
 
 Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.`,
+the main branch is synced with its upstream counterpart.
+This can be disabled with "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		steps.Run(steps.RunOptions{
-			CanSkip: func() bool {
-				return !(git.IsRebaseInProgress() && git.IsMainBranch(git.GetCurrentBranchName()))
-			},
-			Command:    "sync",
-			IsAbort:    abortFlag,
-			IsContinue: continueFlag,
-			IsSkip:     skipFlag,
-			IsUndo:     false,
-			SkipMessageGenerator: func() string {
-				return fmt.Sprintf("the sync of the '%s' branch", git.GetCurrentBranchName())
-			},
-			StepListGenerator: func() steps.StepList {
-				return getSyncStepList(getSyncConfig())
-			},
-		})
+		config, err := getSyncConfig()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		stepList := getSyncStepList(config)
+		runState := steps.NewRunState("sync", stepList)
+		err = steps.Run(runState)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -61,13 +59,17 @@ the main branch is synced with its upstream counterpart.`,
 			git.ValidateIsRepository,
 			conditionallyActivateDryRun,
 			validateIsConfigured,
+			ensureIsNotInUnfinishedState,
 		)
 	},
 }
 
-func getSyncConfig() (result syncConfig) {
-	if git.HasRemote("origin") && !git.IsOffline() {
-		script.Fetch()
+func getSyncConfig() (result syncConfig, err error) {
+	if git.HasRemote("origin") && !git.Config().IsOffline() {
+		err := script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
 	if allFlag {
@@ -75,12 +77,10 @@ func getSyncConfig() (result syncConfig) {
 		prompt.EnsureKnowsParentBranches(branches)
 		result.BranchesToSync = branches
 		result.ShouldPushTags = true
-	} else if git.IsFeatureBranch(result.InitialBranch) {
-		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(git.GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	} else {
-		result.BranchesToSync = []string{result.InitialBranch}
-		result.ShouldPushTags = true
+		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+		result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
+		result.ShouldPushTags = !git.Config().IsFeatureBranch(result.InitialBranch)
 	}
 	return
 }
@@ -90,7 +90,7 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.HasRemote("origin") && config.ShouldPushTags && !git.IsOffline() {
+	if git.HasRemote("origin") && config.ShouldPushTags && !git.Config().IsOffline() {
 		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
@@ -99,9 +99,6 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 
 func init() {
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&abortFlag, "abort", false, abortFlagDescription)
-	syncCmd.Flags().BoolVar(&continueFlag, "continue", false, continueFlagDescription)
 	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
-	syncCmd.Flags().BoolVar(&skipFlag, "skip", false, "Continue a previous command by skipping the branch that resulted in a conflicted")
 	RootCmd.AddCommand(syncCmd)
 }

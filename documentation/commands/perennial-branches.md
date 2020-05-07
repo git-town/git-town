@@ -1,15 +1,26 @@
-#### NAME
+<h1 textrun="command-heading">Perennial-branches command</h1>
 
-perennial-branches - display or update the Git Town configuration for the perennial branches
+<blockquote textrun="command-summary">
+Displays your perennial branches
+</blockquote>
 
-#### SYNOPSIS
+<a textrun="command-description">
+Perennial branches are long-lived branches.
+They cannot be shipped.
+</a>
 
-```
+#### Usage
+
+<pre textrun="command-usage">
 git town perennial-branches
-git town perennial-branches update
-```
+git town perennial-branches [command]
+</pre>
 
-#### DESCRIPTION
+Available commands:
 
-Without `update`, displays your perennial branches.
-With `update`, prompts you to update your perennial branches.
+<table textrun="command-subcommands">
+  <tr>
+    <th>update</th>
+    <td>Prompts to update your perennial branches</td>
+  </tr>
+</table>

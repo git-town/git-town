@@ -19,6 +19,11 @@ Then(/^(?:Git Town|it) is now aware of this branch hierarchy$/) do |table|
 end
 
 
+Then(/^Git Town has no branch hierarchy information$/) do
+  expect(configured_branch_hierarchy_information(ignore_errors: true)).to be_empty
+end
+
+
 Then(/^I am not prompted for any parent branches$/) do
   expect(unformatted_last_run_output).not_to include 'Please specify the parent branch of'
 end

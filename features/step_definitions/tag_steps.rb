@@ -7,6 +7,11 @@ Given(/^I have the following tags$/) do |tags|
 end
 
 
+Given(/^I have a remote tag "([^"]+)" that is not on a branch$/) do |name|
+  create_standalone_remote_tag name
+end
+
+
 
 
 Then(/^I now have the following tags$/) do |expected_tags|
