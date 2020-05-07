@@ -18,9 +18,8 @@ type DeleteRemoteBranchStep struct {
 func (step *DeleteRemoteBranchStep) CreateUndoStep() Step{
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{BranchName: step.BranchName}
-	} else {
-		return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha}
 	}
+	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha}
 }
 
 // Run executes this step.

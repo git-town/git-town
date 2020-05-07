@@ -9,7 +9,7 @@ type AddToPerennialBranches struct {
 }
 
 // CreateUndoStep returns the undo step for this step.
-func (step *AddToPerennialBranches) ACreateUndoStep() Step {
+func (step *AddToPerennialBranches) CreateUndoStep() Step {
 	return &RemoveFromPerennialBranches{BranchName: step.BranchName}
 }
 
