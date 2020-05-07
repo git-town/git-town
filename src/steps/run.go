@@ -62,7 +62,7 @@ func Run(runState *RunState) error {
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
-		step.AddUndoSteps(&runState.UndoStepList)
+		runState.UndoStepList.Prepend(step.CreateUndoStep())
 	}
 }
 

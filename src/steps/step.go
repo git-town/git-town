@@ -5,7 +5,7 @@ package steps
 type Step interface {
 	CreateAbortStep() Step
 	CreateContinueStep() Step
-	AddUndoSteps(*StepList)
+	CreateUndoStep() Step
 	GetAutomaticAbortErrorMessage() string
 	Run() error
 	ShouldAutomaticallyAbortOnError() bool

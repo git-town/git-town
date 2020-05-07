@@ -14,12 +14,12 @@ type DeleteRemoteBranchStep struct {
 	branchSha string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *DeleteRemoteBranchStep) AddUndoSteps(stepList *StepList) {
+// CreateUndoStep returns the undo step for this step.
+func (step *DeleteRemoteBranchStep) CreateUndoStep() Step{
 	if step.IsTracking {
-		stepList.Prepend(&CreateTrackingBranchStep{BranchName: step.BranchName})
+		return &CreateTrackingBranchStep{BranchName: step.BranchName}
 	} else {
-		stepList.Prepend(&CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha})
+		return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha}
 	}
 }
 

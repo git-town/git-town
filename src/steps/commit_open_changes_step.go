@@ -15,9 +15,9 @@ type CommitOpenChangesStep struct {
 	previousSha string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *CommitOpenChangesStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&ResetToShaStep{Sha: step.previousSha})
+// CreateUndoStep returns the undo step for this step.
+func (step *CommitOpenChangesStep) CreateUndoStep() Step {
+	return &ResetToShaStep{Sha: step.previousSha}
 }
 
 // Run executes this step.

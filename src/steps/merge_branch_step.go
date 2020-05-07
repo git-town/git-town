@@ -23,9 +23,9 @@ func (step *MergeBranchStep) CreateContinueStep() Step {
 	return &ContinueMergeBranchStep{}
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *MergeBranchStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&ResetToShaStep{Hard: true, Sha: step.previousSha})
+// CreateUndoStep returns the undo step for this step.
+func (step *MergeBranchStep) CreateUndoStep() Step {
+	return &ResetToShaStep{Hard: true, Sha: step.previousSha}
 }
 
 // Run executes this step.

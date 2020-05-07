@@ -12,12 +12,12 @@ type SetParentBranchStep struct {
 	previousParent string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *SetParentBranchStep) AddUndoSteps(stepList *StepList) {
+// CreateUndoStep returns the undo step for this step.
+func (step *SetParentBranchStep) CreateUndoStep() Step {
 	if step.previousParent == "" {
-		stepList.Prepend(&DeleteParentBranchStep{BranchName: step.BranchName})
+		return &DeleteParentBranchStep{BranchName: step.BranchName}
 	} else {
-		stepList.Prepend(&SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent})
+		return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}
 	}
 }
 

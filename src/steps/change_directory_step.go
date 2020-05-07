@@ -14,9 +14,9 @@ type ChangeDirectoryStep struct {
 	previousDirectory string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *ChangeDirectoryStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&ChangeDirectoryStep{Directory: step.previousDirectory})
+// CreateUndoStep returns the undo step for this step.
+func (step *ChangeDirectoryStep) CreateUndoStep() Step {
+	return &ChangeDirectoryStep{Directory: step.previousDirectory}
 }
 
 // Run executes this step.

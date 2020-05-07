@@ -24,9 +24,9 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseBranchStep{}
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *RebaseBranchStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&ResetToShaStep{Hard: true, Sha: step.previousSha})
+// CreateUndoStep returns the undo step for this step.
+func (step *RebaseBranchStep) CreateUndoStep() Step {
+	return &ResetToShaStep{Hard: true, Sha: step.previousSha}
 }
 
 // Run executes this step.

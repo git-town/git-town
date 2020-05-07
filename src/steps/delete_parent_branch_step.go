@@ -10,17 +10,17 @@ type DeleteParentBranchStep struct {
 	previousParent string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *DeleteParentBranchStep) AddUndoSteps(stepList *StepList) {
+// CreateUndoStep returns the undo step for this step.
+func (step *DeleteParentBranchStep) CreateUndoStep() Step {
 	if step.previousParent == "" {
-		return
+		return &NoOpStep{}
 	}
-	stepList.Prepend(&SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent})
+	return &SetParentBranchStep{BranchName: step.BranchName, ParentBranchName: step.previousParent}
 }
 
 // Run executes this step.
 func (step *DeleteParentBranchStep) Run() error {
-	step.previousParent = git.GetParentBranch(step.BranchName)
+	step.previousParent = git.Config().GetParentBranch(step.BranchName)
 	git.Config().DeleteParentBranch(step.BranchName)
 	return nil
 }

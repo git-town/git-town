@@ -13,9 +13,9 @@ type CheckoutBranchStep struct {
 	previousBranchName string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *CheckoutBranchStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&CheckoutBranchStep{BranchName: step.previousBranchName})
+// CreateUndoStep returns the undo step for this step.
+func (step *CheckoutBranchStep) CreateUndoStep() Step {
+	return &CheckoutBranchStep{BranchName: step.previousBranchName}
 }
 
 // Run executes this step.

@@ -15,9 +15,9 @@ type DeleteLocalBranchStep struct {
 	branchSha string
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *DeleteLocalBranchStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&CreateBranchStep{BranchName: step.BranchName, StartingPoint: step.branchSha})
+// CreateUndoStep returns the undo step for this step.
+func (step *DeleteLocalBranchStep) CreateUndoStep() Step{
+	return &CreateBranchStep{BranchName: step.BranchName, StartingPoint: step.branchSha}
 }
 
 // Run executes this step.

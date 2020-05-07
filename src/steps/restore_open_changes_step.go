@@ -9,9 +9,9 @@ type RestoreOpenChangesStep struct {
 	NoOpStep
 }
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *RestoreOpenChangesStep) AddUndoSteps(stepList *StepList) {
-	stepList.Prepend(&StashOpenChangesStep{})
+// CreateUndoStep returns the undo step for this step.
+func (step *RestoreOpenChangesStep) CreateUndoStep() Step{
+	return &StashOpenChangesStep{}
 }
 
 // Run executes this step.

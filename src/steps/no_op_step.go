@@ -4,9 +4,6 @@ package steps
 // It is used for steps that have no undo or abort steps.
 type NoOpStep struct{}
 
-// AddUndoSteps adds the undo steps for this step to the undo step list
-func (step *NoOpStep) AddUndoSteps(stepList *StepList) {}
-
 // CreateAbortStep returns the abort step for this step.
 func (step *NoOpStep) CreateAbortStep() Step {
 	return &NoOpStep{}
@@ -14,6 +11,11 @@ func (step *NoOpStep) CreateAbortStep() Step {
 
 // CreateContinueStep returns the continue step for this step.
 func (step *NoOpStep) CreateContinueStep() Step {
+	return &NoOpStep{}
+}
+
+// CreateUndoStep returns the undo step for this step.
+func (step *NoOpStep) CreateUndoStep() Step {
 	return &NoOpStep{}
 }
 
