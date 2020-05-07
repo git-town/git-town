@@ -1,19 +1,16 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
 type diffParentConfig struct {
-	InitialBranch string
-	TargetBranch  string
+	branch       string
+	parentBranch string
 }
 
 var diffParentCommand = &cobra.Command{
@@ -28,13 +25,7 @@ identify the parent branch.
 Does not output anything for perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getDiffParentConfig(args)
-		stepList := getDiffParentStepList(config)
-		runState := steps.NewRunState("diff-parent", stepList)
-		err := steps.Run(runState)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		runDiffParent(config)
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -46,29 +37,28 @@ Does not output anything for perennial branches nor the main branch.`,
 }
 
 // Does not return error because "Ensure" functions will call exit directly
-func getDiffParentConfig(args []string) (result diffParentConfig) {
-	result.InitialBranch = git.GetCurrentBranchName()
+func getDiffParentConfig(args []string) (config diffParentConfig) {
+	initialBranch := git.GetCurrentBranchName()
 
 	if len(args) == 0 {
-		result.TargetBranch = result.InitialBranch
+		config.branch = initialBranch
 	} else {
-		result.TargetBranch = args[0]
+		config.branch = args[0]
 	}
 
-	if result.InitialBranch != result.TargetBranch {
-		git.EnsureHasLocalBranch(result.TargetBranch)
+	if initialBranch != config.branch {
+		git.EnsureHasLocalBranch(config.branch)
 	}
 
-	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only diff-parent feature branches.")
+	git.Config().EnsureIsFeatureBranch(config.branch, "You can only diff-parent feature branches.")
 
-	prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
+	prompt.EnsureKnowsParentBranches([]string{config.branch})
+	config.parentBranch = git.Config().GetParentBranch(config.branch)
 	return
 }
 
-func getDiffParentStepList(config diffParentConfig) (result steps.StepList) {
-	targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
-	result.Append(&steps.DiffParentBranchStep{BranchName: config.TargetBranch, ParentBranch: targetBranchParent})
-	return
+func runDiffParent(config diffParentConfig) {
+	script.RunCommandSafe("git", "diff", config.parentBranch+".."+config.branch)
 }
 
 func init() {
