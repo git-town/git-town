@@ -2,6 +2,7 @@ Feature: git town-diff-parent: diffing a given feature branch
 
   (see ../../current_branch/on_feature_branch/with_parent_branches.feature)
 
+
   Background:
     Given my repository has a feature branch named "feature-1"
     And my repository has a feature branch named "feature-2" as a child of "feature-1"
@@ -16,8 +17,8 @@ Feature: git town-diff-parent: diffing a given feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                          |
-      | main      | git diff feature-1..feature-2    |
+      | BRANCH | COMMAND                       |
+      | main   | git diff feature-1..feature-2 |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

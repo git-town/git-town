@@ -10,10 +10,11 @@ Feature: git town-parent-diff: diffing the current feature branch
   Background:
     Given my repository has a feature branch named "feature" with no parent
     And the following commits exist in my repository
-      | BRANCH  | LOCATION      | MESSAGE          |
+      | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
+
 
   Scenario:
     When I run "git-town diff-parent feature" and answer the prompts:

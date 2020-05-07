@@ -21,8 +21,8 @@ Feature: git town-parent-diff: diffing the current feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH    | COMMAND                          |
-      | feature-2 | git diff feature-1..feature-2    |
+      | BRANCH    | COMMAND                       |
+      | feature-2 | git diff feature-1..feature-2 |
     And I am still on the "feature-2" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
