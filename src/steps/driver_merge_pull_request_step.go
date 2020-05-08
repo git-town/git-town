@@ -27,8 +27,8 @@ func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	return nil
 }
 
-// CreateUndoStepAfterRun returns the undo step for this step after it is run.
-func (step *DriverMergePullRequestStep) CreateUndoStepAfterRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *DriverMergePullRequestStep) CreateUndoStep() Step {
 	return &RevertCommitStep{Sha: step.mergeSha}
 }
 

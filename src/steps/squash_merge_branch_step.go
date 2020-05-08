@@ -20,8 +20,8 @@ func (step *SquashMergeBranchStep) CreateAbortStep() Step {
 	return &DiscardOpenChangesStep{}
 }
 
-// CreateUndoStepAfterRun returns the undo step for this step after it is run.
-func (step *SquashMergeBranchStep) CreateUndoStepAfterRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *SquashMergeBranchStep) CreateUndoStep() Step {
 	return &RevertCommitStep{Sha: git.GetCurrentSha()}
 }
 

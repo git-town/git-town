@@ -9,16 +9,19 @@ import (
 type CheckoutBranchStep struct {
 	NoOpStep
 	BranchName string
+
+	previousBranchName string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *CheckoutBranchStep) CreateUndoStepBeforeRun() Step {
-	return &CheckoutBranchStep{BranchName: git.GetCurrentBranchName()}
+// CreateUndoStep returns the undo step for this step.
+func (step *CheckoutBranchStep) CreateUndoStep() Step {
+	return &CheckoutBranchStep{BranchName: step.previousBranchName}
 }
 
 // Run executes this step.
 func (step *CheckoutBranchStep) Run() error {
-	if git.GetCurrentBranchName() != step.BranchName {
+	step.previousBranchName = git.GetCurrentBranchName()
+	if step.previousBranchName != step.BranchName {
 		err := script.RunCommand("git", "checkout", step.BranchName)
 		if err == nil {
 			git.UpdateCurrentBranchCache(step.BranchName)
