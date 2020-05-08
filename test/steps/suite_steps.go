@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 	"sync"
 
 	"github.com/cucumber/godog"
@@ -40,7 +41,12 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 			if err != nil {
 				log.Fatalf("cannot create base directory for feature specs: %s", err)
 			}
-			gitManager = test.NewGitManager(baseDir)
+			// Evaluate symlinks as Mac temp dir is symlinked
+			evalBaseDir, err := filepath.EvalSymlinks(baseDir)
+			if err != nil {
+				log.Fatalf("cannot evaluate symlinks of base directory for feature specs: %s", err)
+			}
+			gitManager = test.NewGitManager(evalBaseDir)
 			err = gitManager.CreateMemoizedEnvironment()
 			if err != nil {
 				log.Fatalf("Cannot create memoized environment: %s", err)

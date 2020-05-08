@@ -11,8 +11,8 @@ type CreateTrackingBranchStep struct {
 	BranchName string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *CreateTrackingBranchStep) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *CreateTrackingBranchStep) CreateUndoStep() Step {
 	return &DeleteRemoteBranchStep{BranchName: step.BranchName}
 }
 

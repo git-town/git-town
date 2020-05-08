@@ -9,8 +9,8 @@ type RestoreOpenChangesStep struct {
 	NoOpStep
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *RestoreOpenChangesStep) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *RestoreOpenChangesStep) CreateUndoStep() Step {
 	return &StashOpenChangesStep{}
 }
 

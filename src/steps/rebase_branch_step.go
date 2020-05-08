@@ -10,6 +10,8 @@ import (
 type RebaseBranchStep struct {
 	NoOpStep
 	BranchName string
+
+	previousSha string
 }
 
 // CreateAbortStep returns the abort step for this step.
@@ -22,13 +24,14 @@ func (step *RebaseBranchStep) CreateContinueStep() Step {
 	return &ContinueRebaseBranchStep{}
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *RebaseBranchStep) CreateUndoStepBeforeRun() Step {
-	return &ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
+// CreateUndoStep returns the undo step for this step.
+func (step *RebaseBranchStep) CreateUndoStep() Step {
+	return &ResetToShaStep{Hard: true, Sha: step.previousSha}
 }
 
 // Run executes this step.
 func (step *RebaseBranchStep) Run() error {
+	step.previousSha = git.GetCurrentSha()
 	err := script.RunCommand("git", "rebase", step.BranchName)
 	if err != nil {
 		git.ClearCurrentBranchCache()
