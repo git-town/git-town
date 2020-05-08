@@ -14,7 +14,7 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
       | main   | local    | main commit  | main_file  |
       | qa     | local    | local commit | local_file |
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: no conflict

@@ -10,7 +10,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | remote           | qa remote commit  | conflicting_file | qa remote content  |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all`
+    When I run "git-town sync --all"
 
 
   Scenario: result
@@ -36,7 +36,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH     | COMMAND                 |
       | qa         | git rebase --abort      |
@@ -54,7 +54,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: skipping
-    When I run `git-town skip`
+    When I run "git-town skip"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | qa     | git rebase --abort |
@@ -72,7 +72,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
@@ -81,7 +81,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git-town continue`
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
@@ -101,7 +101,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue; git-town continue`
+    And I run "git rebase --continue; git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND           |
       | qa     | git push          |

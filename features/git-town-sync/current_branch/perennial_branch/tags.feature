@@ -12,7 +12,7 @@ Feature: git-town sync: syncing the current perennial branch syncs the tags
       | NAME       | LOCATION |
       | local-tag  | local    |
       | remote-tag | remote   |
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result

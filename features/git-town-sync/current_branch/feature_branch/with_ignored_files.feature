@@ -13,5 +13,5 @@ Feature: syncing with ignored files
     And I am on the "feature" branch
     And my workspace has an uncommitted file with name: "somefile" and content: "important"
     And my workspace has an uncommitted file with name: "test/ignored/important" and content: "very important"
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then my workspace still contains the file "test/ignored/important" with content "very important"

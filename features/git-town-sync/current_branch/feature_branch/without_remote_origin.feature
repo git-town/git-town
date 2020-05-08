@@ -12,7 +12,7 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
       | feature | local    | local feature commit | local_feature_file | feature content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result

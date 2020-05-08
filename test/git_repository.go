@@ -341,6 +341,15 @@ func (repo *GitRepository) HasGitTownConfigNow() (result bool, err error) {
 	return outcome.OutputSanitized() != "", err
 }
 
+// HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
+func (repo *GitRepository) HasMergeInProgress() (result bool, err error) {
+	res, err := repo.Shell.Run("git", "status")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine merge in %q progress: %w", repo.Dir, err)
+	}
+	return strings.Contains(res.OutputSanitized(), "You have unmerged paths"), nil
+}
+
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
 func (repo *GitRepository) HasRebaseInProgress() (result bool, err error) {
 	res, err := repo.Shell.Run("git", "status")

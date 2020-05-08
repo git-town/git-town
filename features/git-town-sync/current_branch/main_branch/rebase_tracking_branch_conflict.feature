@@ -12,7 +12,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       | main   | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -32,7 +32,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND            |
       | main   | git rebase --abort |
@@ -44,7 +44,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And my uncommitted file is stashed
@@ -53,7 +53,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND               |
       | main   | git rebase --continue |
@@ -73,7 +73,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town continue`
+    When I run "git rebase --continue; git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND         |
       | main   | git push        |

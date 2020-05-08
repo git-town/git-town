@@ -13,7 +13,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -38,7 +38,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -52,7 +52,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature" branch
     And my uncommitted file is stashed
@@ -61,7 +61,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git commit --no-edit     |
@@ -82,7 +82,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town continue`
+    When I run "git commit --no-edit; git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |

@@ -19,7 +19,7 @@ Feature: git-town sync: collaborative feature branch syncing
 
   Scenario: result
     And I am on the "feature" branch
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
@@ -34,7 +34,7 @@ Feature: git-town sync: collaborative feature branch syncing
       | feature | local and remote | my commit | my_file   |
 
     Given my coworker is on the "feature" branch
-    When my coworker runs `git-town sync`
+    When my coworker runs "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |
@@ -51,7 +51,7 @@ Feature: git-town sync: collaborative feature branch syncing
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
 
     Given I am on the "feature" branch
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | feature | git fetch --prune --tags           |

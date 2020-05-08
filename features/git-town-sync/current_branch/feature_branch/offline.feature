@@ -16,7 +16,7 @@ Feature: git-town sync: offline mode
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result

@@ -82,7 +82,15 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return err
 		}
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2)
+		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
+		if err != nil {
+			return err
+		}
+		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch2)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
 	})
 
 	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {

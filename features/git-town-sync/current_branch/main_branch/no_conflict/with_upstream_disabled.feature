@@ -10,7 +10,7 @@ Feature: git-sync: on the main branch with a upstream remote
     And I am on the "main" branch
     And I have a the git configuration for "git-town.sync-upstream" set to "false"
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result

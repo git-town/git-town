@@ -10,7 +10,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | remote           | feature-2 remote commit | conflicting_file | feature-2 remote content |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all`
+    When I run "git-town sync --all"
 
 
   Scenario: result
@@ -38,7 +38,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH    | COMMAND                |
       | feature-2 | git merge --abort      |
@@ -58,7 +58,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: skipping
-    When I run `git-town skip`
+    When I run "git-town skip"
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git merge --abort |
@@ -78,7 +78,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs no commands
     And it prints the error "You must resolve the conflicts before continuing"
     And I am still on the "feature-2" branch
@@ -88,7 +88,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git-town continue`
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git commit --no-edit     |
@@ -114,7 +114,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run `git commit --no-edit; git-town continue`
+    And I run "git commit --no-edit; git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND                  |
       | feature-2 | git merge --no-edit main |
