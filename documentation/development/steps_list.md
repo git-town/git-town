@@ -25,7 +25,7 @@ They are Go structs that have a `Run` method which executes the step.
 
 When executing a step, the undo steps for it are determined and appended to the
 `undo list` for the current Git Town command. This is done by calling the
-methods `step.CreateUndoStepBeforeRun()` and `step.CreateUndoStepAfterRun()`.
+methods `step.CreateUndoStep()`.
 
 If a Git command fails (typically due to a merge conflict), then the program
 saves state (lists with steps to abort and continue) to disk, informs the user
