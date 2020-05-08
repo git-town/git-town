@@ -39,7 +39,6 @@ func Run(runState *RunState) error {
 			runState.AddPushBranchStepAfterCurrentBranchSteps()
 			continue
 		}
-		undoStepBeforeRun := step.CreateUndoStepBeforeRun()
 		err := step.Run()
 		if err != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
@@ -63,9 +62,7 @@ func Run(runState *RunState) error {
 				exitWithMessages(runState.UnfinishedDetails.CanSkip)
 			}
 		}
-		undoStepAfterRun := step.CreateUndoStepAfterRun()
-		runState.UndoStepList.Prepend(undoStepBeforeRun)
-		runState.UndoStepList.Prepend(undoStepAfterRun)
+		runState.UndoStepList.Prepend(step.CreateUndoStep())
 	}
 }
 
