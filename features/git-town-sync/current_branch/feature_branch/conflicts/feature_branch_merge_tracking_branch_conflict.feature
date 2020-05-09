@@ -75,18 +75,19 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | feature | local, remote | local conflicting commit                                   | conflicting_file |
-      |         |                  | remote conflicting commit                                  | conflicting_file |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      |         |               | remote conflicting commit                                  | conflicting_file |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
     And my repository now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
 
-  Scenario: continuing after resolving the conflicts
+  Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit; git-town continue"
+    When I run "git commit --no-edit"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                  |
       | feature | git merge --no-edit main |
@@ -95,10 +96,10 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | feature | local, remote | local conflicting commit                                   | conflicting_file |
-      |         |                  | remote conflicting commit                                  | conflicting_file |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
+      |         |               | remote conflicting commit                                  | conflicting_file |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
     And my repository now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

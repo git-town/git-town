@@ -7,11 +7,11 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Background:
     Given my repository has the perennial branches "production" and "qa"
-    And I am on the "qa" branch
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
+    And I am on the "qa" branch
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -78,7 +78,8 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run "git rebase --continue; git-town continue"
+    And I run "git rebase --continue"
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND         |
       | qa     | git push        |

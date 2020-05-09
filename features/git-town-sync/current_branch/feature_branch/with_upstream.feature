@@ -31,8 +31,8 @@ Feature: git-sync: on a feature branch with a upstream remote
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH  | LOCATION                    | MESSAGE                          |
-      | main    | local, remote, and upstream | upstream commit                  |
-      | feature | local, remote            | local commit                     |
-      |         |                             | upstream commit                  |
-      |         |                             | Merge branch 'main' into feature |
+      | BRANCH  | LOCATION                | MESSAGE                          |
+      | main    | local, remote, upstream | upstream commit                  |
+      | feature | local, remote           | local commit                     |
+      |         |                         | upstream commit                  |
+      |         |                         | Merge branch 'main' into feature |

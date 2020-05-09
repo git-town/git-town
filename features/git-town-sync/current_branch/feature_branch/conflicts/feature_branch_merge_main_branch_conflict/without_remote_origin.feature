@@ -76,7 +76,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit; git-town continue"
+    And I run "git commit --no-edit"
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git stash pop |

@@ -72,11 +72,11 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                   | FILE NAME        |
       | main    | local, remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
+      |         |               | conflicting local commit  | conflicting_file |
       | feature | local, remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
+      |         |               | conflicting local commit  | conflicting_file |
     And my repository now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |
@@ -85,7 +85,8 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run "git rebase --continue; git-town continue"
+    And I run "git rebase --continue"
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
@@ -97,11 +98,11 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                   | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                   | FILE NAME        |
       | main    | local, remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
+      |         |               | conflicting local commit  | conflicting_file |
       | feature | local, remote | conflicting remote commit | conflicting_file |
-      |         |                  | conflicting local commit  | conflicting_file |
+      |         |               | conflicting local commit  | conflicting_file |
     And my repository now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | resolved content |

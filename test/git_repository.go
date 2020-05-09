@@ -329,7 +329,10 @@ func (repo *GitRepository) FilesInBranch(branch string) (result []string, err er
 		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, repo.Dir, err)
 	}
 	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
-		result = append(result, strings.TrimSpace(line))
+		file := strings.TrimSpace(line)
+		if file != "" {
+			result = append(result, file)
+		}
 	}
 	return result, err
 }

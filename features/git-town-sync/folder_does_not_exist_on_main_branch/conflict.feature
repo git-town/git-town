@@ -6,10 +6,10 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Background:
     Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | BRANCH          | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main            | local, remote | conflicting main commit    | conflicting_file | main content    |
-      | current-feature | local            | conflicting feature commit | conflicting_file | feature content |
-      |                 |                  | folder commit              | new_folder/file1 |                 |
+      | current-feature | local         | conflicting feature commit | conflicting_file | feature content |
+      |                 |               | folder commit              | new_folder/file1 |                 |
       | other-feature   | local, remote | other feature commit       | file2            |                 |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
@@ -20,7 +20,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune --tags                   |
-      | <none>          | cd {{ git_root_folder }}                   |
+      | <none>          | cd {{ root folder }}                       |
       | current-feature | git add -A                                 |
       |                 | git stash                                  |
       |                 | git checkout main                          |
@@ -37,12 +37,12 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH          | COMMAND                          |
-      | current-feature | git merge --abort                |
-      |                 | git checkout main                |
-      | main            | git checkout current-feature     |
-      | current-feature | git stash pop                    |
-      | <none>          | cd {{ git_folder "new_folder" }} |
+      | BRANCH          | COMMAND                      |
+      | current-feature | git merge --abort            |
+      |                 | git checkout main            |
+      | main            | git checkout current-feature |
+      | current-feature | git stash pop                |
+      | <none>          | cd {{ folder "new_folder" }} |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
@@ -75,7 +75,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git checkout current-feature             |
       | current-feature | git push --tags                          |
       |                 | git stash pop                            |
-      | <none>          | cd {{ git_folder "new_folder" }}         |
+      | <none>          | cd {{ folder "new_folder" }}             |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress

@@ -46,9 +46,9 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my workspace has the uncommitted file again
     And there is no merge in progress
     And my repository still has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
-      | feature | local            | conflicting feature commit | conflicting_file | feature content |
+      | feature | local         | conflicting feature commit | conflicting_file | feature content |
 
 
   Scenario: continuing without resolving the conflicts
@@ -74,11 +74,11 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And my repository still has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
-      |         |                  | conflicting main commit          | conflicting_file |
-      |         |                  | Merge branch 'main' into feature |                  |
+      |         |               | conflicting main commit          | conflicting_file |
+      |         |               | Merge branch 'main' into feature |                  |
     And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
@@ -96,11 +96,11 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And my repository still has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
-      |         |                  | conflicting main commit          | conflicting_file |
-      |         |                  | Merge branch 'main' into feature |                  |
+      |         |               | conflicting main commit          | conflicting_file |
+      |         |               | Merge branch 'main' into feature |                  |
     And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
@@ -109,7 +109,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit; git-town continue"
+    And I run "git commit --no-edit"
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |
@@ -117,11 +118,11 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And my repository still has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME        |
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
-      |         |                  | conflicting main commit          | conflicting_file |
-      |         |                  | Merge branch 'main' into feature |                  |
+      |         |               | conflicting main commit          | conflicting_file |
+      |         |               | Merge branch 'main' into feature |                  |
     And my repository still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |

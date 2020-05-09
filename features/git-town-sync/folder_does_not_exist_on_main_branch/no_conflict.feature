@@ -21,7 +21,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune --tags                   |
-      | <none>          | cd {{ git_root_folder }}                   |
+      | <none>          | cd {{ root folder }}                       |
       | current-feature | git add -A                                 |
       |                 | git stash                                  |
       |                 | git checkout main                          |
@@ -37,7 +37,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git checkout current-feature               |
       | current-feature | git push --tags                            |
       |                 | git stash pop                              |
-      | <none>          | cd {{ git_folder "new_folder" }}           |
+      | <none>          | cd {{ folder "new_folder" }}               |
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits

@@ -30,7 +30,7 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And my repository now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
+      | BRANCH  | LOCATION      | MESSAGE   | FILE NAME |
       | feature | local, remote | my commit | my_file   |
 
     Given my coworker is on the "feature" branch
@@ -45,10 +45,10 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git merge --no-edit main           |
       |         | git push                           |
     And now my coworker has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME     |
       | feature | local, remote | coworker commit                                            | coworker_file |
-      |         |                  | my commit                                                  | my_file       |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
+      |         |               | my commit                                                  | my_file       |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |               |
 
     Given I am on the "feature" branch
     When I run "git-town sync"
@@ -60,8 +60,8 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And my repository now now has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME     |
       | feature | local, remote | coworker commit                                            | coworker_file |
-      |         |                  | my commit                                                  | my_file       |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
+      |         |               | my commit                                                  | my_file       |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |               |
