@@ -18,5 +18,5 @@ Feature: git-town sync: syncing the current perennial branch syncs the tags
   Scenario: result
     Then I now have the following tags
       | NAME       | LOCATION         |
-      | local-tag  | local and remote |
-      | remote-tag | local and remote |
+      | local-tag  | local, remote |
+      | remote-tag | local, remote |

@@ -49,4 +49,12 @@ func PrintSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		return nil
 	})
+
+	suite.Step(`^I am not prompted for any parent branches$`, func() error {
+		not_expected := "Please specify the parent branch of"
+		if fs.activeScenarioState.lastRunResult.OutputContainsText(not_expected) {
+			return fmt.Errorf("text found:\n\nDID NOT EXPECT: %q\n\nACTUAL\n\n%q\n----------------------------", not_expected, fs.activeScenarioState.lastRunResult.Output())
+		}
+		return nil
+	})
 }

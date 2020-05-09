@@ -3,10 +3,10 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Background:
     Given my repository has the feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
-      | BRANCH    | LOCATION         | MESSAGE          | FILE NAME        | FILE CONTENT      |
-      | main      | remote           | main commit      | conflicting_file | main content      |
-      | feature-1 | local and remote | feature-1 commit | feature1_file    | feature-1 content |
-      | feature-2 | local and remote | feature-2 commit | conflicting_file | feature-2 content |
+      | BRANCH    | LOCATION      | MESSAGE          | FILE NAME        | FILE CONTENT      |
+      | main      | remote        | main commit      | conflicting_file | main content      |
+      | feature-1 | local, remote | feature-1 commit | feature1_file    | feature-1 content |
+      | feature-2 | local, remote | feature-2 commit | conflicting_file | feature-2 content |
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all"
@@ -47,13 +47,13 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop          |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
-      | main      | local and remote | main commit                        | conflicting_file |
-      | feature-1 | local and remote | feature-1 commit                   | feature1_file    |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-1 |                  |
-      | feature-2 | local and remote | feature-2 commit                   | conflicting_file |
+    And my repository now has the following commits
+      | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME        |
+      | main      | local, remote | main commit                        | conflicting_file |
+      | feature-1 | local, remote | feature-1 commit                   | feature1_file    |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-1 |                  |
+      | feature-2 | local, remote | feature-2 commit                   | conflicting_file |
 
 
   Scenario: skipping
@@ -66,19 +66,22 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop     |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
-      | main      | local and remote | main commit                        | conflicting_file |
-      | feature-1 | local and remote | feature-1 commit                   | feature1_file    |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-1 |                  |
-      | feature-2 | local and remote | feature-2 commit                   | conflicting_file |
+    And my repository now has the following commits
+      | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME        |
+      | main      | local, remote | main commit                        | conflicting_file |
+      | feature-1 | local, remote | feature-1 commit                   | feature1_file    |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-1 |                  |
+      | feature-2 | local, remote | feature-2 commit                   | conflicting_file |
 
 
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error: 
+      """
+      You must resolve the conflicts before continuing
+      """
     And I am still on the "feature-2" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -96,20 +99,21 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
-      | main      | local and remote | main commit                        | conflicting_file |
-      | feature-1 | local and remote | feature-1 commit                   | feature1_file    |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-1 |                  |
-      | feature-2 | local and remote | feature-2 commit                   | conflicting_file |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-2 |                  |
+    And my repository now has the following commits
+      | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME        |
+      | main      | local, remote | main commit                        | conflicting_file |
+      | feature-1 | local, remote | feature-1 commit                   | feature1_file    |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-1 |                  |
+      | feature-2 | local, remote | feature-2 commit                   | conflicting_file |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-2 |                  |
 
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    And I run "git commit --no-edit; git-town continue"
+    And I run "git commit --no-edit"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH    | COMMAND           |
       | feature-2 | git push          |
@@ -118,12 +122,12 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop     |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH    | LOCATION         | MESSAGE                            | FILE NAME        |
-      | main      | local and remote | main commit                        | conflicting_file |
-      | feature-1 | local and remote | feature-1 commit                   | feature1_file    |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-1 |                  |
-      | feature-2 | local and remote | feature-2 commit                   | conflicting_file |
-      |           |                  | main commit                        | conflicting_file |
-      |           |                  | Merge branch 'main' into feature-2 |                  |
+    And my repository now has the following commits
+      | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME        |
+      | main      | local, remote | main commit                        | conflicting_file |
+      | feature-1 | local, remote | feature-1 commit                   | feature1_file    |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-1 |                  |
+      | feature-2 | local, remote | feature-2 commit                   | conflicting_file |
+      |           |               | main commit                        | conflicting_file |
+      |           |               | Merge branch 'main' into feature-2 |                  |

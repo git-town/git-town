@@ -29,9 +29,9 @@ Feature: git-town sync: collaborative feature branch syncing
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
       |         | git push                           |
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION         | MESSAGE   | FILE NAME |
-      | feature | local and remote | my commit | my_file   |
+      | feature | local, remote | my commit | my_file   |
 
     Given my coworker is on the "feature" branch
     When my coworker runs "git-town sync"
@@ -46,7 +46,7 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git push                           |
     And now my coworker has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
-      | feature | local and remote | coworker commit                                            | coworker_file |
+      | feature | local, remote | coworker commit                                            | coworker_file |
       |         |                  | my commit                                                  | my_file       |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |
 
@@ -60,8 +60,8 @@ Feature: git-town sync: collaborative feature branch syncing
       |         | git checkout feature               |
       | feature | git merge --no-edit origin/feature |
       |         | git merge --no-edit main           |
-    And now my repository has the following commits
+    And my repository now now has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME     |
-      | feature | local and remote | coworker commit                                            | coworker_file |
+      | feature | local, remote | coworker commit                                            | coworker_file |
       |         |                  | my commit                                                  | my_file       |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |               |

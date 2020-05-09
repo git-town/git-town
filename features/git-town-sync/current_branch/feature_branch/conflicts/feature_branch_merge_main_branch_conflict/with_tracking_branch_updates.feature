@@ -40,7 +40,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     Then it runs the commands
       | BRANCH  | COMMAND                                                  |
       | feature | git merge --abort                                        |
-      |         | git reset --hard <%= sha 'conflicting feature commit' %> |
+      |         | git reset --hard {{ sha 'conflicting feature commit' }} |
       |         | git checkout main                                        |
       | main    | git checkout feature                                     |
       | feature | git stash pop                                            |
@@ -49,7 +49,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And there is no merge in progress
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local            | conflicting feature commit | conflicting_file | feature content |
       |         | remote           | feature commit             | feature_file     | feature content |
 
@@ -57,7 +57,10 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error: 
+      """
+      You must resolve the conflicts before continuing
+      """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -75,8 +78,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my workspace has the uncommitted file again
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit                                    | conflicting_file |
-      | feature | local and remote | conflicting feature commit                                 | conflicting_file |
+      | main    | local, remote | conflicting main commit                                    | conflicting_file |
+      | feature | local, remote | conflicting feature commit                                 | conflicting_file |
       |         |                  | feature commit                                             | feature_file     |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |
@@ -90,7 +93,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run "git commit --no-edit; git-town continue"
+    And I run "git commit --no-edit"
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND       |
       | feature | git push      |
@@ -99,8 +103,8 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And my workspace has the uncommitted file again
     And my repository still has the following commits
       | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME        |
-      | main    | local and remote | conflicting main commit                                    | conflicting_file |
-      | feature | local and remote | conflicting feature commit                                 | conflicting_file |
+      | main    | local, remote | conflicting main commit                                    | conflicting_file |
+      | feature | local, remote | conflicting feature commit                                 | conflicting_file |
       |         |                  | feature commit                                             | feature_file     |
       |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |                  | conflicting main commit                                    | conflicting_file |

@@ -7,10 +7,10 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main            | local and remote | conflicting main commit    | conflicting_file | main content    |
+      | main            | local, remote | conflicting main commit    | conflicting_file | main content    |
       | current-feature | local            | conflicting feature commit | conflicting_file | feature content |
       |                 |                  | folder commit              | new_folder/file1 |                 |
-      | other-feature   | local and remote | other feature commit       | file2            |                 |
+      | other-feature   | local, remote | other feature commit       | file2            |                 |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
     When I run "git-town sync --all" in the "new_folder" folder
@@ -20,7 +20,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune --tags                   |
-      | <none>          | cd <%= git_root_folder %>                  |
+      | <none>          | cd {{ git_root_folder }}                   |
       | current-feature | git add -A                                 |
       |                 | git stash                                  |
       |                 | git checkout main                          |
@@ -29,7 +29,6 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | current-feature | git merge --no-edit origin/current-feature |
       |                 | git merge --no-edit main                   |
     And I am in the project root folder
-    And it prints the error "Automatic merge failed"
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo has a merge in progress
@@ -38,12 +37,12 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH          | COMMAND                           |
-      | current-feature | git merge --abort                 |
-      |                 | git checkout main                 |
-      | main            | git checkout current-feature      |
-      | current-feature | git stash pop                     |
-      | <none>          | cd <%= git_folder "new_folder" %> |
+      | BRANCH          | COMMAND                          |
+      | current-feature | git merge --abort                |
+      |                 | git checkout main                |
+      | main            | git checkout current-feature     |
+      | current-feature | git stash pop                    |
+      | <none>          | cd {{ git_folder "new_folder" }} |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
@@ -53,7 +52,10 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error: 
+      """
+      You must resolve the conflicts before continuing
+      """
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
@@ -73,18 +75,18 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git checkout current-feature             |
       | current-feature | git push --tags                          |
       |                 | git stash pop                            |
-      | <none>          | cd <%= git_folder "new_folder" %>        |
+      | <none>          | cd {{ git_folder "new_folder" }}         |
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And now my repository has the following commits
+    And my repository now has the following commits
       | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
-      | main            | local and remote | conflicting main commit                  | conflicting_file |
-      | current-feature | local and remote | conflicting feature commit               | conflicting_file |
+      | main            | local, remote | conflicting main commit                  | conflicting_file |
+      | current-feature | local, remote | conflicting feature commit               | conflicting_file |
       |                 |                  | folder commit                            | new_folder/file1 |
       |                 |                  | conflicting main commit                  | conflicting_file |
       |                 |                  | Merge branch 'main' into current-feature |                  |
-      | other-feature   | local and remote | other feature commit                     | file2            |
+      | other-feature   | local, remote | other feature commit                     | file2            |
       |                 |                  | conflicting main commit                  | conflicting_file |
       |                 |                  | Merge branch 'main' into other-feature   |                  |
     And my repository still has the following committed files

@@ -24,13 +24,13 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
       |         | git stash pop            |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME          |
       | main    | local    | local main commit                | local_main_file    |
       | feature | local    | local feature commit             | local_feature_file |
       |         |          | local main commit                | local_main_file    |
       |         |          | Merge branch 'main' into feature |                    |
-    And now my repository has the following committed files
+    And my repository now has the following committed files
       | BRANCH  | NAME               | CONTENT         |
       | main    | local_main_file    | main content    |
       | feature | local_feature_file | feature content |

@@ -316,6 +316,40 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
 
+
+func (repo *GitRepository) FilesInBranch(branch string) (result []string, err error) {
+	outcome, err := repo.Shell.Run("git", "ls-tree", "-r", "--name-only", branch)
+	if err != nil {
+		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, repo.Dir, err)
+	}
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
+		result = append(result, strings.TrimSpace(line))
+	}
+	return result, err
+}
+
+func (repo *GitRepository) FilesInBranches() (result DataTable, err error) {
+	result.AddRow("BRANCH", "NAME", "CONTENT")
+	branches, err := repo.Branches()
+	if err != nil {
+		return result, err
+	}
+	for _, branch := range branches {
+		files, err := repo.FilesInBranch(branch)
+		if err != nil {
+			return result, err
+		}
+		for _, file := range files {
+			content, err := repo.FileContentInCommit(branch, file)
+			if err != nil {
+				return result, err
+			}
+			result.AddRow(branch, file, content)
+		}
+	}
+	return result, err
+}
+
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (repo *GitRepository) HasFile(name, content string) (result bool, err error) {
 	rawContent, err := ioutil.ReadFile(filepath.Join(repo.Dir, name))
@@ -375,6 +409,15 @@ func (repo *GitRepository) IsOffline() (result bool, err error) {
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Shell.Run("git", "rev-parse", "--show-toplevel")
 	return res.OutputSanitized(), err
+}
+
+// Number of branches out of sync returns the number of local branches out in sync with their remote
+func (repo *GitRepository) NumberOfBranchesOutOfSync() (int64, error) {
+	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep . | wc -l")
+	if err != nil {
+		return 0, fmt.Errorf("cannot determine number of branches in sync in %q: %w %q", repo.Dir, err, res.Output())
+	}
+	return strconv.ParseInt(res.OutputSanitized(), 0, 64)
 }
 
 // PushBranch pushes the branch with the given name to the remote.

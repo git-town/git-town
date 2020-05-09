@@ -19,4 +19,4 @@ Feature: git-town sync: syncing a feature branch pulls tags
     Then I now have the following tags
       | NAME       | LOCATION         |
       | local-tag  | local            |
-      | remote-tag | local and remote |
+      | remote-tag | local, remote |

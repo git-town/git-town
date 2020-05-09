@@ -16,6 +16,6 @@ Feature: git-town sync: syncing all branches syncs the tags
 
   Scenario: result
     Then I now have the following tags
-      | NAME       | LOCATION         |
-      | local-tag  | local and remote |
-      | remote-tag | local and remote |
+      | NAME       | LOCATION      |
+      | local-tag  | local, remote |
+      | remote-tag | local, remote |

@@ -12,7 +12,7 @@ Feature: git-town sync: syncing the current perennial branch
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
       | qa     | local            | local commit  | local_file  |
       |        | remote           | remote commit | remote_file |
-      | main   | local and remote | main commit   | main_file   |
+      | main   | local, remote | main commit   | main_file   |
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -30,8 +30,8 @@ Feature: git-town sync: syncing the current perennial branch
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION         | MESSAGE       | FILE NAME   |
-      | main   | local and remote | main commit   | main_file   |
-      | qa     | local and remote | remote commit | remote_file |
+      | main   | local, remote | main commit   | main_file   |
+      | qa     | local, remote | remote commit | remote_file |
       |        |                  | local commit  | local_file  |

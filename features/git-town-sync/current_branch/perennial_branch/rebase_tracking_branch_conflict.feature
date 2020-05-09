@@ -29,7 +29,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       To continue after having resolved conflicts, run "git-town continue".
       To continue by skipping the current branch, run "git-town skip".
       """
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
 
@@ -48,7 +48,10 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error: 
+      """
+      You must resolve the conflicts before continuing
+      """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
@@ -64,11 +67,11 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git stash pop         |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | qa     | local and remote | conflicting remote commit | conflicting_file |
+      | qa     | local, remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
+    And my repository now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
@@ -83,10 +86,10 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git stash pop   |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | qa     | local and remote | conflicting remote commit | conflicting_file |
+      | qa     | local, remote | conflicting remote commit | conflicting_file |
       |        |                  | conflicting local commit  | conflicting_file |
-    And now my repository has the following committed files
+    And my repository now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

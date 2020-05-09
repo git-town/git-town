@@ -12,6 +12,17 @@ import (
 // BranchSteps defines Cucumber step implementations around Git branches.
 // nolint:funlen
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
+	suite.Step(`^all branches are now synchronized$`, func() error {
+		outOfSync, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.NumberOfBranchesOutOfSync()
+		if err != nil {
+			return err
+		}
+		if outOfSync > 0 {
+			return fmt.Errorf("expected no branches out of sync")
+		}
+		return nil
+	})
+
 	suite.Step(`^Git Town is now aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
 		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell)
 		table := test.DataTable{}
@@ -58,7 +69,11 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)	
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
@@ -77,12 +92,9 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateBranch(branch2, "main")
 	})
 
-	suite.Step(`^my repository has the feature branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^my repository has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+		isLocal := localStr != ""
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch1)
-		if err != nil {
-			return err
-		}
-		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
 		if err != nil {
 			return err
 		}
@@ -90,7 +102,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return err
 		}
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
+		if !isLocal {
+			err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
+			if err != nil {
+				return err
+			}
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2) 
+		}
+		return nil
 	})
 
 	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
