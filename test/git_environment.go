@@ -5,6 +5,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -188,6 +191,26 @@ func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
 	return nil
 }
 
+// CreateTags creates tags from the given gherkin tabl
+func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
+	columnNames := helpers.TableFields(table)
+	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
+		return fmt.Errorf("Tag table must have columns NAME and LOCATION")
+	}
+	for _, row := range table.Rows[1:] {
+		name := row.Cells[0].Value
+		location := row.Cells[1].Value
+		if location == "local" {
+			env.DeveloperRepo.CreateTag(name)
+		} else if location == "remote" {
+			env.OriginRepo.CreateTag(name)
+		} else {
+			return fmt.Errorf("Tag table LOCATION must be 'local' or 'remote'")
+		}
+	}
+	return nil
+}
+
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
@@ -217,6 +240,24 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 		}
 	}
 	return builder.Table(fields), nil
+}
+
+// TagTable provides a table for all tags in this Git environment.
+func (env GitEnvironment) TagTable() (result DataTable, err error) {
+	builder := NewTagTableBuilder()
+	localTags, err := env.DeveloperRepo.Tags()
+	if err != nil {
+		return result, err
+	}
+	builder.AddMany(localTags, "local")
+	if env.OriginRepo != nil {
+		remoteTags, err := env.OriginRepo.Tags()
+		if err != nil {
+			return result, err
+		}
+		builder.AddMany(remoteTags, "remote")
+	}
+	return builder.Table(), nil
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.

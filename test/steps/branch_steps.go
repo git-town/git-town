@@ -68,12 +68,16 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^my repository has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
+		isLocal := localStr != ""
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(branch)
 		if err != nil {
 			return err
 		}
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)	
+		if !isLocal {
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)	
+		}
+		return nil
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {

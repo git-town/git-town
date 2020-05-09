@@ -33,7 +33,7 @@ Feature: git-town sync --all: does not sync remote only branches
     And my repository now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                             | FILE NAME     |
       | main       | local, remote | main commit                         | main_file     |
+      | co-feature | remote        | coworker commit                     | coworker_file |
       | my-feature | local, remote | my commit                           | my_file       |
       |            |               | main commit                         | main_file     |
       |            |               | Merge branch 'main' into my-feature |               |
-      | co-feature | remote        | coworker commit                     | coworker_file |

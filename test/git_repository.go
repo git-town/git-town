@@ -271,6 +271,12 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 	return nil
 }
 
+// CreateTag creates a tag with the given name
+func (repo *GitRepository) CreateTag(name string) error {
+	_, err := repo.Shell.Run("git", "tag", "-a", name, "-m", name)
+	return err
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	outcome, err := repo.Shell.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -492,6 +498,18 @@ func (repo *GitRepository) StashSize() (result int, err error) {
 		return 0, nil
 	}
 	return len(res.OutputLines()), nil
+}
+
+// Tags provides a list of the tags in this repository
+func (repo *GitRepository) Tags() (result []string, err error) {
+	res, err := repo.Shell.Run("git", "tag")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine tags in repo %q: %w", repo.Dir, err)
+	}
+	for _, line := range strings.Split(strings.TrimSpace(res.OutputSanitized()), "\n") {
+		result = append(result, strings.TrimSpace(line))
+	}
+	return result, err
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
