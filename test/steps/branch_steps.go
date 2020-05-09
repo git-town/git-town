@@ -124,16 +124,20 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
 	})
 
-	suite.Step(`^my repository has the perennial branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^my repository has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+		isLocal := localStr != ""
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
-		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
-		if err != nil {
-			return fmt.Errorf("cannot push branch %q: %w", branch1, err)
+		if !isLocal {
+			err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch1)
+			if err != nil {
+				return err
+			}
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2) 
 		}
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
+		return nil
 	})
 
 	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
