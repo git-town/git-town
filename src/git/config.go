@@ -358,7 +358,7 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
-	const key = "github.code-hosting-driver"
+	const key = "git-town.code-hosting-driver"
 	c.localConfigCache[key] = value
 	return c.shell.MustRun("git", "config", key, value)
 }
