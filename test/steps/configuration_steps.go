@@ -32,6 +32,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingOriginHostname(value)
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {

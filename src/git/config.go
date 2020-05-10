@@ -363,6 +363,13 @@ func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
 	return c.shell.MustRun("git", "config", key, value)
 }
 
+// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Result {
+	const key = "git-town.code-hosting-origin-hostname"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
