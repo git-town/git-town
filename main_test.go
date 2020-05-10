@@ -30,6 +30,7 @@ func FeatureContext(suite *godog.Suite) {
 	steps.WorkspaceSteps(suite, state)
 	steps.MergeSteps(suite, state)
 	steps.TagSteps(suite, state)
+	steps.CoworkerSteps(suite, state)
 }
 
 func TestMain(m *testing.M) {

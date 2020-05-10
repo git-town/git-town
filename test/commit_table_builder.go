@@ -61,6 +61,13 @@ func (builder *CommitTableBuilder) Add(commit Commit, location string) {
 	}
 }
 
+// AddMany registers the given commits from the given location into this table.
+func (builder *CommitTableBuilder) AddMany(commits []Commit, location string) {
+	for _, commit := range commits {
+		builder.Add(commit, location)
+	}
+}
+
 // branches provides the names of the all branches known to this CommitTableBuilder,
 // sorted alphabetically, with the main branch first.
 func (builder *CommitTableBuilder) branches() []string {
