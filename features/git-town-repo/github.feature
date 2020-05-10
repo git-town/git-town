@@ -1,10 +1,13 @@
 Feature: git-repo when origin is on GitHub
 
   Scenario Outline: result
-    Given my repo's remote origin is <ORIGIN>
-    And I have "open" installed
-    When I run `git-town repo`
-    Then I see the GitHub homepage of the "git-town/git-town" repository in my browser
+    Given my repo's origin is "<ORIGIN>"
+    And my computer has the "open" tool installed
+    When I run "git-town repo"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://github.com/git-town/git-town
+      """
 
     Examples:
       | ORIGIN                                     |
