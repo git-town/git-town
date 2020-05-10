@@ -8,8 +8,10 @@ Feature: syncing with ignored files
 
 
   Scenario: running "git sync" with ignored files
-    Given my repo ignores files named "ignored"
-    And my repository has a feature branch named "feature"
+    Given my repository has a feature branch named "feature"
+    And the following commits exist in my repository
+      | BRANCH  | LOCATION      | MESSAGE   | FILE NAME  | FILE CONTENT |
+      | feature | local, remote | my commit | .gitignore | ignored      |
     And I am on the "feature" branch
     And my workspace has an uncommitted file with name: "somefile" and content: "important"
     And my workspace has an uncommitted file with name: "test/ignored/important" and content: "very important"

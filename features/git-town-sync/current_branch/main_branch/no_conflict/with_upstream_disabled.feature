@@ -8,7 +8,7 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | remote   | remote commit   |
       |        | upstream | upstream commit |
     And I am on the "main" branch
-    And I have a the git configuration for "git-town.sync-upstream" set to "false"
+    And my repo has "git-town.sync-upstream" set to false
     And my workspace has an uncommitted file
     When I run "git-town sync"
 
@@ -26,6 +26,7 @@ Feature: git-sync: on the main branch with a upstream remote
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH | LOCATION      | MESSAGE       |
-      | main   | local, remote | remote commit |
-      |        |               | local commit  |
+      | BRANCH | LOCATION      | MESSAGE         |
+      | main   | local, remote | remote commit   |
+      |        |               | local commit    |
+      |        | upstream      | upstream commit |

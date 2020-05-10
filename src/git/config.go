@@ -405,6 +405,11 @@ func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 
+// SetShouldSyncUpstream updates the configured pull branch strategy.
+func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
+}
+
 // ShouldNewBranchPush indicates whether the current repository is configured to push
 // freshly created branches up to the origin remote.
 func (c *Configuration) ShouldNewBranchPush() bool {

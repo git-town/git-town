@@ -40,6 +40,17 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my workspace still contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
+		actualContent, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentFileContent(file)
+		if err != nil {
+			return err
+		}
+		if expectedContent != actualContent {
+			return fmt.Errorf("file content does not match\n\nEXPECTED: %q\n\nACTUAL:\n\n%q\n----------------------------", expectedContent, actualContent)
+		}
+		return nil
+	})
+
 	suite.Step(`^my repository (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FilesInBranches()
 		if err != nil {

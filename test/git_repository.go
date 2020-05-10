@@ -277,6 +277,36 @@ func (repo *GitRepository) CreateTag(name string) error {
 	return err
 }
 
+// CreateStandaloneTag creates a tag not on a branch
+func (repo *GitRepository) CreateStandaloneTag(name string) error {
+	_, err := repo.Shell.Run("git", "checkout", "-b", "temp")
+	if err != nil {
+		return err
+	}
+	_, err = repo.Shell.Run("touch", "a.txt")
+	if err != nil {
+		return err
+	}	
+	_, err = repo.Shell.Run("git", "add", "-A")
+	if err != nil {
+		return err
+	}
+	_, err = repo.Shell.Run("git", "commit", "-m", "temp")
+	if err != nil {
+		return err
+	}
+	_, err = repo.Shell.Run("git", "tag", "-a", name, "-m", name)
+	if err != nil {
+		return err
+	}
+	_, err = repo.Shell.Run("git", "checkout", "-")
+	if err != nil {
+		return err
+	}
+	_, err = repo.Shell.Run("git", "branch", "-D", "temp")
+	return err
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	outcome, err := repo.Shell.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -284,6 +314,15 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
 	return strings.TrimSpace(outcome.OutputSanitized()), nil
+}
+
+// CurrentFileContent provides the current content of a file.
+func (repo *GitRepository) CurrentFileContent(filename string) (result string, err error) {
+	outcome, err := repo.Shell.Run("cat", filename)
+	if err != nil {
+		return result, err
+	}
+	return outcome.Output(), nil
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.

@@ -26,4 +26,8 @@ func TagSteps(suite *godog.Suite, fs *FeatureState) {
 		}		
 		return nil
 	})
+
+	suite.Step(`^I have a remote tag "([^"]+)" that is not on a branch$`, func(name string) error {
+		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateStandaloneTag(name)
+	})
 }

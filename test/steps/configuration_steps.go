@@ -27,6 +27,15 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
+		if err != nil {
+			return err
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {
