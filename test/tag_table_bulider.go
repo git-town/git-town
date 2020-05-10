@@ -51,7 +51,7 @@ func (builder *TagTableBuilder) Table() (result DataTable) {
 	index := 0
 	for tag := range builder.tagToLocations {
 		tags[index] = tag
-		index = index + 1
+		index++
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {
