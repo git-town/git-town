@@ -35,9 +35,9 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
 	originDir := filepath.Join(dir, "origin")
-	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir))
+	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir, ""))
 	developerDir := filepath.Join(dir, "developer")
-	developerShell := NewMockingShell(developerDir, dir)
+	developerShell := NewMockingShell(developerDir, dir, filepath.Join(dir, "bin"))
 	result := GitEnvironment{
 		Dir:            dir,
 		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
@@ -75,7 +75,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
-	originRepo, err := InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir)
+	originRepo, err := InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
@@ -89,7 +89,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		return gitEnv, err
 	}
 	// clone the "developer" repo
-	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir)
+	gitEnv.DeveloperRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
@@ -107,7 +107,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 
 // AddUpstream adds an upstream repository.
 func (env *GitEnvironment) AddUpstream() (err error) {
-	repo, err := CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir)
+	repo, err := CloneGitRepository(env.DeveloperRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir, "")
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
@@ -117,6 +117,11 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
 	return nil
+}
+
+// binPath provides the full path of the folder containing the test tools for this GitEnvironment.
+func (env *GitEnvironment) binPath() string {
+	return filepath.Join(env.Dir, "bin")
 }
 
 // Branches provides a tabular list of all branches in this GitEnvironment.

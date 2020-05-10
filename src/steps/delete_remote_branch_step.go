@@ -10,18 +10,22 @@ type DeleteRemoteBranchStep struct {
 	NoOpStep
 	BranchName string
 	IsTracking bool
+
+	branchSha string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *DeleteRemoteBranchStep) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *DeleteRemoteBranchStep) CreateUndoStep() Step {
 	if step.IsTracking {
 		return &CreateTrackingBranchStep{BranchName: step.BranchName}
 	}
-	sha := git.GetBranchSha(git.GetTrackingBranchName(step.BranchName))
-	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: sha}
+	return &CreateRemoteBranchStep{BranchName: step.BranchName, Sha: step.branchSha}
 }
 
 // Run executes this step.
 func (step *DeleteRemoteBranchStep) Run() error {
+	if !step.IsTracking {
+		step.branchSha = git.GetBranchSha(git.GetTrackingBranchName(step.BranchName))
+	}
 	return script.RunCommand("git", "push", "origin", ":"+step.BranchName)
 }

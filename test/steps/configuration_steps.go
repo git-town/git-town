@@ -27,6 +27,16 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingDriver(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingOriginHostname(value)
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {
@@ -38,7 +48,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
+			return err
 		}
 		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush()
 		if have != want {
@@ -59,7 +69,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the new-branch-push-flag configuration is (true|false)$`, func(value string) error {
 		b, err := strconv.ParseBool(value)
 		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
+			return err
 		}
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, false)
 		return nil
@@ -80,15 +90,6 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^the main branch name is not configured$`, func() error {
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeleteMainBranchConfiguration()
-		return nil
-	})
-
-	suite.Step(`^the new-branch-push-flag configuration is set to (true|false)$`, func(text string) error {
-		value, err := strconv.ParseBool(text)
-		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
-		}
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(value, false)
 		return nil
 	})
 

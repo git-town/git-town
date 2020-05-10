@@ -8,8 +8,8 @@ type RemoveFromPerennialBranches struct {
 	BranchName string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *RemoveFromPerennialBranches) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *RemoveFromPerennialBranches) CreateUndoStep() Step {
 	return &AddToPerennialBranches{BranchName: step.BranchName}
 }
 

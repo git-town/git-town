@@ -6,17 +6,17 @@ Feature: git-new-pull-request when origin is on GitHub
 
 
   Background:
-    Given I have "open" installed
+    Given my computer has the "open" tool installed
 
 
   Scenario Outline: normal origin
     Given my repository has a feature branch named "feature"
-    And my repo's remote origin is <ORIGIN>
+    And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town/compare/feature?expand=1
+      https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
     Examples:
@@ -31,12 +31,12 @@ Feature: git-new-pull-request when origin is on GitHub
 
   Scenario Outline: origin contains path that looks like a URL
     Given my repository has a feature branch named "feature"
-    And my repo's remote origin is <ORIGIN>
+    And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
+      https://github.com/git-town/git-town.github.com/compare/feature?expand=1 |
       """
 
     Examples:
@@ -51,10 +51,10 @@ Feature: git-new-pull-request when origin is on GitHub
 
   Scenario Outline: proper URL encoding
     Given my repository has a feature branch named "<BRANCH_NAME>"
-    And my repo's remote origin is "https://github.com/git-town/git-town"
+    And my repo's origin is "https://github.com/git-town/git-town"
     And I am on the "<BRANCH_NAME>" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
       <URL>
       """
@@ -69,12 +69,12 @@ Feature: git-new-pull-request when origin is on GitHub
 
   Scenario Outline: SSH style origin
     Given my repository has a feature branch named "feature"
-    And my repo's remote origin is <ORIGIN>
+    And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
-			https://github.com/git-town/git-town/compare/feature?expand=1
+      https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
     Examples:
@@ -86,7 +86,10 @@ Feature: git-new-pull-request when origin is on GitHub
   Scenario: nested feature branch with known parent
     Given my repository has a feature branch named "parent-feature"
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
-    And my repo's remote origin is git@github.com:git-town/git-town.git
+    And my repo's origin is "git@github.com:git-town/git-town.git"
     And I am on the "child-feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new GitHub pull request for the "child-feature" branch against the "parent-feature" branch in the "git-town/git-town" repo in my browser
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://github.com/git-town/git-town/compare/parent-feature...child-feature?expand=1
+      """
