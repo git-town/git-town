@@ -20,8 +20,8 @@ type MockingShell struct {
 	workingDir     string // the directory in which this runner runs
 	homeDir        string // the directory that contains the global Git configuration
 	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
-	testOrigin     string // custom environment variables to use
-	hasMockCommand bool   // indicates whether a custom command is set
+	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
+	hasMockCommand bool   // indicates whether the current test has mocked a command
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
