@@ -61,7 +61,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 			fmt.Printf("\nERROR! Found %d differences in the existing files\n\n", errorCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching files found, see diff above")
-		}		
+		}
 		return nil
 	})
 }

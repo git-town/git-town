@@ -41,15 +41,15 @@ func (builder *TagTableBuilder) Add(tag, location string) {
 func (builder *TagTableBuilder) AddMany(tags []string, location string) {
 	for _, tag := range tags {
 		builder.Add(tag, location)
-	} 
+	}
 }
 
 // Table provides the data accumulated by this TagTableBuilder as a DataTable.
 func (builder *TagTableBuilder) Table() (result DataTable) {
 	result.AddRow("NAME", "LOCATION")
-	var tags []string
+	tags := make([]string, len(builder.tagToLocations))
 	for tag := range builder.tagToLocations {
-			tags = append(tags, tag)
+		tags = append(tags, tag)
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {

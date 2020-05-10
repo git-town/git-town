@@ -10,7 +10,7 @@ import (
 )
 
 // BranchSteps defines Cucumber step implementations around Git branches.
-// nolint:funlen
+// nolint:funlen,gocognit
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^all branches are now synchronized$`, func() error {
 		outOfSync, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.NumberOfBranchesOutOfSync()
@@ -75,7 +75,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return err
 		}
 		if !isLocal {
-			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)	
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)
 		}
 		return nil
 	})
@@ -111,7 +111,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			if err != nil {
 				return err
 			}
-			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2) 
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
 		}
 		return nil
 	})
@@ -135,7 +135,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			if err != nil {
 				return err
 			}
-			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2) 
+			return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch2)
 		}
 		return nil
 	})

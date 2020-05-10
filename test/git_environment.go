@@ -52,7 +52,7 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
 	}
-	for _, repo := range []GitRepository{ result.DeveloperRepo, result.CoworkerRepo } {
+	for _, repo := range []GitRepository{result.DeveloperRepo, result.CoworkerRepo} {
 		// Since we copied the files from the memoized directory,
 		// we have to set the "origin" remote to the copied origin repo here.
 		err = repo.AddRemote("origin", result.OriginRepo.Dir)
@@ -111,7 +111,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone coworker repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), err)
 	}
-	for _, repo := range []GitRepository{ gitEnv.DeveloperRepo, gitEnv.CoworkerRepo } {
+	for _, repo := range []GitRepository{gitEnv.DeveloperRepo, gitEnv.CoworkerRepo} {
 		err = repo.Shell.RunMany([][]string{
 			{"git", "config", "git-town.main-branch-name", "main"},
 			{"git", "config", "git-town.perennial-branch-names", ""},
@@ -217,17 +217,22 @@ func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
 func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
-		return fmt.Errorf("Tag table must have columns NAME and LOCATION")
+		return fmt.Errorf("tag table must have columns NAME and LOCATION")
 	}
 	for _, row := range table.Rows[1:] {
 		name := row.Cells[0].Value
 		location := row.Cells[1].Value
-		if location == "local" {
-			env.DeveloperRepo.CreateTag(name)
-		} else if location == "remote" {
-			env.OriginRepo.CreateTag(name)
-		} else {
-			return fmt.Errorf("Tag table LOCATION must be 'local' or 'remote'")
+		var err error
+		switch location {
+		case "local":
+			err = env.DeveloperRepo.CreateTag(name)
+		case "remote":
+			err = env.OriginRepo.CreateTag(name)
+		default:
+			err = fmt.Errorf("tag table LOCATION must be 'local' or 'remote'")
+		}
+		if err != nil {
+			return err
 		}
 	}
 	return nil

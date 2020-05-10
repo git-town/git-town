@@ -17,5 +17,5 @@ func TestTagTableBuilder(t *testing.T) {
 | tagB | local, remote |
 | tagC | local         |
 `
-	assert.Equal(t, expected, "\n" + table.String())
+	assert.Equal(t, expected, "\n"+table.String())
 }

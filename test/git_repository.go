@@ -279,9 +279,9 @@ func (repo *GitRepository) CreateTag(name string) error {
 
 // CreateStandaloneTag creates a tag not on a branch
 func (repo *GitRepository) CreateStandaloneTag(name string) error {
-	return repo.Shell.RunMany([][]string {
+	return repo.Shell.RunMany([][]string{
 		{"git", "checkout", "-b", "temp"},
-	 	{"touch", "a.txt"},
+		{"touch", "a.txt"},
 		{"git", "add", "-A"},
 		{"git", "commit", "-m", "temp"},
 		{"git", "tag", "-a", name, "-m", name},
@@ -343,7 +343,6 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 	}
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
-
 
 func (repo *GitRepository) FilesInBranch(branch string) (result []string, err error) {
 	outcome, err := repo.Shell.Run("git", "ls-tree", "-r", "--name-only", branch)
