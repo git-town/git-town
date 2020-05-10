@@ -1,10 +1,13 @@
 Feature: git-repo: multi-platform support
 
   Scenario Outline: supported tool installed
-    Given my repo's remote origin is https://github.com/git-town/git-town.git
-    And I have "<TOOL>" installed
-    When I run `git-town repo`
-    Then I see the GitHub homepage of the "git-town/git-town" repository in my browser
+    Given my repo's origin is "https://github.com/git-town/git-town.git"
+    And my computer has the "<TOOL>" tool installed
+    When I run "git-town repo"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://github.com/git-town/git-town
+      """
 
     Examples:
       | TOOL     |
@@ -13,7 +16,10 @@ Feature: git-repo: multi-platform support
 
 
   Scenario: no supported tool installed
-    Given my repo's remote origin is https://github.com/git-town/git-town.git
-    And I have no command that opens browsers installed
-    When I run `git-town repo`
-    Then it prints the error "Cannot open a browser"
+    Given my repo's origin is "https://github.com/git-town/git-town.git"
+    And my computer has no tool to open browsers installed
+    When I run "git-town repo"
+    Then it prints the error:
+      """
+      Cannot open a browser
+      """

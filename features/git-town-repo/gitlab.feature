@@ -1,10 +1,13 @@
 Feature: git-repo when origin is on GitLab
 
   Scenario Outline: result
-    Given my repo's remote origin is <ORIGIN>
-    And I have "open" installed
-    When I run `git-town repo`
-    Then I see the GitLab homepage of the "kadu/kadu" repository in my browser
+    Given my repo's origin is "<ORIGIN>"
+    And my computer has the "open" tool installed
+    When I run "git-town repo"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://gitlab.com/kadu/kadu
+      """
 
     Examples:
       | ORIGIN                           |

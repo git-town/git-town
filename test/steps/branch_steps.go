@@ -53,6 +53,22 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.DeleteMainBranchConfiguration()
 	})
 
+	suite.Step(`^my code base has a feature branch named "([^"]*)"$`, func(name string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranch(name)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(name)
+	})
+
+	suite.Step(`^my code base has a feature branch named "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateChildFeatureBranch(branch, parent)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.PushBranch(branch)
+	})
+
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
 	})

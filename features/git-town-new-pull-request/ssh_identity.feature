@@ -6,13 +6,13 @@ Feature: git-town new-pull-request: when origin is an ssh identity
 
 
   Scenario Outline: ssh identity
-    Given I have "open" installed
+    And my computer has the "open" tool installed
     And my repository has a feature branch named "feature"
-    And my repo's remote origin is "git@my-ssh-identity:git-town/git-town.git"
-    And I configure "git-town.code-hosting-origin-hostname" as "<ORIGIN_HOSTNAME>"
+    And my repo's origin is "git@my-ssh-identity:git-town/git-town.git"
+    And my repo has "git-town.code-hosting-origin-hostname" set to "<ORIGIN_HOSTNAME>"
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
       <PULL_REQUEST_URL>
       """
