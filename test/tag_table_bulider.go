@@ -48,8 +48,10 @@ func (builder *TagTableBuilder) AddMany(tags []string, location string) {
 func (builder *TagTableBuilder) Table() (result DataTable) {
 	result.AddRow("NAME", "LOCATION")
 	tags := make([]string, len(builder.tagToLocations))
+	index := 0
 	for tag := range builder.tagToLocations {
-		tags = append(tags, tag)
+		tags[index] = tag
+		index = index + 1
 	}
 	sort.Strings(tags)
 	for _, tag := range tags {
