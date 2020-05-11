@@ -6,16 +6,26 @@ import (
 	"github.com/cucumber/godog"
 )
 
-// MergeSteps defines Cucumber step implementations around Git merges
-// nolint:funlen
+// Merge defines Gherkin step implementations around merges.
 func MergeSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^there is no merge in progress$`, func() error {
-		has, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
+	suite.Step(`^my repo (?:now|still) has a merge in progress$`, func() error {
+		hasMerge, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
 		if err != nil {
 			return err
 		}
-		if has {
-			return fmt.Errorf("expected no merge in progress, but has one")
+		if !hasMerge {
+			return fmt.Errorf("expected merge in progress")
+		}
+		return nil
+	})
+
+	suite.Step(`^there is no merge in progress$`, func() error {
+		hasMerge, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
+		if err != nil {
+			return err
+		}
+		if hasMerge {
+			return fmt.Errorf("expected no merge in progress")
 		}
 		return nil
 	})

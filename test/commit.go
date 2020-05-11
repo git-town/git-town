@@ -33,6 +33,7 @@ func DefaultCommit() Commit {
 func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []Commit, err error) {
 	columnNames := helpers.TableFields(table)
 	lastBranchName := ""
+	lastLocationName := ""
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for i, cell := range row.Cells {
@@ -43,6 +44,13 @@ func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []
 					cellValue = lastBranchName
 				} else {
 					lastBranchName = cellValue
+				}
+			}
+			if columnName == "LOCATION" {
+				if cell.Value == "" {
+					cellValue = lastLocationName
+				} else {
+					lastLocationName = cellValue
 				}
 			}
 			err := commit.set(columnName, cellValue)

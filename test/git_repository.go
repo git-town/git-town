@@ -270,6 +270,25 @@ func (repo *GitRepository) CreatePerennialBranches(names ...string) error {
 	return nil
 }
 
+// CreateTag creates a tag with the given name
+func (repo *GitRepository) CreateTag(name string) error {
+	_, err := repo.Shell.Run("git", "tag", "-a", name, "-m", name)
+	return err
+}
+
+// CreateStandaloneTag creates a tag not on a branch
+func (repo *GitRepository) CreateStandaloneTag(name string) error {
+	return repo.Shell.RunMany([][]string{
+		{"git", "checkout", "-b", "temp"},
+		{"touch", "a.txt"},
+		{"git", "add", "-A"},
+		{"git", "commit", "-m", "temp"},
+		{"git", "tag", "-a", name, "-m", name},
+		{"git", "checkout", "-"},
+		{"git", "branch", "-D", "temp"},
+	})
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	outcome, err := repo.Shell.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -277,6 +296,15 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 		return result, fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
 	return strings.TrimSpace(outcome.OutputSanitized()), nil
+}
+
+// CurrentFileContent provides the current content of a file.
+func (repo *GitRepository) CurrentFileContent(filename string) (result string, err error) {
+	outcome, err := repo.Shell.Run("cat", filename)
+	if err != nil {
+		return result, err
+	}
+	return outcome.Output(), nil
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -313,6 +341,44 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 		return result, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
+}
+
+// FilesInBranch provides the list of the files present in the given branch.
+func (repo *GitRepository) FilesInBranch(branch string) (result []string, err error) {
+	outcome, err := repo.Shell.Run("git", "ls-tree", "-r", "--name-only", branch)
+	if err != nil {
+		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, repo.Dir, err)
+	}
+	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
+		file := strings.TrimSpace(line)
+		if file != "" {
+			result = append(result, file)
+		}
+	}
+	return result, err
+}
+
+// FilesInBranches provides a data table of files and their content in all branches.
+func (repo *GitRepository) FilesInBranches() (result DataTable, err error) {
+	result.AddRow("BRANCH", "NAME", "CONTENT")
+	branches, err := repo.Branches()
+	if err != nil {
+		return result, err
+	}
+	for _, branch := range branches {
+		files, err := repo.FilesInBranch(branch)
+		if err != nil {
+			return result, err
+		}
+		for _, file := range files {
+			content, err := repo.FileContentInCommit(branch, file)
+			if err != nil {
+				return result, err
+			}
+			result.AddRow(branch, file, content)
+		}
+	}
+	return result, err
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
@@ -374,6 +440,15 @@ func (repo *GitRepository) IsOffline() (result bool, err error) {
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Shell.Run("git", "rev-parse", "--show-toplevel")
 	return res.OutputSanitized(), err
+}
+
+// Number of branches out of sync returns the number of local branches out in sync with their remote
+func (repo *GitRepository) NumberOfBranchesOutOfSync() (int64, error) {
+	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep . | wc -l")
+	if err != nil {
+		return 0, fmt.Errorf("cannot determine number of branches in sync in %q: %w %q", repo.Dir, err, res.Output())
+	}
+	return strconv.ParseInt(res.OutputSanitized(), 0, 64)
 }
 
 // PushBranch pushes the branch with the given name to the remote.
@@ -448,6 +523,18 @@ func (repo *GitRepository) StashSize() (result int, err error) {
 		return 0, nil
 	}
 	return len(res.OutputLines()), nil
+}
+
+// Tags provides a list of the tags in this repository
+func (repo *GitRepository) Tags() (result []string, err error) {
+	res, err := repo.Shell.Run("git", "tag")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine tags in repo %q: %w", repo.Dir, err)
+	}
+	for _, line := range strings.Split(strings.TrimSpace(res.OutputSanitized()), "\n") {
+		result = append(result, strings.TrimSpace(line))
+	}
+	return result, err
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.

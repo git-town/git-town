@@ -5,6 +5,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // GitEnvironment is the complete Git environment for a test scenario.
@@ -20,6 +23,9 @@ type GitEnvironment struct {
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
 
+	// CoworkerRepo is the Git repository that is locally checked out at the coworker machine.
+	CoworkerRepo GitRepository
+
 	// DeveloperShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DeveloperShell *MockingShell
 
@@ -34,29 +40,37 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	if err != nil {
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
+	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir, ""))
 	developerDir := filepath.Join(dir, "developer")
-	developerShell := NewMockingShell(developerDir, dir, filepath.Join(dir, "bin"))
+	developerShell := NewMockingShell(developerDir, dir, binDir)
+	coworkerDir := filepath.Join(dir, "coworker")
 	result := GitEnvironment{
 		Dir:            dir,
+		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir, binDir)),
 		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
 	}
-	// Since we copied the files from the memoized directory,
-	// we have to set the "origin" remote to the copied origin repo here.
-	err = result.DeveloperRepo.AddRemote("origin", result.OriginRepo.Dir)
-	if err != nil {
-		return &result, fmt.Errorf("cannot set remote: %w", err)
+	for _, repo := range []GitRepository{result.DeveloperRepo, result.CoworkerRepo} {
+		// Since we copied the files from the memoized directory,
+		// we have to set the "origin" remote to the copied origin repo here.
+		err = repo.AddRemote("origin", result.OriginRepo.Dir)
+		if err != nil {
+			return &result, fmt.Errorf("cannot set remote: %w", err)
+		}
+		err = repo.Fetch()
+		if err != nil {
+			return &result, fmt.Errorf("cannot fetch: %w", err)
+		}
+		// and connect the main branches again
+		err = repo.ConnectTrackingBranch("main")
+		if err != nil {
+			return &result, fmt.Errorf("cannot connect tracking branch: %w", err)
+		}
 	}
-	err = result.DeveloperRepo.Fetch()
-	if err != nil {
-		return &result, fmt.Errorf("cannot fetch: %w", err)
-	}
-	// and connect the main branches again
-	err = result.DeveloperRepo.ConnectTrackingBranch("main")
-	return &result, err
+	return &result, nil
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
@@ -93,16 +107,26 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
-	err = gitEnv.DeveloperRepo.Shell.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
-		{"git", "checkout", "main"},
-		// NOTE: the developer repo receives the master branch from origin
-		//       but we don't want it here because it isn't used in tests.
-		{"git", "branch", "-d", "master"},
-		{"git", "remote", "remove", "origin"}, // disconnect the remote here since we copy this and connect to another directory in tests
-	})
-	return gitEnv, err
+	// clone the "coworker" repo
+	gitEnv.CoworkerRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	if err != nil {
+		return gitEnv, fmt.Errorf("cannot clone coworker repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), err)
+	}
+	for _, repo := range []GitRepository{gitEnv.DeveloperRepo, gitEnv.CoworkerRepo} {
+		err = repo.Shell.RunMany([][]string{
+			{"git", "config", "git-town.main-branch-name", "main"},
+			{"git", "config", "git-town.perennial-branch-names", ""},
+			{"git", "checkout", "main"},
+			// NOTE: the developer/coworker repos receives the master branch from origin
+			//       but we don't want it here because it isn't used in tests.
+			{"git", "branch", "-d", "master"},
+			{"git", "remote", "remove", "origin"}, // disconnect the remote here since we copy this and connect to another directory in tests
+		})
+		if err != nil {
+			return gitEnv, err
+		}
+	}
+	return gitEnv, nil
 }
 
 // AddUpstream adds an upstream repository.
@@ -148,6 +172,8 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 		var err error
 		for _, location := range commit.Locations {
 			switch location {
+			case "coworker":
+				err = env.CoworkerRepo.CreateCommit(commit)
 			case "local":
 				err = env.DeveloperRepo.CreateCommit(commit)
 			case "local, remote":
@@ -193,6 +219,31 @@ func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
 	return nil
 }
 
+// CreateTags creates tags from the given gherkin table.
+func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
+	columnNames := helpers.TableFields(table)
+	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
+		return fmt.Errorf("tag table must have columns NAME and LOCATION")
+	}
+	for _, row := range table.Rows[1:] {
+		name := row.Cells[0].Value
+		location := row.Cells[1].Value
+		var err error
+		switch location {
+		case "local":
+			err = env.DeveloperRepo.CreateTag(name)
+		case "remote":
+			err = env.OriginRepo.CreateTag(name)
+		default:
+			err = fmt.Errorf("tag table LOCATION must be 'local' or 'remote'")
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // CommitTable provides a table for all commits in this Git environment containing only the given fields.
 func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err error) {
 	builder := NewCommitTableBuilder()
@@ -200,28 +251,50 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 	if err != nil {
 		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
-	for _, localCommit := range localCommits {
-		builder.Add(localCommit, "local")
+	builder.AddMany(localCommits, "local")
+	coworkerCommits, err := env.CoworkerRepo.Commits(fields)
+	if err != nil {
+		return result, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
 	}
+	builder.AddMany(coworkerCommits, "coworker")
 	if env.OriginRepo != nil {
 		remoteCommits, err := env.OriginRepo.Commits(fields)
 		if err != nil {
 			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
-		for _, remoteCommit := range remoteCommits {
-			builder.Add(remoteCommit, "remote")
-		}
+		builder.AddMany(remoteCommits, "remote")
 	}
 	if env.UpstreamRepo != nil {
 		upstreamCommits, err := env.UpstreamRepo.Commits(fields)
 		if err != nil {
 			return result, fmt.Errorf("cannot determine commits in the origin repo: %w", err)
 		}
-		for _, upstreamCommit := range upstreamCommits {
-			builder.Add(upstreamCommit, "upstream")
-		}
+		builder.AddMany(upstreamCommits, "upstream")
 	}
 	return builder.Table(fields), nil
+}
+
+// TagTable provides a table for all tags in this Git environment.
+func (env GitEnvironment) TagTable() (result DataTable, err error) {
+	builder := NewTagTableBuilder()
+	localTags, err := env.DeveloperRepo.Tags()
+	if err != nil {
+		return result, err
+	}
+	builder.AddMany(localTags, "local")
+	if env.OriginRepo != nil {
+		remoteTags, err := env.OriginRepo.Tags()
+		if err != nil {
+			return result, err
+		}
+		builder.AddMany(remoteTags, "remote")
+	}
+	return builder.Table(), nil
+}
+
+// coworkerRepoPath provides the full path to the Git repository with the given name.
+func (env GitEnvironment) coworkerRepoPath() string {
+	return filepath.Join(env.Dir, "coworker")
 }
 
 // developerRepoPath provides the full path to the Git repository with the given name.

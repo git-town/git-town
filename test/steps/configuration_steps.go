@@ -27,6 +27,15 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
+		if err != nil {
+			return err
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+		return nil
+	})
+
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingDriver(value)
 		return nil
@@ -127,6 +136,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		if actual[0] != branch1 || actual[1] != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
 		}
+		return nil
+	})
+
+	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetPullBranchStrategy(value)
 		return nil
 	})
 
