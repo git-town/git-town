@@ -343,6 +343,7 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
 }
 
+// FilesInBranch provides the list of the files present in the given branch.
 func (repo *GitRepository) FilesInBranch(branch string) (result []string, err error) {
 	outcome, err := repo.Shell.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
@@ -357,6 +358,7 @@ func (repo *GitRepository) FilesInBranch(branch string) (result []string, err er
 	return result, err
 }
 
+// FilesInBranches provides a data table of files and their content in all branches.
 func (repo *GitRepository) FilesInBranches() (result DataTable, err error) {
 	result.AddRow("BRANCH", "NAME", "CONTENT")
 	branches, err := repo.Branches()

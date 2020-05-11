@@ -40,14 +40,15 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	if err != nil {
 		return nil, fmt.Errorf("cannot clone GitEnvironment %q to folder %q: %w", original.Dir, dir, err)
 	}
+	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
 	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir, ""))
 	developerDir := filepath.Join(dir, "developer")
-	developerShell := NewMockingShell(developerDir, dir, filepath.Join(dir, "bin"))
+	developerShell := NewMockingShell(developerDir, dir, binDir)
 	coworkerDir := filepath.Join(dir, "coworker")
 	result := GitEnvironment{
 		Dir:            dir,
-		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir, filepath.Join(dir, "bin"))),
+		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir, binDir)),
 		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
@@ -116,7 +117,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 			{"git", "config", "git-town.main-branch-name", "main"},
 			{"git", "config", "git-town.perennial-branch-names", ""},
 			{"git", "checkout", "main"},
-			// NOTE: the developer repo receives the master branch from origin
+			// NOTE: the developer/coworker repos receives the master branch from origin
 			//       but we don't want it here because it isn't used in tests.
 			{"git", "branch", "-d", "master"},
 			{"git", "remote", "remove", "origin"}, // disconnect the remote here since we copy this and connect to another directory in tests
@@ -218,7 +219,7 @@ func (env GitEnvironment) CreateRemoteBranch(name, parent string) error {
 	return nil
 }
 
-// CreateTags creates tags from the given gherkin tabl
+// CreateTags creates tags from the given gherkin table.
 func (env GitEnvironment) CreateTags(table *messages.PickleStepArgument_PickleTable) error {
 	columnNames := helpers.TableFields(table)
 	if columnNames[0] != "NAME" && columnNames[1] != "LOCATION" {
