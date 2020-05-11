@@ -10,10 +10,10 @@ Feature: git-town sync: syncing the main branch syncs the tags
       | NAME      | LOCATION |
       | local-tag | local    |
     And I am on the "main" branch
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then I now have the following tags
-      | NAME      | LOCATION         |
-      | local-tag | local and remote |
+      | NAME      | LOCATION      |
+      | local-tag | local, remote |
 
 
   Scenario: fetching tags on a pulled branch
@@ -21,16 +21,16 @@ Feature: git-town sync: syncing the main branch syncs the tags
       | NAME       | LOCATION |
       | remote-tag | remote   |
     And I am on the "main" branch
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then I now have the following tags
-      | NAME       | LOCATION         |
-      | remote-tag | local and remote |
+      | NAME       | LOCATION      |
+      | remote-tag | local, remote |
 
 
   Scenario: fetching tags not on a branch
     Given I have a remote tag "remote-tag" that is not on a branch
     And I am on the "main" branch
-    When I run `git-town sync`
+    When I run "git-town sync"
     Then I now have the following tags
-      | NAME       | LOCATION         |
-      | remote-tag | local and remote |
+      | NAME       | LOCATION      |
+      | remote-tag | local, remote |

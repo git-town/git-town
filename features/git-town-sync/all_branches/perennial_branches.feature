@@ -11,7 +11,7 @@ Feature: git-town sync --all: syncs all perennial branches
       |            | remote   | qa remote commit         | qa_remote_file         |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all`
+    When I run "git-town sync --all"
 
 
   Scenario: result
@@ -33,10 +33,10 @@ Feature: git-town sync --all: syncs all perennial branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME              |
-      | main       | local and remote | main commit              | main_file              |
-      | production | local and remote | production remote commit | production_remote_file |
-      |            |                  | production local commit  | production_local_file  |
-      | qa         | local and remote | qa remote commit         | qa_remote_file         |
-      |            |                  | qa local commit          | qa_local_file          |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME              |
+      | main       | local, remote | main commit              | main_file              |
+      | production | local, remote | production remote commit | production_remote_file |
+      |            |               | production local commit  | production_local_file  |
+      | qa         | local, remote | qa remote commit         | qa_remote_file         |
+      |            |               | qa local commit          | qa_local_file          |

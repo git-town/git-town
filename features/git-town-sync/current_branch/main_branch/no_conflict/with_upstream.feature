@@ -7,7 +7,7 @@ Feature: git-sync: on the main branch with a upstream remote
       | main   | upstream | upstream commit |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -24,6 +24,6 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git stash pop            |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH | LOCATION                    | MESSAGE         |
-      | main   | local, remote, and upstream | upstream commit |
+    And my repository now has the following commits
+      | BRANCH | LOCATION                | MESSAGE         |
+      | main   | local, remote, upstream | upstream commit |
