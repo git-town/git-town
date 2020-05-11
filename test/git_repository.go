@@ -88,7 +88,7 @@ func (repo *GitRepository) Branches() (result []string, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot run 'git branch' in repo %q: %w", repo.Dir, err)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
+	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		line = strings.Replace(line, "* ", "", 1)
 		result = append(result, strings.TrimSpace(line))
 	}
@@ -126,7 +126,7 @@ func (repo *GitRepository) commitsInBranch(branch string, fields []string) (resu
 	if err != nil {
 		return result, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
+	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		parts := strings.Split(line, "|")
 		commit := Commit{Branch: branch, SHA: parts[0], Message: parts[1], Author: parts[2]}
 		if strings.EqualFold(commit.Message, "initial commit") {
@@ -295,7 +295,7 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the current branch: %w\n%s", err, outcome.Output())
 	}
-	return strings.TrimSpace(outcome.OutputSanitized()), nil
+	return outcome.OutputSanitized(), nil
 }
 
 // CurrentFileContent provides the current content of a file.
@@ -340,7 +340,7 @@ func (repo *GitRepository) FilesInCommit(sha string) (result []string, err error
 	if err != nil {
 		return result, fmt.Errorf("cannot get files for commit %q: %w", sha, err)
 	}
-	return strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n"), nil
+	return strings.Split(outcome.OutputSanitized(), "\n"), nil
 }
 
 // FilesInBranch provides the list of the files present in the given branch.
@@ -349,7 +349,7 @@ func (repo *GitRepository) FilesInBranch(branch string) (result []string, err er
 	if err != nil {
 		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, repo.Dir, err)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(outcome.OutputSanitized()), "\n") {
+	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		file := strings.TrimSpace(line)
 		if file != "" {
 			result = append(result, file)
@@ -531,7 +531,7 @@ func (repo *GitRepository) Tags() (result []string, err error) {
 	if err != nil {
 		return result, fmt.Errorf("cannot determine tags in repo %q: %w", repo.Dir, err)
 	}
-	for _, line := range strings.Split(strings.TrimSpace(res.OutputSanitized()), "\n") {
+	for _, line := range strings.Split(res.OutputSanitized(), "\n") {
 		result = append(result, strings.TrimSpace(line))
 	}
 	return result, err
