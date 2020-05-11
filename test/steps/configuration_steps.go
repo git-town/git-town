@@ -33,6 +33,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 			return err
 		}
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+		return nil
 	})
 
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
