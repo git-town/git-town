@@ -23,6 +23,7 @@ func FeatureContext(suite *godog.Suite) {
 	steps.GitTownSteps(suite, state)
 	steps.InstallationSteps(suite, state)
 	steps.MergeSteps(suite, state)
+	steps.OfflineSteps(suite, state)
 	steps.OriginSteps(suite, state)
 	steps.PrintSteps(suite, state)
 	steps.RebaseSteps(suite, state)
