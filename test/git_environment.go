@@ -47,7 +47,7 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	coworkerDir := filepath.Join(dir, "coworker")
 	result := GitEnvironment{
 		Dir:            dir,
-		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir)),
+		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir, filepath.Join(dir, "bin"))),
 		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
