@@ -233,11 +233,9 @@ func (c *Configuration) GetPullBranchStrategy() string {
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func (c *Configuration) GetRemoteOriginURL() string {
-	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := c.getLocalConfigValue("git-town.testing.remote-url")
-		if mockRemoteURL != "" {
-			return mockRemoteURL
-		}
+	remote := os.Getenv("GIT_TOWN_REMOTE")
+	if remote != "" {
+		return remote
 	}
 	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
 }
@@ -358,6 +356,20 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 	}
 }
 
+// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
+	const key = "git-town.code-hosting-driver"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
+// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Result {
+	const key = "git-town.code-hosting-origin-hostname"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
@@ -387,6 +399,11 @@ func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Resul
 // SetOffline updates whether Git Town is in offline mode
 func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+}
+
+// SetTestOrigin sets the origin to be used for testing.
+func (c *Configuration) SetTestOrigin(value string) {
+	_ = c.setLocalConfigValue("git-town.testing.remote-url", value)
 }
 
 // SetParentBranch marks the given branch as the direct parent of the other given branch

@@ -33,6 +33,15 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 			return err
 		}
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+	})
+
+	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingDriver(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingOriginHostname(value)
 		return nil
 	})
 
@@ -94,6 +103,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^the perennial branches are not configured$`, func() error {
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
+		return nil
+	})
+
+	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
 		return nil
 	})
 

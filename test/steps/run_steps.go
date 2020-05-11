@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -31,6 +32,17 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
+		return nil
+	})
+
+	suite.Step(`^"([^"]*)" launches a new pull request with this url in my browser:$`, func(tool string, url *messages.PickleStepArgument_PickleDocString) error {
+		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
+		want = strings.ReplaceAll(want, "?", `\?`)
+		regex := regexp.MustCompile(want)
+		have := fs.activeScenarioState.lastRunResult.OutputSanitized()
+		if !regex.MatchString(have) {
+			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
+		}
 		return nil
 	})
 
