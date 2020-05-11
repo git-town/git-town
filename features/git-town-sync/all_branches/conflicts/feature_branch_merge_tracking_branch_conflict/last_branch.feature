@@ -34,7 +34,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       """
     And I end up on the "feature-2" branch
     And my uncommitted file is stashed
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting

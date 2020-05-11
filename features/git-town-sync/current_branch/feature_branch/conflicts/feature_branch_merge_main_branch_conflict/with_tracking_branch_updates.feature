@@ -32,7 +32,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting

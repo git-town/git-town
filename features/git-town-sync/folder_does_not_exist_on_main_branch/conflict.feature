@@ -31,7 +31,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am in the project root folder
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting
