@@ -107,7 +107,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
 	// clone the "coworker" repo
-	gitEnv.CoworkerRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), gitEnv.Dir)
+	gitEnv.CoworkerRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), gitEnv.Dir, gitEnv.binPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone coworker repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), err)
 	}
