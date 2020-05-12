@@ -30,6 +30,11 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
+		return nil
+	})
+
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
 		return nil
