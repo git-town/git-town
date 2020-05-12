@@ -1,6 +1,6 @@
 Feature: git town-prune-branches: offline mode
 
-    When offline
+  When offline
   I want to still be able to prune branches
   So that I can work as much as possible even without internet connection.
 
