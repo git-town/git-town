@@ -8,22 +8,25 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
   Background:
     Given my repository has the perennial branches "qa" and "production"
     And the following commits exist in my repository
-      | BRANCH     | LOCATION         | MESSAGE           |
-      | main       | local and remote | main commit       |
-      | production | local and remote | production commit |
-      | qa         | local and remote | qa commit         |
+      | BRANCH     | LOCATION      | MESSAGE           |
+      | main       | local, remote | main commit       |
+      | production | local, remote | production commit |
+      | qa         | local, remote | qa commit         |
     And I am on the "production" branch
     And my workspace has an uncommitted file
 
 
   Scenario: error when trying to rename
-    When I run `git-town rename-branch production renamed-production`
+    When I run "git-town rename-branch production renamed-production"
     Then it runs no commands
-    And it prints the error "'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'."
+    And it prints the error:
+      """
+      'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.
+      """
 
 
   Scenario: forcing rename
-    When I run `git-town rename-branch --force production renamed-production`
+    When I run "git-town rename-branch --force production renamed-production"
     Then it runs the commands
       | BRANCH             | COMMAND                                  |
       | production         | git fetch --prune --tags                 |
@@ -35,28 +38,28 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     And I end up on the "renamed-production" branch
     And the perennial branches are now configured as "qa" and "renamed-production"
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH             | LOCATION         | MESSAGE           |
-      | main               | local and remote | main commit       |
-      | qa                 | local and remote | qa commit         |
-      | renamed-production | local and remote | production commit |
+    And my repository now has the following commits
+      | BRANCH             | LOCATION      | MESSAGE           |
+      | main               | local, remote | main commit       |
+      | qa                 | local, remote | qa commit         |
+      | renamed-production | local, remote | production commit |
 
 
   Scenario: undo
-    Given I run `git-town rename-branch --force production renamed-production`
-    When I run `git-town undo`
+    Given I run "git-town rename-branch --force production renamed-production"
+    When I run "git-town undo"
     Then it runs the commands
-        | BRANCH             | COMMAND                                              |
-        | renamed-production | git branch production <%= sha 'production commit' %> |
-        |                    | git push -u origin production                        |
-        |                    | git push origin :renamed-production                  |
-        |                    | git checkout production                              |
-        | production         | git branch -D renamed-production                     |
+      | BRANCH             | COMMAND                                             |
+      | renamed-production | git branch production {{ sha 'production commit' }} |
+      |                    | git push -u origin production                       |
+      |                    | git push origin :renamed-production                 |
+      |                    | git checkout production                             |
+      | production         | git branch -D renamed-production                    |
     And I end up on the "production" branch
     And the perennial branches are now configured as "qa" and "production"
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE           |
-      | main       | local and remote | main commit       |
-      | production | local and remote | production commit |
-      | qa         | local and remote | qa commit         |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE           |
+      | main       | local, remote | main commit       |
+      | production | local, remote | production commit |
+      | qa         | local, remote | qa commit         |
