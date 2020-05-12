@@ -14,7 +14,7 @@ import (
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^I run "([^"]+)"$`, func(command string) error {
+	suite.Step(`^I run "(.+)"$`, func(command string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunString(command)
 		return nil
 	})
