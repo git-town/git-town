@@ -76,6 +76,8 @@ func (commit *Commit) set(name, value string) (err error) {
 		commit.FileName = value
 	case "FILE CONTENT":
 		commit.FileContent = value
+	case "AUTHOR":
+		commit.Author = value
 	default:
 		return fmt.Errorf("unknown Commit property: %s", name)
 	}

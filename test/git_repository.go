@@ -224,7 +224,11 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	if err != nil {
 		return fmt.Errorf("cannot add file to commit: %w\n%v", err, outcome)
 	}
-	outcome, err = repo.Shell.Run("git", "commit", "-m", commit.Message)
+	commands := []string{"commit", "-m", commit.Message}
+	if commit.Author != "" {
+		commands = append(commands, "--author="+commit.Author)
+	}
+	outcome, err = repo.Shell.Run("git", commands...)
 	if err != nil {
 		return fmt.Errorf("cannot commit: %w\n%v", err, outcome)
 	}

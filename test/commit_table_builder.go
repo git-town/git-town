@@ -119,6 +119,8 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 					row = append(row, commit.FileName)
 				case "FILE CONTENT":
 					row = append(row, commit.FileContent)
+				case "AUTHOR":
+					row = append(row, commit.Author)
 				default:
 					panic("unknown table field: " + field)
 				}
