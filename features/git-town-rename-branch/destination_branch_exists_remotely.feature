@@ -7,19 +7,22 @@ Feature: git town-rename-branch: errors when the destination branch exists remot
     Given my repository has a feature branch named "current-feature"
     And my coworker has a feature branch named "existing-feature"
     And the following commits exist in my repository
-      | BRANCH           | LOCATION         | MESSAGE                 |
-      | current-feature  | local and remote | current-feature commit  |
-      | existing-feature | remote           | existing-feature commit |
+      | BRANCH           | LOCATION      | MESSAGE                 |
+      | current-feature  | local, remote | current-feature commit  |
+      | existing-feature | remote        | existing-feature commit |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town rename-branch current-feature existing-feature`
+    When I run "git-town rename-branch current-feature existing-feature"
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                  |
       | current-feature | git fetch --prune --tags |
-    And it prints the error "A branch named 'existing-feature' already exists"
+    And it prints the error:
+      """
+      A branch named 'existing-feature' already exists
+      """
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And my repository is left with my original commits
