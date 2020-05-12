@@ -144,6 +144,14 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).GetPullBranchStrategy()
+		if have != want {
+			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
+		}
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		actual := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(actual) > 0 {
