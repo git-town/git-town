@@ -41,7 +41,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my workspace still contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentFileContent(file)
+		actualContent, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.FileContent(file)
 		if err != nil {
 			return err
 		}

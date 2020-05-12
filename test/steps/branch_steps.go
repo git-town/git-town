@@ -13,11 +13,11 @@ import (
 // nolint:funlen,gocognit
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^all branches are now synchronized$`, func() error {
-		outOfSync, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.NumberOfBranchesOutOfSync()
+		outOfSync, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.AnyBranchesOutOfSync()
 		if err != nil {
 			return err
 		}
-		if outOfSync > 0 {
+		if outOfSync {
 			return fmt.Errorf("expected no branches out of sync")
 		}
 		return nil

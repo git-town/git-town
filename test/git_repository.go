@@ -72,6 +72,15 @@ func NewGitRepository(workingDir string, homeDir string, shell command.Shell) Gi
 	return GitRepository{Dir: workingDir, Shell: shell}
 }
 
+// AnyBranchesOutOfSync returns if true if and only if one or more local branches are out in sync with their remote
+func (repo *GitRepository) AnyBranchesOutOfSync() (bool, error) {
+	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep .")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if any branches are out of sync in %q: %w %q", repo.Dir, err, res.Output())
+	}
+	return res.OutputSanitized() != "", nil
+}
+
 // AddRemote adds the given Git remote to this repository.
 func (repo *GitRepository) AddRemote(name, value string) error {
 	res, err := repo.Shell.Run("git", "remote", "add", name, value)
@@ -298,8 +307,8 @@ func (repo *GitRepository) CurrentBranch() (result string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
-// CurrentFileContent provides the current content of a file.
-func (repo *GitRepository) CurrentFileContent(filename string) (result string, err error) {
+// FileContent provides the current content of a file.
+func (repo *GitRepository) FileContent(filename string) (result string, err error) {
 	outcome, err := repo.Shell.Run("cat", filename)
 	if err != nil {
 		return result, err
@@ -440,15 +449,6 @@ func (repo *GitRepository) IsOffline() (result bool, err error) {
 func (repo *GitRepository) LastActiveDir() (string, error) {
 	res, err := repo.Shell.Run("git", "rev-parse", "--show-toplevel")
 	return res.OutputSanitized(), err
-}
-
-// Number of branches out of sync returns the number of local branches out in sync with their remote
-func (repo *GitRepository) NumberOfBranchesOutOfSync() (int64, error) {
-	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep . | wc -l")
-	if err != nil {
-		return 0, fmt.Errorf("cannot determine number of branches in sync in %q: %w %q", repo.Dir, err, res.Output())
-	}
-	return strconv.ParseInt(res.OutputSanitized(), 0, 64)
 }
 
 // PushBranch pushes the branch with the given name to the remote.
