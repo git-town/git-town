@@ -23,11 +23,11 @@ type GitEnvironment struct {
 	// DeveloperRepo is the Git repository that is locally checked out at the developer machine.
 	DeveloperRepo GitRepository
 
-	// CoworkerRepo is the Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo GitRepository
-
 	// DeveloperShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DeveloperShell *MockingShell
+
+	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
+	CoworkerRepo *GitRepository
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
 	UpstreamRepo *GitRepository
@@ -45,32 +45,32 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir, ""))
 	developerDir := filepath.Join(dir, "developer")
 	developerShell := NewMockingShell(developerDir, dir, binDir)
-	coworkerDir := filepath.Join(dir, "coworker")
 	result := GitEnvironment{
 		Dir:            dir,
-		CoworkerRepo:   NewGitRepository(coworkerDir, dir, NewMockingShell(coworkerDir, dir, binDir)),
 		DeveloperRepo:  NewGitRepository(developerDir, dir, developerShell),
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
 	}
-	for _, repo := range []GitRepository{result.DeveloperRepo, result.CoworkerRepo} {
-		// Since we copied the files from the memoized directory,
-		// we have to set the "origin" remote to the copied origin repo here.
-		err = repo.AddRemote("origin", result.OriginRepo.Dir)
-		if err != nil {
-			return &result, fmt.Errorf("cannot set remote: %w", err)
-		}
-		err = repo.Fetch()
-		if err != nil {
-			return &result, fmt.Errorf("cannot fetch: %w", err)
-		}
-		// and connect the main branches again
-		err = repo.ConnectTrackingBranch("main")
-		if err != nil {
-			return &result, fmt.Errorf("cannot connect tracking branch: %w", err)
-		}
+	// Since we copied the files from the memoized directory,
+	// we have to set the "origin" remote to the copied origin repo here.
+	_, err = result.DeveloperShell.Run("git", "remote", "remove", "origin")
+	if err != nil {
+		return nil, fmt.Errorf("cannot remove remote: %w", err)
 	}
-	return &result, nil
+	err = result.DeveloperRepo.AddRemote("origin", result.originRepoPath())
+	if err != nil {
+		return nil, fmt.Errorf("cannot set remote: %w", err)
+	}
+	err = result.DeveloperRepo.Fetch()
+	if err != nil {
+		return nil, fmt.Errorf("cannot fetch: %w", err)
+	}
+	// and connect the main branches again
+	err = result.DeveloperRepo.ConnectTrackingBranch("main")
+	if err != nil {
+		return nil, fmt.Errorf("cannot connect tracking branch: %w", err)
+	}
+	return &result, err
 }
 
 // NewStandardGitEnvironment provides a GitEnvironment in the given directory,
@@ -107,26 +107,8 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
-	// clone the "coworker" repo
-	gitEnv.CoworkerRepo, err = CloneGitRepository(gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), gitEnv.Dir, gitEnv.binPath())
-	if err != nil {
-		return gitEnv, fmt.Errorf("cannot clone coworker repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.coworkerRepoPath(), err)
-	}
-	for _, repo := range []GitRepository{gitEnv.DeveloperRepo, gitEnv.CoworkerRepo} {
-		err = repo.Shell.RunMany([][]string{
-			{"git", "config", "git-town.main-branch-name", "main"},
-			{"git", "config", "git-town.perennial-branch-names", ""},
-			{"git", "checkout", "main"},
-			// NOTE: the developer/coworker repos receives the master branch from origin
-			//       but we don't want it here because it isn't used in tests.
-			{"git", "branch", "-d", "master"},
-			{"git", "remote", "remove", "origin"}, // disconnect the remote here since we copy this and connect to another directory in tests
-		})
-		if err != nil {
-			return gitEnv, err
-		}
-	}
-	return gitEnv, nil
+	err = gitEnv.initializeWorkspace(&gitEnv.DeveloperRepo)
+	return gitEnv, err
 }
 
 // AddUpstream adds an upstream repository.
@@ -141,6 +123,16 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
 	return nil
+}
+
+// AddCoworkerRepo adds a coworker repository.
+func (env *GitEnvironment) AddCoworkerRepo() (err error) {
+	coworkerRepo, err := CloneGitRepository(env.originRepoPath(), env.coworkerRepoPath(), env.Dir, "")
+	if err != nil {
+		return fmt.Errorf("cannot clone coworker: %w", err)
+	}
+	env.CoworkerRepo = &coworkerRepo
+	return env.initializeWorkspace(env.CoworkerRepo)
 }
 
 // binPath provides the full path of the folder containing the test tools for this GitEnvironment.
@@ -252,11 +244,13 @@ func (env GitEnvironment) CommitTable(fields []string) (result DataTable, err er
 		return result, fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
 	builder.AddMany(localCommits, "local")
-	coworkerCommits, err := env.CoworkerRepo.Commits(fields)
-	if err != nil {
-		return result, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
+	if env.CoworkerRepo != nil {
+		coworkerCommits, err := env.CoworkerRepo.Commits(fields)
+		if err != nil {
+			return result, fmt.Errorf("cannot determine commits in the coworker repo: %w", err)
+		}
+		builder.AddMany(coworkerCommits, "coworker")
 	}
-	builder.AddMany(coworkerCommits, "coworker")
 	if env.OriginRepo != nil {
 		remoteCommits, err := env.OriginRepo.Commits(fields)
 		if err != nil {
@@ -290,6 +284,17 @@ func (env GitEnvironment) TagTable() (result DataTable, err error) {
 		builder.AddMany(remoteTags, "remote")
 	}
 	return builder.Table(), nil
+}
+
+func (env GitEnvironment) initializeWorkspace(repo *GitRepository) error {
+	return repo.Shell.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
+		{"git", "checkout", "main"},
+		// NOTE: the developer repos receives the master branch from origin
+		//       but we don't want it here because it isn't used in tests.
+		{"git", "branch", "-d", "master"},
+	})
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
