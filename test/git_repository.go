@@ -72,8 +72,8 @@ func NewGitRepository(workingDir string, homeDir string, shell command.Shell) Gi
 	return GitRepository{Dir: workingDir, Shell: shell}
 }
 
-// AnyBranchesOutOfSync returns if true if and only if one or more local branches are out in sync with their remote
-func (repo *GitRepository) AnyBranchesOutOfSync() (bool, error) {
+// HasBranchesOutOfSync returns if true if and only if one or more local branches are out of sync with their remote
+func (repo *GitRepository) HasBranchesOutOfSync() (bool, error) {
 	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep .")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if any branches are out of sync in %q: %w %q", repo.Dir, err, res.Output())
