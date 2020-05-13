@@ -51,7 +51,25 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 		DeveloperShell: developerShell,
 		OriginRepo:     &originRepo,
 	}
-	err = result.setupMemoizedRepository(&result.DeveloperRepo)
+	// Since we copied the files from the memoized directory,
+	// we have to set the "origin" remote to the copied origin repo here.
+	_, err = result.DeveloperShell.Run("git", "remote", "remove", "origin")
+	if err != nil {
+		return nil, fmt.Errorf("cannot remove remote: %w", err)
+	}
+	err = result.DeveloperRepo.AddRemote("origin", result.originRepoPath())
+	if err != nil {
+		return nil, fmt.Errorf("cannot set remote: %w", err)
+	}
+	err = result.DeveloperRepo.Fetch()
+	if err != nil {
+		return nil, fmt.Errorf("cannot fetch: %w", err)
+	}
+	// and connect the main branches again
+	err = result.DeveloperRepo.ConnectTrackingBranch("main")
+	if err != nil {
+		return nil, fmt.Errorf("cannot connect tracking branch: %w", err)
+	}
 	return &result, err
 }
 
@@ -277,29 +295,6 @@ func (env GitEnvironment) initializeWorkspace(repo *GitRepository) error {
 		//       but we don't want it here because it isn't used in tests.
 		{"git", "branch", "-d", "master"},
 	})
-}
-
-func (env GitEnvironment) setupMemoizedRepository(repo *GitRepository) error {
-	// Since we copied the files from the memoized directory,
-	// we have to set the "origin" remote to the copied origin repo here.
-	_, err := repo.Shell.Run("git", "remote", "remove", "origin")
-	if err != nil {
-		return fmt.Errorf("cannot remove remote: %w", err)
-	}
-	err = repo.AddRemote("origin", env.originRepoPath())
-	if err != nil {
-		return fmt.Errorf("cannot set remote: %w", err)
-	}
-	err = repo.Fetch()
-	if err != nil {
-		return fmt.Errorf("cannot fetch: %w", err)
-	}
-	// and connect the main branches again
-	err = repo.ConnectTrackingBranch("main")
-	if err != nil {
-		return fmt.Errorf("cannot connect tracking branch: %w", err)
-	}
-	return nil
 }
 
 // coworkerRepoPath provides the full path to the Git repository with the given name.
