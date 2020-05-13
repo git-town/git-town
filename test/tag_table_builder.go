@@ -21,10 +21,9 @@ type TagTableBuilder struct {
 
 // NewTagTableBuilder provides a fully initialized instance of TagTableBuilder.
 func NewTagTableBuilder() TagTableBuilder {
-	result := TagTableBuilder{
+	return TagTableBuilder{
 		tagToLocations: make(map[string]helpers.OrderedStringSet),
 	}
-	return result
 }
 
 // Add registers the given tag from the given location into this table.
