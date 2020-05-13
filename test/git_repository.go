@@ -564,9 +564,18 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 
 // ShaForCommit provides the SHA for the commit with the given name.
 func (repo *GitRepository) ShaForCommit(name string) (result string, err error) {
-	res, err := repo.Shell.Run("git", "reflog", fmt.Sprintf("--grep-reflog=commit: %s", name), "--format=%H")
+	var args []string
+	if name == "Initial commit" {
+		args = []string{"reflog", "--grep=" + name, "--format=%H", "--max-count=1"}
+	} else {
+		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
+	}
+	res, err := repo.Shell.Run("git", args...)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
+	}
+	if res.OutputSanitized() == "" {
+		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
 	return res.OutputSanitized(), nil
 }
