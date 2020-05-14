@@ -1,6 +1,6 @@
 Feature: git town-ship: shipping hotfixes
 
-    When working on hotfix branches
+  When working on hotfix branches
   I want to ship them similar to feature branches
   So that I can use Git Town to work on hotfixes as well.
 
