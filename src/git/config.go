@@ -261,6 +261,16 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 	return strings.TrimSuffix(matches[1], ".git")
 }
 
+// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
+func (c *Configuration) HasBranchInformation() bool {
+	for key := range c.localConfigCache {
+		if strings.HasPrefix(key, "git-town-branch.") {
+			return true
+		}
+	}
+	return false
+}
+
 // HasParentBranch returns whether or not the given branch has a parent
 func (c *Configuration) HasParentBranch(branchName string) bool {
 	return c.GetParentBranch(branchName) != ""
