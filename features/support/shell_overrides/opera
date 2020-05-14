@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# A test mock for "opera"
-
-echo "opera called with: $@"

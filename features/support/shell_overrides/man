@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# A test mock for "man" (displays documentation)
-
-echo "man called with: $@"

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# A test mock for "curl" (downloads content)
-
-echo "curl called with: $@"
