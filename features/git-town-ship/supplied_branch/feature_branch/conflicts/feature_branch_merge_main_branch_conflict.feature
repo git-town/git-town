@@ -95,7 +95,10 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
     And my repository still has the following commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
       | main   | local, remote | conflicting main commit | conflicting_file |
