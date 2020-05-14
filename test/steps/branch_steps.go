@@ -49,6 +49,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(previous)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(current)
+	})
+
 	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
 		actual, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
 		if err != nil {
@@ -175,5 +183,20 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
+	})
+
+	suite.Step(`^the previous Git branch is now "([^"]*)"$`, func(want string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
+		if err != nil {
+			return err
+		}
+		have, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		if have != want {
+			return fmt.Errorf("expected previous branch %q but got %q", want, have)
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
 	})
 }
