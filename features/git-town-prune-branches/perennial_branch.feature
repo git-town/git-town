@@ -9,13 +9,13 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
     Given my repository has the branches "active-perennial" and "deleted-perennial"
     And the perennial branches are configured as "active-perennial" and "deleted-perennial"
     And the following commits exist in my repository
-      | BRANCH            | LOCATION         | MESSAGE                  |
-      | active-perennial  | local and remote | active-perennial commit  |
-      | deleted-perennial | local and remote | deleted-perennial commit |
+      | BRANCH            | LOCATION      | MESSAGE                  |
+      | active-perennial  | local, remote | active-perennial commit  |
+      | deleted-perennial | local, remote | deleted-perennial commit |
     And the "deleted-perennial" branch gets deleted on the remote
     And I am on the "deleted-perennial" branch
     And my workspace has an uncommitted file
-    When I run `git-town prune-branches`
+    When I run "git-town prune-branches"
 
 
   Scenario: result
@@ -34,11 +34,11 @@ Feature: git town-prune-branches: remove perennial branch configuration when pru
 
 
   Scenario: undo
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                            |
-      | main   | git branch deleted-perennial <%= sha 'deleted-perennial commit' %> |
-      |        | git checkout deleted-perennial                                     |
+      | BRANCH | COMMAND                                                           |
+      | main   | git branch deleted-perennial {{ sha 'deleted-perennial commit' }} |
+      |        | git checkout deleted-perennial                                    |
     And I end up on the "deleted-perennial" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

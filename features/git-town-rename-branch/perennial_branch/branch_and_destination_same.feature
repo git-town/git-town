@@ -6,18 +6,21 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
 
 
   Background:
-    Given my repository has a perennial branch named "production"
+    Given my repository has the perennial branch "production"
     And the following commits exist in my repository
-      | BRANCH     | LOCATION         | MESSAGE           |
-      | production | local and remote | production commit |
+      | BRANCH     | LOCATION      | MESSAGE           |
+      | production | local, remote | production commit |
     And I am on the "production" branch
     And my workspace has an uncommitted file
-    When I run `git-town rename-branch --force production production`
+    When I run "git-town rename-branch --force production production"
 
 
   Scenario: result
     Then it runs no commands
-    And it prints the error "Cannot rename branch to current name."
+    And it prints the error:
+      """
+      Cannot rename branch to current name.
+      """
     And I end up on the "production" branch
     And my workspace still contains my uncommitted file
     And my repository is left with my original commits

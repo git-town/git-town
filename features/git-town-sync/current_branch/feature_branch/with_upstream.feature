@@ -9,7 +9,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       | feature | local    | local commit    |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -30,9 +30,9 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION                    | MESSAGE                          |
-      | main    | local, remote, and upstream | upstream commit                  |
-      | feature | local and remote            | local commit                     |
-      |         |                             | upstream commit                  |
-      |         |                             | Merge branch 'main' into feature |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION                | MESSAGE                          |
+      | main    | local, remote, upstream | upstream commit                  |
+      | feature | local, remote           | local commit                     |
+      |         |                         | upstream commit                  |
+      |         |                         | Merge branch 'main' into feature |

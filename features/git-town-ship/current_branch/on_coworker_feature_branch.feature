@@ -6,14 +6,12 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Background:
-    Given my coworker has a feature branch named "feature"
-    And the following commits exist in my coworker's repository
-      | BRANCH  | LOCATION         | MESSAGE         | FILE NAME     |
-      | feature | local and remote | coworker commit | coworker_file |
-    And I fetch updates
-    And I set the parent branch of "feature" as "main"
+    Given my repository has a feature branch named "feature"
+    And the following commits exist in my repository
+      | BRANCH  | LOCATION      | MESSAGE         | FILE NAME     | AUTHOR                          |
+      | feature | local, remote | coworker commit | coworker_file | coworker <coworker@example.com> |
     And I am on the "feature" branch
-    When I run `git-town ship -m 'feature done'`
+    When I run "git-town ship -m 'feature done'"
 
 
   Scenario: result
@@ -31,6 +29,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
-    And my repository has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME     | AUTHOR                          |
-      | main   | local and remote | feature done | coworker_file | coworker <coworker@example.com> |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
+      | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |

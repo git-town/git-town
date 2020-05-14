@@ -24,7 +24,7 @@ func (step *ChangeDirectoryStep) Run() error {
 	var err error
 	step.previousDirectory, err = os.Getwd()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	_, err = os.Stat(step.Directory)
 	if err == nil {

@@ -30,7 +30,7 @@ type Options struct {
 }
 
 // InputDelay defines how long to wait before writing the next input string into the subprocess.
-const InputDelay = 50 * time.Millisecond
+const InputDelay = 100 * time.Millisecond
 
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.

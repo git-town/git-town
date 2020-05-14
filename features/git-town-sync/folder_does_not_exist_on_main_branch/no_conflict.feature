@@ -8,20 +8,20 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
   Background:
     Given my repository has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE              | FILE NAME        |
-      | main            | local and remote | main commit          | main_file        |
-      | current-feature | local and remote | folder commit        | new_folder/file1 |
-      | other-feature   | local and remote | other feature commit | file2            |
+      | BRANCH          | LOCATION      | MESSAGE              | FILE NAME        |
+      | main            | local, remote | main commit          | main_file        |
+      | current-feature | local, remote | folder commit        | new_folder/file1 |
+      | other-feature   | local, remote | other feature commit | file2            |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all` in the "new_folder" folder
+    When I run "git-town sync --all" in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH          | COMMAND                                    |
       | current-feature | git fetch --prune --tags                   |
-      | <none>          | cd <%= git_root_folder %>                  |
+      | <none>          | cd {{ root folder }}                       |
       | current-feature | git add -A                                 |
       |                 | git stash                                  |
       |                 | git checkout main                          |
@@ -37,15 +37,15 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       |                 | git checkout current-feature               |
       | current-feature | git push --tags                            |
       |                 | git stash pop                              |
-      | <none>          | cd <%= git_folder "new_folder" %>          |
+      | <none>          | cd {{ folder "new_folder" }}               |
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
-    And now my repository has the following commits
-      | BRANCH          | LOCATION         | MESSAGE                                  | FILE NAME        |
-      | main            | local and remote | main commit                              | main_file        |
-      | current-feature | local and remote | folder commit                            | new_folder/file1 |
-      |                 |                  | main commit                              | main_file        |
-      |                 |                  | Merge branch 'main' into current-feature |                  |
-      | other-feature   | local and remote | other feature commit                     | file2            |
-      |                 |                  | main commit                              | main_file        |
-      |                 |                  | Merge branch 'main' into other-feature   |                  |
+    And my repository now has the following commits
+      | BRANCH          | LOCATION      | MESSAGE                                  | FILE NAME        |
+      | main            | local, remote | main commit                              | main_file        |
+      | current-feature | local, remote | folder commit                            | new_folder/file1 |
+      |                 |               | main commit                              | main_file        |
+      |                 |               | Merge branch 'main' into current-feature |                  |
+      | other-feature   | local, remote | other feature commit                     | file2            |
+      |                 |               | main commit                              | main_file        |
+      |                 |               | Merge branch 'main' into other-feature   |                  |

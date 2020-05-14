@@ -1,8 +1,8 @@
 # Testing
 
-Git Town has a very comprehensive test suite to ensure it works correctly and
-never loses data. The end-to-end tests use [Cucumber](https://cucumber.io) to
-make them easier to reason about. Unit tests are normal Go tests.
+Git Town has a comprehensive test suite to ensure it never loses data. The
+end-to-end tests use [Cucumber](https://cucumber.io) to make them easier to
+reason about. Unit tests are normal Go tests.
 
 ## Running Tests
 
@@ -49,11 +49,11 @@ To debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 ## Preventing pushes to GitHub
 
-Certain tests require the Git remote to be set to a real value on GitHub or
-Bitbucket. This causes `git push` operations in this test to also go to GitHub.
-To prevent this, Git Town mocks the Git remote if a Git configuration value
-`git-town.testing.remote-url` exists with the respective value. This also
-requires an environment variable `GIT_TOWN_ENV` set to `test`.
+Certain tests require that the Git remote points to an actual GitHub or
+Bitbucket address. This causes `git push` operations in this test to also go to
+GitHub. To prevent this, set an environment variable `GIT_TOWN_REMOTE` with the
+desired value of the `origin` remote, and Git Town will use that value instead
+of the Git Town configuration.
 
 ## Architecture
 

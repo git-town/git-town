@@ -8,18 +8,21 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
   Background:
     Given my repository has a feature branch named "feature"
     And the following commits exist in my repository
-      | BRANCH  | LOCATION         | MESSAGE     |
-      | feature | local and remote | good commit |
+      | BRANCH  | LOCATION      | MESSAGE     |
+      | feature | local, remote | good commit |
     And I am on the "main" branch
 
 
   Scenario: result
     Given my workspace has an uncommitted file
-    When I run `git-town prepend new-branch`
+    When I run "git-town prepend new-branch"
     Then it runs the commands
       | BRANCH | COMMAND                  |
       | main   | git fetch --prune --tags |
-    And it prints the error "The branch 'main' is not a feature branch. Only feature branches can have parent branches."
+    And it prints the error:
+      """
+      The branch 'main' is not a feature branch. Only feature branches can have parent branches.
+      """
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

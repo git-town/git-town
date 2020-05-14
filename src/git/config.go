@@ -67,10 +67,7 @@ func loadGitConfig(shell command.Shell, global bool) map[string]string {
 	}
 	res, err := shell.Run("git", cmdArgs...)
 	if err != nil {
-		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
-			return result
-		}
-		panic(err)
+		return result
 	}
 	output := res.Output()
 	if output == "" {
@@ -233,11 +230,9 @@ func (c *Configuration) GetPullBranchStrategy() string {
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func (c *Configuration) GetRemoteOriginURL() string {
-	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := c.getLocalConfigValue("git-town.testing.remote-url")
-		if mockRemoteURL != "" {
-			return mockRemoteURL
-		}
+	remote := os.Getenv("GIT_TOWN_REMOTE")
+	if remote != "" {
+		return remote
 	}
 	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
 }
@@ -261,6 +256,16 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 		return ""
 	}
 	return strings.TrimSuffix(matches[1], ".git")
+}
+
+// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
+func (c *Configuration) HasBranchInformation() bool {
+	for key := range c.localConfigCache {
+		if strings.HasPrefix(key, "git-town-branch.") {
+			return true
+		}
+	}
+	return false
 }
 
 // HasParentBranch returns whether or not the given branch has a parent
@@ -358,6 +363,24 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 	}
 }
 
+// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
+	const key = "git-town.code-hosting-driver"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
+// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Result {
+	const key = "git-town.code-hosting-origin-hostname"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
+func (c *Configuration) SetColorUI(value string) *command.Result {
+	return c.shell.MustRun("git", "config", "color.ui", value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
@@ -389,6 +412,11 @@ func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
+// SetTestOrigin sets the origin to be used for testing.
+func (c *Configuration) SetTestOrigin(value string) {
+	_ = c.setLocalConfigValue("git-town.testing.remote-url", value)
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *command.Result {
@@ -403,6 +431,11 @@ func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Resu
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
+}
+
+// SetShouldSyncUpstream updates the configured pull branch strategy.
+func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push

@@ -17,39 +17,73 @@ import (
 // - Temporarily override certain shell commands with mock implementations.
 //   Temporary mocks are only valid for the next command being run.
 type MockingShell struct {
-	workingDir            string // the directory in which this runner runs
-	homeDir               string // the directory that contains the global Git configuration
-	tempShellOverridesDir string // the directory that stores the mock shell command implementations, ignored if empty
+	workingDir     string // the directory in which this runner runs
+	homeDir        string // the directory that contains the global Git configuration
+	binDir         string // the directory that stores the mock shell command implementations, ignored if empty
+	testOrigin     string // optional content of the GIT_TOWN_REMOTE environment variable
+	hasMockCommand bool   // indicates whether the current test has mocked a command
 }
 
 // NewMockingShell provides a new MockingShell instance that executes in the given directory.
-func NewMockingShell(workingDir string, homeDir string) *MockingShell {
-	return &MockingShell{workingDir: workingDir, homeDir: homeDir}
+func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingShell {
+	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
-// AddTempShellOverride temporarily mocks the shell command with the given name
-// with the given Bash script.
-func (ms *MockingShell) AddTempShellOverride(name, content string) error {
-	if !ms.hasTempShellOverrides() {
-		err := ms.createTempShellOverridesDir()
-		if err != nil {
-			return fmt.Errorf("cannot create temp shell overrides dir: %w", err)
-		}
+// MockCommand adds a mock for the command with the given name.
+func (ms *MockingShell) MockCommand(name string) error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
-	return ioutil.WriteFile(ms.tempShellOverrideFilePath(name), []byte(content), 0744)
+	// write custom "which" command
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom which command: %w", err)
+	}
+	// write custom command
+	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom command: %w", err)
+	}
+	ms.hasMockCommand = true
+	return nil
 }
 
-// createTempShellOverridesDir creates the folder that will contain the temp shell overrides.
-// It is safe to call this method multiple times.
-func (ms *MockingShell) createTempShellOverridesDir() error {
-	var err error
-	ms.tempShellOverridesDir, err = ioutil.TempDir("", "")
-	return err
+// MockGit pretends that this repo has Git in the given version installed.
+func (ms *MockingShell) MockGit(version string) error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir %q: %w", ms.binDir, err)
+	}
+	// write custom Git command
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create custom Git binary: %w", err)
+	}
+	ms.hasMockCommand = true
+	return nil
 }
 
-// hasTempShellOverrides indicates whether there are temp shell overrides for the next command.
-func (ms *MockingShell) hasTempShellOverrides() bool {
-	return ms.tempShellOverridesDir != ""
+// MockNoCommandsInstalled pretends that no commands are installed.
+func (ms *MockingShell) MockNoCommandsInstalled() error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
+	}
+	// write custom "which" command
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nexit 1\n")
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom which command: %w", err)
+	}
+	ms.hasMockCommand = true
+	return nil
 }
 
 // MustRun runs the given command and returns the result. Panics on error.
@@ -59,12 +93,6 @@ func (ms *MockingShell) MustRun(cmd string, args ...string) *command.Result {
 		panic(err)
 	}
 	return res
-}
-
-// removeTempShellOverrides removes all custom shell overrides.
-func (ms *MockingShell) removeTempShellOverrides() {
-	os.RemoveAll(ms.tempShellOverridesDir)
-	ms.tempShellOverridesDir = ""
 }
 
 // Run runs the given command with the given arguments
@@ -121,17 +149,20 @@ func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string
 			opts.Env[i] = fmt.Sprintf("HOME=%s", ms.homeDir)
 		}
 	}
-	// enable shell overrides
-	if ms.hasTempShellOverrides() {
+	// add the custom origin
+	if ms.testOrigin != "" {
+		opts.Env = append(opts.Env, fmt.Sprintf("GIT_TOWN_REMOTE=%s", ms.testOrigin))
+	}
+	// add the custom bin dir to the PATH
+	if ms.hasMockCommand {
 		for i := range opts.Env {
 			if strings.HasPrefix(opts.Env[i], "PATH=") {
 				parts := strings.SplitN(opts.Env[i], "=", 2)
-				parts[1] = ms.tempShellOverridesDir + ":" + parts[1]
+				parts[1] = ms.binDir + ":" + parts[1]
 				opts.Env[i] = strings.Join(parts, "=")
 				break
 			}
 		}
-		defer ms.removeTempShellOverrides()
 	}
 	// set the working dir
 	opts.Dir = filepath.Join(ms.workingDir, opts.Dir)
@@ -147,7 +178,7 @@ func (ms *MockingShell) RunWith(opts command.Options, cmd string, args ...string
 	return result, err
 }
 
-// tempShellOverrideFilePath provides the full file path where to store a temp shell command with the given name.
-func (ms *MockingShell) tempShellOverrideFilePath(shellOverrideFilename string) string {
-	return filepath.Join(ms.tempShellOverridesDir, shellOverrideFilename)
+// SetTestOrigin adds the given environment variable to subsequent runs of commands.
+func (ms *MockingShell) SetTestOrigin(content string) {
+	ms.testOrigin = content
 }
