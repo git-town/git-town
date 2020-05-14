@@ -3,6 +3,7 @@ package test
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -146,9 +147,10 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
 	assert.Nil(t, err)
-	branches, err := repo.Branches()
+	res, err := repo.Shell.Run("git", "town", "config")
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"main", "f1", "f1a", "master"}, branches)
+	has := strings.Contains(res.OutputSanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
+	assert.True(t, has)
 }
 
 func TestGitRepository_CreateCommit(t *testing.T) {

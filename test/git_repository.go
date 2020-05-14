@@ -210,12 +210,12 @@ func (repo *GitRepository) CreateBranch(name, parent string) error {
 
 // CreateChildFeatureBranch creates a branch with the given name and parent in this repository.
 // The parent branch must already exist.
-func (repo *GitRepository) CreateChildFeatureBranch(name string, parentBranch string) error {
-	err := repo.CheckoutBranch(parentBranch)
+func (repo *GitRepository) CreateChildFeatureBranch(name string, parent string) error {
+	outcome, err := repo.Shell.Run("git", "branch", name, parent)
 	if err != nil {
-		return fmt.Errorf("cannot checkout parent branch %q: %w", parentBranch, err)
+		return fmt.Errorf("cannot create child branch %q: %w\n%v", name, err, outcome)
 	}
-	outcome, err := repo.Shell.Run("git", "town", "append", name)
+	outcome, err = repo.Shell.Run("git", "config", fmt.Sprintf("git-town-branch.%s.parent", name), parent)
 	if err != nil {
 		return fmt.Errorf("cannot create child branch %q: %w\n%v", name, err, outcome)
 	}
