@@ -12,7 +12,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file
-    And I run `git-town ship feature -m "feature done"`
+    And I run "git-town ship feature -m 'feature done'"
 
 
   Scenario: result
@@ -28,12 +28,12 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
     And my uncommitted file is stashed
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH        | COMMAND                    |
       | main          | git rebase --abort         |
@@ -47,7 +47,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | main          | git rebase --continue              |
@@ -65,17 +65,21 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | other-feature | git stash pop                      |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
-    And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main   | local, remote | conflicting remote commit | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
+      |        |               | feature done              | feature_file     |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town continue`
+    When I run "git rebase --continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | main          | git push                           |
@@ -92,9 +96,12 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | other-feature | git stash pop                      |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main   | local, remote | conflicting remote commit | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
+      |        |               | feature done              | feature_file     |

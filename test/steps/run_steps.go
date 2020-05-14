@@ -13,8 +13,9 @@ import (
 )
 
 // RunSteps defines Gherkin step implementations around running things in subshells.
+// nolint:funlen
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
-	suite.Step(`^I run "([^"]+)"$`, func(command string) error {
+	suite.Step(`^I run "(.+)"$`, func(command string) error {
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunString(command)
 		return nil
 	})
@@ -27,6 +28,11 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
 		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
+		return nil
+	})
+
+	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
+		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
 		return nil
 	})
 

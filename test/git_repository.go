@@ -237,7 +237,11 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	if err != nil {
 		return fmt.Errorf("cannot add file to commit: %w\n%v", err, outcome)
 	}
-	outcome, err = repo.Shell.Run("git", "commit", "-m", commit.Message)
+	commands := []string{"commit", "-m", commit.Message}
+	if commit.Author != "" {
+		commands = append(commands, "--author="+commit.Author)
+	}
+	outcome, err = repo.Shell.Run("git", commands...)
 	if err != nil {
 		return fmt.Errorf("cannot commit: %w\n%v", err, outcome)
 	}
@@ -560,9 +564,18 @@ func (repo *GitRepository) UncommittedFiles() (result []string, err error) {
 
 // ShaForCommit provides the SHA for the commit with the given name.
 func (repo *GitRepository) ShaForCommit(name string) (result string, err error) {
-	res, err := repo.Shell.Run("git", "reflog", fmt.Sprintf("--grep-reflog=commit: %s", name), "--format=%H")
+	var args []string
+	if name == "Initial commit" {
+		args = []string{"reflog", "--grep=" + name, "--format=%H", "--max-count=1"}
+	} else {
+		args = []string{"reflog", "--grep-reflog=commit: " + name, "--format=%H"}
+	}
+	res, err := repo.Shell.Run("git", args...)
 	if err != nil {
 		return result, fmt.Errorf("cannot determine SHA of commit %q: %w\n%s", name, err, res.Output())
+	}
+	if res.OutputSanitized() == "" {
+		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
 	return res.OutputSanitized(), nil
 }

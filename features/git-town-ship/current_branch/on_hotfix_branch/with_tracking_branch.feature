@@ -6,13 +6,13 @@ Feature: git town-ship: shipping hotfixes
 
 
   Background:
-    Given my repository has a perennial branch named "production"
-    And my repository has a hotfix branch named "hotfix" as a child of "production"
-    And the following commit exists in my repository
-      | BRANCH | LOCATION         | MESSAGE       | FILE NAME   | FILE CONTENT   |
-      | hotfix | local and remote | hotfix commit | hotfix_file | hotfix content |
+    Given my repository has the perennial branch "production"
+    And my repository has a feature branch named "hotfix" as a child of "production"
+    And the following commits exist in my repository
+      | BRANCH | LOCATION      | MESSAGE       | FILE NAME   | FILE CONTENT   |
+      | hotfix | local, remote | hotfix commit | hotfix_file | hotfix content |
     And I am on the "hotfix" branch
-    When I run `git-town ship -m "hotfix done"`
+    When I run "git-town ship -m 'hotfix done'"
 
 
   Scenario: result
@@ -31,7 +31,10 @@ Feature: git town-ship: shipping hotfixes
       |            | git push origin :hotfix           |
       |            | git branch -D hotfix              |
     And I end up on the "production" branch
-    And there are no more feature branches
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE     | FILE NAME   |
-      | production | local and remote | hotfix done | hotfix_file |
+    And the existing branches are
+      | REPOSITORY | BRANCHES         |
+      | local      | main, production |
+      | remote     | main, production |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE     | FILE NAME   |
+      | production | local, remote | hotfix done | hotfix_file |

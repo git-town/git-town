@@ -171,6 +171,26 @@ func TestGitRepository_CreateCommit(t *testing.T) {
 	assert.Equal(t, "master", commits[0].Branch)
 }
 
+func TestGitRepository_CreateCommit_Author(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "test commit",
+		Author:      "developer <developer@example.com>",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	assert.Equal(t, "hello.txt", commits[0].FileName)
+	assert.Equal(t, "hello world", commits[0].FileContent)
+	assert.Equal(t, "test commit", commits[0].Message)
+	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "developer <developer@example.com>", commits[0].Author)
+}
+
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 	repo := createTestGitTownRepo(t)
 	err := repo.CreateFeatureBranch("f1")
