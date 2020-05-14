@@ -41,12 +41,28 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
+		has := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell).HasBranchInformation()
+		if has {
+			return fmt.Errorf("unexpected Git Town branch hierarchy information")
+		}
+		return nil
+	})
+
 	suite.Step(`^I am on the "([^"]*)" branch$`, func(branchName string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(branchName)
 		if err != nil {
 			return fmt.Errorf("cannot change to branch %q: %w", branchName, err)
 		}
 		return nil
+	})
+
+	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(previous)
+		if err != nil {
+			return err
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch(current)
 	})
 
 	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
@@ -82,6 +98,10 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
 		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateBranch(branch, "main")
+	})
+
+	suite.Step(`^my repository has a branch "([^"]*)"$`, func(branch string) error {
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repository has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
@@ -175,5 +195,20 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 			return fmt.Errorf("mismatching branches found, see the diff above")
 		}
 		return nil
+	})
+
+	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
+		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
+		if err != nil {
+			return err
+		}
+		have, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		if have != want {
+			return fmt.Errorf("expected previous branch %q but got %q", want, have)
+		}
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
 	})
 }

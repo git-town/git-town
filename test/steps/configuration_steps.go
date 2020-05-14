@@ -27,6 +27,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetColorUI(value)
+		return nil
+	})
+
 	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
 		value, err := strconv.ParseBool(text)
 		if err != nil {
