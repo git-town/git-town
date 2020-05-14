@@ -370,6 +370,10 @@ func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Resu
 	return c.shell.MustRun("git", "config", key, value)
 }
 
+func (c *Configuration) SetColorUI(value string) *command.Result {
+	return c.shell.MustRun("git", "config", "color.ui", value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
