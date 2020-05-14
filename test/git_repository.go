@@ -248,17 +248,6 @@ func (repo *GitRepository) CreateCommit(commit Commit) error {
 	return nil
 }
 
-// CreateFeatureBranch creates a feature branch with no defined parent in this repository.
-func (repo *GitRepository) CreateFeatureBranchNoParent(name string) error {
-	err := repo.Shell.RunMany([][]string{
-		{"git", "checkout", "-b", name},
-	})
-	if err != nil {
-		return fmt.Errorf("cannot create feature branch %q: %w", name, err)
-	}
-	return nil
-}
-
 // CreateFeatureBranch creates a feature branch with the given name in this repository.
 func (repo *GitRepository) CreateFeatureBranch(name string) error {
 	err := repo.Shell.RunMany([][]string{

@@ -117,7 +117,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
-		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFeatureBranchNoParent(branch)
+		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {

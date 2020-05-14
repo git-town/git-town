@@ -11,11 +11,9 @@ Feature: git town-diff-parent: errors if supplied branch does not exist
 
   Scenario: result
     When I run "git-town diff-parent non-existing-feature"
-    Given my workspace has an uncommitted file
     Then it runs no commands
     And it prints the error:
       """
       There is no local branch named 'non-existing-feature'
       """
     And I end up on the "main" branch
-    And my workspace still contains my uncommitted file

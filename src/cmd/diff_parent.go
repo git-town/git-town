@@ -15,17 +15,15 @@ type diffParentConfig struct {
 
 var diffParentCommand = &cobra.Command{
 	Use:   "diff-parent [<branch>]",
-	Short: "Show differences between current branch and parent branch",
-	Long: `Show the difference between a feature branch and its parent
+	Short: "Shows the changes committed to a feature branch",
+	Long: `Shows the changes committed to a feature branch
 
-Works on either the current branch or the branch name provided. If the branch has a parent, then
-the diff will be output directly. If the branch does not have a parent, one will be asked to
-identify the parent branch.
+Works on either the current branch or the branch name provided.
 
-Does not output anything for perennial branches nor the main branch.`,
+Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getDiffParentConfig(args)
-		runDiffParent(config)
+		script.RunCommandSafe("git", "diff", config.parentBranch+".."+config.branch)
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -55,10 +53,6 @@ func getDiffParentConfig(args []string) (config diffParentConfig) {
 	prompt.EnsureKnowsParentBranches([]string{config.branch})
 	config.parentBranch = git.Config().GetParentBranch(config.branch)
 	return
-}
-
-func runDiffParent(config diffParentConfig) {
-	script.RunCommandSafe("git", "diff", config.parentBranch+".."+config.branch)
 }
 
 func init() {
