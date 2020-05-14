@@ -8,12 +8,15 @@ Feature: cannot double undo
   Background:
     Given my repository has a feature branch named "feature"
     And I am on the "feature" branch
-    And I run `git-town kill`
+    And I run "git-town kill"
     And I end up on the "main" branch
-    And I run `git-town undo`
+    And I run "git-town undo"
     And I end up on the "feature" branch
 
 
   Scenario:
-    When I run `git-town undo`
-    Then it prints the error "Nothing to undo"
+    When I run "git-town undo"
+    Then it prints the error:
+      """
+      Nothing to undo
+      """

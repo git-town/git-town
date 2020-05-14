@@ -6,7 +6,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
 
 
   Background:
-    Given the "pull-branch-strategy" configuration is set to "merge"
+    Given the pull-branch-strategy configuration is "merge"
     And my repository has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
@@ -16,7 +16,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -35,15 +35,15 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                                                    | FILE NAME           |
-      | main    | local and remote | local main commit                                          | local_main_file     |
-      |         |                  | remote main commit                                         | remote_main_file    |
-      |         |                  | Merge remote-tracking branch 'origin/main' into main       |                     |
-      | feature | local and remote | local feature commit                                       | local_feature_file  |
-      |         |                  | remote feature commit                                      | remote_feature_file |
-      |         |                  | Merge remote-tracking branch 'origin/feature' into feature |                     |
-      |         |                  | local main commit                                          | local_main_file     |
-      |         |                  | remote main commit                                         | remote_main_file    |
-      |         |                  | Merge remote-tracking branch 'origin/main' into main       |                     |
-      |         |                  | Merge branch 'main' into feature                           |                     |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME           |
+      | main    | local, remote | local main commit                                          | local_main_file     |
+      |         |               | remote main commit                                         | remote_main_file    |
+      |         |               | Merge remote-tracking branch 'origin/main' into main       |                     |
+      | feature | local, remote | local feature commit                                       | local_feature_file  |
+      |         |               | remote feature commit                                      | remote_feature_file |
+      |         |               | Merge remote-tracking branch 'origin/feature' into feature |                     |
+      |         |               | local main commit                                          | local_main_file     |
+      |         |               | remote main commit                                         | remote_main_file    |
+      |         |               | Merge remote-tracking branch 'origin/main' into main       |                     |
+      |         |               | Merge branch 'main' into feature                           |                     |

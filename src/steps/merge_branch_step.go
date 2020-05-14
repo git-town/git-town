@@ -9,6 +9,8 @@ import (
 type MergeBranchStep struct {
 	NoOpStep
 	BranchName string
+
+	previousSha string
 }
 
 // CreateAbortStep returns the abort step for this step.
@@ -21,12 +23,13 @@ func (step *MergeBranchStep) CreateContinueStep() Step {
 	return &ContinueMergeBranchStep{}
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *MergeBranchStep) CreateUndoStepBeforeRun() Step {
-	return &ResetToShaStep{Hard: true, Sha: git.GetCurrentSha()}
+// CreateUndoStep returns the undo step for this step.
+func (step *MergeBranchStep) CreateUndoStep() Step {
+	return &ResetToShaStep{Hard: true, Sha: step.previousSha}
 }
 
 // Run executes this step.
 func (step *MergeBranchStep) Run() error {
+	step.previousSha = git.GetCurrentSha()
 	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
 }

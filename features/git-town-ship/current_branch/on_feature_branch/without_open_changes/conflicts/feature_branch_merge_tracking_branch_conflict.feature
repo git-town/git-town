@@ -12,7 +12,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
       |         | remote   | remote conflicting commit | conflicting_file | remote conflicting content |
     And I am on the "feature" branch
-    When I run `git-town ship -m "feature done"`
+    When I run "git-town ship -m 'feature done'"
 
 
   Scenario: result
@@ -29,11 +29,11 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       To continue after having resolved conflicts, run "git-town continue".
       """
     And I am still on the "feature" branch
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH  | COMMAND              |
       | feature | git merge --abort    |
@@ -46,7 +46,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git commit --no-edit         |
@@ -58,15 +58,19 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I end up on the "main" branch
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
-      | main   | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
+      | main   | local, remote | feature done | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts and committing
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town continue`
+    When I run "git commit --no-edit"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                      |
       | feature | git merge --no-edit main     |
@@ -77,7 +81,10 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       |         | git push origin :feature     |
       |         | git branch -D feature        |
     And I end up on the "main" branch
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME        |
-      | main   | local and remote | feature done | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
+      | main   | local, remote | feature done | conflicting_file |

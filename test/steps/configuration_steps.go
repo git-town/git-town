@@ -27,6 +27,30 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetColorUI(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
+		if err != nil {
+			return err
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingDriver(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingOriginHostname(value)
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {
@@ -38,7 +62,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
+			return err
 		}
 		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).ShouldNewBranchPush()
 		if have != want {
@@ -59,7 +83,7 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^the new-branch-push-flag configuration is (true|false)$`, func(value string) error {
 		b, err := strconv.ParseBool(value)
 		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", value, err)
+			return err
 		}
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(b, false)
 		return nil
@@ -83,17 +107,13 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the new-branch-push-flag configuration is set to (true|false)$`, func(text string) error {
-		value, err := strconv.ParseBool(text)
-		if err != nil {
-			return fmt.Errorf("cannot parse %q into bool: %w", text, err)
-		}
-		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetNewBranchPush(value, false)
+	suite.Step(`^the perennial branches are not configured$`, func() error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
 		return nil
 	})
 
-	suite.Step(`^the perennial branches are not configured$`, func() error {
-		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).DeletePerennialBranchConfiguration()
+	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
 		return nil
 	})
 
@@ -120,6 +140,19 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		if actual[0] != branch1 || actual[1] != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
+		}
+		return nil
+	})
+
+	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetPullBranchStrategy(value)
+		return nil
+	})
+
+	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).GetPullBranchStrategy()
+		if have != want {
+			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
 		}
 		return nil
 	})

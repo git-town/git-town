@@ -15,7 +15,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 		return compareExistingCommits(fs, fs.activeScenarioState.originalCommitTable)
 	})
 
-	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repository (?:now|still) has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(fs, table)
 	})
 

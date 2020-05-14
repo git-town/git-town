@@ -8,10 +8,11 @@ Feature: update the parent of a nested feature branch
   Background:
     Given my repository has a feature branch named "parent-feature"
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
+    And I am on the "child-feature" branch
 
 
   Scenario: selecting the default branch (current parent)
-    When I run `git-town set-parent-branch` and answer the prompts:
+    When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER  |
       | Please specify the parent branch of 'child-feature' | [ENTER] |
     Then Git Town is now aware of this branch hierarchy
@@ -21,7 +22,7 @@ Feature: update the parent of a nested feature branch
 
 
   Scenario: selecting another branch
-    When I run `git-town set-parent-branch` and answer the prompts:
+    When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER      |
       | Please specify the parent branch of 'child-feature' | [UP][ENTER] |
     Then Git Town is now aware of this branch hierarchy
@@ -31,7 +32,7 @@ Feature: update the parent of a nested feature branch
 
 
   Scenario: choosing "<none> (make a perennial branch)"
-    When I run `git-town set-parent-branch` and answer the prompts:
+    When I run "git-town set-parent-branch" and answer the prompts:
       | PROMPT                                              | ANSWER          |
       | Please specify the parent branch of 'child-feature' | [UP][UP][ENTER] |
     Then the perennial branches are now configured as "child-feature"

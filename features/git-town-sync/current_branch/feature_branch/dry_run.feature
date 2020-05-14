@@ -15,7 +15,7 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       |         | remote   | remote feature commit | remote_feature_file |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --dry-run`
+    When I run "git-town sync --dry-run"
 
 
   Scenario: result
@@ -34,7 +34,9 @@ Feature: git-town sync: syncing the current feature branch with a tracking branc
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION | MESSAGE              | FILE NAME          |
-      | main    | local    | local main commit    | local_main_file    |
-      | feature | local    | local feature commit | local_feature_file |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
+      | main    | local    | local main commit     | local_main_file     |
+      |         | remote   | remote main commit    | remote_main_file    |
+      | feature | local    | local feature commit  | local_feature_file  |
+      |         | remote   | remote feature commit | remote_feature_file |

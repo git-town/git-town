@@ -5,19 +5,19 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
 
   Background:
     Given my repository has the feature branches "feature" and "other-feature"
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name: "new_folder/other_feature_file" and content: "other feature content"
-    When I run `git-town ship feature -m "feature done"` in the "new_folder" folder
+    When I run "git-town ship feature -m 'feature done'" in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
       | BRANCH        | COMMAND                            |
       | other-feature | git fetch --prune --tags           |
-      | <none>        | cd <%= git_root_folder %>          |
+      | <none>        | cd {{ root folder }}               |
       | other-feature | git add -A                         |
       |               | git stash                          |
       |               | git checkout main                  |
@@ -33,10 +33,13 @@ Feature: git town-ship: shipping the supplied feature branch from a subfolder
       |               | git branch -D feature              |
       |               | git checkout other-feature         |
       | other-feature | git stash pop                      |
-      | <none>        | cd <%= git_folder "new_folder" %>  |
+      | <none>        | cd {{ folder "new_folder" }}       |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
-    And my repository has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | FILE NAME    |
-      | main   | local and remote | feature done | feature_file |
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
+      | main   | local, remote | feature done | feature_file |

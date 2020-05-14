@@ -6,9 +6,12 @@ Feature: invalid invocation
 
 
   Scenario Outline: <DESCRIPTION>
-    When I run `git-town <CMD>`
+    When I run "git-town <CMD>"
     Then it runs no commands
-    And it prints the error "Usage:"
+    And it prints the error:
+      """
+      Usage:
+      """
 
     Examples:
       | CMD                              |

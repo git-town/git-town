@@ -11,7 +11,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file
-    And I run `git-town ship feature -m "feature done"`
+    And I run "git-town ship feature -m 'feature done'"
 
 
   Scenario: result
@@ -33,11 +33,11 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       """
     And I end up on the "feature" branch
     And my uncommitted file is stashed
-    And my repo has a merge in progress
+    And my repo now has a merge in progress
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH        | COMMAND                    |
       | feature       | git merge --abort          |
@@ -47,15 +47,15 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repository still has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                    | FILE NAME        | FILE CONTENT    |
-      | main    | local and remote | conflicting main commit    | conflicting_file | main content    |
-      | feature | local            | conflicting feature commit | conflicting_file | feature content |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        |
+      | main    | local, remote | conflicting main commit    | conflicting_file |
+      | feature | local         | conflicting feature commit | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git commit --no-edit         |
@@ -69,16 +69,20 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
-    And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
-      | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |                  | feature done            | conflicting_file |
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
+      | main   | local, remote | conflicting main commit | conflicting_file |
+      |        |               | feature done            | conflicting_file |
 
 
   Scenario: continuing after resolving the conflicts and comitting
     Given I resolve the conflict in "conflicting_file"
-    When I run `git commit --no-edit; git-town continue`
+    When I run "git commit --no-edit"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH        | COMMAND                      |
       | feature       | git checkout main            |
@@ -91,8 +95,11 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+      | remote     | main, other-feature |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                 | FILE NAME        |
-      | main   | local and remote | conflicting main commit | conflicting_file |
-      |        |                  | feature done            | conflicting_file |
+      | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
+      | main   | local, remote | conflicting main commit | conflicting_file |
+      |        |               | feature done            | conflicting_file |

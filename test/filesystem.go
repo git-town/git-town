@@ -60,5 +60,7 @@ func createFile(t *testing.T, dir, filename string) {
 func createTempDir(t *testing.T) string {
 	dir, err := ioutil.TempDir("", "")
 	assert.Nil(t, err, "cannot create TempDir")
-	return dir
+	evalDir, err := filepath.EvalSymlinks(dir) // Evaluate symlinks as Mac temp dir is symlinked
+	assert.Nil(t, err, "cannot evaluate symlinks of TempDir")
+	return evalDir
 }

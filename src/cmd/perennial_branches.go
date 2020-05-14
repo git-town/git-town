@@ -15,7 +15,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		printPerennialBranches()
+		cfmt.Println(git.GetPrintablePerennialBranches())
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -34,10 +34,6 @@ var updatePrennialBranchesCommand = &cobra.Command{
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		return git.ValidateIsRepository()
 	},
-}
-
-func printPerennialBranches() {
-	cfmt.Println(git.GetPrintablePerennialBranches())
 }
 
 func init() {

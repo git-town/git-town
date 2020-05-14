@@ -10,20 +10,23 @@ import (
 type ChangeDirectoryStep struct {
 	NoOpStep
 	Directory string
+
+	previousDirectory string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *ChangeDirectoryStep) CreateUndoStepBeforeRun() Step {
-	dir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	return &ChangeDirectoryStep{Directory: dir}
+// CreateUndoStep returns the undo step for this step.
+func (step *ChangeDirectoryStep) CreateUndoStep() Step {
+	return &ChangeDirectoryStep{Directory: step.previousDirectory}
 }
 
 // Run executes this step.
 func (step *ChangeDirectoryStep) Run() error {
-	_, err := os.Stat(step.Directory)
+	var err error
+	step.previousDirectory, err = os.Getwd()
+	if err != nil {
+		return err
+	}
+	_, err = os.Stat(step.Directory)
 	if err == nil {
 		script.PrintCommand("cd", step.Directory)
 		return os.Chdir(step.Directory)

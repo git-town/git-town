@@ -3,6 +3,7 @@ package test
 import (
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,17 +12,17 @@ import (
 func TestCloneGitRepository(t *testing.T) {
 	rootDir := createTempDir(t)
 	originPath := filepath.Join(rootDir, "origin")
-	_, err := InitGitRepository(originPath, rootDir)
+	_, err := InitGitRepository(originPath, rootDir, "")
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := filepath.Join(rootDir, "cloned")
-	_, err = CloneGitRepository(originPath, clonedPath, rootDir)
+	_, err = CloneGitRepository(originPath, clonedPath, rootDir, "")
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
 }
 
 func TestInitGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize normal GitRepository")
 	assertIsNormalGitRepo(t, repo.Dir)
 	// ensure the Git repo works, i.e. we can commit into it
@@ -35,7 +36,7 @@ func TestInitGitRepository(t *testing.T) {
 
 func TestNewGitRepository(t *testing.T) {
 	dir := createTempDir(t)
-	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir))
+	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir, ""))
 }
 
 func TestGitRepository_AddRemote(t *testing.T) {
@@ -117,7 +118,7 @@ func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 	repoDir := filepath.Join(createTempDir(t), "repo") // need a non-existing directory
 	err := CopyDirectory(origin.Dir, repoDir)
 	assert.Nil(t, err)
-	repo := NewGitRepository(repoDir, repoDir, NewMockingShell(repoDir, repoDir))
+	repo := NewGitRepository(repoDir, repoDir, NewMockingShell(repoDir, repoDir, ""))
 	err = repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.Fetch()
@@ -146,9 +147,10 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
 	assert.Nil(t, err)
-	branches, err := repo.Branches()
+	res, err := repo.Shell.Run("git", "town", "config")
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"main", "f1", "f1a", "master"}, branches)
+	has := strings.Contains(res.OutputSanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
+	assert.True(t, has)
 }
 
 func TestGitRepository_CreateCommit(t *testing.T) {
@@ -167,6 +169,26 @@ func TestGitRepository_CreateCommit(t *testing.T) {
 	assert.Equal(t, "hello world", commits[0].FileContent)
 	assert.Equal(t, "test commit", commits[0].Message)
 	assert.Equal(t, "master", commits[0].Branch)
+}
+
+func TestGitRepository_CreateCommit_Author(t *testing.T) {
+	repo := createTestRepo(t)
+	err := repo.CreateCommit(Commit{
+		Branch:      "master",
+		FileName:    "hello.txt",
+		FileContent: "hello world",
+		Message:     "test commit",
+		Author:      "developer <developer@example.com>",
+	})
+	assert.Nil(t, err)
+	commits, err := repo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	assert.Nil(t, err)
+	assert.Len(t, commits, 1)
+	assert.Equal(t, "hello.txt", commits[0].FileName)
+	assert.Equal(t, "hello world", commits[0].FileContent)
+	assert.Equal(t, "test commit", commits[0].Message)
+	assert.Equal(t, "master", commits[0].Branch)
+	assert.Equal(t, "developer <developer@example.com>", commits[0].Author)
 }
 
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
@@ -439,7 +461,7 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
 func createTestRepo(t *testing.T) GitRepository {
 	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, dir)
+	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize Git repow")
 	err = repo.Shell.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
