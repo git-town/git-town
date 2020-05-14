@@ -1,6 +1,5 @@
 ![Git Town](https://raw.githubusercontent.com/git-town/git-town/master/website/img/git-town-horizontal.svg)
 
-[![Build Status](https://travis-ci.org/git-town/git-town.svg?branch=master)](https://travis-ci.org/git-town/git-town)
 [![CircleCI](https://circleci.com/gh/git-town/git-town.svg?style=shield)](https://circleci.com/gh/git-town/git-town)
 [![Go Report Card](https://goreportcard.com/badge/github.com/git-town/git-town)](https://goreportcard.com/report/github.com/git-town/git-town)
 [![License](https://img.shields.io/:license-MIT-blue.svg?style=flat)](LICENSE)

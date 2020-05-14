@@ -29,10 +29,7 @@ deploy:  # deploys the website
 	git push
 	git checkout master
 
-fix: fix-cucumber fix-go fix-rb fix-md  # auto-fixes lint issues in all languages
-
-fix-cucumber:  # auto-fixes all Cucumber lint issues
-	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec cucumber_lint --fix
+fix: fix-go fix-md  # auto-fixes lint issues in all languages
 
 fix-go:  # auto-fixes all Go lint issues
 	gofmt -s -w ./src ./test
@@ -40,16 +37,10 @@ fix-go:  # auto-fixes all Go lint issues
 fix-md:  # auto-fixes all Markdown lint issues
 	tools/prettier/node_modules/.bin/prettier --write .
 
-fix-rb:  # auto-fixes all Ruby lint issues
-	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rubocop --auto-correct
-
 help:  # prints all make targets
 	@cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
 
-lint: lint-cucumber lint-go lint-md lint-rb  # lints all the source code
-
-lint-cucumber:  # lints the Cucumber files
-	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec cucumber_lint
+lint: lint-go lint-md   # lints all the source code
 
 lint-go:  # lints the Go files
 	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
@@ -58,14 +49,10 @@ lint-md:   # lints the Markdown files
 	tools/prettier/node_modules/.bin/prettier -l .
 	tools/text-runner/node_modules/.bin/text-run --offline
 
-lint-rb:  # lints the Ruby files
-	env RUBYOPT='-W:no-deprecated -W:no-experimental' bundle exec rubocop
-
 setup: setup-go  # the setup steps necessary on developer machines
 	bundle install
 	cd tools/harp && yarn install
 	cd tools/text-runner && yarn install
-
 
 setup-go:
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
