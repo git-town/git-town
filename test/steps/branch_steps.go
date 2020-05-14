@@ -185,7 +185,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
-	suite.Step(`^the previous Git branch is now "([^"]*)"$`, func(want string) error {
+	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
 		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
 		if err != nil {
 			return err
