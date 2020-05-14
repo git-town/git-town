@@ -44,7 +44,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
 		has := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell).HasBranchInformation()
 		if has {
-			return fmt.Errorf("Git Town has unexpected branch hierarchy inforamtion")
+			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
 	})
