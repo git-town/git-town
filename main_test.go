@@ -45,8 +45,5 @@ func TestMain(m *testing.M) {
 		Strict:      true,
 		Paths:       []string{"features/"},
 	})
-	if st := m.Run(); st > status {
-		status = st
-	}
 	os.Exit(status)
 }
