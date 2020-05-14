@@ -67,10 +67,7 @@ func loadGitConfig(shell command.Shell, global bool) map[string]string {
 	}
 	res, err := shell.Run("git", cmdArgs...)
 	if err != nil {
-		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
-			return result
-		}
-		panic(err)
+		return result
 	}
 	output := res.Output()
 	if output == "" {
@@ -261,6 +258,16 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 	return strings.TrimSuffix(matches[1], ".git")
 }
 
+// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
+func (c *Configuration) HasBranchInformation() bool {
+	for key := range c.localConfigCache {
+		if strings.HasPrefix(key, "git-town-branch.") {
+			return true
+		}
+	}
+	return false
+}
+
 // HasParentBranch returns whether or not the given branch has a parent
 func (c *Configuration) HasParentBranch(branchName string) bool {
 	return c.GetParentBranch(branchName) != ""
@@ -370,6 +377,10 @@ func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Resu
 	return c.shell.MustRun("git", "config", key, value)
 }
 
+func (c *Configuration) SetColorUI(value string) *command.Result {
+	return c.shell.MustRun("git", "config", "color.ui", value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
@@ -420,6 +431,11 @@ func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Resu
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
+}
+
+// SetShouldSyncUpstream updates the configured pull branch strategy.
+func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push

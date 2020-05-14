@@ -7,11 +7,11 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
   Background:
     Given my repository has a feature branch named "feature"
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
-    When I run `git-town ship` and don't change the default commit message
+    When I run "git-town ship" and close the editor
 
 
   Scenario: result
@@ -30,17 +30,19 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       |         | git checkout feature               |
       | feature | git checkout main                  |
       | main    | git checkout feature               |
-    And it prints the error "Aborted because commit exited with error"
+    And it prints the error:
+      """
+      Aborted because commit exited with error
+      """
     And I am still on the "feature" branch
-    And my repository still has the following commits
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+    And my repository is left with my original commits
 
 
   Scenario: undo
-    When I run `git-town undo`
-    Then it prints the error "Nothing to undo"
+    When I run "git-town undo"
+    Then it prints the error:
+      """
+      Nothing to undo
+      """
     And I am still on the "feature" branch
-    And my repository still has the following commits
-      | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local    | feature commit | feature_file | feature content |
+    And my repository is left with my original commits

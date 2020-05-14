@@ -13,7 +13,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
       | feature | local    | feature commit            | feature_file     | feature content            |
     And I am on the "feature" branch
-    When I run `git-town ship -m "feature done"`
+    When I run "git-town ship -m 'feature done'"
 
 
   Scenario: result
@@ -27,11 +27,11 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       To abort, run "git-town abort".
       To continue after having resolved conflicts, run "git-town continue".
       """
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH | COMMAND              |
       | main   | git rebase --abort   |
@@ -43,7 +43,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -58,17 +58,21 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git push origin :feature           |
       |         | git branch -D feature              |
     And I end up on the "main" branch
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main   | local, remote | conflicting remote commit | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
+      |        |               | feature done              | feature_file     |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    When I run `git rebase --continue; git-town continue`
+    When I run "git rebase --continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git push                           |
@@ -82,9 +86,12 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |         | git push origin :feature           |
       |         | git branch -D feature              |
     And I end up on the "main" branch
-    And there is no "feature" branch
+    And the existing branches are
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
     And my repository still has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
-      | main   | local and remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
-      |        |                  | feature done              | feature_file     |
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
+      | main   | local, remote | conflicting remote commit | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
+      |        |               | feature done              | feature_file     |

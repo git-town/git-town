@@ -1,4 +1,0 @@
----
-default: -r features/step_definitions -r features/support --strict
-parallel:
-  -r features/step_definitions -r features/support --strict --format=progress

@@ -6,12 +6,12 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
   Background:
     Given my repository has the feature branches "feature" and "other-feature"
     And my repo does not have a remote origin
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
     And my workspace has an uncommitted file with name: "feature_file" and content: "conflicting content"
-    When I run `git-town ship feature -m "feature done"`
+    When I run "git-town ship feature -m 'feature done'"
 
 
   Scenario: result
@@ -29,7 +29,9 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
       | other-feature | git stash pop                |
     And I end up on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And there is no "feature" branch
-    And my repository has the following commits
+    And the existing branches are
+      | REPOSITORY | BRANCHES            |
+      | local      | main, other-feature |
+    And my repository now has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |

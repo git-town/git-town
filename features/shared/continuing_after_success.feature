@@ -6,20 +6,26 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-hack
-    Given I run `git-town hack new-feature`
-    When I run `git-town continue`
-    Then it prints the error "Nothing to continue"
+    Given I run "git-town hack new-feature"
+    When I run "git-town continue"
+    Then it prints the error:
+      """
+      Nothing to continue
+      """
 
 
   Scenario: continuing after successful git-ship
     Given my repository has a feature branch named "current-feature"
-    And the following commit exists in my repository
+    And the following commits exist in my repository
       | BRANCH          | FILE NAME    |
       | current-feature | feature_file |
     And I am on the "current-feature" branch
-    And I run `git-town ship -m "feature done"`
-    When I run `git-town continue`
-    Then it prints the error "Nothing to continue"
+    And I run "git-town ship -m 'feature done'"
+    When I run "git-town continue"
+    Then it prints the error:
+      """
+      Nothing to continue
+      """
 
 
   Scenario: continuing after successful git-sync
@@ -28,6 +34,9 @@ Feature: Show clear error if trying to continue after executing a successful com
       | LOCATION | FILE NAME   |
       | local    | local_file  |
       | remote   | remote_file |
-    And I run `git-town sync`
-    When I run `git-town continue`
-    Then it prints the error "Nothing to continue"
+    And I run "git-town sync"
+    When I run "git-town continue"
+    Then it prints the error:
+      """
+      Nothing to continue
+      """

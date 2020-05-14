@@ -12,7 +12,7 @@ Feature: git-town sync: syncing the current feature branch without a tracking br
       | feature | local    | local feature commit | local_feature_file |
     And I am on the "feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync`
+    When I run "git-town sync"
 
 
   Scenario: result
@@ -30,11 +30,11 @@ Feature: git-town sync: syncing the current feature branch without a tracking br
       |         | git stash pop              |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE                          | FILE NAME          |
-      | main    | local and remote | remote main commit               | remote_main_file   |
-      |         |                  | local main commit                | local_main_file    |
-      | feature | local and remote | local feature commit             | local_feature_file |
-      |         |                  | remote main commit               | remote_main_file   |
-      |         |                  | local main commit                | local_main_file    |
-      |         |                  | Merge branch 'main' into feature |                    |
+    And my repository now has the following commits
+      | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME          |
+      | main    | local, remote | remote main commit               | remote_main_file   |
+      |         |               | local main commit                | local_main_file    |
+      | feature | local, remote | local feature commit             | local_feature_file |
+      |         |               | remote main commit               | remote_main_file   |
+      |         |               | local main commit                | local_main_file    |
+      |         |               | Merge branch 'main' into feature |                    |

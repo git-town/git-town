@@ -16,12 +16,12 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Scenario Outline: prompt for squashed commit author
-    When I run `git-town ship -m 'feature done'` and answer the prompts:
+    When I run "git-town ship -m 'feature done'" and answer the prompts:
       | PROMPT                                        | ANSWER   |
       | Please choose an author for the squash commit | <ANSWER> |
-    And my repository has the following commits
-      | BRANCH | LOCATION         | MESSAGE      | AUTHOR           |
-      | main   | local and remote | feature done | <FEATURE_AUTHOR> |
+    And my repository now has the following commits
+      | BRANCH | LOCATION      | MESSAGE      | AUTHOR           |
+      | main   | local, remote | feature done | <FEATURE_AUTHOR> |
 
     Examples:
       | ANSWER        | FEATURE_AUTHOR                    |

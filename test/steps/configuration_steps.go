@@ -27,6 +27,20 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetColorUI(value)
+		return nil
+	})
+
+	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
+		if err != nil {
+			return err
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldSyncUpstream(value)
+		return nil
+	})
+
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
 		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetCodeHostingDriver(value)
 		return nil
@@ -98,6 +112,11 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(name)
+		return nil
+	})
+
 	suite.Step(`^the perennial branches are configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).AddToPerennialBranches(branch1, branch2)
 		return nil
@@ -121,6 +140,19 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		if actual[0] != branch1 || actual[1] != branch2 {
 			return fmt.Errorf("expected %q, got %q", []string{branch1, branch2}, actual)
+		}
+		return nil
+	})
+
+	suite.Step(`^the pull-branch-strategy configuration is "(merge|rebase)"$`, func(value string) error {
+		fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetPullBranchStrategy(value)
+		return nil
+	})
+
+	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+		have := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).GetPullBranchStrategy()
+		if have != want {
+			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
 		}
 		return nil
 	})

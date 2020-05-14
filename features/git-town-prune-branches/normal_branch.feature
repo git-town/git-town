@@ -12,13 +12,13 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
   Background:
     Given my repository has the feature branches "active-feature" and "deleted-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE                |
-      | active-feature  | local and remote | active-feature commit  |
-      | deleted-feature | local and remote | deleted-feature commit |
+      | BRANCH          | LOCATION      | MESSAGE                |
+      | active-feature  | local, remote | active-feature commit  |
+      | deleted-feature | local, remote | deleted-feature commit |
     And the "deleted-feature" branch gets deleted on the remote
     And I am on the "deleted-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town prune-branches`
+    When I run "git-town prune-branches"
 
 
   Scenario: result
@@ -36,11 +36,11 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                                        |
-      | main   | git branch deleted-feature <%= sha 'deleted-feature commit' %> |
-      |        | git checkout deleted-feature                                   |
+      | BRANCH | COMMAND                                                       |
+      | main   | git branch deleted-feature {{ sha 'deleted-feature commit' }} |
+      |        | git checkout deleted-feature                                  |
     And I end up on the "deleted-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are
