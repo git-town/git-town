@@ -100,7 +100,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
