@@ -24,9 +24,9 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run: mv ./git-town /home/circleci/bin/
-      - run: mv ./godog /home/circleci/bin/
-      - run: mv ./golangci-lint /home/circleci/bin/
+      - run: mv ./git-town /go/bin/
+      - run: mv ./godog /go/bin/
+      - run: mv ./golangci-lint /go/bin/
       - run: make unit
       - run: make lint-go
       - run:
