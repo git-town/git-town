@@ -40,8 +40,6 @@ jobs:
       - run: mv ./git-town /go/bin/
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
-      - run: make unit
-      - run: make lint-go
       - run:
           find features -type f -name '*.feature' | grep git-town-s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
