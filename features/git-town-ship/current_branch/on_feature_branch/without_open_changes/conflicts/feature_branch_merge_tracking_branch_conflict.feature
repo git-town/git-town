@@ -62,7 +62,7 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
 
@@ -85,6 +85,6 @@ Feature: git town-ship: resolving conflicts between the current feature branch a
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME        |
       | main   | local, remote | feature done | conflicting_file |
