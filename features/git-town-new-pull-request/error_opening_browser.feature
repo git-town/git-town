@@ -1,4 +1,4 @@
-Feature: Print URL when
+Feature: Print URL when opening browser fails
 
   When using Git Town on a machine with a broken open browser command
   I want that it prints the URL of the website
