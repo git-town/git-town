@@ -5,12 +5,9 @@ Feature: listing the configuration
   So that I can change it more effectively
 
 
-  Background:
-    Given my repository has the feature branches "production" and "qa"
-
-
   Scenario: everything is configured
-    Given the main branch is configured as "main"
+    Given my repository has the feature branches "production" and "qa"
+    And the main branch is configured as "main"
     And the perennial branches are configured as "qa"
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |

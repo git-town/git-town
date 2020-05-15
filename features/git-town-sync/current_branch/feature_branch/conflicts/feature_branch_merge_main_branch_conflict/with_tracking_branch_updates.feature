@@ -47,7 +47,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
@@ -57,7 +57,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error: 
+    And it prints the error:
       """
       You must resolve the conflicts before continuing
       """
@@ -76,7 +76,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop        |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | main    | local, remote | conflicting main commit                                    | conflicting_file |
       | feature | local, remote | conflicting feature commit                                 | conflicting_file |
@@ -101,7 +101,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | main    | local, remote | conflicting main commit                                    | conflicting_file |
       | feature | local, remote | conflicting feature commit                                 | conflicting_file |

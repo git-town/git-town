@@ -99,7 +99,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository still has the following commits
+    And my repository now has the following commits
       | BRANCH | LOCATION      | MESSAGE                 | FILE NAME        |
       | main   | local, remote | conflicting main commit | conflicting_file |
       |        |               | feature done            | conflicting_file |
