@@ -6,10 +6,13 @@ jobs:
       - image: circleci/golang:1.14.2
     steps:
       - checkout
-      # build the binary for the Markdown tests
-      # and store it in the workspace
+      # build the binaries and store them in the workspace
       - run: make build
+      - run: make setup-go
       - run: cp /go/bin/git-town /home/circleci/project/
+      - run: cp /go/bin/godog /home/circleci/project/
+      - run: cp /go/bin/golangci-lint /home/circleci/project/
+      - run: ls /go/bin
       - persist_to_workspace:
           root: /home/circleci
           paths:
@@ -20,8 +23,26 @@ jobs:
     steps:
       - attach_workspace:
           at: /home/circleci
-      - run: make setup-go
-      - run: make test-go
+      - run: mv ./git-town /go/bin/
+      - run: mv ./godog /go/bin/
+      - run: mv ./golangci-lint /go/bin/
+      - run: make unit
+      - run: make lint-go
+      - run:
+          find features -type f -name '*.feature' | grep -v git-town-s | xargs
+          godog --concurrency=$(nproc --all) --format=progress --strict
+  go-s:
+    docker:
+      - image: circleci/golang:1.14.2
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - run: mv ./git-town /go/bin/
+      - run: mv ./godog /go/bin/
+      - run: mv ./golangci-lint /go/bin/
+      - run:
+          find features -type f -name '*.feature' | grep git-town-s | xargs
+          godog --concurrency=$(nproc --all) --format=progress --strict
   markdown:
     docker:
       - image: circleci/node:12
@@ -31,6 +52,8 @@ jobs:
       # move the binary into the PATH
       - run: mkdir /home/circleci/bin
       - run: mv ./git-town /home/circleci/bin/
+      - run: mv ./godog /home/circleci/bin/
+      - run: mv ./golangci-lint /home/circleci/bin/
       - run: cd tools/text-runner && yarn
       - run: make test-md
 workflows:
@@ -39,6 +62,9 @@ workflows:
     jobs:
       - clone
       - go:
+          requires:
+            - clone
+      - go-s:
           requires:
             - clone
       - markdown:
