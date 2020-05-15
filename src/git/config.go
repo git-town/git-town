@@ -457,11 +457,11 @@ func (c *Configuration) ShouldNewBranchPushGlobal() bool {
 
 // ShouldShipDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
 func (c *Configuration) ShouldShipDeleteRemoteBranch() bool {
-	override := c.getLocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
-	if override == "" {
+	setting := c.getLocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	if setting == "" {
 		return true
 	}
-	return util.StringToBool(override)
+	return util.StringToBool(setting)
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
