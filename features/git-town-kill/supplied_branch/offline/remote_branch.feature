@@ -21,6 +21,6 @@ Feature: git town-kill: killing a remote branch in offline mode
       | BRANCH | COMMAND |
     And it prints the error:
       """
-      Cannot delete remote branch 'feature' in offline mode
+      Cannot delete remote branch "feature" in offline mode
       """
     And I am still on the "main" branch

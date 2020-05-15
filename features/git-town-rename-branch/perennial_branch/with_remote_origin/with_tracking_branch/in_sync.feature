@@ -21,7 +21,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
     Then it runs no commands
     And it prints the error:
       """
-      'production' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.
+      "production" is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.
       """
 
 
