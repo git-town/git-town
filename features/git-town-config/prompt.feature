@@ -5,11 +5,8 @@ Feature: Automatically running the configuration wizard if Git Town is unconfigu
   So that I use a properly configured tool at all times.
 
 
-  Background:
-    Given I haven't configured Git Town yet
-
-
   Scenario Outline: All Git Town commands show the configuration prompt if running unconfigured
+    Given I haven't configured Git Town yet
     When I run "<COMMAND>" and answer the prompts:
       | PROMPT                                     | ANSWER  |
       | Please specify the main development branch | [ENTER] |
