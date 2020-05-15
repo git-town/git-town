@@ -53,9 +53,10 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       # move the binary into the PATH
-      - run: mv ./git-town /go/bin/
-      - run: mv ./godog /go/bin/
-      - run: mv ./golangci-lint /go/bin/
+      - run: mkdir /home/circleci/bin
+      - run: mv ./git-town /home/circleci/bin/
+      - run: mv ./godog /home/circleci/bin/
+      - run: mv ./golangci-lint /home/circleci/bin/
       - run: cd tools/text-runner && yarn
       - run: make lint
 workflows:
