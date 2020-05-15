@@ -16,17 +16,22 @@ func DoesBranchHaveUnmergedCommits(branchName string) bool {
 
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
 func EnsureBranchInSync(branchName, errorMessageSuffix string) {
-	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("'%s' is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))
+	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("%q is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))
 }
 
 // EnsureDoesNotHaveBranch enforces that a branch with the given name does not exist
 func EnsureDoesNotHaveBranch(branchName string) {
-	util.Ensure(!HasBranch(branchName), fmt.Sprintf("A branch named '%s' already exists", branchName))
+	util.Ensure(!HasBranch(branchName), fmt.Sprintf("A branch named %q already exists", branchName))
 }
 
 // EnsureHasBranch enforces that a branch with the given name exists
 func EnsureHasBranch(branchName string) {
-	util.Ensure(HasBranch(branchName), fmt.Sprintf("There is no branch named '%s'", branchName))
+	util.Ensure(HasBranch(branchName), fmt.Sprintf("There is no branch named %q", branchName))
+}
+
+// EnsureHasLocalBranch enforces that a local branch with the given name exists
+func EnsureHasLocalBranch(branchName string) {
+	util.Ensure(HasLocalBranch(branchName), fmt.Sprintf("There is no local branch named %q", branchName))
 }
 
 // EnsureIsNotMainBranch enforces that a branch with the given name is not the main branch

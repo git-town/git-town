@@ -260,6 +260,17 @@ func (repo *GitRepository) CreateFeatureBranch(name string) error {
 	return nil
 }
 
+// CreateFeatureBranch creates a feature branch with no defined parent in this repository.
+func (repo *GitRepository) CreateFeatureBranchNoParent(name string) error {
+	err := repo.Shell.RunMany([][]string{
+		{"git", "checkout", "-b", name},
+	})
+	if err != nil {
+		return fmt.Errorf("cannot create feature branch %q: %w", name, err)
+	}
+	return nil
+}
+
 // CreateFile creates a file with the given name and content in this repository.
 func (repo *GitRepository) CreateFile(name, content string) error {
 	filePath := filepath.Join(repo.Dir, name)

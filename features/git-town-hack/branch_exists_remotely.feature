@@ -16,7 +16,7 @@ Feature: git town-hack: errors when the branch exists remotely
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      A branch named 'existing-feature' already exists
+      A branch named "existing-feature" already exists
       """
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file

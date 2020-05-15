@@ -17,7 +17,7 @@ Feature: git town-ship: errors when trying to ship a branch that doesn't exist
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      There is no branch named 'non-existing-branch'
+      There is no branch named "non-existing-branch"
       """
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file

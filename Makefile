@@ -50,7 +50,6 @@ lint-md:   # lints the Markdown files
 	tools/text-runner/node_modules/.bin/text-run --offline
 
 setup: setup-go  # the setup steps necessary on developer machines
-	bundle install
 	cd tools/harp && yarn install
 	cd tools/text-runner && yarn install
 
