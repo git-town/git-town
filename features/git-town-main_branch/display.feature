@@ -8,7 +8,7 @@ Feature: display the main branch configuration
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
     When I run "git-town main-branch"
-    Then it prints
+    Then it prints:
       """
       [none]
       """
@@ -17,7 +17,7 @@ Feature: display the main branch configuration
   Scenario: main branch is configured
     Given the main branch is configured as "main"
     When I run "git-town main-branch"
-    Then it prints
+    Then it prints:
       """
       main
       """
