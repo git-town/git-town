@@ -35,14 +35,13 @@ func ActivateDryRun() {
 func OpenBrowser(url string) {
 	command := browsers.GetOpenBrowserCommand()
 	if command == "" {
-		fmt.Println("Cannot find a browser to open " + url)
+		fmt.Println("Please open in a browser: " + url)
 		return
 	}
 	err := RunCommand(command, url)
 	fmt.Println(err)
 	if err != nil {
-		fmt.Printf("Pull request URL: %s", url)
-		fmt.Println()
+		fmt.Println("Please open in a browser: " + url)
 	}
 }
 

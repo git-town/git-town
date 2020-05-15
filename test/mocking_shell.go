@@ -29,6 +29,29 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
+// MockBrokenCommand adds a mock for the given command that returns an error.
+func (ms *MockingShell) MockBrokenCommand(name string) error {
+	// create "bin" dir
+	err := os.Mkdir(ms.binDir, 0744)
+	if err != nil {
+		return fmt.Errorf("cannot create mock bin dir: %w", err)
+	}
+	// write custom "which" command
+	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom which command: %w", err)
+	}
+	// write custom command
+	content = "#!/usr/bin/env bash\n\nexit 1"
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0744)
+	if err != nil {
+		return fmt.Errorf("cannot write custom command: %w", err)
+	}
+	ms.hasMockCommand = true
+	return nil
+}
+
 // MockCommand adds a mock for the command with the given name.
 func (ms *MockingShell) MockCommand(name string) error {
 	// create "bin" dir

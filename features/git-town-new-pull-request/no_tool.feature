@@ -1,4 +1,4 @@
-Feature: print URL if no tool to open browsers is available
+Feature: print URL when unable to open browser
 
   As a developer using Git Town on a remote machine via SSH
   I want that the tool prints the URL it would have opened
@@ -12,14 +12,22 @@ Feature: print URL if no tool to open browsers is available
     When I run "git-town new-pull-request"
 
   Scenario: result
-    Then it prints
+    Then it runs the commands
+      | BRANCH  | COMMAND                            |
+      | feature | git fetch --prune --tags           |
+      |         | git checkout main                  |
+      | main    | git rebase origin/main             |
+      |         | git checkout feature               |
+      | feature | git merge --no-edit origin/feature |
+      |         | git merge --no-edit main           |
+    And it prints
       """
-      Cannot find a browser to open https://github.com/git-town/git-town/compare/feature?expand=1
+      Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """
 
   Scenario: undo
     When I run "git-town undo"
-    Then it prints
-      """
-      foo
-      """
+    Then it runs the commands
+      | BRANCH  | COMMAND              |
+      | feature | git checkout main    |
+      | main    | git checkout feature |
