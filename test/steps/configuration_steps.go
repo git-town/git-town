@@ -51,6 +51,15 @@ func ConfigurationSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 
+	suite.Step(`^my repo has "git-town.ship-delete-remote-branch" set to "(true|false)"$`, func(value string) error {
+		parsed, err := strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+		_ = fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(false).SetShouldShipDeleteRemoteBranch(parsed)
+		return nil
+	})
+
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
 		branches := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetPerennialBranches()
 		if len(branches) > 0 {

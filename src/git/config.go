@@ -433,6 +433,11 @@ func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 
+// SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
+func (c *Configuration) SetShouldShipDeleteRemoteBranch(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.ship-delete-remote-branch", strconv.FormatBool(value))
+}
+
 // SetShouldSyncUpstream updates the configured pull branch strategy.
 func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
 	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
