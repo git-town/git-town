@@ -6,8 +6,7 @@ jobs:
       - image: circleci/golang:1.14.2
     steps:
       - checkout
-      # build the binary for the Markdown tests
-      # and store it in the workspace
+      # build the binaries and store them in the workspace
       - run: make build
       - run: make setup-go
       - run: cp /go/bin/git-town /home/circleci/project/
@@ -30,9 +29,9 @@ jobs:
       - run: make unit
       - run: make lint-go
       - run:
-          find . -type f -name '*.feature' | grep -v git-town-s | xargs godog
-          --concurrency=$(nproc --all) --format=progress --strict
-  go-sync:
+          find features -type f -name '*.feature' | grep -v git-town-s | xargs
+          godog --concurrency=$(nproc --all) --format=progress --strict
+  go-s:
     docker:
       - image: circleci/golang:1.14.2
     steps:
@@ -44,9 +43,9 @@ jobs:
       - run: make unit
       - run: make lint-go
       - run:
-          find . -type f -name '*.feature' | grep git-town-s | xargs godog
-          --concurrency=$(nproc --all) --format=progress --strict
-  lint:
+          find features -type f -name '*.feature' | grep git-town-s | xargs
+          godog --concurrency=$(nproc --all) --format=progress --strict
+  markdown:
     docker:
       - image: circleci/node:12
     steps:
@@ -58,7 +57,7 @@ jobs:
       - run: mv ./godog /home/circleci/bin/
       - run: mv ./golangci-lint /home/circleci/bin/
       - run: cd tools/text-runner && yarn
-      - run: make lint
+      - run: make test-md
 workflows:
   version: 2
   all_tests:
@@ -67,9 +66,9 @@ workflows:
       - go:
           requires:
             - clone
-      - go-sync:
+      - go-s:
           requires:
             - clone
-      - lint:
+      - markdown:
           requires:
             - clone
