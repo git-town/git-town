@@ -31,10 +31,13 @@ func ActivateDryRun() {
 }
 
 // OpenBrowser opens the default browser with the given URL.
-func OpenBrowser(url string) error {
-	fmt.Printf("Opening URL: %s\n", url)
+// If no browser is found, prints the URL.
+func OpenBrowser(url string) {
 	command := browsers.GetOpenBrowserCommand()
-	fmt.Println(command)
+	if command == "" {
+		fmt.Println("Cannot find a browser to open " + url)
+		return
+	}
 	err := RunCommand(command, url)
 	fmt.Println(err)
 	if err == nil {

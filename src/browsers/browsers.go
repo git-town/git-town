@@ -4,7 +4,6 @@ import (
 	"runtime"
 
 	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/util"
 )
 
 // GetOpenBrowserCommand returns the command to run on the console
@@ -23,7 +22,6 @@ func GetOpenBrowserCommand() string {
 			return browserCommand
 		}
 	}
-	util.ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
 	return ""
 }
 

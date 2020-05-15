@@ -16,5 +16,6 @@ type CreatePullRequestStep struct {
 func (step *CreatePullRequestStep) Run() error {
 	driver := drivers.GetActiveDriver()
 	parentBranch := git.Config().GetParentBranch(step.BranchName)
-	return script.OpenBrowser(driver.GetNewPullRequestURL(step.BranchName, parentBranch))
+	script.OpenBrowser(driver.GetNewPullRequestURL(step.BranchName, parentBranch))
+	return nil
 }
