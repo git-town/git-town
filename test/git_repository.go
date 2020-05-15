@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -74,6 +75,15 @@ func NewGitRepository(workingDir string, homeDir string, shell command.Shell) Gi
 
 // HasBranchesOutOfSync returns if true if and only if one or more local branches are out of sync with their remote
 func (repo *GitRepository) HasBranchesOutOfSync() (bool, error) {
+	res, err := repo.Shell.Run("git", "branch", "-vv")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if any branches are out of sync in %q: %w %q", repo.Dir, err, res.Output())
+	}
+	lines := strings.Split(res.OutputSanitized(), "\n")
+	regex := regexp.MustCompile(`\[.*\]`)
+	for l := range lines {
+		regex.FindString(
+
 	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep . | wc -l")
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if any branches are out of sync in %q: %w %q", repo.Dir, err, res.Output())
@@ -83,6 +93,9 @@ func (repo *GitRepository) HasBranchesOutOfSync() (bool, error) {
 		return false, fmt.Errorf("cannot parse output as int in %q: %w %q", repo.Dir, err, res.Output())
 	}
 	return count != 0, nil
+}
+
+func parseBranchVvLine(line string) bool {
 }
 
 // AddRemote adds the given Git remote to this repository.
