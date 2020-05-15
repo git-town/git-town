@@ -36,10 +36,3 @@ var openBrowserCommands = []string{
 	"mozilla",
 	"netscape",
 }
-
-var missingOpenBrowserCommandMessages = []string{
-	"Cannot open a browser.",
-	"If you think this is a bug,",
-	"please open an issue at https://github.com/git-town/git-town/issues",
-	"and mention your OS and browser.",
-}
