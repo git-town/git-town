@@ -9,7 +9,7 @@ Feature: listing the configuration
     Given the main branch is configured as "main"
     And the perennial branches are configured as "qa" and "staging"
     When I run "git-town config"
-    Then it prints
+    Then it prints:
       """
       Main branch:
         main
@@ -27,7 +27,7 @@ Feature: listing the configuration
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
     And my repository has a feature branch named "qa-hotfix" as a child of "qa"
     When I run "git-town config"
-    Then it prints
+    Then it prints:
       """
       Main branch:
         main
@@ -49,7 +49,7 @@ Feature: listing the configuration
     Given the main branch is configured as "main"
     And the perennial branches are not configured
     When I run "git-town config"
-    Then it prints
+    Then it prints:
       """
       Main branch:
         main
@@ -63,7 +63,7 @@ Feature: listing the configuration
     Given the main branch name is not configured
     And the perennial branches are configured as "qa" and "staging"
     When I run "git-town config"
-    Then it prints
+    Then it prints:
       """
       Main branch:
         [none]
@@ -77,7 +77,7 @@ Feature: listing the configuration
   Scenario: nothing is configured yet
     Given I haven't configured Git Town yet
     When I run "git-town config"
-    Then it prints
+    Then it prints:
       """
       Main branch:
         [none]

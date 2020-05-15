@@ -4,7 +4,6 @@ import (
 	"runtime"
 
 	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/util"
 )
 
 // GetOpenBrowserCommand returns the command to run on the console
@@ -23,7 +22,6 @@ func GetOpenBrowserCommand() string {
 			return browserCommand
 		}
 	}
-	util.ExitWithErrorMessage(missingOpenBrowserCommandMessages...)
 	return ""
 }
 
@@ -37,11 +35,4 @@ var openBrowserCommands = []string{
 	"opera",
 	"mozilla",
 	"netscape",
-}
-
-var missingOpenBrowserCommandMessages = []string{
-	"Cannot open a browser.",
-	"If you think this is a bug,",
-	"please open an issue at https://github.com/git-town/git-town/issues",
-	"and mention your OS and browser.",
 }

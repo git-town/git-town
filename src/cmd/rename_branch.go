@@ -74,7 +74,7 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 	}
 	git.EnsureIsNotMainBranch(result.OldBranchName, "The main branch cannot be renamed.")
 	if !forceFlag {
-		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("'%s' is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.OldBranchName))
+		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.OldBranchName))
 	}
 	if result.OldBranchName == result.NewBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")

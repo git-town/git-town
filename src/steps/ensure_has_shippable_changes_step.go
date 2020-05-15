@@ -16,7 +16,7 @@ type EnsureHasShippableChangesStep struct {
 // GetAutomaticAbortErrorMessage returns the error message to display when this step
 // cause the command to automatically abort.
 func (step *EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() string {
-	return fmt.Sprintf("The branch '%s' has no shippable changes.", step.BranchName)
+	return fmt.Sprintf("The branch %q has no shippable changes.", step.BranchName)
 }
 
 // Run executes this step.

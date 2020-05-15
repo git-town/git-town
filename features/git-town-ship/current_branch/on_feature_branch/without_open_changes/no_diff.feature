@@ -29,7 +29,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       | main          | git checkout empty-feature                  |
     And it prints the error:
       """
-      The branch 'empty-feature' has no shippable changes
+      The branch "empty-feature" has no shippable changes
       """
     And I am still on the "empty-feature" branch
 

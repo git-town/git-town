@@ -17,7 +17,7 @@ Feature: git town-ship: errors when trying to ship a perennial branch
       | production | git fetch --prune --tags |
     And it prints the error:
       """
-      The branch 'production' is not a feature branch. Only feature branches can be shipped.
+      The branch "production" is not a feature branch. Only feature branches can be shipped.
       """
     And I am still on the "production" branch
     And my repository now has the following commits

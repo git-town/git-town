@@ -100,7 +100,7 @@ func buildAutocompletionDefinition() string {
 	}
 	commandAutocompletion := ""
 	for _, command := range commands {
-		commandAutocompletion += fmt.Sprintf("complete --command git --arguments '%s' --description '%s' --condition '__fish_complete_git_town_no_command' --no-files\n", command.name, command.description)
+		commandAutocompletion += fmt.Sprintf("complete --command git --arguments %q --description %q --condition '__fish_complete_git_town_no_command' --no-files\n", command.name, command.description)
 	}
 
 	return fmt.Sprintf(fishAutocompletionTemplate, commandsSpaceSeparated, commandAutocompletion)

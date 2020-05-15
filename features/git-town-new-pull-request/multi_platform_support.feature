@@ -29,7 +29,7 @@ Feature: git-new-pull-request: multi-platform support
     And my computer has no tool to open browsers installed
     And I am on the "feature" branch
     When I run "git-town new-pull-request"
-    Then it prints the error:
+    Then it prints:
       """
-      Cannot open a browser
+      Please open in a browser: https://github.com/git-town/git-town/compare/feature?expand=1
       """

@@ -22,7 +22,7 @@ Feature: git town-rename-branch: errors when the destination branch exists local
       | current-feature | git fetch --prune --tags |
     And it prints the error:
       """
-      A branch named 'existing-feature' already exists
+      A branch named "existing-feature" already exists
       """
     And I am still on the "current-feature" branch
     And my workspace still contains my uncommitted file
