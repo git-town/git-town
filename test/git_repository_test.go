@@ -304,6 +304,8 @@ func TestGitRepository_HasGitTownConfigNow(t *testing.T) {
 	res, err := repo.HasGitTownConfigNow()
 	assert.Nil(t, err)
 	assert.False(t, res)
+	err = repo.CreateBranch("main", "master")
+	assert.Nil(t, err)
 	err = repo.CreateFeatureBranch("foo")
 	assert.Nil(t, err)
 	res, err = repo.HasGitTownConfigNow()
