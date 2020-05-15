@@ -24,5 +24,5 @@ Feature: set the main branch configuration
     When I run "git-town main-branch non-existing"
     Then it prints the error:
       """
-      no branch named 'non-existing'
+      no branch named "non-existing"
       """

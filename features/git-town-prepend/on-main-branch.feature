@@ -21,7 +21,7 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      The branch 'main' is not a feature branch. Only feature branches can have parent branches.
+      The branch "main" is not a feature branch. Only feature branches can have parent branches.
       """
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
