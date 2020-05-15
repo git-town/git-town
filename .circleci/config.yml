@@ -31,7 +31,7 @@ jobs:
       - run: make lint-go
       - run:
           find . -type f -name '*.feature' | grep -v git-town-sync | xargs godog
-          --concurrency=$(shell nproc --all) --format=progress --strict
+          --concurrency=$(nproc --all) --format=progress --strict
   go-sync:
     docker:
       - image: circleci/golang:1.14.2
@@ -45,7 +45,7 @@ jobs:
       - run: make lint-go
       - run:
           find . -type f -name '*.feature' | grep git-town-sync | xargs godog
-          --concurrency=$(shell nproc --all) --format=progress --strict
+          --concurrency=$(nproc --all) --format=progress --strict
   markdown:
     docker:
       - image: circleci/node:12
