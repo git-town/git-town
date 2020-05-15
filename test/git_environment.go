@@ -96,8 +96,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	gitEnv.OriginRepo = &originRepo
 	err = gitEnv.OriginRepo.Shell.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
-		{"git", "checkout", "-b", "main"},
-		{"git", "checkout", "master"},
+		{"git", "branch", "main", "master"},
 	})
 	if err != nil {
 		return gitEnv, err
