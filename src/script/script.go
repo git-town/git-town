@@ -40,10 +40,10 @@ func OpenBrowser(url string) {
 	}
 	err := RunCommand(command, url)
 	fmt.Println(err)
-	if err == nil {
-		return fmt.Errorf("Pull request URL: %s", url)
+	if err != nil {
+		fmt.Printf("Pull request URL: %s", url)
+		fmt.Println()
 	}
-	return nil
 }
 
 // PrintCommand prints the given command-line operation on the console.
