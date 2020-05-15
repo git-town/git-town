@@ -196,6 +196,15 @@ func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
+	assert.Equal(t, []string{"main"}, repo.Configuration(true).GetAncestorBranches("f1"))
+}
+
+func TestGitRepository_CreateFeatureBranchNoParent(t *testing.T) {
+	repo := createTestGitTownRepo(t)
+	err := repo.CreateFeatureBranchNoParent("f1")
+	assert.Nil(t, err)
+	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
+	assert.Equal(t, []string(nil), repo.Configuration(true).GetAncestorBranches("f1"))
 }
 
 func TestGitRepository_CreateFile(t *testing.T) {
