@@ -30,7 +30,7 @@ jobs:
       - run: make unit
       - run: make lint-go
       - run:
-          find . -type f -name '*.feature' | grep -v git-town-sync | xargs godog
+          find . -type f -name '*.feature' | grep -v git-town-s | xargs godog
           --concurrency=$(nproc --all) --format=progress --strict
   go-sync:
     docker:
@@ -44,19 +44,20 @@ jobs:
       - run: make unit
       - run: make lint-go
       - run:
-          find . -type f -name '*.feature' | grep git-town-sync | xargs godog
+          find . -type f -name '*.feature' | grep git-town-s | xargs godog
           --concurrency=$(nproc --all) --format=progress --strict
-  markdown:
+  lint:
     docker:
       - image: circleci/node:12
     steps:
       - attach_workspace:
           at: /home/circleci
       # move the binary into the PATH
-      - run: mkdir /home/circleci/bin
-      - run: mv ./git-town /home/circleci/bin/
+      - run: mv ./git-town /go/bin/
+      - run: mv ./godog /go/bin/
+      - run: mv ./golangci-lint /go/bin/
       - run: cd tools/text-runner && yarn
-      - run: make test-md
+      - run: make lint
 workflows:
   version: 2
   all_tests:
@@ -68,6 +69,6 @@ workflows:
       - go-sync:
           requires:
             - clone
-      - markdown:
+      - lint:
           requires:
             - clone
