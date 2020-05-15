@@ -7,12 +7,9 @@ Feature: git town-parent-diff: diffing the current feature branch
     So that the command can work as I expect
 
 
-  Background:
+  Scenario: result
     Given my repository has a feature branch named "feature" with no parent
     And I am on the "feature" branch
-
-
-  Scenario:
     When I run "git-town diff-parent" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |

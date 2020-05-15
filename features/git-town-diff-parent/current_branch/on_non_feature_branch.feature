@@ -5,12 +5,9 @@ Feature: git town-diff-parent: errors when trying to diff a perennial branch
   Because perennial branches cannot have parent branches
 
 
-  Background:
+  Scenario: result
     Given my repository has the perennial branch "qa"
     And I am on the "qa" branch
-
-
-  Scenario: result
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:

@@ -6,14 +6,11 @@ Feature: git town-parent-diff: diffing the current feature branch
     And which work will be merged into the parent branch
 
 
-  Background:
+  Scenario: result
     Given my repository has a feature branch named "feature-1"
     And my repository has a feature branch named "feature-2" as a child of "feature-1"
     And I am on the "feature-2" branch
     When I run "git-town diff-parent"
-
-
-  Scenario: result
     Then it runs the commands
       | BRANCH    | COMMAND                       |
       | feature-2 | git diff feature-1..feature-2 |

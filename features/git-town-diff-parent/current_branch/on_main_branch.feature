@@ -5,12 +5,9 @@ Feature: git town-diff-parent: errors when trying to diff the main branch
   Because the master branch cannot have a parent branch
 
 
-  Background:
+  Scenario: result
     Given my repository has a feature branch named "feature"
     And I am on the "main" branch
-
-
-  Scenario: result
     When I run "git-town diff-parent"
     Then it runs no commands
     And it prints the error:

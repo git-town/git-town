@@ -3,13 +3,10 @@ Feature: git town-diff-parent: errors when trying to diff a perennial branch
   (see ../current_branch/on_perennial_branch.feature)
 
 
-  Background:
+  Scenario: result
     Given my repository has a feature branch named "feature"
     And my repository has the perennial branch "qa"
     And I am on the "feature" branch
-
-
-  Scenario: result
     When I run "git-town diff-parent qa"
     Then it runs no commands
     And it prints the error:

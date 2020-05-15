@@ -3,14 +3,11 @@ Feature: git town-diff-parent: diffing a given feature branch
   (see ../../current_branch/on_feature_branch/with_parent_branches.feature)
 
 
-  Background:
+  Scenario: result
     Given my repository has a feature branch named "feature-1"
     And my repository has a feature branch named "feature-2" as a child of "feature-1"
     And I am on the "main" branch
     When I run "git-town diff-parent feature-2"
-
-
-  Scenario: result
     Then it runs the commands
       | BRANCH | COMMAND                       |
       | main   | git diff feature-1..feature-2 |
