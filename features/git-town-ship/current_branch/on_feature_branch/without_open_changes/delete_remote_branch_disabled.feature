@@ -35,7 +35,7 @@ Feature: Skip deleting the remote branch when shipping
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
       | main    | local, remote | feature done   | feature_file |
       | feature | remote        | feature commit | feature_file |
@@ -52,7 +52,7 @@ Feature: Skip deleting the remote branch when shipping
       | feature | git checkout main                              |
       | main    | git checkout feature                           |
     And I end up on the "feature" branch
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local         | feature done          | feature_file |
       |         |               | Revert "feature done" | feature_file |
