@@ -1,6 +1,6 @@
 Feature: Skip deleting the remote branch when shipping
 
-  When using GitHub's feature to automatically delete head branches of pull requests.
+    When using GitHub's feature to automatically delete head branches of pull requests.
   I want "git ship" to skip deleting the remote feature branch
   So that I can keep using Git Town in this situation.
 
@@ -8,11 +8,12 @@ Feature: Skip deleting the remote branch when shipping
   Background:
     Given my repository has a feature branch named "feature"
     And the following commit exists in my repository
-      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    | FILE CONTENT    |
-      | feature | local and remote | feature commit | feature_file | feature content |
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
+      | feature | local, remote | feature commit | feature_file |
     And I am on the "feature" branch
-    And I have a the git configuration for "git-town.ship-delete-remote-branch" set to "false"
+    And my repo has "git-town.ship-delete-remote-branch" set to "false"
     When I run `git-town ship -m "feature done"`
+    And the remote deletes the "feature" branch
 
 
   Scenario: result
@@ -31,13 +32,13 @@ Feature: Skip deleting the remote branch when shipping
       |         | git branch -D feature              |
     And I end up on the "main" branch
     And the existing branches are
-      | REPOSITORY | BRANCHES      |
-      | local      | main          |
-      | remote     | main, feature |
+      | REPOSITORY | BRANCHES |
+      | local      | main     |
+      | remote     | main     |
     And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE        | FILE NAME    |
-      | main    | local and remote | feature done   | feature_file |
-      | feature | remote           | feature commit | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
+      | main    | local, remote | feature done   | feature_file |
+      | feature | remote        | feature commit | feature_file |
 
 
   Scenario: undo
@@ -52,7 +53,7 @@ Feature: Skip deleting the remote branch when shipping
       | main    | git checkout feature                           |
     And I end up on the "feature" branch
     And my repository has the following commits
-      | BRANCH  | LOCATION         | MESSAGE               | FILE NAME    |
-      | main    | local and remote | feature done          | feature_file |
-      |         |                  | Revert "feature done" | feature_file |
-      | feature | local and remote | feature commit        | feature_file |
+      | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
+      | main    | local         | feature done          | feature_file |
+      |         |               | Revert "feature done" | feature_file |
+      | feature | local, remote | feature commit        | feature_file |
