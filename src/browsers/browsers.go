@@ -3,8 +3,8 @@ package browsers
 import (
 	"runtime"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/util"
 )
 
 // GetOpenBrowserCommand returns the command to run on the console
@@ -28,6 +28,7 @@ func GetOpenBrowserCommand() string {
 }
 
 var openBrowserCommands = []string{
+	"wsl-open", // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
 	"xdg-open",
 	"open",
 	"cygstart",
@@ -41,6 +42,6 @@ var openBrowserCommands = []string{
 var missingOpenBrowserCommandMessages = []string{
 	"Cannot open a browser.",
 	"If you think this is a bug,",
-	"please open an issue at https://github.com/Originate/git-town/issues",
+	"please open an issue at https://github.com/git-town/git-town/issues",
 	"and mention your OS and browser.",
 }

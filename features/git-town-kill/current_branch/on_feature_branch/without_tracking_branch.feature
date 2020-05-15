@@ -9,12 +9,12 @@ Feature: git town-kill: killing the current feature branch without a tracking br
     Given my repository has a feature branch named "other-feature"
     And my repository has a local feature branch named "current-feature"
     And the following commits exist in my repository
-      | BRANCH          | LOCATION         | MESSAGE                |
-      | current-feature | local            | current feature commit |
-      | other-feature   | local and remote | other feature commit   |
+      | BRANCH          | LOCATION      | MESSAGE                |
+      | current-feature | local         | current feature commit |
+      | other-feature   | local, remote | other feature commit   |
     And I am on the "current-feature" branch
     And my workspace has an uncommitted file
-    When I run `git-town kill`
+    When I run "git-town kill"
 
 
   Scenario: result
@@ -30,18 +30,18 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository has the following commits
-      | BRANCH        | LOCATION         | MESSAGE              |
-      | other-feature | local and remote | other feature commit |
+    And my repository now has the following commits
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | other-feature | local, remote | other feature commit |
 
 
   Scenario: Undoing a kill of a local feature branch
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH          | COMMAND                                                        |
-      | main            | git branch current-feature <%= sha 'WIP on current-feature' %> |
-      |                 | git checkout current-feature                                   |
-      | current-feature | git reset <%= sha 'current feature commit' %>                  |
+      | BRANCH          | COMMAND                                                       |
+      | main            | git branch current-feature {{ sha 'WIP on current-feature' }} |
+      |                 | git checkout current-feature                                  |
+      | current-feature | git reset {{ sha 'current feature commit' }}                  |
     And I end up on the "current-feature" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

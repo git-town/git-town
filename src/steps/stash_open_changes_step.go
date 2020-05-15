@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/src/script"
+	"github.com/git-town/git-town/src/script"
 )
 
 // StashOpenChangesStep stores all uncommitted changes on the Git stash.
@@ -9,8 +9,8 @@ type StashOpenChangesStep struct {
 	NoOpStep
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *StashOpenChangesStep) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *StashOpenChangesStep) CreateUndoStep() Step {
 	return &RestoreOpenChangesStep{}
 }
 

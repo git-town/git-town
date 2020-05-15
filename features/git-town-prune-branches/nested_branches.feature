@@ -9,19 +9,16 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Background:
-    Given my repository has the feature branches "feature" and "feature-child"
+    Given my repository has a feature branch named "feature"
+    And my repository has a feature branch named "feature-child" as a child of "feature"
     And the following commits exist in my repository
-      | BRANCH        | LOCATION         | MESSAGE              |
-      | feature       | local and remote | feature commit       |
-      | feature-child | local and remote | feature-child commit |
-    And Git Town is aware of this branch hierarchy
-      | BRANCH        | PARENT  |
-      | feature       | main    |
-      | feature-child | feature |
+      | BRANCH        | LOCATION      | MESSAGE              |
+      | feature       | local, remote | feature commit       |
+      | feature-child | local, remote | feature-child commit |
     And the "feature" branch gets deleted on the remote
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town prune-branches`
+    When I run "git-town prune-branches"
 
 
   Scenario: result
@@ -41,10 +38,10 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Scenario: undo
-    When I run `git-town undo`
+    When I run "git-town undo"
     Then it runs the commands
-      | BRANCH | COMMAND                                        |
-      | main   | git branch feature <%= sha 'feature commit' %> |
+      | BRANCH | COMMAND                                       |
+      | main   | git branch feature {{ sha 'feature commit' }} |
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file
     And the existing branches are

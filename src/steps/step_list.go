@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 )
 
 // StepList is a list of steps

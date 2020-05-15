@@ -3,9 +3,9 @@ package steps
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/src/drivers"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch
@@ -27,8 +27,8 @@ func (step *DriverMergePullRequestStep) CreateAbortStep() Step {
 	return nil
 }
 
-// CreateUndoStepAfterRun returns the undo step for this step after it is run.
-func (step *DriverMergePullRequestStep) CreateUndoStepAfterRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *DriverMergePullRequestStep) CreateUndoStep() Step {
 	return &RevertCommitStep{Sha: step.mergeSha}
 }
 

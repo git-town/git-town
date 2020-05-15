@@ -30,7 +30,7 @@ type Options struct {
 }
 
 // InputDelay defines how long to wait before writing the next input string into the subprocess.
-const InputDelay = 50 * time.Millisecond
+const InputDelay = 100 * time.Millisecond
 
 // MustRun executes an essential subshell command given in argv notation.
 // Essential subshell commands are essential for the functioning of Git Town.
@@ -85,7 +85,7 @@ func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
 		// Capturing the output and scanning for the actual content needed
 		// would introduce substantial amounts of multi-threaded complexity
 		// for not enough gains.
-		// https://github.com/Originate/go-execplus could help make this more robust.
+		// https://github.com/git-town/go-execplus could help make this more robust.
 		time.Sleep(InputDelay)
 		_, err := input.Write([]byte(userInput))
 		if err != nil {

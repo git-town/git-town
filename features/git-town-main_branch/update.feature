@@ -7,7 +7,7 @@ Feature: set the main branch configuration
 
   Scenario: main branch not yet configured
     Given I don't have a main branch name configured
-    When I run `git-town main-branch main`
+    When I run "git-town main-branch main"
     Then it prints no output
     And the main branch is now configured as "main"
 
@@ -15,11 +15,14 @@ Feature: set the main branch configuration
   Scenario: main branch is configured
     Given my repository has the branches "main-old" and "main-new"
     And the main branch is configured as "main-old"
-    When I run `git-town main-branch main-new`
+    When I run "git-town main-branch main-new"
     Then it prints no output
     And the main branch is now configured as "main-new"
 
 
   Scenario: invalid branch name
-    When I run `git-town main-branch non-existing`
-    Then it prints the error "no branch named 'non-existing'"
+    When I run "git-town main-branch non-existing"
+    Then it prints the error:
+      """
+      no branch named 'non-existing'
+      """

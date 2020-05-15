@@ -23,7 +23,7 @@ bump:
 	@if [ -z "$(VERSION)" ]; then echo "Provide version like: 'VERSION=$(VERS) make bump'"; exit 1; fi
 	@echo "bumping version from: $(VERS) to $(VERSION)"
 	@sed -i.bak 's/$(VERS)/$(VERSION)/g' godog.go
-	@sed -i.bak 's/$(VERS)/$(VERSION)/g' examples/api/features/version.feature
+	@sed -i.bak 's/$(VERS)/$(VERSION)/g' _examples/api/features/version.feature
 	@find . -name '*.bak' | xargs rm
 
 cover:

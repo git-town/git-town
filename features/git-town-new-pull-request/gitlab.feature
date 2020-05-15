@@ -6,15 +6,15 @@ Feature: git-new-pull-request when origin is on GitLab
 
 
   Background:
-    Given I have "open" installed
+    Given my computer has the "open" tool installed
 
 
   Scenario Outline: creating pull-requests
     Given my repository has a feature branch named "feature"
-    And my repo's remote origin is <ORIGIN>
+    And my repo's origin is "<ORIGIN>"
     And I am on the "feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new pull request with this url in my browser:
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
       """
       https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=feature&merge_request%5Btarget_branch%5D=main
       """
@@ -28,7 +28,10 @@ Feature: git-new-pull-request when origin is on GitLab
   Scenario: nested feature branch with known parent
     Given my repository has a feature branch named "parent-feature"
     And my repository has a feature branch named "child-feature" as a child of "parent-feature"
-    And my repo's remote origin is git@gitlab.com:kadu/kadu.git
+    And my repo's origin is "git@gitlab.com:kadu/kadu.git"
     And I am on the "child-feature" branch
-    When I run `git-town new-pull-request`
-    Then I see a new GitLab pull request for the "child-feature" branch against the "parent-feature" branch in the "kadu/kadu" repo in my browser
+    When I run "git-town new-pull-request"
+    Then "open" launches a new pull request with this url in my browser:
+      """
+      https://gitlab.com/kadu/kadu/merge_requests/new?merge_request%5Bsource_branch%5D=child-feature&merge_request%5Btarget_branch%5D=parent-feature
+      """

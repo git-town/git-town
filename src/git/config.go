@@ -14,8 +14,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Originate/git-town/src/command"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/util"
 )
 
 // Configuration manages the Git Town configuration
@@ -23,14 +23,14 @@ import (
 // This class manages which config values are stored in local vs global settings.
 type Configuration struct {
 
-	// localDir contains the directory of the local Git repo.
-	localDir string
-
 	// localConfigCache is a cache of the Git configuration in the local Git repo.
 	localConfigCache map[string]string
 
 	// globalConfigCache is a cache of the global Git configuration.
 	globalConfigCache map[string]string
+
+	// for running shell commands
+	shell command.Shell
 }
 
 // Config provides the current configuration.
@@ -38,7 +38,8 @@ type Configuration struct {
 // The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
 func Config() *Configuration {
 	if currentDirConfig == nil {
-		currentDirConfig = NewConfiguration("")
+		shell := command.ShellInCurrentDir{}
+		currentDirConfig = NewConfiguration(&shell)
 	}
 	return currentDirConfig
 }
@@ -47,16 +48,16 @@ func Config() *Configuration {
 var currentDirConfig *Configuration
 
 // NewConfiguration provides a Configuration instance reflecting the configuration values in the given directory.
-func NewConfiguration(dir string) *Configuration {
+func NewConfiguration(shell command.Shell) *Configuration {
 	return &Configuration{
-		localDir:          dir,
-		localConfigCache:  loadGitConfig(dir, false),
-		globalConfigCache: loadGitConfig(dir, true),
+		shell:             shell,
+		localConfigCache:  loadGitConfig(shell, false),
+		globalConfigCache: loadGitConfig(shell, true),
 	}
 }
 
 // loadGitConfig provides the Git configuration from the given directory or the global one if the global flag is set.
-func loadGitConfig(dir string, global bool) map[string]string {
+func loadGitConfig(shell command.Shell, global bool) map[string]string {
 	result := map[string]string{}
 	cmdArgs := []string{"config", "-lz"}
 	if global {
@@ -64,12 +65,9 @@ func loadGitConfig(dir string, global bool) map[string]string {
 	} else {
 		cmdArgs = append(cmdArgs, "--local")
 	}
-	res, err := command.RunInDir(dir, "git", cmdArgs...)
+	res, err := shell.Run("git", cmdArgs...)
 	if err != nil {
-		if strings.Contains(res.OutputSanitized(), "No such file or directory") {
-			return result
-		}
-		panic(err)
+		return result
 	}
 	output := res.Output()
 	if output == "" {
@@ -170,7 +168,8 @@ func (c *Configuration) getLocalConfigValue(key string) string {
 	return c.localConfigCache[key]
 }
 
-// getGlobalConfigValue provides the configuration value with the given key from the local Git configuration.
+// getLocalOrGlobalConfigValue provides the configuration value with the given key from the local and global Git configuration.
+// Local configuration takes precedence.
 func (c *Configuration) getLocalOrGlobalConfigValue(key string) string {
 	local := c.getLocalConfigValue(key)
 	if local != "" {
@@ -231,13 +230,11 @@ func (c *Configuration) GetPullBranchStrategy() string {
 // GetRemoteOriginURL returns the URL for the "origin" remote.
 // In tests this value can be stubbed.
 func (c *Configuration) GetRemoteOriginURL() string {
-	if os.Getenv("GIT_TOWN_ENV") == "test" {
-		mockRemoteURL := c.getLocalConfigValue("git-town.testing.remote-url")
-		if mockRemoteURL != "" {
-			return mockRemoteURL
-		}
+	remote := os.Getenv("GIT_TOWN_REMOTE")
+	if remote != "" {
+		return remote
 	}
-	return command.MustRunInDir(c.localDir, "git", "remote", "get-url", "origin").OutputSanitized()
+	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
 }
 
 // GetURLHostname returns the hostname contained within the given Git URL.
@@ -259,6 +256,16 @@ func (c *Configuration) GetURLRepositoryName(url string) string {
 		return ""
 	}
 	return strings.TrimSuffix(matches[1], ".git")
+}
+
+// HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
+func (c *Configuration) HasBranchInformation() bool {
+	for key := range c.localConfigCache {
+		if strings.HasPrefix(key, "git-town-branch.") {
+			return true
+		}
+	}
+	return false
 }
 
 // HasParentBranch returns whether or not the given branch has a parent
@@ -323,18 +330,18 @@ func (c *Configuration) RemoveGitAlias(command string) *command.Result {
 
 func (c *Configuration) removeGlobalConfigValue(key string) *command.Result {
 	delete(c.globalConfigCache, key)
-	return command.MustRunInDir(c.localDir, "git", "config", "--global", "--unset", key)
+	return c.shell.MustRun("git", "config", "--global", "--unset", key)
 }
 
 // removeLocalConfigurationValue deletes the configuration value with the given key from the local Git Town configuration.
 func (c *Configuration) removeLocalConfigValue(key string) {
 	delete(c.localConfigCache, key)
-	command.MustRunInDir(c.localDir, "git", "config", "--unset", key)
+	c.shell.MustRun("git", "config", "--unset", key)
 }
 
 // RemoveLocalGitConfiguration removes all Git Town configuration
 func (c *Configuration) RemoveLocalGitConfiguration() {
-	_, err := command.RunInDir(c.localDir, "git", "config", "--remove-section", "git-town")
+	_, err := c.shell.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) && exitErr.ExitCode() == 128 {
@@ -356,15 +363,33 @@ func (c *Configuration) RemoveOutdatedConfiguration() {
 	}
 }
 
+// SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
+	const key = "git-town.code-hosting-driver"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
+// SetCodeHostingOriginHostname sets the "github.code-hosting-driver" setting.
+func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Result {
+	const key = "git-town.code-hosting-origin-hostname"
+	c.localConfigCache[key] = value
+	return c.shell.MustRun("git", "config", key, value)
+}
+
+func (c *Configuration) SetColorUI(value string) *command.Result {
+	return c.shell.MustRun("git", "config", "color.ui", value)
+}
+
 func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
-	return command.MustRunInDir(c.localDir, "git", "config", "--global", key, value)
+	return c.shell.MustRun("git", "config", "--global", key, value)
 }
 
 // setConfigurationValue sets the local configuration with the given key to the given value.
 func (c *Configuration) setLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
-	return command.MustRunInDir(c.localDir, "git", "config", key, value)
+	return c.shell.MustRun("git", "config", key, value)
 }
 
 // SetMainBranch marks the given branch as the main branch
@@ -387,6 +412,11 @@ func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
+// SetTestOrigin sets the origin to be used for testing.
+func (c *Configuration) SetTestOrigin(value string) {
+	_ = c.setLocalConfigValue("git-town.testing.remote-url", value)
+}
+
 // SetParentBranch marks the given branch as the direct parent of the other given branch
 // in the Git Town configuration.
 func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *command.Result {
@@ -401,6 +431,11 @@ func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Resu
 // SetPullBranchStrategy updates the configured pull branch strategy.
 func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
+}
+
+// SetShouldSyncUpstream updates the configured pull branch strategy.
+func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
 }
 
 // ShouldNewBranchPush indicates whether the current repository is configured to push

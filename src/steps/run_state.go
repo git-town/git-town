@@ -3,7 +3,7 @@ package steps
 import (
 	"time"
 
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/git"
 )
 
 // UnfinishedRunStateDetails has details about an unfinished run state
@@ -15,7 +15,7 @@ type UnfinishedRunStateDetails struct {
 
 // RunState represents the current state of a Git Town command,
 // including which operations are left to do,
-// and how to undo what has ben done so far.
+// and how to undo what has been done so far.
 type RunState struct {
 	AbortStepList     StepList
 	Command           string

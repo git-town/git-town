@@ -3,14 +3,14 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
   Background:
     Given my repository has the perennial branches "production" and "qa"
     And the following commits exist in my repository
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        | FILE CONTENT              |
-      | main       | remote           | main commit              | main_file        | main content              |
-      | production | local            | production local commit  | conflicting_file | production local content  |
-      |            | remote           | production remote commit | conflicting_file | production remote content |
-      | qa         | local and remote | qa commit                | qa_file          | qa content                |
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        | FILE CONTENT              |
+      | main       | remote        | main commit              | main_file        | main content              |
+      | production | local         | production local commit  | conflicting_file | production local content  |
+      |            | remote        | production remote commit | conflicting_file | production remote content |
+      | qa         | local, remote | qa commit                | qa_file          | qa content                |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all`
+    When I run "git-town sync --all"
 
 
   Scenario: result
@@ -30,11 +30,11 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       To continue by skipping the current branch, run "git-town skip".
       """
     And my uncommitted file is stashed
-    And my repo has a rebase in progress
+    And my repo now has a rebase in progress
 
 
   Scenario: aborting
-    When I run `git-town abort`
+    When I run "git-town abort"
     Then it runs the commands
       | BRANCH     | COMMAND            |
       | production | git rebase --abort |
@@ -42,16 +42,16 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | main       | git stash pop      |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
+    And my repository now has the following commits
       | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
-      | main       | local and remote | main commit              | main_file        |
+      | main       | local, remote | main commit              | main_file        |
       | production | local            | production local commit  | conflicting_file |
       |            | remote           | production remote commit | conflicting_file |
-      | qa         | local and remote | qa commit                | qa_file          |
+      | qa         | local, remote | qa commit                | qa_file          |
 
 
   Scenario: skipping
-    When I run `git-town skip`
+    When I run "git-town skip"
     Then it runs the commands
       | BRANCH     | COMMAND              |
       | production | git rebase --abort   |
@@ -62,25 +62,28 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
-      | main       | local and remote | main commit              | main_file        |
-      | production | local            | production local commit  | conflicting_file |
-      |            | remote           | production remote commit | conflicting_file |
-      | qa         | local and remote | qa commit                | qa_file          |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
+      | main       | local, remote | main commit              | main_file        |
+      | production | local         | production local commit  | conflicting_file |
+      |            | remote        | production remote commit | conflicting_file |
+      | qa         | local, remote | qa commit                | qa_file          |
 
 
   Scenario: continuing without resolving the conflicts
-    When I run `git-town continue`
+    When I run "git-town continue"
     Then it runs no commands
-    And it prints the error "You must resolve the conflicts before continuing"
+    And it prints the error: 
+      """
+      You must resolve the conflicts before continuing
+      """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress
 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run `git-town continue`
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH     | COMMAND               |
       | production | git rebase --continue |
@@ -92,17 +95,18 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop         |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
-      | main       | local and remote | main commit              | main_file        |
-      | production | local and remote | production remote commit | conflicting_file |
-      |            |                  | production local commit  | conflicting_file |
-      | qa         | local and remote | qa commit                | qa_file          |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
+      | main       | local, remote | main commit              | main_file        |
+      | production | local, remote | production remote commit | conflicting_file |
+      |            |               | production local commit  | conflicting_file |
+      | qa         | local, remote | qa commit                | qa_file          |
 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run `git rebase --continue; git-town continue`
+    And I run "git rebase --continue"
+    And I run "git-town continue"
     Then it runs the commands
       | BRANCH     | COMMAND              |
       | production | git push             |
@@ -113,9 +117,9 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
-      | main       | local and remote | main commit              | main_file        |
-      | production | local and remote | production remote commit | conflicting_file |
-      |            |                  | production local commit  | conflicting_file |
-      | qa         | local and remote | qa commit                | qa_file          |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
+      | main       | local, remote | main commit              | main_file        |
+      | production | local, remote | production remote commit | conflicting_file |
+      |            |               | production local commit  | conflicting_file |
+      | qa         | local, remote | qa commit                | qa_file          |

@@ -1,9 +1,9 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/src/dryrun"
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
+	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
 )
 
 // PushBranchStep pushes the branch with the given name to the origin remote.
@@ -15,8 +15,8 @@ type PushBranchStep struct {
 	Undoable   bool
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *PushBranchStep) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *PushBranchStep) CreateUndoStep() Step {
 	if step.Undoable {
 		return &PushBranchAfterCurrentBranchSteps{}
 	}

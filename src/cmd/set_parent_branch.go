@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/prompt"
-	"github.com/Originate/git-town/src/util"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/prompt"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,14 @@ var setParentBranchCommand = &cobra.Command{
 	Short: "Prompts to set the parent branch for the current branch",
 	Long:  `Prompts to set the parent branch for the current branch`,
 	Run: func(cmd *cobra.Command, args []string) {
-		promptForParentBranch()
+		branchName := git.GetCurrentBranchName()
+		git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
+		defaultParentBranch := git.Config().GetParentBranch(branchName)
+		if defaultParentBranch == "" {
+			defaultParentBranch = git.Config().GetMainBranch()
+		}
+		git.Config().DeleteParentBranch(branchName)
+		prompt.AskForBranchAncestry(branchName, defaultParentBranch)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -21,17 +28,6 @@ var setParentBranchCommand = &cobra.Command{
 			validateIsConfigured,
 		)
 	},
-}
-
-func promptForParentBranch() {
-	branchName := git.GetCurrentBranchName()
-	git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
-	defaultParentBranch := git.Config().GetParentBranch(branchName)
-	if defaultParentBranch == "" {
-		defaultParentBranch = git.Config().GetMainBranch()
-	}
-	git.Config().DeleteParentBranch(branchName)
-	prompt.AskForBranchAncestry(branchName, defaultParentBranch)
 }
 
 func init() {

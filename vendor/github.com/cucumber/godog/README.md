@@ -1,10 +1,8 @@
 [![CircleCI](https://circleci.com/gh/cucumber/godog/tree/master.svg?style=svg)](https://circleci.com/gh/cucumber/godog/tree/master)
-[![GoDoc](https://godoc.org/github.com/DATA-DOG/godog?status.svg)](https://godoc.org/github.com/DATA-DOG/godog)
-[![codecov.io](https://codecov.io/github/DATA-DOG/godog/branch/master/graph/badge.svg)](https://codecov.io/github/DATA-DOG/godog)
+[![GoDoc](https://godoc.org/github.com/cucumber/godog?status.svg)](https://godoc.org/github.com/cucumber/godog)
+[![codecov](https://codecov.io/gh/cucumber/godog/branch/master/graph/badge.svg)](https://codecov.io/gh/cucumber/godog)
 
 # Godog
-
-[🚨🚨🚨 Godog is looking for new maintainers 🚨🚨🚨](https://github.com/cucumber/godog/issues/207)
 
 <p align="center"><img src="/logo.png" alt="Godog logo" style="width:250px;" /></p>
 
@@ -12,7 +10,7 @@
 
 Please read all the README, you may find it very useful. And do not forget
 to peek into the
-[CHANGELOG](https://github.com/DATA-DOG/godog/blob/master/CHANGELOG.md)
+[CHANGELOG](https://github.com/cucumber/godog/blob/master/CHANGELOG.md)
 from time to time.
 
 Package godog is the official Cucumber BDD framework for Golang, it merges
@@ -33,12 +31,27 @@ contexts need to be exported the same way as **Test** functions for go
 tests. Note, that if you use **godog** command tool, it will use `go`
 executable to determine compiler and linker.
 
-**Godog** ships gherkin parser dependency as a subpackage. This will
-ensure that it is always compatible with the installed version of godog.
-So in general there are no vendor dependencies needed for installation.
+**Godog** depends on [gherkin-go](https://github.com/cucumber/gherkin-go) and [messages-go](https://github.com/cucumber/messages-go).
 
 The following about section was taken from
 [cucumber](https://cucumber.io/) homepage.
+
+## Notice:
+
+**If your project depend on the master version of godog instead of a specific release, please read this.**
+
+Due to dependency changes in a coming merge to master, including breaking changes, you should update how you install or depend on godog so that you have a version specified.
+
+### Install
+```
+go get github.com/cucumber/godog/cmd/godog@v0.8.1
+```
+Adding `@v0.8.1` will install v0.8.1 specifically instead of master.
+
+Running `within the $GOPATH`, you would also need to set `GO111MODULE=on`, like this:
+```
+GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.8.1
+```
 
 ## About
 
@@ -63,13 +76,20 @@ When automated testing is this much fun, teams can easily protect
 themselves from costly regressions.
 
 ## Install
+```
+go get github.com/cucumber/godog/cmd/godog@v0.9.0
+```
+Adding `@v0.9.0` will install v0.9.0 specifically instead of master.
 
-    go get github.com/DATA-DOG/godog/cmd/godog
+Running `within the $GOPATH`, you would also need to set `GO111MODULE=on`, like this:
+```
+GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
+```
 
 ## Example
 
 The following example can be [found
-here](/examples/godogs).
+here](/_examples/godogs).
 
 ### Step 1
 
@@ -108,7 +128,7 @@ undefined:
 If we wish to vendor godog dependency, we can do it as usual, using tools
 you prefer:
 
-    git clone https://github.com/DATA-DOG/godog.git $GOPATH/src/godogs/vendor/github.com/DATA-DOG/godog
+    git clone https://github.com/cucumber/godog.git $GOPATH/src/godogs/vendor/github.com/cucumber/godog
 
 It gives you undefined step snippets to implement in your test context.
 You may copy these snippets into your `godogs_test.go` file.
@@ -153,7 +173,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/DATA-DOG/godog"
+	"github.com/cucumber/godog"
+	messages "github.com/cucumber/messages-go/v10"
 )
 
 func thereAreGodogs(available int) error {
@@ -181,7 +202,7 @@ func FeatureContext(s *godog.Suite) {
 	s.Step(`^I eat (\d+)$`, iEat)
 	s.Step(`^there should be (\d+) remaining$`, thereShouldBeRemaining)
 
-	s.BeforeScenario(func(interface{}) {
+	s.BeforeScenario(func(*messages.Pickle) {
 		Godogs = 0 // clean the state before every scenario
 	})
 }
@@ -197,7 +218,7 @@ state before each scenario. You may hook into more events, like
 **BeforeSuite** to prepare a database.
 
 By now, you should have figured out, how to use **godog**. Another advice
-is to make steps orthogonal, small and simple to read for an user. Whether
+is to make steps orthogonal, small and simple to read for a user. Whether
 the user is a dumb website user or an API developer, who may understand
 a little more technical context - it should target that user.
 
@@ -213,7 +234,7 @@ composed.
   image](https://github.com/myie/cucumber-html-reporter) for usage
   details.
 - [how to use godog by semaphoreci](https://semaphoreci.com/community/tutorials/how-to-use-godog-for-behavior-driven-development-in-go)
-- see [examples](https://github.com/DATA-DOG/godog/tree/master/examples)
+- see [examples](https://github.com/cucumber/godog/tree/master/_examples)
 - see extension [AssistDog](https://github.com/hellomd/assistdog), which
   may have useful **gherkin.DataTable** transformations or comparison
   methods for assertions.
@@ -221,14 +242,14 @@ composed.
 ### Documentation
 
 See [godoc][godoc] for general API details.
-See **.travis.yml** for supported **go** versions.
+See **[Circle Config](/.circleci/config.yml)** for supported **go** versions.
 See `godog -h` for general command options.
 
 See implementation examples:
 
-- [rest API server](/examples/api)
-- [rest API with Database](/examples/db)
-- [godogs](/examples/godogs)
+- [rest API server](/_examples/api)
+- [rest API with Database](/_examples/db)
+- [godogs](/_examples/godogs)
 
 ## FAQ
 
@@ -324,6 +345,17 @@ func TestMain(m *testing.M) {
 
 Now when running `go test -v` it will use **pretty** format.
 
+### Tags
+
+If you want to filter scenarios by tags, you can use the
+`-t=<expression>` or `--tags=<expression>` where `<expression>`
+is one of the following:
+
+- `@wip` - run all scenarios with wip tag
+- `~@wip` - exclude all scenarios with wip tag
+- `@wip && ~@new` - run wip scenarios, but exclude new
+- `@wip,@undone` - run wip or undone scenarios
+
 ### Configure common options for godog CLI
 
 There are no global options or configuration files. Alias your common or
@@ -366,13 +398,20 @@ Feel free to open a pull request. Note, if you wish to contribute an extension t
 please open an issue before to discuss whether these changes can be accepted. All backward incompatible changes are
 and will be treated cautiously.
 
-## License
+Reach out to the community on our [Cucumber Slack Community](https://cucumberbdd.slack.com/).
+Join [here](https://cucumberbdd-slack-invite.herokuapp.com/).
 
-**Godog** is licensed under the [MIT][license]
-**Gherkin** is licensed under the [MIT][license] and developed as
+### Popular Cucumber Slack channels for Godog:
+- [#help-godog](https://cucumberbdd.slack.com/archives/CTNL1JCVA) - General Godog Adoption Help
+- [#committers-go](https://cucumberbdd.slack.com/archives/CA5NJPDJ4) - Golang focused Cucumber Contributors
+- [#committers](https://cucumberbdd.slack.com/archives/C62D0FK0E) - General Cucumber Contributors
+
+## License
+- **Godog** is licensed under the [MIT][license]
+- **Gherkin** is licensed under the [MIT][license] and developed as
 a part of the [cucumber project][cucumber]
 
-[godoc]: http://godoc.org/github.com/DATA-DOG/godog "Documentation on godoc"
+[godoc]: http://godoc.org/github.com/cucumber/godog "Documentation on godoc"
 [golang]: https://golang.org/  "GO programming language"
 [behat]: http://docs.behat.org/ "Behavior driven development framework for PHP"
 [cucumber]: https://cucumber.io/ "Behavior driven development framework"

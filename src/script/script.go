@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Originate/git-town/src/browsers"
-	"github.com/Originate/git-town/src/dryrun"
-	"github.com/Originate/git-town/src/git"
+	"github.com/git-town/git-town/src/browsers"
+	"github.com/git-town/git-town/src/dryrun"
+	"github.com/git-town/git-town/src/git"
 
 	"github.com/fatih/color"
 )
@@ -32,7 +32,7 @@ func ActivateDryRun() {
 
 // OpenBrowser opens the default browser with the given URL.
 func OpenBrowser(url string) error {
-	fmt.Println(1111111111111111)
+	fmt.Printf("Opening URL: %s\n", url)
 	command := browsers.GetOpenBrowserCommand()
 	fmt.Println(command)
 	err := RunCommand(command, url)

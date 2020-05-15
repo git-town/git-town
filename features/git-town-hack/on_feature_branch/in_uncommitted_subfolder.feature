@@ -7,31 +7,31 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
 
   Background:
     Given my repository has a feature branch named "feature"
-    And the following commit exists in my repository
-      | BRANCH | LOCATION         | MESSAGE     | FILE NAME |
-      | main   | local and remote | main commit | main_file |
+    And the following commits exist in my repository
+      | BRANCH | LOCATION      | MESSAGE     | FILE NAME |
+      | main   | local, remote | main commit | main_file |
     And I am on the "feature" branch
-    And my workspace has an uncommitted file with name: "new_folder/file1" and content: "foo"
-    When I run `git-town hack new-feature` in the "new_folder" folder
+    And my workspace has an uncommitted file in folder "new_folder"
+    When I run "git-town hack new-feature" in the "new_folder" folder
 
 
   Scenario: result
     Then it runs the commands
-      | BRANCH      | COMMAND                              |
-      | feature     | git fetch --prune --tags             |
-      | <none>      | cd <%= git_root_folder %>            |
-      | feature     | git add -A                           |
-      |             | git stash                            |
-      |             | git checkout main                    |
-      | main        | git rebase origin/main               |
-      |             | git branch new-feature main          |
-      |             | git checkout new-feature             |
-      | new-feature | git stash pop                        |
-      | <none>      | cd <%= git_root_folder %>/new_folder |
+      | BRANCH      | COMMAND                      |
+      | feature     | git fetch --prune --tags     |
+      | <none>      | cd {{ root folder }}         |
+      | feature     | git add -A                   |
+      |             | git stash                    |
+      |             | git checkout main            |
+      | main        | git rebase origin/main       |
+      |             | git branch new-feature main  |
+      |             | git checkout new-feature     |
+      | new-feature | git stash pop                |
+      | <none>      | cd {{ folder "new_folder" }} |
     And I end up on the "new-feature" branch
     And I am in the project root folder
     And my workspace still contains my uncommitted file
-    And my repository has the following commits
-      | BRANCH      | LOCATION         | MESSAGE     |
-      | main        | local and remote | main commit |
-      | new-feature | local            | main commit |
+    And my repository now has the following commits
+      | BRANCH      | LOCATION      | MESSAGE     |
+      | main        | local, remote | main commit |
+      | new-feature | local         | main commit |

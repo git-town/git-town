@@ -4,13 +4,13 @@ Feature: git-town sync --all: does not sync remote only branches
     Given my repository has a feature branch named "my-feature"
     And my coworker has a feature branch named "co-feature"
     And the following commits exist in my repository
-      | BRANCH     | LOCATION         | MESSAGE         | FILE NAME     |
-      | main       | remote           | main commit     | main_file     |
-      | my-feature | local and remote | my commit       | my_file       |
-      | co-feature | remote           | coworker commit | coworker_file |
+      | BRANCH     | LOCATION      | MESSAGE         | FILE NAME     |
+      | main       | remote        | main commit     | main_file     |
+      | my-feature | local, remote | my commit       | my_file       |
+      | co-feature | remote        | coworker commit | coworker_file |
     And I am on the "main" branch
     And my workspace has an uncommitted file
-    When I run `git-town sync --all`
+    When I run "git-town sync --all"
 
 
   Scenario: result
@@ -30,10 +30,10 @@ Feature: git-town sync --all: does not sync remote only branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                             | FILE NAME     |
-      | main       | local and remote | main commit                         | main_file     |
-      | my-feature | local and remote | my commit                           | my_file       |
-      |            |                  | main commit                         | main_file     |
-      |            |                  | Merge branch 'main' into my-feature |               |
-      | co-feature | remote           | coworker commit                     | coworker_file |
+    And my repository now has the following commits
+      | BRANCH     | LOCATION      | MESSAGE                             | FILE NAME     |
+      | main       | local, remote | main commit                         | main_file     |
+      | co-feature | remote        | coworker commit                     | coworker_file |
+      | my-feature | local, remote | my commit                           | my_file       |
+      |            |               | main commit                         | main_file     |
+      |            |               | Merge branch 'main' into my-feature |               |

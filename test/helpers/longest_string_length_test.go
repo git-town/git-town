@@ -1,9 +1,10 @@
-package helpers
+package helpers_test
 
 import (
 	"strings"
 	"testing"
 
+	"github.com/git-town/git-town/test/helpers"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +15,7 @@ func TestLongestStringLength(t *testing.T) {
 	}
 	for expected, input := range tests {
 		t.Run(strings.Join(input, "-"), func(t *testing.T) {
-			assert.Equal(t, expected, LongestStringLength(input))
+			assert.Equal(t, expected, helpers.LongestStringLength(input))
 		})
 	}
 }

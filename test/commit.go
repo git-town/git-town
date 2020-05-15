@@ -3,8 +3,8 @@ package test
 import (
 	"fmt"
 
-	"github.com/Originate/git-town/test/helpers"
-	"github.com/cucumber/godog/gherkin"
+	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // Commit describes a Git commit.
@@ -30,12 +30,30 @@ func DefaultCommit() Commit {
 }
 
 // FromGherkinTable provides a Commit collection representing the data in the given Gherkin table.
-func FromGherkinTable(table *gherkin.DataTable) (result []Commit, err error) {
+func FromGherkinTable(table *messages.PickleStepArgument_PickleTable) (result []Commit, err error) {
 	columnNames := helpers.TableFields(table)
+	lastBranchName := ""
+	lastLocationName := ""
 	for _, row := range table.Rows[1:] {
 		commit := DefaultCommit()
 		for i, cell := range row.Cells {
-			err := commit.set(columnNames[i], cell.Value)
+			columnName := columnNames[i]
+			cellValue := cell.Value
+			if columnName == "BRANCH" {
+				if cell.Value == "" {
+					cellValue = lastBranchName
+				} else {
+					lastBranchName = cellValue
+				}
+			}
+			if columnName == "LOCATION" {
+				if cell.Value == "" {
+					cellValue = lastLocationName
+				} else {
+					lastLocationName = cellValue
+				}
+			}
+			err := commit.set(columnName, cellValue)
 			if err != nil {
 				return result, fmt.Errorf("cannot set property %q to %q: %w", columnNames[i], cell.Value, err)
 			}
@@ -58,6 +76,8 @@ func (commit *Commit) set(name, value string) (err error) {
 		commit.FileName = value
 	case "FILE CONTENT":
 		commit.FileContent = value
+	case "AUTHOR":
+		commit.Author = value
 	default:
 		return fmt.Errorf("unknown Commit property: %s", name)
 	}

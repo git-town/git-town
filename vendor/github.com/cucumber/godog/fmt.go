@@ -9,12 +9,14 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"text/template"
 	"time"
 	"unicode"
 
 	"github.com/cucumber/godog/colors"
-	"github.com/cucumber/godog/gherkin"
+
+	"github.com/cucumber/messages-go/v10"
 )
 
 // some snippet formatting regexps
@@ -42,7 +44,7 @@ var undefinedSnippetsTpl = template.Must(template.New("snippets").Funcs(snippetH
 type undefinedSnippet struct {
 	Method   string
 	Expr     string
-	argument interface{} // gherkin step argument
+	argument *messages.PickleStepArgument
 }
 
 type registeredFormatter struct {
@@ -96,14 +98,14 @@ func AvailableFormatters() map[string]string {
 // formatters needs to be registered with a
 // godog.Format function call
 type Formatter interface {
-	Feature(*gherkin.Feature, string, []byte)
-	Node(interface{})
-	Defined(*gherkin.Step, *StepDef)
-	Failed(*gherkin.Step, *StepDef, error)
-	Passed(*gherkin.Step, *StepDef)
-	Skipped(*gherkin.Step, *StepDef)
-	Undefined(*gherkin.Step, *StepDef)
-	Pending(*gherkin.Step, *StepDef)
+	Feature(*messages.GherkinDocument, string, []byte)
+	Pickle(*messages.Pickle)
+	Defined(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition)
+	Failed(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition, error)
+	Passed(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition)
+	Skipped(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition)
+	Undefined(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition)
+	Pending(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition)
 	Summary()
 }
 
@@ -119,17 +121,17 @@ type ConcurrentFormatter interface {
 // suite name and io.Writer to record output
 type FormatterFunc func(string, io.Writer) Formatter
 
-type stepType int
+type stepResultStatus int
 
 const (
-	passed stepType = iota
+	passed stepResultStatus = iota
 	failed
 	skipped
 	undefined
 	pending
 )
 
-func (st stepType) clr() colors.ColorFunc {
+func (st stepResultStatus) clr() colors.ColorFunc {
 	switch st {
 	case passed:
 		return green
@@ -142,7 +144,7 @@ func (st stepType) clr() colors.ColorFunc {
 	}
 }
 
-func (st stepType) String() string {
+func (st stepResultStatus) String() string {
 	switch st {
 	case passed:
 		return "passed"
@@ -160,65 +162,27 @@ func (st stepType) String() string {
 }
 
 type stepResult struct {
-	typ     stepType
-	feature *feature
-	owner   interface{}
-	step    *gherkin.Step
-	time    time.Time
-	def     *StepDef
-	err     error
+	status stepResultStatus
+	time   time.Time
+	err    error
+
+	owner *messages.Pickle
+	step  *messages.Pickle_PickleStep
+	def   *StepDefinition
 }
 
-func (f stepResult) line() string {
-	return fmt.Sprintf("%s:%d", f.feature.Path, f.step.Location.Line)
+func newStepResult(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) *stepResult {
+	return &stepResult{time: timeNowFunc(), owner: pickle, step: step, def: match}
 }
 
-func (f stepResult) scenarioDesc() string {
-	if sc, ok := f.owner.(*gherkin.Scenario); ok {
-		return fmt.Sprintf("%s: %s", sc.Keyword, sc.Name)
+func newBaseFmt(suite string, out io.Writer) *basefmt {
+	return &basefmt{
+		suiteName: suite,
+		started:   timeNowFunc(),
+		indent:    2,
+		out:       out,
+		lock:      new(sync.Mutex),
 	}
-
-	if row, ok := f.owner.(*gherkin.TableRow); ok {
-		for _, def := range f.feature.Feature.ScenarioDefinitions {
-			out, ok := def.(*gherkin.ScenarioOutline)
-			if !ok {
-				continue
-			}
-
-			for _, ex := range out.Examples {
-				for _, rw := range ex.TableBody {
-					if rw.Location.Line == row.Location.Line {
-						return fmt.Sprintf("%s: %s", out.Keyword, out.Name)
-					}
-				}
-			}
-		}
-	}
-	return f.line() // was not expecting different owner
-}
-
-func (f stepResult) scenarioLine() string {
-	if sc, ok := f.owner.(*gherkin.Scenario); ok {
-		return fmt.Sprintf("%s:%d", f.feature.Path, sc.Location.Line)
-	}
-
-	if row, ok := f.owner.(*gherkin.TableRow); ok {
-		for _, def := range f.feature.Feature.ScenarioDefinitions {
-			out, ok := def.(*gherkin.ScenarioOutline)
-			if !ok {
-				continue
-			}
-
-			for _, ex := range out.Examples {
-				for _, rw := range ex.TableBody {
-					if rw.Location.Line == row.Location.Line {
-						return fmt.Sprintf("%s:%d", f.feature.Path, out.Location.Line)
-					}
-				}
-			}
-		}
-	}
-	return f.line() // was not expecting different owner
 }
 
 type basefmt struct {
@@ -228,193 +192,215 @@ type basefmt struct {
 	owner  interface{}
 	indent int
 
-	started   time.Time
-	features  []*feature
-	failed    []*stepResult
-	passed    []*stepResult
-	skipped   []*stepResult
-	undefined []*stepResult
-	pending   []*stepResult
+	started  time.Time
+	features []*feature
+
+	lock *sync.Mutex
 }
 
-func (f *basefmt) Node(n interface{}) {
-	switch t := n.(type) {
-	case *gherkin.Scenario:
-		f.owner = t
-		feature := f.features[len(f.features)-1]
-		feature.Scenarios = append(feature.Scenarios, &scenario{Name: t.Name, time: timeNowFunc()})
-	case *gherkin.ScenarioOutline:
-		feature := f.features[len(f.features)-1]
-		feature.Scenarios = append(feature.Scenarios, &scenario{OutlineName: t.Name})
-	case *gherkin.TableRow:
-		f.owner = t
+func (f *basefmt) lastFeature() *feature {
+	return f.features[len(f.features)-1]
+}
 
-		feature := f.features[len(f.features)-1]
-		lastExample := feature.Scenarios[len(feature.Scenarios)-1]
+func (f *basefmt) lastStepResult() *stepResult {
+	return f.lastFeature().lastStepResult()
+}
 
-		newExample := scenario{OutlineName: lastExample.OutlineName, ExampleNo: lastExample.ExampleNo + 1, time: timeNowFunc()}
-		newExample.Name = fmt.Sprintf("%s #%d", newExample.OutlineName, newExample.ExampleNo)
-
-		const firstExample = 1
-		if newExample.ExampleNo == firstExample {
-			feature.Scenarios[len(feature.Scenarios)-1] = &newExample
-		} else {
-			feature.Scenarios = append(feature.Scenarios, &newExample)
+func (f *basefmt) findFeature(scenarioAstID string) *feature {
+	for _, ft := range f.features {
+		if sc := ft.findScenario(scenarioAstID); sc != nil {
+			return ft
 		}
 	}
+
+	panic("Couldn't find scenario for AST ID: " + scenarioAstID)
 }
 
-func (f *basefmt) Defined(*gherkin.Step, *StepDef) {
-
-}
-
-func (f *basefmt) Feature(ft *gherkin.Feature, p string, c []byte) {
-	f.features = append(f.features, &feature{Path: p, Feature: ft, time: timeNowFunc()})
-}
-
-func (f *basefmt) Passed(step *gherkin.Step, match *StepDef) {
-	s := &stepResult{
-		owner:   f.owner,
-		feature: f.features[len(f.features)-1],
-		step:    step,
-		def:     match,
-		typ:     passed,
-		time:    timeNowFunc(),
+func (f *basefmt) findScenario(scenarioAstID string) *messages.GherkinDocument_Feature_Scenario {
+	for _, ft := range f.features {
+		if sc := ft.findScenario(scenarioAstID); sc != nil {
+			return sc
+		}
 	}
-	f.passed = append(f.passed, s)
 
-	f.features[len(f.features)-1].appendStepResult(s)
+	panic("Couldn't find scenario for AST ID: " + scenarioAstID)
 }
 
-func (f *basefmt) Skipped(step *gherkin.Step, match *StepDef) {
-	s := &stepResult{
-		owner:   f.owner,
-		feature: f.features[len(f.features)-1],
-		step:    step,
-		def:     match,
-		typ:     skipped,
-		time:    timeNowFunc(),
+func (f *basefmt) findBackground(scenarioAstID string) *messages.GherkinDocument_Feature_Background {
+	for _, ft := range f.features {
+		if bg := ft.findBackground(scenarioAstID); bg != nil {
+			return bg
+		}
 	}
-	f.skipped = append(f.skipped, s)
 
-	f.features[len(f.features)-1].appendStepResult(s)
+	return nil
 }
 
-func (f *basefmt) Undefined(step *gherkin.Step, match *StepDef) {
-	s := &stepResult{
-		owner:   f.owner,
-		feature: f.features[len(f.features)-1],
-		step:    step,
-		def:     match,
-		typ:     undefined,
-		time:    timeNowFunc(),
+func (f *basefmt) findExample(exampleAstID string) (*messages.GherkinDocument_Feature_Scenario_Examples, *messages.GherkinDocument_Feature_TableRow) {
+	for _, ft := range f.features {
+		if es, rs := ft.findExample(exampleAstID); es != nil && rs != nil {
+			return es, rs
+		}
 	}
-	f.undefined = append(f.undefined, s)
 
-	f.features[len(f.features)-1].appendStepResult(s)
+	return nil, nil
 }
 
-func (f *basefmt) Failed(step *gherkin.Step, match *StepDef, err error) {
-	s := &stepResult{
-		owner:   f.owner,
-		feature: f.features[len(f.features)-1],
-		step:    step,
-		def:     match,
-		err:     err,
-		typ:     failed,
-		time:    timeNowFunc(),
+func (f *basefmt) findStep(stepAstID string) *messages.GherkinDocument_Feature_Step {
+	for _, ft := range f.features {
+		if st := ft.findStep(stepAstID); st != nil {
+			return st
+		}
 	}
-	f.failed = append(f.failed, s)
 
-	f.features[len(f.features)-1].appendStepResult(s)
+	panic("Couldn't find step for AST ID: " + stepAstID)
 }
 
-func (f *basefmt) Pending(step *gherkin.Step, match *StepDef) {
-	s := &stepResult{
-		owner:   f.owner,
-		feature: f.features[len(f.features)-1],
-		step:    step,
-		def:     match,
-		typ:     pending,
-		time:    timeNowFunc(),
-	}
-	f.pending = append(f.pending, s)
+func (f *basefmt) Pickle(p *messages.Pickle) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
 
-	f.features[len(f.features)-1].appendStepResult(s)
+	feature := f.features[len(f.features)-1]
+	feature.pickleResults = append(feature.pickleResults, &pickleResult{Name: p.Name, time: timeNowFunc()})
+}
+
+func (f *basefmt) Defined(*messages.Pickle, *messages.Pickle_PickleStep, *StepDefinition) {}
+
+func (f *basefmt) Feature(ft *messages.GherkinDocument, p string, c []byte) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	f.features = append(f.features, &feature{Path: p, GherkinDocument: ft, time: timeNowFunc()})
+}
+
+func (f *basefmt) Passed(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	s := newStepResult(pickle, step, match)
+	s.status = passed
+	f.lastFeature().appendStepResult(s)
+}
+
+func (f *basefmt) Skipped(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	s := newStepResult(pickle, step, match)
+	s.status = skipped
+	f.lastFeature().appendStepResult(s)
+}
+
+func (f *basefmt) Undefined(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	s := newStepResult(pickle, step, match)
+	s.status = undefined
+	f.lastFeature().appendStepResult(s)
+}
+
+func (f *basefmt) Failed(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition, err error) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	s := newStepResult(pickle, step, match)
+	s.status = failed
+	s.err = err
+	f.lastFeature().appendStepResult(s)
+}
+
+func (f *basefmt) Pending(pickle *messages.Pickle, step *messages.Pickle_PickleStep, match *StepDefinition) {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+
+	s := newStepResult(pickle, step, match)
+	s.status = pending
+	f.lastFeature().appendStepResult(s)
 }
 
 func (f *basefmt) Summary() {
-	var total, passed, undefined int
-	for _, ft := range f.features {
-		for _, def := range ft.ScenarioDefinitions {
-			switch t := def.(type) {
-			case *gherkin.Scenario:
-				total++
-				if len(t.Steps) == 0 {
-					undefined++
-				}
-			case *gherkin.ScenarioOutline:
-				for _, ex := range t.Examples {
-					total += len(ex.TableBody)
-					if len(t.Steps) == 0 {
-						undefined += len(ex.TableBody)
-					}
+	var totalSc, passedSc, undefinedSc int
+	var totalSt, passedSt, failedSt, skippedSt, pendingSt, undefinedSt int
+
+	for _, feat := range f.features {
+		for _, pr := range feat.pickleResults {
+			var prStatus stepResultStatus
+			totalSc++
+
+			if len(pr.stepResults) == 0 {
+				prStatus = undefined
+			}
+
+			for _, sr := range pr.stepResults {
+				totalSt++
+
+				switch sr.status {
+				case passed:
+					prStatus = passed
+					passedSt++
+				case failed:
+					prStatus = failed
+					failedSt++
+				case skipped:
+					skippedSt++
+				case undefined:
+					prStatus = undefined
+					undefinedSt++
+				case pending:
+					prStatus = pending
+					pendingSt++
 				}
 			}
-		}
-	}
-	passed = total - undefined
-	var owner interface{}
-	for _, undef := range f.undefined {
-		if owner != undef.owner {
-			undefined++
-			owner = undef.owner
+
+			if prStatus == passed {
+				passedSc++
+			} else if prStatus == undefined {
+				undefinedSc++
+			}
 		}
 	}
 
 	var steps, parts, scenarios []string
-	nsteps := len(f.passed) + len(f.failed) + len(f.skipped) + len(f.undefined) + len(f.pending)
-	if len(f.passed) > 0 {
-		steps = append(steps, green(fmt.Sprintf("%d passed", len(f.passed))))
+	if passedSt > 0 {
+		steps = append(steps, green(fmt.Sprintf("%d passed", passedSt)))
 	}
-	if len(f.failed) > 0 {
-		passed -= len(f.failed)
-		parts = append(parts, red(fmt.Sprintf("%d failed", len(f.failed))))
-		steps = append(steps, parts[len(parts)-1])
+	if failedSt > 0 {
+		parts = append(parts, red(fmt.Sprintf("%d failed", failedSt)))
+		steps = append(steps, red(fmt.Sprintf("%d failed", failedSt)))
 	}
-	if len(f.pending) > 0 {
-		passed -= len(f.pending)
-		parts = append(parts, yellow(fmt.Sprintf("%d pending", len(f.pending))))
-		steps = append(steps, yellow(fmt.Sprintf("%d pending", len(f.pending))))
+	if pendingSt > 0 {
+		parts = append(parts, yellow(fmt.Sprintf("%d pending", pendingSt)))
+		steps = append(steps, yellow(fmt.Sprintf("%d pending", pendingSt)))
 	}
-	if len(f.undefined) > 0 {
-		passed -= undefined
-		parts = append(parts, yellow(fmt.Sprintf("%d undefined", undefined)))
-		steps = append(steps, yellow(fmt.Sprintf("%d undefined", len(f.undefined))))
-	} else if undefined > 0 {
+	if undefinedSt > 0 {
+		parts = append(parts, yellow(fmt.Sprintf("%d undefined", undefinedSc)))
+		steps = append(steps, yellow(fmt.Sprintf("%d undefined", undefinedSt)))
+	} else if undefinedSc > 0 {
 		// there may be some scenarios without steps
-		parts = append(parts, yellow(fmt.Sprintf("%d undefined", undefined)))
+		parts = append(parts, yellow(fmt.Sprintf("%d undefined", undefinedSc)))
 	}
-	if len(f.skipped) > 0 {
-		steps = append(steps, cyan(fmt.Sprintf("%d skipped", len(f.skipped))))
+	if skippedSt > 0 {
+		steps = append(steps, cyan(fmt.Sprintf("%d skipped", skippedSt)))
 	}
-	if passed > 0 {
-		scenarios = append(scenarios, green(fmt.Sprintf("%d passed", passed)))
+	if passedSc > 0 {
+		scenarios = append(scenarios, green(fmt.Sprintf("%d passed", passedSc)))
 	}
 	scenarios = append(scenarios, parts...)
 	elapsed := timeNowFunc().Sub(f.started)
 
 	fmt.Fprintln(f.out, "")
-	if total == 0 {
+
+	if totalSc == 0 {
 		fmt.Fprintln(f.out, "No scenarios")
 	} else {
-		fmt.Fprintln(f.out, fmt.Sprintf("%d scenarios (%s)", total, strings.Join(scenarios, ", ")))
+		fmt.Fprintln(f.out, fmt.Sprintf("%d scenarios (%s)", totalSc, strings.Join(scenarios, ", ")))
 	}
 
-	if nsteps == 0 {
+	if totalSt == 0 {
 		fmt.Fprintln(f.out, "No steps")
 	} else {
-		fmt.Fprintln(f.out, fmt.Sprintf("%d steps (%s)", nsteps, strings.Join(steps, ", ")))
+		fmt.Fprintln(f.out, fmt.Sprintf("%d steps (%s)", totalSt, strings.Join(steps, ", ")))
 	}
 
 	elapsedString := elapsed.String()
@@ -435,6 +421,20 @@ func (f *basefmt) Summary() {
 		fmt.Fprintln(f.out, "")
 		fmt.Fprintln(f.out, yellow("You can implement step definitions for undefined steps with these snippets:"))
 		fmt.Fprintln(f.out, yellow(text))
+	}
+}
+
+func (f *basefmt) Sync(cf ConcurrentFormatter) {
+	if source, ok := cf.(*basefmt); ok {
+		f.lock = source.lock
+	}
+}
+
+func (f *basefmt) Copy(cf ConcurrentFormatter) {
+	if source, ok := cf.(*basefmt); ok {
+		for _, v := range source.features {
+			f.features = append(f.features, v)
+		}
 	}
 }
 
@@ -465,12 +465,13 @@ func (s *undefinedSnippet) Args() (ret string) {
 			args = append(args, reflect.String.String())
 		}
 	}
+
 	if s.argument != nil {
-		switch s.argument.(type) {
-		case *gherkin.DocString:
-			args = append(args, "*gherkin.DocString")
-		case *gherkin.DataTable:
-			args = append(args, "*gherkin.DataTable")
+		if s.argument.GetDocString() != nil {
+			args = append(args, "*messages.PickleStepArgument_PickleDocString")
+		}
+		if s.argument.GetDataTable() != nil {
+			args = append(args, "*messages.PickleStepArgument_PickleTable")
 		}
 	}
 
@@ -486,15 +487,30 @@ func (s *undefinedSnippet) Args() (ret string) {
 	return strings.TrimSpace(strings.TrimRight(ret, ", ") + " " + last)
 }
 
+func (f *basefmt) findStepResults(status stepResultStatus) (res []*stepResult) {
+	for _, feat := range f.features {
+		for _, pr := range feat.pickleResults {
+			for _, sr := range pr.stepResults {
+				if sr.status == status {
+					res = append(res, sr)
+				}
+			}
+		}
+	}
+
+	return
+}
+
 func (f *basefmt) snippets() string {
-	if len(f.undefined) == 0 {
+	undefinedStepResults := f.findStepResults(undefined)
+	if len(undefinedStepResults) == 0 {
 		return ""
 	}
 
 	var index int
 	var snips []*undefinedSnippet
 	// build snippets
-	for _, u := range f.undefined {
+	for _, u := range undefinedStepResults {
 		steps := []string{u.step.Text}
 		arg := u.step.Argument
 		if u.def != nil {
@@ -523,7 +539,7 @@ func (f *basefmt) snippets() string {
 			name = strings.Join(words, "")
 			if len(name) == 0 {
 				index++
-				name = fmt.Sprintf("stepDefinition%d", index)
+				name = fmt.Sprintf("StepDefinitioninition%d", index)
 			}
 
 			var found bool
@@ -547,25 +563,6 @@ func (f *basefmt) snippets() string {
 	return strings.Replace(buf.String(), " \n", "\n", -1)
 }
 
-func (f *basefmt) isLastStep(s *gherkin.Step) bool {
-	ft := f.features[len(f.features)-1]
-
-	for _, def := range ft.ScenarioDefinitions {
-		if outline, ok := def.(*gherkin.ScenarioOutline); ok {
-			for n, step := range outline.Steps {
-				if step.Location.Line == s.Location.Line {
-					return n == len(outline.Steps)-1
-				}
-			}
-		}
-
-		if scenario, ok := def.(*gherkin.Scenario); ok {
-			for n, step := range scenario.Steps {
-				if step.Location.Line == s.Location.Line {
-					return n == len(scenario.Steps)-1
-				}
-			}
-		}
-	}
-	return false
+func isLastStep(pickle *messages.Pickle, step *messages.Pickle_PickleStep) bool {
+	return pickle.Steps[len(pickle.Steps)-1].Id == step.Id
 }

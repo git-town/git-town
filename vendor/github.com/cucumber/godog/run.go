@@ -277,6 +277,6 @@ func supportsConcurrency(format string) bool {
 	case "events", "pretty", "cucumber":
 		return false
 	default:
-		return false
+		return true // enables concurrent custom formatters to work
 	}
 }

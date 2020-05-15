@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Originate/git-town/test/helpers"
+	"github.com/git-town/git-town/test/helpers"
 )
 
 // CommitTableBuilder collects data about commits in Git repositories
@@ -61,6 +61,13 @@ func (builder *CommitTableBuilder) Add(commit Commit, location string) {
 	}
 }
 
+// AddMany registers the given commits from the given location into this table.
+func (builder *CommitTableBuilder) AddMany(commits []Commit, location string) {
+	for _, commit := range commits {
+		builder.Add(commit, location)
+	}
+}
+
 // branches provides the names of the all branches known to this CommitTableBuilder,
 // sorted alphabetically, with the main branch first.
 func (builder *CommitTableBuilder) branches() []string {
@@ -83,6 +90,8 @@ func (builder *CommitTableBuilder) branches() []string {
 // Table provides the data accumulated by this CommitTableBuilder as a DataTable.
 func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 	result.AddRow(fields...)
+	lastBranch := ""
+	lastLocation := ""
 	for _, branch := range builder.branches() {
 		SHAs := builder.commitsInBranch[branch]
 		for _, SHA := range SHAs.Slice() {
@@ -91,21 +100,33 @@ func (builder *CommitTableBuilder) Table(fields []string) (result DataTable) {
 			for _, field := range fields {
 				switch field {
 				case "BRANCH":
-					row = append(row, branch)
+					if branch == lastBranch {
+						row = append(row, "")
+					} else {
+						row = append(row, branch)
+					}
 				case "LOCATION":
-					locations := builder.locations[SHA+branch]
-					row = append(row, strings.Join(locations.Slice(), ", "))
+					locations := strings.Join(builder.locations[SHA+branch].Slice(), ", ")
+					if locations == lastLocation && branch == lastBranch {
+						row = append(row, "")
+					} else {
+						lastLocation = locations
+						row = append(row, locations)
+					}
 				case "MESSAGE":
 					row = append(row, commit.Message)
 				case "FILE NAME":
 					row = append(row, commit.FileName)
 				case "FILE CONTENT":
 					row = append(row, commit.FileContent)
+				case "AUTHOR":
+					row = append(row, commit.Author)
 				default:
 					panic("unknown table field: " + field)
 				}
 			}
 			result.AddRow(row...)
+			lastBranch = branch
 		}
 	}
 	return result

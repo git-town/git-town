@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"github.com/Originate/git-town/src/git"
-	"github.com/Originate/git-town/src/script"
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/script"
 )
 
 // ResetToShaStep undoes all commits on the current branch

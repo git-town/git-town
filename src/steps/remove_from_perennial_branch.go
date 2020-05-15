@@ -1,6 +1,6 @@
 package steps
 
-import "github.com/Originate/git-town/src/git"
+import "github.com/git-town/git-town/src/git"
 
 // RemoveFromPerennialBranches removes the branch with the given name as a perennial branch
 type RemoveFromPerennialBranches struct {
@@ -8,8 +8,8 @@ type RemoveFromPerennialBranches struct {
 	BranchName string
 }
 
-// CreateUndoStepBeforeRun returns the undo step for this step before it is run.
-func (step *RemoveFromPerennialBranches) CreateUndoStepBeforeRun() Step {
+// CreateUndoStep returns the undo step for this step.
+func (step *RemoveFromPerennialBranches) CreateUndoStep() Step {
 	return &AddToPerennialBranches{BranchName: step.BranchName}
 }
 
