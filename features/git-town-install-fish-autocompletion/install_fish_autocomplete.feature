@@ -8,7 +8,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: without existing fish autocompletion folder
     Given I have no fish autocompletion file
     When I run "git-town install-fish-autocompletion"
-    Then it prints
+    Then it prints:
       """
       Git autocompletion for Fish shell installed
       """
@@ -18,7 +18,7 @@ Feature: Installing Fish Shell autocomplete definitions
   Scenario: with empty fish autocompletion folder
     Given I have an empty fish autocompletion folder
     When I run "git-town install-fish-autocompletion"
-    Then it prints
+    Then it prints:
       """
       Git autocompletion for Fish shell installed
       """

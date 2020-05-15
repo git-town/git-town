@@ -2,7 +2,7 @@ Feature: displaying the global new branch push flag configuration
 
   Scenario: default set
     When I run "git-town new-branch-push-flag --global"
-    Then it prints
+    Then it prints:
       """
       false
       """
@@ -11,7 +11,7 @@ Feature: displaying the global new branch push flag configuration
   Scenario: set to "true"
     Given the global new-branch-push-flag configuration is true
     When I run "git-town new-branch-push-flag --global"
-    Then it prints
+    Then it prints:
       """
       true
       """
@@ -20,7 +20,7 @@ Feature: displaying the global new branch push flag configuration
   Scenario: set to false
     Given the global new-branch-push-flag configuration is false
     When I run "git-town new-branch-push-flag --global"
-    Then it prints
+    Then it prints:
       """
       false
       """

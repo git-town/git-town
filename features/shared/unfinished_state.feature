@@ -26,7 +26,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
       | PROMPT                       | ANSWER  |
       | Please choose how to proceed | [ENTER] |
     Then it runs no commands
-    And it prints
+    And it prints:
       """
       You have an unfinished `sync` command that ended on the `main` branch now.
       """
