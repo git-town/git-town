@@ -13,11 +13,13 @@ var repoCommand = &cobra.Command{
 	Short: "Opens the repository homepage",
 	Long: `Opens the repository homepage
 
-Supported only for repositories hosted on GitHub, GitLab, and Bitbucket.
-When using self-hosted versions this command needs to be configured with
+Supported for repositories hosted on GitHub, GitLab, and Bitbucket.
+Derives the Git provider from the "origin" remote.
+You can override this detection with
 "git config git-town.code-hosting-driver <DRIVER>"
 where DRIVER is "github", "gitlab", or "bitbucket".
-When using SSH identities, this command needs to be configured with
+
+When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
