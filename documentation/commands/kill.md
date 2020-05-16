@@ -5,9 +5,7 @@ Removes an obsolete feature branch
 </blockquote>
 
 <a textrun="command-description">
-Deletes the current branch, or the given one if a branch name is provided,
-from the local and remote repositories.
-
+Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.
 
 </a>
