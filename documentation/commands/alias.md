@@ -10,7 +10,9 @@ When enabled, you can run "git hack" instead of "git town hack".
 
 Does not overwrite existing aliases.
 
-This can conflict with other tools that also define Git aliases. </a>
+This can conflict with other tools that also define Git aliases.
+
+</a>
 
 #### Usage
 
