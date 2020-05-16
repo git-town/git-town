@@ -47,7 +47,7 @@ Feature: warn about unfinished prompt asking the user how to proceed
 
   Scenario: attempting to sync again and choosing to continue after resolving conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run "git-town sync" and answer the prompts:
+    When I run "git-town sync", answer the prompts, and close the next editor:
       | PROMPT                       | ANSWER        |
       | Please choose how to proceed | [DOWN][ENTER] |
     Then it runs the commands
