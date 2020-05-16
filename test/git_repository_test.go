@@ -319,6 +319,28 @@ func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 	assert.True(t, have)
 }
 
+func TestGitRepository_HasBranchesOutOfSync_branchBehind(t *testing.T) {
+	repo1 := createTestRepo(t)
+	dir2 := createTempDir(t)
+	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	assert.Nil(t, err)
+	err = repo2.CreateBranch("branch1", "master")
+	assert.Nil(t, err)
+	err = repo2.PushBranch("branch1")
+	assert.Nil(t, err)
+	err = repo1.CreateFile("file1", "content")
+	assert.Nil(t, err)
+	err = repo1.StageFiles("file1")
+	assert.Nil(t, err)
+	err = repo1.CommitStagedChanges(true)
+	assert.Nil(t, err)
+	err = repo2.Fetch()
+	assert.Nil(t, err)
+	have, err := repo2.HasBranchesOutOfSync()
+	assert.Nil(t, err)
+	assert.True(t, have)
+}
+
 func TestGitRepository_HasGitTownConfigNow(t *testing.T) {
 	repo := createTestRepo(t)
 	res, err := repo.HasGitTownConfigNow()
