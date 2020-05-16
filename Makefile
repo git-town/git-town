@@ -13,7 +13,7 @@ cross-compile:  # builds the binary for all platforms
 			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: build   # runs the new Godog-based feature tests
-	godog --concurrency=$(shell nproc --all) --format=progress --strict
+	go test
 
 deploy:  # deploys the website
 	git checkout gh-pages

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# A test mock for "netscape"
-
-echo "netscape called with: $@"
