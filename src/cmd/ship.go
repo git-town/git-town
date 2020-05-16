@@ -47,9 +47,11 @@ If you use GitHub, this command can squash merge pull requests via the GitHub AP
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
 It will also update the base branch for any pull requests against that branch.
-3. If you use GitHub's feature to automatically delete head branches,
+
+If your origin server deletes shipped branches, for example
+GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
-and Git Town will leave it up to GitHub to delete the remote branch.`,
+and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := gitShipConfig(args)
 		if err != nil {
