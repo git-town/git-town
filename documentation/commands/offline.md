@@ -9,7 +9,9 @@ Use offline mode to maximize Git Town capabilities when working in an offline en
 
 When Git Town is in offline mode, certain commands will lose networking and
 upstream syncing capabilities but will continue to work locally. Commands that
-rely on network functionality will be completely disabled. </a>
+rely on network functionality will be completely disabled.
+
+</a>
 
 #### Usage
 
