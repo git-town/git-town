@@ -84,7 +84,7 @@ func (repo *GitRepository) HasBranchesOutOfSync() (bool, error) {
 	for l := range lines {
 		regex.FindString(
 
-	res, err := repo.Shell.Run("bash", "-c", "git branch -vv | grep -o \"\\[.*\\]\" | tr -d \"[]\" | awk \"{ print \\$2 }\" | grep . | wc -l")
+	res, err := repo.Shell.Run("bash", "-c", `git branch -vv | grep -o "\[.*\]" | tr -d "[]" | awk "{ print \$2 }" | grep . | wc -l`)
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if any branches are out of sync in %q: %w %q", repo.Dir, err, res.Output())
 	}
