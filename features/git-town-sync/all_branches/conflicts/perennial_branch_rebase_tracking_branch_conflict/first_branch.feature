@@ -43,10 +43,10 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
     And my repository now has the following commits
-      | BRANCH     | LOCATION         | MESSAGE                  | FILE NAME        |
+      | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
       | main       | local, remote | main commit              | main_file        |
-      | production | local            | production local commit  | conflicting_file |
-      |            | remote           | production remote commit | conflicting_file |
+      | production | local         | production local commit  | conflicting_file |
+      |            | remote        | production remote commit | conflicting_file |
       | qa         | local, remote | qa commit                | qa_file          |
 
 
@@ -73,7 +73,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error: 
+    And it prints the error:
       """
       You must resolve the conflicts before continuing
       """
@@ -83,7 +83,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run "git-town continue"
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH     | COMMAND               |
       | production | git rebase --continue |
@@ -105,7 +105,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue"
+    And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH     | COMMAND              |
