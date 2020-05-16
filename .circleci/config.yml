@@ -17,6 +17,8 @@ jobs:
           root: /home/circleci
           paths:
             - project
+  # runs all Go tests except the Cukes for ship and sync,
+  # which the "go-s" job tests in parallel
   go:
     docker:
       - image: circleci/golang:1.14.2
@@ -31,6 +33,7 @@ jobs:
       - run:
           find features -type f -name '*.feature' | grep -v git-town-s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
+  # runs the Cucumber tests for ship and sync in parallel to the other ones
   go-s:
     docker:
       - image: circleci/golang:1.14.2
