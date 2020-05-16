@@ -2,6 +2,7 @@ package main_test
 
 import (
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -39,11 +40,10 @@ func TestMain(m *testing.M) {
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
-		Format: "pretty",
-		Paths:  []string{"features/git-town-append/on-perennial-branch.feature"},
+		Format:      "progress",
+		Concurrency: runtime.NumCPU(),
+		Strict:      true,
+		Paths:       []string{"features/"},
 	})
-	if st := m.Run(); st > status {
-		status = st
-	}
 	os.Exit(status)
 }
