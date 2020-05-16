@@ -56,7 +56,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    And I run "git-town continue"
+    And I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH  | COMMAND                            |
       | main    | git rebase --continue              |
@@ -82,7 +82,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue"
+    And I run "git rebase --continue" and close the editor
     And I run "git-town continue"
     Then it runs the commands
       | BRANCH  | COMMAND                            |

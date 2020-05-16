@@ -48,7 +48,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error: 
+    And it prints the error:
       """
       You must resolve the conflicts before continuing
       """
@@ -58,7 +58,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing after resolving the conflicts
     Given I resolve the conflict in "conflicting_file"
-    When I run "git-town continue"
+    When I run "git-town continue" and close the editor
     Then it runs the commands
       | BRANCH | COMMAND               |
       | qa     | git rebase --continue |
@@ -68,9 +68,9 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | qa     | local, remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
     And my repository now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
@@ -78,7 +78,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
   Scenario: continuing after resolving the conflicts and continuing the rebase
     Given I resolve the conflict in "conflicting_file"
-    And I run "git rebase --continue"
+    And I run "git rebase --continue" and close the editor
     When I run "git-town continue"
     Then it runs the commands
       | BRANCH | COMMAND         |
@@ -88,9 +88,9 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And my repository now has the following commits
-      | BRANCH | LOCATION         | MESSAGE                   | FILE NAME        |
+      | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | qa     | local, remote | conflicting remote commit | conflicting_file |
-      |        |                  | conflicting local commit  | conflicting_file |
+      |        |               | conflicting local commit  | conflicting_file |
     And my repository now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
