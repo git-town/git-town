@@ -19,8 +19,8 @@ When run on the main branch or a perennial branch:
 - pulls and pushes updates for the current branch
 - pushes tags
 
-Additionally, when there is a remote upstream, the main branch is synced with
-its upstream counterpart. This can be disabled with
+If the repository contains an "upstream" remote, syncs the main branch with its
+upstream counterpart. You can disable this by running
 `git config git-town.sync-upstream false`.
 
 </a>
@@ -35,5 +35,5 @@ git town sync
 
 <pre textrun="command-flags">
 --all       Sync all local branches
---dry-run   Output the commands that would be run without them
+--dry-run   Print the commands without running them
 </pre>

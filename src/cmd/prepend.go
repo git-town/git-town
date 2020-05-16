@@ -25,13 +25,14 @@ var prependCommand = &cobra.Command{
 	Long: `Creates a new feature branch as the parent of the current branch
 
 Syncs the parent branch,
-forks a new feature branch with the given name off the parent branch,
+cuts a new feature branch with the given name off the parent branch,
 makes the new branch the parent of the current branch,
 pushes the new feature branch to the remote repository
-(if and only if "new-branch-push-flag" is true),
+(if "new-branch-push-flag" is true),
 and brings over all uncommitted changes to the new feature branch.
 
-See "sync" for information regarding remote upstream.`,
+See "sync" for remote upstream options.
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getPrependConfig(args)
 		if err != nil {
