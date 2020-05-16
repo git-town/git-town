@@ -25,13 +25,12 @@ var aliasCommand = &cobra.Command{
 	Short: "Adds or removes default global aliases",
 	Long: `Adds or removes default global aliases
 
-Global aliases allow Git Town commands to be used like native Git commands.
-When aliases are set, you can run "git hack" instead of having to run "git town hack".
-Example: "git append" becomes equivalent to "git town append".
+Global aliases make Git Town commands feel like native Git commands.
+When enabled, you can run "git hack" instead of "git town hack".
 
-When adding aliases, no existing aliases will be overwritten.
+Does not overwrite existing aliases.
 
-Note that this can conflict with other tools that also define additional Git commands.`,
+This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
