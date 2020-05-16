@@ -24,7 +24,7 @@ var (
 	buildDate string
 )
 
-var dryRunFlagDescription = "Print the commands without running them"
+var dryRunFlagDescription = "Print the commands but don't run them"
 
 func conditionallyActivateDryRun() error {
 	if dryRunFlag {

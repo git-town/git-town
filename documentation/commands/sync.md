@@ -35,5 +35,5 @@ git town sync
 
 <pre textrun="command-flags">
 --all       Sync all local branches
---dry-run   Print the commands without running them
+--dry-run   Print the commands but don't run them
 </pre>
