@@ -10,6 +10,30 @@ import (
 
 var noneString = "[none]"
 
+// getBranchAncestryRoots returns the branches with children and no parents
+func getBranchAncestryRoots() []string {
+	parentMap := Config().GetParentBranchMap()
+	children := make([]string, len(parentMap))
+	parents := make([]string, len(parentMap))
+	i := 0
+	for child, parent := range parentMap {
+		children[i] = child
+		parents[i] = parent
+		i++
+	}
+	roots := make([]string, len(parentMap))
+	i = 0
+	for _, parent := range parents {
+		if !util.DoesStringArrayContain(children, parent) && !util.DoesStringArrayContain(roots, parent) {
+			roots[i] = parent
+			i++
+		}
+	}
+	roots = roots[0:i]
+	sort.Strings(roots)
+	return roots
+}
+
 // GetPrintableMainBranch returns a user printable main branch
 func GetPrintableMainBranch() string {
 	output := Config().GetMainBranch()
@@ -28,32 +52,32 @@ func GetPrintablePerennialBranches() string {
 	return output
 }
 
-// GetPrintablePerennialBranchTrees returns a user printable list of perennial branches trees
-func GetPrintablePerennialBranchTrees() string {
-	trees := []string{}
-	for _, perennialBranch := range Config().GetPerennialBranches() {
-		trees = append(trees, GetPrintableBranchTree(perennialBranch))
-	}
-	if len(trees) == 0 {
-		return noneString
-	}
-	return strings.Join(trees, "\n")
-}
-
 // GetPrintableNewBranchPushFlag returns a user printable new branch push flag
 func GetPrintableNewBranchPushFlag() string {
 	return strconv.FormatBool(Config().ShouldNewBranchPush())
 }
 
-// GetPrintableBranchTree returns a user printable branch tree
-func GetPrintableBranchTree(branchName string) (result string) {
+// getPrintableBranchTree returns a user printable branch tree
+func getPrintableBranchTree(branchName string) (result string) {
 	result += branchName
 	childBranches := Config().GetChildBranches(branchName)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
-		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch), 1)
+		result += "\n" + util.Indent(getPrintableBranchTree(childBranch), 1)
 	}
 	return
+}
+
+// GetPrintableBranchAncestry returns a user printable branch ancestry
+func GetPrintableBranchAncestry() string {
+	roots := getBranchAncestryRoots()
+	trees := make([]string, len(roots))
+	i := 0
+	for _, root := range roots {
+		trees[i] = getPrintableBranchTree(root)
+		i++
+	}
+	return strings.Join(trees, "\n\n")
 }
 
 // GetPrintableOfflineFlag returns a user printable offline flag
