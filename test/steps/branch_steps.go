@@ -5,7 +5,6 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
-	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/test"
 )
 
@@ -24,12 +23,11 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^Git Town is (?:now|still) aware of this branch hierarchy$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		gitConfig := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell)
 		table := test.DataTable{}
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {
 			branch := row.Cells[0].Value
-			parentBranch := gitConfig.GetParentBranch(branch)
+			parentBranch := fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
 		diff, errCount := table.EqualGherkin(input)
@@ -42,8 +40,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
-		has := git.NewConfiguration(fs.activeScenarioState.gitEnvironment.DeveloperShell).HasBranchInformation()
-		if has {
+		if fs.activeScenarioState.gitEnvironment.DeveloperRepo.Configuration(true).HasBranchInformation() {
 			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
