@@ -14,8 +14,8 @@ var newBranchPushFlagCommand = &cobra.Command{
 	Short: "Displays or sets your new branch push flag",
 	Long: `Displays or sets your new branch push flag
 
-Branches created with hack / append / prepend will be pushed upon creation
-if and only if "new-branch-push-flag" is true. The default value is false.`,
+If "new-branch-push-flag" is true, Git Town pushes branches created with
+hack / append / prepend on creation. Defaults to false.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			printNewBranchPushFlag()

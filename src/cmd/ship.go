@@ -39,10 +39,10 @@ into the main branch, resulting in linear history on the main branch.
 - pushes the main branch to the remote repository
 - deletes <branch_name> from the local and remote repositories
 
-Ships only direct children of the main branch.
-To ship a nested child branch, all ancestor branches must be shipped or killed first.
+Ships direct children of the main branch.
+To ship a nested child branch, ship or kill all ancestor branches first.
 
-If you are using GitHub, this command can squash merge pull requests via the GitHub API. Setup:
+If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
