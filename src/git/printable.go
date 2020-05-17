@@ -13,15 +13,12 @@ var noneString = "[none]"
 // getBranchAncestryRoots returns the branches with children and no parents
 func getBranchAncestryRoots() []string {
 	parentMap := Config().GetParentBranchMap()
-	roots := make([]string, len(parentMap))
-	i := 0
+	roots := []string{}
 	for _, parent := range parentMap {
 		if _, ok := parentMap[parent]; !ok && !util.DoesStringArrayContain(roots, parent) {
-			roots[i] = parent
-			i++
+			roots = append(roots, parent)
 		}
 	}
-	roots = roots[0:i]
 	sort.Strings(roots)
 	return roots
 }
@@ -64,10 +61,8 @@ func getPrintableBranchTree(branchName string) (result string) {
 func GetPrintableBranchAncestry() string {
 	roots := getBranchAncestryRoots()
 	trees := make([]string, len(roots))
-	i := 0
-	for _, root := range roots {
+	for i, root := range roots {
 		trees[i] = getPrintableBranchTree(root)
-		i++
 	}
 	return strings.Join(trees, "\n\n")
 }
