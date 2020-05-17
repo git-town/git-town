@@ -8,11 +8,11 @@ func ConflictSteps(suite *godog.Suite, fs *FeatureState) {
 		if content == "" {
 			content = "resolved content"
 		}
-		err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.CreateFile(filename, content)
+		err := fs.state.gitEnv.DevRepo.CreateFile(filename, content)
 		if err != nil {
 			return err
 		}
-		err = fs.activeScenarioState.gitEnvironment.DeveloperRepo.StageFiles(filename)
+		err = fs.state.gitEnv.DevRepo.StageFiles(filename)
 		if err != nil {
 			return err
 		}

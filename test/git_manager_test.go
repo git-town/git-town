@@ -25,6 +25,6 @@ func TestGitManager_CreateScenarioEnvironment(t *testing.T) {
 	assert.Nil(t, err, "creating memoized environment failed")
 	result, err := gm.CreateScenarioEnvironment("foo")
 	assert.Nil(t, err, "cannot create scenario environment")
-	_, err = os.Stat(result.DeveloperRepo.Dir)
-	assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DeveloperRepo.Dir)
+	_, err = os.Stat(result.DevRepo.Dir)
+	assert.False(t, os.IsNotExist(err), "scenario environment directory %q not found", result.DevRepo.Dir)
 }
