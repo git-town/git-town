@@ -212,4 +212,8 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		}
 		return fs.activeScenarioState.gitEnvironment.DeveloperRepo.CheckoutBranch("-")
 	})
+
+	suite.Step(`^the remote deletes the "([^"]*)" branch$`, func(name string) error {
+		return fs.activeScenarioState.gitEnvironment.OriginRepo.RemoveBranch(name)
+	})
 }

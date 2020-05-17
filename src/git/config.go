@@ -433,6 +433,11 @@ func (c *Configuration) SetPullBranchStrategy(strategy string) *command.Result {
 	return c.setLocalConfigValue("git-town.pull-branch-strategy", strategy)
 }
 
+// SetShouldShipDeleteRemoteBranch updates the configured pull branch strategy.
+func (c *Configuration) SetShouldShipDeleteRemoteBranch(value bool) *command.Result {
+	return c.setLocalConfigValue("git-town.ship-delete-remote-branch", strconv.FormatBool(value))
+}
+
 // SetShouldSyncUpstream updates the configured pull branch strategy.
 func (c *Configuration) SetShouldSyncUpstream(value bool) *command.Result {
 	return c.setLocalConfigValue("git-town.sync-upstream", strconv.FormatBool(value))
@@ -453,6 +458,15 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 func (c *Configuration) ShouldNewBranchPushGlobal() bool {
 	config := c.getGlobalConfigValue("git-town.new-branch-push-flag")
 	return config == "true"
+}
+
+// ShouldShipDeleteRemoteBranch indicates whether to delete the remote branch after shipping.
+func (c *Configuration) ShouldShipDeleteRemoteBranch() bool {
+	setting := c.getLocalOrGlobalConfigValue("git-town.ship-delete-remote-branch")
+	if setting == "" {
+		return true
+	}
+	return util.StringToBool(setting)
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.

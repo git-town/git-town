@@ -46,7 +46,12 @@ If you use GitHub, this command can squash merge pull requests via the GitHub AP
 1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
-It will also update the base branch for any pull requests against that branch.`,
+It will also update the base branch for any pull requests against that branch.
+
+If your origin server deletes shipped branches, for example
+GitHub's feature to automatically delete head branches,
+run "git config git-town.ship-delete-remote-branch false"
+and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := gitShipConfig(args)
 		if err != nil {
@@ -141,7 +146,9 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		if git.Config().ShouldShipDeleteRemoteBranch() {
+			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
