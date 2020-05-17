@@ -11,7 +11,7 @@ import (
 
 // nolint:deadcode,unused
 func FeatureContext(suite *godog.Suite) {
-	state := &steps.FeatureState{}
+	state := &steps.ScenarioState{}
 	steps.SuiteSteps(suite, state)
 	steps.AutocompletionSteps(suite, state)
 	steps.BranchSteps(suite, state)
