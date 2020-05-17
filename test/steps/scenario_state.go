@@ -9,7 +9,7 @@ import (
 // scenarioState constains the state that is shared by all steps within a scenario.
 type scenarioState struct {
 	// the GitEnvironment used in the current scenario
-	gitEnvironment *test.GitEnvironment
+	gitEnv *test.GitEnvironment
 
 	// the error of the last run of Git Town
 	lastRunErr error

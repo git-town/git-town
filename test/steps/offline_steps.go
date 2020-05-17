@@ -9,7 +9,7 @@ import (
 // OfflineSteps defines Cucumber step implementations around offline functionality.
 func OfflineSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^offline mode is disabled$`, func() error {
-		offline, err := fs.state.gitEnvironment.DeveloperRepo.IsOffline()
+		offline, err := fs.state.gitEnv.DeveloperRepo.IsOffline()
 		if err != nil {
 			return err
 		}
@@ -19,7 +19,7 @@ func OfflineSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 	suite.Step(`^offline mode is enabled$`, func() error {
-		offline, err := fs.state.gitEnvironment.DeveloperRepo.IsOffline()
+		offline, err := fs.state.gitEnv.DeveloperRepo.IsOffline()
 		if err != nil {
 			return err
 		}

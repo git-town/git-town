@@ -16,34 +16,34 @@ import (
 // nolint:funlen
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "(.+)"$`, func(command string) error {
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunString(command)
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnv.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
 		return nil
 	})
 
@@ -74,9 +74,9 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
 		expanded := dataTable.Expand(
-			fs.state.gitEnvironment.DeveloperRepo.Dir,
-			&fs.state.gitEnvironment.DeveloperRepo,
-			fs.state.gitEnvironment.OriginRepo,
+			fs.state.gitEnv.DeveloperRepo.Dir,
+			&fs.state.gitEnv.DeveloperRepo,
+			fs.state.gitEnv.OriginRepo,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {

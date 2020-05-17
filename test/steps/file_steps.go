@@ -10,7 +10,7 @@ import (
 // FileSteps defines Cucumber step implementations around files.
 func FileSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I don't have any uncommitted files$`, func() error {
-		files, err := fs.state.gitEnvironment.DeveloperRepo.UncommittedFiles()
+		files, err := fs.state.gitEnv.DeveloperRepo.UncommittedFiles()
 		if err != nil {
 			return fmt.Errorf("cannot determine uncommitted files: %w", err)
 		}
@@ -21,7 +21,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my uncommitted file is stashed$`, func() error {
-		uncommittedFiles, err := fs.state.gitEnvironment.DeveloperRepo.UncommittedFiles()
+		uncommittedFiles, err := fs.state.gitEnv.DeveloperRepo.UncommittedFiles()
 		if err != nil {
 			return err
 		}
@@ -30,7 +30,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 				return fmt.Errorf("expected file %q to be stashed but it is still uncommitted", fs.state.uncommittedFileName)
 			}
 		}
-		stashSize, err := fs.state.gitEnvironment.DeveloperRepo.StashSize()
+		stashSize, err := fs.state.gitEnv.DeveloperRepo.StashSize()
 		if err != nil {
 			return err
 		}
@@ -41,7 +41,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my workspace still contains the file "([^"]*)" with content "([^"]*)"$`, func(file, expectedContent string) error {
-		actualContent, err := fs.state.gitEnvironment.DeveloperRepo.FileContent(file)
+		actualContent, err := fs.state.gitEnv.DeveloperRepo.FileContent(file)
 		if err != nil {
 			return err
 		}
@@ -52,7 +52,7 @@ func FileSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fileTable, err := fs.state.gitEnvironment.DeveloperRepo.FilesInBranches()
+		fileTable, err := fs.state.gitEnv.DeveloperRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
 		}

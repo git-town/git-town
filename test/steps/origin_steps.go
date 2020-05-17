@@ -5,16 +5,16 @@ import "github.com/cucumber/godog"
 // OriginSteps defines Cucumber step implementations around Git origins.
 func OriginSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my repo does not have a remote origin$`, func() error {
-		err := fs.state.gitEnvironment.DeveloperRepo.RemoveRemote("origin")
+		err := fs.state.gitEnv.DeveloperRepo.RemoveRemote("origin")
 		if err != nil {
 			return err
 		}
-		fs.state.gitEnvironment.OriginRepo = nil
+		fs.state.gitEnv.OriginRepo = nil
 		return nil
 	})
 
 	suite.Step(`^my repo's origin is "([^"]*)"$`, func(origin string) error {
-		fs.state.gitEnvironment.DeveloperShell.SetTestOrigin(origin)
+		fs.state.gitEnv.DeveloperShell.SetTestOrigin(origin)
 		return nil
 	})
 }

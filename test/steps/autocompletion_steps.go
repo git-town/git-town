@@ -30,7 +30,7 @@ func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I now have a Git autocompletion file$`, func() error {
-		fishPath := filepath.Join(fs.state.gitEnvironment.Dir, ".config", "fish", "completions", "git.fish")
+		fishPath := filepath.Join(fs.state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
 		_, err := os.Stat(fishPath)
 		if os.IsNotExist(err) {
 			return err
@@ -51,7 +51,7 @@ func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
 }
 
 func fishFolderPath(fs *FeatureState) string {
-	return filepath.Join(fs.state.gitEnvironment.Dir, ".config", "fish", "completions")
+	return filepath.Join(fs.state.gitEnv.Dir, ".config", "fish", "completions")
 }
 
 func fishFilePath(fs *FeatureState) string {

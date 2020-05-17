@@ -25,7 +25,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
 		}
-		return fs.state.gitEnvironment.CreateCommits(commits)
+		return fs.state.gitEnv.CreateCommits(commits)
 	})
 }
 
@@ -33,7 +33,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 // against the given Gherkin table.
 func compareExistingCommits(fs *FeatureState, table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable, err := fs.state.gitEnvironment.CommitTable(fields)
+	commitTable, err := fs.state.gitEnv.CommitTable(fields)
 	if err != nil {
 		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}
