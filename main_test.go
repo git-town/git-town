@@ -48,7 +48,7 @@ func TestMain(m *testing.M) {
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
-		Paths:       []string{"features/"},
+		Paths:       []string{"features/environment.feature"},
 	})
 	os.Exit(status)
 }
