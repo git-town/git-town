@@ -418,16 +418,6 @@ func TestGitRepository_PushBranch(t *testing.T) {
 	assert.Equal(t, []string{"b1", "master"}, branches)
 }
 
-func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
-	repo := createTestRepo(t)
-	assert.Len(t, repo.originalCommits, 0)
-	repo.RegisterOriginalCommit(Commit{
-		FileName: "file",
-	})
-	assert.Len(t, repo.originalCommits, 1)
-	assert.Equal(t, "file", repo.originalCommits[0].FileName)
-}
-
 func TestGitRepository_Remotes(t *testing.T) {
 	repo := createTestRepo(t)
 	origin := createTestRepo(t)

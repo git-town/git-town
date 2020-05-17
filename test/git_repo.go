@@ -22,9 +22,6 @@ type GitRepo struct {
 	// Dir contains the path of the directory that this repository is in.
 	Dir string
 
-	// originalCommits contains the commits in this repository before the test ran.
-	originalCommits []Commit
-
 	// Shell runs console commands in this repo.
 	Shell command.Shell
 
@@ -211,7 +208,6 @@ func (repo *GitRepo) CreateChildFeatureBranch(name string, parent string) error 
 
 // CreateCommit creates a commit with the given properties in this Git repo.
 func (repo *GitRepo) CreateCommit(commit Commit) error {
-	repo.originalCommits = append(repo.originalCommits, commit)
 	err := repo.CheckoutBranch(commit.Branch)
 	if err != nil {
 		return fmt.Errorf("cannot checkout branch %q: %w", commit.Branch, err)
@@ -471,11 +467,6 @@ func (repo *GitRepo) PushBranch(name string) error {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, repo.Dir, err, outcome)
 	}
 	return nil
-}
-
-// RegisterOriginalCommit tracks the given commit as existing in this repo before the system under test executed.
-func (repo *GitRepo) RegisterOriginalCommit(commit Commit) {
-	repo.originalCommits = append(repo.originalCommits, commit)
 }
 
 // Remotes provides the names of all Git remotes in this repository.

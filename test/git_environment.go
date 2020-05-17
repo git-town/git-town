@@ -176,9 +176,6 @@ func (env *GitEnvironment) CreateCommits(commits []Commit) error {
 				if err != nil {
 					return fmt.Errorf("cannot push branch %q after creating commit: %w", commit.Branch, err)
 				}
-				// The developer repo has created and pushed the commit to origin already,
-				// so all we need to do here is register the commit in the list of existing commits in origin.
-				env.OriginRepo.RegisterOriginalCommit(commit)
 			case "remote":
 				err = env.OriginRepo.CreateCommit(commit)
 			case "upstream":
