@@ -26,6 +26,11 @@ func SuiteSteps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(scenario), err)
 		}
+		// Godog only provides state for the entire feature.
+		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
+		// This is a limitation of the current Godog implementation, which doesn't have a `ScenarioContext` method,
+		// only a `FeatureContext` method.
+		// See main_test.go for additional details.
 		state.Reset(gitEnvironment)
 		if hasTag(scenario, "@debug") {
 			test.Debug = true
