@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"os"
 	"runtime"
 	"testing"
 
@@ -41,14 +40,16 @@ func FeatureContext(suite *godog.Suite) {
 	steps.CoworkerSteps(suite, state)
 }
 
-func TestMain(m *testing.M) {
+func TestGodog(t *testing.T) {
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
-		Paths:       []string{"features/environment.feature"},
+		Paths:       []string{"features/"},
 	})
-	os.Exit(status)
+	if status > 0 {
+		t.FailNow()
+	}
 }

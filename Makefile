@@ -15,6 +15,11 @@ cross-compile:  # builds the binary for all platforms
 cuke: build   # runs the new Godog-based feature tests
 	go test
 
+cuke-prof: build  # creates a flamegraph
+	go test . -v -cpuprofile=godog.out
+	@rm git-town.test
+	@echo Please open https://www.speedscope.app and load the file godog.out
+
 deploy:  # deploys the website
 	git checkout gh-pages
 	git pull
