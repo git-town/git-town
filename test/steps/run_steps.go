@@ -16,34 +16,34 @@ import (
 // nolint:funlen
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "(.+)"$`, func(command string) error {
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunString(command)
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		fs.activeScenarioState.lastRunResult, fs.activeScenarioState.lastRunErr = fs.activeScenarioState.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
+		fs.state.lastRunResult, fs.state.lastRunErr = fs.state.gitEnvironment.DeveloperShell.RunStringWith(cmd, command.Options{Dir: folderName})
 		return nil
 	})
 
@@ -51,7 +51,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)
-		have := fs.activeScenarioState.lastRunResult.OutputSanitized()
+		have := fs.state.lastRunResult.OutputSanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
@@ -59,7 +59,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
+		commands := test.GitCommandsInGitTownOutput(fs.state.lastRunResult.Output())
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -70,13 +70,13 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := test.GitCommandsInGitTownOutput(fs.activeScenarioState.lastRunResult.Output())
+		commands := test.GitCommandsInGitTownOutput(fs.state.lastRunResult.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
 		expanded := dataTable.Expand(
-			fs.activeScenarioState.gitEnvironment.DeveloperRepo.Dir,
-			&fs.activeScenarioState.gitEnvironment.DeveloperRepo,
-			fs.activeScenarioState.gitEnvironment.OriginRepo,
+			fs.state.gitEnvironment.DeveloperRepo.Dir,
+			&fs.state.gitEnvironment.DeveloperRepo,
+			fs.state.gitEnvironment.OriginRepo,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {
