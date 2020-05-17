@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"os"
 	"runtime"
 	"testing"
 
@@ -11,7 +10,12 @@ import (
 
 // nolint:deadcode,unused
 func FeatureContext(suite *godog.Suite) {
-	state := &steps.FeatureState{}
+	// The current Godog implementation only provides a FeatureContext,
+	// no SuiteContext nor ScenarioContext.
+	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
+	// and register the steps here.
+	// It is initialized in SuiteSteps.BeforeScenario.
+	state := &steps.ScenarioState{}
 	steps.SuiteSteps(suite, state)
 	steps.AutocompletionSteps(suite, state)
 	steps.BranchSteps(suite, state)
@@ -36,7 +40,7 @@ func FeatureContext(suite *godog.Suite) {
 	steps.CoworkerSteps(suite, state)
 }
 
-func TestMain(m *testing.M) {
+func TestGodog(t *testing.T) {
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
@@ -45,5 +49,7 @@ func TestMain(m *testing.M) {
 		Strict:      true,
 		Paths:       []string{"features/"},
 	})
-	os.Exit(status)
+	if status > 0 {
+		t.FailNow()
+	}
 }

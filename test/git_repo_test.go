@@ -15,7 +15,7 @@ func TestCloneGitRepository(t *testing.T) {
 	_, err := InitGitRepository(originPath, rootDir, "")
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := filepath.Join(rootDir, "cloned")
-	_, err = CloneGitRepository(originPath, clonedPath, rootDir, "")
+	_, err = CloneGitRepo(originPath, clonedPath, rootDir, "")
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
 }
@@ -302,7 +302,7 @@ func TestGitRepository_FilesInCommit(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
@@ -324,7 +324,7 @@ func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
@@ -344,7 +344,7 @@ func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_branchBehind(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
@@ -416,16 +416,6 @@ func TestGitRepository_PushBranch(t *testing.T) {
 	branches, err := origin.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
-}
-
-func TestGitRepository_RegisterOriginalCommit(t *testing.T) {
-	repo := createTestRepo(t)
-	assert.Len(t, repo.originalCommits, 0)
-	repo.RegisterOriginalCommit(Commit{
-		FileName: "file",
-	})
-	assert.Len(t, repo.originalCommits, 1)
-	assert.Equal(t, "file", repo.originalCommits[0].FileName)
 }
 
 func TestGitRepository_Remotes(t *testing.T) {
@@ -534,7 +524,7 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 // HELPERS
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
-func createTestRepo(t *testing.T) GitRepository {
+func createTestRepo(t *testing.T) GitRepo {
 	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize Git repow")
@@ -545,7 +535,7 @@ func createTestRepo(t *testing.T) GitRepository {
 	return repo
 }
 
-func createTestGitTownRepo(t *testing.T) GitRepository {
+func createTestGitTownRepo(t *testing.T) GitRepo {
 	repo := createTestRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.Nil(t, err)

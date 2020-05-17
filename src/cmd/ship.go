@@ -39,14 +39,19 @@ into the main branch, resulting in linear history on the main branch.
 - pushes the main branch to the remote repository
 - deletes <branch_name> from the local and remote repositories
 
-Ships only direct children of the main branch.
-To ship a nested child branch, all ancestor branches must be shipped or killed first.
+Ships direct children of the main branch.
+To ship a nested child branch, ship or kill all ancestor branches first.
 
-If you are using GitHub, this command can squash merge pull requests via the GitHub API. Setup:
+If you use GitHub, this command can squash merge pull requests via the GitHub API. Setup:
 1. Get a GitHub personal access token with the "repo" scope
 2. Run 'git config git-town.github-token XXX' (optionally add the '--global' flag)
 Now anytime you ship a branch with a pull request on GitHub, it will squash merge via the GitHub API.
-It will also update the base branch for any pull requests against that branch.`,
+It will also update the base branch for any pull requests against that branch.
+
+If your origin server deletes shipped branches, for example
+GitHub's feature to automatically delete head branches,
+run "git config git-town.ship-delete-remote-branch false"
+and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := gitShipConfig(args)
 		if err != nil {
@@ -141,7 +146,9 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		if git.Config().ShouldShipDeleteRemoteBranch() {
+			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
+		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})

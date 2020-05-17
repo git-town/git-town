@@ -11,17 +11,17 @@ import (
 
 // AutocompletionSteps defines Cucumber step implementations around Git branches.
 // nolint:funlen
-func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
+func AutocompletionSteps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I have an empty fish autocompletion folder$`, func() error {
-		return os.MkdirAll(fishFolderPath(fs), 0744)
+		return os.MkdirAll(fishFolderPath(state), 0744)
 	})
 
 	suite.Step(`^I have an existing Git autocompletion file$`, func() error {
-		err := os.MkdirAll(fishFolderPath(fs), 0744)
+		err := os.MkdirAll(fishFolderPath(state), 0744)
 		if err != nil {
 			return fmt.Errorf("cannot create fish folder: %w", err)
 		}
-		return ioutil.WriteFile(fishFilePath(fs), []byte("existing content"), 0744)
+		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0744)
 	})
 
 	suite.Step(`^I have no fish autocompletion file$`, func() error {
@@ -30,7 +30,7 @@ func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I now have a Git autocompletion file$`, func() error {
-		fishPath := filepath.Join(fs.activeScenarioState.gitEnvironment.Dir, ".config", "fish", "completions", "git.fish")
+		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
 		_, err := os.Stat(fishPath)
 		if os.IsNotExist(err) {
 			return err
@@ -38,7 +38,7 @@ func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
 		return nil
 	})
 	suite.Step(`^I still have my original Git autocompletion file$`, func() error {
-		content, err := ioutil.ReadFile(fishFilePath(fs))
+		content, err := ioutil.ReadFile(fishFilePath(state))
 		if err != nil {
 			return err
 		}
@@ -50,10 +50,10 @@ func AutocompletionSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 }
 
-func fishFolderPath(fs *FeatureState) string {
-	return filepath.Join(fs.activeScenarioState.gitEnvironment.Dir, ".config", "fish", "completions")
+func fishFolderPath(state *ScenarioState) string {
+	return filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions")
 }
 
-func fishFilePath(fs *FeatureState) string {
-	return filepath.Join(fishFolderPath(fs), "git.fish")
+func fishFilePath(state *ScenarioState) string {
+	return filepath.Join(fishFolderPath(state), "git.fish")
 }

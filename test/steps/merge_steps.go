@@ -7,9 +7,9 @@ import (
 )
 
 // Merge defines Gherkin step implementations around merges.
-func MergeSteps(suite *godog.Suite, fs *FeatureState) {
+func MergeSteps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo (?:now|still) has a merge in progress$`, func() error {
-		hasMerge, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
+		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err
 		}
@@ -20,7 +20,7 @@ func MergeSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^there is no merge in progress$`, func() error {
-		hasMerge, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasMergeInProgress()
+		hasMerge, err := state.gitEnv.DevRepo.HasMergeInProgress()
 		if err != nil {
 			return err
 		}

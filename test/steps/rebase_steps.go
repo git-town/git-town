@@ -7,9 +7,9 @@ import (
 )
 
 // RebaseSteps defines Gherkin step implementations around rebases.
-func RebaseSteps(suite *godog.Suite, fs *FeatureState) {
+func RebaseSteps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo (?:now|still) has a rebase in progress$`, func() error {
-		hasRebase, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasRebaseInProgress()
+		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err
 		}
@@ -20,7 +20,7 @@ func RebaseSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^there is no rebase in progress$`, func() error {
-		hasRebase, err := fs.activeScenarioState.gitEnvironment.DeveloperRepo.HasRebaseInProgress()
+		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
 		if err != nil {
 			return err
 		}

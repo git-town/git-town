@@ -36,9 +36,9 @@ When run on the main branch or a perennial branch
 - pulls and pushes updates for the current branch
 - pushes tags
 
-Additionally, when there is a remote upstream,
-the main branch is synced with its upstream counterpart.
-This can be disabled with "git config git-town.sync-upstream false".`,
+If the repository contains an "upstream" remote,
+syncs the main branch with its upstream counterpart.
+You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getSyncConfig()
 		if err != nil {

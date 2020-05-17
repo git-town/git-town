@@ -8,13 +8,13 @@ import (
 )
 
 // TagSteps defines Gherkin step implementations around merges.
-func TagSteps(suite *godog.Suite, fs *FeatureState) {
+func TagSteps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^my repo has the following tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		return fs.activeScenarioState.gitEnvironment.CreateTags(table)
+		return state.gitEnv.CreateTags(table)
 	})
 
 	suite.Step(`^my repo now has the following tags$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		tagTable, err := fs.activeScenarioState.gitEnvironment.TagTable()
+		tagTable, err := state.gitEnv.TagTable()
 		if err != nil {
 			return err
 		}
@@ -28,6 +28,6 @@ func TagSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repo has a remote tag "([^"]+)" that is not on a branch$`, func(name string) error {
-		return fs.activeScenarioState.gitEnvironment.OriginRepo.CreateStandaloneTag(name)
+		return state.gitEnv.OriginRepo.CreateStandaloneTag(name)
 	})
 }

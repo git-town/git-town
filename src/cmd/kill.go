@@ -23,9 +23,7 @@ var killCommand = &cobra.Command{
 	Short: "Removes an obsolete feature branch",
 	Long: `Removes an obsolete feature branch
 
-Deletes the current branch, or the given one if a branch name is provided,
-from the local and remote repositories.
-
+Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := getKillConfig(args)
