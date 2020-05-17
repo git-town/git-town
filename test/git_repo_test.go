@@ -534,7 +534,7 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 // HELPERS
 
 // createTestGitRepo creates a fully initialized Git repo including a master branch.
-func createTestRepo(t *testing.T) GitRepository {
+func createTestRepo(t *testing.T) GitRepo {
 	dir := createTempDir(t)
 	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize Git repow")
@@ -545,7 +545,7 @@ func createTestRepo(t *testing.T) GitRepository {
 	return repo
 }
 
-func createTestGitTownRepo(t *testing.T) GitRepository {
+func createTestGitTownRepo(t *testing.T) GitRepo {
 	repo := createTestRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.Nil(t, err)

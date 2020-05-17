@@ -18,19 +18,19 @@ type GitEnvironment struct {
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
 	// If this value is nil, the current test setup has no remote.
-	OriginRepo *GitRepository
+	OriginRepo *GitRepo
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo GitRepository
+	DevRepo GitRepo
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DevShell *MockingShell
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *GitRepository
+	CoworkerRepo *GitRepo
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *GitRepository
+	UpstreamRepo *GitRepo
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -285,7 +285,7 @@ func (env GitEnvironment) TagTable() (result DataTable, err error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *GitRepository) error {
+func (env GitEnvironment) initializeWorkspace(repo *GitRepo) error {
 	return repo.Shell.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
