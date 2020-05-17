@@ -11,7 +11,12 @@ import (
 
 // nolint:deadcode,unused
 func FeatureContext(suite *godog.Suite) {
-	state := &steps.FeatureState{}
+	// The current Godog implementation only provides a FeatureContext,
+	// no SuiteContext nor ScenarioContext.
+	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
+	// and register the steps here.
+	// It is initialized in SuiteSteps.BeforeScenario.
+	state := &steps.ScenarioState{}
 	steps.SuiteSteps(suite, state)
 	steps.AutocompletionSteps(suite, state)
 	steps.BranchSteps(suite, state)

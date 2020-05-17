@@ -6,8 +6,8 @@ import (
 	"github.com/git-town/git-town/test"
 )
 
-// scenarioState constains the state that is shared by all steps within a scenario.
-type scenarioState struct {
+// ScenarioState constains the state that is shared by all steps within a scenario.
+type ScenarioState struct {
 	// the GitEnvironment used in the current scenario
 	gitEnv *test.GitEnvironment
 
@@ -25,4 +25,14 @@ type scenarioState struct {
 
 	// content of the uncommitted file in the workspace
 	uncommittedContent string
+}
+
+// Reset resets this FeatureState to its null values and assigns the given values.
+func (state *ScenarioState) Reset(gitEnv *test.GitEnvironment) {
+	state.gitEnv = gitEnv
+	state.initialCommits = nil
+	state.runRes = nil
+	state.runErr = nil
+	state.uncommittedFileName = ""
+	state.uncommittedContent = ""
 }
