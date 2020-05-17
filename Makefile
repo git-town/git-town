@@ -13,11 +13,11 @@ cross-compile:  # builds the binary for all platforms
 			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: build   # runs the new Godog-based feature tests
-	go test
+	@go test ./features -v -count=1
 
 cuke-prof: build  # creates a flamegraph
-	go test . -v -cpuprofile=godog.out
-	@rm git-town.test
+	go test ./features -v -cpuprofile=godog.out
+	@rm features.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
 deploy:  # deploys the website

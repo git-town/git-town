@@ -1,4 +1,4 @@
-package main_test
+package features
 
 import (
 	"runtime"
@@ -47,7 +47,7 @@ func TestGodog(t *testing.T) {
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
-		Paths:       []string{"features/"},
+		Paths:       []string{"./"},
 	})
 	if status > 0 {
 		t.FailNow()
