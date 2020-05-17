@@ -18,7 +18,7 @@ func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
 	assertIsNormalGitRepo(t, filepath.Join(dir, "cloned", "developer"))
 	assertHasGitBranch(t, filepath.Join(dir, "cloned", "developer"), "main")
 	// check pushing
-	err = cloned.DeveloperRepo.PushBranch("main")
+	err = cloned.DevRepo.PushBranch("main")
 	assert.Nil(t, err)
 }
 
@@ -34,7 +34,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 	// verify the developer repo
 	assertIsNormalGitRepo(t, filepath.Join(gitEnvRootDir, "developer"))
 	assertHasGlobalGitConfiguration(t, gitEnvRootDir)
-	branch, err = result.DeveloperRepo.CurrentBranch()
+	branch, err = result.DevRepo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "main", branch)
 }
@@ -47,9 +47,9 @@ func TestGitEnvironment_Branches(t *testing.T) {
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.Nil(t, err)
 	// create the branches
-	err = cloned.DeveloperRepo.CreateBranch("d1", "main")
+	err = cloned.DevRepo.CreateBranch("d1", "main")
 	assert.Nil(t, err)
-	err = cloned.DeveloperRepo.CreateBranch("d2", "main")
+	err = cloned.DevRepo.CreateBranch("d2", "main")
 	assert.Nil(t, err)
 	err = cloned.OriginRepo.CreateBranch("o1", "master")
 	assert.Nil(t, err)
@@ -96,7 +96,7 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	// verify local commits
-	commits, err := cloned.DeveloperRepo.Commits([]string{"FILE NAME", "FILE CONTENT"})
+	commits, err := cloned.DevRepo.Commits([]string{"FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
 	assert.Len(t, commits, 2)
 	assert.Equal(t, "local commit", commits[0].Message)
@@ -136,7 +136,7 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Contains(t, branches, "b1")
 	// verify it isn't in the local branches
-	branches, err = cloned.DeveloperRepo.Branches()
+	branches, err = cloned.DevRepo.Branches()
 	assert.Nil(t, err)
 	assert.NotContains(t, branches, "b1")
 }
@@ -149,14 +149,14 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.Nil(t, err)
 	// create a few commits
-	err = cloned.DeveloperRepo.CreateCommit(Commit{
+	err = cloned.DevRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "local-remote.md",
 		FileContent: "one",
 		Message:     "local-remote",
 	})
 	assert.Nil(t, err)
-	err = cloned.DeveloperRepo.PushBranch("main")
+	err = cloned.DevRepo.PushBranch("main")
 	assert.Nil(t, err)
 	err = cloned.OriginRepo.CreateCommit(Commit{
 		Branch:      "main",
@@ -187,7 +187,7 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	err = cloned.AddUpstream()
 	assert.Nil(t, err)
 	// create a few commits
-	err = cloned.DeveloperRepo.CreateCommit(Commit{
+	err = cloned.DevRepo.CreateCommit(Commit{
 		Branch:      "main",
 		FileName:    "local.md",
 		FileContent: "one",

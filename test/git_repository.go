@@ -33,9 +33,9 @@ type GitRepository struct {
 	configCache *git.Configuration
 }
 
-// CloneGitRepository clones a Git repo in originDir into a new GitRepository in workingDir.
+// CloneGitRepo clones a Git repo in originDir into a new GitRepository in workingDir.
 // The cloning operation is using the given homeDir as the $HOME.
-func CloneGitRepository(originDir, targetDir, homeDir, binDir string) (GitRepository, error) {
+func CloneGitRepo(originDir, targetDir, homeDir, binDir string) (GitRepository, error) {
 	res, err := command.Run("git", "clone", originDir, targetDir)
 	if err != nil {
 		return GitRepository{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())

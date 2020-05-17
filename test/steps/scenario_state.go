@@ -12,13 +12,13 @@ type scenarioState struct {
 	gitEnv *test.GitEnvironment
 
 	// the error of the last run of Git Town
-	lastRunErr error
+	runErr error
 
 	// the outcome of the last run of Git Town
-	lastRunResult *command.Result
+	runRes *command.Result
 
-	// originalCommitTable describes the commits in this Git environment before the WHEN steps ran.
-	originalCommitTable *messages.PickleStepArgument_PickleTable
+	// initialCommits describes the commits in this Git environment before the WHEN steps ran.
+	initialCommits *messages.PickleStepArgument_PickleTable
 
 	// name of the uncommitted file in the workspace
 	uncommittedFileName string

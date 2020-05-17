@@ -15,7 +15,7 @@ func TestCloneGitRepository(t *testing.T) {
 	_, err := InitGitRepository(originPath, rootDir, "")
 	assert.Nil(t, err, "cannot initialze origin Git repository")
 	clonedPath := filepath.Join(rootDir, "cloned")
-	_, err = CloneGitRepository(originPath, clonedPath, rootDir, "")
+	_, err = CloneGitRepo(originPath, clonedPath, rootDir, "")
 	assert.Nil(t, err, "cannot clone repo")
 	assertIsNormalGitRepo(t, clonedPath)
 }
@@ -302,7 +302,7 @@ func TestGitRepository_FilesInCommit(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
@@ -324,7 +324,7 @@ func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
@@ -344,7 +344,7 @@ func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 func TestGitRepository_HasBranchesOutOfSync_branchBehind(t *testing.T) {
 	repo1 := createTestRepo(t)
 	dir2 := createTempDir(t)
-	repo2, err := CloneGitRepository(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
 	err = repo2.CreateBranch("branch1", "master")
 	assert.Nil(t, err)

@@ -12,7 +12,7 @@ import (
 // CommitSteps defines Cucumber step implementations around configuration.
 func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my repository is left with my original commits$`, func() error {
-		return compareExistingCommits(fs, fs.state.originalCommitTable)
+		return compareExistingCommits(fs, fs.state.initialCommits)
 	})
 
 	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
@@ -20,7 +20,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the following commits exist in my repository$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fs.state.originalCommitTable = table
+		fs.state.initialCommits = table
 		commits, err := test.FromGherkinTable(table)
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)

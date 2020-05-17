@@ -11,6 +11,6 @@ func RepoSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^my repository knows about the remote branch$`, func() error {
-		return fs.state.gitEnv.DeveloperRepo.Fetch()
+		return fs.state.gitEnv.DevRepo.Fetch()
 	})
 }
