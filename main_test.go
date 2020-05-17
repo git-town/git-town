@@ -47,7 +47,7 @@ func TestGodog(t *testing.T) {
 		Format:      "progress",
 		Concurrency: runtime.NumCPU(),
 		Strict:      true,
-		Paths:       []string{"./"},
+		Paths:       []string{"features/"},
 	})
 	if status > 0 {
 		t.FailNow()
