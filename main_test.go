@@ -2,6 +2,7 @@ package main_test
 
 import (
 	"runtime"
+	"runtime/debug"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -41,6 +42,7 @@ func FeatureContext(suite *godog.Suite) {
 }
 
 func TestGodog(t *testing.T) {
+	debug.SetGCPercent(-1)
 	status := godog.RunWithOptions("godog", func(s *godog.Suite) {
 		FeatureContext(s)
 	}, godog.Options{
