@@ -22,9 +22,9 @@ var gitManager *test.GitManager
 func SuiteSteps(suite *godog.Suite, state *ScenarioState) {
 	suite.BeforeScenario(func(scenario *messages.Pickle) {
 		// create a GitEnvironment for the scenario
-		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenarioName(scenario))
+		gitEnvironment, err := gitManager.CreateScenarioEnvironment(scenario.GetName())
 		if err != nil {
-			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(scenario), err)
+			log.Fatalf("cannot create environment for scenario %q: %s", scenario.GetName(), err)
 		}
 		// Godog only provides state for the entire feature.
 		// We want state to be scenario-specific, hence we reset the shared state before each scenario.
@@ -63,7 +63,7 @@ func SuiteSteps(suite *godog.Suite, state *ScenarioState) {
 		if e == nil {
 			err := state.gitEnv.Remove()
 			if err != nil {
-				log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(scenario), err)
+				log.Fatalf("error removing the Git environment after scenario %q: %v", scenario.GetName(), err)
 			}
 		} else {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
@@ -79,9 +79,4 @@ func hasTag(scenario *messages.Pickle, name string) bool {
 		}
 	}
 	return false
-}
-
-// scenarioName returns the name of the given Scenario or ScenarioOutline
-func scenarioName(args *messages.Pickle) string {
-	return args.GetName()
 }
