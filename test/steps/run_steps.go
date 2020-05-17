@@ -16,34 +16,34 @@ import (
 // nolint:funlen
 func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^I run "(.+)"$`, func(command string) error {
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunString(command)
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunString(command)
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" and answer the prompts:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunStringWith(cmd, command.Options{Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)", answer the prompts, and close the next editor:$`, func(cmd string, input *messages.PickleStepArgument_PickleTable) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunStringWith(cmd, command.Options{Env: env, Input: tableToInput(input)})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and close the editor$`, func(cmd string) error {
 		env := append(os.Environ(), "GIT_EDITOR=true")
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Env: env})
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunStringWith(cmd, command.Options{Env: env})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]*)" and enter an empty commit message$`, func(cmd string) error {
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunStringWith(cmd, command.Options{Input: []string{"dGZZ"}})
 		return nil
 	})
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
-		fs.state.runRes, fs.state.runErr = fs.state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Dir: folderName})
+		fs.runRes, fs.runErr = fs.gitEnv.DevShell.RunStringWith(cmd, command.Options{Dir: folderName})
 		return nil
 	})
 
@@ -51,7 +51,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 		want := fmt.Sprintf("%s called with: %s", tool, url.Content)
 		want = strings.ReplaceAll(want, "?", `\?`)
 		regex := regexp.MustCompile(want)
-		have := fs.state.runRes.OutputSanitized()
+		have := fs.runRes.OutputSanitized()
 		if !regex.MatchString(have) {
 			return fmt.Errorf("EXPECTED: a regex matching %q\nGOT: %q", want, have)
 		}
@@ -59,7 +59,7 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^it runs no commands$`, func() error {
-		commands := test.GitCommandsInGitTownOutput(fs.state.runRes.Output())
+		commands := test.GitCommandsInGitTownOutput(fs.runRes.Output())
 		if len(commands) > 0 {
 			for _, command := range commands {
 				fmt.Println(command)
@@ -70,13 +70,13 @@ func RunSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^it runs the commands$`, func(input *messages.PickleStepArgument_PickleTable) error {
-		commands := test.GitCommandsInGitTownOutput(fs.state.runRes.Output())
+		commands := test.GitCommandsInGitTownOutput(fs.runRes.Output())
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
 		expanded := dataTable.Expand(
-			fs.state.gitEnv.DevRepo.Dir,
-			&fs.state.gitEnv.DevRepo,
-			fs.state.gitEnv.OriginRepo,
+			fs.gitEnv.DevRepo.Dir,
+			&fs.gitEnv.DevRepo,
+			fs.gitEnv.OriginRepo,
 		)
 		diff, errorCount := table.EqualDataTable(expanded)
 		if errorCount != 0 {

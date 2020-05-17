@@ -12,7 +12,7 @@ import (
 // CommitSteps defines Cucumber step implementations around configuration.
 func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my repository is left with my original commits$`, func() error {
-		return compareExistingCommits(fs, fs.state.initialCommits)
+		return compareExistingCommits(fs, fs.initialCommits)
 	})
 
 	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
@@ -20,12 +20,12 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the following commits exist in my repository$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		fs.state.initialCommits = table
+		fs.initialCommits = table
 		commits, err := test.FromGherkinTable(table)
 		if err != nil {
 			return fmt.Errorf("cannot parse Gherkin table: %w", err)
 		}
-		return fs.state.gitEnv.CreateCommits(commits)
+		return fs.gitEnv.CreateCommits(commits)
 	})
 }
 
@@ -33,7 +33,7 @@ func CommitSteps(suite *godog.Suite, fs *FeatureState) {
 // against the given Gherkin table.
 func compareExistingCommits(fs *FeatureState, table *messages.PickleStepArgument_PickleTable) error {
 	fields := helpers.TableFields(table)
-	commitTable, err := fs.state.gitEnv.CommitTable(fields)
+	commitTable, err := fs.gitEnv.CommitTable(fields)
 	if err != nil {
 		return fmt.Errorf("cannot determine commits in the developer repo: %w", err)
 	}

@@ -26,7 +26,8 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(scenario), err)
 		}
-		fs.state = scenarioState{gitEnv: gitEnvironment}
+		fs.gitEnv = gitEnvironment
+		// TODO: reset FS here
 		if hasTag(scenario, "@debug") {
 			test.Debug = true
 		}
@@ -56,12 +57,12 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
 		if e == nil {
-			err := fs.state.gitEnv.Remove()
+			err := fs.gitEnv.Remove()
 			if err != nil {
 				log.Fatalf("error removing the Git environment after scenario %q: %v", scenarioName(scenario), err)
 			}
 		} else {
-			fmt.Printf("failed scenario, investigate state in %q\n", fs.state.gitEnv.Dir)
+			fmt.Printf("failed scenario, investigate state in %q\n", fs.gitEnv.Dir)
 		}
 	})
 }

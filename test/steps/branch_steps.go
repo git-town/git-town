@@ -12,7 +12,7 @@ import (
 // nolint:funlen,gocognit
 func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^all branches are now synchronized$`, func() error {
-		outOfSync, err := fs.state.gitEnv.DevRepo.HasBranchesOutOfSync()
+		outOfSync, err := fs.gitEnv.DevRepo.HasBranchesOutOfSync()
 		if err != nil {
 			return err
 		}
@@ -27,7 +27,7 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {
 			branch := row.Cells[0].Value
-			parentBranch := fs.state.gitEnv.DevRepo.Configuration(true).GetParentBranch(branch)
+			parentBranch := fs.gitEnv.DevRepo.Configuration(true).GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
 		diff, errCount := table.EqualGherkin(input)
@@ -40,14 +40,14 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
-		if fs.state.gitEnv.DevRepo.Configuration(true).HasBranchInformation() {
+		if fs.gitEnv.DevRepo.Configuration(true).HasBranchInformation() {
 			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
 	})
 
 	suite.Step(`^I am on the "([^"]*)" branch$`, func(branchName string) error {
-		err := fs.state.gitEnv.DevRepo.CheckoutBranch(branchName)
+		err := fs.gitEnv.DevRepo.CheckoutBranch(branchName)
 		if err != nil {
 			return fmt.Errorf("cannot change to branch %q: %w", branchName, err)
 		}
@@ -55,15 +55,15 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
-		err := fs.state.gitEnv.DevRepo.CheckoutBranch(previous)
+		err := fs.gitEnv.DevRepo.CheckoutBranch(previous)
 		if err != nil {
 			return err
 		}
-		return fs.state.gitEnv.DevRepo.CheckoutBranch(current)
+		return fs.gitEnv.DevRepo.CheckoutBranch(current)
 	})
 
 	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
-		actual, err := fs.state.gitEnv.DevRepo.CurrentBranch()
+		actual, err := fs.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
 			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
@@ -74,115 +74,115 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^I don't have a main branch name configured$`, func() error {
-		return fs.state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
+		return fs.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
 	suite.Step(`^my code base has a feature branch named "([^"]*)"$`, func(name string) error {
-		err := fs.state.gitEnv.DevRepo.CreateFeatureBranch(name)
+		err := fs.gitEnv.DevRepo.CreateFeatureBranch(name)
 		if err != nil {
 			return err
 		}
-		return fs.state.gitEnv.DevRepo.PushBranch(name)
+		return fs.gitEnv.DevRepo.PushBranch(name)
 	})
 
 	suite.Step(`^my code base has a feature branch named "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
-		err := fs.state.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parent)
+		err := fs.gitEnv.DevRepo.CreateChildFeatureBranch(branch, parent)
 		if err != nil {
 			return err
 		}
-		return fs.state.gitEnv.DevRepo.PushBranch(branch)
+		return fs.gitEnv.DevRepo.PushBranch(branch)
 	})
 
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
-		return fs.state.gitEnv.OriginRepo.CreateBranch(branch, "main")
+		return fs.gitEnv.OriginRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repository has a branch "([^"]*)"$`, func(branch string) error {
-		return fs.state.gitEnv.DevRepo.CreateBranch(branch, "main")
+		return fs.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
 	suite.Step(`^my repository has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
-		err := fs.state.gitEnv.DevRepo.CreateFeatureBranch(branch)
+		err := fs.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {
 			return err
 		}
 		if !isLocal {
-			return fs.state.gitEnv.DevRepo.PushBranch(branch)
+			return fs.gitEnv.DevRepo.PushBranch(branch)
 		}
 		return nil
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
-		return fs.state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
+		return fs.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
 	})
 
 	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
-		err := fs.state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
+		err := fs.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
-		return fs.state.gitEnv.DevRepo.PushBranch(childBranch)
+		return fs.gitEnv.DevRepo.PushBranch(childBranch)
 	})
 
 	suite.Step(`^my repository has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		err := fs.state.gitEnv.DevRepo.CreateBranch(branch1, "main")
+		err := fs.gitEnv.DevRepo.CreateBranch(branch1, "main")
 		if err != nil {
 			return err
 		}
-		return fs.state.gitEnv.DevRepo.CreateBranch(branch2, "main")
+		return fs.gitEnv.DevRepo.CreateBranch(branch2, "main")
 	})
 
 	suite.Step(`^my repository has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := fs.state.gitEnv.DevRepo.CreateFeatureBranch(branch1)
+		err := fs.gitEnv.DevRepo.CreateFeatureBranch(branch1)
 		if err != nil {
 			return err
 		}
-		err = fs.state.gitEnv.DevRepo.CreateFeatureBranch(branch2)
+		err = fs.gitEnv.DevRepo.CreateFeatureBranch(branch2)
 		if err != nil {
 			return err
 		}
 		if !isLocal {
-			err = fs.state.gitEnv.DevRepo.PushBranch(branch1)
+			err = fs.gitEnv.DevRepo.PushBranch(branch1)
 			if err != nil {
 				return err
 			}
-			return fs.state.gitEnv.DevRepo.PushBranch(branch2)
+			return fs.gitEnv.DevRepo.PushBranch(branch2)
 		}
 		return nil
 	})
 
 	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
-		err := fs.state.gitEnv.DevRepo.CreatePerennialBranches(branch1)
+		err := fs.gitEnv.DevRepo.CreatePerennialBranches(branch1)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
-		return fs.state.gitEnv.DevRepo.PushBranch(branch1)
+		return fs.gitEnv.DevRepo.PushBranch(branch1)
 	})
 
 	suite.Step(`^my repository has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
-		err := fs.state.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
+		err := fs.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
 		if !isLocal {
-			err = fs.state.gitEnv.DevRepo.PushBranch(branch1)
+			err = fs.gitEnv.DevRepo.PushBranch(branch1)
 			if err != nil {
 				return err
 			}
-			return fs.state.gitEnv.DevRepo.PushBranch(branch2)
+			return fs.gitEnv.DevRepo.PushBranch(branch2)
 		}
 		return nil
 	})
 
 	suite.Step(`^the "([^"]*)" branch gets deleted on the remote$`, func(name string) error {
-		return fs.state.gitEnv.OriginRepo.RemoveBranch(name)
+		return fs.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
 	suite.Step(`^the existing branches are$`, func(table *messages.PickleStepArgument_PickleTable) error {
-		existing, err := fs.state.gitEnv.Branches()
+		existing, err := fs.gitEnv.Branches()
 		if err != nil {
 			return err
 		}
@@ -199,21 +199,21 @@ func BranchSteps(suite *godog.Suite, fs *FeatureState) {
 	})
 
 	suite.Step(`^the previous Git branch is (?:now|still) "([^"]*)"$`, func(want string) error {
-		err := fs.state.gitEnv.DevRepo.CheckoutBranch("-")
+		err := fs.gitEnv.DevRepo.CheckoutBranch("-")
 		if err != nil {
 			return err
 		}
-		have, err := fs.state.gitEnv.DevRepo.CurrentBranch()
+		have, err := fs.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
 			return err
 		}
 		if have != want {
 			return fmt.Errorf("expected previous branch %q but got %q", want, have)
 		}
-		return fs.state.gitEnv.DevRepo.CheckoutBranch("-")
+		return fs.gitEnv.DevRepo.CheckoutBranch("-")
 	})
 
 	suite.Step(`^the remote deletes the "([^"]*)" branch$`, func(name string) error {
-		return fs.state.gitEnv.OriginRepo.RemoveBranch(name)
+		return fs.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 }

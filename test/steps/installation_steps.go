@@ -7,19 +7,19 @@ import (
 // InstallationSteps defines Cucumber step implementations around installation of Git Town.
 func InstallationSteps(suite *godog.Suite, fs *FeatureState) {
 	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
-		return fs.state.gitEnv.DevShell.MockBrokenCommand(name)
+		return fs.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
 	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {
-		return fs.state.gitEnv.DevShell.MockNoCommandsInstalled()
+		return fs.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
 	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
-		return fs.state.gitEnv.DevShell.MockCommand(tool)
+		return fs.gitEnv.DevShell.MockCommand(tool)
 	})
 
 	suite.Step(`^I have Git "([^"]*)" installed$`, func(version string) error {
-		err := fs.state.gitEnv.DevShell.MockGit(version)
+		err := fs.gitEnv.DevShell.MockGit(version)
 		return err
 	})
 }
