@@ -26,3 +26,13 @@ type FeatureState struct {
 	// content of the uncommitted file in the workspace
 	uncommittedContent string
 }
+
+// Reset resets this FeatureState to its null values and assigns the given values.
+func (fs *FeatureState) Reset(gitEnv *test.GitEnvironment) {
+	fs.gitEnv = gitEnv
+	fs.initialCommits = nil
+	fs.runRes = nil
+	fs.runErr = nil
+	fs.uncommittedFileName = ""
+	fs.uncommittedContent = ""
+}

@@ -26,8 +26,7 @@ func SuiteSteps(suite *godog.Suite, fs *FeatureState) {
 		if err != nil {
 			log.Fatalf("cannot create environment for scenario %q: %s", scenarioName(scenario), err)
 		}
-		fs.gitEnv = gitEnvironment
-		// TODO: reset FS here
+		fs.Reset(gitEnvironment)
 		if hasTag(scenario, "@debug") {
 			test.Debug = true
 		}
