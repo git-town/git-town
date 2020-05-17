@@ -1,4 +1,4 @@
-package features
+package main_test
 
 import (
 	"runtime"
