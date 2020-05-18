@@ -54,7 +54,7 @@ func CreateTestRepo(t *testing.T) GitRepo {
 	return repo
 }
 
-// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and 
+// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
 // initial git town configuration
 func CreateTestGitTownRepo(t *testing.T) GitRepo {
 	repo := CreateTestRepo(t)
