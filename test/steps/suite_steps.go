@@ -60,12 +60,7 @@ func SuiteSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.AfterScenario(func(scenario *messages.Pickle, e error) {
-		if e == nil {
-			err := state.gitEnv.Remove()
-			if err != nil {
-				log.Fatalf("error removing the Git environment after scenario %q: %v", scenario.GetName(), err)
-			}
-		} else {
+		if e != nil {
 			fmt.Printf("failed scenario, investigate state in %q\n", state.gitEnv.Dir)
 		}
 	})
