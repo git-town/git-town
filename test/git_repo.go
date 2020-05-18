@@ -9,11 +9,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"testing"
 
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
 	"github.com/git-town/git-town/test/helpers"
+	"github.com/stretchr/testify/assert"
 )
 
 // GitRepo is a Git repository that exists inside a Git environment.
@@ -38,6 +40,32 @@ func CloneGitRepo(originDir, targetDir, homeDir, binDir string) (GitRepo, error)
 		return GitRepo{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
 	return NewGitRepository(targetDir, homeDir, NewMockingShell(targetDir, homeDir, binDir)), nil
+}
+
+// CreateTestRepo creates a GitRepo for use in tests
+func CreateTestRepo(t *testing.T) GitRepo {
+	dir := createTempDir(t)
+	repo, err := InitGitRepository(dir, dir, "")
+	assert.Nil(t, err, "cannot initialize Git repow")
+	err = repo.Shell.RunMany([][]string{
+		{"git", "commit", "--allow-empty", "-m", "initial commit"},
+	})
+	assert.Nil(t, err, "cannot create initial commit: %s")
+	return repo
+}
+
+// CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
+// initial git town configuration
+func CreateTestGitTownRepo(t *testing.T) GitRepo {
+	repo := CreateTestRepo(t)
+	err := repo.CreateBranch("main", "master")
+	assert.Nil(t, err)
+	err = repo.Shell.RunMany([][]string{
+		{"git", "config", "git-town.main-branch-name", "main"},
+		{"git", "config", "git-town.perennial-branch-names", ""},
+	})
+	assert.Nil(t, err)
+	return repo
 }
 
 // InitGitRepository initializes a fully functioning Git repository in the given path,

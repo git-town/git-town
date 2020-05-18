@@ -40,7 +40,7 @@ func TestNewGitRepository(t *testing.T) {
 }
 
 func TestGitRepository_AddRemote(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.AddRemote("foo", "bar")
 	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
@@ -49,7 +49,7 @@ func TestGitRepository_AddRemote(t *testing.T) {
 }
 
 func TestGitRepository_Branches(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	assert.Nil(t, repo.CreateFeatureBranch("branch3"))
 	assert.Nil(t, repo.CreateFeatureBranch("branch2"))
 	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
@@ -59,7 +59,7 @@ func TestGitRepository_Branches(t *testing.T) {
 }
 
 func TestGitRepository_CheckoutBranch(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
 	err = repo.CheckoutBranch("branch1")
@@ -75,7 +75,7 @@ func TestGitRepository_CheckoutBranch(t *testing.T) {
 }
 
 func TestGitRepository_Commits(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "file1",
@@ -104,7 +104,7 @@ func TestGitRepository_Commits(t *testing.T) {
 }
 
 func TestGitRepository_Configuration(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	config := repo.Configuration(false)
 	assert.NotNil(t, config, "first path: new config")
 	config = repo.Configuration(false)
@@ -114,7 +114,7 @@ func TestGitRepository_Configuration(t *testing.T) {
 func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 	// replicating the situation this is used in,
 	// connecting branches of repos with the same commits in them
-	origin := createTestRepo(t)
+	origin := CreateTestRepo(t)
 	repoDir := filepath.Join(createTempDir(t), "repo") // need a non-existing directory
 	err := CopyDirectory(origin.Dir, repoDir)
 	assert.Nil(t, err)
@@ -130,7 +130,7 @@ func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 }
 
 func TestGitRepo_CreateBranch(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
 	currentBranch, err := repo.CurrentBranch()
@@ -142,7 +142,7 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 }
 
 func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
@@ -154,7 +154,7 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 }
 
 func TestGitRepository_CreateCommit(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "hello.txt",
@@ -172,7 +172,7 @@ func TestGitRepository_CreateCommit(t *testing.T) {
 }
 
 func TestGitRepository_CreateCommit_Author(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "hello.txt",
@@ -192,7 +192,7 @@ func TestGitRepository_CreateCommit_Author(t *testing.T) {
 }
 
 func TestGitRepository_CreateFeatureBranch(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
@@ -200,7 +200,7 @@ func TestGitRepository_CreateFeatureBranch(t *testing.T) {
 }
 
 func TestGitRepository_CreateFeatureBranchNoParent(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.CreateFeatureBranchNoParent("f1")
 	assert.Nil(t, err)
 	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
@@ -208,7 +208,7 @@ func TestGitRepository_CreateFeatureBranchNoParent(t *testing.T) {
 }
 
 func TestGitRepository_CreateFile(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
 	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "filename"))
@@ -217,7 +217,7 @@ func TestGitRepository_CreateFile(t *testing.T) {
 }
 
 func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("folder/filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
 	content, err := ioutil.ReadFile(filepath.Join(repo.Dir, "folder/filename"))
@@ -226,7 +226,7 @@ func TestGitRepository_CreateFile_InSubFolder(t *testing.T) {
 }
 
 func TestGitRepository_CreatePerennialBranches(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.CreatePerennialBranches("p1", "p2")
 	assert.Nil(t, err)
 	branches, err := repo.Branches()
@@ -238,7 +238,7 @@ func TestGitRepository_CreatePerennialBranches(t *testing.T) {
 }
 
 func TestGitRepository_CurrentBranch(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CheckoutBranch("master")
 	assert.Nil(t, err)
 	err = repo.CreateBranch("b1", "master")
@@ -256,8 +256,8 @@ func TestGitRepository_CurrentBranch(t *testing.T) {
 }
 
 func TestGitRepository_Fetch(t *testing.T) {
-	repo := createTestRepo(t)
-	origin := createTestRepo(t)
+	repo := CreateTestRepo(t)
+	origin := CreateTestRepo(t)
 	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.Fetch()
@@ -265,7 +265,7 @@ func TestGitRepository_Fetch(t *testing.T) {
 }
 
 func TestGitRepository_FileContentInCommit(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateCommit(Commit{
 		Branch:      "master",
 		FileName:    "hello.txt",
@@ -282,7 +282,7 @@ func TestGitRepository_FileContentInCommit(t *testing.T) {
 }
 
 func TestGitRepository_FilesInCommit(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
 	assert.Nil(t, err)
 	err = repo.CreateFile("f2.txt", "two")
@@ -300,7 +300,7 @@ func TestGitRepository_FilesInCommit(t *testing.T) {
 }
 
 func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
-	repo1 := createTestRepo(t)
+	repo1 := CreateTestRepo(t)
 	dir2 := createTempDir(t)
 	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
@@ -322,7 +322,7 @@ func TestGitRepository_HasBranchesOutOfSync_synced(t *testing.T) {
 }
 
 func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
-	repo1 := createTestRepo(t)
+	repo1 := CreateTestRepo(t)
 	dir2 := createTempDir(t)
 	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
@@ -342,7 +342,7 @@ func TestGitRepository_HasBranchesOutOfSync_branchAhead(t *testing.T) {
 }
 
 func TestGitRepository_HasBranchesOutOfSync_branchBehind(t *testing.T) {
-	repo1 := createTestRepo(t)
+	repo1 := CreateTestRepo(t)
 	dir2 := createTempDir(t)
 	repo2, err := CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
 	assert.Nil(t, err)
@@ -364,7 +364,7 @@ func TestGitRepository_HasBranchesOutOfSync_branchBehind(t *testing.T) {
 }
 
 func TestGitRepository_HasGitTownConfigNow(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	res, err := repo.HasGitTownConfigNow()
 	assert.Nil(t, err)
 	assert.False(t, res)
@@ -378,7 +378,7 @@ func TestGitRepository_HasGitTownConfigNow(t *testing.T) {
 }
 
 func TestGitRepository_HasFile(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
 	assert.Nil(t, err)
 	has, err := repo.HasFile("f1.txt", "one")
@@ -391,22 +391,22 @@ func TestGitRepository_HasFile(t *testing.T) {
 }
 
 func TestGitRepository_HasRebaseInProgress(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	has, err := repo.HasRebaseInProgress()
 	assert.Nil(t, err)
 	assert.False(t, has)
 }
 
 func TestGitRepository_LastActiveDir(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	dir, err := repo.LastActiveDir()
 	assert.Nil(t, err)
 	assert.Equal(t, repo.Dir, dir)
 }
 
 func TestGitRepository_PushBranch(t *testing.T) {
-	repo := createTestRepo(t)
-	origin := createTestRepo(t)
+	repo := CreateTestRepo(t)
+	origin := CreateTestRepo(t)
 	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.CreateBranch("b1", "master")
@@ -419,8 +419,8 @@ func TestGitRepository_PushBranch(t *testing.T) {
 }
 
 func TestGitRepository_Remotes(t *testing.T) {
-	repo := createTestRepo(t)
-	origin := createTestRepo(t)
+	repo := CreateTestRepo(t)
+	origin := CreateTestRepo(t)
 	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
@@ -429,7 +429,7 @@ func TestGitRepository_Remotes(t *testing.T) {
 }
 
 func TestGitRepository_RemoveBranch(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
 	branches, err := repo.Branches()
@@ -443,8 +443,8 @@ func TestGitRepository_RemoveBranch(t *testing.T) {
 }
 
 func TestGitRepository_RemoveRemote(t *testing.T) {
-	repo := createTestRepo(t)
-	origin := createTestRepo(t)
+	repo := CreateTestRepo(t)
+	origin := CreateTestRepo(t)
 	err := repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.RemoveRemote("origin")
@@ -455,7 +455,7 @@ func TestGitRepository_RemoveRemote(t *testing.T) {
 }
 
 func TestGitRepository_SetOffline(t *testing.T) {
-	repo := createTestGitTownRepo(t)
+	repo := CreateTestGitTownRepo(t)
 	err := repo.SetOffline(true)
 	assert.Nil(t, err)
 	offline, err := repo.IsOffline()
@@ -469,11 +469,11 @@ func TestGitRepository_SetOffline(t *testing.T) {
 }
 
 func TestGitRepository_SetRemote(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	remotes, err := repo.Remotes()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{}, remotes)
-	origin := createTestRepo(t)
+	origin := CreateTestRepo(t)
 	err = repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	remotes, err = repo.Remotes()
@@ -482,7 +482,7 @@ func TestGitRepository_SetRemote(t *testing.T) {
 }
 
 func TestGitRepository_ShaForCommit(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateCommit(Commit{Branch: "master", FileName: "foo", FileContent: "bar", Message: "commit"})
 	assert.Nil(t, err)
 	sha, err := repo.ShaForCommit("commit")
@@ -491,13 +491,13 @@ func TestGitRepository_ShaForCommit(t *testing.T) {
 }
 
 func TestGitRepository_StageFile(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
 	assert.Nil(t, err)
 }
 
 func TestGitRepository_Stash(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	stashSize, err := repo.StashSize()
 	assert.Nil(t, err)
 	assert.Zero(t, stashSize)
@@ -511,7 +511,7 @@ func TestGitRepository_Stash(t *testing.T) {
 }
 
 func TestGitRepository_UncommittedFiles(t *testing.T) {
-	repo := createTestRepo(t)
+	repo := CreateTestRepo(t)
 	err := repo.CreateFile("f1.txt", "one")
 	assert.Nil(t, err)
 	err = repo.CreateFile("f2.txt", "two")
@@ -519,30 +519,4 @@ func TestGitRepository_UncommittedFiles(t *testing.T) {
 	files, err := repo.UncommittedFiles()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{".gitconfig", "f1.txt", "f2.txt"}, files)
-}
-
-// HELPERS
-
-// createTestGitRepo creates a fully initialized Git repo including a master branch.
-func createTestRepo(t *testing.T) GitRepo {
-	dir := createTempDir(t)
-	repo, err := InitGitRepository(dir, dir, "")
-	assert.Nil(t, err, "cannot initialize Git repow")
-	err = repo.Shell.RunMany([][]string{
-		{"git", "commit", "--allow-empty", "-m", "initial commit"},
-	})
-	assert.Nil(t, err, "cannot create initial commit: %s")
-	return repo
-}
-
-func createTestGitTownRepo(t *testing.T) GitRepo {
-	repo := createTestRepo(t)
-	err := repo.CreateBranch("main", "master")
-	assert.Nil(t, err)
-	err = repo.Shell.RunMany([][]string{
-		{"git", "config", "git-town.main-branch-name", "main"},
-		{"git", "config", "git-town.perennial-branch-names", ""},
-	})
-	assert.Nil(t, err)
-	return repo
 }
