@@ -27,7 +27,7 @@ type ScenarioState struct {
 	uncommittedContent string
 }
 
-// Reset resets this FeatureState to its null values and assigns the given values.
+// Reset restores the null value of this ScenarioState.
 func (state *ScenarioState) Reset(gitEnv *test.GitEnvironment) {
 	state.gitEnv = gitEnv
 	state.initialCommits = nil
