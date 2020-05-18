@@ -13,7 +13,7 @@ cross-compile:  # builds the binary for all platforms
 			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: build   # runs the new Godog-based feature tests
-	@go test . -v -count=1
+	@env go test . -v -count=1
 
 cuke-prof: build  # creates a flamegraph
 	env GOGC=off go test . -v -cpuprofile=godog.out
