@@ -107,7 +107,18 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
 	err = gitEnv.initializeWorkspace(&gitEnv.DevRepo)
-	return gitEnv, err
+	if err != nil {
+		return gitEnv, fmt.Errorf("cannot create new standard Git environment: %w", err)
+	}
+	err = gitEnv.DevRepo.RemoveUnnecessaryFiles()
+	if err != nil {
+		return gitEnv, err
+	}
+	err = gitEnv.OriginRepo.RemoveUnnecessaryFiles()
+	if err != nil {
+		return gitEnv, err
+	}
+	return gitEnv, nil
 }
 
 // AddUpstream adds an upstream repository.

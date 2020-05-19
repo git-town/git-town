@@ -524,6 +524,18 @@ func (repo *GitRepo) RemoveRemote(name string) error {
 	return err
 }
 
+// RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
+func (repo *GitRepo) RemoveUnnecessaryFiles() error {
+	fullPath := filepath.Join(repo.Dir, ".git", "hooks")
+	err := os.RemoveAll(fullPath)
+	if err != nil {
+		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
+	}
+	_ = os.Remove(filepath.Join(repo.Dir, ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(repo.Dir, ".git", "description"))
+	return nil
+}
+
 // SetOffline enables or disables offline mode for this GitRepository.
 func (repo *GitRepo) SetOffline(enabled bool) error {
 	outcome, err := repo.Shell.Run("git", "config", "--global", "git-town.offline", strconv.FormatBool(enabled))
