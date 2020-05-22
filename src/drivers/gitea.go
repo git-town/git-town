@@ -11,7 +11,6 @@ import (
 	"golang.org/x/oauth2"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/src/git"
 )
 
 type giteaCodeHostingDriver struct {
@@ -23,8 +22,26 @@ type giteaCodeHostingDriver struct {
 	repository string
 }
 
-func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "gitea" || d.hostname == "gitea.com"
+func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+	var hostname string
+
+	if opts.OriginHostname != "" {
+		hostname := opts.OriginHostname
+	} else {
+		hostname := git.Config().GetURLHostname(opts.OriginURL)
+	}
+
+	if opts.DriverType != "gitea" && hostname != "gitea.com"{
+		return false
+	}
+    // Initialize
+	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(opts.OriginURL), "/", 2)
+	d.client = nil
+	d.hostname = hostname
+	d.originURL = opts.OriginURL
+	d.owner = repositoryParts[0]
+	d.repository = repositoryParts[1]
+	return true
 }
 
 func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -96,21 +113,6 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 
 func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
 	d.apiToken = apiToken
-}
-
-func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
 }
 
 func init() {

@@ -4,9 +4,9 @@ package drivers
 // for the different code hosting services
 type CodeHostingDriver interface {
 
-	// CanBeUsed returns whether this driver can manage
-	// a repository with the given hostname
-	CanBeUsed(driverType string) bool
+	// WasActivated returns whether this driver was applicable
+	// and activated for any given DriverOptions
+	WasActivated(opts DriverOptions) bool
 
 	// CanMergePullRequest returns whether or not MergePullRequest should be
 	// called when shipping. If true, also returns the default commit message
@@ -25,12 +25,6 @@ type CodeHostingDriver interface {
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string
-
-	// SetOriginURL configures the driver with the origin URL of the Git repo
-	SetOriginURL(originURL string)
-
-	// SetOriginHostname configures the driver with the origin hostname of the Git repo
-	SetOriginHostname(originHostname string)
 
 	// GetAPIToken returns the API token to talk to this hosting driver's API
 	GetAPIToken() string

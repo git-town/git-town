@@ -14,8 +14,24 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "gitlab" || d.hostname == "gitlab.com"
+
+func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+	var hostname string
+
+	if opts.OriginHostname != "" {
+		hostname := opts.OriginHostname
+	} else {
+		hostname := git.Config().GetURLHostname(opts.OriginURL)
+	}
+
+	if opts.DriverType != "gitlab" && hostname != "gitlab.com"{
+		return false
+	}
+    // Initialize
+	d.hostname = hostname
+	d.originURL = opts.OriginURL
+	d.repository = git.Config().GetURLRepositoryName(opts.OriginURL)
+	return true
 }
 
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -39,16 +55,6 @@ func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 
 func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 	return "GitLab"
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
 }
 
 func (d *gitlabCodeHostingDriver) GetAPIToken() string {
