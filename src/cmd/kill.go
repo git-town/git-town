@@ -73,7 +73,7 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	if err != nil {
 		return result, err
 	}
-	if hasOrigin && !git.Config().IsOffline() {
+	if hasOrigin && !repo.Config(false).IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
