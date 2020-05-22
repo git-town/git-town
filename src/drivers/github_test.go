@@ -33,10 +33,8 @@ func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
 func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
 	canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Nil(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
@@ -45,10 +43,8 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
-
 	driver.SetAPIToken("")
 	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
 }
@@ -56,20 +52,16 @@ func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Error(t, err)
 }
 
 func TestGitHubDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
 }
@@ -77,10 +69,8 @@ func TestGitHubDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
 	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
 }
@@ -93,10 +83,8 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(404, ""))
 	_, err := driver.MergePullRequest(options)
-
 	assert.Error(t, err)
 }
 
@@ -108,10 +96,8 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) 
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-
 	_, err := driver.MergePullRequest(options)
 	assert.Error(t, err)
 }
@@ -124,11 +110,9 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	_, err := driver.MergePullRequest(options)
-
 	assert.Error(t, err)
 	assert.Equal(t, "no pull request found", err.Error())
 }
@@ -141,11 +125,9 @@ func TestGitHubDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
 	_, err := driver.MergePullRequest(options)
-
 	assert.Error(t, err)
 	assert.Equal(t, "multiple pull requests found: 1, 2", err.Error())
 }
@@ -158,7 +140,6 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	var mergeRequest *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
@@ -167,7 +148,6 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 		return httpmock.NewStringResponse(200, `{"sha": "abc123"}`), nil
 	})
 	sha, err := driver.MergePullRequest(options)
-
 	assert.Nil(t, err)
 	assert.Equal(t, "abc123", sha)
 	mergeParameters := getRequestData(mergeRequest)
@@ -184,12 +164,10 @@ func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 	httpmock.RegisterResponder("PUT", mergePullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, err := driver.MergePullRequest(options)
-
 	assert.Error(t, err)
 }
 
@@ -201,7 +179,6 @@ func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
 	}
-
 	var updateRequest1, updateRequest2 *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, `[{"number": 2}, {"number": 3}]`))
 	httpmock.RegisterResponder("PATCH", updatePullRequestBaseURL1, func(req *http.Request) (*http.Response, error) {
@@ -215,7 +192,6 @@ func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}]`))
 	httpmock.RegisterResponder("PUT", mergePullRequestURL, httpmock.NewStringResponder(200, `{"sha": "abc123"}`))
 	_, err := driver.MergePullRequest(options)
-
 	assert.Nil(t, err)
 	updateParameters1 := getRequestData(updateRequest1)
 	assert.Equal(t, "main", updateParameters1["base"])
