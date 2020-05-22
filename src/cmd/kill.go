@@ -69,7 +69,11 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	hasOrigin, err := repo.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
+	if hasOrigin && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -78,7 +82,7 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	if result.InitialBranch != result.TargetBranch {
 		git.EnsureHasBranch(result.TargetBranch)
 	}
-	return
+	return result, nil
 }
 
 func getKillStepList(config killConfig) (result steps.StepList) {

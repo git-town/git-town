@@ -337,6 +337,15 @@ func (repo *Repo) HasRebaseInProgress() (result bool, err error) {
 	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
 }
 
+// HasRemote indicates whether this repo has a remote with the given name.
+func (repo *Repo) HasRemote(name string) (result bool, err error) {
+	remotes, err := repo.Remotes()
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
+	}
+	return util.DoesStringArrayContain(remotes, name), nil
+}
+
 // IsOffline indicates whether Git Town is offline.
 func (repo *Repo) IsOffline() (result bool, err error) {
 	res, err := repo.Shell.Run("git", "config", "--get", "git-town.offline")

@@ -370,6 +370,19 @@ func TestGitRepo_HasRebaseInProgress(t *testing.T) {
 	assert.False(t, has)
 }
 
+func TestGitRepo_HasRemote(t *testing.T) {
+	origin := test.CreateTestRepo(t)
+	repoDir := test.CreateTempDir(t)
+	repo, err := test.CloneGitRepo(origin.Dir, repoDir, repoDir, repoDir)
+	assert.Nil(t, err)
+	has, err := repo.HasRemote("origin")
+	assert.Nil(t, err)
+	assert.True(t, has)
+	has, err = repo.HasRemote("zonk")
+	assert.Nil(t, err)
+	assert.False(t, has)
+}
+
 func TestGitRepo_LastActiveDir(t *testing.T) {
 	repo := test.CreateTestRepo(t)
 	dir, err := repo.LastActiveDir()
