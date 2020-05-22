@@ -49,12 +49,6 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
 }
 
-func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
-
 func init() {
 	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }

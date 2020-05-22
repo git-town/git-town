@@ -25,10 +25,4 @@ type CodeHostingDriver interface {
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string
-
-	// GetAPIToken returns the API token to talk to this hosting driver's API
-	GetAPIToken() string
-
-	// SetAPIToken configures the driver with API token
-	SetAPIToken(apiToken string)
 }

@@ -49,12 +49,6 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 	return "GitLab"
 }
 
-func (d *gitlabCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {}
-
 func init() {
 	registry.RegisterDriver(&gitlabCodeHostingDriver{})
 }
