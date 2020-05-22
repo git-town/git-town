@@ -23,21 +23,13 @@ type giteaCodeHostingDriver struct {
 }
 
 func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	var hostname string
-
-	if opts.OriginHostname != "" {
-		hostname := opts.OriginHostname
-	} else {
-		hostname := gitConfig.GetURLHostname(opts.OriginURL)
-	}
-
-	if opts.DriverType != "gitea" && hostname != "gitea.com"{
+	if opts.DriverType != "gitea" && opts.OriginHostname != "gitea.com"{
 		return false
 	}
     // Initialize
 	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(opts.OriginURL), "/", 2)
 	d.client = nil
-	d.hostname = hostname
+	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]

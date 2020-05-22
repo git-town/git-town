@@ -16,19 +16,11 @@ type bitbucketCodeHostingDriver struct {
 }
 
 func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	var hostname string
-
-	if opts.OriginHostname != "" {
-		hostname := opts.OriginHostname
-	} else {
-		hostname := gitConfig.GetURLHostname(opts.OriginURL)
-	}
-
-	if opts.DriverType != "bitbucket" && hostname != "bitbucket.org"{
+	if opts.DriverType != "bitbucket" && opts.OriginHostname != "bitbucket.org"{
 		return false
 	}
     // Initialize
-	d.hostname = hostname
+	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
 	d.repository = gitConfig.GetURLRepositoryName(opts.OriginURL)
 	return true
