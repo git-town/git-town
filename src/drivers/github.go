@@ -20,8 +20,26 @@ type githubCodeHostingDriver struct {
 	repository string
 }
 
-func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "github" || d.hostname == "github.com"
+func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+	var hostname string
+
+	if opts.OriginHostname != "" {
+		hostname := opts.OriginHostname
+	} else {
+		hostname := gitConfig.GetURLHostname(opts.OriginURL)
+	}
+
+	if opts.DriverType != "github" && hostname != "github.com"{
+		return false
+	}
+    // Initialize
+	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(opts.OriginURL), "/", 2)
+	d.client = nil
+	d.hostname = hostname
+	d.originURL = opts.OriginURL
+	d.owner = repositoryParts[0]
+	d.repository = repositoryParts[1]
+	return true
 }
 
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -62,21 +80,6 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
 	return "GitHub"
-}
-
-func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = gitConfig.GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
-}
-
-func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
 }
 
 func (d *githubCodeHostingDriver) GetAPIToken() string {
