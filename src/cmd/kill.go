@@ -26,9 +26,10 @@ var killCommand = &cobra.Command{
 Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getKillConfig(args)
+		repo := git.RepoInCurrentDir(false)
+		config, err := getKillConfig(args, repo)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
 		stepList := getKillStepList(config)
@@ -48,15 +49,23 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func getKillConfig(args []string) (result killConfig, err error) {
-	result.InitialBranch = git.GetCurrentBranchName()
+func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error) {
+	result.InitialBranch, err = repo.CurrentBranch()
+	if err != nil {
+		return result, err
+	}
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
 	} else {
 		result.TargetBranch = args[0]
 	}
-	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
-	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
+	if !repo.Configuration(false).IsFeatureBranch(result.TargetBranch) {
+		return result, fmt.Errorf("you can only kill feature branches")
+	}
+	result.IsTargetBranchLocal, err = repo.HasLocalBranch(result.TargetBranch)
+	if err != nil {
+		return result, err
+	}
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}

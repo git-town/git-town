@@ -11,8 +11,23 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/util"
 	"github.com/git-town/git-town/test/helpers"
 )
+
+var repoInCurrentDir *Repo
+
+// RepoInCurrentDir provides a Repo instance in the current working directory.
+func RepoInCurrentDir(dryRun bool) *Repo {
+	if repoInCurrentDir == nil {
+		repoInCurrentDir = &Repo{
+			Dir:    ".",
+			dryRun: dryRun,
+			Shell:  &command.ShellInCurrentDir{},
+		}
+	}
+	return repoInCurrentDir
+}
 
 // Repo is a Git repository that exists inside a Git environment.
 type Repo struct {
@@ -26,6 +41,12 @@ type Repo struct {
 	// configCache contains the Git Town configuration to use.
 	// This value is lazy loaded. Please use Configuration() to access it.
 	configCache *Configuration
+
+	// currentBranch contains the current Git branch we are on in this repo
+	currentBranch string
+
+	// dryRun indicates whether dryRun is enabled
+	dryRun bool
 }
 
 // AddRemote adds the given Git remote to this repository.
@@ -57,6 +78,7 @@ func (repo *Repo) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, repo.Dir, err, outcome)
 	}
+	repo.currentBranch = name
 	return nil
 }
 
@@ -288,6 +310,15 @@ func (repo *Repo) HasGitTownConfigNow() (result bool, err error) {
 	return outcome.OutputSanitized() != "", err
 }
 
+// HasLocalBranch indicates whether this repo has a local branch with the given name.
+func (repo *Repo) HasLocalBranch(name string) (bool, error) {
+	branches, err := repo.LocalBranches()
+	if err != nil {
+		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
+	}
+	return util.DoesStringArrayContain(branches, name), nil
+}
+
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (repo *Repo) HasMergeInProgress() (result bool, err error) {
 	res, err := repo.Shell.Run("git", "status")
@@ -322,6 +353,19 @@ func (repo *Repo) IsOffline() (result bool, err error) {
 func (repo *Repo) LastActiveDir() (string, error) {
 	res, err := repo.Shell.Run("git", "rev-parse", "--show-toplevel")
 	return res.OutputSanitized(), err
+}
+
+// LocalBranches provides the names of all local branches in this repo.
+func (repo *Repo) LocalBranches() (result []string, err error) {
+	outcome, err := repo.Shell.Run("git", "branch")
+	if err != nil {
+		return result, fmt.Errorf("cannot determine the local branches")
+	}
+	lines := outcome.OutputLines()
+	for l := range lines {
+		result = append(result, strings.TrimSpace(strings.Trim(lines[l], "* ")))
+	}
+	return result, nil
 }
 
 // PushBranch pushes the branch with the given name to the remote.
