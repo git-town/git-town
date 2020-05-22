@@ -14,7 +14,7 @@ import (
 
 // GitRepo extends git.Repo with facilities for testing.
 type GitRepo struct {
-	*git.GitRepo
+	*git.Repo
 }
 
 // CloneGitRepo clones a Git repo in originDir into a new GitRepository in workingDir.
@@ -66,7 +66,7 @@ func InitGitRepository(workingDir, homeDir, binDir string) (GitRepo, error) {
 // The directory must contain an existing Git repo.
 // TODO: remove homeDir here, it is included in the given Shell.
 func NewGitRepository(workingDir string, homeDir string, shell command.Shell) GitRepo {
-	repo := git.GitRepo{Dir: workingDir, Shell: shell}
+	repo := git.Repo{Dir: workingDir, Shell: shell}
 	return GitRepo{&repo}
 }
 
