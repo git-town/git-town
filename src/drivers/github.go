@@ -27,19 +27,19 @@ func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "github" || d.hostname == "github.com"
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, err error) {
+func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
 	if d.apiToken == "" {
-		return false, "", nil
+		return false, "", 0, nil
 	}
 	d.connect()
 	pullRequests, err := d.getPullRequests(branch, parentBranch)
 	if err != nil {
-		return false, "", err
+		return false, "", 0, err
 	}
 	if len(pullRequests) != 1 {
-		return false, "", nil
+		return false, "", 0, nil
 	}
-	return true, d.getDefaultCommitMessage(pullRequests[0]), nil
+	return true, d.getDefaultCommitMessage(pullRequests[0]), pullRequests[0].GetNumber(), nil
 }
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -138,9 +138,12 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 }
 
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	pullRequestNumber, err := d.getPullRequestNumber(options)
-	if err != nil {
-		return "", err
+	pullRequestNumber := options.PullRequestNumber
+	if pullRequestNumber == 0 {
+		pullRequestNumber, err = d.getPullRequestNumber(options)
+		if err != nil {
+			return "", err
+		}
 	}
 	if options.LogRequests {
 		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", pullRequestNumber))

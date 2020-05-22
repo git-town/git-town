@@ -35,11 +35,12 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	defer teardown()
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-	canMerge, defaultCommintMessage, err := driver.CanMergePullRequest("feature", "main")
+	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.Nil(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
+	assert.Equal(t, 1, pullRequestNumber)
 }
 
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
@@ -47,7 +48,7 @@ func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	defer teardown()
 
 	driver.SetAPIToken("")
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
@@ -58,7 +59,7 @@ func TestGitHubDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T
 	defer teardown()
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-	_, _, err := driver.CanMergePullRequest("feature", "main")
+	_, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.Error(t, err)
 }
@@ -68,7 +69,7 @@ func TestGitHubDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 	defer teardown()
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
@@ -79,7 +80,7 @@ func TestGitHubDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testi
 	defer teardown()
 
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-	canMerge, _, err := driver.CanMergePullRequest("feature", "main")
+	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.Nil(t, err)
 	assert.False(t, canMerge)
