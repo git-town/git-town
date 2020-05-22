@@ -33,6 +33,7 @@ func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
+	d.apiToken = git.Config().GetGiteaToken()
 	return true
 }
 

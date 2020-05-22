@@ -31,6 +31,7 @@ func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
+	d.apiToken = git.Config().GetGitHubToken()
 	return true
 }
 
@@ -72,14 +73,6 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
 	return "GitHub"
-}
-
-func (d *githubCodeHostingDriver) GetAPIToken() string {
-	return gitConfig.GetGitHubToken()
-}
-
-func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
 }
 
 func init() {

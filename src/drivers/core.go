@@ -25,9 +25,6 @@ func GetActiveDriver() CodeHostingDriver {
 			OriginURL:      originURL,
 			OriginHostname: originHostname,
 		})
-		if activeDriver != nil {
-			activeDriver.SetAPIToken(activeDriver.GetAPIToken())
-		}
 	}
 	return activeDriver
 }
