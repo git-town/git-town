@@ -199,6 +199,11 @@ func (c *Configuration) GetGitHubToken() string {
 	return c.getLocalOrGlobalConfigValue("git-town.github-token")
 }
 
+// GetGiteaToken provides the content of the Gitea API token stored in the local or global Git Town configuration.
+func (c *Configuration) GetGiteaToken() string {
+	return c.getLocalOrGlobalConfigValue("git-town.gitea-token")
+}
+
 // GetMainBranch returns the name of the main branch.
 func (c *Configuration) GetMainBranch() string {
 	return c.getLocalOrGlobalConfigValue("git-town.main-branch-name")
