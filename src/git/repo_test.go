@@ -108,7 +108,7 @@ func TestGitRepo_CreateChildFeatureBranch(t *testing.T) {
 	assert.Nil(t, err)
 	err = repo.CreateChildFeatureBranch("f1a", "f1")
 	assert.Nil(t, err)
-	res, err := repo.Shell.Run("git", "town", "config")
+	res, err := repo.Run("git", "town", "config")
 	assert.Nil(t, err)
 	has := strings.Contains(res.OutputSanitized(), "Branch Ancestry:\n  main\n    f1\n      f1a")
 	assert.True(t, has)
@@ -539,7 +539,7 @@ func CreateTestGitTownRepo(t *testing.T) test.GitRepo {
 	repo := test.CreateTestRepo(t)
 	err := repo.CreateBranch("main", "master")
 	assert.Nil(t, err)
-	err = repo.Shell.RunMany([][]string{
+	err = repo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 	})

@@ -24,7 +24,7 @@ func CoworkerSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my coworker runs "([^"]+)"$`, func(command string) error {
-		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.Shell.RunString(command)
+		state.runRes, state.runErr = state.gitEnv.CoworkerRepo.RunString(command)
 		return nil
 	})
 }

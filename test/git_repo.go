@@ -32,7 +32,7 @@ func CreateTestRepo(t *testing.T) GitRepo {
 	dir := CreateTempDir(t)
 	repo, err := InitGitRepository(dir, dir, "")
 	assert.Nil(t, err, "cannot initialize Git repo")
-	err = repo.Shell.RunMany([][]string{
+	err = repo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "initial commit"},
 	})
 	assert.Nil(t, err, "cannot create initial commit: %s")
@@ -50,11 +50,11 @@ func InitGitRepository(workingDir, homeDir, binDir string) (GitRepo, error) {
 	}
 	// initialize the repo in the folder
 	result := NewGitRepository(workingDir, NewMockingShell(workingDir, homeDir, binDir))
-	outcome, err := result.Shell.Run("git", "init")
+	outcome, err := result.Run("git", "init")
 	if err != nil {
 		return result, fmt.Errorf(`error running "git init" in %q: %w\n%v`, workingDir, err, outcome)
 	}
-	err = result.Shell.RunMany([][]string{
+	err = result.RunMany([][]string{
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
 		{"git", "config", "--global", "core.editor", "vim"},
@@ -110,7 +110,7 @@ func (repo *GitRepo) Commits(fields []string) (result []Commit, err error) {
 
 // CommitsInBranch provides all commits in the given Git branch.
 func (repo *GitRepo) commitsInBranch(branch string, fields []string) (result []Commit, err error) {
-	outcome, err := repo.Shell.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
+	outcome, err := repo.Run("git", "log", branch, "--format=%h|%s|%an <%ae>", "--topo-order", "--reverse")
 	if err != nil {
 		return result, fmt.Errorf("cannot get commits in branch %q: %w", branch, err)
 	}
@@ -149,7 +149,7 @@ func (repo *GitRepo) CreateCommit(commit Commit) error {
 	if err != nil {
 		return fmt.Errorf("cannot create file %q needed for commit: %w", commit.FileName, err)
 	}
-	outcome, err := repo.Shell.Run("git", "add", commit.FileName)
+	outcome, err := repo.Run("git", "add", commit.FileName)
 	if err != nil {
 		return fmt.Errorf("cannot add file to commit: %w\n%v", err, outcome)
 	}
@@ -157,7 +157,7 @@ func (repo *GitRepo) CreateCommit(commit Commit) error {
 	if commit.Author != "" {
 		commands = append(commands, "--author="+commit.Author)
 	}
-	outcome, err = repo.Shell.Run("git", commands...)
+	outcome, err = repo.Run("git", commands...)
 	if err != nil {
 		return fmt.Errorf("cannot commit: %w\n%v", err, outcome)
 	}

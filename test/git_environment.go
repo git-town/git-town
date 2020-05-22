@@ -94,7 +94,7 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
 	gitEnv.OriginRepo = &originRepo
-	err = gitEnv.OriginRepo.Shell.RunMany([][]string{
+	err = gitEnv.OriginRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		{"git", "branch", "main", "master"},
 	})
@@ -294,7 +294,7 @@ func (env GitEnvironment) TagTable() (result DataTable, err error) {
 }
 
 func (env GitEnvironment) initializeWorkspace(repo *GitRepo) error {
-	return repo.Shell.RunMany([][]string{
+	return repo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},
