@@ -59,7 +59,7 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	} else {
 		result.TargetBranch = args[0]
 	}
-	if !repo.Configuration(false).IsFeatureBranch(result.TargetBranch) {
+	if !repo.Config(false).IsFeatureBranch(result.TargetBranch) {
 		return result, fmt.Errorf("you can only kill feature branches")
 	}
 	result.IsTargetBranchLocal, err = repo.HasLocalBranch(result.TargetBranch)

@@ -76,9 +76,9 @@ func TestGitRepository_Commits(t *testing.T) {
 
 func TestGitRepository_Configuration(t *testing.T) {
 	repo := test.CreateTestRepo(t)
-	config := repo.Configuration(false)
+	config := repo.Config(false)
 	assert.NotNil(t, config, "first path: new config")
-	config = repo.Configuration(false)
+	config = repo.Config(false)
 	assert.NotNil(t, config, "second path: cached config")
 }
 
@@ -166,16 +166,16 @@ func TestGitRepo_CreateFeatureBranch(t *testing.T) {
 	repo := CreateTestGitTownRepo(t)
 	err := repo.CreateFeatureBranch("f1")
 	assert.Nil(t, err)
-	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
-	assert.Equal(t, []string{"main"}, repo.Configuration(true).GetAncestorBranches("f1"))
+	assert.True(t, repo.Config(true).IsFeatureBranch("f1"))
+	assert.Equal(t, []string{"main"}, repo.Config(true).GetAncestorBranches("f1"))
 }
 
 func TestGitRepo_CreateFeatureBranchNoParent(t *testing.T) {
 	repo := CreateTestGitTownRepo(t)
 	err := repo.CreateFeatureBranchNoParent("f1")
 	assert.Nil(t, err)
-	assert.True(t, repo.Configuration(true).IsFeatureBranch("f1"))
-	assert.Equal(t, []string(nil), repo.Configuration(true).GetAncestorBranches("f1"))
+	assert.True(t, repo.Config(true).IsFeatureBranch("f1"))
+	assert.Equal(t, []string(nil), repo.Config(true).GetAncestorBranches("f1"))
 }
 
 func TestGitRepo_CreateFile(t *testing.T) {
@@ -203,7 +203,7 @@ func TestGitRepo_CreatePerennialBranches(t *testing.T) {
 	branches, err := repo.Branches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
-	config := repo.Configuration(true)
+	config := repo.Config(true)
 	assert.True(t, config.IsPerennialBranch("p1"))
 	assert.True(t, config.IsPerennialBranch("p2"))
 }
