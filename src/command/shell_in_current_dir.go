@@ -11,12 +11,12 @@ type ShellInCurrentDir struct {
 }
 
 // MustRun runs the given command and returns the result. Panics on error.
-func (shell *ShellInCurrentDir) MustRun(cmd string, args ...string) (result *Result) {
+func (shell *ShellInCurrentDir) MustRun(cmd string, args ...string) *Result {
 	return MustRun(cmd, args...)
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (shell *ShellInCurrentDir) Run(cmd string, args ...string) (result *Result, err error) {
+func (shell *ShellInCurrentDir) Run(cmd string, args ...string) (*Result, error) {
 	return Run(cmd, args...)
 }
 
@@ -34,20 +34,20 @@ func (shell *ShellInCurrentDir) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell *ShellInCurrentDir) RunString(fullCmd string) (result *Result, err error) {
+func (shell *ShellInCurrentDir) RunString(fullCmd string) (*Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return Run(cmd, args...)
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell *ShellInCurrentDir) RunStringWith(fullCmd string, options Options) (result *Result, err error) {
+func (shell *ShellInCurrentDir) RunStringWith(fullCmd string, options Options) (*Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
-		return result, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
 	return RunWith(options, cmd, args...)

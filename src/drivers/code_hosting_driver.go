@@ -10,14 +10,14 @@ type CodeHostingDriver interface {
 
 	// CanMergePullRequest returns whether or not MergePullRequest should be
 	// called when shipping. If true, also returns the default commit message
-	CanMergePullRequest(branch, parentBranch string) (bool, string, error)
+	CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, err error)
 
 	// GetNewPullRequestURL returns the URL of the page
 	// to create a new pull request online
 	GetNewPullRequestURL(branch, parentBranch string) string
 
 	// MergePullRequest merges the pull request through the hosting service api
-	MergePullRequest(MergePullRequestOptions) (string, error)
+	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
 	// GetRepositoryURL returns the URL where the given repository
 	// can be found online
