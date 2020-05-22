@@ -32,7 +32,7 @@ Does not delete perennial branches nor the main branch.`,
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList := getKillStepList(config)
+		stepList := getKillStepList(config, repo)
 		runState := steps.NewRunState("kill", stepList)
 		err = steps.Run(runState)
 		if err != nil {
@@ -91,10 +91,10 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	return result, nil
 }
 
-func getKillStepList(config killConfig) (result steps.StepList) {
+func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList) {
 	switch {
 	case config.IsTargetBranchLocal:
-		targetBranchParent := git.Config().GetParentBranch(config.TargetBranch)
+		targetBranchParent := repo.Config(false).GetParentBranch(config.TargetBranch)
 		if git.HasTrackingBranch(config.TargetBranch) && !git.Config().IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
