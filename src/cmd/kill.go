@@ -50,31 +50,25 @@ Does not delete perennial branches nor the main branch.`,
 
 func getKillConfig(args []string) (result killConfig, err error) {
 	result.InitialBranch = git.GetCurrentBranchName()
-
 	if len(args) == 0 {
 		result.TargetBranch = result.InitialBranch
 	} else {
 		result.TargetBranch = args[0]
 	}
-
 	git.Config().EnsureIsFeatureBranch(result.TargetBranch, "You can only kill feature branches.")
-
 	result.IsTargetBranchLocal = git.HasLocalBranch(result.TargetBranch)
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
 	}
-
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-
 	if result.InitialBranch != result.TargetBranch {
 		git.EnsureHasBranch(result.TargetBranch)
 	}
-
 	return
 }
 

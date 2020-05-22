@@ -55,7 +55,6 @@ func getPruneBranchesStepList() (result steps.StepList) {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config().GetMainBranch()})
 		}
-
 		parent := git.Config().GetParentBranch(branchName)
 		if parent != "" {
 			for _, child := range git.Config().GetChildBranches(branchName) {
@@ -63,11 +62,9 @@ func getPruneBranchesStepList() (result steps.StepList) {
 			}
 			result.Append(&steps.DeleteParentBranchStep{BranchName: branchName})
 		}
-
 		if git.Config().IsPerennialBranch(branchName) {
 			result.Append(&steps.RemoveFromPerennialBranches{BranchName: branchName})
 		}
-
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
