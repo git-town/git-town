@@ -22,21 +22,13 @@ type githubCodeHostingDriver struct {
 }
 
 func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	var hostname string
-
-	if opts.OriginHostname != "" {
-		hostname := opts.OriginHostname
-	} else {
-		hostname := git.Config().GetURLHostname(opts.OriginURL)
-	}
-
-	if opts.DriverType != "github" && hostname != "github.com"{
+	if opts.DriverType != "github" && opts.OriginHostname != "github.com"{
 		return false
 	}
     // Initialize
 	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(opts.OriginURL), "/", 2)
 	d.client = nil
-	d.hostname = hostname
+	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
