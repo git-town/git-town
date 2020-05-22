@@ -80,7 +80,13 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 		}
 	}
 	if result.InitialBranch != result.TargetBranch {
-		git.EnsureHasBranch(result.TargetBranch)
+		hasTargetBranch, err := repo.HasLocalOrRemoteBranch(result.TargetBranch)
+		if err != nil {
+			return result, err
+		}
+		if !hasTargetBranch {
+			return result, fmt.Errorf("there is no branch named %q", result.TargetBranch)
+		}
 	}
 	return result, nil
 }

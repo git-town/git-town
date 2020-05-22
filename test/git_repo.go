@@ -72,7 +72,7 @@ func NewGitRepository(workingDir string, shell command.Shell) GitRepo {
 // FilesInBranches provides a data table of files and their content in all branches.
 func (repo *GitRepo) FilesInBranches() (result DataTable, err error) {
 	result.AddRow("BRANCH", "NAME", "CONTENT")
-	branches, err := repo.Branches()
+	branches, err := repo.LocalBranches()
 	if err != nil {
 		return result, err
 	}
@@ -94,7 +94,7 @@ func (repo *GitRepo) FilesInBranches() (result DataTable, err error) {
 
 // Commits provides a tabular list of the commits in this Git repository with the given fields.
 func (repo *GitRepo) Commits(fields []string) (result []Commit, err error) {
-	branches, err := repo.Branches()
+	branches, err := repo.LocalBranches()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}

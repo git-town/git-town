@@ -58,20 +58,6 @@ func (repo *Repo) AddRemote(name, value string) error {
 	return nil
 }
 
-// Branches provides the names of the local branches in this Git repository,
-// sorted alphabetically, with the "main" branch first.
-func (repo *Repo) Branches() (result []string, err error) {
-	outcome, err := repo.Shell.Run("git", "branch")
-	if err != nil {
-		return result, fmt.Errorf("cannot run 'git branch' in repo %q: %w", repo.Dir, err)
-	}
-	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
-		line = strings.Replace(line, "* ", "", 1)
-		result = append(result, strings.TrimSpace(line))
-	}
-	return helpers.MainFirst(sort.StringSlice(result)), nil
-}
-
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (repo *Repo) CheckoutBranch(name string) error {
 	outcome, err := repo.Shell.Run("git", "checkout", name)
@@ -319,6 +305,15 @@ func (repo *Repo) HasLocalBranch(name string) (bool, error) {
 	return util.DoesStringArrayContain(branches, name), nil
 }
 
+// HasLocalOrRemoteBranch indicates whether this repo has a local or remote branch with the given name.
+func (repo *Repo) HasLocalOrRemoteBranch(name string) (bool, error) {
+	branches, err := repo.LocalAndRemoteBranches()
+	if err != nil {
+		return false, fmt.Errorf("cannot determine whether the local or remote branch %q exists: %w", name, err)
+	}
+	return util.DoesStringArrayContain(branches, name), nil
+}
+
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (repo *Repo) HasMergeInProgress() (result bool, err error) {
 	res, err := repo.Shell.Run("git", "status")
@@ -374,7 +369,30 @@ func (repo *Repo) LocalBranches() (result []string, err error) {
 	for l := range lines {
 		result = append(result, strings.TrimSpace(strings.Trim(lines[l], "* ")))
 	}
-	return result, nil
+	return helpers.MainFirst(sort.StringSlice(result)), nil
+}
+
+// LocalAndRemoteBranches provides the names of all local branches in this repo.
+func (repo *Repo) LocalAndRemoteBranches() ([]string, error) {
+	outcome, err := repo.Shell.Run("git", "branch", "-a")
+	if err != nil {
+		return []string{}, fmt.Errorf("cannot determine the local branches")
+	}
+	lines := outcome.OutputLines()
+	branchNames := make(map[string]struct{})
+	for l := range lines {
+		if !strings.Contains(lines[l], " -> ") {
+			branchNames[strings.TrimSpace(strings.Replace(strings.Replace(lines[l], "* ", "", 1), "remotes/origin/", "", 1))] = struct{}{}
+		}
+	}
+	result := make([]string, len(branchNames))
+	i := 0
+	for branchName := range branchNames {
+		result[i] = branchName
+		i++
+	}
+	sort.Strings(result)
+	return helpers.MainFirst(result), nil
 }
 
 // PushBranch pushes the branch with the given name to the remote.

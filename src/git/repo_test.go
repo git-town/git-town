@@ -19,16 +19,6 @@ func TestGitRepository_AddRemote(t *testing.T) {
 	assert.Equal(t, []string{"foo"}, remotes)
 }
 
-func TestGitRepository_Branches(t *testing.T) {
-	repo := CreateTestGitTownRepo(t)
-	assert.Nil(t, repo.CreateFeatureBranch("branch3"))
-	assert.Nil(t, repo.CreateFeatureBranch("branch2"))
-	assert.Nil(t, repo.CreateFeatureBranch("branch1"))
-	branches, err := repo.Branches()
-	assert.Nil(t, err)
-	assert.Equal(t, []string{"main", "branch1", "branch2", "branch3", "master"}, branches)
-}
-
 func TestGitRepository_CheckoutBranch(t *testing.T) {
 	repo := test.CreateTestRepo(t)
 	err := repo.CreateBranch("branch1", "master")
@@ -107,7 +97,7 @@ func TestGitRepo_CreateBranch(t *testing.T) {
 	currentBranch, err := repo.CurrentBranch()
 	assert.Nil(t, err)
 	assert.Equal(t, "master", currentBranch)
-	branches, err := repo.Branches()
+	branches, err := repo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"branch1", "master"}, branches)
 }
@@ -200,7 +190,7 @@ func TestGitRepo_CreatePerennialBranches(t *testing.T) {
 	repo := CreateTestGitTownRepo(t)
 	err := repo.CreatePerennialBranches("p1", "p2")
 	assert.Nil(t, err)
-	branches, err := repo.Branches()
+	branches, err := repo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
 	config := repo.Config(true)
@@ -399,9 +389,31 @@ func TestGitRepo_LocalBranches(t *testing.T) {
 	assert.Nil(t, err)
 	err = repo.CreateBranch("b2", "master")
 	assert.Nil(t, err)
+	err = origin.CreateBranch("b3", "master")
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
 	branches, err := repo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"b1", "b2", "master"}, branches)
+}
+
+func TestGitRepo_LocalAndRemoteBranches(t *testing.T) {
+	origin := test.CreateTestRepo(t)
+	repoDir := test.CreateTempDir(t)
+	repo, err := test.CloneGitRepo(origin.Dir, repoDir, repoDir, repoDir)
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b2", "master")
+	assert.Nil(t, err)
+	err = origin.CreateBranch("b3", "master")
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
+	branches, err := repo.LocalAndRemoteBranches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"b1", "b2", "b3", "master"}, branches)
 }
 
 func TestGitRepo_PushBranch(t *testing.T) {
@@ -413,7 +425,7 @@ func TestGitRepo_PushBranch(t *testing.T) {
 	assert.Nil(t, err)
 	err = repo.PushBranch("b1")
 	assert.Nil(t, err)
-	branches, err := origin.Branches()
+	branches, err := origin.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
 }
@@ -432,12 +444,12 @@ func TestGitRepo_RemoveBranch(t *testing.T) {
 	repo := test.CreateTestRepo(t)
 	err := repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
-	branches, err := repo.Branches()
+	branches, err := repo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
 	err = repo.RemoveBranch("b1")
 	assert.Nil(t, err)
-	branches, err = repo.Branches()
+	branches, err = repo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"master"}, branches)
 }

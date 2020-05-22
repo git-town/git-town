@@ -26,7 +26,7 @@ func EnsureDoesNotHaveBranch(branchName string) {
 
 // EnsureHasBranch enforces that a branch with the given name exists
 func EnsureHasBranch(branchName string) {
-	util.Ensure(HasBranch(branchName), fmt.Sprintf("There is no branch named %q", branchName))
+	util.Ensure(HasBranch(branchName), fmt.Sprintf("there is no branch named %q", branchName))
 }
 
 // EnsureHasLocalBranch enforces that a local branch with the given name exists
