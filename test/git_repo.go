@@ -24,7 +24,7 @@ func CloneGitRepo(originDir, targetDir, homeDir, binDir string) (GitRepo, error)
 	if err != nil {
 		return GitRepo{}, fmt.Errorf("cannot clone repo %q: %w\n%s", originDir, err, res.Output())
 	}
-	return NewGitRepository(targetDir, homeDir, NewMockingShell(targetDir, homeDir, binDir)), nil
+	return NewGitRepository(targetDir, NewMockingShell(targetDir, homeDir, binDir)), nil
 }
 
 // CreateTestRepo creates a GitRepo for use in tests
@@ -49,7 +49,7 @@ func InitGitRepository(workingDir, homeDir, binDir string) (GitRepo, error) {
 		return GitRepo{}, fmt.Errorf("cannot create directory %q: %w", workingDir, err)
 	}
 	// initialize the repo in the folder
-	result := NewGitRepository(workingDir, homeDir, NewMockingShell(workingDir, homeDir, binDir))
+	result := NewGitRepository(workingDir, NewMockingShell(workingDir, homeDir, binDir))
 	outcome, err := result.Shell.Run("git", "init")
 	if err != nil {
 		return result, fmt.Errorf(`error running "git init" in %q: %w\n%v`, workingDir, err, outcome)
@@ -64,8 +64,7 @@ func InitGitRepository(workingDir, homeDir, binDir string) (GitRepo, error) {
 
 // NewGitRepository provides a new GitRepository instance working in the given directory.
 // The directory must contain an existing Git repo.
-// TODO: remove homeDir here, it is included in the given Shell.
-func NewGitRepository(workingDir string, homeDir string, shell command.Shell) GitRepo {
+func NewGitRepository(workingDir string, shell command.Shell) GitRepo {
 	repo := git.Repo{Dir: workingDir, Shell: shell}
 	return GitRepo{&repo}
 }

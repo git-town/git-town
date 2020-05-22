@@ -51,5 +51,5 @@ func TestInitGitRepository(t *testing.T) {
 
 func TestNewGitRepository(t *testing.T) {
 	dir := CreateTempDir(t)
-	_ = NewGitRepository(dir, dir, NewMockingShell(dir, dir, ""))
+	_ = NewGitRepository(dir, NewMockingShell(dir, dir, ""))
 }

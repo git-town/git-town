@@ -89,7 +89,7 @@ func TestGitRepo_ConnectTrackingBranch(t *testing.T) {
 	repoDir := filepath.Join(test.CreateTempDir(t), "repo") // need a non-existing directory
 	err := test.CopyDirectory(origin.Dir, repoDir)
 	assert.Nil(t, err)
-	repo := test.NewGitRepository(repoDir, repoDir, test.NewMockingShell(repoDir, repoDir, ""))
+	repo := test.NewGitRepository(repoDir, test.NewMockingShell(repoDir, repoDir, ""))
 	err = repo.AddRemote("origin", origin.Dir)
 	assert.Nil(t, err)
 	err = repo.Fetch()
