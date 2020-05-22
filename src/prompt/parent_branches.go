@@ -68,15 +68,14 @@ The latter allows to build on top of currently unshipped features.
 var parentBranchPromptTemplate = "Please specify the parent branch of %q:"
 var perennialBranchOption = "<none> (perennial branch)"
 
-func filterOutSelfAndDescendants(branchName string, choices []string) []string {
-	result := []string{}
+func filterOutSelfAndDescendants(branchName string, choices []string) (filtered []string) {
 	for _, choice := range choices {
 		if choice == branchName || git.Config().IsAncestorBranch(choice, branchName) {
 			continue
 		}
-		result = append(result, choice)
+		filtered = append(filtered, choice)
 	}
-	return result
+	return filtered
 }
 
 func printParentBranchHeader() {
