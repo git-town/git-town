@@ -37,19 +37,15 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 // Does not return error because "Ensure" functions will call exit directly
 func getDiffParentConfig(args []string) (config diffParentConfig) {
 	initialBranch := git.GetCurrentBranchName()
-
 	if len(args) == 0 {
 		config.branch = initialBranch
 	} else {
 		config.branch = args[0]
 	}
-
 	if initialBranch != config.branch {
 		git.EnsureHasLocalBranch(config.branch)
 	}
-
 	git.Config().EnsureIsFeatureBranch(config.branch, "You can only diff-parent feature branches.")
-
 	prompt.EnsureKnowsParentBranches([]string{config.branch})
 	config.parentBranch = git.Config().GetParentBranch(config.branch)
 	return
