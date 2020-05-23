@@ -107,7 +107,11 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, 
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
-			if git.HasOpenChanges() {
+			hasOpenChanges, err := repo.HasOpenChanges()
+			if err != nil {
+				return result, err
+			}
+			if hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})

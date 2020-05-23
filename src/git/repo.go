@@ -329,11 +329,20 @@ func (repo *Repo) HasMergeInProgress() (result bool, err error) {
 	return strings.Contains(res.OutputSanitized(), "You have unmerged paths"), nil
 }
 
+// HasOpenChanges indicates whether this repo has open changes.
+func (repo *Repo) HasOpenChanges() (bool, error) {
+	outcome, err := repo.Run("git", "status", "--porcelain")
+	if err != nil {
+		return false, fmt.Errorf("cannot determine open changes: %w", err)
+	}
+	return outcome.OutputSanitized() != "", nil
+}
+
 // HasRebaseInProgress indicates whether this Git repository currently has a rebase in progress.
-func (repo *Repo) HasRebaseInProgress() (result bool, err error) {
+func (repo *Repo) HasRebaseInProgress() (bool, error) {
 	res, err := repo.Run("git", "status")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine rebase in %q progress: %w", repo.Dir, err)
+		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", repo.Dir, err)
 	}
 	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
 }

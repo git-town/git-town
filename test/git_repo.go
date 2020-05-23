@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -30,12 +31,16 @@ func CloneGitRepo(originDir, targetDir, homeDir, binDir string) (GitRepo, error)
 // CreateTestRepo creates a GitRepo for use in tests
 func CreateTestRepo(t *testing.T) GitRepo {
 	dir := CreateTempDir(t)
-	repo, err := InitGitRepository(dir, dir, "")
-	assert.Nil(t, err, "cannot initialize Git repo")
-	err = repo.RunMany([][]string{
-		{"git", "commit", "--allow-empty", "-m", "initial commit"},
-	})
-	assert.Nil(t, err, "cannot create initial commit: %s")
+	workingDir := filepath.Join(dir, "repo")
+	err := os.MkdirAll(workingDir, 0744)
+	assert.Nil(t, err)
+	homeDir := filepath.Join(dir, "home")
+	err = os.MkdirAll(homeDir, 0744)
+	assert.Nil(t, err)
+	repo, err := InitGitRepository(workingDir, homeDir, "")
+	assert.Nil(t, err)
+	_, err = repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
+	assert.Nil(t, err)
 	return repo
 }
 
