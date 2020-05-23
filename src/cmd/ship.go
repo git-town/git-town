@@ -126,13 +126,13 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canShipWithDriver, defaultCommitMessage, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	canShipWithDriver, defaultCommitMessage, pullRequestNumber, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
 	if err != nil {
 		return result, err
 	}
 	if canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, PullRequestNumber: pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
@@ -162,16 +162,16 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (bool, string, error) {
+func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int, err error) {
 	if !git.HasRemote("origin") {
-		return false, "", nil
+		return false, "", 0, nil
 	}
 	if git.Config().IsOffline() {
-		return false, "", nil
+		return false, "", 0, nil
 	}
 	driver := drivers.GetActiveDriver()
 	if driver == nil {
-		return false, "", nil
+		return false, "", 0, nil
 	}
 	return driver.CanMergePullRequest(branch, parentBranch)
 }

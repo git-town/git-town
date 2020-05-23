@@ -19,8 +19,8 @@ func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, err error) {
-	return false, "", nil
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+	return false, "", 0, nil
 }
 
 func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
