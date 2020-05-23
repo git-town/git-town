@@ -448,6 +448,21 @@ func TestGitRepo_LocalAndRemoteBranches(t *testing.T) {
 	assert.Equal(t, []string{"b1", "b2", "b3", "master"}, branches)
 }
 
+func TestGitRepo_PreviouslyCheckedOutBranch(t *testing.T) {
+	repo := test.CreateTestRepo(t)
+	err := repo.CreateBranch("feature1", "master")
+	assert.Nil(t, err)
+	err = repo.CreateBranch("feature2", "master")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("feature1")
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("feature2")
+	assert.Nil(t, err)
+	have, err := repo.PreviouslyCheckedOutBranch()
+	assert.Nil(t, err)
+	assert.Equal(t, "feature1", have)
+}
+
 func TestGitRepo_PushBranch(t *testing.T) {
 	repo := test.CreateTestRepo(t)
 	origin := test.CreateTestRepo(t)

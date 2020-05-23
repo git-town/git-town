@@ -128,9 +128,13 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, 
 		fmt.Printf("Cannot delete remote branch %q in offline mode", config.TargetBranch)
 		os.Exit(1)
 	}
+	previousBranch, err := repo.PreviouslyCheckedOutBranch()
+	if err != nil {
+		return result, err
+	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.InitialBranch != config.TargetBranch && config.TargetBranch == git.GetPreviouslyCheckedOutBranch(),
+		StashOpenChanges: config.InitialBranch != config.TargetBranch && config.TargetBranch == previousBranch,
 	})
 	return result, nil
 }

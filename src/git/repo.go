@@ -425,6 +425,15 @@ func (repo *Repo) LocalAndRemoteBranches() ([]string, error) {
 	return helpers.MainFirst(result), nil
 }
 
+// PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
+func (repo *Repo) PreviouslyCheckedOutBranch() (name string, err error) {
+	outcome, err := repo.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
+	}
+	return outcome.OutputSanitized(), nil
+}
+
 // PushBranch pushes the branch with the given name to the remote.
 func (repo *Repo) PushBranch(name string) error {
 	outcome, err := repo.Run("git", "push", "-u", "origin", name)
