@@ -118,12 +118,11 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 }
 
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	pullRequestNumber := options.PullRequestNumber
-	if pullRequestNumber == 0 {
+	if options.PullRequestNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", pullRequestNumber))
+		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -131,7 +130,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, pullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})
