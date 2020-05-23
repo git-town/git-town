@@ -103,7 +103,7 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, 
 		if err != nil {
 			return result, err
 		}
-		if hasTrackingBranch && !git.Config().IsOffline() {
+		if hasTrackingBranch && !repo.Config(false).IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
