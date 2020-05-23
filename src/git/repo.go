@@ -90,8 +90,8 @@ func (repo *Repo) CommitStagedChanges(message bool) error {
 }
 
 // Config returns a cached Config instance for this repo.
-func (repo *Repo) Config(refresh bool) *Configuration {
-	if repo.configCache == nil || refresh {
+func (repo *Repo) Config() *Configuration {
+	if repo.configCache == nil {
 		repo.configCache = NewConfiguration(repo.Shell)
 	}
 	return repo.configCache
@@ -176,7 +176,7 @@ func (repo *Repo) CreatePerennialBranches(names ...string) error {
 			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, repo.Dir, err)
 		}
 	}
-	repo.Config(false).AddToPerennialBranches(names...)
+	repo.Config().AddToPerennialBranches(names...)
 	return nil
 }
 

@@ -27,7 +27,8 @@ func BranchSteps(suite *godog.Suite, state *ScenarioState) {
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {
 			branch := row.Cells[0].Value
-			parentBranch := state.gitEnv.DevRepo.Config(true).GetParentBranch(branch)
+			state.gitEnv.DevRepo.Config().Reload()
+			parentBranch := state.gitEnv.DevRepo.Config().GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
 		diff, errCount := table.EqualGherkin(input)
@@ -40,7 +41,8 @@ func BranchSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
-		if state.gitEnv.DevRepo.Config(true).HasBranchInformation() {
+		state.gitEnv.DevRepo.Config().Reload()
+		if state.gitEnv.DevRepo.Config().HasBranchInformation() {
 			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
