@@ -8,6 +8,7 @@ import (
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
+	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -45,11 +46,10 @@ Does not delete perennial branches nor the main branch.`,
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		err := git.ValidateIsRepository()
-		if err != nil {
-			return err
-		}
-		return validateIsConfigured()
+		return util.FirstError(
+			git.ValidateIsRepository,
+			validateIsConfigured,
+		)
 	},
 }
 
