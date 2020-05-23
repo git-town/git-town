@@ -72,6 +72,7 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	}
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
+		repo.Config(true)
 	}
 	hasOrigin, err := repo.HasRemote("origin")
 	if err != nil {
