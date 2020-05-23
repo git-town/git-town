@@ -18,12 +18,11 @@ import (
 var repoInCurrentDir *Repo
 
 // RepoInCurrentDir provides a Repo instance in the current working directory.
-func RepoInCurrentDir(dryRun bool) *Repo {
+func RepoInCurrentDir() *Repo {
 	if repoInCurrentDir == nil {
 		repoInCurrentDir = &Repo{
-			Dir:    ".",
-			dryRun: dryRun,
-			Shell:  &command.ShellInCurrentDir{},
+			Dir:   ".",
+			Shell: &command.ShellInCurrentDir{},
 		}
 	}
 	return repoInCurrentDir
@@ -50,9 +49,6 @@ type Repo struct {
 
 	// indicates whether the remoteBranches property has been initialized
 	remoteBranchesInitialized bool
-
-	// dryRun indicates whether dryRun is enabled
-	dryRun bool
 }
 
 // AddRemote adds the given Git remote to this repository.

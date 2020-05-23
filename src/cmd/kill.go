@@ -26,7 +26,7 @@ var killCommand = &cobra.Command{
 Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.RepoInCurrentDir(false)
+		repo := git.RepoInCurrentDir()
 		config, err := getKillConfig(args, repo)
 		if err != nil {
 			fmt.Println("Error:", err)
