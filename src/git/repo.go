@@ -45,6 +45,12 @@ type Repo struct {
 	// currentBranch contains the current Git branch we are on in this repo
 	currentBranch string
 
+	// list of the remote branches
+	remoteBranches []string
+
+	// indicates whether the remoteBranches property has been initialized
+	remoteBranchesInitialized bool
+
 	// dryRun indicates whether dryRun is enabled
 	dryRun bool
 }
@@ -341,6 +347,21 @@ func (repo *Repo) HasRemote(name string) (result bool, err error) {
 	return util.DoesStringArrayContain(remotes, name), nil
 }
 
+// HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
+func (repo *Repo) HasTrackingBranch(name string) (result bool, err error) {
+	trackingBranchName := "origin/" + name
+	remoteBranches, err := repo.RemoteBranches()
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
+	}
+	for _, line := range remoteBranches {
+		if strings.TrimSpace(line) == trackingBranchName {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
 // IsOffline indicates whether Git Town is offline.
 func (repo *Repo) IsOffline() (result bool, err error) {
 	res, err := repo.Run("git", "config", "--get", "git-town.offline")
@@ -402,6 +423,27 @@ func (repo *Repo) PushBranch(name string) error {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, repo.Dir, err, outcome)
 	}
 	return nil
+}
+
+// RemoteBranches provides the names of the remote branches in this repo.
+func (repo *Repo) RemoteBranches() ([]string, error) {
+	if repo.remoteBranchesInitialized {
+		return repo.remoteBranches, nil
+	}
+	outcome, err := repo.Run("git", "branch", "-r")
+	if err != nil {
+		return []string{}, fmt.Errorf("cannot determine remote branches")
+	}
+	lines := outcome.OutputLines()
+	result := make([]string, 0, len(lines)-1)
+	for l := range lines {
+		if !strings.Contains(lines[l], " -> ") {
+			result = append(result, strings.TrimSpace(lines[l]))
+		}
+	}
+	repo.remoteBranches = result
+	remoteBranchesInitialized = true
+	return result, nil
 }
 
 // Remotes provides the names of all Git remotes in this repository.

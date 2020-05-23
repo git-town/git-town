@@ -32,7 +32,11 @@ Does not delete perennial branches nor the main branch.`,
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList := getKillStepList(config, repo)
+		stepList, err := getKillStepList(config, repo)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("kill", stepList)
 		err = steps.Run(runState)
 		if err != nil {
@@ -91,11 +95,15 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	return result, nil
 }
 
-func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList) {
+func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, err error) {
 	switch {
 	case config.IsTargetBranchLocal:
 		targetBranchParent := repo.Config(false).GetParentBranch(config.TargetBranch)
-		if git.HasTrackingBranch(config.TargetBranch) && !git.Config().IsOffline() {
+		hasTrackingBranch, err := repo.HasTrackingBranch(config.TargetBranch)
+		if err != nil {
+			return result, err
+		}
+		if hasTrackingBranch && !git.Config().IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
 		if config.InitialBranch == config.TargetBranch {
@@ -119,7 +127,7 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList) 
 		RunInGitRoot:     true,
 		StashOpenChanges: config.InitialBranch != config.TargetBranch && config.TargetBranch == git.GetPreviouslyCheckedOutBranch(),
 	})
-	return
+	return result, nil
 }
 
 func init() {

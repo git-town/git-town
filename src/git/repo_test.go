@@ -244,23 +244,23 @@ func TestGitRepo_FilesInCommit(t *testing.T) {
 }
 
 func TestGitRepo_HasBranchesOutOfSync_synced(t *testing.T) {
-	repo1 := test.CreateTestRepo(t)
-	dir2 := test.CreateTempDir(t)
-	repo2, err := test.CloneGitRepo(repo1.Dir, dir2, repo1.Dir, repo1.Dir)
+	origin := test.CreateTestRepo(t)
+	repoDir := test.CreateTempDir(t)
+	repo, err := test.CloneGitRepo(origin.Dir, repoDir, origin.Dir, origin.Dir)
 	assert.Nil(t, err)
-	err = repo2.CreateBranch("branch1", "master")
+	err = repo.CreateBranch("branch1", "master")
 	assert.Nil(t, err)
-	err = repo2.CheckoutBranch("branch1")
+	err = repo.CheckoutBranch("branch1")
 	assert.Nil(t, err)
-	err = repo2.CreateFile("file1", "content")
+	err = repo.CreateFile("file1", "content")
 	assert.Nil(t, err)
-	err = repo2.StageFiles("file1")
+	err = repo.StageFiles("file1")
 	assert.Nil(t, err)
-	err = repo2.CommitStagedChanges(true)
+	err = repo.CommitStagedChanges(true)
 	assert.Nil(t, err)
-	err = repo2.PushBranch("master")
+	err = repo.PushBranch("master")
 	assert.Nil(t, err)
-	have, err := repo2.HasBranchesOutOfSync()
+	have, err := repo.HasBranchesOutOfSync()
 	assert.Nil(t, err)
 	assert.False(t, have)
 }
@@ -373,6 +373,28 @@ func TestGitRepo_HasRemote(t *testing.T) {
 	assert.False(t, has)
 }
 
+func TestGitRepo_HasTrackingBranch(t *testing.T) {
+	origin := test.CreateTestRepo(t)
+	err := origin.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	repoDir := test.CreateTempDir(t)
+	repo, err := test.CloneGitRepo(origin.Dir, repoDir, repoDir, repoDir)
+	assert.Nil(t, err)
+	err = repo.CheckoutBranch("b1")
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b2", "master")
+	assert.Nil(t, err)
+	has, err := repo.HasTrackingBranch("b1")
+	assert.Nil(t, err)
+	assert.True(t, has)
+	has, err = repo.HasTrackingBranch("b2")
+	assert.Nil(t, err)
+	assert.False(t, has)
+	has, err = repo.HasTrackingBranch("b3")
+	assert.Nil(t, err)
+	assert.False(t, has)
+}
+
 func TestGitRepo_LastActiveDir(t *testing.T) {
 	repo := test.CreateTestRepo(t)
 	dir, err := repo.LastActiveDir()
@@ -428,6 +450,24 @@ func TestGitRepo_PushBranch(t *testing.T) {
 	branches, err := origin.LocalBranches()
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"b1", "master"}, branches)
+}
+
+func TestGitRepo_RemoteBranches(t *testing.T) {
+	origin := test.CreateTestRepo(t)
+	repoDir := test.CreateTempDir(t)
+	repo, err := test.CloneGitRepo(origin.Dir, repoDir, repoDir, repoDir)
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b1", "master")
+	assert.Nil(t, err)
+	err = repo.CreateBranch("b2", "master")
+	assert.Nil(t, err)
+	err = origin.CreateBranch("b3", "master")
+	assert.Nil(t, err)
+	err = repo.Fetch()
+	assert.Nil(t, err)
+	branches, err := repo.RemoteBranches()
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"origin/b3", "origin/master"}, branches)
 }
 
 func TestGitRepo_Remotes(t *testing.T) {
