@@ -82,10 +82,6 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // The tests don't use the master branch.
 func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the folder
-	err = os.MkdirAll(dir, 0744)
-	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create folder %q for Git environment: %w", dir, err)
-	}
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
