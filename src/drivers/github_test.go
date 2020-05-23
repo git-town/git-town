@@ -118,31 +118,17 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	_, err := driver.MergePullRequest(options)
 	assert.Error(t, err)
-	assert.Equal(t, "no pull request found", err.Error())
-}
-
-func TestGitHubDriver_MergePullRequest_MultiplePullRequestsFound(t *testing.T) {
-	driver, teardown := setupDriver(t, "TOKEN")
-	defer teardown()
-	options := MergePullRequestOptions{
-		Branch:        "feature",
-		CommitMessage: "title\nextra detail1\nextra detail2",
-		ParentBranch:  "main",
-	}
-	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
-	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-	_, err := driver.MergePullRequest(options)
-	assert.Error(t, err)
-	assert.Equal(t, "multiple pull requests found: 1, 2", err.Error())
+	assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
 }
 
 func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
-		Branch:        "feature",
-		CommitMessage: "title\nextra detail1\nextra detail2",
-		ParentBranch:  "main",
+		Branch:            "feature",
+		PullRequestNumber: 1,
+		CommitMessage:     "title\nextra detail1\nextra detail2",
+		ParentBranch:      "main",
 	}
 	var mergeRequest *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, "[]"))
@@ -179,9 +165,10 @@ func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	options := MergePullRequestOptions{
-		Branch:        "feature",
-		CommitMessage: "title\nextra detail1\nextra detail2",
-		ParentBranch:  "main",
+		Branch:            "feature",
+		PullRequestNumber: 1,
+		CommitMessage:     "title\nextra detail1\nextra detail2",
+		ParentBranch:      "main",
 	}
 	var updateRequest1, updateRequest2 *http.Request
 	httpmock.RegisterResponder("GET", childPullRequestsURL, httpmock.NewStringResponder(200, `[{"number": 2}, {"number": 3}]`))

@@ -2,10 +2,8 @@ package drivers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"golang.org/x/oauth2"
@@ -110,24 +108,6 @@ func (d *githubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.Pu
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
-func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
-	pullRequests, err := d.getPullRequests(options.Branch, options.ParentBranch)
-	if err != nil {
-		return -1, err
-	}
-	if len(pullRequests) == 0 {
-		return -1, errors.New("no pull request found")
-	}
-	if len(pullRequests) > 1 {
-		pullRequestNumbersAsStrings := make([]string, len(pullRequests))
-		for i, pullRequest := range pullRequests {
-			pullRequestNumbersAsStrings[i] = strconv.Itoa(*pullRequest.Number)
-		}
-		return -1, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
-	}
-	return *pullRequests[0].Number, nil
-}
-
 func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
@@ -140,10 +120,7 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	pullRequestNumber := options.PullRequestNumber
 	if pullRequestNumber == 0 {
-		pullRequestNumber, err = d.getPullRequestNumber(options)
-		if err != nil {
-			return "", err
-		}
+		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
 		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", pullRequestNumber))

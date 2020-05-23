@@ -127,6 +127,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
 	canShipWithDriver, defaultCommitMessage, pullRequestNumber, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	fmt.Println("PR number:", pullRequestNumber)
 	if err != nil {
 		return result, err
 	}
