@@ -99,7 +99,6 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, err error) {
 	switch {
 	case config.IsTargetBranchLocal:
-		targetBranchParent := repo.Config().GetParentBranch(config.TargetBranch)
 		hasTrackingBranch, err := repo.HasTrackingBranch(config.TargetBranch)
 		if err != nil {
 			return result, err
@@ -107,6 +106,7 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, 
 		if hasTrackingBranch && !repo.Config().IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
+		targetBranchParent := repo.Config().GetParentBranch(config.TargetBranch)
 		if config.InitialBranch == config.TargetBranch {
 			hasOpenChanges, err := repo.HasOpenChanges()
 			if err != nil {
