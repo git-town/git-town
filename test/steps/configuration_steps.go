@@ -164,6 +164,7 @@ func ConfigurationSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
+		state.gitEnv.DevRepo.Configuration.Reload()
 		have := state.gitEnv.DevRepo.Configuration.GetPullBranchStrategy()
 		if have != want {
 			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)
