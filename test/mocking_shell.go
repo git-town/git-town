@@ -29,8 +29,8 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
-// Dir provides the directory this MockingShell operates in.
-func (ms *MockingShell) Dir() string {
+// WorkingDir provides the directory this MockingShell operates in.
+func (ms *MockingShell) WorkingDir() string {
 	return ms.workingDir
 }
 

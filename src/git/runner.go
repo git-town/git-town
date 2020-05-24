@@ -39,7 +39,7 @@ func (r *Runner) AddRemote(name, value string) error {
 func (r *Runner) CheckoutBranch(name string) error {
 	outcome, err := r.Run("git", "checkout", name)
 	if err != nil {
-		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.Dir(), err, outcome)
+		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
 	r.currentBranch.Changed(name)
 	return nil
@@ -187,7 +187,7 @@ func (r *Runner) CreateFeatureBranchNoParent(name string) error {
 
 // CreateFile creates a file with the given name and content in this repository.
 func (r *Runner) CreateFile(name, content string) error {
-	filePath := filepath.Join(r.Dir(), name)
+	filePath := filepath.Join(r.WorkingDir(), name)
 	folderPath := filepath.Dir(filePath)
 	err := os.MkdirAll(folderPath, os.ModePerm)
 	if err != nil {
@@ -205,7 +205,7 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 	for _, name := range names {
 		err := r.CreateBranch(name, "main")
 		if err != nil {
-			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.Dir(), err)
+			return fmt.Errorf("cannot create perennial branch %q in repo %q: %w", name, r.WorkingDir(), err)
 		}
 	}
 	r.AddToPerennialBranches(names...)
@@ -289,7 +289,7 @@ func (r *Runner) FilesInCommit(sha string) (result []string, err error) {
 func (r *Runner) FilesInBranch(branch string) (result []string, err error) {
 	outcome, err := r.Run("git", "ls-tree", "-r", "--name-only", branch)
 	if err != nil {
-		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.Dir(), err)
+		return result, fmt.Errorf("cannot determine files in branch %q in repo %q: %w", branch, r.WorkingDir(), err)
 	}
 	for _, line := range strings.Split(outcome.OutputSanitized(), "\n") {
 		file := strings.TrimSpace(line)
@@ -304,14 +304,14 @@ func (r *Runner) FilesInBranch(branch string) (result []string, err error) {
 func (r *Runner) HasBranchesOutOfSync() (bool, error) {
 	res, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.Dir(), err, res.Output())
+		return false, fmt.Errorf("cannot determine if branches are out of sync in %q: %w %q", r.WorkingDir(), err, res.Output())
 	}
 	return strings.Contains(res.Output(), "["), nil
 }
 
 // HasFile indicates whether this repository contains a file with the given name and content.
 func (r *Runner) HasFile(name, content string) (result bool, err error) {
-	rawContent, err := ioutil.ReadFile(filepath.Join(r.Dir(), name))
+	rawContent, err := ioutil.ReadFile(filepath.Join(r.WorkingDir(), name))
 	if err != nil {
 		return result, fmt.Errorf("repo doesn't have file %q: %w", name, err)
 	}
@@ -356,7 +356,7 @@ func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
 func (r *Runner) HasMergeInProgress() (result bool, err error) {
 	res, err := r.Run("git", "status")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine merge in %q progress: %w", r.Dir(), err)
+		return result, fmt.Errorf("cannot determine merge in %q progress: %w", r.WorkingDir(), err)
 	}
 	return strings.Contains(res.OutputSanitized(), "You have unmerged paths"), nil
 }
@@ -374,7 +374,7 @@ func (r *Runner) HasOpenChanges() (bool, error) {
 func (r *Runner) HasRebaseInProgress() (bool, error) {
 	res, err := r.Run("git", "status")
 	if err != nil {
-		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.Dir(), err)
+		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.WorkingDir(), err)
 	}
 	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
 }
@@ -458,7 +458,7 @@ func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 func (r *Runner) PushBranch(name string) error {
 	outcome, err := r.Run("git", "push", "-u", "origin", name)
 	if err != nil {
-		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, r.Dir(), err, outcome)
+		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
 	return nil
 }
@@ -513,13 +513,13 @@ func (r *Runner) RemoveRemote(name string) error {
 
 // RemoveUnnecessaryFiles trims all files that aren't necessary in this repo.
 func (r *Runner) RemoveUnnecessaryFiles() error {
-	fullPath := filepath.Join(r.Dir(), ".git", "hooks")
+	fullPath := filepath.Join(r.WorkingDir(), ".git", "hooks")
 	err := os.RemoveAll(fullPath)
 	if err != nil {
 		return fmt.Errorf("cannot remove unnecessary files in %q: %w", fullPath, err)
 	}
-	_ = os.Remove(filepath.Join(r.Dir(), ".git", "COMMIT_EDITMSG"))
-	_ = os.Remove(filepath.Join(r.Dir(), ".git", "description"))
+	_ = os.Remove(filepath.Join(r.WorkingDir(), ".git", "COMMIT_EDITMSG"))
+	_ = os.Remove(filepath.Join(r.WorkingDir(), ".git", "description"))
 	return nil
 }
 
@@ -551,7 +551,7 @@ func (r *Runner) StashSize() (result int, err error) {
 func (r *Runner) Tags() (result []string, err error) {
 	res, err := r.Run("git", "tag")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine tags in repo %q: %w", r.Dir(), err)
+		return result, fmt.Errorf("cannot determine tags in repo %q: %w", r.WorkingDir(), err)
 	}
 	for _, line := range strings.Split(res.OutputSanitized(), "\n") {
 		result = append(result, strings.TrimSpace(line))
@@ -563,7 +563,7 @@ func (r *Runner) Tags() (result []string, err error) {
 func (r *Runner) UncommittedFiles() (result []string, err error) {
 	res, err := r.Run("git", "status", "--porcelain", "--untracked-files=all")
 	if err != nil {
-		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.Dir(), err)
+		return result, fmt.Errorf("cannot determine uncommitted files in %q: %w", r.WorkingDir(), err)
 	}
 	lines := res.OutputLines()
 	for l := range lines {

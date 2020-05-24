@@ -18,8 +18,8 @@ func NewShellInCurrentDir() (ShellInCurrentDir, error) {
 	return ShellInCurrentDir{dir}, err
 }
 
-// Dir provides the directory that this Shell operates in.
-func (shell ShellInCurrentDir) Dir() string {
+// WorkingDir provides the directory that this Shell operates in.
+func (shell ShellInCurrentDir) WorkingDir() string {
 	return shell.dir
 }
 

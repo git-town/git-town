@@ -78,10 +78,10 @@ func TestRunner_ConnectTrackingBranch(t *testing.T) {
 	// connecting branches of repos with the same commits in them
 	origin := test.CreateRepo(t)
 	repoDir := filepath.Join(test.CreateTempDir(t), "repo") // need a non-existing directory
-	err := test.CopyDirectory(origin.Dir(), repoDir)
+	err := test.CopyDirectory(origin.WorkingDir(), repoDir)
 	assert.Nil(t, err)
 	repo := test.NewRepo(repoDir, repoDir, "")
-	err = repo.AddRemote("origin", origin.Dir())
+	err = repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	err = repo.Fetch()
 	assert.Nil(t, err)
@@ -175,7 +175,7 @@ func TestRunner_CreateFile(t *testing.T) {
 	repo := test.CreateRepo(t)
 	err := repo.CreateFile("filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
-	content, err := ioutil.ReadFile(filepath.Join(repo.Dir(), "filename"))
+	content, err := ioutil.ReadFile(filepath.Join(repo.WorkingDir(), "filename"))
 	assert.Nil(t, err, "cannot read file")
 	assert.Equal(t, "content", string(content))
 }
@@ -184,7 +184,7 @@ func TestRunner_CreateFile_InSubFolder(t *testing.T) {
 	repo := test.CreateRepo(t)
 	err := repo.CreateFile("folder/filename", "content")
 	assert.Nil(t, err, "cannot create file in repo")
-	content, err := ioutil.ReadFile(filepath.Join(repo.Dir(), "folder/filename"))
+	content, err := ioutil.ReadFile(filepath.Join(repo.WorkingDir(), "folder/filename"))
 	assert.Nil(t, err, "cannot read file")
 	assert.Equal(t, "content", string(content))
 }
@@ -222,7 +222,7 @@ func TestRunner_CurrentBranch(t *testing.T) {
 func TestRunner_Fetch(t *testing.T) {
 	repo := test.CreateRepo(t)
 	origin := test.CreateRepo(t)
-	err := repo.AddRemote("origin", origin.Dir())
+	err := repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	err = repo.Fetch()
 	assert.Nil(t, err)
@@ -412,7 +412,7 @@ func TestRunner_LastActiveDir(t *testing.T) {
 	repo := test.CreateRepo(t)
 	dir, err := repo.LastActiveDir()
 	assert.Nil(t, err)
-	assert.Equal(t, repo.Dir(), dir)
+	assert.Equal(t, repo.WorkingDir(), dir)
 }
 
 func TestRunner_LocalBranches(t *testing.T) {
@@ -469,7 +469,7 @@ func TestRunner_PreviouslyCheckedOutBranch(t *testing.T) {
 func TestRunner_PushBranch(t *testing.T) {
 	repo := test.CreateRepo(t)
 	origin := test.CreateRepo(t)
-	err := repo.AddRemote("origin", origin.Dir())
+	err := repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	err = repo.CreateBranch("b1", "master")
 	assert.Nil(t, err)
@@ -501,7 +501,7 @@ func TestRunner_RemoteBranches(t *testing.T) {
 func TestRunner_Remotes(t *testing.T) {
 	repo := test.CreateRepo(t)
 	origin := test.CreateRepo(t)
-	err := repo.AddRemote("origin", origin.Dir())
+	err := repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	remotes, err := repo.Remotes()
 	assert.Nil(t, err)
@@ -525,7 +525,7 @@ func TestRunner_RemoveBranch(t *testing.T) {
 func TestRunner_RemoveRemote(t *testing.T) {
 	repo := test.CreateRepo(t)
 	origin := test.CreateRepo(t)
-	err := repo.AddRemote("origin", origin.Dir())
+	err := repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	err = repo.RemoveRemote("origin")
 	assert.Nil(t, err)
@@ -540,7 +540,7 @@ func TestRunner_SetRemote(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, []string{}, remotes)
 	origin := test.CreateRepo(t)
-	err = repo.AddRemote("origin", origin.Dir())
+	err = repo.AddRemote("origin", origin.WorkingDir())
 	assert.Nil(t, err)
 	remotes, err = repo.Remotes()
 	assert.Nil(t, err)

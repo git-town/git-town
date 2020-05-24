@@ -13,7 +13,7 @@ func FolderSteps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot determine the current working directory: %w", err)
 		}
-		expected := state.gitEnv.DevRepo.Dir()
+		expected := state.gitEnv.DevRepo.WorkingDir()
 		if actual != expected {
 			return fmt.Errorf("expected to be in %q but am in %q", expected, actual)
 		}
