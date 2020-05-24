@@ -36,15 +36,9 @@ func CreateRepo(t *testing.T) Repo {
 // InitRepo creates a fully functioning test.Repo in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
-	// create the folder
-	// TODO: delete?
-	err := os.MkdirAll(workingDir, 0744)
-	if err != nil {
-		return Repo{}, fmt.Errorf("cannot create directory %q: %w", workingDir, err)
-	}
 	// initialize the repo in the folder
 	result := NewRepo(workingDir, homeDir, binDir)
-	err = result.RunMany([][]string{
+	err := result.RunMany([][]string{
 		{"git", "init"},
 		{"git", "config", "--global", "user.name", "user"},
 		{"git", "config", "--global", "user.email", "email@example.com"},
