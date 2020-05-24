@@ -318,7 +318,7 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 	return result
 }
 
-// Reload refreshes the cached information in this configuration.
+// Reload refreshes the cached configuration information.
 func (c *Configuration) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)
 	c.globalConfigCache = loadGitConfig(c.shell, true)
