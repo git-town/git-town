@@ -13,12 +13,12 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// Runner executes Git commands using the given Shell.
+// Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // runs console commands
-	currentBranch  *CurrentBranchTracker // tracks the current branch of this Git repo
+	command.Shell                        // for running console commands
+	currentBranch  *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
 	remoteBranches *RemoteBranchTracker  // caches the remote branches of this Git repo
-	*Configuration
+	*Configuration                       // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
