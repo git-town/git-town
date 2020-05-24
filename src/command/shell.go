@@ -7,4 +7,5 @@ type Shell interface {
 	RunMany([][]string) error
 	RunString(string) (*Result, error)
 	RunStringWith(string, Options) (*Result, error)
+	Dir() string
 }

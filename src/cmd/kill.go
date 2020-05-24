@@ -26,7 +26,7 @@ var killCommand = &cobra.Command{
 Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.RepoInCurrentDir()
+		repo := git.ProdRepoInCurrentDir()
 		config, err := getKillConfig(args, repo)
 		if err != nil {
 			fmt.Println("Error:", err)
@@ -53,8 +53,8 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error) {
-	result.InitialBranch, err = repo.CurrentBranch()
+func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
+	result.InitialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
 	}
@@ -63,29 +63,29 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	} else {
 		result.TargetBranch = args[0]
 	}
-	if !repo.Config().IsFeatureBranch(result.TargetBranch) {
+	if !repo.Configuration.IsFeatureBranch(result.TargetBranch) {
 		return result, fmt.Errorf("you can only kill feature branches")
 	}
-	result.IsTargetBranchLocal, err = repo.HasLocalBranch(result.TargetBranch)
+	result.IsTargetBranchLocal, err = repo.Silent.HasLocalBranch(result.TargetBranch)
 	if err != nil {
 		return result, err
 	}
 	if result.IsTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.TargetBranch})
-		repo.Config().Reload()
+		repo.Configuration.Reload()
 	}
-	hasOrigin, err := repo.HasRemote("origin")
+	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
 	}
-	if hasOrigin && !repo.Config().IsOffline() {
+	if hasOrigin && !repo.Silent.Configuration.IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
 	if result.InitialBranch != result.TargetBranch {
-		hasTargetBranch, err := repo.HasLocalOrRemoteBranch(result.TargetBranch)
+		hasTargetBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.TargetBranch)
 		if err != nil {
 			return result, err
 		}
@@ -96,19 +96,19 @@ func getKillConfig(args []string, repo *git.Repo) (result killConfig, err error)
 	return result, nil
 }
 
-func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, err error) {
+func getKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	switch {
 	case config.IsTargetBranchLocal:
-		hasTrackingBranch, err := repo.HasTrackingBranch(config.TargetBranch)
+		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(config.TargetBranch)
 		if err != nil {
 			return result, err
 		}
-		if hasTrackingBranch && !repo.Config().IsOffline() {
+		if hasTrackingBranch && !repo.Configuration.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
-		targetBranchParent := repo.Config().GetParentBranch(config.TargetBranch)
+		targetBranchParent := repo.Configuration.GetParentBranch(config.TargetBranch)
 		if config.InitialBranch == config.TargetBranch {
-			hasOpenChanges, err := repo.HasOpenChanges()
+			hasOpenChanges, err := repo.Silent.HasOpenChanges()
 			if err != nil {
 				return result, err
 			}
@@ -118,17 +118,17 @@ func getKillStepList(config killConfig, repo *git.Repo) (result steps.StepList, 
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range repo.Config().GetChildBranches(config.TargetBranch) {
+		for _, child := range repo.Configuration.GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-	case !repo.Config().IsOffline():
+	case !repo.Configuration.IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	default:
 		fmt.Printf("Cannot delete remote branch %q in offline mode", config.TargetBranch)
 		os.Exit(1)
 	}
-	previousBranch, err := repo.PreviouslyCheckedOutBranch()
+	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return result, err
 	}

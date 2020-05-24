@@ -15,7 +15,7 @@ func CoworkerSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Config().SetParentBranch(childBranch, parentBranch)
+		_ = state.gitEnv.CoworkerRepo.Configuration.SetParentBranch(childBranch, parentBranch)
 		return nil
 	})
 
