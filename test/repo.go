@@ -22,11 +22,11 @@ func CreateRepo(t *testing.T) Repo {
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
 	// TODO: change to Mkdir
-	err := os.MkdirAll(workingDir, 0744)
+	err := os.Mkdir(workingDir, 0744)
 	assert.Nil(t, err)
 	homeDir := filepath.Join(dir, "home")
 	// TODO: change to Mkdir
-	err = os.MkdirAll(homeDir, 0744)
+	err = os.Mkdir(homeDir, 0744)
 	assert.Nil(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
 	assert.Nil(t, err)
