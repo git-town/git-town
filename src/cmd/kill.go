@@ -63,7 +63,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	} else {
 		result.TargetBranch = args[0]
 	}
-	if !repo.Configuration.IsFeatureBranch(result.TargetBranch) {
+	if !repo.IsFeatureBranch(result.TargetBranch) {
 		return result, fmt.Errorf("you can only kill feature branches")
 	}
 	result.IsTargetBranchLocal, err = repo.Silent.HasLocalBranch(result.TargetBranch)
@@ -78,7 +78,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	if hasOrigin && !repo.Silent.Configuration.IsOffline() {
+	if hasOrigin && !repo.Silent.IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -103,10 +103,10 @@ func getKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepLi
 		if err != nil {
 			return result, err
 		}
-		if hasTrackingBranch && !repo.Configuration.IsOffline() {
+		if hasTrackingBranch && !repo.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: true})
 		}
-		targetBranchParent := repo.Configuration.GetParentBranch(config.TargetBranch)
+		targetBranchParent := repo.GetParentBranch(config.TargetBranch)
 		if config.InitialBranch == config.TargetBranch {
 			hasOpenChanges, err := repo.Silent.HasOpenChanges()
 			if err != nil {
@@ -118,11 +118,11 @@ func getKillStepList(config killConfig, repo *git.ProdRepo) (result steps.StepLi
 			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.TargetBranch, Force: true})
-		for _, child := range repo.Configuration.GetChildBranches(config.TargetBranch) {
+		for _, child := range repo.GetChildBranches(config.TargetBranch) {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.TargetBranch})
-	case !repo.Configuration.IsOffline():
+	case !repo.IsOffline():
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.TargetBranch, IsTracking: false})
 	default:
 		fmt.Printf("Cannot delete remote branch %q in offline mode", config.TargetBranch)

@@ -12,11 +12,12 @@ type ProdRepo struct {
 // ProdRepoInCurrentDir provides a Repo instance in the current working directory.
 func ProdRepoInCurrentDir() *ProdRepo {
 	shell := command.ShellInCurrentDir{}
+	config := NewConfiguration(shell)
 	silentRunner := Runner{
 		Shell:          shell,
 		currentBranch:  &CurrentBranchTracker{},
 		remoteBranches: &RemoteBranchTracker{},
-		Configuration:  NewConfiguration(shell),
+		Configuration:  config,
 	}
-	return &ProdRepo{Silent: silentRunner}
+	return &ProdRepo{Silent: silentRunner, Configuration: config}
 }
