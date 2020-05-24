@@ -21,11 +21,9 @@ type Repo struct {
 func CreateRepo(t *testing.T) Repo {
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
-	// TODO: change to Mkdir
 	err := os.Mkdir(workingDir, 0744)
 	assert.Nil(t, err)
 	homeDir := filepath.Join(dir, "home")
-	// TODO: change to Mkdir
 	err = os.Mkdir(homeDir, 0744)
 	assert.Nil(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
@@ -37,7 +35,6 @@ func CreateRepo(t *testing.T) Repo {
 
 // InitRepo creates a fully functioning test.Repo in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
-// TODO: where is this used? Merge with CreateRepo?
 func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
 	// create the folder
 	// TODO: delete?
