@@ -63,11 +63,11 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	assert.Nil(t, err)
 	runner := NewMockingShell(dir1, createTempDir(t), "")
 	toolPath := filepath.Join(dir2, "list-dir")
-	err = ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0744)
+	err = CreateLsTool(toolPath)
 	assert.Nil(t, err)
-	res, err := runner.RunStringWith(toolPath, command.Options{Dir: "subdir"})
+	res, err := runner.RunWith(command.Options{Dir: "subdir"}, toolPath)
 	assert.Nil(t, err)
-	assert.Equal(t, "list-dir", res.OutputSanitized())
+	assert.Equal(t, ScriptName("list-dir"), res.OutputSanitized())
 }
 
 func TestShellRunner_RunStringWith_Input(t *testing.T) {

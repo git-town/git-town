@@ -485,7 +485,7 @@ func (repo *GitRepo) IsOffline() (result bool, err error) {
 // LastActiveDir provides the directory that was last used in this repo.
 func (repo *GitRepo) LastActiveDir() (string, error) {
 	res, err := repo.Shell.Run("git", "rev-parse", "--show-toplevel")
-	return res.OutputSanitized(), err
+	return filepath.FromSlash(res.OutputSanitized()), err
 }
 
 // PushBranch pushes the branch with the given name to the remote.
