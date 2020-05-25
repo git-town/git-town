@@ -68,6 +68,9 @@ When run on a perennial branch
 }
 
 func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
+	result.initialBranch = git.GetCurrentBranchName()
+	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
+	result.isOffline = git.Config().IsOffline()
 	if len(args) == 1 {
 		result.oldBranchName = git.GetCurrentBranchName()
 		result.newBranchName = args[0]
@@ -82,7 +85,7 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 	if result.oldBranchName == result.newBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
-	if !git.Config().IsOffline() {
+	if !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -91,11 +94,8 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 	git.EnsureHasBranch(result.oldBranchName)
 	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
 	git.EnsureDoesNotHaveBranch(result.newBranchName)
-	result.initialBranch = git.GetCurrentBranchName()
-	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)
-	result.isOffline = git.Config().IsOffline()
 	return result, nil
 }
 
