@@ -14,9 +14,10 @@ import (
 )
 
 type prependConfig struct {
-	InitialBranch string
-	ParentBranch  string
-	TargetBranch  string
+	InitialBranch    string
+	ParentBranch     string
+	TargetBranch     string
+	AncestorBranches []string
 }
 
 var prependCommand = &cobra.Command{
@@ -69,11 +70,12 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 	git.Config().EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
 	result.ParentBranch = git.Config().GetParentBranch(result.InitialBranch)
+	result.AncestorBranches = git.Config().GetAncestorBranches(result.InitialBranch)
 	return
 }
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
-	for _, branchName := range git.Config().GetAncestorBranches(config.InitialBranch) {
+	for _, branchName := range config.AncestorBranches {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
