@@ -19,7 +19,7 @@ type shipConfig struct {
 	pullRequestNumber            int
 	branchToShip                 string
 	branchToMergeInto            string
-	initialBranch                string // the name of the branch that was checked out when running this command
+	initialBranch                string
 	defaultCommitMessage         string
 	canShipWithDriver            bool
 	hasOrigin                    bool
