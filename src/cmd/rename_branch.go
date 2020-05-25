@@ -15,6 +15,7 @@ type renameBranchConfig struct {
 	oldBranchName            string
 	newBranchName            string
 	initialBranch            string
+	oldBranchChildren        []string
 	isInitialBranchPerennial bool
 }
 
@@ -90,6 +91,7 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 	git.EnsureDoesNotHaveBranch(result.newBranchName)
 	result.initialBranch = git.GetCurrentBranchName()
 	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
+	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
 	return result, nil
 }
 
@@ -105,7 +107,7 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
 		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: git.Config().GetParentBranch(config.oldBranchName)})
 	}
-	for _, child := range git.Config().GetChildBranches(config.oldBranchName) {
+	for _, child := range config.oldBranchChildren {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})
 	}
 	if git.HasTrackingBranch(config.oldBranchName) && !git.Config().IsOffline() {
