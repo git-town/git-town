@@ -18,6 +18,7 @@ import (
 type shipConfig struct {
 	BranchToShip  string
 	InitialBranch string // the name of the branch that was checked out when running this command
+	isOffline     bool
 }
 
 // optional commit message provided via the command line
@@ -98,6 +99,7 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	if result.BranchToShip != result.InitialBranch {
 		git.EnsureHasBranch(result.BranchToShip)
 	}
+	result.isOffline = git.Config().IsOffline()
 	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
@@ -119,7 +121,6 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 
 func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result := steps.StepList{}
-	isOffline := git.Config().IsOffline()
 	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
 	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
@@ -137,7 +138,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
-	if git.HasRemote("origin") && !isOffline {
+	if git.HasRemote("origin") && !config.isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
@@ -145,7 +146,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !isOffline) {
+	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !config.isOffline) {
 		if git.Config().ShouldShipDeleteRemoteBranch() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
