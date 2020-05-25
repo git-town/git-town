@@ -14,9 +14,11 @@ import (
 )
 
 type syncConfig struct {
-	InitialBranch  string
-	BranchesToSync []string
-	ShouldPushTags bool
+	initialBranch  string
+	branchesToSync []string
+	shouldPushTags bool
+	hasOrigin      bool
+	isOffline      bool
 }
 
 var syncCmd = &cobra.Command{
@@ -65,32 +67,34 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 }
 
 func getSyncConfig() (result syncConfig, err error) {
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	result.hasOrigin = git.HasRemote("origin")
+	result.isOffline = git.Config().IsOffline()
+	if result.hasOrigin && !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	result.InitialBranch = git.GetCurrentBranchName()
+	result.initialBranch = git.GetCurrentBranchName()
 	if allFlag {
 		branches := git.GetLocalBranchesWithMainBranchFirst()
 		prompt.EnsureKnowsParentBranches(branches)
-		result.BranchesToSync = branches
-		result.ShouldPushTags = true
+		result.branchesToSync = branches
+		result.shouldPushTags = true
 	} else {
-		prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-		result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
-		result.ShouldPushTags = !git.Config().IsFeatureBranch(result.InitialBranch)
+		prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+		result.branchesToSync = append(git.Config().GetAncestorBranches(result.initialBranch), result.initialBranch)
+		result.shouldPushTags = !git.Config().IsFeatureBranch(result.initialBranch)
 	}
 	return
 }
 
 func getSyncStepList(config syncConfig) (result steps.StepList) {
-	for _, branchName := range config.BranchesToSync {
+	for _, branchName := range config.branchesToSync {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.HasRemote("origin") && config.ShouldPushTags && !git.Config().IsOffline() {
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.initialBranch})
+	if config.hasOrigin && config.shouldPushTags && !config.isOffline {
 		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})

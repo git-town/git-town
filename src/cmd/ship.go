@@ -131,8 +131,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) steps.StepList {
-	result := steps.StepList{}
+func getShipStepList(config shipConfig) (result steps.StepList) {
 	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.branchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})
