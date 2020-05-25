@@ -18,7 +18,6 @@ func (step *CreateBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CreateBranchStep) Run(runner *git.Runner) error {
-	return runner.CreateBranch(step.BranchName, step.StartingPoint)
-	// return script.RunCommand("git", "branch", step.BranchName, step.StartingPoint)
+func (step *CreateBranchStep) Run(repo *git.ProdRepo) error {
+	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
 }

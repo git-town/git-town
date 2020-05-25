@@ -10,6 +10,6 @@ type AbortMergeBranchStep struct {
 }
 
 // Run executes this step.
-func (step *AbortMergeBranchStep) Run(runner *git.Runner) error {
-	return runner.AbortMerge()
+func (step *AbortMergeBranchStep) Run(repo *git.ProdRepo) error {
+	return repo.Logging.AbortMerge()
 }

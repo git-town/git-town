@@ -18,13 +18,13 @@ func (step *CheckoutBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CheckoutBranchStep) Run(runner *git.Runner) (err error) {
-	step.previousBranchName, err = runner.CurrentBranch()
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.previousBranchName, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
 	if step.previousBranchName != step.BranchName {
-		return runner.CheckoutBranch(step.BranchName)
+		return repo.Logging.CheckoutBranch(step.BranchName)
 	}
 	return nil
 }

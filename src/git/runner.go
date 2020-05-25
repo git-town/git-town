@@ -53,6 +53,15 @@ func (r *Runner) AddRemote(name, value string) error {
 	return nil
 }
 
+// BranchSha provides the SHA of the tip of the branch with the given name.
+func (r *Runner) BranchSha(name string) (string, error) {
+	out, err := r.Run("git", "rev-parse", name)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine the Sha for branch %q: %w\n%s", name, err, out.Output())
+	}
+	return out.OutputSanitized(), nil
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *Runner) CheckoutBranch(name string) error {
 	outcome, err := r.Run("git", "checkout", name)
@@ -131,6 +140,15 @@ func (r *Runner) ConnectTrackingBranch(name string) error {
 	out, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
 	if err != nil {
 		return fmt.Errorf("cannot connect tracking branch for %q: %w\n%s", name, err, out)
+	}
+	return nil
+}
+
+// ContinueRebase finishes a rebase operation.
+func (r *Runner) ContinueRebase() error {
+	out, err := r.Run("git", "rebase", "--continue")
+	if err != nil {
+		return fmt.Errorf("cannot continue rebase: %w\n%s", err, out.Output())
 	}
 	return nil
 }
@@ -230,6 +248,15 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 	return nil
 }
 
+// CreateRemoteBranch creates a tracking branch for the given ref.
+func (r *Runner) CreateRemoteBranch(ref, remoteName string) error {
+	outcome, err := r.Run("git", "push", "origin", ref+":refs/heads/"+remoteName)
+	if err != nil {
+		return fmt.Errorf("cannot create a remote branch named %q for %q: %w\n%s", remoteName, ref, err, outcome.Output())
+	}
+	return nil
+}
+
 // CreateStandaloneTag creates a tag not on a branch
 func (r *Runner) CreateStandaloneTag(name string) error {
 	return r.RunMany([][]string{
@@ -249,6 +276,15 @@ func (r *Runner) CreateTag(name string) error {
 	return err
 }
 
+// CreateTrackingBranch creates a tracking branch for the branch with the given name.
+func (r *Runner) CreateTrackingBranch(branchName string) error {
+	out, err := r.Run("git", "push", "-u", "origin", BranchName)
+	if err != nil {
+		return fmt.Errorf("cannot create a tracking branch for %q: %w\n%s", branchName, err, out.Output())
+	}
+	return nil
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -258,13 +294,17 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
-// FileContent provides the current content of a file.
-func (r *Runner) FileContent(filename string) (result string, err error) {
-	outcome, err := r.Run("cat", filename)
-	if err != nil {
-		return result, err
+// DeleteLocalBranch removes the given branch.
+func (r *Runner) DeleteLocalBranch(name string, force bool) error {
+	args := []string{"branch", "-d", name}
+	if force {
+		args[1] = "-D"
 	}
-	return outcome.Output(), nil
+	out, err := r.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot delete branch %q: %w\n%s", name, err, out.Output())
+	}
+	return nil
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -283,6 +323,15 @@ func (r *Runner) Fetch() error {
 		return fmt.Errorf("cannot fetch: %w", err)
 	}
 	return nil
+}
+
+// FileContent provides the current content of a file.
+func (r *Runner) FileContent(filename string) (result string, err error) {
+	outcome, err := r.Run("cat", filename)
+	if err != nil {
+		return result, err
+	}
+	return outcome.Output(), nil
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.

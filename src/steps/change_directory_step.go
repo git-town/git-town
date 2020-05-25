@@ -21,7 +21,7 @@ func (step *ChangeDirectoryStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *ChangeDirectoryStep) Run(runner *git.Runner) error {
+func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo) error {
 	var err error
 	step.previousDirectory, err = os.Getwd()
 	if err != nil {

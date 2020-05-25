@@ -9,6 +9,6 @@ type Step interface {
 	CreateContinueStep() Step
 	CreateUndoStep() Step
 	GetAutomaticAbortErrorMessage() string
-	Run(runner *git.Runner) error
+	Run(repo *git.ProdRepo) error
 	ShouldAutomaticallyAbortOnError() bool
 }
