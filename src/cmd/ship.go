@@ -68,11 +68,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getShipStepList(config)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		stepList := getShipStepList(config)
 		runState := steps.NewRunState("ship", stepList)
 		err = steps.Run(runState)
 		if err != nil {
@@ -135,8 +131,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-// nolint: unparam
-func getShipStepList(config shipConfig) (steps.StepList, error) {
+func getShipStepList(config shipConfig) steps.StepList {
 	result := steps.StepList{}
 	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
@@ -170,7 +165,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch})
-	return result, nil
+	return result
 }
 
 func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int, err error) {
