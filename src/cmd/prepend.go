@@ -92,7 +92,7 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return
+	return result
 }
 
 func init() {
