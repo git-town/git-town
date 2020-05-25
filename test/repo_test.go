@@ -4,26 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/git-town/git-town/src/git"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestGitRepository_FileContentInCommit(t *testing.T) {
-	repo := CreateRepo(t)
-	err := repo.CreateCommit(git.Commit{
-		Branch:      "master",
-		FileName:    "hello.txt",
-		FileContent: "hello world",
-		Message:     "commit",
-	})
-	assert.Nil(t, err)
-	commits, err := repo.CommitsInBranch("master", []string{})
-	assert.Nil(t, err)
-	assert.Len(t, commits, 1)
-	content, err := repo.FileContentInCommit(commits[0].SHA, "hello.txt")
-	assert.Nil(t, err)
-	assert.Equal(t, "hello world", content)
-}
 
 func TestNewRepo(t *testing.T) {
 	dir := CreateTempDir(t)

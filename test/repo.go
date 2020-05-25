@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Repo is a Repo in test code.
+// Repo is a Git Repo in test code.
 type Repo struct {
 	git.Runner               // the git.Runner instance to use
 	shell      *MockingShell // a reference to the MockingShell instance used here
@@ -36,7 +36,6 @@ func CreateRepo(t *testing.T) Repo {
 // InitRepo creates a fully functioning test.Repo in the given working directory,
 // including necessary Git configuration to make commits. Creates missing folders as needed.
 func InitRepo(workingDir, homeDir, binDir string) (Repo, error) {
-	// initialize the repo in the folder
 	result := NewRepo(workingDir, homeDir, binDir)
 	err := result.RunMany([][]string{
 		{"git", "init"},
