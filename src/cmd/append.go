@@ -14,8 +14,9 @@ import (
 )
 
 type appendConfig struct {
-	ParentBranch string
-	TargetBranch string
+	AncestorBranches []string
+	ParentBranch     string
+	TargetBranch     string
 }
 
 var appendCommand = &cobra.Command{
@@ -65,6 +66,7 @@ func getAppendConfig(args []string) (result appendConfig, err error) {
 	}
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
 	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})
+	result.AncestorBranches = git.Config().GetAncestorBranches(result.ParentBranch)
 	return
 }
 

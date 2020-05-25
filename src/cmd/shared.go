@@ -82,7 +82,7 @@ func ensureIsNotInUnfinishedState() error {
 }
 
 func getAppendStepList(config appendConfig) (result steps.StepList) {
-	for _, branchName := range append(git.Config().GetAncestorBranches(config.ParentBranch), config.ParentBranch) {
+	for _, branchName := range append(config.AncestorBranches, config.ParentBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
