@@ -32,10 +32,11 @@ Does not overwrite existing aliases.
 
 This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		toggle := util.StringToBool(args[0])
 		for _, command := range commandsToAlias {
 			if toggle {
-				addAlias(command)
+				addAlias(command, repo)
 			} else {
 				removeAlias(command)
 			}
@@ -49,8 +50,8 @@ This can conflict with other tools that also define Git aliases.`,
 	},
 }
 
-func addAlias(command string) {
-	result := git.Config().AddGitAlias(command)
+func addAlias(command string, repo *git.ProdRepo) {
+	result := repo.AddGitAlias(command)
 	script.PrintCommand(result.Command(), result.Args()...)
 }
 

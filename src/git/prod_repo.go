@@ -11,7 +11,7 @@ type ProdRepo struct {
 
 // NewProdRepo provides a Repo instance in the current working directory.
 func NewProdRepo() *ProdRepo {
-	shell := command.ShellInCurrentDir{}
+	shell := command.SilentShell{}
 	config := NewConfiguration(shell)
 	silentRunner := Runner{
 		Shell:          shell,
