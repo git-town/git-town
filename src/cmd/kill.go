@@ -17,6 +17,7 @@ type killConfig struct {
 	previousBranch      string
 	targetBranchParent  string
 	targetBranch        string
+	childBranches       []string
 	isTargetBranchLocal bool
 	hasOpenChanges      bool
 	hasTrackingBranch   bool
@@ -110,6 +111,7 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
+	result.childBranches = runner.GetChildBranches(result.targetBranch)
 	return result, nil
 }
 
@@ -126,7 +128,7 @@ func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepLi
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.targetBranch, Force: true})
-		for _, child := range runner.GetChildBranches(config.targetBranch) {
+		for _, child := range config.childBranches {
 			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
