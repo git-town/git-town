@@ -17,6 +17,7 @@ type appendConfig struct {
 	AncestorBranches []string
 	ParentBranch     string
 	TargetBranch     string
+	HasOrigin        bool
 }
 
 var appendCommand = &cobra.Command{
@@ -67,6 +68,7 @@ func getAppendConfig(args []string) (result appendConfig, err error) {
 	git.EnsureDoesNotHaveBranch(result.TargetBranch)
 	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})
 	result.AncestorBranches = git.Config().GetAncestorBranches(result.ParentBranch)
+	result.HasOrigin = git.HasRemote("origin")
 	return
 }
 
