@@ -14,10 +14,10 @@ import (
 )
 
 type prependConfig struct {
-	InitialBranch       string
-	ParentBranch        string
-	TargetBranch        string
-	AncestorBranches    []string
+	initialBranch       string
+	parentBranch        string
+	targetBranch        string
+	ancestorBranches    []string
 	hasOrigin           bool
 	shouldNewBranchPush bool
 	isOffline           bool
@@ -61,8 +61,8 @@ See "sync" for remote upstream options.
 }
 
 func getPrependConfig(args []string) (result prependConfig, err error) {
-	result.InitialBranch = git.GetCurrentBranchName()
-	result.TargetBranch = args[0]
+	result.initialBranch = git.GetCurrentBranchName()
+	result.targetBranch = args[0]
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
@@ -72,24 +72,24 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.TargetBranch)
-	git.Config().EnsureIsFeatureBranch(result.InitialBranch, "Only feature branches can have parent branches.")
-	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
-	result.ParentBranch = git.Config().GetParentBranch(result.InitialBranch)
-	result.AncestorBranches = git.Config().GetAncestorBranches(result.InitialBranch)
+	git.EnsureDoesNotHaveBranch(result.targetBranch)
+	git.Config().EnsureIsFeatureBranch(result.initialBranch, "Only feature branches can have parent branches.")
+	prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+	result.parentBranch = git.Config().GetParentBranch(result.initialBranch)
+	result.ancestorBranches = git.Config().GetAncestorBranches(result.initialBranch)
 	return
 }
 
 func getPrependStepList(config prependConfig) (result steps.StepList) {
-	for _, branchName := range config.AncestorBranches {
+	for _, branchName := range config.ancestorBranches {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
-	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
-	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.initialBranch, ParentBranchName: config.targetBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranch})
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return
