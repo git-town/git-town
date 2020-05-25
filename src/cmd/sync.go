@@ -17,6 +17,7 @@ type syncConfig struct {
 	InitialBranch  string
 	BranchesToSync []string
 	ShouldPushTags bool
+	hasOrigin      bool
 }
 
 var syncCmd = &cobra.Command{
@@ -65,7 +66,8 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 }
 
 func getSyncConfig() (result syncConfig, err error) {
-	if git.HasRemote("origin") && !git.Config().IsOffline() {
+	result.hasOrigin = git.HasRemote("origin")
+	if result.hasOrigin && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -90,7 +92,7 @@ func getSyncStepList(config syncConfig) (result steps.StepList) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
-	if git.HasRemote("origin") && config.ShouldPushTags && !git.Config().IsOffline() {
+	if config.hasOrigin && config.ShouldPushTags && !git.Config().IsOffline() {
 		result.Append(&steps.PushTagsStep{})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
