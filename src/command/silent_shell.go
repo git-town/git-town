@@ -2,25 +2,17 @@ package command
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/kballard/go-shellquote"
 )
 
 // SilentShell is an implementation of the Shell interface that runs commands in the current working directory.
 type SilentShell struct {
-	dir string
-}
-
-// NewShellInCurrentDir provides ShellInCurrentDir instances.
-func NewShellInCurrentDir() (SilentShell, error) {
-	dir, err := os.Getwd()
-	return SilentShell{dir}, err
 }
 
 // WorkingDir provides the directory that this Shell operates in.
 func (shell SilentShell) WorkingDir() string {
-	return shell.dir
+	return "."
 }
 
 // MustRun runs the given command and returns the result. Panics on error.
