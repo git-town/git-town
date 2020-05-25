@@ -20,6 +20,7 @@ type prependConfig struct {
 	AncestorBranches    []string
 	hasOrigin           bool
 	shouldNewBranchPush bool
+	isOffline           bool
 }
 
 var prependCommand = &cobra.Command{
@@ -64,7 +65,8 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 	result.TargetBranch = args[0]
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
-	if result.hasOrigin && !git.Config().IsOffline() {
+	result.isOffline = git.Config().IsOffline()
+	if result.hasOrigin && !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -86,7 +88,7 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.InitialBranch, ParentBranchName: config.TargetBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if config.hasOrigin && config.shouldNewBranchPush && !git.Config().IsOffline() {
+	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
