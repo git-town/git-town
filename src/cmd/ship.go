@@ -20,6 +20,7 @@ type shipConfig struct {
 	InitialBranch           string // the name of the branch that was checked out when running this command
 	isOffline               bool
 	isShippingInitialBranch bool
+	branchToMergeInto       string
 }
 
 // optional commit message provided via the command line
@@ -105,6 +106,7 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.BranchToShip == result.InitialBranch
+	result.branchToMergeInto = git.Config().GetParentBranch(result.BranchToShip)
 	return
 }
 
@@ -123,12 +125,11 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 
 func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result := steps.StepList{}
-	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
-	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
+	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
-	result.Append(&steps.CheckoutBranchStep{BranchName: branchToMergeInto})
-	canShipWithDriver, defaultCommitMessage, pullRequestNumber, err := getCanShipWithDriver(config.BranchToShip, branchToMergeInto)
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
+	canShipWithDriver, defaultCommitMessage, pullRequestNumber, err := getCanShipWithDriver(config.BranchToShip, config.branchToMergeInto)
 	if err != nil {
 		return result, err
 	}
@@ -140,7 +141,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
 	if git.HasRemote("origin") && !config.isOffline {
-		result.Append(&steps.PushBranchStep{BranchName: branchToMergeInto, Undoable: true})
+		result.Append(&steps.PushBranchStep{BranchName: config.branchToMergeInto, Undoable: true})
 	}
 	childBranches := git.Config().GetChildBranches(config.BranchToShip)
 	// NOTE: when shipping with a driver, we can always delete the remote branch because:
@@ -155,7 +156,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
 	for _, child := range childBranches {
-		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
+		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
