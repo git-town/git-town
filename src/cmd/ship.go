@@ -16,9 +16,10 @@ import (
 )
 
 type shipConfig struct {
-	BranchToShip  string
-	InitialBranch string // the name of the branch that was checked out when running this command
-	isOffline     bool
+	BranchToShip            string
+	InitialBranch           string // the name of the branch that was checked out when running this command
+	isOffline               bool
+	isShippingInitialBranch bool
 }
 
 // optional commit message provided via the command line
@@ -99,10 +100,11 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	if result.BranchToShip != result.InitialBranch {
 		git.EnsureHasBranch(result.BranchToShip)
 	}
-	result.isOffline = git.Config().IsOffline()
 	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
+	result.isOffline = git.Config().IsOffline()
+	result.isShippingInitialBranch = result.BranchToShip == result.InitialBranch
 	return
 }
 
@@ -122,7 +124,6 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result := steps.StepList{}
 	branchToMergeInto := git.Config().GetParentBranch(config.BranchToShip)
-	isShippingInitialBranch := config.BranchToShip == config.InitialBranch
 	result.AppendList(steps.GetSyncBranchSteps(branchToMergeInto, true))
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
@@ -156,10 +157,10 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	for _, child := range childBranches {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: branchToMergeInto})
 	}
-	if !isShippingInitialBranch {
+	if !config.isShippingInitialBranch {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.InitialBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !isShippingInitialBranch})
+	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: !config.isShippingInitialBranch})
 	return result, nil
 }
 
