@@ -25,6 +25,7 @@ type shipConfig struct {
 	isShippingInitialBranch bool
 	canShipWithDriver       bool
 	hasOrigin               bool
+	hasTrackingBranch       bool
 	pullRequestNumber       int
 }
 
@@ -109,6 +110,7 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
+	result.hasTrackingBranch = git.HasTrackingBranch(result.BranchToShip)
 	result.hasOrigin = git.HasRemote("origin")
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.BranchToShip == result.InitialBranch
@@ -151,7 +153,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if config.canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(config.childBranches) == 0 && !config.isOffline) {
+	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
 		if git.Config().ShouldShipDeleteRemoteBranch() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
