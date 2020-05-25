@@ -12,7 +12,8 @@ import (
 )
 
 type pruneBranchesConfig struct {
-	currentBranchName string
+	currentBranchName                        string
+	localBranchesWithDeletedTrackingBranches []string
 }
 
 var pruneBranchesCommand = &cobra.Command{
@@ -54,12 +55,13 @@ func getPruneBranchesConfig() (result pruneBranchesConfig, err error) {
 		}
 	}
 	result.currentBranchName = git.GetCurrentBranchName()
+	result.localBranchesWithDeletedTrackingBranches = git.GetLocalBranchesWithDeletedTrackingBranches()
 	return result, nil
 }
 
 func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList) {
 	initialBranchName := config.currentBranchName
-	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
+	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config().GetMainBranch()})
 		}
