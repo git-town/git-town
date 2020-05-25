@@ -18,9 +18,14 @@ import (
 type shipConfig struct {
 	BranchToShip            string
 	InitialBranch           string // the name of the branch that was checked out when running this command
+	branchToMergeInto       string
+	defaultCommitMessage    string
+	childBranches           []string
 	isOffline               bool
 	isShippingInitialBranch bool
-	branchToMergeInto       string
+	canShipWithDriver       bool
+	hasOrigin               bool
+	pullRequestNumber       int
 }
 
 // optional commit message provided via the command line
@@ -104,10 +109,13 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	git.Config().EnsureIsFeatureBranch(result.BranchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.BranchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.BranchToShip)
+	result.hasOrigin = git.HasRemote("origin")
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.BranchToShip == result.InitialBranch
 	result.branchToMergeInto = git.Config().GetParentBranch(result.BranchToShip)
-	return
+	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.BranchToShip, result.branchToMergeInto)
+	result.childBranches = git.Config().GetChildBranches(result.BranchToShip)
+	return result, err
 }
 
 func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
@@ -129,33 +137,28 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result.AppendList(steps.GetSyncBranchSteps(config.BranchToShip, false))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.BranchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
-	canShipWithDriver, defaultCommitMessage, pullRequestNumber, err := getCanShipWithDriver(config.BranchToShip, config.branchToMergeInto)
-	if err != nil {
-		return result, err
-	}
-	if canShipWithDriver {
+	if config.canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.BranchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, PullRequestNumber: pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: defaultCommitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.BranchToShip, PullRequestNumber: config.pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: config.defaultCommitMessage})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.BranchToShip, CommitMessage: commitMessage})
 	}
-	if git.HasRemote("origin") && !config.isOffline {
+	if config.hasOrigin && !config.isOffline {
 		result.Append(&steps.PushBranchStep{BranchName: config.branchToMergeInto, Undoable: true})
 	}
-	childBranches := git.Config().GetChildBranches(config.BranchToShip)
 	// NOTE: when shipping with a driver, we can always delete the remote branch because:
 	// - we know we have a tracking branch (otherwise there would be no PR to ship via driver)
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
-	if canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(childBranches) == 0 && !config.isOffline) {
+	if config.canShipWithDriver || (git.HasTrackingBranch(config.BranchToShip) && len(config.childBranches) == 0 && !config.isOffline) {
 		if git.Config().ShouldShipDeleteRemoteBranch() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.BranchToShip})
 	result.Append(&steps.DeleteParentBranchStep{BranchName: config.BranchToShip})
-	for _, child := range childBranches {
+	for _, child := range config.childBranches {
 		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.branchToMergeInto})
 	}
 	if !config.isShippingInitialBranch {
