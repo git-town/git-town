@@ -38,11 +38,7 @@ Does not delete perennial branches nor the main branch.`,
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList, err := getKillStepList(config, &repo.Silent)
-		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
-		}
+		stepList := getKillStepList(config, &repo.Silent)
 		runState := steps.NewRunState("kill", stepList)
 		err = steps.Run(runState)
 		if err != nil {
@@ -117,7 +113,7 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 	return result, nil
 }
 
-func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepList, err error) {
+func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepList) {
 	switch {
 	case config.isTargetBranchLocal:
 		if config.hasTrackingBranch && !config.isOffline {
@@ -144,7 +140,7 @@ func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepLi
 		RunInGitRoot:     true,
 		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	})
-	return result, nil
+	return result
 }
 
 func init() {
