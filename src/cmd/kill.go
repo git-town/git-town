@@ -14,6 +14,8 @@ import (
 
 type killConfig struct {
 	initialBranch       string
+	previousBranch      string
+	targetBranchParent  string
 	targetBranch        string
 	isTargetBranchLocal bool
 	hasTrackingBranch   bool
@@ -98,6 +100,11 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
+	result.targetBranchParent = runner.GetParentBranch(result.targetBranch)
+	result.previousBranch, err = runner.PreviouslyCheckedOutBranch()
+	if err != nil {
+		return result, err
+	}
 	return result, nil
 }
 
@@ -107,7 +114,6 @@ func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepLi
 		if config.hasTrackingBranch && !runner.IsOffline() {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.targetBranch, IsTracking: true})
 		}
-		targetBranchParent := runner.GetParentBranch(config.targetBranch)
 		if config.initialBranch == config.targetBranch {
 			hasOpenChanges, err := runner.HasOpenChanges()
 			if err != nil {
@@ -116,11 +122,11 @@ func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepLi
 			if hasOpenChanges {
 				result.Append(&steps.CommitOpenChangesStep{})
 			}
-			result.Append(&steps.CheckoutBranchStep{BranchName: targetBranchParent})
+			result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: config.targetBranch, Force: true})
 		for _, child := range runner.GetChildBranches(config.targetBranch) {
-			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: targetBranchParent})
+			result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.targetBranchParent})
 		}
 		result.Append(&steps.DeleteParentBranchStep{BranchName: config.targetBranch})
 	case !runner.IsOffline():
@@ -129,13 +135,9 @@ func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepLi
 		fmt.Printf("Cannot delete remote branch %q in offline mode", config.targetBranch)
 		os.Exit(1)
 	}
-	previousBranch, err := runner.PreviouslyCheckedOutBranch()
-	if err != nil {
-		return result, err
-	}
 	result.Wrap(steps.WrapOptions{
 		RunInGitRoot:     true,
-		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == previousBranch,
+		StashOpenChanges: config.initialBranch != config.targetBranch && config.targetBranch == config.previousBranch,
 	})
 	return result, nil
 }
