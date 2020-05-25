@@ -111,11 +111,11 @@ func (r *Runner) CommitsInBranch(branch string, fields []string) (result []Commi
 }
 
 // CommitStagedChanges commits the currently staged changes.
-func (r *Runner) CommitStagedChanges(message bool) error {
+func (r *Runner) CommitStagedChanges(message string) error {
 	var out *command.Result
 	var err error
-	if message {
-		out, err = r.Run("git", "commit", "-m", "committing")
+	if message != "" {
+		out, err = r.Run("git", "commit", "-m", message)
 	} else {
 		out, err = r.Run("git", "commit", "--no-edit")
 	}
