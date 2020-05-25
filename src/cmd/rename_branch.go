@@ -12,8 +12,10 @@ import (
 )
 
 type renameBranchConfig struct {
-	oldBranchName string
-	newBranchName string
+	oldBranchName            string
+	newBranchName            string
+	initialBranch            string
+	isInitialBranchPerennial bool
 }
 
 var forceFlag bool
@@ -86,15 +88,17 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 	git.EnsureHasBranch(result.oldBranchName)
 	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
 	git.EnsureDoesNotHaveBranch(result.newBranchName)
-	return
+	result.initialBranch = git.GetCurrentBranchName()
+	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
+	return result, nil
 }
 
 func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
-	if git.GetCurrentBranchName() == config.oldBranchName {
+	if config.initialBranch == config.oldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
 	}
-	if git.Config().IsPerennialBranch(config.oldBranchName) {
+	if config.isInitialBranchPerennial {
 		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.oldBranchName})
 		result.Append(&steps.AddToPerennialBranches{BranchName: config.newBranchName})
 	} else {
