@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type pruneBranchesConfig struct {
+	currentBranchName string
+}
+
 var pruneBranchesCommand = &cobra.Command{
 	Use:   "prune-branches",
 	Short: "Deletes local branches whose tracking branch no longer exists",
@@ -19,12 +23,12 @@ var pruneBranchesCommand = &cobra.Command{
 Deletes branches whose tracking branch no longer exists from the local repository.
 This usually means the branch was shipped or killed on another machine.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := checkPruneBranchesPreconditions()
+		config, err := getPruneBranchesConfig()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getPruneBranchesStepList()
+		stepList := getPruneBranchesStepList(config)
 		runState := steps.NewRunState("prune-branches", stepList)
 		err = steps.Run(runState)
 		if err != nil {
@@ -42,15 +46,19 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 }
 
-func checkPruneBranchesPreconditions() error {
+func getPruneBranchesConfig() (result pruneBranchesConfig, err error) {
 	if git.HasRemote("origin") {
-		return script.Fetch()
+		err = script.Fetch()
+		if err != nil {
+			return result, err
+		}
 	}
-	return nil
+	result.currentBranchName = git.GetCurrentBranchName()
+	return result, nil
 }
 
-func getPruneBranchesStepList() (result steps.StepList) {
-	initialBranchName := git.GetCurrentBranchName()
+func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList) {
+	initialBranchName := config.currentBranchName
 	for _, branchName := range git.GetLocalBranchesWithDeletedTrackingBranches() {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: git.Config().GetMainBranch()})
