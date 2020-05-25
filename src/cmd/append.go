@@ -72,7 +72,7 @@ func getAppendConfig(args []string) (result appendConfig, err error) {
 	result.AncestorBranches = git.Config().GetAncestorBranches(result.ParentBranch)
 	result.HasOrigin = git.HasRemote("origin")
 	result.ShouldNewBranchPush = git.Config().ShouldNewBranchPush()
-	result.IsOffline = !git.Config().IsOffline()
+	result.IsOffline = git.Config().IsOffline()
 	return
 }
 

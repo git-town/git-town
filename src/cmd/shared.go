@@ -88,7 +88,7 @@ func getAppendStepList(config appendConfig) (result steps.StepList) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if config.HasOrigin && config.ShouldNewBranchPush && !git.Config().IsOffline() {
+	if config.HasOrigin && config.ShouldNewBranchPush && !config.IsOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
