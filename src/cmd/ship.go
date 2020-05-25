@@ -16,17 +16,18 @@ import (
 )
 
 type shipConfig struct {
-	BranchToShip            string
-	InitialBranch           string // the name of the branch that was checked out when running this command
-	branchToMergeInto       string
-	defaultCommitMessage    string
-	childBranches           []string
-	isOffline               bool
-	isShippingInitialBranch bool
-	canShipWithDriver       bool
-	hasOrigin               bool
-	hasTrackingBranch       bool
-	pullRequestNumber       int
+	BranchToShip                 string
+	InitialBranch                string // the name of the branch that was checked out when running this command
+	branchToMergeInto            string
+	defaultCommitMessage         string
+	childBranches                []string
+	isOffline                    bool
+	isShippingInitialBranch      bool
+	canShipWithDriver            bool
+	hasOrigin                    bool
+	hasTrackingBranch            bool
+	shouldShipDeleteRemoteBranch bool
+	pullRequestNumber            int
 }
 
 // optional commit message provided via the command line
@@ -117,6 +118,7 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	result.branchToMergeInto = git.Config().GetParentBranch(result.BranchToShip)
 	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.BranchToShip, result.branchToMergeInto)
 	result.childBranches = git.Config().GetChildBranches(result.BranchToShip)
+	result.shouldShipDeleteRemoteBranch = git.Config().ShouldShipDeleteRemoteBranch()
 	return result, err
 }
 
@@ -133,6 +135,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
+// nolint: unparam
 func getShipStepList(config shipConfig) (steps.StepList, error) {
 	result := steps.StepList{}
 	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true))
@@ -154,7 +157,7 @@ func getShipStepList(config shipConfig) (steps.StepList, error) {
 	// - we have updated the PRs of all child branches (because we have API access)
 	// - we know we are online
 	if config.canShipWithDriver || (config.hasTrackingBranch && len(config.childBranches) == 0 && !config.isOffline) {
-		if git.Config().ShouldShipDeleteRemoteBranch() {
+		if config.shouldShipDeleteRemoteBranch {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.BranchToShip, IsTracking: true})
 		}
 	}
