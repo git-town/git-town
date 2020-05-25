@@ -60,18 +60,18 @@ func getParentBranch(targetBranch string) string {
 }
 
 func getHackConfig(args []string) (result appendConfig, err error) {
-	result.TargetBranch = args[0]
-	result.ParentBranch = getParentBranch(result.TargetBranch)
-	result.HasOrigin = git.HasRemote("origin")
-	result.ShouldNewBranchPush = git.Config().ShouldNewBranchPush()
-	result.IsOffline = git.Config().IsOffline()
+	result.targetBranch = args[0]
+	result.parentBranch = getParentBranch(result.targetBranch)
+	result.hasOrigin = git.HasRemote("origin")
+	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
+	result.isOffline = git.Config().IsOffline()
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.TargetBranch)
+	git.EnsureDoesNotHaveBranch(result.targetBranch)
 	return
 }
 
