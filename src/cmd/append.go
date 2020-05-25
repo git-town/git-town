@@ -14,10 +14,12 @@ import (
 )
 
 type appendConfig struct {
-	AncestorBranches []string
-	ParentBranch     string
-	TargetBranch     string
-	HasOrigin        bool
+	AncestorBranches    []string
+	ParentBranch        string
+	TargetBranch        string
+	HasOrigin           bool
+	IsOffline           bool
+	ShouldNewBranchPush bool
 }
 
 var appendCommand = &cobra.Command{
@@ -69,6 +71,8 @@ func getAppendConfig(args []string) (result appendConfig, err error) {
 	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})
 	result.AncestorBranches = git.Config().GetAncestorBranches(result.ParentBranch)
 	result.HasOrigin = git.HasRemote("origin")
+	result.ShouldNewBranchPush = git.Config().ShouldNewBranchPush()
+	result.IsOffline = !git.Config().IsOffline()
 	return
 }
 
