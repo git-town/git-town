@@ -1,15 +1,16 @@
-package test
+package test_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/git-town/git-town/test"
 	"github.com/sergi/go-diff/diffmatchpatch"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDataTable(t *testing.T) {
-	r := DataTable{}
+	r := test.DataTable{}
 	r.AddRow("ALPHA", "BETA")
 	r.AddRow("1", "2")
 	r.AddRow("longer text", "even longer text")
@@ -26,15 +27,15 @@ func TestDataTable(t *testing.T) {
 }
 
 func TestDataTable_Expand(t *testing.T) {
-	r := DataTable{}
+	r := test.DataTable{}
 	r.AddRow("one", "cd {{ root folder }}")
 	actual := r.Expand("/foo/bar", nil, nil)
-	assert.Equal(t, actual.cells[0][0], "one")
-	assert.Equal(t, actual.cells[0][1], "cd /foo/bar")
+	assert.Equal(t, actual.Cells[0][0], "one")
+	assert.Equal(t, actual.Cells[0][1], "cd /foo/bar")
 }
 
 func TestDataTable_Remove(t *testing.T) {
-	r := DataTable{}
+	r := test.DataTable{}
 	r.AddRow("local", "main, master, foo")
 	r.AddRow("remote", "master, bar")
 	r.RemoveText("master, ")

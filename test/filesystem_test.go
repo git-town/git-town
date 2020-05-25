@@ -8,7 +8,7 @@ import (
 )
 
 func TestCopyDirectory(t *testing.T) {
-	tmpDir := createTempDir(t)
+	tmpDir := CreateTempDir(t)
 	srcDir := filepath.Join(tmpDir, "src")
 	dstDir := filepath.Join(tmpDir, "dst")
 	createFile(t, srcDir, "one.txt")
@@ -22,13 +22,10 @@ func TestCopyDirectory(t *testing.T) {
 }
 
 func TestCopyDirectory_GitRepo(t *testing.T) {
-	tmpDir := createTempDir(t)
-	srcDir := filepath.Join(tmpDir, "src")
-	dstDir := filepath.Join(tmpDir, "dst")
-	_, err := InitGitRepository(srcDir, tmpDir, "")
-	assert.Nil(t, err)
-	createFile(t, srcDir, "one.txt")
-	err = CopyDirectory(srcDir, dstDir)
+	origin := CreateRepo(t)
+	createFile(t, origin.WorkingDir(), "one.txt")
+	dstDir := filepath.Join(CreateTempDir(t), "dest")
+	err := CopyDirectory(origin.WorkingDir(), dstDir)
 	assert.Nil(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")

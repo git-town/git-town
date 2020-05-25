@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/test/helpers"
 )
 
@@ -18,19 +19,19 @@ type GitEnvironment struct {
 
 	// OriginRepo is the Git repository that simulates the remote repo (on GitHub).
 	// If this value is nil, the current test setup has no remote.
-	OriginRepo *GitRepo
+	OriginRepo *Repo
 
 	// DevRepo is the Git repository that is locally checked out at the developer machine.
-	DevRepo GitRepo
+	DevRepo Repo
 
 	// DevShell provides a reference to the MockingShell instance used in the DeveloperRepo.
 	DevShell *MockingShell
 
 	// CoworkerRepo is the optional Git repository that is locally checked out at the coworker machine.
-	CoworkerRepo *GitRepo
+	CoworkerRepo *Repo
 
 	// UpstreamRepo is the optional Git repository that contains the upstream for this environment.
-	UpstreamRepo *GitRepo
+	UpstreamRepo *Repo
 }
 
 // CloneGitEnvironment provides a GitEnvironment instance in the given directory,
@@ -42,12 +43,12 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 	}
 	binDir := filepath.Join(dir, "bin")
 	originDir := filepath.Join(dir, "origin")
-	originRepo := NewGitRepository(originDir, dir, NewMockingShell(originDir, dir, ""))
+	originRepo := NewRepo(originDir, dir, "")
 	developerDir := filepath.Join(dir, "developer")
 	developerShell := NewMockingShell(developerDir, dir, binDir)
 	result := GitEnvironment{
 		Dir:        dir,
-		DevRepo:    NewGitRepository(developerDir, dir, developerShell),
+		DevRepo:    NewRepo(developerDir, dir, binDir),
 		DevShell:   developerShell,
 		OriginRepo: &originRepo,
 	}
@@ -82,27 +83,28 @@ func CloneGitEnvironment(original *GitEnvironment, dir string) (*GitEnvironment,
 // The tests don't use the master branch.
 func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 	// create the folder
-	err = os.MkdirAll(dir, 0744)
-	if err != nil {
-		return gitEnv, fmt.Errorf("cannot create folder %q for Git environment: %w", dir, err)
-	}
 	// create the GitEnvironment
 	gitEnv = &GitEnvironment{Dir: dir}
 	// create the origin repo
-	originRepo, err := InitGitRepository(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	err = os.MkdirAll(gitEnv.originRepoPath(), 0744)
 	if err != nil {
-		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
+		return nil, fmt.Errorf("cannot create directory %q: %w", gitEnv.originRepoPath(), err)
 	}
-	gitEnv.OriginRepo = &originRepo
-	err = gitEnv.OriginRepo.Shell.RunMany([][]string{
+	// initialize the repo in the folder
+	originRepo, err := InitRepo(gitEnv.originRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	if err != nil {
+		return nil, err
+	}
+	err = originRepo.RunMany([][]string{
 		{"git", "commit", "--allow-empty", "-m", "Initial commit"},
 		{"git", "branch", "main", "master"},
 	})
 	if err != nil {
-		return gitEnv, err
+		return gitEnv, fmt.Errorf("cannot initialize origin directory at %q: %w", gitEnv.originRepoPath(), err)
 	}
+	gitEnv.OriginRepo = &originRepo
 	// clone the "developer" repo
-	gitEnv.DevRepo, err = CloneGitRepo(gitEnv.originRepoPath(), gitEnv.developerRepoPath(), gitEnv.Dir, gitEnv.binPath())
+	gitEnv.DevRepo, err = originRepo.Clone(gitEnv.developerRepoPath())
 	if err != nil {
 		return gitEnv, fmt.Errorf("cannot clone developer repo %q from origin %q: %w", gitEnv.originRepoPath(), gitEnv.developerRepoPath(), err)
 	}
@@ -123,12 +125,12 @@ func NewStandardGitEnvironment(dir string) (gitEnv *GitEnvironment, err error) {
 
 // AddUpstream adds an upstream repository.
 func (env *GitEnvironment) AddUpstream() (err error) {
-	repo, err := CloneGitRepo(env.DevRepo.Dir, filepath.Join(env.Dir, "upstream"), env.Dir, "")
+	repo, err := env.DevRepo.Clone(filepath.Join(env.Dir, "upstream"))
 	if err != nil {
 		return fmt.Errorf("cannot clone upstream: %w", err)
 	}
 	env.UpstreamRepo = &repo
-	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.Dir)
+	err = env.DevRepo.AddRemote("upstream", env.UpstreamRepo.WorkingDir())
 	if err != nil {
 		return fmt.Errorf("cannot set upstream remote: %w", err)
 	}
@@ -137,7 +139,7 @@ func (env *GitEnvironment) AddUpstream() (err error) {
 
 // AddCoworkerRepo adds a coworker repository.
 func (env *GitEnvironment) AddCoworkerRepo() (err error) {
-	coworkerRepo, err := CloneGitRepo(env.originRepoPath(), env.coworkerRepoPath(), env.Dir, "")
+	coworkerRepo, err := env.OriginRepo.Clone(env.coworkerRepoPath())
 	if err != nil {
 		return fmt.Errorf("cannot clone coworker: %w", err)
 	}
@@ -153,13 +155,13 @@ func (env *GitEnvironment) binPath() string {
 // Branches provides a tabular list of all branches in this GitEnvironment.
 func (env *GitEnvironment) Branches() (result DataTable, err error) {
 	result.AddRow("REPOSITORY", "BRANCHES")
-	branches, err := env.DevRepo.Branches()
+	branches, err := env.DevRepo.LocalBranches()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the developer repo branches of the GitEnvironment: %w", err)
 	}
 	result.AddRow("local", strings.Join(branches, ", "))
 	if env.OriginRepo != nil {
-		branches, err = env.OriginRepo.Branches()
+		branches, err = env.OriginRepo.LocalBranches()
 		if err != nil {
 			return result, fmt.Errorf("cannot determine the origin repo branches of the GitEnvironment: %w", err)
 		}
@@ -169,7 +171,7 @@ func (env *GitEnvironment) Branches() (result DataTable, err error) {
 }
 
 // CreateCommits creates the commits described by the given Gherkin table in this Git repository.
-func (env *GitEnvironment) CreateCommits(commits []Commit) error {
+func (env *GitEnvironment) CreateCommits(commits []git.Commit) error {
 	for _, commit := range commits {
 		var err error
 		for _, location := range commit.Locations {
@@ -293,8 +295,8 @@ func (env GitEnvironment) TagTable() (result DataTable, err error) {
 	return builder.Table(), nil
 }
 
-func (env GitEnvironment) initializeWorkspace(repo *GitRepo) error {
-	return repo.Shell.RunMany([][]string{
+func (env GitEnvironment) initializeWorkspace(repo *Repo) error {
+	return repo.RunMany([][]string{
 		{"git", "config", "git-town.main-branch-name", "main"},
 		{"git", "config", "git-town.perennial-branch-names", ""},
 		{"git", "checkout", "main"},

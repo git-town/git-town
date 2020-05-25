@@ -48,7 +48,7 @@ func WorkspaceSteps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
-		os.RemoveAll(filepath.Join(state.gitEnv.DevRepo.Dir, ".git"))
+		os.RemoveAll(filepath.Join(state.gitEnv.DevRepo.WorkingDir(), ".git"))
 		return nil
 	})
 

@@ -1,4 +1,4 @@
-package helpers
+package git
 
 // MainFirst provides the given list of strings, with an element "main" moved to its first position.
 func MainFirst(input []string) []string {

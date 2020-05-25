@@ -74,7 +74,7 @@ func RunSteps(suite *godog.Suite, state *ScenarioState) {
 		table := test.RenderExecutedGitCommands(commands, input)
 		dataTable := test.FromGherkin(input)
 		expanded := dataTable.Expand(
-			state.gitEnv.DevRepo.Dir,
+			state.gitEnv.DevRepo.WorkingDir(),
 			&state.gitEnv.DevRepo,
 			state.gitEnv.OriginRepo,
 		)
