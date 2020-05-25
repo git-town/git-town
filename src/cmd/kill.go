@@ -18,6 +18,7 @@ type killConfig struct {
 	targetBranchParent  string
 	targetBranch        string
 	childBranches       []string
+	isOffline           bool
 	isTargetBranchLocal bool
 	hasOpenChanges      bool
 	hasTrackingBranch   bool
@@ -83,7 +84,8 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 	if err != nil {
 		return result, err
 	}
-	if hasOrigin && !runner.IsOffline() {
+	result.isOffline = runner.IsOffline()
+	if hasOrigin && !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
@@ -118,7 +120,7 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 func getKillStepList(config killConfig, runner *git.Runner) (result steps.StepList, err error) {
 	switch {
 	case config.isTargetBranchLocal:
-		if config.hasTrackingBranch && !runner.IsOffline() {
+		if config.hasTrackingBranch && !config.isOffline {
 			result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.targetBranch, IsTracking: true})
 		}
 		if config.initialBranch == config.targetBranch {
