@@ -12,7 +12,7 @@ import (
 )
 
 type pruneBranchesConfig struct {
-	currentBranchName                        string
+	initialBranchName                        string
 	mainBranch                               string
 	localBranchesWithDeletedTrackingBranches []string
 }
@@ -56,13 +56,13 @@ func getPruneBranchesConfig() (result pruneBranchesConfig, err error) {
 		}
 	}
 	result.mainBranch = git.Config().GetMainBranch()
-	result.currentBranchName = git.GetCurrentBranchName()
+	result.initialBranchName = git.GetCurrentBranchName()
 	result.localBranchesWithDeletedTrackingBranches = git.GetLocalBranchesWithDeletedTrackingBranches()
 	return result, nil
 }
 
 func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList) {
-	initialBranchName := config.currentBranchName
+	initialBranchName := config.initialBranchName
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
 			result.Append(&steps.CheckoutBranchStep{BranchName: config.mainBranch})
