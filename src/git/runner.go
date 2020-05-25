@@ -26,6 +26,24 @@ func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteB
 	return Runner{shell, currentBranch, remoteBranches, config}
 }
 
+// AbortMerge aborts the current merge operation.
+func (r *Runner) AbortMerge() error {
+	res, err := r.Run("git", "merge", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort merge: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
+// AbortRebase aborts the current rebase operation.
+func (r *Runner) AbortRebase() error {
+	res, err := r.Run("git", "rebase", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort rebase: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
 // AddRemote adds the given Git remote to this repository.
 func (r *Runner) AddRemote(name, value string) error {
 	res, err := r.Run("git", "remote", "add", name, value)
@@ -403,6 +421,15 @@ func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 	return false, nil
 }
 
+// HeadSha provides the currently checked out SHA.
+func (r *Runner) HeadSha() (string, error) {
+	res, err := r.Run("git", "rev-parse", "HEAD")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine HEAD SHA: %w\n%s", err, res.Output())
+	}
+	return res.OutputSanitized(), nil
+}
+
 // LastActiveDir provides the directory that was last used in this repo.
 func (r *Runner) LastActiveDir() (string, error) {
 	res, err := r.Run("git", "rev-parse", "--show-toplevel")
@@ -592,6 +619,15 @@ func (r *Runner) ShaForCommit(name string) (result string, err error) {
 		return result, fmt.Errorf("cannot find the SHA of commit %q", name)
 	}
 	return res.OutputSanitized(), nil
+}
+
+// StageAll stages all unstaged changes.
+func (r *Runner) StageAll() error {
+	res, err := r.Run("git", "add", "-A")
+	if err != nil {
+		return fmt.Errorf("cannot stage all changes: %w\n%s", err, res.Output())
+	}
+	return nil
 }
 
 // StageFiles adds the file with the given name to the Git index.

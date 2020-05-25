@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.
@@ -21,11 +20,18 @@ func (step *CommitOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CommitOpenChangesStep) Run() error {
-	step.previousSha = git.GetCurrentSha()
-	err := script.RunCommand("git", "add", "-A")
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo) error {
+	currentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return err
 	}
-	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("WIP on %s", git.GetCurrentBranchName()))
+	step.previousSha, err = repo.Silent.HeadSha()
+	if err != nil {
+		return err
+	}
+	err = repo.Logging.StageAll()
+	if err != nil {
+		return err
+	}
+	return repo.Logging.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

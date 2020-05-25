@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // CheckoutBranchStep checks out a new branch.
@@ -19,14 +18,13 @@ func (step *CheckoutBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CheckoutBranchStep) Run() error {
-	step.previousBranchName = git.GetCurrentBranchName()
-	if step.previousBranchName != step.BranchName {
-		err := script.RunCommand("git", "checkout", step.BranchName)
-		if err == nil {
-			git.UpdateCurrentBranchCache(step.BranchName)
-		}
+func (step *CheckoutBranchStep) Run(runner *git.Runner) (err error) {
+	step.previousBranchName, err = runner.CurrentBranch()
+	if err != nil {
 		return err
+	}
+	if step.previousBranchName != step.BranchName {
+		return runner.CheckoutBranch(step.BranchName)
 	}
 	return nil
 }

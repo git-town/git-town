@@ -12,7 +12,7 @@ import (
 
 // Run runs the Git Town command described by the given state
 // nolint: gocyclo, gocognit
-func Run(runState *RunState) error {
+func Run(runState *RunState, runner *git.Runner) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
@@ -39,12 +39,12 @@ func Run(runState *RunState) error {
 			runState.AddPushBranchStepAfterCurrentBranchSteps()
 			continue
 		}
-		err := step.Run()
+		err := step.Run(runner)
 		if err != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
-				err := Run(&abortRunState)
+				err := Run(&abortRunState, runner)
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
