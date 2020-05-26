@@ -318,6 +318,12 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 	return result
 }
 
+// Reload refreshes the cached configuration information.
+func (c *Configuration) Reload() {
+	c.localConfigCache = loadGitConfig(c.shell, false)
+	c.globalConfigCache = loadGitConfig(c.shell, true)
+}
+
 // RemoveFromPerennialBranches removes the given branch as a perennial branch
 func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 	c.SetPerennialBranches(util.RemoveStringFromSlice(c.GetPerennialBranches(), branchName))
@@ -377,6 +383,7 @@ func (c *Configuration) SetCodeHostingOriginHostname(value string) *command.Resu
 	return c.shell.MustRun("git", "config", key, value)
 }
 
+// SetColorUI configures whether Git output contains color codes.
 func (c *Configuration) SetColorUI(value string) *command.Result {
 	return c.shell.MustRun("git", "config", "color.ui", value)
 }

@@ -1,17 +1,19 @@
-package test
+package test_test
 
 import (
 	"testing"
 
+	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCommitTableBuilder(t *testing.T) {
-	builder := NewCommitTableBuilder()
-	commit1 := Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
-	commit2 := Commit{SHA: "sha2", Branch: "main", Message: "commit2"}
-	commit3 := Commit{SHA: "sha3", Branch: "main", Message: "commit3"}
-	commit4 := Commit{SHA: "sha4", Branch: "branch3", Message: "commit4"}
+	builder := test.NewCommitTableBuilder()
+	commit1 := git.Commit{SHA: "sha1", Branch: "branch1", Message: "commit1"}
+	commit2 := git.Commit{SHA: "sha2", Branch: "main", Message: "commit2"}
+	commit3 := git.Commit{SHA: "sha3", Branch: "main", Message: "commit3"}
+	commit4 := git.Commit{SHA: "sha4", Branch: "branch3", Message: "commit4"}
 	builder.Add(commit1, "local")
 	builder.Add(commit1, "remote")
 	builder.Add(commit2, "local")

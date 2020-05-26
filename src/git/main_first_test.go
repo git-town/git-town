@@ -1,9 +1,9 @@
-package helpers_test
+package git_test
 
 import (
 	"testing"
 
-	"github.com/git-town/git-town/test/helpers"
+	"github.com/git-town/git-town/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func TestMainFirst(t *testing.T) {
 		{give: []string{}, want: []string{}},
 	}
 	for tt := range tests {
-		have := helpers.MainFirst(tests[tt].give)
+		have := git.MainFirst(tests[tt].give)
 		assert.Equal(t, tests[tt].want, have)
 	}
 }

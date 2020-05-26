@@ -81,7 +81,7 @@ func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepLi
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
-	return
+	return result
 }
 
 func init() {

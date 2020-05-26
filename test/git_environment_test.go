@@ -5,11 +5,12 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/git-town/git-town/src/git"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -23,7 +24,7 @@ func TestGitEnvironment_CloneGitEnvironment(t *testing.T) {
 }
 
 func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
-	gitEnvRootDir := createTempDir(t)
+	gitEnvRootDir := CreateTempDir(t)
 	result, err := NewStandardGitEnvironment(gitEnvRootDir)
 	assert.Nil(t, err)
 	// verify the origin repo
@@ -41,7 +42,7 @@ func TestGitEnvironment_NewStandardGitEnvironment(t *testing.T) {
 
 func TestGitEnvironment_Branches(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -65,13 +66,13 @@ func TestGitEnvironment_Branches(t *testing.T) {
 
 func TestGitEnvironment_CreateCommits(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.Nil(t, err)
 	// create the commits
-	err = cloned.CreateCommits([]Commit{
+	err = cloned.CreateCommits([]git.Commit{
 		{
 			Branch:      "main",
 			FileName:    "local-file",
@@ -123,7 +124,7 @@ func TestGitEnvironment_CreateCommits(t *testing.T) {
 
 func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -132,24 +133,24 @@ func TestGitEnvironment_CreateRemoteBranch(t *testing.T) {
 	err = cloned.CreateRemoteBranch("b1", "main")
 	assert.Nil(t, err)
 	// verify it is in the remote branches
-	branches, err := cloned.OriginRepo.Branches()
+	branches, err := cloned.OriginRepo.LocalBranches()
 	assert.Nil(t, err)
 	assert.Contains(t, branches, "b1")
 	// verify it isn't in the local branches
-	branches, err = cloned.DevRepo.Branches()
+	branches, err = cloned.DevRepo.LocalBranches()
 	assert.Nil(t, err)
 	assert.NotContains(t, branches, "b1")
 }
 
 func TestGitEnvironment_CommitTable(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
 	assert.Nil(t, err)
 	// create a few commits
-	err = cloned.DevRepo.CreateCommit(Commit{
+	err = cloned.DevRepo.CreateCommit(git.Commit{
 		Branch:      "main",
 		FileName:    "local-remote.md",
 		FileContent: "one",
@@ -158,7 +159,7 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 	assert.Nil(t, err)
 	err = cloned.DevRepo.PushBranch("main")
 	assert.Nil(t, err)
-	err = cloned.OriginRepo.CreateCommit(Commit{
+	err = cloned.OriginRepo.CreateCommit(git.Commit{
 		Branch:      "main",
 		FileName:    "remote.md",
 		FileContent: "two",
@@ -168,18 +169,18 @@ func TestGitEnvironment_CommitTable(t *testing.T) {
 	// get the CommitTable
 	table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
-	assert.Len(t, table.cells, 3)
-	assert.Equal(t, table.cells[1][0], "local, remote")
-	assert.Equal(t, table.cells[1][1], "local-remote.md")
-	assert.Equal(t, table.cells[1][2], "one")
-	assert.Equal(t, table.cells[2][0], "remote")
-	assert.Equal(t, table.cells[2][1], "remote.md")
-	assert.Equal(t, table.cells[2][2], "two")
+	assert.Len(t, table.Cells, 3)
+	assert.Equal(t, table.Cells[1][0], "local, remote")
+	assert.Equal(t, table.Cells[1][1], "local-remote.md")
+	assert.Equal(t, table.Cells[1][2], "one")
+	assert.Equal(t, table.Cells[2][0], "remote")
+	assert.Equal(t, table.Cells[2][1], "remote.md")
+	assert.Equal(t, table.Cells[2][2], "two")
 }
 
 func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))
@@ -187,14 +188,14 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	err = cloned.AddUpstream()
 	assert.Nil(t, err)
 	// create a few commits
-	err = cloned.DevRepo.CreateCommit(Commit{
+	err = cloned.DevRepo.CreateCommit(git.Commit{
 		Branch:      "main",
 		FileName:    "local.md",
 		FileContent: "one",
 		Message:     "local",
 	})
 	assert.Nil(t, err)
-	err = cloned.UpstreamRepo.CreateCommit(Commit{
+	err = cloned.UpstreamRepo.CreateCommit(git.Commit{
 		Branch:      "main",
 		FileName:    "upstream.md",
 		FileContent: "two",
@@ -204,18 +205,18 @@ func TestGitEnvironment_CommitTable_Upstream(t *testing.T) {
 	// get the CommitTable
 	table, err := cloned.CommitTable([]string{"LOCATION", "FILE NAME", "FILE CONTENT"})
 	assert.Nil(t, err)
-	assert.Len(t, table.cells, 3)
-	assert.Equal(t, table.cells[1][0], "local")
-	assert.Equal(t, table.cells[1][1], "local.md")
-	assert.Equal(t, table.cells[1][2], "one")
-	assert.Equal(t, table.cells[2][0], "upstream")
-	assert.Equal(t, table.cells[2][1], "upstream.md")
-	assert.Equal(t, table.cells[2][2], "two")
+	assert.Len(t, table.Cells, 3)
+	assert.Equal(t, table.Cells[1][0], "local")
+	assert.Equal(t, table.Cells[1][1], "local.md")
+	assert.Equal(t, table.Cells[1][2], "one")
+	assert.Equal(t, table.Cells[2][0], "upstream")
+	assert.Equal(t, table.Cells[2][1], "upstream.md")
+	assert.Equal(t, table.Cells[2][2], "two")
 }
 
 func TestGitEnvironment_Remove(t *testing.T) {
 	// create GitEnvironment instance
-	dir := createTempDir(t)
+	dir := CreateTempDir(t)
 	memoizedGitEnv, err := NewStandardGitEnvironment(filepath.Join(dir, "memoized"))
 	assert.Nil(t, err)
 	cloned, err := CloneGitEnvironment(memoizedGitEnv, filepath.Join(dir, "cloned"))

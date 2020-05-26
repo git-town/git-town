@@ -14,8 +14,12 @@ import (
 )
 
 type appendConfig struct {
-	ParentBranch string
-	TargetBranch string
+	ancestorBranches    []string
+	parentBranch        string
+	targetBranch        string
+	hasOrigin           bool
+	isOffline           bool
+	shouldNewBranchPush bool
 }
 
 var appendCommand = &cobra.Command{
@@ -55,16 +59,20 @@ See "sync" for information regarding remote upstream.`,
 }
 
 func getAppendConfig(args []string) (result appendConfig, err error) {
-	result.ParentBranch = git.GetCurrentBranchName()
-	result.TargetBranch = args[0]
+	result.parentBranch = git.GetCurrentBranchName()
+	result.targetBranch = args[0]
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.TargetBranch)
-	prompt.EnsureKnowsParentBranches([]string{result.ParentBranch})
+	git.EnsureDoesNotHaveBranch(result.targetBranch)
+	prompt.EnsureKnowsParentBranches([]string{result.parentBranch})
+	result.ancestorBranches = git.Config().GetAncestorBranches(result.parentBranch)
+	result.hasOrigin = git.HasRemote("origin")
+	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
+	result.isOffline = git.Config().IsOffline()
 	return
 }
 
