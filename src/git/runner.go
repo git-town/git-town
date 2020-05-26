@@ -316,6 +316,23 @@ func (r *Runner) DeleteMainBranchConfiguration() error {
 	return nil
 }
 
+// DeleteRemoteBranch removes the branch with the given name from the origin remote.
+func (r *Runner) DeleteRemoteBranch(name string) error {
+	res, err := r.Run("git", "push", "origin", ":"+name)
+	if err != nil {
+		return fmt.Errorf("cannot delete the remote branch %q: %w\n%s", name, err, res.Output())
+	}
+	return nil
+}
+
+// DiscardOpenChanges removes all uncommitted changes.
+func (r *Runner) DiscardOpenChanges() error {
+	res, err := r.Run("git", "reset", "--hard")
+	if err != nil {
+		return fmt.Errorf("cannot discard uncommitted changes: %w\n%s", err, res.Output())
+	}
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch")
@@ -457,13 +474,12 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
 func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
-	trackingBranchName := "origin/" + name
 	remoteBranches, err := r.RemoteBranches()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine if tracking branch %q exists: %w", name, err)
 	}
 	for _, line := range remoteBranches {
-		if strings.TrimSpace(line) == trackingBranchName {
+		if strings.TrimSpace(line) == r.TrackingBranchName(name) {
 			return true, nil
 		}
 	}
@@ -573,6 +589,7 @@ func (r *Runner) Remotes() (names []string, err error) {
 }
 
 // RemoveBranch deletes the branch with the given name from this repo.
+// TODO: rename to DeleteBranch
 func (r *Runner) RemoveBranch(name string) error {
 	res, err := r.Run("git", "branch", "-D", name)
 	if err != nil {
@@ -633,6 +650,11 @@ func (r *Runner) Tags() (result []string, err error) {
 		result = append(result, strings.TrimSpace(line))
 	}
 	return result, err
+}
+
+// TrackingBranchName provides the name of the remote branch tracking the local branch with the given name.
+func (r *Runner) TrackingBranchName(branch string) string {
+	return "origin/" + branch
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.

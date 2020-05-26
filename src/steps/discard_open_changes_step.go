@@ -1,8 +1,6 @@
 package steps
 
-import (
-	"github.com/git-town/git-town/src/script"
-)
+import "github.com/git-town/git-town/src/git"
 
 // DiscardOpenChangesStep resets the branch to the last commit, discarding uncommitted changes.
 type DiscardOpenChangesStep struct {
@@ -10,6 +8,6 @@ type DiscardOpenChangesStep struct {
 }
 
 // Run executes this step.
-func (step *DiscardOpenChangesStep) Run() error {
-	return script.RunCommand("git", "reset", "--hard")
+func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo) error {
+	return repo.Logging.DiscardOpenChanges()
 }
