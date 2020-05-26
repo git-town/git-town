@@ -406,7 +406,7 @@ func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 // LastActiveDir provides the directory that was last used in this repo.
 func (r *Runner) LastActiveDir() (string, error) {
 	res, err := r.Run("git", "rev-parse", "--show-toplevel")
-	return res.OutputSanitized(), err
+	return filepath.FromSlash(res.OutputSanitized()), err
 }
 
 // LocalBranches provides the names of all local branches in this repo.
