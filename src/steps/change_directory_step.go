@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // ChangeDirectoryStep changes the current working directory.
@@ -29,7 +28,7 @@ func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo) error {
 	}
 	_, err = os.Stat(step.Directory)
 	if err == nil {
-		script.PrintCommand("cd", step.Directory)
+		repo.LoggingShell.PrintCommand("cd", step.Directory)
 		return os.Chdir(step.Directory)
 	}
 	return nil

@@ -10,7 +10,8 @@ import (
 type ProdRepo struct {
 	Silent         Runner // the Runner instance for silent Git operations
 	Logging        Runner // the Runner instance to Git operations that show up in the output
-	*Configuration        // the git.Configuration instance for this repo
+	LoggingShell   LoggingShell
+	*Configuration // the git.Configuration instance for this repo
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
