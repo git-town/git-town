@@ -17,12 +17,12 @@ import (
 type Runner struct {
 	command.Shell                        // for running console commands
 	currentBranch  *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
-	remoteBranches *RemoteBranchTracker  // caches the remote branches of this Git repo
+	remoteBranches *RemoteBranchCache    // caches the remote branches of this Git repo
 	*Configuration                       // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchTracker, config *Configuration) Runner {
+func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
 	return Runner{shell, currentBranch, remoteBranches, config}
 }
 

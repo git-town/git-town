@@ -8,7 +8,7 @@ import (
 )
 
 func TestRemoteBranchTracker(t *testing.T) {
-	rbt := git.RemoteBranchTracker{}
+	rbt := git.RemoteBranchCache{}
 	assert.False(t, rbt.Initialized())
 	rbt.Set([]string{"one", "two"})
 	assert.True(t, rbt.Initialized())
