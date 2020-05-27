@@ -33,10 +33,10 @@ var abortCmd = &cobra.Command{
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			git.ValidateIsRepository,
-			validateIsConfigured,
-		)
+		if err := git.ValidateIsRepository(); err != nil {
+			return err
+		}
+		return validateIsConfigured()
 	},
 }
 

@@ -14,10 +14,10 @@ func NewProdRepo() *ProdRepo {
 	shell := command.SilentShell{}
 	config := NewConfiguration(shell)
 	silentRunner := Runner{
-		Shell:          shell,
-		currentBranch:  &CurrentBranchTracker{},
-		remoteBranches: &RemoteBranchTracker{},
-		Configuration:  config,
+		Shell:             shell,
+		currentBranch:     &CurrentBranchTracker{},
+		remoteBranchCache: &RemoteBranchCache{},
+		Configuration:     config,
 	}
 	loggingRunner := Runner{
 		Shell:          command.StreamingShell{},

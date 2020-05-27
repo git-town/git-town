@@ -63,11 +63,11 @@ func TestShellRunner_RunStringWith_Dir(t *testing.T) {
 	assert.Nil(t, err)
 	runner := NewMockingShell(dir1, CreateTempDir(t), "")
 	toolPath := filepath.Join(dir2, "list-dir")
-	err = ioutil.WriteFile(toolPath, []byte("#!/usr/bin/env bash\n\nls\n"), 0744)
+	err = CreateLsTool(toolPath)
 	assert.Nil(t, err)
-	res, err := runner.RunStringWith(toolPath, command.Options{Dir: "subdir"})
+	res, err := runner.RunWith(command.Options{Dir: "subdir"}, toolPath)
 	assert.Nil(t, err)
-	assert.Equal(t, "list-dir", res.OutputSanitized())
+	assert.Equal(t, ScriptName("list-dir"), res.OutputSanitized())
 }
 
 func TestShellRunner_RunStringWith_Input(t *testing.T) {
@@ -77,13 +77,10 @@ func TestShellRunner_RunStringWith_Input(t *testing.T) {
 	assert.Nil(t, err)
 	runner := NewMockingShell(dir1, CreateTempDir(t), "")
 	toolPath := filepath.Join(dir2, "list-dir")
-	err = ioutil.WriteFile(toolPath, []byte(`#!/usr/bin/env bash
-read i1
-read i2
-echo Hello $i1 and $i2
-`), 0744)
+	err = CreateInputTool(toolPath)
 	assert.Nil(t, err)
-	res, err := runner.RunStringWith(toolPath, command.Options{Input: []string{"one\n", "two\n"}})
+	cmd, args := CallScriptArgs(toolPath)
+	res, err := runner.RunWith(command.Options{Input: []string{"one\n", "two\n"}}, cmd, args...)
 	assert.Nil(t, err)
-	assert.Equal(t, "Hello one and two", res.OutputSanitized())
+	assert.Contains(t, res.OutputSanitized(), "You entered one and two")
 }
