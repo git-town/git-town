@@ -91,7 +91,7 @@ func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
 	header := cmd + " "
 	for index, part := range args {
 		if strings.Contains(part, " ") {
-			part = `"` + strings.Replace(part, `"`, "\"", -1) + `"`
+			part = `"` + part + `"`
 		}
 		if index != 0 {
 			header += " "
