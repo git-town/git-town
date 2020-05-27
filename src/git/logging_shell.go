@@ -1,4 +1,4 @@
-package command
+package git
 
 import (
 	"fmt"
@@ -8,9 +8,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/dryrun"
-	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 	"github.com/kballard/go-shellquote"
 )
 
@@ -18,12 +17,13 @@ import (
 // that runs commands in the current working directory
 // and streams the command output to the application output.
 type LoggingShell struct {
-	out *os.File // where to stream command output
+	out                  *os.File // where to stream command output
+	currentBranchTracker *CurrentBranchTracker
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(out *os.File) *LoggingShell {
-	return &LoggingShell{out}
+func NewLoggingShell(out *os.File, branchTracker *CurrentBranchTracker) *LoggingShell {
+	return &LoggingShell{out, branchTracker}
 }
 
 // WorkingDir provides the directory that this Shell operates in.
@@ -32,18 +32,18 @@ func (shell LoggingShell) WorkingDir() string {
 }
 
 // MustRun runs the given command and returns the result. Panics on error.
-func (shell LoggingShell) MustRun(cmd string, args ...string) *Result {
-	return MustRun(cmd, args...)
+func (shell LoggingShell) MustRun(cmd string, args ...string) *command.Result {
+	return command.MustRun(cmd, args...)
 }
 
 // Run runs the given command in this ShellRunner's directory.
-func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
-	PrintCommand(cmd, args...)
-	if shell.dryrun {
+func (shell LoggingShell) Run(cmd string, args ...string) (*command.Result, error) {
+	shell.PrintCommand(cmd, args...)
+	if dryrun.IsActive() {
 		if len(args) == 2 && cmd == "git" && args[0] == "checkout" {
 			dryrun.SetCurrentBranchName(args[1])
 		}
-		return nil
+		return nil, nil
 	}
 	// Windows commands run inside CMD
 	// because opening browsers is done via "start"
@@ -55,9 +55,7 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
 	subProcess.Stderr = os.Stderr
 	subProcess.Stdin = os.Stdin
 	subProcess.Stdout = os.Stdout
-	return subProcess.Run()
-	err := script.RunCommand(cmd, args...)
-	return nil, err
+	return nil, subProcess.Run()
 }
 
 // RunMany runs all given commands in current directory.
@@ -65,7 +63,7 @@ func (shell LoggingShell) Run(cmd string, args ...string) (*Result, error) {
 // Failed commands abort immediately with the encountered error.
 func (shell LoggingShell) RunMany(commands [][]string) error {
 	for _, argv := range commands {
-		outcome, err := Run(argv[0], argv[1:]...)
+		outcome, err := shell.Run(argv[0], argv[1:]...)
 		if err != nil {
 			return fmt.Errorf("error running command %q: %w\n%v", argv, err, outcome)
 		}
@@ -74,39 +72,40 @@ func (shell LoggingShell) RunMany(commands [][]string) error {
 }
 
 // RunString runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunString(fullCmd string) (*Result, error) {
+func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
 	parts, err := shellquote.Split(fullCmd)
 	if err != nil {
 		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
 	}
 	cmd, args := parts[0], parts[1:]
-	return Run(cmd, args...)
+	return shell.Run(cmd, args...)
 }
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
-func (shell LoggingShell) RunStringWith(fullCmd string, options Options) (*Result, error) {
-	parts, err := shellquote.Split(fullCmd)
-	if err != nil {
-		return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	}
-	cmd, args := parts[0], parts[1:]
-	return RunWith(options, cmd, args...)
+func (shell LoggingShell) RunStringWith(fullCmd string, options command.Options) (*command.Result, error) {
+	panic("implement this")
+	// parts, err := shellquote.Split(fullCmd)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
+	// }
+	// cmd, args := parts[0], parts[1:]
+	// return shell.RunWith(options, cmd, args...)
 }
 
 // PrintCommand prints the given command-line operation on the console.
-func PrintCommand(cmd string, args ...string) {
+func (shell LoggingShell) PrintCommand(cmd string, args ...string) {
 	header := cmd + " "
 	for index, part := range args {
 		if strings.Contains(part, " ") {
-			part = "\"" + strings.Replace(part, "\"", "\\\"", -1) + "\""
+			part = `"` + strings.Replace(part, `"`, "\"", -1) + `"`
 		}
 		if index != 0 {
 			header += " "
 		}
 		header += part
 	}
-	if cmd == "git" && git.IsRepository() {
-		header = fmt.Sprintf("[%s] %s", git.GetCurrentBranchName(), header)
+	if cmd == "git" && IsRepository() {
+		header = fmt.Sprintf("[%s] %s", GetCurrentBranchName(), header)
 	}
 	fmt.Println()
 	_, err := color.New(color.Bold).Println(header)

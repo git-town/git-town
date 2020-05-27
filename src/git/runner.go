@@ -19,7 +19,6 @@ type Runner struct {
 	currentBranch     *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
 	remoteBranchCache *RemoteBranchCache    // caches the remote branches of this Git repo
 	*Configuration                          // caches Git configuration settings
-	dryrun            bool                  // whether to execute changes on disk
 }
 
 // NewRunner provides Runner instances.
