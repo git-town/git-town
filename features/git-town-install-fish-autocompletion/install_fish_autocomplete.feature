@@ -6,7 +6,7 @@ Feature: Installing Fish Shell autocomplete definitions
 
 
   Scenario: without existing fish autocompletion folder
-    Given I have no fish autocompletion file
+    Given my computer has no fish autocompletion file
     When I run "git-town install-fish-autocompletion"
     Then it prints:
       """
@@ -26,10 +26,10 @@ Feature: Installing Fish Shell autocomplete definitions
 
 
   Scenario: with an existing Git autocompletion file
-    Given I have an existing Git autocompletion file
+    Given my computer has an existing Git autocompletion file
     When I run "git-town install-fish-autocompletion"
     Then it prints the error:
       """
       Git autocompletion for Fish shell already exists
       """
-    And I still have my original Git autocompletion file
+    And my computer still has the original Git autocompletion file

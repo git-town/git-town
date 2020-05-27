@@ -189,24 +189,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I have an existing Git autocompletion file$`, func() error {
-		err := os.MkdirAll(fishFolderPath(state), 0744)
-		if err != nil {
-			return fmt.Errorf("cannot create fish folder: %w", err)
-		}
-		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0744)
-	})
-
-	suite.Step(`^I have Git "([^"]*)" installed$`, func(version string) error {
-		err := state.gitEnv.DevShell.MockGit(version)
-		return err
-	})
-
-	suite.Step(`^I have no fish autocompletion file$`, func() error {
-		// nothing to do here, the test directory has no data
-		return nil
-	})
-
 	suite.Step(`^I haven't configured Git Town yet$`, func() error {
 		state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
@@ -265,18 +247,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Dir: folderName})
-		return nil
-	})
-
-	suite.Step(`^I still have my original Git autocompletion file$`, func() error {
-		content, err := ioutil.ReadFile(fishFilePath(state))
-		if err != nil {
-			return err
-		}
-		contentStr := string(content)
-		if contentStr != "existing content" {
-			return fmt.Errorf("config file content was changed to %q", content)
-		}
 		return nil
 	})
 
@@ -391,12 +361,42 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return os.MkdirAll(fishFolderPath(state), 0744)
 	})
 
+	suite.Step(`^my computer has an existing Git autocompletion file$`, func() error {
+		err := os.MkdirAll(fishFolderPath(state), 0744)
+		if err != nil {
+			return fmt.Errorf("cannot create fish folder: %w", err)
+		}
+		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0744)
+	})
+
+	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {
+		err := state.gitEnv.DevShell.MockGit(version)
+		return err
+	})
+
+	suite.Step(`^my computer has no fish autocompletion file$`, func() error {
+		// nothing to do here, the test directory has no data
+		return nil
+	})
+
 	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {
 		return state.gitEnv.DevShell.MockNoCommandsInstalled()
 	})
 
 	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
+	})
+
+	suite.Step(`^my computer still has the original Git autocompletion file$`, func() error {
+		content, err := ioutil.ReadFile(fishFilePath(state))
+		if err != nil {
+			return err
+		}
+		contentStr := string(content)
+		if contentStr != "existing content" {
+			return fmt.Errorf("config file content was changed to %q", content)
+		}
+		return nil
 	})
 
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
