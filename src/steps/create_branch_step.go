@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // CreateBranchStep creates a new branch
@@ -20,5 +19,5 @@ func (step *CreateBranchStep) CreateUndoStep() Step {
 
 // Run executes this step.
 func (step *CreateBranchStep) Run(repo *git.ProdRepo) error {
-	return script.RunCommand("git", "branch", step.BranchName, step.StartingPoint)
+	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
 }
