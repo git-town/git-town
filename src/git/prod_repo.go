@@ -6,10 +6,10 @@ import (
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent         Runner // the Runner instance for silent Git operations
-	Logging        Runner // the Runner instance to Git operations that show up in the output
-	LoggingShell   LoggingShell
-	*Configuration // the git.Configuration instance for this repo
+	Silent         Runner        // the Runner instance for silent Git operations
+	Logging        Runner        // the Runner instance to Git operations that show up in the output
+	LoggingShell   *LoggingShell // the LoggingShell instance used
+	*Configuration               // the git.Configuration instance for this repo
 }
 
 // NewProdRepo provides a Repo instance in the current working directory.
@@ -23,10 +23,11 @@ func NewProdRepo() *ProdRepo {
 		remoteBranchCache: &RemoteBranchCache{},
 		Configuration:     config,
 	}
+	loggingShell := NewLoggingShell(&currentBranchTracker)
 	loggingRunner := Runner{
-		Shell:         NewLoggingShell(&currentBranchTracker),
+		Shell:         loggingShell,
 		currentBranch: &CurrentBranchTracker{},
 		Configuration: config,
 	}
-	return &ProdRepo{Silent: silentRunner, Logging: loggingRunner, Configuration: config}
+	return &ProdRepo{Silent: silentRunner, Logging: loggingRunner, LoggingShell: loggingShell, Configuration: config}
 }
