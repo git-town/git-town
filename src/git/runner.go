@@ -17,12 +17,12 @@ import (
 type Runner struct {
 	command.Shell                        // for running console commands
 	currentBranch  *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
-	remoteBranches *RemoteBranchCache    // caches the remote branches of this Git repo
+	remoteBranches *RemoteBranches       // caches the remote branches of this Git repo
 	*Configuration                       // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
+func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranches, config *Configuration) Runner {
 	return Runner{shell, currentBranch, remoteBranches, config}
 }
 
@@ -466,7 +466,7 @@ func (r *Runner) PushBranch(name string) error {
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
 	if r.remoteBranches.Initialized() {
-		return r.remoteBranches.Branches(), nil
+		return r.remoteBranches.Get(), nil
 	}
 	outcome, err := r.Run("git", "branch", "-r")
 	if err != nil {

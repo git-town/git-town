@@ -1,24 +1,24 @@
 package git
 
-// RemoteBranchTracker caches the known remote branches of a Git repository.
+// RemoteBranches caches the known remote branches of a Git repository.
 // The zero value is valid.
-type RemoteBranchCache struct {
+type RemoteBranches struct {
 	branches    []string
 	initialized bool
 }
 
 // Initialized indicates whether this RemoteBranchTracker is initialized.
-func (rbt *RemoteBranchCache) Initialized() bool {
+func (rbt *RemoteBranches) Initialized() bool {
 	return rbt.initialized
 }
 
-// Branches provides the currently known remote branches.
-func (rbt *RemoteBranchCache) Branches() []string {
+// Get provides the currently known remote branches.
+func (rbt *RemoteBranches) Get() []string {
 	return rbt.branches
 }
 
 // Set stores the given remote branches.
-func (rbt *RemoteBranchCache) Set(branches []string) {
+func (rbt *RemoteBranches) Set(branches []string) {
 	rbt.branches = branches
 	rbt.initialized = true
 }

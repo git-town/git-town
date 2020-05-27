@@ -16,7 +16,7 @@ func NewProdRepo() *ProdRepo {
 	silentRunner := Runner{
 		Shell:          shell,
 		currentBranch:  &CurrentBranchTracker{},
-		remoteBranches: &RemoteBranchCache{},
+		remoteBranches: &RemoteBranches{},
 		Configuration:  config,
 	}
 	return &ProdRepo{Silent: silentRunner, Configuration: config}
