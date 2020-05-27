@@ -30,7 +30,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
 
@@ -46,7 +46,7 @@ Feature: git town-ship: shipping the current feature branch without a tracking b
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local, remote | feature done          | feature_file |
       |         |               | Revert "feature done" | feature_file |

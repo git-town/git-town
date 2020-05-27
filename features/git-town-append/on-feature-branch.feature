@@ -31,7 +31,7 @@ Feature: Appending a branch to a feature branch
       | new-child        | git stash pop                               |
     And I end up on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing_feature_commit |
       | new-child        | local         | existing_feature_commit |
@@ -55,7 +55,7 @@ Feature: Appending a branch to a feature branch
       | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

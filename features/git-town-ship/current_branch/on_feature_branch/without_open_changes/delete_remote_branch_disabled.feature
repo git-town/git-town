@@ -1,6 +1,6 @@
 Feature: Skip deleting the remote branch when shipping the current branch
 
-  When using GitHub's feature to automatically delete head branches of pull requests.
+    When using GitHub's feature to automatically delete head branches of pull requests.
   I want "git ship" to skip deleting the remote feature branch
   So that I can keep using Git Town in this situation.
 
@@ -35,7 +35,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
 
@@ -51,7 +51,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local, remote | feature done          | feature_file |
       |         |               | Revert "feature done" | feature_file |

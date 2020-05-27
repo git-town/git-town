@@ -46,7 +46,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -79,7 +79,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     And I am still on the "current-feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH          | LOCATION      | MESSAGE                                  | FILE NAME        |
       | main            | local, remote | conflicting main commit                  | conflicting_file |
       | current-feature | local, remote | conflicting feature commit               | conflicting_file |
@@ -89,7 +89,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
       | other-feature   | local, remote | other feature commit                     | file2            |
       |                 |               | conflicting main commit                  | conflicting_file |
       |                 |               | Merge branch 'main' into other-feature   |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH          | NAME             | CONTENT          |
       | main            | conflicting_file | main content     |
       | current-feature | conflicting_file | resolved content |

@@ -20,5 +20,5 @@ Feature: git town-ship: errors when trying to ship a perennial branch
       The branch "production" is not a feature branch. Only feature branches can be shipped.
       """
     And I am still on the "production" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION |

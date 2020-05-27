@@ -36,7 +36,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME               |
       | main   | local, remote | feature done | new_folder/feature_file |
 
@@ -55,7 +55,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
       | main    | git checkout feature                          |
       | <none>  | cd {{ folder "new_folder" }}                  |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME               |
       | main    | local, remote | feature done          | new_folder/feature_file |
       |         |               | Revert "feature done" | new_folder/feature_file |

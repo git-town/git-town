@@ -30,7 +30,7 @@ Feature: git-town sync --all: does not sync remote only branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                             | FILE NAME     |
       | main       | local, remote | main commit                         | main_file     |
       | co-feature | remote        | coworker commit                     | coworker_file |

@@ -45,7 +45,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
@@ -73,13 +73,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop        |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
       |         |               | conflicting main commit          | conflicting_file |
       |         |               | Merge branch 'main' into feature |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -95,13 +95,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop        |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
       |         |               | conflicting main commit          | conflicting_file |
       |         |               | Merge branch 'main' into feature |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT         |
       | main    | conflicting_file | main content    |
       | feature | conflicting_file | feature content |
@@ -117,13 +117,13 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | conflicting main commit          | conflicting_file |
       | feature | local, remote | conflicting feature commit       | conflicting_file |
       |         |               | conflicting main commit          | conflicting_file |
       |         |               | Merge branch 'main' into feature |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |

@@ -24,6 +24,6 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git stash pop            |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |

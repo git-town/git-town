@@ -38,7 +38,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       |        | git checkout feature |
     And I am still on the "feature" branch
     And there is no rebase in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing after resolving the conflicts
@@ -62,7 +62,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
@@ -90,7 +90,7 @@ Feature: git town-ship: resolving conflicts between the main branch and its trac
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |

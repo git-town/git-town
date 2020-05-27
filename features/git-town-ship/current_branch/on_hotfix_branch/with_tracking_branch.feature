@@ -35,6 +35,6 @@ Feature: git town-ship: shipping hotfixes
       | REPOSITORY | BRANCHES         |
       | local      | main, production |
       | remote     | main, production |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE     | FILE NAME   |
       | production | local, remote | hotfix done | hotfix_file |

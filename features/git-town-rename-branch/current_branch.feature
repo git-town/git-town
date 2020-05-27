@@ -28,7 +28,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                 | git branch -D feature              |
     And I end up on the "renamed-feature" branch
     And the perennial branches are now configured as "production"
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH          | LOCATION      | MESSAGE     |
       | main            | local, remote | main commit |
       | production      | local, remote | prod commit |
@@ -44,7 +44,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       Cannot rename branch to current name.
       """
     And I end up on the "feature" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: rename perennial branch
@@ -70,7 +70,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       |                    | git branch -D production                 |
     And I end up on the "renamed-production" branch
     And the perennial branches are now configured as "renamed-production"
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH             | LOCATION      | MESSAGE     |
       | main               | local, remote | main commit |
       | feature            | local, remote | feat commit |
@@ -90,7 +90,7 @@ Feature: git town-rename-branch: rename current branch implicitly
       | feature         | git branch -D renamed-feature              |
     And I end up on the "feature" branch
     And the perennial branches are now configured as "production"
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE     |
       | main       | local, remote | main commit |
       | feature    | local, remote | feat commit |

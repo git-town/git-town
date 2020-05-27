@@ -49,7 +49,7 @@ Feature: Syncing before creating the pull request
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -79,7 +79,7 @@ Feature: Syncing before creating the pull request
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | main commit                      | conflicting_file |
       | feature | local, remote | feature commit                   | conflicting_file |
@@ -102,7 +102,7 @@ Feature: Syncing before creating the pull request
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          | FILE NAME        |
       | main    | local, remote | main commit                      | conflicting_file |
       | feature | local, remote | feature commit                   | conflicting_file |

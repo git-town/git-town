@@ -40,4 +40,4 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       """
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

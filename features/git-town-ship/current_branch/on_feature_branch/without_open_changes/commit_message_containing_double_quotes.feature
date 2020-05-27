@@ -35,7 +35,7 @@ Feature: git town-ship: shipping the current feature branch
       | local      | main     |
       | remote     | main     |
     And I don't have any uncommitted files
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                            | FILE NAME    |
       | main   | local, remote | message containing "double quotes" | feature_file |
 
@@ -52,7 +52,7 @@ Feature: git town-ship: shipping the current feature branch
       | feature | git checkout main                                         |
       | main    | git checkout feature                                      |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                     | FILE NAME    |
       | main    | local, remote | message containing "double quotes"          | feature_file |
       |         |               | Revert "message containing "double quotes"" | feature_file |

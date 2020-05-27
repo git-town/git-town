@@ -32,7 +32,7 @@ Feature: git-town sync: offline mode
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION | MESSAGE                          | FILE NAME           |
       | main    | local    | local main commit                | local_main_file     |
       |         | remote   | remote main commit               | remote_main_file    |

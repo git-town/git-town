@@ -32,6 +32,6 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |

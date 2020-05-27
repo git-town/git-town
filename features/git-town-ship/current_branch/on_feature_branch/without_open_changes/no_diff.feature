@@ -42,7 +42,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       Nothing to undo
       """
     And I am still on the "empty-feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE        | FILE NAME   |
       | main          | local, remote | main commit    | common_file |
       | empty-feature | local         | feature commit | common_file |

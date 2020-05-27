@@ -40,7 +40,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -65,11 +65,11 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git stash pop         |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |
 
@@ -85,10 +85,10 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
       |        | git stash pop   |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | main   | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | main   | conflicting_file | resolved content |

@@ -26,4 +26,4 @@ Feature: git town-kill: errors when trying to kill the main branch
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | remote     | main, feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

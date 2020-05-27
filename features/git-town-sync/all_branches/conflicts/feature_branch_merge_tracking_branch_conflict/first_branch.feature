@@ -42,7 +42,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop     |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                 | FILE NAME        |
       | main      | local, remote | main commit             | main_file        |
       | feature-1 | local         | feature-1 local commit  | conflicting_file |
@@ -64,7 +64,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop                        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                            | FILE NAME        |
       | main      | local, remote | main commit                        | main_file        |
       | feature-1 | local         | feature-1 local commit             | conflicting_file |
@@ -103,7 +103,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop                        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                                                        | FILE NAME        |
       | main      | local, remote | main commit                                                    | main_file        |
       | feature-1 | local, remote | feature-1 local commit                                         | conflicting_file |
@@ -133,7 +133,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       |           | git stash pop                        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                                                        | FILE NAME        |
       | main      | local, remote | main commit                                                    | main_file        |
       | feature-1 | local, remote | feature-1 local commit                                         | conflicting_file |

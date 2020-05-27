@@ -35,7 +35,7 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       Aborted because commit exited with error
       """
     And I am still on the "feature" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: undo
@@ -45,4 +45,4 @@ Feature: git town-ship: aborting the ship of the current feature branch by enter
       Nothing to undo
       """
     And I am still on the "feature" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits

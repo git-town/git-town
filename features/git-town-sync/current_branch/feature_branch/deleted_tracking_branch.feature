@@ -25,6 +25,6 @@ Feature: git-town sync: restores deleted tracking branch
       | feature | git merge --no-edit main   |
       |         | git push -u origin feature |
     And I am still on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
       | feature | local, remote | feature commit | feature_file |

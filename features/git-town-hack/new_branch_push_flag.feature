@@ -1,6 +1,6 @@
 Feature: git town-hack: push branch to remote upon creation
 
-  When creating a new feature branch and having enough CI server bandwidth for an extra CI run
+    When creating a new feature branch and having enough CI server bandwidth for an extra CI run
   I want it to be pushed to the CI server right away
   So that I can push and pull from the remote branch right away without having to run "git sync" first
 
@@ -23,7 +23,7 @@ Feature: git town-hack: push branch to remote upon creation
       |         | git checkout feature       |
       | feature | git push -u origin feature |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE       |
       | main    | local, remote | remote commit |
       | feature | local, remote | remote commit |

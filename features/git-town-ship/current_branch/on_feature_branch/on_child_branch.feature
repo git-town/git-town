@@ -31,7 +31,7 @@ Feature: git town-ship: shipping a child branch
       Please ship "feature-1" first.
       """
     And I end up on the "feature-3" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -47,4 +47,4 @@ Feature: git town-ship: shipping a child branch
       Nothing to undo
       """
     And I am still on the "feature-3" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits

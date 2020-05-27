@@ -48,7 +48,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
     And there is no merge in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -74,12 +74,12 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop            |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | feature | local, remote | local conflicting commit                                   | conflicting_file |
       |         |               | remote conflicting commit                                  | conflicting_file |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |
 
@@ -95,11 +95,11 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop            |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | feature | local, remote | local conflicting commit                                   | conflicting_file |
       |         |               | remote conflicting commit                                  | conflicting_file |
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | feature | conflicting_file | resolved content |

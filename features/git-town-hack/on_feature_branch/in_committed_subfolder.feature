@@ -31,7 +31,7 @@ Feature: git town-hack: starting a new feature from a new subfolder on the main 
     And I end up on the "new-feature" branch
     And I am in the project root folder
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE       |
       | main        | local, remote | main commit   |
       | feature     | local, remote | folder commit |

@@ -27,7 +27,7 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH        | LOCATION | MESSAGE              |
       | other-feature | local    | other feature commit |
 
@@ -44,4 +44,4 @@ Feature: git town-kill: killing the given feature branch when on it (without rem
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

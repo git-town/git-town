@@ -1,6 +1,6 @@
 Feature: git town-hack: offline mode
 
-  When having no internet connection
+    When having no internet connection
   I want that new branches are created without attempting network accesses
   So that I don't see unnecessary errors.
 
@@ -26,7 +26,7 @@ Feature: git town-hack: offline mode
       | feature | git stash pop           |
     And I end up on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
       | feature | local         | main commit |

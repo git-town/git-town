@@ -69,7 +69,7 @@ Feature: Prompt for parent branch when unknown
     When I run "git-town sync" and answer the prompts:
       | PROMPT                                        | ANSWER  |
       | Please specify the parent branch of 'feature' | [ENTER] |
-    Then my repository now has the following commits
+    Then my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                          |
       | main    | local, remote | main commit                      |
       | feature | local, remote | feature commit                   |
@@ -90,7 +90,7 @@ Feature: Prompt for parent branch when unknown
       | PROMPT                                          | ANSWER  |
       | Please specify the parent branch of 'feature-1' | [ENTER] |
       | Please specify the parent branch of 'feature-2' | [ENTER] |
-    Then my repository now has the following commits
+    Then my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE                            |
       | main      | local, remote | main commit                        |
       | feature-1 | local, remote | feature-1 commit                   |

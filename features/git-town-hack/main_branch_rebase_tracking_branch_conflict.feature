@@ -43,7 +43,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
     And I end up on the "existing-feature" branch
     And my workspace has the uncommitted file again
     And there is no rebase in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -68,7 +68,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
       | main        | local, remote | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |
@@ -88,7 +88,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE                   | FILE NAME        |
       | main        | local, remote | conflicting remote commit | conflicting_file |
       |             |               | conflicting local commit  | conflicting_file |

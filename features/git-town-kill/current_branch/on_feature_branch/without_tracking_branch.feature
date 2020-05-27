@@ -30,7 +30,7 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
 
@@ -48,4 +48,4 @@ Feature: git town-kill: killing the current feature branch without a tracking br
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, other-feature                  |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

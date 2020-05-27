@@ -40,7 +40,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop     |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: skipping
@@ -54,14 +54,14 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop            |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | conflicting_file |
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | feature-1 content |
@@ -79,7 +79,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And I am still on the "feature-1" branch
     And my uncommitted file is stashed
     And my repo still has a merge in progress
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | feature-1 content |
@@ -98,7 +98,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop            |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | conflicting_file |
@@ -107,7 +107,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |
@@ -127,7 +127,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | main      | git stash pop            |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION | MESSAGE                            | FILE NAME        |
       | main      | local    | main commit                        | conflicting_file |
       | feature-1 | local    | feature-1 commit                   | conflicting_file |
@@ -136,7 +136,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | resolved content  |

@@ -28,7 +28,7 @@ Feature: push branch to remote upon creation
       |                  | git stash pop                 |
     And I end up on the "new-parent" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
@@ -51,7 +51,7 @@ Feature: push branch to remote upon creation
       | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

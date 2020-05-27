@@ -18,5 +18,5 @@ Feature: git town-ship: errors if on supplied branch and there are open changes
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION |

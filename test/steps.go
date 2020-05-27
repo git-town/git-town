@@ -551,7 +551,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranch(branch1)
 	})
 
-	suite.Step(`^my repository is left with my original commits$`, func() error {
+	suite.Step(`^my repo is left with my original commits$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
@@ -564,11 +564,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository knows about the remote branch$`, func() error {
+	suite.Step(`^my repo knows about the remote branch$`, func() error {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 
-	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})
 
@@ -608,7 +608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
