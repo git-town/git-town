@@ -15,6 +15,6 @@ func (step *RemoveFromPerennialBranches) CreateUndoStep() Step {
 
 // Run executes this step.
 func (step *RemoveFromPerennialBranches) Run(repo *git.ProdRepo) error {
-	git.Config().RemoveFromPerennialBranches(step.BranchName)
+	repo.RemoveFromPerennialBranches(step.BranchName)
 	return nil
 }
