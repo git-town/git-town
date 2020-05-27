@@ -4,8 +4,8 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
 
 
   Background:
-    Given my repository has the feature branches "feature" and "other-feature"
-    And the following commits exist in my repository
+    Given my repo has the feature branches "feature" and "other-feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
@@ -38,6 +38,6 @@ Feature: git town-ship: shipping the supplied feature branch without a tracking 
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |

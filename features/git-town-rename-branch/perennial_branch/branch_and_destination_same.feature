@@ -6,8 +6,8 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
 
 
   Background:
-    Given my repository has the perennial branch "production"
-    And the following commits exist in my repository
+    Given my repo has the perennial branch "production"
+    And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production commit |
     And I am on the "production" branch
@@ -23,4 +23,4 @@ Feature: git town-rename-branch: does nothing if renaming a perennial branch ont
       """
     And I end up on the "production" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

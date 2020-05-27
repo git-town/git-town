@@ -4,8 +4,8 @@ Feature: git town-diff-parent: diffing a given feature branch
 
 
   Scenario: result
-    Given my repository has a feature branch named "feature-1"
-    And my repository has a feature branch named "feature-2" as a child of "feature-1"
+    Given my repo has a feature branch named "feature-1"
+    And my repo has a feature branch named "feature-2" as a child of "feature-1"
     And I am on the "feature-2" branch
     When I run "git-town diff-parent feature-2"
     Then it runs the commands

@@ -6,8 +6,8 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |
       | feature | local, remote | good commit |
     And I am on the "main" branch
@@ -29,4 +29,4 @@ Feature: git town-prepend: errors when trying to prepend something in front of t
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | remote     | main, feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

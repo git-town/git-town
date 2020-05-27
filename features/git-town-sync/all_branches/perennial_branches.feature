@@ -1,8 +1,8 @@
 Feature: git-town sync --all: syncs all perennial branches
 
   Background:
-    Given my repository has the perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    Given my repo has the perennial branches "production" and "qa"
+    And the following commits exist in my repo
       | BRANCH     | LOCATION | MESSAGE                  | FILE NAME              |
       | main       | remote   | main commit              | main_file              |
       | production | local    | production local commit  | production_local_file  |
@@ -33,7 +33,7 @@ Feature: git-town sync --all: syncs all perennial branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME              |
       | main       | local, remote | main commit              | main_file              |
       | production | local, remote | production remote commit | production_remote_file |

@@ -5,7 +5,7 @@ Feature: print URL when unable to open browser
   So that I can copy-and-paste the URL to open it on my local computer.
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my repo's origin is "git@github.com:git-town/git-town"
     And my computer has no tool to open browsers installed
     And I am on the "feature" branch

@@ -6,7 +6,7 @@ Feature: git-town sync: syncing a feature branch pulls tags
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my repo has the following tags
       | NAME       | LOCATION |
       | local-tag  | local    |
@@ -17,6 +17,6 @@ Feature: git-town sync: syncing a feature branch pulls tags
 
   Scenario: result
     Then my repo now has the following tags
-      | NAME       | LOCATION         |
-      | local-tag  | local            |
+      | NAME       | LOCATION      |
+      | local-tag  | local         |
       | remote-tag | local, remote |

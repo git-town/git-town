@@ -6,7 +6,7 @@ Feature: git town-ship: errors when trying to ship a perennial branch
 
 
   Background:
-    Given my repository has the perennial branches "qa" and "production"
+    Given my repo has the perennial branches "qa" and "production"
     And I am on the "production" branch
     When I run "git-town ship"
 
@@ -20,5 +20,5 @@ Feature: git town-ship: errors when trying to ship a perennial branch
       The branch "production" is not a feature branch. Only feature branches can be shipped.
       """
     And I am still on the "production" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION |

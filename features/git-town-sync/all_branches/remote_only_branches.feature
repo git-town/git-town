@@ -1,9 +1,9 @@
 Feature: git-town sync --all: does not sync remote only branches
 
   Background:
-    Given my repository has a feature branch named "my-feature"
+    Given my repo has a feature branch named "my-feature"
     And my coworker has a feature branch named "co-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE         | FILE NAME     |
       | main       | remote        | main commit     | main_file     |
       | my-feature | local, remote | my commit       | my_file       |
@@ -30,7 +30,7 @@ Feature: git-town sync --all: does not sync remote only branches
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
     And all branches are now synchronized
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                             | FILE NAME     |
       | main       | local, remote | main commit                         | main_file     |
       | co-feature | remote        | coworker commit                     | coworker_file |

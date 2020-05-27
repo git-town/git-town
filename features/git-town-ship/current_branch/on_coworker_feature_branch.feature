@@ -6,8 +6,8 @@ Feature: git town-ship: shipping a coworker's feature branch
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE         | FILE NAME     | AUTHOR                          |
       | feature | local, remote | coworker commit | coworker_file | coworker <coworker@example.com> |
     And I am on the "feature" branch
@@ -29,6 +29,6 @@ Feature: git town-ship: shipping a coworker's feature branch
       |         | git push                                                                |
       |         | git push origin :feature                                                |
       |         | git branch -D feature                                                   |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME     | AUTHOR                          |
       | main   | local, remote | feature done | coworker_file | coworker <coworker@example.com> |

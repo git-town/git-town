@@ -6,9 +6,9 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
 
 
   Background:
-    Given my repository has a feature branch named "other-feature"
+    Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | remote   | feature commit | feature_file | feature content |
     And I am on the "other-feature" branch
@@ -43,6 +43,6 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |

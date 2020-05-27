@@ -86,7 +86,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town is no longer configured for this repository$`, func() error {
+	suite.Step(`^Git Town is no longer configured for this repo$`, func() error {
 		res, err := state.gitEnv.DevRepo.HasGitTownConfigNow()
 		if err != nil {
 			return err
@@ -430,15 +430,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has a branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^my repo has a branch "([^"]*)"$`, func(branch string) error {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
+	suite.Step(`^my repo has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
 		return state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
+	suite.Step(`^my repo has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
@@ -446,7 +446,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranch(childBranch)
 	})
 
-	suite.Step(`^my repository has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^my repo has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {
@@ -495,7 +495,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^my repo has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := state.gitEnv.DevRepo.CreateBranch(branch1, "main")
 		if err != nil {
 			return err
@@ -507,7 +507,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CreateTags(table)
 	})
 
-	suite.Step(`^my repository has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^my repo has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch1)
 		if err != nil {
@@ -527,7 +527,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
@@ -543,7 +543,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
+	suite.Step(`^my repo has the perennial branch "([^"]+)"`, func(branch1 string) error {
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
@@ -551,7 +551,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranch(branch1)
 	})
 
-	suite.Step(`^my repository is left with my original commits$`, func() error {
+	suite.Step(`^my repo is left with my original commits$`, func() error {
 		return compareExistingCommits(state, state.initialCommits)
 	})
 
@@ -564,11 +564,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository knows about the remote branch$`, func() error {
+	suite.Step(`^my repo knows about the remote branch$`, func() error {
 		return state.gitEnv.DevRepo.Fetch()
 	})
 
-	suite.Step(`^my repository now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo now has the following commits$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		return compareExistingCommits(state, table)
 	})
 
@@ -608,7 +608,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^my repo (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
 			return fmt.Errorf("cannot determine files in branches in the developer repo: %w", err)
@@ -688,7 +688,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my workspace is currently not a Git repository$`, func() error {
+	suite.Step(`^my workspace is currently not a Git repo$`, func() error {
 		os.RemoveAll(filepath.Join(state.gitEnv.DevRepo.WorkingDir(), ".git"))
 		return nil
 	})
@@ -738,7 +738,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.OriginRepo.RemoveBranch(name)
 	})
 
-	suite.Step(`^the following commits exist in my repository$`, func(table *messages.PickleStepArgument_PickleTable) error {
+	suite.Step(`^the following commits exist in my repo$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		state.initialCommits = table
 		commits, err := FromGherkinTable(table)
 		if err != nil {

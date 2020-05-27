@@ -15,8 +15,8 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-ship
-    Given my repository has a feature branch named "current-feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "current-feature"
+    And the following commits exist in my repo
       | BRANCH          | FILE NAME    |
       | current-feature | feature_file |
     And I am on the "current-feature" branch
@@ -30,7 +30,7 @@ Feature: Show clear error if trying to continue after executing a successful com
 
   Scenario: continuing after successful git-sync
     Given I am on the "main" branch
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | LOCATION | FILE NAME   |
       | local    | local_file  |
       | remote   | remote_file |

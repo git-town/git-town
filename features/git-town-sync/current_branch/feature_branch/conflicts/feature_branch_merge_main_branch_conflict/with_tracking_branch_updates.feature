@@ -1,8 +1,8 @@
 Feature: git-town sync: resolving conflicts between the current feature branch and the main branch (with tracking branch updates)
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |
       | feature | local    | conflicting feature commit | conflicting_file | feature content |
@@ -47,7 +47,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
     And there is no merge in progress
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local, remote | conflicting main commit    | conflicting_file | main content    |
       | feature | local         | conflicting feature commit | conflicting_file | feature content |
@@ -76,7 +76,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop        |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | main    | local, remote | conflicting main commit                                    | conflicting_file |
       | feature | local, remote | conflicting feature commit                                 | conflicting_file |
@@ -84,7 +84,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |               | conflicting main commit                                    | conflicting_file |
       |         |               | Merge branch 'main' into feature                           |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
@@ -101,7 +101,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         | git stash pop |
     And I am still on the "feature" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME        |
       | main    | local, remote | conflicting main commit                                    | conflicting_file |
       | feature | local, remote | conflicting feature commit                                 | conflicting_file |
@@ -109,7 +109,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
       |         |               | Merge remote-tracking branch 'origin/feature' into feature |                  |
       |         |               | conflicting main commit                                    | conflicting_file |
       |         |               | Merge branch 'main' into feature                           |                  |
-    And my repository still has the following committed files
+    And my repo still has the following committed files
       | BRANCH  | NAME             | CONTENT          |
       | main    | conflicting_file | main content     |
       | feature | conflicting_file | resolved content |
