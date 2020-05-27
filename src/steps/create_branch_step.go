@@ -1,8 +1,6 @@
 package steps
 
-import (
-	"github.com/git-town/git-town/src/git"
-)
+import "github.com/git-town/git-town/src/git"
 
 // CreateBranchStep creates a new branch
 // but leaves the current branch unchanged.
