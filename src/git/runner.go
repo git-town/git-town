@@ -144,6 +144,15 @@ func (r *Runner) ConnectTrackingBranch(name string) error {
 	return nil
 }
 
+// ContinueRebase continues the currently ongoing rebase.
+func (r *Runner) ContinueRebase() error {
+	outcome, err := r.Run("git", "rebase", "--continue")
+	if err != nil {
+		return fmt.Errorf("cannot continue rebase: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // CreateBranch creates a new branch with the given name.
 // The created branch is a normal branch.
 // To create feature branches, use CreateFeatureBranch.
@@ -400,7 +409,14 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.WorkingDir(), err)
 	}
-	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
+	output := res.OutputSanitized()
+	if strings.Contains(output, "You are currently rebasing") {
+		return true, nil
+	}
+	if strings.Contains(output, "rebase in progress") {
+		return true, nil
+	}
+	return false, nil
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
