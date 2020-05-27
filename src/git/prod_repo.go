@@ -29,5 +29,10 @@ func NewProdRepo() *ProdRepo {
 		currentBranch: &CurrentBranchTracker{},
 		Configuration: config,
 	}
-	return &ProdRepo{Silent: silentRunner, Logging: loggingRunner, LoggingShell: loggingShell, Configuration: config}
+	return &ProdRepo{
+		Silent:        silentRunner,
+		Logging:       loggingRunner,
+		LoggingShell:  loggingShell,
+		Configuration: config,
+	}
 }
