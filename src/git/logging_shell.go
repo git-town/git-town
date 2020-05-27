@@ -16,14 +16,14 @@ import (
 // LoggingShell is an implementation of the Shell interface
 // that runs commands in the current working directory
 // and streams the command output to the application output.
+// It is used by Git Town commands to run Git commands that show up in their output.
 type LoggingShell struct {
-	out                  *os.File // where to stream command output
 	currentBranchTracker *CurrentBranchTracker
 }
 
 // NewLoggingShell provides StreamingShell instances.
-func NewLoggingShell(out *os.File, branchTracker *CurrentBranchTracker) *LoggingShell {
-	return &LoggingShell{out, branchTracker}
+func NewLoggingShell(branchTracker *CurrentBranchTracker) *LoggingShell {
+	return &LoggingShell{branchTracker}
 }
 
 // WorkingDir provides the directory that this Shell operates in.

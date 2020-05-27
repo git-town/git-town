@@ -1,8 +1,6 @@
 package git
 
 import (
-	"os"
-
 	"github.com/git-town/git-town/src/command"
 )
 
@@ -26,7 +24,7 @@ func NewProdRepo() *ProdRepo {
 		Configuration:     config,
 	}
 	loggingRunner := Runner{
-		Shell:         NewLoggingShell(os.Stdout, &currentBranchTracker),
+		Shell:         NewLoggingShell(&currentBranchTracker),
 		currentBranch: &CurrentBranchTracker{},
 		Configuration: config,
 	}
