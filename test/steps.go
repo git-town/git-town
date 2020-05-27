@@ -81,14 +81,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
-		state.gitEnv.DevRepo.Configuration.Reload()
-		if state.gitEnv.DevRepo.Configuration.HasBranchInformation() {
-			return fmt.Errorf("unexpected Git Town branch hierarchy information")
-		}
-		return nil
-	})
-
 	suite.Step(`^Git Town is in offline mode$`, func() error {
 		state.gitEnv.DevRepo.SetOffline(true)
 		return nil
@@ -119,6 +111,14 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			fmt.Printf("\nERROR! Found %d differences in the branch hierarchy\n\n", errCount)
 			fmt.Println(diff)
 			return fmt.Errorf("mismatching branches found, see the diff above")
+		}
+		return nil
+	})
+
+	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
+		state.gitEnv.DevRepo.Configuration.Reload()
+		if state.gitEnv.DevRepo.Configuration.HasBranchInformation() {
+			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
 	})
@@ -155,17 +155,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
-		actual, err := state.gitEnv.DevRepo.CurrentBranch()
-		if err != nil {
-			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
-		}
-		if actual != expected {
-			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
-		}
-		return nil
-	})
-
 	suite.Step(`^I am on the "([^"]*)" branch with "([^"]*)" as the previous Git branch$`, func(current, previous string) error {
 		err := state.gitEnv.DevRepo.CheckoutBranch(previous)
 		if err != nil {
@@ -189,23 +178,13 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I now have a Git autocompletion file$`, func() error {
-		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
-		_, err := os.Stat(fishPath)
-		if os.IsNotExist(err) {
-			return err
-		}
-		return nil
-	})
-
-	suite.Step(`^I still have my original Git autocompletion file$`, func() error {
-		content, err := ioutil.ReadFile(fishFilePath(state))
+	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
+		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
-			return err
+			return fmt.Errorf("cannot determine current branch of developer repo: %w", err)
 		}
-		contentStr := string(content)
-		if contentStr != "existing content" {
-			return fmt.Errorf("config file content was changed to %q", content)
+		if actual != expected {
+			return fmt.Errorf("expected active branch %q but is %q", expected, actual)
 		}
 		return nil
 	})
@@ -235,6 +214,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	suite.Step(`^I haven't configured Git Town yet$`, func() error {
 		state.gitEnv.DevRepo.DeletePerennialBranchConfiguration()
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
+	})
+
+	suite.Step(`^I now have a Git autocompletion file$`, func() error {
+		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
+		_, err := os.Stat(fishPath)
+		if os.IsNotExist(err) {
+			return err
+		}
+		return nil
 	})
 
 	suite.Step(`^I resolve the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(filename, content string) error {
@@ -281,6 +269,18 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^I run "([^"]+)" in the "([^"]+)" folder$`, func(cmd, folderName string) error {
 		state.runRes, state.runErr = state.gitEnv.DevShell.RunStringWith(cmd, command.Options{Dir: folderName})
+		return nil
+	})
+
+	suite.Step(`^I still have my original Git autocompletion file$`, func() error {
+		content, err := ioutil.ReadFile(fishFilePath(state))
+		if err != nil {
+			return err
+		}
+		contentStr := string(content)
+		if contentStr != "existing content" {
+			return fmt.Errorf("config file content was changed to %q", content)
+		}
 		return nil
 	})
 
@@ -462,6 +462,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.AddUpstream()
 	})
 
+	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.SetColorUI(value)
+		return nil
+	})
+
 	suite.Step(`^my repo has "git-town.code-hosting-driver" set to "([^"]*)"$`, func(value string) error {
 		_ = state.gitEnv.DevRepo.SetCodeHostingDriver(value)
 		return nil
@@ -469,20 +474,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my repo has "git-town.code-hosting-origin-hostname" set to "([^"]*)"$`, func(value string) error {
 		_ = state.gitEnv.DevRepo.SetCodeHostingOriginHostname(value)
-		return nil
-	})
-
-	suite.Step(`^my repo has "color\.ui" set to "([^"]*)"$`, func(value string) error {
-		_ = state.gitEnv.DevRepo.SetColorUI(value)
-		return nil
-	})
-
-	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
-		value, err := strconv.ParseBool(text)
-		if err != nil {
-			return err
-		}
-		_ = state.gitEnv.DevRepo.SetShouldSyncUpstream(value)
 		return nil
 	})
 
@@ -495,14 +486,12 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo (?:now|still) has a rebase in progress$`, func() error {
-		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
+	suite.Step(`^my repo has "git-town.sync-upstream" set to (true|false)$`, func(text string) error {
+		value, err := strconv.ParseBool(text)
 		if err != nil {
 			return err
 		}
-		if !hasRebase {
-			return fmt.Errorf("expected rebase in progress")
-		}
+		_ = state.gitEnv.DevRepo.SetShouldSyncUpstream(value)
 		return nil
 	})
 
@@ -608,9 +597,17 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repo has a remote tag "([^"]+)" that is not on a branch$`, func(name string) error {
-		return state.gitEnv.OriginRepo.CreateStandaloneTag(name)
+	suite.Step(`^my repo (?:now|still) has a rebase in progress$`, func() error {
+		hasRebase, err := state.gitEnv.DevRepo.HasRebaseInProgress()
+		if err != nil {
+			return err
+		}
+		if !hasRebase {
+			return fmt.Errorf("expected rebase in progress")
+		}
+		return nil
 	})
+
 	suite.Step(`^my repository (?:now|still) has the following committed files$`, func(table *messages.PickleStepArgument_PickleTable) error {
 		fileTable, err := state.gitEnv.DevRepo.FilesInBranches()
 		if err != nil {
@@ -623,6 +620,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("mismatching files found, see diff above")
 		}
 		return nil
+	})
+
+	suite.Step(`^my repo has a remote tag "([^"]+)" that is not on a branch$`, func(name string) error {
+		return state.gitEnv.OriginRepo.CreateStandaloneTag(name)
 	})
 
 	suite.Step(`^my repo's origin is "([^"]*)"$`, func(origin string) error {
