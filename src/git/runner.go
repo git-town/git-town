@@ -15,14 +15,14 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
-	currentBranch  *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
-	remoteBranches *RemoteBranchTracker  // caches the remote branches of this Git repo
-	*Configuration                       // caches Git configuration settings
+	command.Shell                           // for running console commands
+	currentBranch     *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
+	remoteBranchCache *RemoteBranchCache    // caches the remote branches of this Git repo
+	*Configuration                          // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchTracker, config *Configuration) Runner {
+func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
 	return Runner{shell, currentBranch, remoteBranches, config}
 }
 
@@ -465,8 +465,8 @@ func (r *Runner) PushBranch(name string) error {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
-	if r.remoteBranches.Initialized() {
-		return r.remoteBranches.Branches(), nil
+	if r.remoteBranchCache.Initialized() {
+		return r.remoteBranchCache.Get(), nil
 	}
 	outcome, err := r.Run("git", "branch", "-r")
 	if err != nil {
@@ -479,7 +479,7 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 			result = append(result, strings.TrimSpace(lines[l]))
 		}
 	}
-	r.remoteBranches.Set(result)
+	r.remoteBranchCache.Set(result)
 	remoteBranchesInitialized = true
 	return result, nil
 }
