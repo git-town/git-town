@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
@@ -52,7 +51,7 @@ This can conflict with other tools that also define Git aliases.`,
 
 func addAlias(command string, repo *git.ProdRepo) {
 	result := repo.AddGitAlias(command)
-	script.PrintCommand(result.Command(), result.Args()...)
+	repo.LoggingShell.PrintCommand(result.Command(), result.Args()...)
 }
 
 func removeAlias(command string, repo *git.ProdRepo) {
