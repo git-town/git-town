@@ -1,7 +1,6 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -13,12 +12,22 @@ type PreserveCheckoutHistoryStep struct {
 }
 
 // Run executes this step.
-func (step *PreserveCheckoutHistoryStep) Run() error {
-	expectedPreviouslyCheckedOutBranch := git.GetExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
-	if expectedPreviouslyCheckedOutBranch != git.GetPreviouslyCheckedOutBranch() {
-		currentBranch := git.GetCurrentBranchName()
-		command.MustRun("git", "checkout", expectedPreviouslyCheckedOutBranch)
-		command.MustRun("git", "checkout", currentBranch)
+func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo) error {
+	expectedPreviouslyCheckedOutBranch, err := repo.Silent.GetExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
+	if err != nil {
+		return err
+	}
+	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
+	if err != nil {
+		return err
+	}
+	if expectedPreviouslyCheckedOutBranch != previousBranch {
+		currentBranch, err := repo.Silent.CurrentBranch()
+		if err != nil {
+			return err
+		}
+		repo.Silent.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+		repo.Silent.CheckoutBranch(currentBranch)
 	}
 	return nil
 }

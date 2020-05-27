@@ -24,7 +24,7 @@ func (step *PushBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *PushBranchStep) Run() error {
+func (step *PushBranchStep) Run(repo *git.ProdRepo) error {
 	if !git.ShouldBranchBePushed(step.BranchName) && !dryrun.IsActive() {
 		return nil
 	}

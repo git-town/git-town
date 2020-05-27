@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch
@@ -43,28 +42,31 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *DriverMergePullRequestStep) Run() error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 	commitMessage := step.CommitMessage
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
-		err := script.SquashMerge(step.BranchName)
-		if err != nil {
-			return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
-		}
-		err = git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
-		if err != nil {
-			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
-		}
-		err = script.RunCommand("git", "commit")
+		err := repo.Logging.SquashMerge(step.BranchName)
 		if err != nil {
 			return err
 		}
-		commitMessage = git.GetLastCommitMessage()
-		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
+		err = repo.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
 		if err != nil {
-			return fmt.Errorf("cannot reset the main branch: %w", err)
+			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
+		}
+		err = repo.StartCommit()
+		if err != nil {
+			return err
+		}
+		commitMessage, err = repo.LastCommitMessage()
+		if err != nil {
+			return err
+		}
+		output, err = repo.Run("git", "reset", "--hard", "HEAD~1")
+		if err != nil {
+			return fmt.Errorf("cannot reset the main branch: %w\n%s", err, output.Output())
 		}
 		step.enteredEmptyCommitMessage = false
 	}

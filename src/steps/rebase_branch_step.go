@@ -30,7 +30,7 @@ func (step *RebaseBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RebaseBranchStep) Run() error {
+func (step *RebaseBranchStep) Run(repo *git.ProdRepo) error {
 	step.previousSha = git.GetCurrentSha()
 	err := script.RunCommand("git", "rebase", step.BranchName)
 	if err != nil {

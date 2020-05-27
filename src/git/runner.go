@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -70,6 +71,22 @@ func (r *Runner) CheckoutBranch(name string) error {
 	}
 	r.currentBranch.Changed(name)
 	return nil
+}
+
+// CommentOutSquashCommitMessage comments out the message for the current squash merge
+// Adds the given prefix with the newline if provided
+func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
+	const squashMessageFile := ".git/SQUASH_MSG"
+	contentBytes, err := ioutil.ReadFile(squashMessageFile)
+	if err != nil {
+		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
+	}
+	content := string(contentBytes)
+	if prefix != "" {
+		content = prefix + "\n" + content
+	}
+	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
+	return ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
 }
 
 // Commits provides a list of the commits in this Git repository with the given fields.
@@ -342,6 +359,11 @@ func (r *Runner) Fetch() error {
 	return nil
 }
 
+// FetchUpstream fetches updates from the upstream remote.
+func (r *Runner) FetchUpstream(branch string) error {
+	return r.Run("git", "fetch", "upstream", branch)
+}
+
 // FileContent provides the current content of a file.
 func (r *Runner) FileContent(filename string) (result string, err error) {
 	outcome, err := r.Run("cat", filename)
@@ -472,6 +494,16 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 	return util.DoesStringArrayContain(remotes, name), nil
 }
 
+// HasShippableChanges returns whether the supplied branch has an changes
+// not currently on the main branchName
+func (r *Runner) HasShippableChanges(branch string) (bool, error) {
+	out, err := r.Run("git", "diff", r.GetMainBranch()+".."+branch)
+	if err != nil {
+		return false, fmt.Errorf("cannot determine whether shippable changes exist: %w\n%s", err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
+}
+
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
 func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 	remoteBranches, err := r.RemoteBranches()
@@ -499,6 +531,15 @@ func (r *Runner) HeadSha() (string, error) {
 func (r *Runner) LastActiveDir() (string, error) {
 	res, err := r.Run("git", "rev-parse", "--show-toplevel")
 	return res.OutputSanitized(), err
+}
+
+// LastCommitMessage provides the commit message of the last commit.
+func (r *Runner) LastCommitMessage() (string, err) {
+	out, err := return r.Run("git", "log", "-1", "--format=%B")
+	if err != nil {
+		return fmt.Errorf("cannot determine the last commit message: %w\n%s", err, out.Output())
+	}
+	return out.OutputSanitized(), nil
 }
 
 // LocalBranches provides the names of all local branches in this repo.
@@ -537,6 +578,15 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	return MainFirst(result), nil
 }
 
+// MergeBranch merges the given branch into this branch, with the default commit message.
+func (r *Runner) MergeBranch(branch string) error {
+	out, err := r.Run("git", "merge", "--no-edit", branch)
+	if err != nil {
+		return fmt.Errorf("cannot merge branch %q: %w\n%s", branch, err, out.Output())
+	}
+	return nil
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -544,6 +594,26 @@ func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 		return "", fmt.Errorf("cannot determine the previously checked out branch: %w", err)
 	}
 	return outcome.OutputSanitized(), nil
+}
+
+// PreviouslyCheckedOutBranchExpected returns what is the expected previously checked out branch
+// given the inputs
+func (r *Runner) PreviouslyCheckedOutBranchExpected(initialPreviouslyCheckedOutBranch, initialBranch string) (string, error) {
+	hasLocalInitialPreviouslyCheckedOutBranch, err :=r.HasLocalBranch(initialPreviouslyCheckedOutBranch)
+	if err != nil {
+		return fmt.Errorf("cannot determine expected previously checked out branch: %w", err)
+	}
+	if (hasLocalInitialPreviouslyCheckedOutBranch) {
+		hasInitialBranch, err :=r.HasLocalBranch(initialBranch)
+		if err != nil {
+			return fmt.Errorf("cannot determine expected previously checked out branch: %w", err)
+		}
+		if r.CurrentBranchName() == initialBranch || !hasInitialBranch {
+			return initialPreviouslyCheckedOutBranch
+		}
+		return initialBranch
+	}
+	return r.GetMainBranch()
 }
 
 // PushBranch pushes the branch with the given name to the remote.
@@ -614,6 +684,22 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	_ = os.Remove(filepath.Join(r.WorkingDir(), ".git", "COMMIT_EDITMSG"))
 	_ = os.Remove(filepath.Join(r.WorkingDir(), ".git", "description"))
 	return nil
+}
+
+// SquashMerge squash-merges the given branch into the current branch.
+func (r *Runner) SquashMerge(branch string) error {
+	out, err := r.Run("git", "merge", "--squash", branch)
+	if err != nil {
+		return fmt.Errorf("cannot squash-merge branch %q: %w\n%s", branch, err, out.Output())
+	}
+}
+
+// StartCommit starts a commit and shows the editor for the commit message to the user.
+func (r *Runner) StartCommit() error {
+	out, err := r.Run("git", "commit")
+	if err != nil {
+		return fmt.Errorf("cannot start a commit: %w\n%s", err, out.Output())
+	}
 }
 
 // Stash adds the current files to the Git stash.
