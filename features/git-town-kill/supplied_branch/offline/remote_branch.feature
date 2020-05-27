@@ -8,10 +8,10 @@ Feature: git town-kill: killing a remote branch in offline mode
   Background:
     Given Git Town is in offline mode
     And my origin has a feature branch named "feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        |
       | feature | remote   | feature commit |
-    And my repository knows about the remote branch
+    And my repo knows about the remote branch
     And I am on the "main" branch
     When I run "git-town kill feature"
 

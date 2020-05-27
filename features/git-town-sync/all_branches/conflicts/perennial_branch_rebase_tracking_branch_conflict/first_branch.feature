@@ -1,8 +1,8 @@
 Feature: git-town sync --all: handling rebase conflicts between perennial branch and its tracking branch
 
   Background:
-    Given my repository has the perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    Given my repo has the perennial branches "production" and "qa"
+    And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        | FILE CONTENT              |
       | main       | remote        | main commit              | main_file        | main content              |
       | production | local         | production local commit  | conflicting_file | production local content  |
@@ -42,7 +42,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       | main       | git stash pop      |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
       | main       | local, remote | main commit              | main_file        |
       | production | local         | production local commit  | conflicting_file |
@@ -62,7 +62,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
       | main       | local, remote | main commit              | main_file        |
       | production | local         | production local commit  | conflicting_file |
@@ -95,7 +95,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop         |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
       | main       | local, remote | main commit              | main_file        |
       | production | local, remote | production remote commit | conflicting_file |
@@ -117,7 +117,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
       |            | git stash pop        |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        |
       | main       | local, remote | main commit              | main_file        |
       | production | local, remote | production remote commit | conflicting_file |

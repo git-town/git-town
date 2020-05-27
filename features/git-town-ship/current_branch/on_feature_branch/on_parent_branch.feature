@@ -6,9 +6,9 @@ Feature: git town-ship: shipping a parent branch
 
 
   Background:
-    Given my repository has a feature branch named "parent-feature"
-    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "parent-feature"
+    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    And the following commits exist in my repo
       | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | parent-feature | local, remote | parent feature commit | parent_feature_file | parent feature content |
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
@@ -31,7 +31,7 @@ Feature: git town-ship: shipping a parent branch
       |                | git push                                  |
       |                | git branch -D parent-feature              |
     And I end up on the "main" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | main           | local, remote | parent feature done   | parent_feature_file | parent feature content |
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |
@@ -52,7 +52,7 @@ Feature: git town-ship: shipping a parent branch
       | parent-feature | git checkout main                                           |
       | main           | git checkout parent-feature                                 |
     And I end up on the "parent-feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH         | LOCATION      | MESSAGE                      | FILE NAME           |
       | main           | local, remote | parent feature done          | parent_feature_file |
       |                |               | Revert "parent feature done" | parent_feature_file |

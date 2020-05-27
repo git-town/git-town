@@ -7,7 +7,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
 
   Background:
     Given my code base has a feature branch named "feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
       | feature | local, remote | feature commit | feature_file |
     And I am on the "feature" branch
@@ -35,7 +35,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
 
@@ -51,7 +51,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local, remote | feature done          | feature_file |
       |         |               | Revert "feature done" | feature_file |

@@ -6,8 +6,8 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
 
 
   Background:
-    Given my repository has a feature branch named "current-feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "current-feature"
+    And the following commits exist in my repo
       | BRANCH          | LOCATION      | MESSAGE               |
       | main            | local, remote | main commit           |
       | current-feature | local, remote | feature commit        |
@@ -27,4 +27,4 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
       """
     And I end up on the "current-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

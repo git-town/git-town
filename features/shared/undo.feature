@@ -6,7 +6,7 @@ Feature: cannot double undo
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And I am on the "feature" branch
     And I run "git-town kill"
     And I end up on the "main" branch

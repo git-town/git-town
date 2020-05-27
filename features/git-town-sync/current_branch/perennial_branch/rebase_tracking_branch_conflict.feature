@@ -6,8 +6,8 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
 
 
   Background:
-    Given my repository has the perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    Given my repo has the perennial branches "production" and "qa"
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | qa     | local    | conflicting local commit  | conflicting_file | local conflicting content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote conflicting content |
@@ -42,7 +42,7 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
     And there is no rebase in progress
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: continuing without resolving the conflicts
@@ -67,11 +67,11 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git stash pop         |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | qa     | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |
 
@@ -87,10 +87,10 @@ Feature: git-town sync: resolving conflicts between the current perennial branch
       |        | git stash pop   |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                   | FILE NAME        |
       | qa     | local, remote | conflicting remote commit | conflicting_file |
       |        |               | conflicting local commit  | conflicting_file |
-    And my repository now has the following committed files
+    And my repo now has the following committed files
       | BRANCH | NAME             | CONTENT          |
       | qa     | conflicting_file | resolved content |

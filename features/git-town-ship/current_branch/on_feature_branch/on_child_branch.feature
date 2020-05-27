@@ -6,10 +6,10 @@ Feature: git town-ship: shipping a child branch
 
 
   Background:
-    Given my repository has a feature branch named "feature-1"
-    And my repository has a feature branch named "feature-2" as a child of "feature-1"
-    And my repository has a feature branch named "feature-3" as a child of "feature-2"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature-1"
+    And my repo has a feature branch named "feature-2" as a child of "feature-1"
+    And my repo has a feature branch named "feature-3" as a child of "feature-2"
+    And the following commits exist in my repo
       | BRANCH    | LOCATION      | MESSAGE          | FILE NAME      | FILE CONTENT      |
       | feature-1 | local, remote | feature 1 commit | feature_1_file | feature 1 content |
       | feature-2 | local, remote | feature 2 commit | feature_2_file | feature 2 content |
@@ -31,7 +31,7 @@ Feature: git town-ship: shipping a child branch
       Please ship "feature-1" first.
       """
     And I end up on the "feature-3" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is still aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |
@@ -47,4 +47,4 @@ Feature: git town-ship: shipping a child branch
       Nothing to undo
       """
     And I am still on the "feature-3" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits

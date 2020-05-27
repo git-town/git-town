@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/git-town/git-town/test/steps"
+	"github.com/git-town/git-town/test"
 )
 
 // nolint:deadcode,unused
@@ -15,29 +15,8 @@ func FeatureContext(suite *godog.Suite) {
 	// Hence we have to register the scenario state here (and reuse it for all scenarios in a feature)
 	// and register the steps here.
 	// It is initialized in SuiteSteps.BeforeScenario.
-	state := &steps.ScenarioState{}
-	steps.SuiteSteps(suite, state)
-	steps.AutocompletionSteps(suite, state)
-	steps.BranchSteps(suite, state)
-	steps.CommitSteps(suite, state)
-	steps.ConfigurationSteps(suite, state)
-	steps.ConflictSteps(suite, state)
-	steps.DebugSteps(suite, state)
-	steps.FileSteps(suite, state)
-	steps.FolderSteps(suite, state)
-	steps.GitTownSteps(suite, state)
-	steps.InstallationSteps(suite, state)
-	steps.MergeSteps(suite, state)
-	steps.OfflineSteps(suite, state)
-	steps.OriginSteps(suite, state)
-	steps.PrintSteps(suite, state)
-	steps.RebaseSteps(suite, state)
-	steps.RepoSteps(suite, state)
-	steps.RunSteps(suite, state)
-	steps.WorkspaceSteps(suite, state)
-	steps.MergeSteps(suite, state)
-	steps.TagSteps(suite, state)
-	steps.CoworkerSteps(suite, state)
+	state := &test.ScenarioState{}
+	test.Steps(suite, state)
 }
 
 func TestGodog(t *testing.T) {

@@ -6,9 +6,9 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my repo does not have a remote origin
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
@@ -27,7 +27,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
     And the existing branches are
       | REPOSITORY | BRANCHES |
       | local      | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION | MESSAGE      | FILE NAME    |
       | main   | local    | feature done | feature_file |
 
@@ -40,7 +40,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
       |        | git revert {{ sha 'feature done' }}           |
       |        | git checkout feature                          |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME    |
       | main    | local    | feature done          | feature_file |
       |         |          | Revert "feature done" | feature_file |

@@ -4,7 +4,7 @@ Feature: git town-ship: errors when trying to ship the main branch
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And I am on the "feature" branch
     And my workspace has an uncommitted file
     When I run "git-town ship main"

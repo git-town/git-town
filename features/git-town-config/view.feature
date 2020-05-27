@@ -22,10 +22,10 @@ Feature: listing the configuration
 
   Scenario: everything is configured and there are nested branches
     Given the main branch is configured as "main"
-    And my repository has the perennial branches "qa" and "staging"
-    And my repository has the feature branches "parent-feature" and "stand-alone-feature"
-    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
-    And my repository has a feature branch named "qa-hotfix" as a child of "qa"
+    And my repo has the perennial branches "qa" and "staging"
+    And my repo has the feature branches "parent-feature" and "stand-alone-feature"
+    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
+    And my repo has a feature branch named "qa-hotfix" as a child of "qa"
     When I run "git-town config"
     Then it prints:
       """

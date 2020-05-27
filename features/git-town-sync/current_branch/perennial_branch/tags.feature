@@ -6,7 +6,7 @@ Feature: git-town sync: syncing the current perennial branch syncs the tags
 
 
   Background:
-    Given my repository has the perennial branches "production" and "qa"
+    Given my repo has the perennial branches "production" and "qa"
     And I am on the "production" branch
     And my repo has the following tags
       | NAME       | LOCATION |

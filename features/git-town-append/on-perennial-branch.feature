@@ -6,8 +6,8 @@ Feature: Appending a branch to a perennial branch
 
 
   Background:
-    Given my repository has the perennial branches "qa" and "production"
-    And the following commits exist in my repository
+    Given my repo has the perennial branches "qa" and "production"
+    And the following commits exist in my repo
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "production" branch
@@ -27,7 +27,7 @@ Feature: Appending a branch to a perennial branch
       | new-child  | git stash pop                   |
     And I end up on the "new-child" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | new-child  | local         | production_commit |
       | production | local, remote | production_commit |
@@ -47,6 +47,6 @@ Feature: Appending a branch to a perennial branch
       |            | git stash pop           |
     And I end up on the "production" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | production | local, remote | production_commit |
