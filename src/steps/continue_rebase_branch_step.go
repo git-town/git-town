@@ -22,7 +22,7 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 }
 
 // Run executes this step.
-func (step *ContinueRebaseBranchStep) Run() error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo) error {
 	if git.IsRebaseInProgress() {
 		return script.RunCommand("git", "rebase", "--continue")
 	}

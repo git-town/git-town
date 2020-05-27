@@ -22,7 +22,7 @@ func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 }
 
 // Run executes this step.
-func (step *ContinueMergeBranchStep) Run() error {
+func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo) error {
 	if git.IsMergeInProgress() {
 		return script.RunCommand("git", "commit", "--no-edit")
 	}

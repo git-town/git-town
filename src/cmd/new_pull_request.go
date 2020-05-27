@@ -38,6 +38,7 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getNewPullRequestConfig()
 		if err != nil {
 			fmt.Println(err)
@@ -45,7 +46,7 @@ where hostname matches what is in your ssh config file.`,
 		}
 		stepList := getNewPullRequestStepList(config)
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

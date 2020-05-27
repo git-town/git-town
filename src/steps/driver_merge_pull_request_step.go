@@ -43,7 +43,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *DriverMergePullRequestStep) Run() error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 	commitMessage := step.CommitMessage
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver

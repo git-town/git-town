@@ -13,7 +13,7 @@ type CreatePullRequestStep struct {
 }
 
 // Run executes this step.
-func (step *CreatePullRequestStep) Run() error {
+func (step *CreatePullRequestStep) Run(repo *git.ProdRepo) error {
 	driver := drivers.GetActiveDriver()
 	parentBranch := git.Config().GetParentBranch(step.BranchName)
 	script.OpenBrowser(driver.GetNewPullRequestURL(step.BranchName, parentBranch))

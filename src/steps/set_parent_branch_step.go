@@ -21,7 +21,7 @@ func (step *SetParentBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *SetParentBranchStep) Run() error {
+func (step *SetParentBranchStep) Run(repo *git.ProdRepo) error {
 	step.previousParent = git.Config().GetParentBranch(step.BranchName)
 	git.Config().SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil

@@ -38,6 +38,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for remote upstream options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getPrependConfig(args)
 		if err != nil {
 			fmt.Println(err)
@@ -45,7 +46,7 @@ See "sync" for remote upstream options.
 		}
 		stepList := getPrependStepList(config)
 		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

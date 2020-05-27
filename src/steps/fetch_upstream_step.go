@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
 
@@ -12,6 +13,6 @@ type FetchUpstreamStep struct {
 }
 
 // Run executes this step.
-func (step *FetchUpstreamStep) Run() error {
+func (step *FetchUpstreamStep) Run(repo *git.ProdRepo) error {
 	return script.RunCommand("git", "fetch", "upstream", step.BranchName)
 }

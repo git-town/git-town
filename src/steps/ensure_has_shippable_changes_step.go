@@ -20,7 +20,7 @@ func (step *EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() strin
 }
 
 // Run executes this step.
-func (step *EnsureHasShippableChangesStep) Run() error {
+func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo) error {
 	if !git.HasShippableChanges(step.BranchName) {
 		return errors.New("no shippable changes")
 	}

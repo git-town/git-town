@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
 
@@ -15,7 +16,7 @@ func (step *StashOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *StashOpenChangesStep) Run() error {
+func (step *StashOpenChangesStep) Run(repo *git.ProdRepo) error {
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
 		return err

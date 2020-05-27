@@ -3,6 +3,7 @@ package steps
 import (
 	"os"
 
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
 
@@ -20,7 +21,7 @@ func (step *ChangeDirectoryStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *ChangeDirectoryStep) Run() error {
+func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo) error {
 	var err error
 	step.previousDirectory, err = os.Getwd()
 	if err != nil {

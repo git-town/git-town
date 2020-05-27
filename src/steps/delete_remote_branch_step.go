@@ -23,7 +23,7 @@ func (step *DeleteRemoteBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteRemoteBranchStep) Run() error {
+func (step *DeleteRemoteBranchStep) Run(repo *git.ProdRepo) error {
 	if !step.IsTracking {
 		step.branchSha = git.GetBranchSha(git.GetTrackingBranchName(step.BranchName))
 	}

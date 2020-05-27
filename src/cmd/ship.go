@@ -63,6 +63,7 @@ GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := gitShipConfig(args)
 		if err != nil {
 			fmt.Println(err)
@@ -70,7 +71,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 		}
 		stepList := getShipStepList(config)
 		runState := steps.NewRunState("ship", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

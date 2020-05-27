@@ -42,6 +42,7 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getSyncConfig()
 		if err != nil {
 			fmt.Println(err)
@@ -49,7 +50,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		}
 		stepList := getSyncStepList(config)
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

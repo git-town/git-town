@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
 
@@ -11,6 +12,6 @@ type AbortRebaseBranchStep struct {
 }
 
 // Run executes this step.
-func (step *AbortRebaseBranchStep) Run() error {
+func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo) error {
 	return script.RunCommand("git", "rebase", "--abort")
 }

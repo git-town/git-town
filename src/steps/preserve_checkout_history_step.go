@@ -13,7 +13,7 @@ type PreserveCheckoutHistoryStep struct {
 }
 
 // Run executes this step.
-func (step *PreserveCheckoutHistoryStep) Run() error {
+func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo) error {
 	expectedPreviouslyCheckedOutBranch := git.GetExpectedPreviouslyCheckedOutBranch(step.InitialPreviouslyCheckedOutBranch, step.InitialBranch)
 	if expectedPreviouslyCheckedOutBranch != git.GetPreviouslyCheckedOutBranch() {
 		currentBranch := git.GetCurrentBranchName()

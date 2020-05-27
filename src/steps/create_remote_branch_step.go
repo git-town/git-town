@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
 
@@ -12,6 +13,6 @@ type CreateRemoteBranchStep struct {
 }
 
 // Run executes this step.
-func (step *CreateRemoteBranchStep) Run() error {
+func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo) error {
 	return script.RunCommand("git", "push", "origin", step.Sha+":refs/heads/"+step.BranchName)
 }

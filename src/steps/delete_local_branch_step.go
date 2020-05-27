@@ -21,7 +21,7 @@ func (step *DeleteLocalBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteLocalBranchStep) Run() error {
+func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo) error {
 	step.branchSha = git.GetBranchSha(step.BranchName)
 	op := "-d"
 	if step.Force || git.DoesBranchHaveUnmergedCommits(step.BranchName) {
