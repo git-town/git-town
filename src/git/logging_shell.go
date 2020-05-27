@@ -83,13 +83,7 @@ func (shell LoggingShell) RunString(fullCmd string) (*command.Result, error) {
 
 // RunStringWith runs the given command (including possible arguments) in this ShellInDir's directory.
 func (shell LoggingShell) RunStringWith(fullCmd string, options command.Options) (*command.Result, error) {
-	panic("implement this")
-	// parts, err := shellquote.Split(fullCmd)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("cannot split command %q: %w", fullCmd, err)
-	// }
-	// cmd, args := parts[0], parts[1:]
-	// return shell.RunWith(options, cmd, args...)
+	panic("this isn't used")
 }
 
 // PrintCommand prints the given command-line operation on the console.
