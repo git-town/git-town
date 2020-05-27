@@ -1,13 +1,13 @@
 Feature: git town-ship: offline mode
 
-  When offline
+    When offline
   I want to be able to ship branches on my local machine
   So that I can keep working as much as possible despite having no internet connection.
 
 
   Background:
     Given Git Town is in offline mode
-    And my repository has a feature branch named "feature"
+    And my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION      | MESSAGE        |
       | feature | local, remote | feature commit |

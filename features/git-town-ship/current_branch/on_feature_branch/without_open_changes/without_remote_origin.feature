@@ -6,7 +6,7 @@ Feature: git town-ship: shipping the current feature branch without a remote ori
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

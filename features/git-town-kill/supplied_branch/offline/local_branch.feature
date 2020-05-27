@@ -1,13 +1,13 @@
 Feature: git town-kill: killing a local branch in offline mode
 
-  When offline
+    When offline
   I want to be able to still delete the current branch including all open changes
   So that I can work as much as possible despite no internet connection.
 
 
   Background:
     Given Git Town is in offline mode
-    And my repository has the feature branches "current-feature" and "other-feature"
+    And my repo has the feature branches "current-feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |

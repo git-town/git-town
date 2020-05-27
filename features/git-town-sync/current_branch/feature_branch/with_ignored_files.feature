@@ -8,7 +8,7 @@ Feature: syncing with ignored files
 
 
   Scenario: running "git sync" with ignored files
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION      | MESSAGE   | FILE NAME  | FILE CONTENT |
       | feature | local, remote | my commit | .gitignore | ignored      |

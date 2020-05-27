@@ -15,7 +15,7 @@ Feature: Show clear error if trying to continue after executing a successful com
 
 
   Scenario: continuing after successful git-ship
-    Given my repository has a feature branch named "current-feature"
+    Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | FILE NAME    |
       | current-feature | feature_file |

@@ -4,7 +4,7 @@ Feature: git town-ship: shipping the supplied feature branch without a remote or
 
 
   Background:
-    Given my repository has the feature branches "feature" and "other-feature"
+    Given my repo has the feature branches "feature" and "other-feature"
     And my repo does not have a remote origin
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

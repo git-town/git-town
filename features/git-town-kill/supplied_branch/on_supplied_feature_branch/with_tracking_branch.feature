@@ -6,7 +6,7 @@ Feature: git town-kill: killing the given feature branch when on it
 
 
   Background:
-    Given my repository has the feature branches "other-feature" and "current-feature"
+    Given my repo has the feature branches "other-feature" and "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |

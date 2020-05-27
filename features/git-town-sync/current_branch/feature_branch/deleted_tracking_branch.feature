@@ -6,7 +6,7 @@ Feature: git-town sync: restores deleted tracking branch
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
       | feature | local, remote | feature commit | feature_file |

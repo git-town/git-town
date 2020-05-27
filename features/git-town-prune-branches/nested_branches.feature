@@ -9,8 +9,8 @@ Feature: git town-prune-branches: delete branches that were shipped or removed o
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And my repository has a feature branch named "feature-child" as a child of "feature"
+    Given my repo has a feature branch named "feature"
+    And my repo has a feature branch named "feature-child" as a child of "feature"
     And the following commits exist in my repository
       | BRANCH        | LOCATION      | MESSAGE              |
       | feature       | local, remote | feature commit       |

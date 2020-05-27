@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors if renaming a feature branch that has un
 
 
   Background:
-    Given my repository has a feature branch named "current-feature"
+    Given my repo has a feature branch named "current-feature"
     And the following commits exist in my repository
       | BRANCH          | LOCATION      | MESSAGE              |
       | main            | local, remote | main commit          |

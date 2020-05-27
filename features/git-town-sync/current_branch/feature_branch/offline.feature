@@ -1,13 +1,13 @@
 Feature: git-town sync: offline mode
 
-  When offline
+    When offline
   I still want to be able to sync my branches locally
   So that I can work despite having no internet connection.
 
 
   Background:
     Given Git Town is in offline mode
-    And my repository has a feature branch named "feature"
+    And my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |

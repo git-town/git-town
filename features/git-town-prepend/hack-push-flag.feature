@@ -5,7 +5,7 @@ Feature: push branch to remote upon creation
 
   Background:
     Given the new-branch-push-flag configuration is true
-    And my repository has a feature branch named "existing-feature"
+    And my repo has a feature branch named "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |

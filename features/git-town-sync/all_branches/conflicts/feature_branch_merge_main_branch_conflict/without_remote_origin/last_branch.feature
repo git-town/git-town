@@ -2,7 +2,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has the local feature branches "feature-1" and "feature-2"
+    And my repo has the local feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION | MESSAGE          | FILE NAME        | FILE CONTENT      |
       | main      | local    | main commit      | conflicting_file | main content      |
@@ -36,12 +36,12 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: aborting
     When I run "git-town abort"
     Then it runs the commands
-      | BRANCH    | COMMAND                                        |
-      | feature-2 | git merge --abort                              |
-      |           | git checkout feature-1                         |
+      | BRANCH    | COMMAND                                       |
+      | feature-2 | git merge --abort                             |
+      |           | git checkout feature-1                        |
       | feature-1 | git reset --hard {{ sha 'feature-1 commit' }} |
-      |           | git checkout main                              |
-      | main      | git stash pop                                  |
+      |           | git checkout main                             |
+      | main      | git stash pop                                 |
     And I end up on the "main" branch
     And my workspace has the uncommitted file again
     And my repository is left with my original commits
@@ -74,7 +74,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error: 
+    And it prints the error:
       """
       You must resolve the conflicts before continuing
       """

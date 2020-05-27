@@ -2,7 +2,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has the local feature branches "feature-1" and "feature-2"
+    And my repo has the local feature branches "feature-1" and "feature-2"
     And the following commits exist in my repository
       | BRANCH    | LOCATION | MESSAGE          | FILE NAME        | FILE CONTENT      |
       | main      | local    | main commit      | conflicting_file | main content      |
@@ -61,7 +61,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
       | feature-2 | local    | feature-2 commit                   | feature2_file    |
       |           |          | main commit                        | conflicting_file |
       |           |          | Merge branch 'main' into feature-2 |                  |
-  And my repository now has the following committed files
+    And my repository now has the following committed files
       | BRANCH    | NAME             | CONTENT           |
       | main      | conflicting_file | main content      |
       | feature-1 | conflicting_file | feature-1 content |
@@ -80,10 +80,10 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     And my uncommitted file is stashed
     And my repo still has a merge in progress
     And my repository now has the following committed files
-        | BRANCH    | NAME             | CONTENT           |
-        | main      | conflicting_file | main content      |
-        | feature-1 | conflicting_file | feature-1 content |
-        | feature-2 | feature2_file    | feature-2 content |
+      | BRANCH    | NAME             | CONTENT           |
+      | main      | conflicting_file | main content      |
+      | feature-1 | conflicting_file | feature-1 content |
+      | feature-2 | feature2_file    | feature-2 content |
 
 
   Scenario: continuing after resolving the conflicts

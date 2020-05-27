@@ -2,7 +2,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has a local feature branch named "feature"
+    And my repo has a local feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

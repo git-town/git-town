@@ -6,7 +6,7 @@ Feature: git town-ship: shipping the current feature branch from a subfolder
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME               | FILE CONTENT    |
       | feature | local, remote | feature commit | new_folder/feature_file | feature content |

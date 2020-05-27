@@ -7,7 +7,7 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has the local perennial branches "production" and "qa"
+    And my repo has the local perennial branches "production" and "qa"
     And the following commits exist in my repository
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | main commit  | main_file  |

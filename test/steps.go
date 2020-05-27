@@ -430,15 +430,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has a branch "([^"]*)"$`, func(branch string) error {
+	suite.Step(`^my repo has a branch "([^"]*)"$`, func(branch string) error {
 		return state.gitEnv.DevRepo.CreateBranch(branch, "main")
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
+	suite.Step(`^my repo has a feature branch named "([^"]*)" with no parent$`, func(branch string) error {
 		return state.gitEnv.DevRepo.CreateFeatureBranchNoParent(branch)
 	})
 
-	suite.Step(`^my repository has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
+	suite.Step(`^my repo has a feature branch named "([^"]+)" as a child of "([^"]+)"$`, func(childBranch, parentBranch string) error {
 		err := state.gitEnv.DevRepo.CreateChildFeatureBranch(childBranch, parentBranch)
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
@@ -446,7 +446,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.PushBranch(childBranch)
 	})
 
-	suite.Step(`^my repository has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
+	suite.Step(`^my repo has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch)
 		if err != nil {
@@ -495,7 +495,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
+	suite.Step(`^my repo has the branches "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
 		err := state.gitEnv.DevRepo.CreateBranch(branch1, "main")
 		if err != nil {
 			return err
@@ -507,7 +507,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.CreateTags(table)
 	})
 
-	suite.Step(`^my repository has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^my repo has the (local )?feature branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreateFeatureBranch(branch1)
 		if err != nil {
@@ -527,7 +527,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
+	suite.Step(`^my repo has the (local )?perennial branches "([^"]+)" and "([^"]+)"$`, func(localStr, branch1, branch2 string) error {
 		isLocal := localStr != ""
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1, branch2)
 		if err != nil {
@@ -543,7 +543,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^my repository has the perennial branch "([^"]+)"`, func(branch1 string) error {
+	suite.Step(`^my repo has the perennial branch "([^"]+)"`, func(branch1 string) error {
 		err := state.gitEnv.DevRepo.CreatePerennialBranches(branch1)
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)

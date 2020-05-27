@@ -6,7 +6,7 @@ Feature: Appending a branch to a perennial branch
 
 
   Background:
-    Given my repository has the perennial branches "qa" and "production"
+    Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |

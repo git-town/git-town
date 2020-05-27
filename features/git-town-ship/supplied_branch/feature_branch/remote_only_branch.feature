@@ -6,7 +6,7 @@ Feature: git town-ship: shipping the supplied feature branch with a tracking bra
 
 
   Background:
-    Given my repository has a feature branch named "other-feature"
+    Given my repo has a feature branch named "other-feature"
     And my origin has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |

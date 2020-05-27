@@ -1,14 +1,14 @@
 Feature: git town-parent-diff: diffing the current feature branch
 
-    As a user running parent-diff
-    With a supplied branch
-    On the main branch
-    I should see a prompt to identify a parent branch
-    So that the command can work as I expect
+  As a user running parent-diff
+  With a supplied branch
+  On the main branch
+  I should see a prompt to identify a parent branch
+  So that the command can work as I expect
 
 
   Scenario: result
-    Given my repository has a feature branch named "feature" with no parent
+    Given my repo has a feature branch named "feature" with no parent
     And I am on the "main" branch
     When I run "git-town diff-parent feature" and answer the prompts:
       | PROMPT                                        | ANSWER  |

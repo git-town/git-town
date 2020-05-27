@@ -6,7 +6,7 @@ Feature: remove a branch from the perennial branches configuration
 
 
   Background:
-    Given my repository has the branches "staging" and "qa"
+    Given my repo has the branches "staging" and "qa"
     And the perennial branches are configured as "staging" and "qa"
 
 

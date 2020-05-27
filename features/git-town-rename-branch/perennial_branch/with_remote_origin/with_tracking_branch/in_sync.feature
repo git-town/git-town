@@ -6,7 +6,7 @@ Feature: git town-rename-branch: renaming a perennial branch with a tracking bra
 
 
   Background:
-    Given my repository has the perennial branches "qa" and "production"
+    Given my repo has the perennial branches "qa" and "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION      | MESSAGE           |
       | main       | local, remote | main commit       |

@@ -32,7 +32,7 @@ Feature: git town-hack: prompt for parent branch
 
 
   Scenario: selecting another branch
-    Given my repository has the perennial branch "production"
+    Given my repo has the perennial branch "production"
     And the following commits exist in my repository
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |

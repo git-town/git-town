@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors when the destination branch exists local
 
 
   Background:
-    Given my repository has the feature branches "current-feature" and "existing-feature"
+    Given my repo has the feature branches "current-feature" and "existing-feature"
     And the following commits exist in my repository
       | BRANCH           | LOCATION      | MESSAGE                 |
       | current-feature  | local, remote | current-feature commit  |

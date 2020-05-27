@@ -6,7 +6,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT               |
       | feature | local    | local conflicting commit  | conflicting_file | local conflicting content  |
@@ -54,7 +54,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
   Scenario: continuing without resolving the conflicts
     When I run "git-town continue"
     Then it runs no commands
-    And it prints the error: 
+    And it prints the error:
       """
       You must resolve the conflicts before continuing
       """

@@ -6,7 +6,7 @@ Feature: git town-diff-parent: errors when trying to diff a perennial branch
 
 
   Scenario: result
-    Given my repository has the perennial branch "qa"
+    Given my repo has the perennial branch "qa"
     And I am on the "qa" branch
     When I run "git-town diff-parent"
     Then it runs no commands

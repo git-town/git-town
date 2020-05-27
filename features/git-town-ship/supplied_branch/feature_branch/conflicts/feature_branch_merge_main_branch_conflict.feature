@@ -4,7 +4,7 @@ Feature: git town-ship: resolving conflicts between the supplied feature branch 
 
 
   Background:
-    Given my repository has the feature branches "feature" and "other-feature"
+    Given my repo has the feature branches "feature" and "other-feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION | MESSAGE                    | FILE NAME        | FILE CONTENT    |
       | main    | local    | conflicting main commit    | conflicting_file | main content    |

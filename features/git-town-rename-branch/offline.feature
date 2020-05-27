@@ -7,7 +7,7 @@ Feature: git town-rename-branch: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repository has a feature branch named "feature"
+    And my repo has a feature branch named "feature"
     And the following commits exist in my repository
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
