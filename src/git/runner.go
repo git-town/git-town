@@ -26,6 +26,15 @@ func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteB
 	return Runner{shell, currentBranch, remoteBranches, config}
 }
 
+// AbortMerge cancels a currently ongoing Git merge operation.
+func (r *Runner) AbortMerge() error {
+	res, err := r.Run("git", "merge", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort current merge: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
 // AddRemote adds the given Git remote to this repository.
 func (r *Runner) AddRemote(name, value string) error {
 	res, err := r.Run("git", "remote", "add", name, value)
