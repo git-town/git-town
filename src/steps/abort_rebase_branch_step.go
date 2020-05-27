@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // AbortRebaseBranchStep represents aborting on ongoing merge conflict.
@@ -13,5 +12,5 @@ type AbortRebaseBranchStep struct {
 
 // Run executes this step.
 func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo) error {
-	return script.RunCommand("git", "rebase", "--abort")
+	return repo.Logging.AbortRebase()
 }

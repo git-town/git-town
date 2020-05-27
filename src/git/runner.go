@@ -35,6 +35,15 @@ func (r *Runner) AbortMerge() error {
 	return nil
 }
 
+// AbortRebase cancels a currently ongoing Git rebase operation.
+func (r *Runner) AbortRebase() error {
+	res, err := r.Run("git", "rebase", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort current merge: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
 // AddRemote adds the given Git remote to this repository.
 func (r *Runner) AddRemote(name, value string) error {
 	res, err := r.Run("git", "remote", "add", name, value)
