@@ -16,6 +16,17 @@ func GetOpenBrowserCommand() string {
 		//       So we are using "start" here.
 		return "start"
 	}
+	var openBrowserCommands = []string{
+		"wsl-open", // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
+		"xdg-open",
+		"open",
+		"cygstart",
+		"x-www-browser",
+		"firefox",
+		"opera",
+		"mozilla",
+		"netscape",
+	}
 	for _, browserCommand := range openBrowserCommands {
 		res, err := command.Run("which", browserCommand)
 		if err == nil && res.OutputSanitized() != "" {
@@ -23,16 +34,4 @@ func GetOpenBrowserCommand() string {
 		}
 	}
 	return ""
-}
-
-var openBrowserCommands = []string{
-	"wsl-open", // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
-	"xdg-open",
-	"open",
-	"cygstart",
-	"x-www-browser",
-	"firefox",
-	"opera",
-	"mozilla",
-	"netscape",
 }
