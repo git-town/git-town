@@ -189,10 +189,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
-	suite.Step(`^I have an empty fish autocompletion folder$`, func() error {
-		return os.MkdirAll(fishFolderPath(state), 0744)
-	})
-
 	suite.Step(`^I have an existing Git autocompletion file$`, func() error {
 		err := os.MkdirAll(fishFolderPath(state), 0744)
 		if err != nil {
@@ -389,6 +385,10 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
+	})
+
+	suite.Step(`^my computer has an empty fish autocompletion folder$`, func() error {
+		return os.MkdirAll(fishFolderPath(state), 0744)
 	})
 
 	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {

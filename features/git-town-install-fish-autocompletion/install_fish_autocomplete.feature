@@ -16,7 +16,7 @@ Feature: Installing Fish Shell autocomplete definitions
 
 
   Scenario: with empty fish autocompletion folder
-    Given I have an empty fish autocompletion folder
+    Given my computer has an empty fish autocompletion folder
     When I run "git-town install-fish-autocompletion"
     Then it prints:
       """
