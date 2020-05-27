@@ -15,7 +15,6 @@ var skipCmd = &cobra.Command{
 	Use:   "skip",
 	Short: "Restarts the last run git-town command by skipping the current branch",
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
 		runState, err := steps.LoadPreviousRunState()
 		if err != nil {
 			fmt.Printf("cannot load previous run state: %v\n", err)
@@ -28,7 +27,7 @@ var skipCmd = &cobra.Command{
 			util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
 		}
 		skipRunState := runState.CreateSkipRunState()
-		err = steps.Run(&skipRunState, repo)
+		err = steps.Run(&skipRunState, git.NewProdRepo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

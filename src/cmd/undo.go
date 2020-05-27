@@ -15,7 +15,6 @@ var undoCmd = &cobra.Command{
 	Use:   "undo",
 	Short: "Undoes the last run git-town command",
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
 		runState, err := steps.LoadPreviousRunState()
 		if err != nil {
 			fmt.Printf("cannot load previous run state: %v\n", err)
@@ -25,7 +24,7 @@ var undoCmd = &cobra.Command{
 			util.ExitWithErrorMessage("Nothing to undo")
 		}
 		undoRunState := runState.CreateUndoRunState()
-		err = steps.Run(&undoRunState, repo)
+		err = steps.Run(&undoRunState, git.NewProdRepo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

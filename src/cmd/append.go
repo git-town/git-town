@@ -35,7 +35,6 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
 		config, err := getAppendConfig(args)
 		if err != nil {
 			fmt.Println(err)
@@ -43,7 +42,7 @@ See "sync" for information regarding remote upstream.`,
 		}
 		stepList := getAppendStepList(config)
 		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, git.NewProdRepo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
