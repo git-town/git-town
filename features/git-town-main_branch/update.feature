@@ -6,7 +6,7 @@ Feature: set the main branch configuration
 
 
   Scenario: main branch not yet configured
-    Given I don't have a main branch name configured
+    Given my repo doesn't have a main branch configured
     When I run "git-town main-branch main"
     Then it prints no output
     And the main branch is now configured as "main"

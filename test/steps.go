@@ -163,21 +163,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.CheckoutBranch(current)
 	})
 
-	suite.Step(`^I don't have a main branch name configured$`, func() error {
-		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
-	})
-
-	suite.Step(`^I don't have any uncommitted files$`, func() error {
-		files, err := state.gitEnv.DevRepo.UncommittedFiles()
-		if err != nil {
-			return fmt.Errorf("cannot determine uncommitted files: %w", err)
-		}
-		if len(files) > 0 {
-			return fmt.Errorf("unexpected uncommitted files: %s", files)
-		}
-		return nil
-	})
-
 	suite.Step(`^I (?:end up|am still) on the "([^"]*)" branch$`, func(expected string) error {
 		actual, err := state.gitEnv.DevRepo.CurrentBranch()
 		if err != nil {
@@ -427,6 +412,21 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		state.gitEnv.OriginRepo = nil
+		return nil
+	})
+
+	suite.Step(`^my repo doesn't have a main branch configured$`, func() error {
+		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
+	})
+
+	suite.Step(`^my repo doesn't have any uncommitted files$`, func() error {
+		files, err := state.gitEnv.DevRepo.UncommittedFiles()
+		if err != nil {
+			return fmt.Errorf("cannot determine uncommitted files: %w", err)
+		}
+		if len(files) > 0 {
+			return fmt.Errorf("unexpected uncommitted files: %s", files)
+		}
 		return nil
 	})
 

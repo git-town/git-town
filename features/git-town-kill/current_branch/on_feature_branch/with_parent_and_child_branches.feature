@@ -29,7 +29,7 @@ Feature: git town-kill: killing the current feature branch with child branches
       |           | git checkout feature-1           |
       | feature-1 | git branch -D feature-2          |
     And I end up on the "feature-1" branch
-    And I don't have any uncommitted files
+    And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |
