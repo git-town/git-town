@@ -1,6 +1,6 @@
 Feature: git append: offline mode
 
-    When having no internet connection
+  When having no internet connection
   I want that new branches are created without attempting network accesses
   So that I don't see unnecessary errors.
 

@@ -1,6 +1,6 @@
 Feature: git town-kill: killing a local branch in offline mode
 
-    When offline
+  When offline
   I want to be able to still delete the current branch including all open changes
   So that I can work as much as possible despite no internet connection.
 

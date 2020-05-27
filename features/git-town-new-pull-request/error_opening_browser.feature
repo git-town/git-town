@@ -1,6 +1,6 @@
 Feature: Print URL when opening browser fails
 
-    When using Git Town on a machine with a broken open browser command
+  When using Git Town on a machine with a broken open browser command
   I want that it prints the URL of the website
   So that I can copy-and-paste it into my browser.
 

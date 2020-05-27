@@ -1,6 +1,6 @@
 Feature: git-town sync: offline mode
 
-    When offline
+  When offline
   I still want to be able to sync my branches locally
   So that I can work despite having no internet connection.
 
