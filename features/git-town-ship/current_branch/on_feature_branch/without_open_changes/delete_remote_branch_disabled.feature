@@ -7,7 +7,7 @@ Feature: Skip deleting the remote branch when shipping the current branch
 
   Background:
     Given my code base has a feature branch named "feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    |
       | feature | local, remote | feature commit | feature_file |
     And I am on the "feature" branch

@@ -7,7 +7,7 @@ Feature: git-town sync: syncing the current perennial branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   |
       | qa     | local         | local commit  | local_file  |
       |        | remote        | remote commit | remote_file |

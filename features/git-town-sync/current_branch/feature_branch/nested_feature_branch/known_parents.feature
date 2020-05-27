@@ -8,7 +8,7 @@ Feature: git-town sync: syncing a nested feature branch (with known parent branc
   Scenario:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH         | LOCATION | MESSAGE                      | FILE NAME                  |
       | main           | local    | local main commit            | local_main_file            |
       |                | remote   | remote main commit           | remote_main_file           |

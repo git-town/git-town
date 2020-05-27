@@ -2,7 +2,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
 
   Background:
     Given my repo has the feature branches "feature-1" and "feature-2"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH    | LOCATION      | MESSAGE                 | FILE NAME            | FILE CONTENT             |
       | main      | remote        | main commit             | conflicting_file     | main content             |
       | feature-1 | local         | feature-1 local commit  | conflicting_file     | feature-1 local content  |

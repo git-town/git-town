@@ -8,7 +8,7 @@ Feature: Syncing before creating the pull request
   Background:
     Given my code base has a feature branch named "parent-feature"
     And my code base has a feature branch named "child-feature" as a child of "parent-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH         | LOCATION | MESSAGE              | FILE NAME          |
       | main           | local    | local main commit    | local_main_file    |
       |                | remote   | remote main commit   | remote_main_file   |

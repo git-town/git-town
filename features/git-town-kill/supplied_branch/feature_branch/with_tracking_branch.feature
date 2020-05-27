@@ -7,7 +7,7 @@ Feature: git town-kill: killing the given feature branch
 
   Background:
     Given my repo has the feature branches "good-feature" and "dead-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | dead-feature | local, remote | dead-end commit                      | unfortunate_file |

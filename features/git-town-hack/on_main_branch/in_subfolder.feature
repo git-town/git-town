@@ -6,7 +6,7 @@ Feature: git town-hack: starting a new feature from a subfolder on the main bran
 
 
   Background:
-    Given the following commits exist in my repository
+    Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE       | FILE NAME        |
       | main   | local    | folder commit | new_folder/file1 |
     And I am on the "main" branch

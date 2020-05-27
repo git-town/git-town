@@ -6,7 +6,7 @@ Feature: git-town sync: syncing the current feature branch (without a tracking b
   Background:
     Given my repo does not have a remote origin
     And my repo has a local feature branch named "feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE              | FILE NAME          | FILE CONTENT    |
       | main    | local    | local main commit    | local_main_file    | main content    |
       | feature | local    | local feature commit | local_feature_file | feature content |

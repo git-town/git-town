@@ -7,7 +7,7 @@ Feature: git town-hack: starting a new feature from the main branch (without rem
 
   Background:
     Given my repo does not have a remote origin
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     | FILE NAME |
       | main   | local    | main_commit | main_file |
     And I am on the "main" branch

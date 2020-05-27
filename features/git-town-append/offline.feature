@@ -8,7 +8,7 @@ Feature: git append: offline mode
   Background:
     Given Git Town is in offline mode
     And my repo has a feature branch named "existing-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing feature commit |
     And I am on the "existing-feature" branch

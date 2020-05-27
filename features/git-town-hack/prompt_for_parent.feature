@@ -6,7 +6,7 @@ Feature: git town-hack: prompt for parent branch
 
 
   Scenario: selecting the default branch (the main development branch)
-    Given the following commits exist in my repository
+    Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
@@ -33,7 +33,7 @@ Feature: git town-hack: prompt for parent branch
 
   Scenario: selecting another branch
     Given my repo has the perennial branch "production"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "main" branch

@@ -8,7 +8,7 @@ Feature: git town-ship: shipping hotfixes
   Background:
     Given my repo has the perennial branch "production"
     And my repo has a feature branch named "hotfix" as a child of "production"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE       | FILE NAME   | FILE CONTENT   |
       | hotfix | local, remote | hotfix commit | hotfix_file | hotfix content |
     And I am on the "hotfix" branch

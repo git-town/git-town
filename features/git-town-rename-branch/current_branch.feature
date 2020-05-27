@@ -8,7 +8,7 @@ Feature: git town-rename-branch: rename current branch implicitly
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "production"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE     |
       | main       | local, remote | main commit |
       | feature    | local, remote | feat commit |

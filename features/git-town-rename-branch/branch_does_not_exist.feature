@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
 
 
   Background:
-    Given the following commits exist in my repository
+    Given the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch

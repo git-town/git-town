@@ -2,7 +2,7 @@ Feature: git-town sync --all: handling rebase conflicts between perennial branch
 
   Background:
     Given my repo has the perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH     | LOCATION      | MESSAGE                  | FILE NAME        | FILE CONTENT              |
       | main       | remote        | main commit              | main_file        | main content              |
       | production | local         | production local commit  | conflicting_file | production local content  |

@@ -6,7 +6,7 @@ Feature: git town-ship: shipping a parent branch
   Background:
     Given my repo has a feature branch named "parent-feature"
     And my repo has a feature branch named "child-feature" as a child of "parent-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH         | LOCATION      | MESSAGE               | FILE NAME           | FILE CONTENT           |
       | parent-feature | local, remote | parent feature commit | parent_feature_file | parent feature content |
       | child-feature  | local, remote | child feature commit  | child_feature_file  | child feature content  |

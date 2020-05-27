@@ -7,7 +7,7 @@ Feature: git town-hack: resolving conflicts between main branch and its tracking
 
   Background:
     Given my repo has a feature branch named "existing-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE                   | FILE NAME        | FILE CONTENT   |
       | main   | local    | conflicting local commit  | conflicting_file | local content  |
       |        | remote   | conflicting remote commit | conflicting_file | remote content |

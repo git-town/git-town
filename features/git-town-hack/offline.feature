@@ -7,7 +7,7 @@ Feature: git town-hack: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch

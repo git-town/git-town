@@ -10,7 +10,7 @@ Feature: git-town sync: collaborative feature branch syncing
     And my repo has a feature branch named "feature"
     And my coworker fetches updates
     And my coworker sets the parent branch of "feature" as "main"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE         | FILE NAME     |
       | feature | local    | my commit       | my_file       |
       |         | coworker | coworker commit | coworker_file |

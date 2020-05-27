@@ -5,7 +5,7 @@ Feature: git town-ship: errors when trying to ship the supplied feature branch t
 
   Background:
     Given my repo has the feature branches "empty-feature" and "other-feature"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |

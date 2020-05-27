@@ -6,7 +6,7 @@ Feature: git town-kill: errors when trying to kill a perennial branch
   Background:
     Given my repo has a feature branch named "feature"
     And my repo has the perennial branch "qa"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |
       | feature | local, remote | good commit |
       | qa      | local, remote | qa commit   |

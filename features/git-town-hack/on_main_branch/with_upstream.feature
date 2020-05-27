@@ -2,7 +2,7 @@ Feature: git-hack: on the main branch with a upstream remote
 
   Background:
     Given my repo has an upstream repo
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch

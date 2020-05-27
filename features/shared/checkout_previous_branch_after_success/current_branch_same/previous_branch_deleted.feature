@@ -14,7 +14,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
   Scenario: prune-branches
     Given my repo has the feature branches "previous" and "current"
     And the "previous" branch gets deleted on the remote
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | FILE NAME    | FILE CONTENT    |
       | current | local    | current_file | current content |
     And I am on the "current" branch with "previous" as the previous Git branch
@@ -25,7 +25,7 @@ Feature: deleting the current branch makes the main branch the new previous bran
 
   Scenario: ship
     Given my repo has the feature branches "previous" and "current"
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH   | LOCATION | FILE NAME    | FILE CONTENT    |
       | previous | remote   | feature_file | feature content |
     And I am on the "current" branch with "previous" as the previous Git branch
