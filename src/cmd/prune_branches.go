@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -41,11 +40,13 @@ This usually means the branch was shipped or killed on another machine.`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			git.ValidateIsRepository,
-			validateIsConfigured,
-			git.Config().ValidateIsOnline,
-		)
+		if err := git.ValidateIsRepository(); err != nil {
+			return err
+		}
+		if err := validateIsConfigured(); err != nil {
+			return err
+		}
+		return git.Config().ValidateIsOnline()
 	},
 }
 
