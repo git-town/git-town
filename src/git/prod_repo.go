@@ -1,8 +1,6 @@
 package git
 
-import (
-	"github.com/git-town/git-town/src/command"
-)
+import "github.com/git-town/git-town/src/command"
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
