@@ -12,7 +12,7 @@ Feature: Installing Fish Shell autocomplete definitions
       """
       Git autocompletion for Fish shell installed
       """
-    And I now have a Git autocompletion file
+    And my computer now has a Git autocompletion file
 
 
   Scenario: with empty fish autocompletion folder
@@ -22,7 +22,7 @@ Feature: Installing Fish Shell autocomplete definitions
       """
       Git autocompletion for Fish shell installed
       """
-    And I now have a Git autocompletion file
+    And my computer now has a Git autocompletion file
 
 
   Scenario: with an existing Git autocompletion file

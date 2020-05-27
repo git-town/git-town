@@ -179,15 +179,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevRepo.DeleteMainBranchConfiguration()
 	})
 
-	suite.Step(`^I now have a Git autocompletion file$`, func() error {
-		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
-		_, err := os.Stat(fishPath)
-		if os.IsNotExist(err) {
-			return err
-		}
-		return nil
-	})
-
 	suite.Step(`^I resolve the conflict in "([^"]*)"(?: with "([^"]*)")?$`, func(filename, content string) error {
 		if content == "" {
 			content = "resolved content"
@@ -370,6 +361,15 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
+	})
+
+	suite.Step(`^my computer now has a Git autocompletion file$`, func() error {
+		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
+		_, err := os.Stat(fishPath)
+		if os.IsNotExist(err) {
+			return err
+		}
+		return nil
 	})
 
 	suite.Step(`^my computer still has the original Git autocompletion file$`, func() error {
