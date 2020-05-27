@@ -1,9 +1,6 @@
 package git
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/util"
 )
@@ -46,13 +43,6 @@ func HasOpenChanges() bool {
 // not currently on the main branchName
 func HasShippableChanges(branchName string) bool {
 	return command.MustRun("git", "diff", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
-}
-
-// IsMergeInProgress returns whether the local repository is in the middle of
-// an unfinished merge process.
-func IsMergeInProgress() bool {
-	_, err := os.Stat(fmt.Sprintf("%s/.git/MERGE_HEAD", GetRootDirectory()))
-	return err == nil
 }
 
 // IsRebaseInProgress returns whether the local repository is in the middle of

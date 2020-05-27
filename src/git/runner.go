@@ -63,6 +63,15 @@ func (r *Runner) CheckoutBranch(name string) error {
 	return nil
 }
 
+// CommitNoEdit commits all staged files with the default commit message.
+func (r *Runner) CommitNoEdit() error {
+	outcome, err := r.Run("git", "commit", "--no-edit")
+	if err != nil {
+		return fmt.Errorf("cannot commit files: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (r *Runner) Commits(fields []string) (result []Commit, err error) {
 	branches, err := r.LocalBranches()
@@ -372,11 +381,8 @@ func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (r *Runner) HasMergeInProgress() (result bool, err error) {
-	res, err := r.Run("git", "status")
-	if err != nil {
-		return result, fmt.Errorf("cannot determine merge in %q progress: %w", r.WorkingDir(), err)
-	}
-	return strings.Contains(res.OutputSanitized(), "You have unmerged paths"), nil
+	_, err = os.Stat(filepath.Join(r.WorkingDir(), ".git", "MERGE_HEAD"))
+	return err == nil, nil
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
