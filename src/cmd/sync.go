@@ -20,6 +20,9 @@ type syncConfig struct {
 	isOffline      bool
 }
 
+// the git.ProdRepo instance to use for sync commands
+var syncProdRepo *git.ProdRepo
+
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Updates the current branch with all relevant changes",
@@ -41,7 +44,6 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
 		config, err := getSyncConfig()
 		if err != nil {
 			fmt.Println(err)
@@ -49,7 +51,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		}
 		stepList := getSyncStepList(config)
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, syncProdRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -57,6 +59,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		syncProdRepo = git.NewProdRepo()
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
@@ -66,7 +69,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState()
+		return ensureIsNotInUnfinishedState(syncProdRepo)
 	},
 }
 
