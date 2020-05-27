@@ -9,7 +9,6 @@ import (
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -53,12 +52,16 @@ where hostname matches what is in your ssh config file.`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			git.ValidateIsRepository,
-			validateIsConfigured,
-			git.Config().ValidateIsOnline,
-			drivers.ValidateHasDriver,
-		)
+		if err := git.ValidateIsRepository(); err != nil {
+			return err
+		}
+		if err := validateIsConfigured(); err != nil {
+			return err
+		}
+		if err := git.Config().ValidateIsOnline(); err != nil {
+			return err
+		}
+		return drivers.ValidateHasDriver()
 	},
 }
 
