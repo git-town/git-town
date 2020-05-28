@@ -17,7 +17,8 @@ func GetOpenBrowserCommand() string {
 		return "start"
 	}
 	var openBrowserCommands = []string{
-		"wsl-open", // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
+		"wsl-open",           // for Windows Subsystem for Linux, see https://github.com/git-town/git-town/issues/1344
+		"garcon-url-handler", // opens links in native browser on ChromeOS
 		"xdg-open",
 		"open",
 		"cygstart",
