@@ -344,6 +344,15 @@ func (r *Runner) DeleteRemoteBranch(name string) error {
 	return nil
 }
 
+// DiscardOpenChanges deletes all uncommitted changes.
+func (r *Runner) DiscardOpenChanges() error {
+	out, err := r.Run("git", "reset", "--hard")
+	if err != nil {
+		return fmt.Errorf("cannot discard open changes: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch")
