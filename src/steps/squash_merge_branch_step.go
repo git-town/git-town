@@ -35,7 +35,7 @@ func (step *SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
 func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
 	err := repo.Logging.SquashMerge(step.BranchName)
 	if err != nil {
-		return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
+		return err
 	}
 	args := []string{"commit"}
 	if step.CommitMessage != "" {
@@ -45,7 +45,7 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
 	if author != git.GetLocalAuthor() {
 		args = append(args, "--author", author)
 	}
-	err = git.CommentOutSquashCommitMessage("")
+	err = repo.Silent.CommentOutSquashCommitMessage("")
 	if err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 	}

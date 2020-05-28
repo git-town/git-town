@@ -51,9 +51,9 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		step.enteredEmptyCommitMessage = true
 		err := repo.Logging.SquashMerge(step.BranchName)
 		if err != nil {
-			return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
+			return err
 		}
-		err = git.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
+		err = repo.Silent.CommentOutSquashCommitMessage(step.DefaultCommitMessage + "\n\n")
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
