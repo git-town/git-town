@@ -33,7 +33,7 @@ func (step *SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
 
 // Run executes this step.
 func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
-	err := script.SquashMerge(step.BranchName)
+	err := repo.Logging.SquashMerge(step.BranchName)
 	if err != nil {
 		return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
 	}

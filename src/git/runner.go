@@ -631,6 +631,15 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	return nil
 }
 
+// SquashMerge squash-merges the given branch into the current branch
+func (r *Runner) SquashMerge(branch string) error {
+	out, err := r.Run("git", "merge", "--squash", branch)
+	if err != nil {
+		return fmt.Errorf("cannot squash-merge branch %q: %w\n%s", branch, err, out.Output())
+	}
+	return nil
+}
+
 // Stash adds the current files to the Git stash.
 func (r *Runner) Stash() error {
 	err := r.RunMany([][]string{

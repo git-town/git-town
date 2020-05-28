@@ -49,7 +49,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge
 		step.enteredEmptyCommitMessage = true
-		err := script.SquashMerge(step.BranchName)
+		err := repo.Logging.SquashMerge(step.BranchName)
 		if err != nil {
 			return fmt.Errorf("cannot squash-merge branch %q: %w", step.BranchName, err)
 		}
