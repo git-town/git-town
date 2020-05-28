@@ -39,12 +39,6 @@ func HasOpenChanges() bool {
 	return command.MustRun("git", "status", "--porcelain").OutputSanitized() != ""
 }
 
-// HasShippableChanges returns whether the supplied branch has an changes
-// not currently on the main branchName
-func HasShippableChanges(branchName string) bool {
-	return command.MustRun("git", "diff", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
-}
-
 // IsRebaseInProgress returns whether the local repository is in the middle of
 // an unfinished rebase process.
 func IsRebaseInProgress() bool {

@@ -21,7 +21,11 @@ func (step *EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() strin
 
 // Run executes this step.
 func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo) error {
-	if !git.HasShippableChanges(step.BranchName) {
+	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.BranchName)
+	if err != nil {
+		return err
+	}
+	if !hasShippableChanges {
 		return errors.New("no shippable changes")
 	}
 	return nil

@@ -513,6 +513,16 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 	return util.DoesStringArrayContain(remotes, name), nil
 }
 
+// HasShippableChanges indicates whether the given branch has changes
+// not currently in the main branch.
+func (r *Runner) HasShippableChanges(branch string) (bool, error) {
+	out, err := r.Run("git", "diff", r.GetMainBranch()+".."+branch)
+	if err != nil {
+		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w\n%s", branch, err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
+}
+
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
 func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 	trackingBranchName := "origin/" + name
