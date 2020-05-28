@@ -742,3 +742,12 @@ func (r *Runner) StageFiles(names ...string) error {
 	}
 	return nil
 }
+
+// StartCommit starts a commit and stops at asking the user for the commit message.
+func (r *Runner) StartCommit() error {
+	out, err := r.Run("git", "commit")
+	if err != nil {
+		return fmt.Errorf("cannot start commit: %w\n%s", err, out.Output())
+	}
+	return nil
+}

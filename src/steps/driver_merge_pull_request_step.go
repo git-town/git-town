@@ -57,7 +57,7 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		if err != nil {
 			return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 		}
-		err = script.RunCommand("git", "commit")
+		err = repo.Logging.StartCommit()
 		if err != nil {
 			return err
 		}
