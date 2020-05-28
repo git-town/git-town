@@ -8,12 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// DoesBranchHaveUnmergedCommits returns whether the branch with the given name
-// contains commits that are not merged into the main branch
-func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return command.MustRun("git", "log", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
-}
-
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
 func EnsureBranchInSync(branchName, errorMessageSuffix string) {
 	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("%q is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))

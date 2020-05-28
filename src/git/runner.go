@@ -53,6 +53,25 @@ func (r *Runner) AddRemote(name, value string) error {
 	return nil
 }
 
+// BranchHasUnmergedCommits indicates whether the branch with the given name
+// contains commits that are not merged into the main branch
+func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
+	out, err := r.Run("git", "log", r.GetMainBranch()+".."+branch)
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w\n%s", branch, err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
+}
+
+// BranchSha provides the SHA for the local branch with the given name.
+func (r *Runner) BranchSha(name string) (sha string, err error) {
+	outcome, err := r.Run("git", "rev-parse", name)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w\n%s", name, err, outcome.Output())
+	}
+	return outcome.OutputSanitized(), nil
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *Runner) CheckoutBranch(name string) error {
 	outcome, err := r.Run("git", "checkout", name)
@@ -294,13 +313,17 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
-// FileContent provides the current content of a file.
-func (r *Runner) FileContent(filename string) (result string, err error) {
-	outcome, err := r.Run("cat", filename)
-	if err != nil {
-		return result, err
+// DeleteLocalBranch removes the local branch with the given name.
+func (r *Runner) DeleteLocalBranch(name string, force bool) error {
+	args := []string{"branch", "-d", name}
+	if force {
+		args[1] = "-D"
 	}
-	return outcome.Output(), nil
+	out, err := r.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot delete local branch %q: %w\n%s", name, err, out.Output())
+	}
+	return nil
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -319,6 +342,15 @@ func (r *Runner) Fetch() error {
 		return fmt.Errorf("cannot fetch: %w", err)
 	}
 	return nil
+}
+
+// FileContent provides the current content of a file.
+func (r *Runner) FileContent(filename string) (result string, err error) {
+	outcome, err := r.Run("cat", filename)
+	if err != nil {
+		return result, err
+	}
+	return outcome.Output(), nil
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
