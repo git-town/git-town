@@ -330,6 +330,11 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
+// CurrentSha provides the SHA of the currently checked out branch/commit.
+func (r *Runner) CurrentSha() (string, error) {
+	return r.BranchSha("HEAD")
+}
+
 // DeleteLocalBranch removes the local branch with the given name.
 func (r *Runner) DeleteLocalBranch(name string, force bool) error {
 	args := []string{"branch", "-d", name}

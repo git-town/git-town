@@ -29,7 +29,10 @@ func (step *MergeBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *MergeBranchStep) Run(repo *git.ProdRepo) error {
-	step.previousSha = git.GetCurrentSha()
+func (step *MergeBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
 	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
 }
