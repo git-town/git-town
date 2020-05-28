@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // DriverMergePullRequestStep squash merges the branch with the given name into the current branch
@@ -65,9 +64,9 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		if err != nil {
 			return err
 		}
-		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
+		err = repo.Logging.DeleteLastCommit()
 		if err != nil {
-			return fmt.Errorf("cannot reset the main branch: %w", err)
+			return err
 		}
 		step.enteredEmptyCommitMessage = false
 	}

@@ -657,6 +657,15 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	return nil
 }
 
+// DeleteLastCommit resets HEAD to the previous commit.
+func (r *Runner) DeleteLastCommit() error {
+	out, err := r.Run("git", "reset", "--hard", "HEAD~1")
+	if err != nil {
+		return fmt.Errorf("cannot delete last commit: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
 // SquashMerge squash-merges the given branch into the current branch
 func (r *Runner) SquashMerge(branch string) error {
 	out, err := r.Run("git", "merge", "--squash", branch)
