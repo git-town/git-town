@@ -71,12 +71,16 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		step.enteredEmptyCommitMessage = false
 	}
 	driver := drivers.GetActiveDriver()
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
 	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
 		Branch:            step.BranchName,
 		PullRequestNumber: step.PullRequestNumber,
 		CommitMessage:     commitMessage,
 		LogRequests:       true,
-		ParentBranch:      git.GetCurrentBranchName(),
+		ParentBranch:      currentBranch,
 	})
 	return step.mergeError
 }
