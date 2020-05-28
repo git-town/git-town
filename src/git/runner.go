@@ -248,6 +248,15 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 	return nil
 }
 
+// CreateRemoteBranch creates a remote branch from the given local SHA.
+func (r *Runner) CreateRemoteBranch(localSha, branchName string) error {
+	outcome, err := r.Run("git", "push", "origin", localSha+":refs/heads/"+branchName)
+	if err != nil {
+		return fmt.Errorf("cannot create remote branch for local SHA %q: %w\n%s", localSha, err, outcome.Output())
+	}
+	return nil
+}
+
 // CreateStandaloneTag creates a tag not on a branch
 func (r *Runner) CreateStandaloneTag(name string) error {
 	return r.RunMany([][]string{
