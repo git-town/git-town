@@ -276,6 +276,15 @@ func (r *Runner) CreateTag(name string) error {
 	return err
 }
 
+// CreateTrackingBranch creates a remote tracking branch for the given local branch.
+func (r *Runner) CreateTrackingBranch(branch string) error {
+	outcome, err := r.Run("git", "push", "-u", "origin", branch)
+	if err != nil {
+		return fmt.Errorf("cannot create tracking branch for %q: %w\n%s", branch, err, outcome.Output())
+	}
+	return nil
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
