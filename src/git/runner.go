@@ -379,6 +379,15 @@ func (r *Runner) Fetch() error {
 	return nil
 }
 
+// FetchUpstream fetches updates from the upstream remote.
+func (r *Runner) FetchUpstream(branch string) error {
+	out, err := r.Run("git", "fetch", "upstream", branch)
+	if err != nil {
+		return fmt.Errorf("cannot fetch from upstream: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
 // FileContent provides the current content of a file.
 func (r *Runner) FileContent(filename string) (result string, err error) {
 	outcome, err := r.Run("cat", filename)
