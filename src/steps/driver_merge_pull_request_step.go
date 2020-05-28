@@ -61,7 +61,10 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		if err != nil {
 			return err
 		}
-		commitMessage = git.GetLastCommitMessage()
+		commitMessage, err = repo.Silent.LastCommitMessage()
+		if err != nil {
+			return err
+		}
 		err = script.RunCommand("git", "reset", "--hard", "HEAD~1")
 		if err != nil {
 			return fmt.Errorf("cannot reset the main branch: %w", err)

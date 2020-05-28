@@ -534,6 +534,15 @@ func (r *Runner) LastActiveDir() (string, error) {
 	return filepath.FromSlash(res.OutputSanitized()), err
 }
 
+// LastCommitMessage returns the commit message for the last commit
+func (r *Runner) LastCommitMessage() (string, error) {
+	out, err := r.Run("git", "log", "-1", "--format=%B")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine last commit message: %w\n%s", err, out.Output())
+	}
+	return out.OutputSanitized(), nil
+}
+
 // LocalBranches provides the names of all local branches in this repo.
 func (r *Runner) LocalBranches() (result []string, err error) {
 	outcome, err := r.Run("git", "branch")
