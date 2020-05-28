@@ -603,6 +603,13 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	return MainFirst(result), nil
 }
 
+// MergeBranchNoEdit merges the given branch into the current branch,
+// using the default commit message.
+func (r *Runner) MergeBranchNoEdit(branch string) error {
+	_, err := r.Run("git", "merge", "--no-edit", branch)
+	return err
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")

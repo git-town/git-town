@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // MergeBranchStep merges the branch with the given name into the current branch
@@ -34,5 +33,5 @@ func (step *MergeBranchStep) Run(repo *git.ProdRepo) (err error) {
 	if err != nil {
 		return err
 	}
-	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
+	return repo.Logging.MergeBranchNoEdit(step.BranchName)
 }
