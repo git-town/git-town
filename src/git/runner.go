@@ -335,6 +335,15 @@ func (r *Runner) DeleteMainBranchConfiguration() error {
 	return nil
 }
 
+// DeleteRemoteBranch removes the remote branch of the given local branch.
+func (r *Runner) DeleteRemoteBranch(name string) error {
+	out, err := r.Run("git", "push", "origin", ":"+name)
+	if err != nil {
+		return fmt.Errorf("cannot delete tracking branch for %q: %w\n%s", name, err, out.Output())
+	}
+	return nil
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch")
@@ -647,6 +656,11 @@ func (r *Runner) Tags() (result []string, err error) {
 		result = append(result, strings.TrimSpace(line))
 	}
 	return result, err
+}
+
+// TrackingBranchName provides the name of the remote branch tracking the given local branch.
+func (r *Runner) TrackingBranchName(branch string) string {
+	return "origin/" + branch
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
