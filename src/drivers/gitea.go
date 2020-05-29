@@ -29,7 +29,7 @@ func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
 
 func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
 	if d.apiToken == "" {
-		return false, "", o, nil
+		return false, "", 0, nil
 	}
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
@@ -38,13 +38,13 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	if err != nil {
 		return false, "", 0, err
 	}
-	baseName := options.ParentBranch
-	headName := d.owner + ":" + options.Branch  // TODO: check format
+	baseName := parentBranch
+	headName := d.owner + ":" + branch  // TODO: check format
 	pullRequest, err := identifyPullRequest(filterPullRequests(openPullRequests, baseName, headName))
 	if err != nil {
 		return false, "", 0, nil
 	}
-	return true, getDefaultCommitMessage(pullRequests[0]), pullRequest.Index, nil
+	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
 }
 
 func (d *giteaCodeHostingDriver) GetAPIToken() string {
@@ -74,12 +74,12 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 	}
 	baseName := options.Branch
 	newBaseName := options.ParentBranch
-	err := d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, nil), newBaseName)
+	err = d.apiRetargetPullRequests(filterPullRequests(openPullRequests, baseName, ""), newBaseName)
 	if err != nil {
 		return "", err
 	}
 
-	commitMessageParts := strings.SplitN(commitMessage, "\n", 2)
+	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	commitTitle := commitMessageParts[0]
 	commitMessage := ""
 	if len(commitMessageParts) == 2 {
@@ -119,40 +119,40 @@ func (d *giteaCodeHostingDriver) connect() {
 			&oauth2.Token{AccessToken: d.apiToken},
 		)
 		tc := oauth2.NewClient(context.Background(), ts)
-		d.client = gitea.NewClientWithHTTP(tc)
+		d.client = gitea.NewClientWithHTTP(fmt.Sprintf("https://%s", d.hostname), tc)
 	}
 }
 
 func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
-	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Index)
+	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
 }
 
-func identifyPullRequest(filteredPullRequests *[]gitea.PullRequest) (*gitea.PullRequest, error) {
+func identifyPullRequest(filteredPullRequests []*gitea.PullRequest) (*gitea.PullRequest, error) {
 	if len(filteredPullRequests) == 0 {
-		return -1, errors.New("no pull request found")
+		return nil, errors.New("no pull request found")
 	}
 	if len(filteredPullRequests) > 1 {
 		pullRequestNumbersAsStrings := make([]string, len(filteredPullRequests))
 		for i, filteredPullRequest := range filteredPullRequests {
-			pullRequestNumbersAsStrings[i] = strconv.Itoa(*filteredPullRequest.Index)
+			pullRequestNumbersAsStrings[i] = strconv.Itoa(filteredPullRequest.Index)
 		}
-		return -1, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
+		return nil, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
 	}
 
-	return *filteredPullRequests[0], nil
+	return filteredPullRequests[0], nil
 }
 
 func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName  string) ([]*gitea.PullRequest) {
-	pullRequestsFiltered := []*PullRequest
+	pullRequestsFiltered := []*gitea.PullRequest{}
 	// todo make resilient against paging
 	for _, pullRequest := range pullRequests {
 		if pullRequest.Base.Name != baseName {
 			break
 		}
-		if headName != nil && pullRequest.Head.Name != headName {
+		if headName != "" && pullRequest.Head.Name != headName {
 			break
 		}
-		append(pullRequestsFiltered, pullRequest)
+		pullRequestsFiltered = append(pullRequestsFiltered, pullRequest)
 
 	}
 	return pullRequestsFiltered
@@ -160,8 +160,8 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName  s
 
 func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
 	printLog(fmt.Sprintf("Gitea API: Merging PR #%d", pullRequestNumber))
-	result, err := d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
-		MergeMethod: gitea.MergeStyleSquash,
+	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
+		Style: gitea.MergeStyleSquash,
 		Title: commitTitle,
 		Message: commitMessage,
 	})
@@ -181,18 +181,18 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, comm
 //   ancerstor -> master
 //   children1 -> ancestor  --> master (retargeted to master after merge)
 //   children2 -> ancestor  --> master (retargeted to master after merge)
-func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests *[]gitea.PullRequest, newBaseName string) error {
+func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
 		// if options.LogRequests {
 		// 	printLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d", *pullRequest.Index))
 		// }
-		printLog(fmt.Sprintf("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", *pullRequest.Index))
+		printLog(fmt.Sprintf("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index))
 		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
 		// 	Base: newBaseName
 		// })
-		if err != nil {
-			return err
-		}
+		// if err != nil {
+		//	return err
+		// }
 	}
 	return nil
 }
