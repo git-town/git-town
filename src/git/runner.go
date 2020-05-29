@@ -642,6 +642,15 @@ func (r *Runner) MergeBranchNoEdit(branch string) error {
 	return err
 }
 
+// PopStash restores stashed-away changes into the workspace.
+func (r *Runner) PopStash() error {
+	outcome, err := r.Run("git", "stash", "pop")
+	if err != nil {
+		return fmt.Errorf("cannot pop the stash: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
