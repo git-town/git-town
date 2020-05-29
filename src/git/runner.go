@@ -687,6 +687,15 @@ func (r *Runner) PushBranchSetUpstream(name string) error {
 	return nil
 }
 
+// PushTags pushes the branch with the given name to the remote.
+func (r *Runner) PushTags() error {
+	outcome, err := r.Run("git", "push", "--tags")
+	if err != nil {
+		return fmt.Errorf("cannot push branch in repo %q: %w\n%v", r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
 	if r.remoteBranchCache.Initialized() {
