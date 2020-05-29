@@ -42,7 +42,11 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
 		args = append(args, "-m", step.CommitMessage)
 	}
 	author := prompt.GetSquashCommitAuthor(step.BranchName)
-	if author != git.GetLocalAuthor() {
+	repoAuthor, err := repo.Silent.Author()
+	if err != nil {
+		return err
+	}
+	if author != repoAuthor {
 		args = append(args, "--author", author)
 	}
 	err = repo.Silent.CommentOutSquashCommitMessage("")

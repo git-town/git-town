@@ -53,6 +53,21 @@ func (r *Runner) AddRemote(name, value string) error {
 	return nil
 }
 
+// Author returns the locally Git configured user.
+func (r *Runner) Author() (author string, err error) {
+	out, err := r.Run("git", "config", "user.name")
+	if err != nil {
+		return "", err
+	}
+	name := out.OutputSanitized()
+	out, err = r.Run("git", "config", "user.email")
+	if err != nil {
+		return "", err
+	}
+	email := out.OutputSanitized()
+	return name + " <" + email + ">", nil
+}
+
 // BranchHasUnmergedCommits indicates whether the branch with the given name
 // contains commits that are not merged into the main branch
 func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
