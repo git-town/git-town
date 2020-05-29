@@ -765,6 +765,20 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	return nil
 }
 
+// ResetToSha undoes all commits on the current branch all the way until the given SHA.
+func (r *Runner) ResetToSha(sha string, hard bool) error {
+	args := []string{"reset"}
+	if hard {
+		args = append(args, "--hard")
+	}
+	args = append(args, sha)
+	outcome, err := r.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot reset to SHA %q: %w\n%v", sha, err, outcome)
+	}
+	return nil
+}
+
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to the remote.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {

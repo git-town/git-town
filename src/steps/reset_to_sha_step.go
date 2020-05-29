@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // ResetToShaStep undoes all commits on the current branch
@@ -22,10 +21,5 @@ func (step *ResetToShaStep) Run(repo *git.ProdRepo) (err error) {
 	if step.Sha == currentSha {
 		return nil
 	}
-	args := []string{"reset"}
-	if step.Hard {
-		args = append(args, "--hard")
-	}
-	args = append(args, step.Sha)
-	return script.RunCommand("git", args...)
+	return repo.Logging.ResetToSha(step.Sha, step.Hard)
 }
