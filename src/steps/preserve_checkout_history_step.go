@@ -1,7 +1,6 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -23,8 +22,11 @@ func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo) error {
 		if err != nil {
 			return err
 		}
-		command.MustRun("git", "checkout", expectedPreviouslyCheckedOutBranch)
-		command.MustRun("git", "checkout", currentBranch)
+		err = repo.Silent.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+		if err != nil {
+			return err
+		}
+		return repo.Silent.CheckoutBranch(currentBranch)
 	}
 	return nil
 }
