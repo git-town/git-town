@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // StashOpenChangesStep stores all uncommitted changes on the Git stash.
@@ -17,9 +16,5 @@ func (step *StashOpenChangesStep) CreateUndoStep() Step {
 
 // Run executes this step.
 func (step *StashOpenChangesStep) Run(repo *git.ProdRepo) error {
-	err := repo.Logging.StageAll()
-	if err != nil {
-		return err
-	}
-	return script.RunCommand("git", "stash")
+	return repo.Logging.Stash()
 }
