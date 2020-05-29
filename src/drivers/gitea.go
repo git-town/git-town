@@ -23,45 +23,8 @@ type giteaCodeHostingDriver struct {
 	repository string
 }
 
-func (d *giteaCodeHostingDriver) HostingServiceName() string {
-	return "Gitea"
-}
-
-
 func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitea" || d.hostname == "gitea.com"
-}
-
-func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
-}
-
-func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *giteaCodeHostingDriver) GetRepositoryURL() string {
-	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
-}
-
-func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
-	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", d.GetRepositoryURL(), url.PathEscape(toCompare))
-}
-
-func (d *giteaCodeHostingDriver) GetAPIToken() string {
-	return git.Config().GetGiteaToken()
-}
-
-func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
 }
 
 func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
@@ -82,6 +45,23 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 		return false, "", nil
 	}
 	return true, getDefaultCommitMessage(pullRequests[0]), nil
+}
+
+func (d *giteaCodeHostingDriver) GetAPIToken() string {
+	return git.Config().GetGiteaToken()
+}
+
+func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
+	toCompare := parentBranch + "..." + branch
+	return fmt.Sprintf("%s/compare/%s", d.GetRepositoryURL(), url.PathEscape(toCompare))
+}
+
+func (d *giteaCodeHostingDriver) GetRepositoryURL() string {
+	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
+}
+
+func (d *giteaCodeHostingDriver) HostingServiceName() string {
+	return "Gitea"
 }
 
 // todo (helper)
@@ -112,6 +92,25 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 		commitMessage = commitMessageParts[1]
 	}
 	return d.apiMergePullRequest(pullRequest, commitTitle, commitMessage)
+}
+
+func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
+	d.apiToken = apiToken
+}
+
+func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
+	d.hostname = originHostname
+}
+
+func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
+	d.originURL = originURL
+	d.hostname = git.Config().GetURLHostname(originURL)
+	d.client = nil
+	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
+	if len(repositoryParts) == 2 {
+		d.owner = repositoryParts[0]
+		d.repository = repositoryParts[1]
+	}
 }
 
 func init() {
