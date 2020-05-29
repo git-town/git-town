@@ -376,7 +376,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.gitEnv.DevRepo.PushBranch(name)
+		return state.gitEnv.DevRepo.PushBranchSetUpstream(name)
 	})
 
 	suite.Step(`^my code base has a feature branch named "([^"]*)" as a child of "([^"]*)"$`, func(branch, parent string) error {
@@ -384,7 +384,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		return state.gitEnv.DevRepo.PushBranch(branch)
+		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 	})
 
 	suite.Step(`^my computer has a broken "([^"]*)" tool installed$`, func(name string) error {
@@ -443,7 +443,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create feature branch %q: %w", childBranch, err)
 		}
-		return state.gitEnv.DevRepo.PushBranch(childBranch)
+		return state.gitEnv.DevRepo.PushBranchSetUpstream(childBranch)
 	})
 
 	suite.Step(`^my repo has a (local )?feature branch named "([^"]*)"$`, func(localStr, branch string) error {
@@ -453,7 +453,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		if !isLocal {
-			return state.gitEnv.DevRepo.PushBranch(branch)
+			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch)
 		}
 		return nil
 	})
@@ -518,11 +518,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return err
 		}
 		if !isLocal {
-			err = state.gitEnv.DevRepo.PushBranch(branch1)
+			err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranch(branch2)
+			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch2)
 		}
 		return nil
 	})
@@ -534,11 +534,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
 		if !isLocal {
-			err = state.gitEnv.DevRepo.PushBranch(branch1)
+			err = state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
 			if err != nil {
 				return err
 			}
-			return state.gitEnv.DevRepo.PushBranch(branch2)
+			return state.gitEnv.DevRepo.PushBranchSetUpstream(branch2)
 		}
 		return nil
 	})
@@ -548,7 +548,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create perennial branches: %w", err)
 		}
-		return state.gitEnv.DevRepo.PushBranch(branch1)
+		return state.gitEnv.DevRepo.PushBranchSetUpstream(branch1)
 	})
 
 	suite.Step(`^my repo is left with my original commits$`, func() error {
