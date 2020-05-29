@@ -788,6 +788,15 @@ func (r *Runner) ResetToSha(sha string, hard bool) error {
 	return nil
 }
 
+// RevertCommit reverts the commit with the given SHA.
+func (r *Runner) RevertCommit(sha string) error {
+	res, err := r.Run("git", "revert", sha)
+	if err != nil {
+		return fmt.Errorf("cannot revert commit %q: %w\n%s", sha, err, res.Output())
+	}
+	return nil
+}
+
 // ShouldPushBranch returns whether the local branch with the given name
 // contains commits that have not been pushed to the remote.
 func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
