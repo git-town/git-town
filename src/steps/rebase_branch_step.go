@@ -29,9 +29,12 @@ func (step *RebaseBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RebaseBranchStep) Run(repo *git.ProdRepo) error {
-	step.previousSha = git.GetCurrentSha()
-	err := repo.Logging.Rebase(step.BranchName)
+func (step *RebaseBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	err = repo.Logging.Rebase(step.BranchName)
 	if err != nil {
 		git.ClearCurrentBranchCache()
 	}
