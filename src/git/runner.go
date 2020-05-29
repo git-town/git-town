@@ -643,6 +643,15 @@ func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
+// Pull fetches updates from the origin remote and updates the currently checked out branch.
+func (r *Runner) Pull() error {
+	outcome, err := r.Run("git", "pull")
+	if err != nil {
+		return fmt.Errorf("cannot pull updates: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // PushBranch pushes the branch with the given name to the remote.
 func (r *Runner) PushBranch(name string) error {
 	outcome, err := r.Run("git", "push", "-u", "origin", name)
