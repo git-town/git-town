@@ -27,24 +27,24 @@ func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitea" || d.hostname == "gitea.com"
 }
 
-func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
+func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, string, error) {
 	if d.apiToken == "" {
-		return false, "", nil
+		return false, "", o, nil
 	}
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		return false, "", err
+		return false, "", 0, err
 	}
 	baseName := options.ParentBranch
 	headName := d.owner + ":" + options.Branch  // TODO: check format
-	_, err := identifyPullRequest(filterPullRequests(openPullRequests, baseName, headName))
+	pullRequest, err := identifyPullRequest(filterPullRequests(openPullRequests, baseName, headName))
 	if err != nil {
-		return false, "", nil
+		return false, "", 0, nil
 	}
-	return true, getDefaultCommitMessage(pullRequests[0]), nil
+	return true, getDefaultCommitMessage(pullRequests[0]), pullRequest.Index, nil
 }
 
 func (d *giteaCodeHostingDriver) GetAPIToken() string {
@@ -79,19 +79,14 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 	if err != nil {
 		return "", err
 	}
-	baseName := options.ParentBranch
-	headName := d.owner + ":" + options.Branch  // TODO: check format
-	pullRequest, err := identifyPullRequest(filterPullRequests(openPullRequests, baseName, headName))
-	if err != nil {
-		return "", err
-	}
+
 	commitMessageParts := strings.SplitN(commitMessage, "\n", 2)
 	commitTitle := commitMessageParts[0]
 	commitMessage := ""
 	if len(commitMessageParts) == 2 {
 		commitMessage = commitMessageParts[1]
 	}
-	return d.apiMergePullRequest(pullRequest, commitTitle, commitMessage)
+	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
 }
 
 func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
@@ -164,9 +159,9 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName  s
 	return pullRequestsFiltered
 }
 
-func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequest *gitea.PullRequest commitTitle, commitMessage string) (string, error) {
-	printLog(fmt.Sprintf("Gitea API: Merging PR #%d", *pullRequest.Index))
-	result, err := d.client.MergePullRequest(d.owner, d.repository, *pullRequest.Index, gitea.MergePullRequestOption{
+func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (string, error) {
+	printLog(fmt.Sprintf("Gitea API: Merging PR #%d", pullRequestNumber))
+	result, err := d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		MergeMethod: gitea.MergeStyleSquash,
 		Title: commitTitle,
 		Message: commitMessage,
@@ -174,7 +169,7 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequest *gitea.PullRequ
 	if err != nil {
 		return "", err
 	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, *pullRequest.Index)
+	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, pullRequestNumber)
 	if err != nil {
 		return "", err
 	}
