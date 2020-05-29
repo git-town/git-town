@@ -43,18 +43,6 @@ func EnsureIsPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
 }
 
-// GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
-// given the inputs
-func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) string {
-	if HasLocalBranch(initialPreviouslyCheckedOutBranch) {
-		if GetCurrentBranchName() == initialBranch || !HasLocalBranch(initialBranch) {
-			return initialPreviouslyCheckedOutBranch
-		}
-		return initialBranch
-	}
-	return Config().GetMainBranch()
-}
-
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically
 func GetLocalBranches() (result []string) {

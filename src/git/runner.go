@@ -375,6 +375,30 @@ func (r *Runner) DiscardOpenChanges() error {
 	return nil
 }
 
+// ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
+// given the inputs
+func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) (string, error) {
+	hasInitialPreviouslyCheckedOutBranch, err := r.HasLocalBranch(initialPreviouslyCheckedOutBranch)
+	if err != nil {
+		return "", err
+	}
+	if hasInitialPreviouslyCheckedOutBranch {
+		currentBranch, err := r.CurrentBranch()
+		if err != nil {
+			return "", err
+		}
+		hasInitialBranch, err := r.HasLocalBranch(initialBranch)
+		if err != nil {
+			return "", err
+		}
+		if currentBranch == initialBranch || !hasInitialBranch {
+			return initialPreviouslyCheckedOutBranch, nil
+		}
+		return initialBranch, nil
+	}
+	return Config().GetMainBranch(), nil
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch")
