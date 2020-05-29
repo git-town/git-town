@@ -27,6 +27,16 @@ func TestGetDriver_DriverType_GitHub(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
+func TestGetDriver_DriverType_Gitea(t *testing.T) {
+	driver := drivers.GetDriver(drivers.DriverOptions{
+		DriverType: "gitea",
+		OriginURL:  "git@self-hosted-gitea.com:git-town/git-town.git",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "Gitea", driver.HostingServiceName())
+	assert.Equal(t, "https://self-hosted-gitea.com/git-town/git-town", driver.GetRepositoryURL())
+}
+
 func TestGetDriver_DriverType_GitLab(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "gitlab",
@@ -55,6 +65,16 @@ func TestGetDriver_OriginHostname_GitHub(t *testing.T) {
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
 	assert.Equal(t, "https://github.com/git-town/git-town", driver.GetRepositoryURL())
+}
+
+func TestGetDriver_OriginHostname_Gitea(t *testing.T) {
+	driver := drivers.GetDriver(drivers.DriverOptions{
+		OriginURL:      "git@my-ssh-identity.com:git-town/git-town.git",
+		OriginHostname: "gitea.com",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "Gitea", driver.HostingServiceName())
+	assert.Equal(t, "https://gitea.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
 func TestGetDriver_OriginHostname_GitLab(t *testing.T) {
