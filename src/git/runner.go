@@ -687,11 +687,20 @@ func (r *Runner) PushBranchSetUpstream(name string) error {
 	return nil
 }
 
-// PushTags pushes the branch with the given name to the remote.
+// PushTags pushes new the Git tags to origin.
 func (r *Runner) PushTags() error {
 	outcome, err := r.Run("git", "push", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot push branch in repo %q: %w\n%v", r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (r *Runner) Rebase(target string) error {
+	outcome, err := r.Run("git", "rebase", target)
+	if err != nil {
+		return fmt.Errorf("cannot rebase against branch %q: %w\n%v", target, err, outcome)
 	}
 	return nil
 }
