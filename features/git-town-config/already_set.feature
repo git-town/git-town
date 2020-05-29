@@ -6,7 +6,7 @@ Feature: listing the configuration
 
 
   Scenario: everything is configured
-    Given my repository has the feature branches "production" and "qa"
+    Given my repo has the feature branches "production" and "qa"
     And the main branch is configured as "main"
     And the perennial branches are configured as "qa"
     When I run "git-town config setup" and answer the prompts:

@@ -4,7 +4,7 @@ Feature: git town-ship: errors if on supplied branch and there are open changes
 
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my workspace has an uncommitted file
     And I am on the "feature" branch
     When I run "git-town ship feature"
@@ -18,5 +18,5 @@ Feature: git town-ship: errors if on supplied branch and there are open changes
       """
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION |

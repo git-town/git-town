@@ -5,7 +5,7 @@ Feature: Print URL when opening browser fails
   So that I can copy-and-paste it into my browser.
 
   Background:
-    Given my repository has a feature branch named "feature"
+    Given my repo has a feature branch named "feature"
     And my repo's origin is "git@github.com:git-town/git-town"
     And my computer has a broken "open" tool installed
     And I am on the "feature" branch

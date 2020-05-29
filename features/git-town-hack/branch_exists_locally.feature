@@ -6,7 +6,7 @@ Feature: git town-hack: errors when the branch exists locally
 
 
   Background:
-    Given my repository has a feature branch named "existing-feature"
+    Given my repo has a feature branch named "existing-feature"
     And I am on the "main" branch
     And my workspace has an uncommitted file
     When I run "git-town hack existing-feature"

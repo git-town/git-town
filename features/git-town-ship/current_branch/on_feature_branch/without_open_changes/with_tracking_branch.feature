@@ -6,8 +6,8 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local, remote | feature commit | feature_file | feature content |
     And I am on the "feature" branch
@@ -34,7 +34,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE      | FILE NAME    |
       | main   | local, remote | feature done | feature_file |
 
@@ -51,7 +51,7 @@ Feature: git town-ship: shipping the current feature branch with a tracking bran
       | feature | git checkout main                             |
       | main    | git checkout feature                          |
     And I end up on the "feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE               | FILE NAME    |
       | main    | local, remote | feature done          | feature_file |
       |         |               | Revert "feature done" | feature_file |

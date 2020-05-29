@@ -15,8 +15,7 @@ import (
 // DataTable allows comparing user-generated data with Gherkin tables.
 // The zero value is an empty DataTable.
 type DataTable struct {
-	// cells contains table data organized as rows and columns
-	cells [][]string
+	Cells [][]string // contains table data organized as rows and columns
 }
 
 // FromGherkin provides a DataTable instance populated with data from the given Gherkin table.
@@ -33,15 +32,15 @@ func FromGherkin(table *messages.PickleStepArgument_PickleTable) (result DataTab
 
 // AddRow adds the given row of table data to this table.
 func (table *DataTable) AddRow(elements ...string) {
-	table.cells = append(table.cells, elements)
+	table.Cells = append(table.Cells, elements)
 }
 
 // columns provides the table data organized into columns.
 func (table *DataTable) columns() (result [][]string) {
-	for column := range table.cells[0] {
+	for column := range table.Cells[0] {
 		colData := []string{}
-		for row := range table.cells {
-			colData = append(colData, table.cells[row][column])
+		for row := range table.Cells {
+			colData = append(colData, table.Cells[row][column])
 		}
 		result = append(result, colData)
 	}
@@ -62,7 +61,7 @@ func (table *DataTable) EqualDataTable(other DataTable) (diff string, errorCount
 // EqualGherkin compares this DataTable instance to the given Gherkin table.
 // If both are equal it returns an empty string, otherwise a diff printable on the console.
 func (table *DataTable) EqualGherkin(other *messages.PickleStepArgument_PickleTable) (diff string, errorCount int) {
-	if len(table.cells) == 0 {
+	if len(table.Cells) == 0 {
 		return "your data is empty", 1
 	}
 	dataTable := FromGherkin(other)
@@ -73,11 +72,11 @@ var templateRE *regexp.Regexp
 var templateOnce sync.Once
 
 // Expand returns a new DataTable instance with the placeholders in this datatable replaced with the given values.
-func (table *DataTable) Expand(rootDir string, localRepo *GitRepo, remoteRepo *GitRepo) (result DataTable) {
-	for row := range table.cells {
+func (table *DataTable) Expand(rootDir string, localRepo *Repo, remoteRepo *Repo) (result DataTable) {
+	for row := range table.Cells {
 		cells := []string{}
-		for col := range table.cells[row] {
-			cell := table.cells[row][col]
+		for col := range table.Cells[row] {
+			cell := table.Cells[row][col]
 			if strings.Contains(cell, "{{") {
 				templateOnce.Do(func() { templateRE = regexp.MustCompile(`\{\{.*?\}\}`) })
 				match := templateRE.FindString(cell)
@@ -113,9 +112,9 @@ func (table *DataTable) Expand(rootDir string, localRepo *GitRepo, remoteRepo *G
 
 // RemoveText deletes the given text from each cell.
 func (table *DataTable) RemoveText(text string) {
-	for row := range table.cells {
-		for col := range table.cells[row] {
-			table.cells[row][col] = strings.Replace(table.cells[row][col], text, "", 1)
+	for row := range table.Cells {
+		for col := range table.Cells[row] {
+			table.Cells[row][col] = strings.Replace(table.Cells[row][col], text, "", 1)
 		}
 	}
 }
@@ -128,9 +127,9 @@ func (table *DataTable) String() (result string) {
 		formatStrings = append(formatStrings, fmt.Sprintf("| %%-%dv ", width))
 	}
 	// render the table using this format
-	for row := range table.cells {
-		for col := range table.cells[row] {
-			result += fmt.Sprintf(formatStrings[col], table.cells[row][col])
+	for row := range table.Cells {
+		for col := range table.Cells[row] {
+			result += fmt.Sprintf(formatStrings[col], table.Cells[row][col])
 		}
 		result += "|\n"
 	}

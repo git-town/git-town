@@ -29,6 +29,11 @@ func NewMockingShell(workingDir string, homeDir string, binDir string) *MockingS
 	return &MockingShell{workingDir: workingDir, homeDir: homeDir, binDir: binDir}
 }
 
+// WorkingDir provides the directory this MockingShell operates in.
+func (ms *MockingShell) WorkingDir() string {
+	return ms.workingDir
+}
+
 // MockBrokenCommand adds a mock for the given command that returns an error.
 func (ms *MockingShell) MockBrokenCommand(name string) error {
 	// create "bin" dir

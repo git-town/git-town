@@ -4,10 +4,10 @@ Feature: git town-kill: killing the given branch with child branches
 
 
   Background:
-    Given my repository has a feature branch named "feature-1"
-    And my repository has a feature branch named "feature-2" as a child of "feature-1"
-    And my repository has a feature branch named "feature-3" as a child of "feature-2"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature-1"
+    And my repo has a feature branch named "feature-2" as a child of "feature-1"
+    And my repo has a feature branch named "feature-3" as a child of "feature-2"
+    And the following commits exist in my repo
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, remote | feature 1 commit |
       | feature-2 | local, remote | feature 2 commit |
@@ -29,7 +29,7 @@ Feature: git town-kill: killing the given branch with child branches
       | REPOSITORY | BRANCHES                   |
       | local      | main, feature-1, feature-3 |
       | remote     | main, feature-1, feature-3 |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH    | LOCATION      | MESSAGE          |
       | feature-1 | local, remote | feature 1 commit |
       | feature-3 | local, remote | feature 3 commit |
@@ -51,7 +51,7 @@ Feature: git town-kill: killing the given branch with child branches
       | REPOSITORY | BRANCHES                              |
       | local      | main, feature-1, feature-2, feature-3 |
       | remote     | main, feature-1, feature-2, feature-3 |
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH    | PARENT    |
       | feature-1 | main      |

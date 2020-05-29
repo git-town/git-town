@@ -18,8 +18,8 @@ func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitlab" || d.hostname == "gitlab.com"
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
-	return false, "", nil
+func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+	return false, "", 0, nil
 }
 
 func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
@@ -33,7 +33,7 @@ func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
-func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	return "", errors.New("shipping pull requests via the GitLab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 

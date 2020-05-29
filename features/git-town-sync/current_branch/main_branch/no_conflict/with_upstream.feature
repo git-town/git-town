@@ -2,7 +2,7 @@ Feature: git-sync: on the main branch with a upstream remote
 
   Background:
     Given my repo has an upstream repo
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE         |
       | main   | upstream | upstream commit |
     And I am on the "main" branch
@@ -24,6 +24,6 @@ Feature: git-sync: on the main branch with a upstream remote
       |        | git stash pop            |
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH | LOCATION                | MESSAGE         |
       | main   | local, remote, upstream | upstream commit |

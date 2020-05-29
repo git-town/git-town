@@ -6,8 +6,8 @@ Feature: git town-kill: killing the given feature branch
 
 
   Background:
-    Given my repository has the feature branches "good-feature" and "dead-feature"
-    And the following commits exist in my repository
+    Given my repo has the feature branches "good-feature" and "dead-feature"
+    And the following commits exist in my repo
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | dead-feature | local, remote | dead-end commit                      | unfortunate_file |
@@ -29,7 +29,7 @@ Feature: git town-kill: killing the given feature branch
       | REPOSITORY | BRANCHES           |
       | local      | main, good-feature |
       | remote     | main, good-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH       | LOCATION      | MESSAGE                              | FILE NAME        |
       | main         | local, remote | conflicting with uncommitted changes | conflicting_file |
       | good-feature | local, remote | good commit                          | good_file        |
@@ -47,4 +47,4 @@ Feature: git town-kill: killing the given feature branch
       | REPOSITORY | BRANCHES                         |
       | local      | main, dead-feature, good-feature |
       | remote     | main, dead-feature, good-feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

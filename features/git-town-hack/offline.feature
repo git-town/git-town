@@ -7,7 +7,7 @@ Feature: git town-hack: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And the following commits exist in my repository
+    And the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch
@@ -26,7 +26,7 @@ Feature: git town-hack: offline mode
       | feature | git stash pop           |
     And I end up on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE     |
       | main    | local, remote | main commit |
       | feature | local         | main commit |

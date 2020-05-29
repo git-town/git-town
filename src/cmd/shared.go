@@ -82,14 +82,14 @@ func ensureIsNotInUnfinishedState() error {
 }
 
 func getAppendStepList(config appendConfig) (result steps.StepList) {
-	for _, branchName := range append(git.Config().GetAncestorBranches(config.ParentBranch), config.ParentBranch) {
+	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
 		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
 	}
-	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
-	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.Config().ShouldNewBranchPush() && !git.Config().IsOffline() {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranch})
+	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return result

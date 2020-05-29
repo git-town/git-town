@@ -6,8 +6,8 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | feature | local    | feature commit | feature_file | feature content |
     And I am on the "feature" branch
@@ -35,7 +35,7 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       Aborted because commit exited with error
       """
     And I am still on the "feature" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits
 
 
   Scenario: undo
@@ -45,4 +45,4 @@ Feature: git town-ship: trying the ship of the current feature branch without ed
       Nothing to undo
       """
     And I am still on the "feature" branch
-    And my repository is left with my original commits
+    And my repo is left with my original commits

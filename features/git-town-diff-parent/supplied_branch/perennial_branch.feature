@@ -4,8 +4,8 @@ Feature: git town-diff-parent: errors when trying to diff a perennial branch
 
 
   Scenario: result
-    Given my repository has a feature branch named "feature"
-    And my repository has the perennial branch "qa"
+    Given my repo has a feature branch named "feature"
+    And my repo has the perennial branch "qa"
     And I am on the "feature" branch
     When I run "git-town diff-parent qa"
     Then it runs no commands

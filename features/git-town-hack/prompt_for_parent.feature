@@ -6,7 +6,7 @@ Feature: git town-hack: prompt for parent branch
 
 
   Scenario: selecting the default branch (the main development branch)
-    Given the following commits exist in my repository
+    Given the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE     |
       | main   | remote   | main_commit |
     And I am on the "main" branch
@@ -25,15 +25,15 @@ Feature: git town-hack: prompt for parent branch
       | new-feature | git stash pop               |
     And I end up on the "new-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH      | LOCATION      | MESSAGE     |
       | main        | local, remote | main_commit |
       | new-feature | local         | main_commit |
 
 
   Scenario: selecting another branch
-    Given my repository has the perennial branch "production"
-    And the following commits exist in my repository
+    Given my repo has the perennial branch "production"
+    And the following commits exist in my repo
       | BRANCH     | LOCATION | MESSAGE           |
       | production | remote   | production_commit |
     And I am on the "main" branch
@@ -53,7 +53,7 @@ Feature: git town-hack: prompt for parent branch
       | hotfix     | git stash pop                |
     And I end up on the "hotfix" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH     | LOCATION      | MESSAGE           |
       | hotfix     | local         | production_commit |
       | production | local, remote | production_commit |

@@ -2,10 +2,8 @@ package drivers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"golang.org/x/oauth2"
@@ -27,19 +25,19 @@ func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "github" || d.hostname == "github.com"
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
+func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
 	if d.apiToken == "" {
-		return false, "", nil
+		return false, "", 0, nil
 	}
 	d.connect()
 	pullRequests, err := d.getPullRequests(branch, parentBranch)
 	if err != nil {
-		return false, "", err
+		return false, "", 0, err
 	}
 	if len(pullRequests) != 1 {
-		return false, "", nil
+		return false, "", 0, nil
 	}
-	return true, d.getDefaultCommitMessage(pullRequests[0]), nil
+	return true, d.getDefaultCommitMessage(pullRequests[0]), pullRequests[0].GetNumber(), nil
 }
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -54,9 +52,9 @@ func (d *githubCodeHostingDriver) GetRepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
-func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
-	err := d.updatePullRequestsAgainst(options)
+	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
 		return "", err
 	}
@@ -110,24 +108,6 @@ func (d *githubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.Pu
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
-func (d *githubCodeHostingDriver) getPullRequestNumber(options MergePullRequestOptions) (int, error) {
-	pullRequests, err := d.getPullRequests(options.Branch, options.ParentBranch)
-	if err != nil {
-		return -1, err
-	}
-	if len(pullRequests) == 0 {
-		return -1, errors.New("no pull request found")
-	}
-	if len(pullRequests) > 1 {
-		pullRequestNumbersAsStrings := make([]string, len(pullRequests))
-		for i, pullRequest := range pullRequests {
-			pullRequestNumbersAsStrings[i] = strconv.Itoa(*pullRequest.Number)
-		}
-		return -1, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
-	}
-	return *pullRequests[0].Number, nil
-}
-
 func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
@@ -137,13 +117,12 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 	return pullRequests, err
 }
 
-func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (string, error) {
-	pullRequestNumber, err := d.getPullRequestNumber(options)
-	if err != nil {
-		return "", err
+func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+	if options.PullRequestNumber == 0 {
+		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", pullRequestNumber))
+		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -151,7 +130,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, pullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})

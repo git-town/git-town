@@ -7,8 +7,8 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has the local perennial branches "production" and "qa"
-    And the following commits exist in my repository
+    And my repo has the local perennial branches "production" and "qa"
+    And the following commits exist in my repo
       | BRANCH | LOCATION | MESSAGE      | FILE NAME  |
       | main   | local    | main commit  | main_file  |
       | qa     | local    | local commit | local_file |
@@ -25,4 +25,4 @@ Feature: git-town sync: syncing the current perennial branch (without remote rep
       |        | git stash pop |
     And I am still on the "qa" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

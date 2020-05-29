@@ -7,19 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var commandsToAlias = []string{
-	"append",
-	"hack",
-	"kill",
-	"new-pull-request",
-	"prepend",
-	"prune-branches",
-	"rename-branch",
-	"repo",
-	"ship",
-	"sync",
-}
-
 var aliasCommand = &cobra.Command{
 	Use:   "alias (true | false)",
 	Short: "Adds or removes default global aliases",
@@ -33,6 +20,18 @@ Does not overwrite existing aliases.
 This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		toggle := util.StringToBool(args[0])
+		var commandsToAlias = []string{
+			"append",
+			"hack",
+			"kill",
+			"new-pull-request",
+			"prepend",
+			"prune-branches",
+			"rename-branch",
+			"repo",
+			"ship",
+			"sync",
+		}
 		for _, command := range commandsToAlias {
 			if toggle {
 				addAlias(command)

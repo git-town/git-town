@@ -5,8 +5,8 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
 
   Background:
     Given my repo does not have a remote origin
-    And my repository has the local feature branches "current-feature" and "other-feature"
-    And the following commits exist in my repository
+    And my repo has the local feature branches "current-feature" and "other-feature"
+    And the following commits exist in my repo
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
       | main            | local    | main commit            | conflicting_file     |
       | current-feature | local    | current feature commit | current_feature_file |
@@ -28,7 +28,7 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
     And the existing branches are
       | REPOSITORY | BRANCHES              |
       | local      | main, current-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH          | LOCATION | MESSAGE                | FILE NAME            |
       | main            | local    | main commit            | conflicting_file     |
       | current-feature | local    | current feature commit | current_feature_file |
@@ -47,4 +47,4 @@ Feature: git town-kill: killing the given feature branch (without remote repo)
     And the existing branches are
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

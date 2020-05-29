@@ -7,8 +7,8 @@ Feature: git prepend: offline mode
 
   Background:
     Given Git Town is in offline mode
-    And my repository has a feature branch named "existing-feature"
-    And the following commits exist in my repository
+    And my repo has a feature branch named "existing-feature"
+    And the following commits exist in my repo
       | BRANCH           | LOCATION      | MESSAGE                 | FILE NAME             | FILE CONTENT             |
       | existing-feature | local, remote | existing_feature_commit | existing_feature_file | existing feature content |
     And I am on the "existing-feature" branch
@@ -28,7 +28,7 @@ Feature: git prepend: offline mode
       | new-parent       | git stash pop              |
     And I end up on the "new-parent" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH           | LOCATION      | MESSAGE                 |
       | existing-feature | local, remote | existing_feature_commit |
     And Git Town is now aware of this branch hierarchy
@@ -50,7 +50,7 @@ Feature: git prepend: offline mode
       | existing-feature | git stash pop                 |
     And I end up on the "existing-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits
     And Git Town is now aware of this branch hierarchy
       | BRANCH           | PARENT |
       | existing-feature | main   |

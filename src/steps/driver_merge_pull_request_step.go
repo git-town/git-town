@@ -12,6 +12,7 @@ import (
 type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
+	PullRequestNumber         int
 	CommitMessage             string
 	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
@@ -69,10 +70,11 @@ func (step *DriverMergePullRequestStep) Run() error {
 	}
 	driver := drivers.GetActiveDriver()
 	step.mergeSha, step.mergeError = driver.MergePullRequest(drivers.MergePullRequestOptions{
-		Branch:        step.BranchName,
-		CommitMessage: commitMessage,
-		LogRequests:   true,
-		ParentBranch:  git.GetCurrentBranchName(),
+		Branch:            step.BranchName,
+		PullRequestNumber: step.PullRequestNumber,
+		CommitMessage:     commitMessage,
+		LogRequests:       true,
+		ParentBranch:      git.GetCurrentBranchName(),
 	})
 	return step.mergeError
 }
