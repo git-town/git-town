@@ -19,7 +19,10 @@ func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo) error {
 		return err
 	}
 	if expectedPreviouslyCheckedOutBranch != git.GetPreviouslyCheckedOutBranch() {
-		currentBranch := git.GetCurrentBranchName()
+		currentBranch, err := repo.Silent.CurrentBranch()
+		if err != nil {
+			return err
+		}
 		command.MustRun("git", "checkout", expectedPreviouslyCheckedOutBranch)
 		command.MustRun("git", "checkout", currentBranch)
 	}
