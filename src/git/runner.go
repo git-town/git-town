@@ -16,15 +16,14 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                           // for running console commands
-	currentBranch     *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
-	remoteBranchCache *RemoteBranchCache    // caches the remote branches of this Git repo
-	*Configuration                          // caches Git configuration settings
+	command.Shell                        // for running console commands
+	remoteBranchCache *RemoteBranchCache // caches the remote branches of this Git repo
+	*Configuration                       // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
-	return Runner{shell, currentBranch, remoteBranches, config}
+func NewRunner(shell command.Shell, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
+	return Runner{shell, remoteBranches, config}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -79,7 +78,7 @@ func (r *Runner) CheckoutBranch(name string) error {
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
-	r.currentBranch.Changed(name)
+	currentBranchCache = name
 	return nil
 }
 
