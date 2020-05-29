@@ -17,16 +17,18 @@ func (step *PreserveCheckoutHistoryStep) Run(repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	if expectedPreviouslyCheckedOutBranch != git.GetPreviouslyCheckedOutBranch() {
-		currentBranch, err := repo.Silent.CurrentBranch()
-		if err != nil {
-			return err
-		}
-		err = repo.Silent.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
-		if err != nil {
-			return err
-		}
-		return repo.Silent.CheckoutBranch(currentBranch)
+	// NOTE: errors are not a failure condition here --> ignoring them
+	previouslyCheckedOutBranch, _ := repo.Silent.PreviouslyCheckedOutBranch()
+	if expectedPreviouslyCheckedOutBranch == previouslyCheckedOutBranch {
+		return nil
 	}
-	return nil
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	err = repo.Silent.CheckoutBranch(expectedPreviouslyCheckedOutBranch)
+	if err != nil {
+		return err
+	}
+	return repo.Silent.CheckoutBranch(currentBranch)
 }
