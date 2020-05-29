@@ -661,10 +661,10 @@ func (r *Runner) Pull() error {
 }
 
 // PushBranch pushes the branch with the given name to the remote.
-func (r *Runner) PushBranch(name string) error {
-	outcome, err := r.Run("git", "push", "-u", "origin", name)
+func (r *Runner) PushBranch() error {
+	outcome, err := r.Run("git", "push")
 	if err != nil {
-		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
+		return fmt.Errorf("cannot push branch in repo %q to origin: %w\n%v", r.WorkingDir(), err, outcome)
 	}
 	return nil
 }
