@@ -17,7 +17,7 @@ func (step *StashOpenChangesStep) CreateUndoStep() Step {
 
 // Run executes this step.
 func (step *StashOpenChangesStep) Run(repo *git.ProdRepo) error {
-	err := script.RunCommand("git", "add", "-A")
+	err := repo.Logging.StageAll()
 	if err != nil {
 		return err
 	}

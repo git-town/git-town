@@ -861,6 +861,15 @@ func (r *Runner) SquashMerge(branch string) error {
 	return nil
 }
 
+// StageAll squash-merges the given branch into the current branch
+func (r *Runner) StageAll() error {
+	_, err := r.Run("git", "add", "-A")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Stash adds the current files to the Git stash.
 func (r *Runner) Stash() error {
 	err := r.RunMany([][]string{
