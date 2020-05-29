@@ -670,6 +670,15 @@ func (r *Runner) PushBranch(name string) error {
 	return nil
 }
 
+// PushBranchForce pushes the branch with the given name to the remote.
+func (r *Runner) PushBranchForce(name string) error {
+	outcome, err := r.Run("git", "push", "-f", "origin", name)
+	if err != nil {
+		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
 	if r.remoteBranchCache.Initialized() {

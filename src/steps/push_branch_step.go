@@ -33,7 +33,7 @@ func (step *PushBranchStep) Run(repo *git.ProdRepo) error {
 		return nil
 	}
 	if step.Force {
-		return script.RunCommand("git", "push", "-f", "origin", step.BranchName)
+		return repo.Logging.PushBranchForce(step.BranchName)
 	}
 	if git.GetCurrentBranchName() == step.BranchName {
 		return script.RunCommand("git", "push")
