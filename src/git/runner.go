@@ -335,6 +335,15 @@ func (r *Runner) CurrentSha() (string, error) {
 	return r.BranchSha("HEAD")
 }
 
+// DeleteLastCommit resets HEAD to the previous commit.
+func (r *Runner) DeleteLastCommit() error {
+	out, err := r.Run("git", "reset", "--hard", "HEAD~1")
+	if err != nil {
+		return fmt.Errorf("cannot delete last commit: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
 // DeleteLocalBranch removes the local branch with the given name.
 func (r *Runner) DeleteLocalBranch(name string, force bool) error {
 	args := []string{"branch", "-d", name}
@@ -721,13 +730,15 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	return nil
 }
 
-// DeleteLastCommit resets HEAD to the previous commit.
-func (r *Runner) DeleteLastCommit() error {
-	out, err := r.Run("git", "reset", "--hard", "HEAD~1")
+// ShouldPushBranch returns whether the local branch with the given name
+// contains commits that have not been pushed to the remote.
+func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
+	trackingBranch := r.TrackingBranchName(branch)
+	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
 	if err != nil {
-		return fmt.Errorf("cannot delete last commit: %w\n%s", err, out.Output())
+		return false, fmt.Errorf("cannot list diff of %q and %q: %w\n%s", branch, trackingBranch, err, out.Output())
 	}
-	return nil
+	return out.OutputSanitized() != "", nil
 }
 
 // SquashMerge squash-merges the given branch into the current branch

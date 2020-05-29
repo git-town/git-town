@@ -153,13 +153,6 @@ func IsBranchInSync(branchName string) bool {
 	return true
 }
 
-// ShouldBranchBePushed returns whether the local branch with the given name
-// contains commits that have not been pushed to the remote.
-func ShouldBranchBePushed(branchName string) bool {
-	trackingBranchName := GetTrackingBranchName(branchName)
-	return command.MustRun("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName).OutputSanitized() != ""
-}
-
 // Helpers
 
 // Remote branches are cached in order to minimize the number of git commands run
