@@ -184,6 +184,35 @@ func (r *Runner) CommitStagedChanges(message string) error {
 	return nil
 }
 
+// CommitWithMessageAndAuthor .
+func (r *Runner) CommitWithMessageAndAuthor(message, author string) error {
+	out, err := r.Run("git", "commit", "-m", message, "--author", author)
+	if err != nil {
+		return fmt.Errorf("cannot commit with message %q and author %q: %w\n%s", message, author, err, out.Output())
+	}
+	return nil
+}
+
+// CommitWithMessage commits the staged changes with the given commit message.
+func (r *Runner) CommitWithMessage(message string) error {
+	out, err := r.Run("git", "commit", "-m", message)
+	if err != nil {
+		return fmt.Errorf("cannot commit with message %q: %w\n%s", message, err, out.Output())
+	}
+	return nil
+}
+
+// CommitWithAuthor .
+func (r *Runner) CommitWithAuthor(author string) error {
+	panic("CommitWithMessageAndAuthor")
+}
+
+// Commit .
+func (r *Runner) Commit() error {
+	_, err := r.Run("git", "commit")
+	return err
+}
+
 // ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
 // The branch must exist.
 func (r *Runner) ConnectTrackingBranch(name string) error {

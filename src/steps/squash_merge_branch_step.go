@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 )
 
 // SquashMergeBranchStep squash merges the branch with the given name into the current branch
@@ -37,23 +36,24 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
 	if err != nil {
 		return err
 	}
-	args := []string{"commit"}
-	if step.CommitMessage != "" {
-		args = append(args, "-m", step.CommitMessage)
-	}
 	author := prompt.GetSquashCommitAuthor(step.BranchName)
 	repoAuthor, err := repo.Silent.Author()
 	if err != nil {
 		return err
 	}
-	if author != repoAuthor {
-		args = append(args, "--author", author)
-	}
-	err = repo.Silent.CommentOutSquashCommitMessage("")
-	if err != nil {
+	if err = repo.Silent.CommentOutSquashCommitMessage(""); err != nil {
 		return fmt.Errorf("cannot comment out the squash commit message: %w", err)
 	}
-	return script.RunCommand("git", args...)
+	switch {
+	case author != repoAuthor && step.CommitMessage != "":
+		return repo.Logging.CommitWithMessageAndAuthor(step.CommitMessage, author)
+	case author != repoAuthor:
+		return repo.Logging.CommitWithAuthor(author)
+	case step.CommitMessage != "":
+		return repo.Logging.CommitWithMessage(step.CommitMessage)
+	default:
+		return repo.Logging.Commit()
+	}
 }
 
 // ShouldAutomaticallyAbortOnError returns whether this step should cause the command to
