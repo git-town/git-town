@@ -14,8 +14,12 @@ type ResetToShaStep struct {
 }
 
 // Run executes this step.
-func (step *ResetToShaStep) Run(repo *git.ProdRepo) error {
-	if step.Sha == git.GetCurrentSha() {
+func (step *ResetToShaStep) Run(repo *git.ProdRepo) (err error) {
+	currentSha, err := repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	if step.Sha == currentSha {
 		return nil
 	}
 	args := []string{"reset"}
