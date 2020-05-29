@@ -27,7 +27,7 @@ func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitea" || d.hostname == "gitea.com"
 }
 
-func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, string, error) {
+func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
 	if d.apiToken == "" {
 		return false, "", o, nil
 	}
@@ -64,8 +64,7 @@ func (d *giteaCodeHostingDriver) HostingServiceName() string {
 	return "Gitea"
 }
 
-// todo (helper)
-func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
 		State: gitea.StateOpen,
@@ -159,7 +158,7 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName  s
 	return pullRequestsFiltered
 }
 
-func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (string, error) {
+func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
 	printLog(fmt.Sprintf("Gitea API: Merging PR #%d", pullRequestNumber))
 	result, err := d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		MergeMethod: gitea.MergeStyleSquash,
