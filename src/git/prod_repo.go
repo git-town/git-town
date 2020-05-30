@@ -4,8 +4,8 @@ import "github.com/git-town/git-town/src/command"
 
 // ProdRepo is a Git Repo in production code.
 type ProdRepo struct {
-	Silent         Runner        // the Runner instance for silent Git operations
-	Logging        Runner        // the Runner instance to Git operations that show up in the output
+	Silent         CachedRunner  // the Runner instance for silent Git operations
+	Logging        CachedRunner  // the Runner instance to Git operations that show up in the output
 	LoggingShell   *LoggingShell // the LoggingShell instance used
 	*Configuration               // the git.Configuration instance for this repo
 }
@@ -15,18 +15,10 @@ func NewProdRepo() *ProdRepo {
 	silentShell := command.SilentShell{}
 	config := Config()
 	currentBranchTracker := CurrentBranchTracker{}
-	silentRunner := Runner{
-		Shell: silentShell,
-		// currentBranch:     &currentBranchTracker,
-		remoteBranchCache: &RemoteBranchCache{},
-		Configuration:     config,
-	}
+	remoteBranchCache := RemoteBranchCache{}
+	silentRunner := NewCachedRunner(silentShell, config, &remoteBranchCache)
 	loggingShell := NewLoggingShell(&currentBranchTracker)
-	loggingRunner := Runner{
-		Shell: loggingShell,
-		// currentBranch: &CurrentBranchTracker{},
-		Configuration: config,
-	}
+	loggingRunner := NewCachedRunner(loggingShell, config, &remoteBranchCache)
 	return &ProdRepo{
 		Silent:        silentRunner,
 		Logging:       loggingRunner,
