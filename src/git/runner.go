@@ -16,14 +16,13 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                        // for running console commands
-	remoteBranchCache *RemoteBranchCache // caches the remote branches of this Git repo
-	*Configuration                       // caches Git configuration settings
+	command.Shell  // for running console commands
+	*Configuration // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
-	return Runner{shell, remoteBranches, config}
+func NewRunner(shell command.Shell, config *Configuration) Runner {
+	return Runner{shell, config}
 }
 
 // AbortMerge cancels a currently ongoing Git merge operation.
@@ -755,9 +754,6 @@ func (r *Runner) Rebase(target string) error {
 
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
-	if r.remoteBranchCache.Initialized() {
-		return r.remoteBranchCache.Get(), nil
-	}
 	outcome, err := r.Run("git", "branch", "-r")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine remote branches")
@@ -769,8 +765,6 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 			result = append(result, strings.TrimSpace(lines[l]))
 		}
 	}
-	r.remoteBranchCache.Set(result)
-	remoteBranchesInitialized = true
 	return result, nil
 }
 
