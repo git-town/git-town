@@ -24,7 +24,11 @@ func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) 
 		}
 		result.AppendList(steps)
 	} else {
-		result.AppendList(getSyncNonFeatureBranchSteps(branchName))
+		steps, err := getSyncNonFeatureBranchSteps(branchName, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	if pushBranch && hasRemoteOrigin && !repo.IsOffline() {
 		hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
@@ -50,12 +54,16 @@ func getSyncFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result St
 	if hasTrackingBranch {
 		result.Append(&MergeBranchStep{BranchName: repo.Silent.TrackingBranchName(branchName)})
 	}
-	result.Append(&MergeBranchStep{BranchName: git.Config().GetParentBranch(branchName)})
+	result.Append(&MergeBranchStep{BranchName: repo.GetParentBranch(branchName)})
 	return
 }
 
-func getSyncNonFeatureBranchSteps(branchName string) (result StepList) {
-	if git.HasTrackingBranch(branchName) {
+func getSyncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result StepList, err error) {
+	hasTrackingBranch, err := repo.Silent.HasTrackingBranch(branchName)
+	if err != nil {
+		return result, err
+	}
+	if hasTrackingBranch {
 		if git.Config().GetPullBranchStrategy() == "rebase" {
 			result.Append(&RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
 		} else {
