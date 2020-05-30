@@ -31,7 +31,7 @@ This usually means the branch was shipped or killed on another machine.`,
 		}
 		stepList := getPruneBranchesStepList(config)
 		runState := steps.NewRunState("prune-branches", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, git.NewProdRepo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

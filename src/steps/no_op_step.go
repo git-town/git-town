@@ -1,5 +1,7 @@
 package steps
 
+import "github.com/git-town/git-town/src/git"
+
 // NoOpStep does nothing.
 // It is used for steps that have no undo or abort steps.
 type NoOpStep struct{}
@@ -26,7 +28,7 @@ func (step *NoOpStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *NoOpStep) Run() error {
+func (step *NoOpStep) Run(repo *git.ProdRepo) error {
 	return nil
 }
 

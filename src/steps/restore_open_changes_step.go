@@ -1,7 +1,7 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/git"
 )
 
 // RestoreOpenChangesStep restores stashed away changes into the workspace.
@@ -15,6 +15,6 @@ func (step *RestoreOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RestoreOpenChangesStep) Run() error {
-	return script.RunCommand("git", "stash", "pop")
+func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo) error {
+	return repo.Logging.PopStash()
 }

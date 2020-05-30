@@ -9,22 +9,22 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestShellInCurrentDir_MustRun(t *testing.T) {
-	runner := command.ShellInCurrentDir{}
-	res := runner.MustRun("echo", "hello", "world")
+func TestSilentShell_MustRun(t *testing.T) {
+	shell := command.SilentShell{}
+	res := shell.MustRun("echo", "hello", "world")
 	assert.Equal(t, "hello world", res.OutputSanitized())
 }
 
-func TestShellInCurrentDir_Run_arguments(t *testing.T) {
-	runner := command.ShellInCurrentDir{}
-	res, err := runner.Run("echo", "hello", "world")
+func TestSilentShell_Run_arguments(t *testing.T) {
+	shell := command.SilentShell{}
+	res, err := shell.Run("echo", "hello", "world")
 	assert.Nil(t, err)
 	assert.Equal(t, "hello world", res.OutputSanitized())
 }
 
-func TestShellInCurrentDir_RunMany(t *testing.T) {
-	runner := command.ShellInCurrentDir{}
-	err := runner.RunMany([][]string{
+func TestSilentShell_RunMany(t *testing.T) {
+	shell := command.SilentShell{}
+	err := shell.RunMany([][]string{
 		{"mkdir", "tmp"},
 		{"touch", "tmp/first"},
 		{"touch", "tmp/second"},
@@ -37,18 +37,18 @@ func TestShellInCurrentDir_RunMany(t *testing.T) {
 	assert.Equal(t, "second", infos[1].Name())
 }
 
-func TestShellInCurrentDir_RunString(t *testing.T) {
-	runner := command.ShellInCurrentDir{}
-	_, err := runner.RunString("touch first")
+func TestSilentShell_RunString(t *testing.T) {
+	shell := command.SilentShell{}
+	_, err := shell.RunString("touch first")
 	defer os.Remove("first")
 	assert.Nil(t, err)
 	_, err = os.Stat("first")
 	assert.False(t, os.IsNotExist(err))
 }
 
-func TestShellInCurrentDir_RunStringWith(t *testing.T) {
-	runner := command.ShellInCurrentDir{}
-	res, err := runner.RunStringWith("ls -1", command.Options{Dir: ".."})
+func TestSilentShell_RunStringWith(t *testing.T) {
+	shell := command.SilentShell{}
+	res, err := shell.RunStringWith("ls -1", command.Options{Dir: ".."})
 	assert.Nil(t, err)
 	assert.Contains(t, res.OutputSanitized(), "cmd")
 }

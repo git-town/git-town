@@ -46,7 +46,7 @@ func validateIsConfigured() error {
 	return nil
 }
 
-func ensureIsNotInUnfinishedState() error {
+func ensureIsNotInUnfinishedState(repo *git.ProdRepo) error {
 	runState, err := steps.LoadPreviousRunState()
 	if err != nil {
 		fmt.Printf("cannot load previous run state: %v\n", err)
@@ -64,13 +64,13 @@ func ensureIsNotInUnfinishedState() error {
 			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
-			err = steps.Run(runState)
+			err = steps.Run(runState, repo)
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()
-			err = steps.Run(&abortRunState)
+			err = steps.Run(&abortRunState, repo)
 		case prompt.ResponseTypeSkip:
 			skipRunState := runState.CreateSkipRunState()
-			err = steps.Run(&skipRunState)
+			err = steps.Run(&skipRunState, repo)
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -81,9 +81,13 @@ func ensureIsNotInUnfinishedState() error {
 	return nil
 }
 
-func getAppendStepList(config appendConfig) (result steps.StepList) {
+func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
@@ -92,5 +96,5 @@ func getAppendStepList(config appendConfig) (result steps.StepList) {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result
+	return result, nil
 }

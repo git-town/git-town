@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // ContinueMergeBranchStep finishes an ongoing merge conflict
@@ -22,9 +21,13 @@ func (step *ContinueMergeBranchStep) CreateContinueStep() Step {
 }
 
 // Run executes this step.
-func (step *ContinueMergeBranchStep) Run() error {
-	if git.IsMergeInProgress() {
-		return script.RunCommand("git", "commit", "--no-edit")
+func (step *ContinueMergeBranchStep) Run(repo *git.ProdRepo) error {
+	hasMergeInprogress, err := repo.Silent.HasMergeInProgress()
+	if err != nil {
+		return err
+	}
+	if hasMergeInprogress {
+		return repo.Logging.CommitNoEdit()
 	}
 	return nil
 }

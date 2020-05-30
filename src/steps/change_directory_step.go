@@ -3,7 +3,7 @@ package steps
 import (
 	"os"
 
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/git"
 )
 
 // ChangeDirectoryStep changes the current working directory.
@@ -20,7 +20,7 @@ func (step *ChangeDirectoryStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *ChangeDirectoryStep) Run() error {
+func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo) error {
 	var err error
 	step.previousDirectory, err = os.Getwd()
 	if err != nil {
@@ -28,7 +28,7 @@ func (step *ChangeDirectoryStep) Run() error {
 	}
 	_, err = os.Stat(step.Directory)
 	if err == nil {
-		script.PrintCommand("cd", step.Directory)
+		repo.LoggingShell.PrintCommand("cd", step.Directory)
 		return os.Chdir(step.Directory)
 	}
 	return nil
