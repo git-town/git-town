@@ -49,7 +49,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getSyncStepList(config)
+		stepList := getSyncStepList(config, syncProdRepo)
 		runState := steps.NewRunState("sync", stepList)
 		err = steps.Run(runState, syncProdRepo)
 		if err != nil {
@@ -96,9 +96,9 @@ func getSyncConfig() (result syncConfig, err error) {
 	return
 }
 
-func getSyncStepList(config syncConfig) (result steps.StepList) {
+func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepList) {
 	for _, branchName := range config.branchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
 	}
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.initialBranch})
 	if config.hasOrigin && config.shouldPushTags && !config.isOffline {

@@ -63,14 +63,15 @@ GitHub's feature to automatically delete head branches,
 run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := gitShipConfig(args)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getShipStepList(config)
+		stepList := getShipStepList(config, repo)
 		runState := steps.NewRunState("ship", stepList)
-		err = steps.Run(runState, git.NewProdRepo())
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -131,9 +132,9 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig) (result steps.StepList) {
-	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true))
-	result.AppendList(steps.GetSyncBranchSteps(config.branchToShip, false))
+func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList) {
+	result.AppendList(steps.GetSyncBranchSteps(config.branchToMergeInto, true, repo))
+	result.AppendList(steps.GetSyncBranchSteps(config.branchToShip, false, repo))
 	result.Append(&steps.EnsureHasShippableChangesStep{BranchName: config.branchToShip})
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
 	if config.canShipWithDriver {

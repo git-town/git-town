@@ -37,14 +37,15 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for remote upstream options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getPrependConfig(args)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getPrependStepList(config)
+		stepList := getPrependStepList(config, repo)
 		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState, git.NewProdRepo())
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -79,9 +80,9 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 	return
 }
 
-func getPrependStepList(config prependConfig) (result steps.StepList) {
+func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList) {
 	for _, branchName := range config.ancestorBranches {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})

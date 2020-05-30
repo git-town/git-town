@@ -37,14 +37,15 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getNewPullRequestConfig()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getNewPullRequestStepList(config)
+		stepList := getNewPullRequestStepList(config, repo)
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, git.NewProdRepo())
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -78,9 +79,9 @@ func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepList) {
+func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})

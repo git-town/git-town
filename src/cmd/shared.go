@@ -81,9 +81,9 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo) error {
 	return nil
 }
 
-func getAppendStepList(config appendConfig) (result steps.StepList) {
+func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
