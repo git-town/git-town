@@ -32,7 +32,7 @@ Deletes the current or provided branch from the local and remote repositories.
 Does not delete perennial branches nor the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := getKillConfig(args, &repo.Silent)
+		config, err := getKillConfig(args, repo)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
@@ -54,8 +54,8 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
-func getKillConfig(args []string, runner *git.Runner) (result killConfig, err error) {
-	result.initialBranch, err = runner.CurrentBranch()
+func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
+	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
 		return result, err
 	}
@@ -64,22 +64,22 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 	} else {
 		result.targetBranch = args[0]
 	}
-	if !runner.IsFeatureBranch(result.targetBranch) {
+	if !repo.IsFeatureBranch(result.targetBranch) {
 		return result, fmt.Errorf("you can only kill feature branches")
 	}
-	result.isTargetBranchLocal, err = runner.HasLocalBranch(result.targetBranch)
+	result.isTargetBranchLocal, err = repo.Silent.HasLocalBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}
 	if result.isTargetBranchLocal {
 		prompt.EnsureKnowsParentBranches([]string{result.targetBranch})
-		runner.Configuration.Reload()
+		repo.Configuration.Reload()
 	}
-	hasOrigin, err := runner.HasRemote("origin")
+	hasOrigin, err := repo.Silent.HasRemote("origin")
 	if err != nil {
 		return result, err
 	}
-	result.isOffline = runner.IsOffline()
+	result.isOffline = repo.IsOffline()
 	if hasOrigin && !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
@@ -87,7 +87,7 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 		}
 	}
 	if result.initialBranch != result.targetBranch {
-		hasTargetBranch, err := runner.HasLocalOrRemoteBranch(result.targetBranch)
+		hasTargetBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
 		if err != nil {
 			return result, err
 		}
@@ -95,20 +95,20 @@ func getKillConfig(args []string, runner *git.Runner) (result killConfig, err er
 			return result, fmt.Errorf("there is no branch named %q", result.targetBranch)
 		}
 	}
-	result.hasTrackingBranch, err = runner.HasTrackingBranch(result.targetBranch)
+	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.targetBranch)
 	if err != nil {
 		return result, err
 	}
-	result.targetBranchParent = runner.GetParentBranch(result.targetBranch)
-	result.previousBranch, err = runner.PreviouslyCheckedOutBranch()
+	result.targetBranchParent = repo.GetParentBranch(result.targetBranch)
+	result.previousBranch, err = repo.Silent.PreviouslyCheckedOutBranch()
 	if err != nil {
 		return result, err
 	}
-	result.hasOpenChanges, err = runner.HasOpenChanges()
+	result.hasOpenChanges, err = repo.Silent.HasOpenChanges()
 	if err != nil {
 		return result, err
 	}
-	result.childBranches = runner.GetChildBranches(result.targetBranch)
+	result.childBranches = repo.GetChildBranches(result.targetBranch)
 	return result, nil
 }
 
