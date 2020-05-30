@@ -37,7 +37,7 @@ func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) 
 			result.Append(&CreateTrackingBranchStep{BranchName: branchName})
 		}
 	}
-	return
+	return result, nil
 }
 
 // Helpers
