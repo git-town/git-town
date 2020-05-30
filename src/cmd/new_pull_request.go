@@ -43,7 +43,11 @@ where hostname matches what is in your ssh config file.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getNewPullRequestStepList(config, repo)
+		stepList, err := getNewPullRequestStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("new-pull-request", stepList)
 		err = steps.Run(runState, repo)
 		if err != nil {
@@ -79,13 +83,17 @@ func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList) {
+func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
-	return result
+	return result, nil
 }
 
 func init() {

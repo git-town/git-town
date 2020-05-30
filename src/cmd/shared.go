@@ -81,9 +81,13 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo) error {
 	return nil
 }
 
-func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList) {
+func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
@@ -92,5 +96,5 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result
+	return result, nil
 }

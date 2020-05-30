@@ -43,7 +43,11 @@ See "sync" for remote upstream options.
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getPrependStepList(config, repo)
+		stepList, err := getPrependStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("prepend", stepList)
 		err = steps.Run(runState, repo)
 		if err != nil {
@@ -80,9 +84,13 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 	return
 }
 
-func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList) {
+func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.ancestorBranches {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true, repo))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
@@ -92,7 +100,7 @@ func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result
+	return result, nil
 }
 
 func init() {

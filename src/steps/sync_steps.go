@@ -7,9 +7,12 @@ import (
 )
 
 // GetSyncBranchSteps returns the steps to sync the branch with the given name.
-func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList) {
-	isFeature := git.Config().IsFeatureBranch(branchName)
-	hasRemoteOrigin := git.HasRemote("origin")
+func GetSyncBranchSteps(branchName string, pushBranch bool, repo *git.ProdRepo) (result StepList, err error) {
+	isFeature := repo.IsFeatureBranch(branchName)
+	hasRemoteOrigin, err := repo.Silent.HasRemote("origin")
+	if err != nil {
+		return result, err
+	}
 
 	if !hasRemoteOrigin && !isFeature {
 		return

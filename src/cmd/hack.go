@@ -33,7 +33,11 @@ See "sync" for information regarding remote upstream.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getAppendStepList(config, repo)
+		stepList, err := getAppendStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("hack", stepList)
 		err = steps.Run(runState, repo)
 		if err != nil {
