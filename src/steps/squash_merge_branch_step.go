@@ -47,8 +47,6 @@ func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
 	switch {
 	case author != repoAuthor && step.CommitMessage != "":
 		return repo.Logging.CommitWithMessageAndAuthor(step.CommitMessage, author)
-	case author != repoAuthor:
-		return repo.Logging.CommitWithAuthor(author)
 	case step.CommitMessage != "":
 		return repo.Logging.CommitWithMessage(step.CommitMessage)
 	default:

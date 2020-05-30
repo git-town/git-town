@@ -202,11 +202,6 @@ func (r *Runner) CommitWithMessage(message string) error {
 	return nil
 }
 
-// CommitWithAuthor .
-func (r *Runner) CommitWithAuthor(author string) error {
-	panic("CommitWithMessageAndAuthor")
-}
-
 // Commit .
 func (r *Runner) Commit() error {
 	_, err := r.Run("git", "commit")
