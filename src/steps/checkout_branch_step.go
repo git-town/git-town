@@ -19,7 +19,7 @@ func (step *CheckoutBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CheckoutBranchStep) Run() error {
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo) error {
 	step.previousBranchName = git.GetCurrentBranchName()
 	if step.previousBranchName != step.BranchName {
 		err := script.RunCommand("git", "checkout", step.BranchName)

@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // DeleteLocalBranchStep deletes the branch with the given name,
@@ -21,11 +20,14 @@ func (step *DeleteLocalBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteLocalBranchStep) Run() error {
-	step.branchSha = git.GetBranchSha(step.BranchName)
-	op := "-d"
-	if step.Force || git.DoesBranchHaveUnmergedCommits(step.BranchName) {
-		op = "-D"
+func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.branchSha, err = repo.Silent.BranchSha(step.BranchName)
+	if err != nil {
+		return err
 	}
-	return script.RunCommand("git", "branch", op, step.BranchName)
+	hasUnmergedCommits, err := repo.Silent.BranchHasUnmergedCommits(step.BranchName)
+	if err != nil {
+		return err
+	}
+	return repo.Logging.DeleteLocalBranch(step.BranchName, step.Force || hasUnmergedCommits)
 }

@@ -14,7 +14,7 @@ func (step *AddToPerennialBranches) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *AddToPerennialBranches) Run() error {
-	git.Config().AddToPerennialBranches(step.BranchName)
+func (step *AddToPerennialBranches) Run(repo *git.ProdRepo) error {
+	repo.AddToPerennialBranches(step.BranchName)
 	return nil
 }

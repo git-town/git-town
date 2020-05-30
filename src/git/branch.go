@@ -8,12 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// DoesBranchHaveUnmergedCommits returns whether the branch with the given name
-// contains commits that are not merged into the main branch
-func DoesBranchHaveUnmergedCommits(branchName string) bool {
-	return command.MustRun("git", "log", Config().GetMainBranch()+".."+branchName).OutputSanitized() != ""
-}
-
 // EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch
 func EnsureBranchInSync(branchName, errorMessageSuffix string) {
 	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("%q is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))
@@ -47,18 +41,6 @@ func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 // EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch
 func EnsureIsPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
-}
-
-// GetExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
-// given the inputs
-func GetExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) string {
-	if HasLocalBranch(initialPreviouslyCheckedOutBranch) {
-		if GetCurrentBranchName() == initialBranch || !HasLocalBranch(initialBranch) {
-			return initialPreviouslyCheckedOutBranch
-		}
-		return initialBranch
-	}
-	return Config().GetMainBranch()
 }
 
 // GetLocalBranches returns the names of all branches in the local repository,
@@ -169,13 +151,6 @@ func IsBranchInSync(branchName string) bool {
 		return localSha == remoteSha
 	}
 	return true
-}
-
-// ShouldBranchBePushed returns whether the local branch with the given name
-// contains commits that have not been pushed to the remote.
-func ShouldBranchBePushed(branchName string) bool {
-	trackingBranchName := GetTrackingBranchName(branchName)
-	return command.MustRun("git", "rev-list", "--left-right", branchName+"..."+trackingBranchName).OutputSanitized() != ""
 }
 
 // Helpers

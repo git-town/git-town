@@ -24,7 +24,7 @@ var abortCmd = &cobra.Command{
 			util.ExitWithErrorMessage("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState)
+		err = steps.Run(&abortRunState, git.NewProdRepo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

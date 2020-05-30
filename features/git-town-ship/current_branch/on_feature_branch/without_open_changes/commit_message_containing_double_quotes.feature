@@ -16,19 +16,19 @@ Feature: git town-ship: shipping the current feature branch
 
   Scenario: result
     Then it runs the commands
-      | BRANCH  | COMMAND                                                |
-      | feature | git fetch --prune --tags                               |
-      |         | git checkout main                                      |
-      | main    | git rebase origin/main                                 |
-      |         | git checkout feature                                   |
-      | feature | git merge --no-edit origin/feature                     |
-      |         | git merge --no-edit main                               |
-      |         | git checkout main                                      |
-      | main    | git merge --squash feature                             |
-      |         | git commit -m "message containing \\"double quotes\\"" |
-      |         | git push                                               |
-      |         | git push origin :feature                               |
-      |         | git branch -D feature                                  |
+      | BRANCH  | COMMAND                                            |
+      | feature | git fetch --prune --tags                           |
+      |         | git checkout main                                  |
+      | main    | git rebase origin/main                             |
+      |         | git checkout feature                               |
+      | feature | git merge --no-edit origin/feature                 |
+      |         | git merge --no-edit main                           |
+      |         | git checkout main                                  |
+      | main    | git merge --squash feature                         |
+      |         | git commit -m "message containing "double quotes"" |
+      |         | git push                                           |
+      |         | git push origin :feature                           |
+      |         | git branch -D feature                              |
     And I end up on the "main" branch
     And the existing branches are
       | REPOSITORY | BRANCHES |

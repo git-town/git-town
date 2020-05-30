@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // RebaseBranchStep rebases the current branch
@@ -30,9 +29,12 @@ func (step *RebaseBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RebaseBranchStep) Run() error {
-	step.previousSha = git.GetCurrentSha()
-	err := script.RunCommand("git", "rebase", step.BranchName)
+func (step *RebaseBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	err = repo.Logging.Rebase(step.BranchName)
 	if err != nil {
 		git.ClearCurrentBranchCache()
 	}

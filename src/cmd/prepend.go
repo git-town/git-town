@@ -37,14 +37,19 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for remote upstream options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getPrependConfig(args)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getPrependStepList(config)
+		stepList, err := getPrependStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -79,9 +84,13 @@ func getPrependConfig(args []string) (result prependConfig, err error) {
 	return
 }
 
-func getPrependStepList(config prependConfig) (result steps.StepList) {
+func getPrependStepList(config prependConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.ancestorBranches {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
 	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
@@ -91,7 +100,7 @@ func getPrependStepList(config prependConfig) (result steps.StepList) {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result
+	return result, nil
 }
 
 func init() {

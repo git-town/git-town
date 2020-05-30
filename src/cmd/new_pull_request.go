@@ -37,14 +37,19 @@ When using SSH identities, this command needs to be configured with
 "git config git-town.code-hosting-origin-hostname <hostname>"
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getNewPullRequestConfig()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getNewPullRequestStepList(config)
+		stepList, err := getNewPullRequestStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -78,13 +83,17 @@ func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig) (result steps.StepList) {
+func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
-	return result
+	return result, nil
 }
 
 func init() {

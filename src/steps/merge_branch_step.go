@@ -2,7 +2,6 @@ package steps
 
 import (
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // MergeBranchStep merges the branch with the given name into the current branch
@@ -29,7 +28,10 @@ func (step *MergeBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *MergeBranchStep) Run() error {
-	step.previousSha = git.GetCurrentSha()
-	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
+func (step *MergeBranchStep) Run(repo *git.ProdRepo) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	return repo.Logging.MergeBranchNoEdit(step.BranchName)
 }

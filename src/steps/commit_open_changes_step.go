@@ -21,7 +21,7 @@ func (step *CommitOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CommitOpenChangesStep) Run() error {
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo) error {
 	step.previousSha = git.GetCurrentSha()
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {
