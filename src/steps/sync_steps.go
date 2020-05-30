@@ -64,15 +64,15 @@ func getSyncNonFeatureBranchSteps(branchName string, repo *git.ProdRepo) (result
 		return result, err
 	}
 	if hasTrackingBranch {
-		if git.Config().GetPullBranchStrategy() == "rebase" {
+		if repo.GetPullBranchStrategy() == "rebase" {
 			result.Append(&RebaseBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
 		} else {
 			result.Append(&MergeBranchStep{BranchName: git.GetTrackingBranchName(branchName)})
 		}
 	}
 
-	mainBranchName := git.Config().GetMainBranch()
-	if mainBranchName == branchName && git.HasRemote("upstream") && git.Config().ShouldSyncUpstream() {
+	mainBranchName := repo.GetMainBranch()
+	if mainBranchName == branchName && git.HasRemote("upstream") && repo.ShouldSyncUpstream() {
 		result.Append(&FetchUpstreamStep{BranchName: mainBranchName})
 		result.Append(&RebaseBranchStep{BranchName: fmt.Sprintf("upstream/%s", mainBranchName)})
 	}
