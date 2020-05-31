@@ -34,7 +34,7 @@ Feature: git town-ship: shipping the current feature branch
       | REPOSITORY | BRANCHES |
       | local      | main     |
       | remote     | main     |
-    And I don't have any uncommitted files
+    And my repo doesn't have any uncommitted files
     And my repo now has the following commits
       | BRANCH | LOCATION      | MESSAGE                            | FILE NAME    |
       | main   | local, remote | message containing "double quotes" | feature_file |

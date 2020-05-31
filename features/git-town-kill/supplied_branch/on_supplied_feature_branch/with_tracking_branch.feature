@@ -26,7 +26,7 @@ Feature: git town-kill: killing the given feature branch when on it
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I end up on the "main" branch
-    And I don't have any uncommitted files
+    And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
