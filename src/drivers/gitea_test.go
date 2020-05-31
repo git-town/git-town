@@ -9,9 +9,9 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-var giteaApiEndpoint = "https://gitea.com/api/v1"
-var giteaVersionURL = giteaApiEndpoint + "/version"
-var giteaPullRequestBaseURL = giteaApiEndpoint + "/repos/gitea/go-sdk/pulls"
+var giteaAPIEndpoint = "https://gitea.com/api/v1"
+var giteaVersionURL = giteaAPIEndpoint + "/version"
+var giteaPullRequestBaseURL = giteaAPIEndpoint + "/repos/gitea/go-sdk/pulls"
 var giteaOpenPullRequestURL = giteaPullRequestBaseURL + "?limit=50&page=0&state=open"
 var giteaMergePullRequestURL = giteaPullRequestBaseURL + "/1/merge"
 var giteaGetPullRequestURL = giteaPullRequestBaseURL + "/1"

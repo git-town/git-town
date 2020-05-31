@@ -141,7 +141,6 @@ func identifyPullRequest(filteredPullRequests []*gitea.PullRequest) (*gitea.Pull
 		pullRequestNumbersAsStrings := make([]string, len(filteredPullRequests))
 		for i, filteredPullRequest := range filteredPullRequests {
 			pullRequestNumbersAsStrings[i] = strconv.FormatInt(filteredPullRequest.Index, 10)
-
 		}
 		return nil, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
 	}
@@ -189,8 +188,9 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, co
 func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
 		// if options.LogRequests {
-		// 	printLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d", *pullRequest.Index))
+		// 	printLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
 		// }
+		printLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", 1, newBaseName))
 		printLog(fmt.Sprintf("The Gitea API currently does not support retargeting, please restarget #%d manually, see https://github.com/go-gitea/gitea/issues/11552", pullRequest.Index))
 		// _, err = d.client.EditPullRequest(d.owner, d.repository, *pullRequest.Index, &gitea.EditPullRequestOption{
 		// 	Base: newBaseName
