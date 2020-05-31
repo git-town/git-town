@@ -27,7 +27,7 @@ func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitea" || d.hostname == "gitea.com"
 }
 
-func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -47,7 +47,7 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	if err != nil {
 		return false, "", 0, nil
 	}
-	return true, getDefaultCommitMessage(pullRequest), int(pullRequest.Index), nil
+	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
 }
 
 func (d *giteaCodeHostingDriver) GetAPIToken() string {
@@ -161,9 +161,9 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 	return pullRequestsFiltered
 }
 
-func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, commitTitle, commitMessage string) (mergeSha string, err error) {
+func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
 	printLog(fmt.Sprintf("Gitea API: Merging PR #%d", pullRequestNumber))
-	_, err = d.client.MergePullRequest(d.owner, d.repository, int64(pullRequestNumber), gitea.MergePullRequestOption{
+	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
 		Message: commitMessage,
@@ -171,7 +171,7 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int, comm
 	if err != nil {
 		return "", err
 	}
-	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, int64(pullRequestNumber))
+	pullRequest, err := d.client.GetPullRequest(d.owner, d.repository, pullRequestNumber)
 	if err != nil {
 		return "", err
 	}
