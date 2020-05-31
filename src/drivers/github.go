@@ -25,7 +25,7 @@ func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "github" || d.hostname == "github.com"
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -37,7 +37,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	if len(pullRequests) != 1 {
 		return false, "", 0, nil
 	}
-	return true, d.getDefaultCommitMessage(pullRequests[0]), pullRequests[0].GetNumber(), nil
+	return true, d.getDefaultCommitMessage(pullRequests[0]), int64(pullRequests[0].GetNumber()), nil
 }
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -130,7 +130,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, int(options.PullRequestNumber), githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})

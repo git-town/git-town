@@ -16,7 +16,7 @@ import (
 )
 
 type shipConfig struct {
-	pullRequestNumber            int
+	pullRequestNumber            int64
 	branchToShip                 string
 	branchToMergeInto            string
 	initialBranch                string
@@ -167,7 +167,7 @@ func getShipStepList(config shipConfig) (result steps.StepList) {
 	return result
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if !git.HasRemote("origin") {
 		return false, "", 0, nil
 	}

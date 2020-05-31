@@ -18,7 +18,7 @@ func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitlab" || d.hostname == "gitlab.com"
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
 

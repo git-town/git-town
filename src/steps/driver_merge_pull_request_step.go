@@ -12,7 +12,7 @@ import (
 type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
-	PullRequestNumber         int
+	PullRequestNumber         int64
 	CommitMessage             string
 	DefaultCommitMessage      string
 	enteredEmptyCommitMessage bool
