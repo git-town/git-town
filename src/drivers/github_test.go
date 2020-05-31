@@ -39,7 +39,7 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
-	assert.Equal(t, 1, pullRequestNumber)
+	assert.Equal(t, int64(1), pullRequestNumber)
 }
 
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
