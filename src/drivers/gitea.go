@@ -11,7 +11,6 @@ import (
 	"golang.org/x/oauth2"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/git-town/git-town/src/git"
 )
 
 type giteaCodeHostingDriver struct {
@@ -51,7 +50,7 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 }
 
 func (d *giteaCodeHostingDriver) GetAPIToken() string {
-	return git.Config().GetGiteaToken()
+	return gitConfig.GetGiteaToken()
 }
 
 func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -104,9 +103,9 @@ func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
 
 func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
+	d.hostname = gitConfig.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]

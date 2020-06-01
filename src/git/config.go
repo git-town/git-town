@@ -93,7 +93,7 @@ type Configuration struct {
 // Config provides the current configuration.
 // This is used in the Git Town business logic, which runs in the current directory.
 // The configuration is lazy-loaded this way to allow using some Git Town commands outside of Git repositories.
-func Config() *Configuration {
+func Config() ConfigurationInterface {
 	if currentDirConfig == nil {
 		shell := command.SilentShell{}
 		currentDirConfig = NewConfiguration(&shell)

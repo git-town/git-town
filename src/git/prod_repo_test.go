@@ -9,5 +9,5 @@ import (
 
 func TestNewProdRepo(t *testing.T) {
 	repo := git.NewProdRepo()
-	assert.Equal(t, repo.Configuration, repo.Silent.Configuration)
+	assert.Equal(t, repo.ConfigurationInterface, repo.Silent.ConfigurationInterface)
 }

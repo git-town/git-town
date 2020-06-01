@@ -102,8 +102,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		table.AddRow("BRANCH", "PARENT")
 		for _, row := range input.Rows[1:] {
 			branch := row.Cells[0].Value
-			state.gitEnv.DevRepo.Configuration.Reload()
-			parentBranch := state.gitEnv.DevRepo.Configuration.GetParentBranch(branch)
+			state.gitEnv.DevRepo.ConfigurationInterface.Reload()
+			parentBranch := state.gitEnv.DevRepo.ConfigurationInterface.GetParentBranch(branch)
 			table.AddRow(branch, parentBranch)
 		}
 		diff, errCount := table.EqualGherkin(input)
@@ -116,8 +116,8 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^Git Town now has no branch hierarchy information$`, func() error {
-		state.gitEnv.DevRepo.Configuration.Reload()
-		if state.gitEnv.DevRepo.Configuration.HasBranchInformation() {
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
+		if state.gitEnv.DevRepo.ConfigurationInterface.HasBranchInformation() {
 			return fmt.Errorf("unexpected Git Town branch hierarchy information")
 		}
 		return nil
@@ -402,7 +402,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my coworker sets the parent branch of "([^"]*)" as "([^"]*)"$`, func(childBranch, parentBranch string) error {
-		_ = state.gitEnv.CoworkerRepo.Configuration.SetParentBranch(childBranch, parentBranch)
+		_ = state.gitEnv.CoworkerRepo.ConfigurationInterface.SetParentBranch(childBranch, parentBranch)
 		return nil
 	})
 
@@ -556,7 +556,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^my repo is now configured with no perennial branches$`, func() error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		branches := state.gitEnv.DevRepo.GetPerennialBranches()
 		if len(branches) > 0 {
 			return fmt.Errorf("expected no perennial branches, got %q", branches)
@@ -719,7 +719,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is disabled$`, func() error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		if state.gitEnv.DevRepo.IsOffline() {
 			return fmt.Errorf("expected to not be offline but am")
 		}
@@ -727,7 +727,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^offline mode is enabled$`, func() error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		if !state.gitEnv.DevRepo.IsOffline() {
 			return fmt.Errorf("expected to be offline but am not")
 		}
@@ -783,7 +783,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the main branch is now configured as "([^"]+)"$`, func(name string) error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		actual := state.gitEnv.DevRepo.GetMainBranch()
 		if actual != name {
 			return fmt.Errorf("expected %q, got %q", name, actual)
@@ -805,7 +805,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return err
 		}
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		have := state.gitEnv.DevRepo.ShouldNewBranchPush()
 		if have != want {
 			return fmt.Errorf("expected global new-branch-push-flag to be %t, but was %t", want, have)
@@ -824,7 +824,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now configured as "([^"]+)"$`, func(name string) error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		actual := state.gitEnv.DevRepo.GetPerennialBranches()
 		if len(actual) != 1 {
 			return fmt.Errorf("expected 1 perennial branch, got %q", actual)
@@ -836,7 +836,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the perennial branches are now configured as "([^"]+)" and "([^"]+)"$`, func(branch1, branch2 string) error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		actual := state.gitEnv.DevRepo.GetPerennialBranches()
 		if len(actual) != 2 {
 			return fmt.Errorf("expected 2 perennial branches, got %q", actual)
@@ -873,7 +873,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 	})
 
 	suite.Step(`^the pull-branch-strategy configuration is now "(merge|rebase)"$`, func(want string) error {
-		state.gitEnv.DevRepo.Configuration.Reload()
+		state.gitEnv.DevRepo.ConfigurationInterface.Reload()
 		have := state.gitEnv.DevRepo.GetPullBranchStrategy()
 		if have != want {
 			return fmt.Errorf("expected pull-branch-strategy to be %q but was %q", want, have)

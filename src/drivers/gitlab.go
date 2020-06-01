@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-
-	"github.com/git-town/git-town/src/git"
 )
 
 type gitlabCodeHostingDriver struct {
@@ -43,8 +41,8 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
+	d.hostname = gitConfig.GetURLHostname(originURL)
+	d.repository = gitConfig.GetURLRepositoryName(originURL)
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
