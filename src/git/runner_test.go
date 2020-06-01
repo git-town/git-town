@@ -67,9 +67,9 @@ func TestRunner_Commits(t *testing.T) {
 
 func TestRunner_Configuration(t *testing.T) {
 	runner := test.CreateRepo(t).Runner
-	config := runner.Configuration
+	config := runner.ConfigurationInterface
 	assert.NotNil(t, config, "first path: new config")
-	config = runner.Configuration
+	config = runner.ConfigurationInterface
 	assert.NotNil(t, config, "second path: cached config")
 }
 
@@ -157,18 +157,18 @@ func TestRunner_CreateFeatureBranch(t *testing.T) {
 	runner := CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranch("f1")
 	assert.NoError(t, err)
-	runner.Configuration.Reload()
-	assert.True(t, runner.Configuration.IsFeatureBranch("f1"))
-	assert.Equal(t, []string{"main"}, runner.Configuration.GetAncestorBranches("f1"))
+	runner.ConfigurationInterface.Reload()
+	assert.True(t, runner.ConfigurationInterface.IsFeatureBranch("f1"))
+	assert.Equal(t, []string{"main"}, runner.ConfigurationInterface.GetAncestorBranches("f1"))
 }
 
 func TestRunner_CreateFeatureBranchNoParent(t *testing.T) {
 	runner := CreateTestGitTownRepo(t).Runner
 	err := runner.CreateFeatureBranchNoParent("f1")
 	assert.NoError(t, err)
-	runner.Configuration.Reload()
-	assert.True(t, runner.Configuration.IsFeatureBranch("f1"))
-	assert.Equal(t, []string(nil), runner.Configuration.GetAncestorBranches("f1"))
+	runner.ConfigurationInterface.Reload()
+	assert.True(t, runner.ConfigurationInterface.IsFeatureBranch("f1"))
+	assert.Equal(t, []string(nil), runner.ConfigurationInterface.GetAncestorBranches("f1"))
 }
 
 func TestRunner_CreateFile(t *testing.T) {
@@ -196,9 +196,9 @@ func TestRunner_CreatePerennialBranches(t *testing.T) {
 	branches, err := runner.LocalBranches()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"main", "master", "p1", "p2"}, branches)
-	runner.Configuration.Reload()
-	assert.True(t, runner.Configuration.IsPerennialBranch("p1"))
-	assert.True(t, runner.Configuration.IsPerennialBranch("p2"))
+	runner.ConfigurationInterface.Reload()
+	assert.True(t, runner.ConfigurationInterface.IsPerennialBranch("p1"))
+	assert.True(t, runner.ConfigurationInterface.IsPerennialBranch("p2"))
 }
 
 func TestRunner_CurrentBranch(t *testing.T) {

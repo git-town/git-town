@@ -10,7 +10,7 @@ type CachedRunner struct {
 }
 
 // NewCachedRunner provides CachedRunner instances.
-func NewCachedRunner(shell command.Shell, config *Configuration, remoteBranchCache *RemoteBranchCache) CachedRunner {
+func NewCachedRunner(shell command.Shell, config ConfigurationInterface, remoteBranchCache *RemoteBranchCache) CachedRunner {
 	return CachedRunner{NewRunner(shell, config), remoteBranchCache}
 }
 

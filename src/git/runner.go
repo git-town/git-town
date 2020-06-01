@@ -16,12 +16,12 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell  // for running console commands
-	*Configuration // caches Git configuration settings
+	command.Shell          // for running console commands
+	ConfigurationInterface // provides an interface to cached Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, config *Configuration) Runner {
+func NewRunner(shell command.Shell, config ConfigurationInterface) Runner {
 	return Runner{shell, config}
 }
 
@@ -244,7 +244,7 @@ func (r *Runner) CreateChildFeatureBranch(name string, parent string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create child branch %q: %w", name, err)
 	}
-	_ = r.Configuration.SetParentBranch(name, parent)
+	_ = r.ConfigurationInterface.SetParentBranch(name, parent)
 	return nil
 }
 
