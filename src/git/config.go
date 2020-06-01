@@ -18,6 +18,7 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
+//go:generate sh -c "docker run -v $PWD/../..:/src -w /src --user=$(id -u):$(id -g) vektra/mockery -dir=src/git -name ConfigurationInterface"
 
 // ConfigurationInterface defines the Configuration interface.
 type ConfigurationInterface interface {
