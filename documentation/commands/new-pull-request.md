@@ -11,8 +11,9 @@ of your repository. The form is pre-populated for the current branch so that the
 pull request only shows the changes made against the immediate parent branch.
 
 Supported only for repositories hosted on [GitHub](http://github.com/),
-[GitLab](http://gitlab.com/), [Gitea](http://gitea.com/), and [Bitbucket](https://bitbucket.org/). When
-using self-hosted versions this command needs to be configured with
+[GitLab](http://gitlab.com/), [Gitea](http://gitea.com/), and
+[Bitbucket](https://bitbucket.org/). When using self-hosted versions this
+command needs to be configured with
 `git config git-town.code-hosting-driver <driver>` where driver is "github",
 "gitlab", or "bitbucket". When using SSH identities, this command needs to be
 configured with `git config git-town.code-hosting-origin-hostname <hostname>`

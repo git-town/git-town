@@ -49,11 +49,11 @@ To debug a Godog Cucumber feature in [VSCode](https://code.visualstudio.com):
 
 ## Preventing pushes to GitHub
 
-Certain tests require that the Git remote points to an actual GitHub, Gitea, GitLab or
-Bitbucket address. This causes `git push` operations in this test to also go to
-GitHub. To prevent this, set an environment variable `GIT_TOWN_REMOTE` with the
-desired value of the `origin` remote, and Git Town will use that value instead
-of what is in the repo.
+Certain tests require that the Git remote points to an actual GitHub, Gitea,
+GitLab or Bitbucket address. This causes `git push` operations in this test to
+also go to GitHub. To prevent this, set an environment variable
+`GIT_TOWN_REMOTE` with the desired value of the `origin` remote, and Git Town
+will use that value instead of what is in the repo.
 
 ## Architecture
 

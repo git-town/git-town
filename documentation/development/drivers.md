@@ -4,7 +4,9 @@ _The following refers to the commands `git-new-pull-request` and `git-repo`._
 
 _Drivers_ implement third-party specific functionality in a standardized way.
 For example, the [GitHub driver](/src/drivers/github.go) implements
-GitHub-related operations like creating a pull request there. Likewise,  [Gitea driver](/src/drivers/gitea.go) implements similar functionality for Gitea.
+GitHub-related operations like creating a pull request there. Likewise,
+[Gitea driver](/src/drivers/gitea.go) implements similar functionality for
+Gitea.
 
 There is also an analogous [Bitbucket driver](/src/drivers/bitbucket.go) that
 does the same things on Bitbucket. Both drivers are part of the
