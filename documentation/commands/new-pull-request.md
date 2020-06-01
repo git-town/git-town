@@ -15,9 +15,10 @@ Supported only for repositories hosted on [GitHub](http://github.com/),
 [Bitbucket](https://bitbucket.org/). When using self-hosted versions this
 command needs to be configured with
 `git config git-town.code-hosting-driver <driver>` where driver is "github",
-"gitlab", "gitea", or "bitbucket". When using SSH identities, this command needs to be
-configured with `git config git-town.code-hosting-origin-hostname <hostname>`
-where hostname matches what is in your ssh config file.
+"gitlab", "gitea", or "bitbucket". When using SSH identities, this command needs
+to be configured with
+`git config git-town.code-hosting-origin-hostname <hostname>` where hostname
+matches what is in your ssh config file.
 
 </a>
 
