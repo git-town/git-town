@@ -31,7 +31,7 @@ func (d *githubCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
-	d.apiToken = git.Config().GetGitHubToken()
+	d.apiToken = gitConfig.GetGitHubToken()
 	return true
 }
 

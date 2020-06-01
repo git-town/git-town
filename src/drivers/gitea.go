@@ -10,7 +10,6 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/git-town/git-town/src/git"
 	"code.gitea.io/sdk/gitea"
 )
 
@@ -34,7 +33,7 @@ func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
-	d.apiToken = git.Config().GetGiteaToken()
+	d.apiToken = gitConfig.GetGiteaToken()
 	return true
 }
 
