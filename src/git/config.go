@@ -18,6 +18,10 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
+//go:generate docker run -v $PWD/../..:/src -w /src vektra/mockery -dir=src/git -name ConfigurationInterface
+//go:generate echo "\nFiles are generated within the user namespace of the\ncontainer which is mapped to root. Therefore we sudo chown unconventionally...\n"
+//go:generate sh -c "echo sudo chown $(id -u):$(id -g) -R ../../mocks\n"
+//go:generate sh -c "sudo chown $(id -u):$(id -g) -R ../../mocks"
 
 // ConfigurationInterface defines the Configuration interface
 type ConfigurationInterface interface {
