@@ -44,8 +44,8 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = gitConfig.GetURLHostname(originURL)
-	d.repository = gitConfig.GetURLRepositoryName(originURL)
+	d.hostname = GitConfig.GetURLHostname(originURL)
+	d.repository = GitConfig.GetURLRepositoryName(originURL)
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {

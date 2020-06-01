@@ -41,8 +41,8 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = gitConfig.GetURLHostname(originURL)
-	d.repository = gitConfig.GetURLRepositoryName(originURL)
+	d.hostname = GitConfig.GetURLHostname(originURL)
+	d.repository = GitConfig.GetURLRepositoryName(originURL)
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {

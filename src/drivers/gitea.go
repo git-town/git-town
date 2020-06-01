@@ -50,7 +50,7 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 }
 
 func (d *giteaCodeHostingDriver) GetAPIToken() string {
-	return gitConfig.GetGiteaToken()
+	return GitConfig.GetGiteaToken()
 }
 
 func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -103,9 +103,9 @@ func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
 
 func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = gitConfig.GetURLHostname(originURL)
+	d.hostname = GitConfig.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(GitConfig.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]

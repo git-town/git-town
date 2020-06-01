@@ -41,7 +41,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
-	if parentBranch != gitConfig.GetMainBranch() {
+	if parentBranch != GitConfig.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
@@ -66,9 +66,9 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = gitConfig.GetURLHostname(originURL)
+	d.hostname = GitConfig.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(GitConfig.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]
@@ -80,7 +80,7 @@ func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
 }
 
 func (d *githubCodeHostingDriver) GetAPIToken() string {
-	return gitConfig.GetGitHubToken()
+	return GitConfig.GetGitHubToken()
 }
 
 func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
