@@ -14,4 +14,5 @@ Feature: git-town repo: when origin is an ssh identity
       | ORIGIN_HOSTNAME | REPO_URL                                |
       | bitbucket.org   | https://bitbucket.org/git-town/git-town |
       | github.com      | https://github.com/git-town/git-town    |
+      | gitea.com       | https://gitea.com/git-town/git-town    |
       | gitlab.com      | https://gitlab.com/git-town/git-town    |
