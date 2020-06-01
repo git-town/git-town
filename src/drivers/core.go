@@ -13,15 +13,15 @@ var GitConfig = git.Config()
 // GetActiveDriver returns the code hosting driver to use based on the git config
 func GetActiveDriver() CodeHostingDriver {
 	var originHostname string
-	originURL := gitConfig.GetRemoteOriginURL()
-	if gitConfig.GetCodeHostingOriginHostname() != "" {
-		originHostname = gitConfig.GetCodeHostingOriginHostname()
+	originURL := GitConfig.GetRemoteOriginURL()
+	if GitConfig.GetCodeHostingOriginHostname() != "" {
+		originHostname = GitConfig.GetCodeHostingOriginHostname()
 	} else {
-		originHostname = gitConfig.GetURLHostname(originURL)
+		originHostname = GitConfig.GetURLHostname(originURL)
 	}
 	if activeDriver == nil {
 		activeDriver = GetDriver(DriverOptions{
-			DriverType:     gitConfig.GetCodeHostingDriverName(),
+			DriverType:     GitConfig.GetCodeHostingDriverName(),
 			OriginURL:      originURL,
 			OriginHostname: originHostname,
 		})
