@@ -60,10 +60,6 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
 }
 
-func (d *giteaCodeHostingDriver) GetAPIToken() string {
-	return gitConfig.GetGiteaToken()
-}
-
 func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := parentBranch + "..." + branch
 	return fmt.Sprintf("%s/compare/%s", d.GetRepositoryURL(), url.PathEscape(toCompare))
@@ -102,10 +98,6 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 		commitMessage = commitMessageParts[1]
 	}
 	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
-}
-
-func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
 }
 
 func init() {
