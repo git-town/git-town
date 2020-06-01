@@ -25,7 +25,7 @@ func (d *githubCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 		return false
 	}
     // Initialize
-	repositoryParts := strings.SplitN(gitConfig.GetURLRepositoryName(opts.OriginURL), "/", 2)
+	repositoryParts := strings.SplitN(GetURLRepositoryName(opts.OriginURL), "/", 2)
 	d.client = nil
 	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL

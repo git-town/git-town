@@ -22,7 +22,7 @@ func (d *bitbucketCodeHostingDriver) WasActivated(opts DriverOptions) bool {
     // Initialize
 	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
-	d.repository = gitConfig.GetURLRepositoryName(opts.OriginURL)
+	d.repository = GetURLRepositoryName(opts.OriginURL)
 	return true
 }
 

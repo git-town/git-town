@@ -40,8 +40,6 @@ type ConfigurationInterface interface {
 	GetPerennialBranches() []string
 	GetPullBranchStrategy() string
 	GetRemoteOriginURL() string
-	GetURLHostname(url string) string
-	GetURLRepositoryName(url string) string
 	HasBranchInformation() bool
 	HasParentBranch(branchName string) bool
 	IsAncestorBranch(branchName, ancestorBranchName string) bool
@@ -49,7 +47,6 @@ type ConfigurationInterface interface {
 	IsMainBranch(branchName string) bool
 	IsOffline() bool
 	IsPerennialBranch(branchName string) bool
-	localConfigKeysMatching(toMatch string) (result []string)
 	Reload()
 	RemoveFromPerennialBranches(branchName string)
 	RemoveGitAlias(command string) *command.Result
@@ -297,27 +294,6 @@ func (c *Configuration) GetRemoteOriginURL() string {
 		return remote
 	}
 	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
-}
-
-// GetURLHostname returns the hostname contained within the given Git URL.
-func (c *Configuration) GetURLHostname(url string) string {
-	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
-	matches := hostnameRegex.FindStringSubmatch(url)
-	if matches == nil {
-		return ""
-	}
-	return matches[3]
-}
-
-// GetURLRepositoryName returns the repository name contains within the given Git URL.
-func (c *Configuration) GetURLRepositoryName(url string) string {
-	hostname := c.GetURLHostname(url)
-	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
-	matches := repositoryNameRegex.FindStringSubmatch(url)
-	if matches == nil {
-		return ""
-	}
-	return strings.TrimSuffix(matches[1], ".git")
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
