@@ -18,6 +18,63 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
+
+// ConfigurationInterface defines the Configuration interface
+type ConfigurationInterface interface {
+	AddToPerennialBranches(branchNames ...string) *command.Result
+	AddGitAlias(command string) *command.Result
+	DeleteMainBranchConfiguration()
+	DeleteParentBranch(branchName string)
+	DeletePerennialBranchConfiguration()
+	EnsureIsFeatureBranch(branchName, errorSuffix string)
+	GetAncestorBranches(branchName string) (result []string)
+	GetChildBranches(branchName string) (result []string)
+	GetCodeHostingDriverName() string
+	GetCodeHostingOriginHostname() string
+	GetParentBranchMap() map[string]string
+	GetGitAlias(command string) string
+	GetGitHubToken() string
+	GetGiteaToken() string
+	GetMainBranch() string
+	GetParentBranch(branchName string) string
+	GetPerennialBranches() []string
+	GetPullBranchStrategy() string
+	GetRemoteOriginURL() string
+	GetURLHostname(url string) string
+	GetURLRepositoryName(url string) string
+	HasBranchInformation() bool
+	HasParentBranch(branchName string) bool
+	IsAncestorBranch(branchName, ancestorBranchName string) bool
+	IsFeatureBranch(branchName string) bool
+	IsMainBranch(branchName string) bool
+	IsOffline() bool
+	IsPerennialBranch(branchName string) bool
+	localConfigKeysMatching(toMatch string) (result []string)
+	Reload()
+	RemoveFromPerennialBranches(branchName string)
+	RemoveGitAlias(command string) *command.Result
+	RemoveLocalGitConfiguration()
+	RemoveOutdatedConfiguration()
+	SetCodeHostingDriver(value string) *command.Result
+	SetCodeHostingOriginHostname(value string) *command.Result
+	SetColorUI(value string) *command.Result
+	SetMainBranch(branchName string) *command.Result
+	SetNewBranchPush(value bool, global bool) *command.Result
+	SetOffline(value bool) *command.Result
+	SetTestOrigin(value string)
+	SetParentBranch(branchName, parentBranchName string) *command.Result
+	SetPerennialBranches(branchNames []string) *command.Result
+	SetPullBranchStrategy(strategy string) *command.Result
+	SetShouldShipDeleteRemoteBranch(value bool) *command.Result
+	SetShouldSyncUpstream(value bool) *command.Result
+	ShouldNewBranchPush() bool
+	ShouldNewBranchPushGlobal() bool
+	ShouldShipDeleteRemoteBranch() bool
+	ShouldSyncUpstream() bool
+	ValidateIsOnline() error
+}
+
+
 // Configuration manages the Git Town configuration
 // stored in Git metadata in the given local repo and the global Git configuration.
 // This class manages which config values are stored in local vs global settings.
@@ -493,3 +550,6 @@ func (c *Configuration) ValidateIsOnline() error {
 	}
 	return nil
 }
+
+// Configuration implements ConfigurationInterface
+var _ ConfigurationInterface = (*Configuration)(nil)
