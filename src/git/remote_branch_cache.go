@@ -1,6 +1,6 @@
 package git
 
-// RemoteBranches caches the known remote branches of a Git repository.
+// RemoteBranchCache caches the known remote branches of a Git repository.
 // The zero value is valid.
 type RemoteBranchCache struct {
 	branches    []string

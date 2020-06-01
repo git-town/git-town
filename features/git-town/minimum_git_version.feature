@@ -9,7 +9,7 @@ Feature: git town: show an error message when minimum Git version is not satisfi
 
 
   Scenario: using an unsupported Git Version
-    Given I have Git "2.6.2" installed
+    Given my computer has Git "2.6.2" installed
     When I run "git-town config"
     Then it prints the error:
       """

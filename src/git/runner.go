@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -15,15 +16,31 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell                           // for running console commands
-	currentBranch     *CurrentBranchTracker // tracks the currently checked out branch of this Git repo
-	remoteBranchCache *RemoteBranchCache    // caches the remote branches of this Git repo
-	*Configuration                          // caches Git configuration settings
+	command.Shell  // for running console commands
+	*Configuration // caches Git configuration settings
 }
 
 // NewRunner provides Runner instances.
-func NewRunner(shell command.Shell, currentBranch *CurrentBranchTracker, remoteBranches *RemoteBranchCache, config *Configuration) Runner {
-	return Runner{shell, currentBranch, remoteBranches, config}
+func NewRunner(shell command.Shell, config *Configuration) Runner {
+	return Runner{shell, config}
+}
+
+// AbortMerge cancels a currently ongoing Git merge operation.
+func (r *Runner) AbortMerge() error {
+	res, err := r.Run("git", "merge", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort current merge: %w\n%s", err, res.Output())
+	}
+	return nil
+}
+
+// AbortRebase cancels a currently ongoing Git rebase operation.
+func (r *Runner) AbortRebase() error {
+	res, err := r.Run("git", "rebase", "--abort")
+	if err != nil {
+		return fmt.Errorf("cannot abort current merge: %w\n%s", err, res.Output())
+	}
+	return nil
 }
 
 // AddRemote adds the given Git remote to this repository.
@@ -35,13 +52,72 @@ func (r *Runner) AddRemote(name, value string) error {
 	return nil
 }
 
+// Author returns the locally Git configured user.
+func (r *Runner) Author() (author string, err error) {
+	out, err := r.Run("git", "config", "user.name")
+	if err != nil {
+		return "", err
+	}
+	name := out.OutputSanitized()
+	out, err = r.Run("git", "config", "user.email")
+	if err != nil {
+		return "", err
+	}
+	email := out.OutputSanitized()
+	return name + " <" + email + ">", nil
+}
+
+// BranchHasUnmergedCommits indicates whether the branch with the given name
+// contains commits that are not merged into the main branch
+func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
+	out, err := r.Run("git", "log", r.GetMainBranch()+".."+branch)
+	if err != nil {
+		return false, fmt.Errorf("cannot determine if branch %q has unmerged commits: %w\n%s", branch, err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
+}
+
+// BranchSha provides the SHA for the local branch with the given name.
+func (r *Runner) BranchSha(name string) (sha string, err error) {
+	outcome, err := r.Run("git", "rev-parse", name)
+	if err != nil {
+		return "", fmt.Errorf("cannot determine SHA of local branch %q: %w\n%s", name, err, outcome.Output())
+	}
+	return outcome.OutputSanitized(), nil
+}
+
 // CheckoutBranch checks out the Git branch with the given name in this repo.
 func (r *Runner) CheckoutBranch(name string) error {
 	outcome, err := r.Run("git", "checkout", name)
 	if err != nil {
 		return fmt.Errorf("cannot check out branch %q in repo %q: %w\n%v", name, r.WorkingDir(), err, outcome)
 	}
-	r.currentBranch.Changed(name)
+	currentBranchCache = name
+	return nil
+}
+
+// CommentOutSquashCommitMessage comments out the message for the current squash merge
+// Adds the given prefix with the newline if provided
+func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
+	squashMessageFile := ".git/SQUASH_MSG"
+	contentBytes, err := ioutil.ReadFile(squashMessageFile)
+	if err != nil {
+		return fmt.Errorf("cannot read squash message file %q: %w", squashMessageFile, err)
+	}
+	content := string(contentBytes)
+	if prefix != "" {
+		content = prefix + "\n" + content
+	}
+	content = regexp.MustCompile("(?m)^").ReplaceAllString(content, "# ")
+	return ioutil.WriteFile(squashMessageFile, []byte(content), 0644)
+}
+
+// CommitNoEdit commits all staged files with the default commit message.
+func (r *Runner) CommitNoEdit() error {
+	outcome, err := r.Run("git", "commit", "--no-edit")
+	if err != nil {
+		return fmt.Errorf("cannot commit files: %w\n%s", err, outcome.Output())
+	}
 	return nil
 }
 
@@ -107,12 +183,45 @@ func (r *Runner) CommitStagedChanges(message string) error {
 	return nil
 }
 
+// CommitWithMessageAndAuthor .
+func (r *Runner) CommitWithMessageAndAuthor(message, author string) error {
+	out, err := r.Run("git", "commit", "-m", message, "--author", author)
+	if err != nil {
+		return fmt.Errorf("cannot commit with message %q and author %q: %w\n%s", message, author, err, out.Output())
+	}
+	return nil
+}
+
+// CommitWithMessage commits the staged changes with the given commit message.
+func (r *Runner) CommitWithMessage(message string) error {
+	out, err := r.Run("git", "commit", "-m", message)
+	if err != nil {
+		return fmt.Errorf("cannot commit with message %q: %w\n%s", message, err, out.Output())
+	}
+	return nil
+}
+
+// Commit .
+func (r *Runner) Commit() error {
+	_, err := r.Run("git", "commit")
+	return err
+}
+
 // ConnectTrackingBranch connects the branch with the given name to its remote tracking branch.
 // The branch must exist.
 func (r *Runner) ConnectTrackingBranch(name string) error {
 	out, err := r.Run("git", "branch", "--set-upstream-to=origin/"+name, name)
 	if err != nil {
 		return fmt.Errorf("cannot connect tracking branch for %q: %w\n%s", name, err, out)
+	}
+	return nil
+}
+
+// ContinueRebase continues the currently ongoing rebase.
+func (r *Runner) ContinueRebase() error {
+	outcome, err := r.Run("git", "rebase", "--continue")
+	if err != nil {
+		return fmt.Errorf("cannot continue rebase: %w\n%s", err, outcome.Output())
 	}
 	return nil
 }
@@ -212,6 +321,15 @@ func (r *Runner) CreatePerennialBranches(names ...string) error {
 	return nil
 }
 
+// CreateRemoteBranch creates a remote branch from the given local SHA.
+func (r *Runner) CreateRemoteBranch(localSha, branchName string) error {
+	outcome, err := r.Run("git", "push", "origin", localSha+":refs/heads/"+branchName)
+	if err != nil {
+		return fmt.Errorf("cannot create remote branch for local SHA %q: %w\n%s", localSha, err, outcome.Output())
+	}
+	return nil
+}
+
 // CreateStandaloneTag creates a tag not on a branch
 func (r *Runner) CreateStandaloneTag(name string) error {
 	return r.RunMany([][]string{
@@ -231,6 +349,15 @@ func (r *Runner) CreateTag(name string) error {
 	return err
 }
 
+// CreateTrackingBranch creates a remote tracking branch for the given local branch.
+func (r *Runner) CreateTrackingBranch(branch string) error {
+	outcome, err := r.Run("git", "push", "-u", "origin", branch)
+	if err != nil {
+		return fmt.Errorf("cannot create tracking branch for %q: %w\n%s", branch, err, outcome.Output())
+	}
+	return nil
+}
+
 // CurrentBranch provides the currently checked out branch for this repo.
 func (r *Runner) CurrentBranch() (result string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -240,13 +367,31 @@ func (r *Runner) CurrentBranch() (result string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
-// FileContent provides the current content of a file.
-func (r *Runner) FileContent(filename string) (result string, err error) {
-	outcome, err := r.Run("cat", filename)
+// CurrentSha provides the SHA of the currently checked out branch/commit.
+func (r *Runner) CurrentSha() (string, error) {
+	return r.BranchSha("HEAD")
+}
+
+// DeleteLastCommit resets HEAD to the previous commit.
+func (r *Runner) DeleteLastCommit() error {
+	out, err := r.Run("git", "reset", "--hard", "HEAD~1")
 	if err != nil {
-		return result, err
+		return fmt.Errorf("cannot delete last commit: %w\n%s", err, out.Output())
 	}
-	return outcome.Output(), nil
+	return nil
+}
+
+// DeleteLocalBranch removes the local branch with the given name.
+func (r *Runner) DeleteLocalBranch(name string, force bool) error {
+	args := []string{"branch", "-d", name}
+	if force {
+		args[1] = "-D"
+	}
+	out, err := r.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot delete local branch %q: %w\n%s", name, err, out.Output())
+	}
+	return nil
 }
 
 // DeleteMainBranchConfiguration removes the configuration for which branch is the main branch.
@@ -258,6 +403,48 @@ func (r *Runner) DeleteMainBranchConfiguration() error {
 	return nil
 }
 
+// DeleteRemoteBranch removes the remote branch of the given local branch.
+func (r *Runner) DeleteRemoteBranch(name string) error {
+	out, err := r.Run("git", "push", "origin", ":"+name)
+	if err != nil {
+		return fmt.Errorf("cannot delete tracking branch for %q: %w\n%s", name, err, out.Output())
+	}
+	return nil
+}
+
+// DiscardOpenChanges deletes all uncommitted changes.
+func (r *Runner) DiscardOpenChanges() error {
+	out, err := r.Run("git", "reset", "--hard")
+	if err != nil {
+		return fmt.Errorf("cannot discard open changes: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
+// ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
+// given the inputs
+func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) (string, error) {
+	hasInitialPreviouslyCheckedOutBranch, err := r.HasLocalBranch(initialPreviouslyCheckedOutBranch)
+	if err != nil {
+		return "", err
+	}
+	if hasInitialPreviouslyCheckedOutBranch {
+		currentBranch, err := r.CurrentBranch()
+		if err != nil {
+			return "", err
+		}
+		hasInitialBranch, err := r.HasLocalBranch(initialBranch)
+		if err != nil {
+			return "", err
+		}
+		if currentBranch == initialBranch || !hasInitialBranch {
+			return initialPreviouslyCheckedOutBranch, nil
+		}
+		return initialBranch, nil
+	}
+	return Config().GetMainBranch(), nil
+}
+
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
 	_, err := r.Run("git", "fetch")
@@ -265,6 +452,24 @@ func (r *Runner) Fetch() error {
 		return fmt.Errorf("cannot fetch: %w", err)
 	}
 	return nil
+}
+
+// FetchUpstream fetches updates from the upstream remote.
+func (r *Runner) FetchUpstream(branch string) error {
+	out, err := r.Run("git", "fetch", "upstream", branch)
+	if err != nil {
+		return fmt.Errorf("cannot fetch from upstream: %w\n%s", err, out.Output())
+	}
+	return nil
+}
+
+// FileContent provides the current content of a file.
+func (r *Runner) FileContent(filename string) (result string, err error) {
+	outcome, err := r.Run("cat", filename)
+	if err != nil {
+		return result, err
+	}
+	return outcome.Output(), nil
 }
 
 // FileContentInCommit provides the content of the file with the given name in the commit with the given SHA.
@@ -354,11 +559,8 @@ func (r *Runner) HasLocalOrRemoteBranch(name string) (bool, error) {
 
 // HasMergeInProgress indicates whether this Git repository currently has a merge in progress.
 func (r *Runner) HasMergeInProgress() (result bool, err error) {
-	res, err := r.Run("git", "status")
-	if err != nil {
-		return result, fmt.Errorf("cannot determine merge in %q progress: %w", r.WorkingDir(), err)
-	}
-	return strings.Contains(res.OutputSanitized(), "You have unmerged paths"), nil
+	_, err = os.Stat(filepath.Join(r.WorkingDir(), ".git", "MERGE_HEAD"))
+	return err == nil, nil
 }
 
 // HasOpenChanges indicates whether this repo has open changes.
@@ -376,7 +578,14 @@ func (r *Runner) HasRebaseInProgress() (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("cannot determine rebase in %q progress: %w", r.WorkingDir(), err)
 	}
-	return strings.Contains(res.OutputSanitized(), "You are currently rebasing"), nil
+	output := res.OutputSanitized()
+	if strings.Contains(output, "You are currently rebasing") {
+		return true, nil
+	}
+	if strings.Contains(output, "rebase in progress") {
+		return true, nil
+	}
+	return false, nil
 }
 
 // HasRemote indicates whether this repo has a remote with the given name.
@@ -386,6 +595,16 @@ func (r *Runner) HasRemote(name string) (result bool, err error) {
 		return false, fmt.Errorf("cannot determine if remote %q exists: %w", name, err)
 	}
 	return util.DoesStringArrayContain(remotes, name), nil
+}
+
+// HasShippableChanges indicates whether the given branch has changes
+// not currently in the main branch.
+func (r *Runner) HasShippableChanges(branch string) (bool, error) {
+	out, err := r.Run("git", "diff", r.GetMainBranch()+".."+branch)
+	if err != nil {
+		return false, fmt.Errorf("cannot determine whether branch %q has shippable changes: %w\n%s", branch, err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
 }
 
 // HasTrackingBranch indicates whether the local branch with the given name has a remote tracking branch.
@@ -407,6 +626,15 @@ func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 func (r *Runner) LastActiveDir() (string, error) {
 	res, err := r.Run("git", "rev-parse", "--show-toplevel")
 	return filepath.FromSlash(res.OutputSanitized()), err
+}
+
+// LastCommitMessage returns the commit message for the last commit
+func (r *Runner) LastCommitMessage() (string, error) {
+	out, err := r.Run("git", "log", "-1", "--format=%B")
+	if err != nil {
+		return "", fmt.Errorf("cannot determine last commit message: %w\n%s", err, out.Output())
+	}
+	return out.OutputSanitized(), nil
 }
 
 // LocalBranches provides the names of all local branches in this repo.
@@ -445,6 +673,22 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	return MainFirst(result), nil
 }
 
+// MergeBranchNoEdit merges the given branch into the current branch,
+// using the default commit message.
+func (r *Runner) MergeBranchNoEdit(branch string) error {
+	_, err := r.Run("git", "merge", "--no-edit", branch)
+	return err
+}
+
+// PopStash restores stashed-away changes into the workspace.
+func (r *Runner) PopStash() error {
+	outcome, err := r.Run("git", "stash", "pop")
+	if err != nil {
+		return fmt.Errorf("cannot pop the stash: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // PreviouslyCheckedOutBranch provides the name of the branch that was previously checked out in this repo.
 func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	outcome, err := r.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
@@ -454,8 +698,35 @@ func (r *Runner) PreviouslyCheckedOutBranch() (name string, err error) {
 	return outcome.OutputSanitized(), nil
 }
 
+// Pull fetches updates from the origin remote and updates the currently checked out branch.
+func (r *Runner) Pull() error {
+	outcome, err := r.Run("git", "pull")
+	if err != nil {
+		return fmt.Errorf("cannot pull updates: %w\n%s", err, outcome.Output())
+	}
+	return nil
+}
+
 // PushBranch pushes the branch with the given name to the remote.
-func (r *Runner) PushBranch(name string) error {
+func (r *Runner) PushBranch() error {
+	outcome, err := r.Run("git", "push")
+	if err != nil {
+		return fmt.Errorf("cannot push branch in repo %q to origin: %w\n%v", r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
+// PushBranchForce pushes the branch with the given name to the remote.
+func (r *Runner) PushBranchForce(name string) error {
+	outcome, err := r.Run("git", "push", "-f", "origin", name)
+	if err != nil {
+		return fmt.Errorf("cannot force-push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
+// PushBranchSetUpstream pushes the branch with the given name to the remote.
+func (r *Runner) PushBranchSetUpstream(name string) error {
 	outcome, err := r.Run("git", "push", "-u", "origin", name)
 	if err != nil {
 		return fmt.Errorf("cannot push branch %q in repo %q to origin: %w\n%v", name, r.WorkingDir(), err, outcome)
@@ -463,11 +734,26 @@ func (r *Runner) PushBranch(name string) error {
 	return nil
 }
 
+// PushTags pushes new the Git tags to origin.
+func (r *Runner) PushTags() error {
+	outcome, err := r.Run("git", "push", "--tags")
+	if err != nil {
+		return fmt.Errorf("cannot push branch in repo %q: %w\n%v", r.WorkingDir(), err, outcome)
+	}
+	return nil
+}
+
+// Rebase initiates a Git rebase of the current branch against the given branch.
+func (r *Runner) Rebase(target string) error {
+	outcome, err := r.Run("git", "rebase", target)
+	if err != nil {
+		return fmt.Errorf("cannot rebase against branch %q: %w\n%v", target, err, outcome)
+	}
+	return nil
+}
+
 // RemoteBranches provides the names of the remote branches in this repo.
 func (r *Runner) RemoteBranches() ([]string, error) {
-	if r.remoteBranchCache.Initialized() {
-		return r.remoteBranchCache.Get(), nil
-	}
 	outcome, err := r.Run("git", "branch", "-r")
 	if err != nil {
 		return []string{}, fmt.Errorf("cannot determine remote branches")
@@ -479,8 +765,6 @@ func (r *Runner) RemoteBranches() ([]string, error) {
 			result = append(result, strings.TrimSpace(lines[l]))
 		}
 	}
-	r.remoteBranchCache.Set(result)
-	remoteBranchesInitialized = true
 	return result, nil
 }
 
@@ -523,10 +807,53 @@ func (r *Runner) RemoveUnnecessaryFiles() error {
 	return nil
 }
 
+// ResetToSha undoes all commits on the current branch all the way until the given SHA.
+func (r *Runner) ResetToSha(sha string, hard bool) error {
+	args := []string{"reset"}
+	if hard {
+		args = append(args, "--hard")
+	}
+	args = append(args, sha)
+	outcome, err := r.Run("git", args...)
+	if err != nil {
+		return fmt.Errorf("cannot reset to SHA %q: %w\n%v", sha, err, outcome)
+	}
+	return nil
+}
+
+// RevertCommit reverts the commit with the given SHA.
+func (r *Runner) RevertCommit(sha string) error {
+	res, err := r.Run("git", "revert", sha)
+	if err != nil {
+		return fmt.Errorf("cannot revert commit %q: %w\n%s", sha, err, res.Output())
+	}
+	return nil
+}
+
+// ShouldPushBranch returns whether the local branch with the given name
+// contains commits that have not been pushed to the remote.
+func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
+	trackingBranch := r.TrackingBranchName(branch)
+	out, err := r.Run("git", "rev-list", "--left-right", branch+"..."+trackingBranch)
+	if err != nil {
+		return false, fmt.Errorf("cannot list diff of %q and %q: %w\n%s", branch, trackingBranch, err, out.Output())
+	}
+	return out.OutputSanitized() != "", nil
+}
+
+// SquashMerge squash-merges the given branch into the current branch
+func (r *Runner) SquashMerge(branch string) error {
+	out, err := r.Run("git", "merge", "--squash", branch)
+	if err != nil {
+		return fmt.Errorf("cannot squash-merge branch %q: %w\n%s", branch, err, out.Output())
+	}
+	return nil
+}
+
 // Stash adds the current files to the Git stash.
 func (r *Runner) Stash() error {
 	err := r.RunMany([][]string{
-		{"git", "add", "."},
+		{"git", "add", "-A"},
 		{"git", "stash"},
 	})
 	if err != nil {
@@ -557,6 +884,11 @@ func (r *Runner) Tags() (result []string, err error) {
 		result = append(result, strings.TrimSpace(line))
 	}
 	return result, err
+}
+
+// TrackingBranchName provides the name of the remote branch tracking the given local branch.
+func (r *Runner) TrackingBranchName(branch string) string {
+	return "origin/" + branch
 }
 
 // UncommittedFiles provides the names of the files not committed into Git.
@@ -600,6 +932,15 @@ func (r *Runner) StageFiles(names ...string) error {
 	_, err := r.Run("git", args...)
 	if err != nil {
 		return fmt.Errorf("cannot stage files %s: %w", strings.Join(names, ", "), err)
+	}
+	return nil
+}
+
+// StartCommit starts a commit and stops at asking the user for the commit message.
+func (r *Runner) StartCommit() error {
+	out, err := r.Run("git", "commit")
+	if err != nil {
+		return fmt.Errorf("cannot start commit: %w\n%s", err, out.Output())
 	}
 	return nil
 }
