@@ -14,4 +14,5 @@ Feature: git-town repo: when origin is a self hosted servie
       | DRIVER    | REPO_URL                              |
       | bitbucket | https://self-hosted/git-town/git-town |
       | github    | https://self-hosted/git-town/git-town |
+      | gitea     | https://self-hosted/git-town/git-town |
       | gitlab    | https://self-hosted/git-town/git-town |
