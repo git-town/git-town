@@ -9,6 +9,7 @@ require (
 	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/dustin/go-humanize v1.0.0
 	github.com/fatih/color v1.9.0
+	github.com/golang/mock v1.4.3 // indirect
 	github.com/golang/protobuf v1.4.0 // indirect
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
