@@ -13,7 +13,7 @@ type gitlabCodeHostingDriver struct {
 }
 
 
-func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+func (d *gitlabCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	if opts.DriverType != "gitlab" && opts.OriginHostname != "gitlab.com"{
 		return false
 	}

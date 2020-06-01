@@ -10,6 +10,7 @@ import (
 
 	"golang.org/x/oauth2"
 
+	"github.com/git-town/git-town/src/git"
 	"code.gitea.io/sdk/gitea"
 )
 

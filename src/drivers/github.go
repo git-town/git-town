@@ -20,7 +20,7 @@ type githubCodeHostingDriver struct {
 	repository string
 }
 
-func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+func (d *githubCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	if opts.DriverType != "github" && opts.OriginHostname != "github.com"{
 		return false
 	}

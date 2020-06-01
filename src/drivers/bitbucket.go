@@ -15,7 +15,7 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+func (d *bitbucketCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	if opts.DriverType != "bitbucket" && opts.OriginHostname != "bitbucket.org"{
 		return false
 	}
