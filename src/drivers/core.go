@@ -8,7 +8,7 @@ var registry = Registry{}
 
 var activeDriver CodeHostingDriver
 
-var gitConfig = git.Config()
+var GitConfig = git.Config()
 
 // GetActiveDriver returns the code hosting driver to use based on the git config
 func GetActiveDriver() CodeHostingDriver {

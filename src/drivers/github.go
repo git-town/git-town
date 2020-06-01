@@ -31,7 +31,7 @@ func (d *githubCodeHostingDriver) WasActivated(opts DriverOptions) bool {
 	d.originURL = opts.OriginURL
 	d.owner = repositoryParts[0]
 	d.repository = repositoryParts[1]
-	d.apiToken = gitConfig.GetGitHubToken()
+	d.apiToken = GitConfig.GetGitHubToken()
 	return true
 }
 
@@ -52,7 +52,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
-	if parentBranch != gitConfig.GetMainBranch() {
+	if parentBranch != GitConfig.GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
