@@ -14,8 +14,15 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
+func (d *bitbucketCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+	if opts.DriverType != "bitbucket" && opts.OriginHostname != "bitbucket.org" {
+		return false
+	}
+	// Initialize
+	d.hostname = opts.OriginHostname
+	d.originURL = opts.OriginURL
+	d.repository = GetURLRepositoryName(opts.OriginURL)
+	return true
 }
 
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -40,22 +47,6 @@ func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOp
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
 }
-
-func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = GitConfig.GetURLHostname(originURL)
-	d.repository = GitConfig.GetURLRepositoryName(originURL)
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
 
 func init() {
 	registry.RegisterDriver(&bitbucketCodeHostingDriver{})

@@ -21,8 +21,19 @@ type giteaCodeHostingDriver struct {
 	repository string
 }
 
-func (d *giteaCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "gitea" || d.hostname == "gitea.com"
+func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
+	if opts.DriverType != "gitea" && opts.OriginHostname != "gitea.com" {
+		return false
+	}
+	// Initialize
+	repositoryParts := strings.SplitN(GetURLRepositoryName(opts.OriginURL), "/", 2)
+	d.client = nil
+	d.hostname = opts.OriginHostname
+	d.originURL = opts.OriginURL
+	d.owner = repositoryParts[0]
+	d.repository = repositoryParts[1]
+	d.apiToken = GitConfig.GetGiteaToken()
+	return true
 }
 
 func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -46,10 +57,6 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 		return false, "", 0, nil
 	}
 	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
-}
-
-func (d *giteaCodeHostingDriver) GetAPIToken() string {
-	return GitConfig.GetGiteaToken()
 }
 
 func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -89,25 +96,6 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 		commitMessage = commitMessageParts[1]
 	}
 	return d.apiMergePullRequest(options.PullRequestNumber, commitTitle, commitMessage)
-}
-
-func (d *giteaCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
-}
-
-func (d *giteaCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = GitConfig.GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(GitConfig.GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
 }
 
 func init() {
