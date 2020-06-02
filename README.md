@@ -450,3 +450,7 @@ Kudos to our contributors!
     </td>
   </tr>
 </table>
+
+### Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/git-town/git-town.svg)](https://starchart.cc/git-town/git-town)
