@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
-// PreserveCheckoutHistoryStep does stuff
+// PreserveCheckoutHistoryStep does stuff.
 type PreserveCheckoutHistoryStep struct {
 	NoOpStep
 	InitialBranch                     string

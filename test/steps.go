@@ -20,7 +20,7 @@ import (
 // beforeSuiteMux ensures that we run BeforeSuite only once globally.
 var beforeSuiteMux sync.Mutex
 
-// the global GitManager instance
+// the global GitManager instance.
 var gitManager *GitManager
 
 // Steps defines Cucumber step implementations around Git workspace management.

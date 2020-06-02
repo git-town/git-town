@@ -33,7 +33,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 	},
 }
 
-// Does not return error because "Ensure" functions will call exit directly
+// Does not return error because "Ensure" functions will call exit directly.
 func getDiffParentConfig(args []string) (config diffParentConfig) {
 	initialBranch := git.GetCurrentBranchName()
 	if len(args) == 0 {

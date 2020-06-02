@@ -3,7 +3,7 @@ package drivers
 import "fmt"
 
 // UnsupportedHostingServiceError represents the error condition
-// when no suitable hosting service is found in the respective Registry
+// when no suitable hosting service is found in the respective Registry.
 type UnsupportedHostingServiceError struct {
 	registry *Registry
 }

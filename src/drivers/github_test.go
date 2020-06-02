@@ -57,7 +57,6 @@ func TestGitHubDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Error(t, err)
 }
 
@@ -118,7 +117,7 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	_, err := driver.MergePullRequest(options)
 	assert.Error(t, err)
-	assert.Equal(t, "cannot merge via Github since there is no pull request", err.Error())
+	assert.Equal(t, "cannot merge via Github: no pull request found", err.Error())
 }
 
 func TestGitHubDriver_MergePullRequest(t *testing.T) {

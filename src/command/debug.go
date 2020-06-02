@@ -9,7 +9,7 @@ import (
 var debug bool
 var count int
 
-// SetDebug sets whether or not we are in debug mode
+// SetDebug sets whether or not we are in debug mode.
 func SetDebug(value bool) {
 	debug = value
 }

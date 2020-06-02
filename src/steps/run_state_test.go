@@ -22,9 +22,9 @@ func TestRunState_Marshal(t *testing.T) {
 		},
 	}
 	data, err := json.Marshal(runState)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	newRunState := &steps.RunState{}
 	err = json.Unmarshal(data, &newRunState)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, runState, newRunState)
 }
