@@ -49,7 +49,7 @@ func SaveRunState(runState *RunState) error {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
 	filename := getRunResultFilename()
-	err = ioutil.WriteFile(filename, content, 0644)
+	err = ioutil.WriteFile(filename, content, 0600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}

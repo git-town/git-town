@@ -38,6 +38,7 @@ func TestCommand_RunInDir(t *testing.T) {
 	dirPath := filepath.Join(dir, "mydir")
 	err = os.Mkdir(dirPath, 0744)
 	assert.NoError(t, err)
+	// nolint:gosec
 	err = ioutil.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0744)
 	assert.NoError(t, err)
 	res, err := command.RunInDir(dirPath, "ls", "-1")
