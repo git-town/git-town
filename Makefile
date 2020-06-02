@@ -60,7 +60,7 @@ setup: setup-go  # the setup steps necessary on developer machines
 
 setup-go:
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.27.0
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
