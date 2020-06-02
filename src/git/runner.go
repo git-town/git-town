@@ -302,8 +302,7 @@ func (r *Runner) CreateFile(name, content string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create folder %q: %v", folderPath, err)
 	}
-	// nolint:gosec
-	err = ioutil.WriteFile(filePath, []byte(content), 0700)
+	err = ioutil.WriteFile(filePath, []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot create file %q: %w", name, err)
 	}

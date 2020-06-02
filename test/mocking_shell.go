@@ -43,15 +43,13 @@ func (ms *MockingShell) MockBrokenCommand(name string) error {
 	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
 	// write custom command
 	content = "#!/usr/bin/env bash\n\nexit 1"
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}
@@ -68,15 +66,13 @@ func (ms *MockingShell) MockCommand(name string) error {
 	}
 	// write custom "which" command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" == %q ]; then\n  echo %q\nelse\n  exit 1\nfi", name, filepath.Join(ms.binDir, name))
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
 	// write custom command
 	content = fmt.Sprintf("#!/usr/bin/env bash\n\necho %s called with: \"$@\"\n", name)
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, name), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom command: %w", err)
 	}
@@ -93,8 +89,7 @@ func (ms *MockingShell) MockGit(version string) error {
 	}
 	// write custom Git command
 	content := fmt.Sprintf("#!/usr/bin/env bash\n\nif [ \"$1\" = \"version\" ]; then\n  echo git version %s\nfi\n", version)
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "git"), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot create custom Git binary: %w", err)
 	}
@@ -111,8 +106,7 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 	}
 	// write custom "which" command
 	content := "#!/usr/bin/env bash\n\nexit 1\n"
-	// nolint:gosec
-	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0700)
+	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
 	}
