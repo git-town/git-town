@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	gtmocks "github.com/git-town/git-town/mocks"
 	. "github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
@@ -17,12 +18,20 @@ var giteaMergePullRequestURL = giteaPullRequestBaseURL + "/1/merge"
 var giteaGetPullRequestURL = giteaPullRequestBaseURL + "/1"
 
 func giteaSetupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
-	httpmock.Activate()
-	driver := GetDriver(DriverOptions{OriginURL: "git@gitea.com:gitea/go-sdk.git"})
-	assert.NotNil(t, driver)
+	var mockedGitConfig = new(gtmocks.ConfigurationInterface)
+	mockedGitConfig.On("GetCodeHostingOriginHostname").Return("")
+	mockedGitConfig.On("GetCodeHostingDriverName").Return("")
+	mockedGitConfig.On("GetRemoteOriginURL").Return("git@gitea.com:gitea/go-sdk.git")
 	if token != "" {
-		driver.SetAPIToken(token)
+		mockedGitConfig.On("GetGiteaToken").Return(token)
+	} else {
+		mockedGitConfig.On("GetGiteaToken").Return("")
 	}
+	GitConfig = mockedGitConfig
+	httpmock.Activate()
+	driver := GetDriver()
+	assert.NotNil(t, driver)
+	mockedGitConfig.AssertExpectations(t)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
 	}
@@ -43,7 +52,6 @@ func TestGiteaDriver_CanMergePullRequest(t *testing.T) {
 func TestGiteaDriver_CanMergePullRequest_EmptyGiteaToken(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "")
 	defer teardown()
-	driver.SetAPIToken("")
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 	assert.NoError(t, err)
 	assert.False(t, canMerge)

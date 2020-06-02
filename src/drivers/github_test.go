@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 
+	gtmocks "github.com/git-town/git-town/mocks"
 	. "github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
@@ -19,12 +20,20 @@ var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
 func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
-	httpmock.Activate()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:git-town/git-town.git"})
-	assert.NotNil(t, driver)
+	var mockedGitConfig = new(gtmocks.ConfigurationInterface)
+	mockedGitConfig.On("GetCodeHostingOriginHostname").Return("")
+	mockedGitConfig.On("GetCodeHostingDriverName").Return("")
+	mockedGitConfig.On("GetRemoteOriginURL").Return("git@github.com:git-town/git-town.git")
 	if token != "" {
-		driver.SetAPIToken(token)
+		mockedGitConfig.On("GetGitHubToken").Return(token)
+	} else {
+		mockedGitConfig.On("GetGitHubToken").Return("")
 	}
+	GitConfig = mockedGitConfig
+	httpmock.Activate()
+	driver := GetDriver()
+	assert.NotNil(t, driver)
+	mockedGitConfig.AssertExpectations(t)
 	return driver, func() {
 		httpmock.DeactivateAndReset()
 	}
@@ -35,7 +44,6 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
 	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.NoError(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
@@ -45,9 +53,7 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
-	driver.SetAPIToken("")
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
