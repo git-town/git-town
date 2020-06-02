@@ -22,10 +22,10 @@ type giteaCodeHostingDriver struct {
 }
 
 func (d *giteaCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	if opts.DriverType != "gitea" && opts.OriginHostname != "gitea.com"{
+	if opts.DriverType != "gitea" && opts.OriginHostname != "gitea.com" {
 		return false
 	}
-    // Initialize
+	// Initialize
 	repositoryParts := strings.SplitN(GetURLRepositoryName(opts.OriginURL), "/", 2)
 	d.client = nil
 	d.hostname = opts.OriginHostname

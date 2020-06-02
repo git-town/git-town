@@ -3,11 +3,10 @@ package drivers_test
 import (
 	"testing"
 
-	"github.com/git-town/git-town/src/drivers"
 	gtmocks "github.com/git-town/git-town/mocks"
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 )
-
 
 func TestGetDriver_DriverType_Bitbucket(t *testing.T) {
 	var mockedGitConfig = new(gtmocks.ConfigurationInterface)

@@ -15,10 +15,10 @@ type bitbucketCodeHostingDriver struct {
 }
 
 func (d *bitbucketCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	if opts.DriverType != "bitbucket" && opts.OriginHostname != "bitbucket.org"{
+	if opts.DriverType != "bitbucket" && opts.OriginHostname != "bitbucket.org" {
 		return false
 	}
-    // Initialize
+	// Initialize
 	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
 	d.repository = GetURLRepositoryName(opts.OriginURL)

@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/git-town/git-town/src/drivers"
 	gtmocks "github.com/git-town/git-town/mocks"
+	. "github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )

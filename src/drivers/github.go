@@ -21,10 +21,10 @@ type githubCodeHostingDriver struct {
 }
 
 func (d *githubCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	if opts.DriverType != "github" && opts.OriginHostname != "github.com"{
+	if opts.DriverType != "github" && opts.OriginHostname != "github.com" {
 		return false
 	}
-    // Initialize
+	// Initialize
 	repositoryParts := strings.SplitN(GetURLRepositoryName(opts.OriginURL), "/", 2)
 	d.client = nil
 	d.hostname = opts.OriginHostname

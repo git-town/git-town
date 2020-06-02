@@ -11,12 +11,11 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-
 func (d *gitlabCodeHostingDriver) WasActivated(opts DriverOptions) bool {
-	if opts.DriverType != "gitlab" && opts.OriginHostname != "gitlab.com"{
+	if opts.DriverType != "gitlab" && opts.OriginHostname != "gitlab.com" {
 		return false
 	}
-    // Initialize
+	// Initialize
 	d.hostname = opts.OriginHostname
 	d.originURL = opts.OriginURL
 	d.repository = GetURLRepositoryName(opts.OriginURL)
