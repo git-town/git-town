@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher
+// EnsureVersionRequirementSatisfied asserts that Git is the needed version or higher.
 func EnsureVersionRequirementSatisfied() {
 	util.Ensure(isVersionRequirementSatisfied(), "Git Town requires Git 2.7.0 or higher")
 }

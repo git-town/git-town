@@ -608,7 +608,7 @@ func TestRunner_UncommittedFiles(t *testing.T) {
 }
 
 // CreateTestGitTownRepo creates a GitRepo for use in tests, with a main branch and
-// initial git town configuration
+// initial git town configuration.
 func CreateTestGitTownRepo(t *testing.T) test.Repo {
 	repo := test.CreateRepo(t)
 	err := repo.CreateBranch("main", "master")

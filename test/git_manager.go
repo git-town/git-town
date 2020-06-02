@@ -36,7 +36,7 @@ func (manager *GitManager) CreateMemoizedEnvironment() error {
 	return nil
 }
 
-// CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name
+// CreateScenarioEnvironment provides a new GitEnvironment for the scenario with the given name.
 func (manager *GitManager) CreateScenarioEnvironment(scenarioName string) (*GitEnvironment, error) {
 	envDirName := helpers.FolderName(scenarioName) + "_" + helpers.UniqueString()
 	envPath := filepath.Join(manager.dir, envDirName)

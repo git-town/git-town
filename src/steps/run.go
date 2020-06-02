@@ -10,7 +10,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// Run runs the Git Town command described by the given state
+// Run runs the Git Town command described by the given state.
 // nolint: gocyclo, gocognit
 func Run(runState *RunState, repo *git.ProdRepo) error {
 	for {

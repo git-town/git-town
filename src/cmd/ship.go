@@ -30,7 +30,7 @@ type shipConfig struct {
 	childBranches                []string
 }
 
-// optional commit message provided via the command line
+// optional commit message provided via the command line.
 var commitMessage string
 
 var shipCmd = &cobra.Command{

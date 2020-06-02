@@ -178,7 +178,7 @@ func (c *Configuration) getLocalOrGlobalConfigValue(key string) string {
 	return c.getGlobalConfigValue(key)
 }
 
-// GetParentBranchMap returns a map from branch name to its parent branch
+// GetParentBranchMap returns a map from branch name to its parent branch.
 func (c *Configuration) GetParentBranchMap() map[string]string {
 	result := map[string]string{}
 	for _, key := range c.localConfigKeysMatching(`^git-town-branch\..*\.parent$`) {
@@ -268,7 +268,7 @@ func (c *Configuration) HasBranchInformation() bool {
 	return false
 }
 
-// HasParentBranch returns whether or not the given branch has a parent
+// HasParentBranch returns whether or not the given branch has a parent.
 func (c *Configuration) HasParentBranch(branchName string) bool {
 	return c.GetParentBranch(branchName) != ""
 }
@@ -291,7 +291,7 @@ func (c *Configuration) IsMainBranch(branchName string) bool {
 	return branchName == c.GetMainBranch()
 }
 
-// IsOffline indicates whether Git Town is currently in offline mode
+// IsOffline indicates whether Git Town is currently in offline mode.
 func (c *Configuration) IsOffline() bool {
 	config := c.getGlobalConfigValue("git-town.offline")
 	if config != "" {
@@ -324,7 +324,7 @@ func (c *Configuration) Reload() {
 	c.globalConfigCache = loadGitConfig(c.shell, true)
 }
 
-// RemoveFromPerennialBranches removes the given branch as a perennial branch
+// RemoveFromPerennialBranches removes the given branch as a perennial branch.
 func (c *Configuration) RemoveFromPerennialBranches(branchName string) {
 	c.SetPerennialBranches(util.RemoveStringFromSlice(c.GetPerennialBranches(), branchName))
 }
@@ -345,7 +345,7 @@ func (c *Configuration) removeLocalConfigValue(key string) {
 	c.shell.MustRun("git", "config", "--unset", key)
 }
 
-// RemoveLocalGitConfiguration removes all Git Town configuration
+// RemoveLocalGitConfiguration removes all Git Town configuration.
 func (c *Configuration) RemoveLocalGitConfiguration() {
 	_, err := c.shell.Run("git", "config", "--remove-section", "git-town")
 	if err != nil {
@@ -360,7 +360,7 @@ func (c *Configuration) RemoveLocalGitConfiguration() {
 	}
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration
+// RemoveOutdatedConfiguration removes outdated Git Town configuration.
 func (c *Configuration) RemoveOutdatedConfiguration() {
 	for child, parent := range c.GetParentBranchMap() {
 		if !HasBranch(child) || !HasBranch(parent) {
@@ -414,7 +414,7 @@ func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Resul
 	return c.setLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
-// SetOffline updates whether Git Town is in offline mode
+// SetOffline updates whether Git Town is in offline mode.
 func (c *Configuration) SetOffline(value bool) *command.Result {
 	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
@@ -430,7 +430,7 @@ func (c *Configuration) SetParentBranch(branchName, parentBranchName string) *co
 	return c.setLocalConfigValue("git-town-branch."+branchName+".parent", parentBranchName)
 }
 
-// SetPerennialBranches marks the given branches as perennial branches
+// SetPerennialBranches marks the given branches as perennial branches.
 func (c *Configuration) SetPerennialBranches(branchNames []string) *command.Result {
 	return c.setLocalConfigValue("git-town.perennial-branch-names", strings.Join(branchNames, " "))
 }
@@ -481,7 +481,7 @@ func (c *Configuration) ShouldSyncUpstream() bool {
 	return c.getLocalOrGlobalConfigValue("git-town.sync-upstream") != "false"
 }
 
-// ValidateIsOnline asserts that Git Town is not in offline mode
+// ValidateIsOnline asserts that Git Town is not in offline mode.
 func (c *Configuration) ValidateIsOnline() error {
 	if c.IsOffline() {
 		return errors.New("this command requires an active internet connection")
