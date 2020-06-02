@@ -22,14 +22,14 @@ func CreateRepo(t *testing.T) Repo {
 	dir := CreateTempDir(t)
 	workingDir := filepath.Join(dir, "repo")
 	err := os.Mkdir(workingDir, 0744)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	homeDir := filepath.Join(dir, "home")
 	err = os.Mkdir(homeDir, 0744)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	repo, err := InitRepo(workingDir, homeDir, homeDir)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	_, err = repo.Run("git", "commit", "--allow-empty", "-m", "initial commit")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	return repo
 }
 
