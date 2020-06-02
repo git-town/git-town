@@ -11,7 +11,7 @@ import (
 )
 
 // Run runs the Git Town command described by the given state.
-// nolint: gocyclo, gocognit
+// nolint: gocyclo, gocognit, nestif
 func Run(runState *RunState, repo *git.ProdRepo) error {
 	for {
 		step := runState.RunStepList.Pop()
