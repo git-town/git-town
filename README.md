@@ -216,14 +216,14 @@ Kudos to our contributors!
         <sup><b>@aricahunter</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/jiexi">
         <img src="https://avatars2.githubusercontent.com/u/918701?s=60" width="60px">
         <sup><b>@jiexi</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/iamandrewluca">
         <img src="https://avatars1.githubusercontent.com/u/1881266?s=60" width="60px">
@@ -266,14 +266,14 @@ Kudos to our contributors!
         <sup><b>@morrme</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/mjhm">
         <img src="https://avatars0.githubusercontent.com/u/431925?s=60" width="60px">
         <sup><b>@mjhm</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/luketlancaster">
         <img src="https://avatars3.githubusercontent.com/u/8376505?s=60" width="60px">
@@ -316,14 +316,14 @@ Kudos to our contributors!
         <sup><b>@TKAB</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Siilwyn">
         <img src="https://avatars2.githubusercontent.com/u/5701149?s=60" width="60px">
         <sup><b>@Siilwyn</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/WurmD">
         <img src="https://avatars2.githubusercontent.com/u/5755747?s=60" width="60px">
@@ -366,14 +366,14 @@ Kudos to our contributors!
         <sup><b>@pattiereaves</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/zenspider">
         <img src="https://avatars0.githubusercontent.com/u/9832?s=60" width="60px">
         <sup><b>@zenspider</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/Iron-Ham">
         <img src="https://avatars1.githubusercontent.com/u/3388381?s=60" width="60px">
@@ -416,14 +416,14 @@ Kudos to our contributors!
         <sup><b>@qrevel</b></sup>
       </a>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="60">
       <a href="https://github.com/aeneasr">
         <img src="https://avatars1.githubusercontent.com/u/3372410?s=60" width="60px">
         <sup><b>@aeneasr</b></sup>
       </a>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="60">
       <a href="https://github.com/martinjaime">
         <img src="https://avatars1.githubusercontent.com/u/10568301?s=60" width="60px">
