@@ -50,7 +50,7 @@ func createFile(t *testing.T, dir, filename string) {
 	filePath := filepath.Join(dir, filename)
 	err := os.MkdirAll(filepath.Dir(filePath), 0744)
 	assert.Nil(t, err)
-	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0600)
+	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0500)
 	assert.Nil(t, err)
 }
 
