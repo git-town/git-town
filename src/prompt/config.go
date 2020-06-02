@@ -8,7 +8,7 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
-// EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed
+// EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
 func EnsureIsConfigured() {
 	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
@@ -18,7 +18,7 @@ func EnsureIsConfigured() {
 	}
 }
 
-// ConfigureMainBranch has the user to confgure the main branch
+// ConfigureMainBranch has the user to confgure the main branch.
 func ConfigureMainBranch() {
 	newMainBranch := askForBranch(askForBranchOptions{
 		branchNames:       git.GetLocalBranches(),
@@ -28,7 +28,7 @@ func ConfigureMainBranch() {
 	git.Config().SetMainBranch(newMainBranch)
 }
 
-// ConfigurePerennialBranches has the user to confgure the perennial branches
+// ConfigurePerennialBranches has the user to confgure the perennial branches.
 func ConfigurePerennialBranches() {
 	branchNames := git.GetLocalBranchesWithoutMain()
 	if len(branchNames) == 0 {

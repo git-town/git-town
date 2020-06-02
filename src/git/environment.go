@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/src/command"
 )
 
-// ValidateIsRepository asserts that the current directory is in a repository
+// ValidateIsRepository asserts that the current directory is in a repository.
 func ValidateIsRepository() error {
 	if IsRepository() {
 		return nil
@@ -14,11 +14,11 @@ func ValidateIsRepository() error {
 	return errors.New("this is not a Git repository")
 }
 
-// isRepository is cached in order to minimize the number of git commands run
+// isRepository is cached in order to minimize the number of git commands run.
 var isRepository bool
 var isRepositoryInitialized bool
 
-// IsRepository returns whether or not the current directory is in a repository
+// IsRepository returns whether or not the current directory is in a repository.
 func IsRepository() bool {
 	if !isRepositoryInitialized {
 		_, err := command.Run("git", "rev-parse")

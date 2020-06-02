@@ -2,7 +2,7 @@ package steps
 
 import "github.com/git-town/git-town/src/git"
 
-// AddToPerennialBranches adds the branch with the given name as a perennial branch
+// AddToPerennialBranches adds the branch with the given name as a perennial branch.
 type AddToPerennialBranches struct {
 	NoOpStep
 	BranchName string

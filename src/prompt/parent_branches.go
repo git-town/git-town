@@ -22,7 +22,7 @@ func EnsureKnowsParentBranches(branchNames []string) {
 	}
 }
 
-// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch
+// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
 	for {
@@ -43,7 +43,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 	}
 }
 
-// AskForBranchParent prompts the user for the parent of the given branch
+// AskForBranchParent prompts the user for the parent of the given branch.
 func AskForBranchParent(branchName, defaultBranchName string) string {
 	choices := git.GetLocalBranchesWithMainBranchFirst()
 	filteredChoices := filterOutSelfAndDescendants(branchName, choices)

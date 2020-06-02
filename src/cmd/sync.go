@@ -20,7 +20,7 @@ type syncConfig struct {
 	isOffline      bool
 }
 
-// the git.ProdRepo instance to use for sync commands
+// the git.ProdRepo instance to use for sync commands.
 var syncProdRepo *git.ProdRepo
 
 var syncCmd = &cobra.Command{

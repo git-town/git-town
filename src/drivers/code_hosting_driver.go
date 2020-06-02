@@ -1,7 +1,7 @@
 package drivers
 
 // CodeHostingDriver defines the structure of drivers
-// for the different code hosting services
+// for the different code hosting services.
 type CodeHostingDriver interface {
 
 	// CanBeUsed returns whether this driver can manage
