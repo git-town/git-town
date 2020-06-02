@@ -23,7 +23,7 @@ Feature: invalid invocation
       | config arg1                      |
       | hack                             |
       | hack arg1 arg2                   |
-      | install-fish-autocompletion arg1 |
+      | completion arg1                  |
       | kill arg1 arg2                   |
       | main-branch arg1 arg2            |
       | new-branch-push-flag arg1 arg2   |

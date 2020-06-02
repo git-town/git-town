@@ -61,8 +61,8 @@ Git Town provides these additional Git commands:
 
 - [git town alias](/documentation/commands/alias.md) - adds or removes shorter
   aliases for Git Town commands
-- [git town install-fish-autocompletion](/documentation/commands/install-fish-autocompletion.md) -
-  installs the autocompletion definition for [Fish shell](http://fishshell.com)
+- [git town completion](/documentation/commands/completion.md) -
+  generates competion scripts for bash, zsh, fish & powershell.
 - [git town version](/documentation/commands/version.md) - displays the
   installed version of Git Town
 

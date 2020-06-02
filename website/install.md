@@ -64,7 +64,7 @@ ensure your Git version is 2.7.0 or higher._
 
 #### Install autocompletion
 
-- for [Fish shell](http://fishshell.com): `git town install-fish-autocompletion`
+- check instructions from: `git town completion --help`
 
 #### Notifications about new releases
 
