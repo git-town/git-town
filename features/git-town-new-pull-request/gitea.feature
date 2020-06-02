@@ -16,7 +16,7 @@ Feature: git-new-pull-request when origin is on Gitea
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitea.com/git-town/git-town/compare/feature
+      https://gitea.com/git-town/git-town/compare/main...feature
       """
 
     Examples:
@@ -36,7 +36,7 @@ Feature: git-new-pull-request when origin is on Gitea
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitea.com/git-town/git-town.gitea.com/compare/feature |
+      https://gitea.com/git-town/git-town.gitea.com/compare/main...feature
       """
 
     Examples:
@@ -61,10 +61,10 @@ Feature: git-new-pull-request when origin is on Gitea
 
     Examples:
       | BRANCH_NAME    | URL                                                        |
-      | feature-branch | https://gitea.com/git-town/git-town/compare/feature-branch |
-      | feature_branch | https://gitea.com/git-town/git-town/compare/feature_branch |
-      | fix-#2         | https://gitea.com/git-town/git-town/compare/fix-%232       |
-      | test/feature   | https://gitea.com/git-town/git-town/compare/test%2Ffeature |
+      | feature-branch | https://gitea.com/git-town/git-town/compare/main...feature-branch |
+      | feature_branch | https://gitea.com/git-town/git-town/compare/main...feature_branch |
+      | fix-#2         | https://gitea.com/git-town/git-town/compare/main...fix-%232       |
+      | test/feature   | https://gitea.com/git-town/git-town/compare/main...test%2Ffeature |
 
 
   Scenario Outline: SSH style origin
@@ -74,7 +74,7 @@ Feature: git-new-pull-request when origin is on Gitea
     When I run "git-town new-pull-request"
     Then "open" launches a new pull request with this url in my browser:
       """
-      https://gitea.com/git-town/git-town/compare/feature
+      https://gitea.com/git-town/git-town/compare/main...feature
       """
 
     Examples:

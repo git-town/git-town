@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -10,10 +9,6 @@ import (
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
-
-var ErrNoFeatureBranch = errors.New("no feature branch")
-var ErrBranchMissing = errors.New("branch missing")
-var ErrInvalidValue = errors.New("invalid value")
 
 // RootCmd is the main Cobra object.
 var RootCmd = &cobra.Command{
