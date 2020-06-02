@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"errors"
 	"io/ioutil"
 	"os"
 	"os/exec"
