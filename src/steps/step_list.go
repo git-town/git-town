@@ -70,19 +70,16 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 		InitialBranch:                     git.GetCurrentBranchName(),
 		InitialPreviouslyCheckedOutBranch: git.GetPreviouslyCheckedOutBranch(),
 	})
-
 	if options.StashOpenChanges && git.HasOpenChanges() {
 		stepList.Prepend(&StashOpenChangesStep{})
 		stepList.Append(&RestoreOpenChangesStep{})
 	}
-
 	initialDirectory, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("cannot get current working directory: %v", err)
 		os.Exit(1)
 	}
 	gitRootDirectory := git.GetRootDirectory()
-
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
