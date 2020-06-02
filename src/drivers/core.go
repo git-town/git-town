@@ -2,7 +2,7 @@ package drivers
 
 import "github.com/git-town/git-town/src/git"
 
-// Core provides the public API for the drivers subsystem
+// Core provides the public API for the drivers subsystem.
 
 var registry = Registry{}
 
@@ -10,7 +10,7 @@ var activeDriver CodeHostingDriver
 
 var GitConfig = git.Config()
 
-// GetActiveDriver returns the code hosting driver to use based on the git config
+// GetActiveDriver returns the code hosting driver to use based on the git config.
 func GetActiveDriver() CodeHostingDriver {
 	if activeDriver == nil {
 		activeDriver = GetDriver()
@@ -18,7 +18,7 @@ func GetActiveDriver() CodeHostingDriver {
 	return activeDriver
 }
 
-// GetDriver returns the code hosting driver to use based on given origin url
+// GetDriver returns the code hosting driver to use based on given origin url.
 func GetDriver() CodeHostingDriver {
 	var originHostname string
 	originURL := GitConfig.GetRemoteOriginURL()
@@ -34,7 +34,7 @@ func GetDriver() CodeHostingDriver {
 	})
 }
 
-// ValidateHasDriver returns an error if there is no code hosting driver
+// ValidateHasDriver returns an error if there is no code hosting driver.
 func ValidateHasDriver() error {
 	driver := GetActiveDriver()
 	if driver == nil {

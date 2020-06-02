@@ -2,7 +2,7 @@ package steps
 
 import "github.com/git-town/git-town/src/git"
 
-// RemoveFromPerennialBranches removes the branch with the given name as a perennial branch
+// RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranches struct {
 	NoOpStep
 	BranchName string

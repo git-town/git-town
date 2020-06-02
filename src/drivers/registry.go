@@ -4,12 +4,12 @@ import (
 	"sort"
 )
 
-// Registry collects and manages all CodeHostingDriver instances
+// Registry collects and manages all CodeHostingDriver instances.
 type Registry struct {
 	drivers []CodeHostingDriver
 }
 
-// DetermineActiveDriver determines the driver to use for the given hostname
+// DetermineActiveDriver determines the driver to use for the given hostname.
 func (r *Registry) DetermineActiveDriver(driverOptions DriverOptions) CodeHostingDriver {
 	for _, driver := range r.drivers {
 		if driver.WasActivated(driverOptions) {
@@ -19,7 +19,7 @@ func (r *Registry) DetermineActiveDriver(driverOptions DriverOptions) CodeHostin
 	return nil
 }
 
-// DriverNames returns the names of all drivers, sorted alphabetically
+// DriverNames returns the names of all drivers, sorted alphabetically.
 func (r *Registry) DriverNames() (result []string) {
 	for _, driver := range r.drivers {
 		result = append(result, driver.HostingServiceName())
@@ -29,7 +29,7 @@ func (r *Registry) DriverNames() (result []string) {
 }
 
 // RegisterDriver allows driver implementations to register themselves
-// with the registry
+// with the registry.
 func (r *Registry) RegisterDriver(driver CodeHostingDriver) {
 	r.drivers = append(r.drivers, driver)
 }

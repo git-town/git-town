@@ -1,7 +1,6 @@
 package drivers
 
 import (
-	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -42,7 +41,7 @@ func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
 }
 
 func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return "", fmt.Errorf("shipping pull requests via the Bitbucket API: %w\nIf you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues", ErrNotSupported)
 }
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {

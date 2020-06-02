@@ -1,7 +1,6 @@
 package drivers
 
 import (
-	"errors"
 	"fmt"
 	"net/url"
 )
@@ -40,7 +39,7 @@ func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
 }
 
 func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
-	return "", errors.New("shipping pull requests via the GitLab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
+	return "", fmt.Errorf("shipping pull requests via the GitLab API: %w\nIf you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues", ErrNotSupported)
 }
 
 func (d *gitlabCodeHostingDriver) HostingServiceName() string {

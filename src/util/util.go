@@ -47,7 +47,7 @@ func Indent(message string, level int) string {
 }
 
 // Pluralize outputs the count and the word. The word is made plural
-// if the count isn't one
+// if the count isn't one.
 func Pluralize(count, word string) string {
 	result := count + " " + word
 	if count != "1" {
@@ -79,7 +79,7 @@ func PrintError(messages ...string) {
 
 // PrintLabelAndValue prints the label bolded and underlined
 // the value indented on the next line
-// followed by an empty line
+// followed by an empty line.
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	PrintlnColor(labelFmt, label+":")
@@ -88,7 +88,7 @@ func PrintLabelAndValue(label, value string) {
 }
 
 // RemoveStringFromSlice returns a new string slice which is the given string slice
-// with the given string removed
+// with the given string removed.
 func RemoveStringFromSlice(list []string, value string) (result []string) {
 	for _, element := range list {
 		if element != value {

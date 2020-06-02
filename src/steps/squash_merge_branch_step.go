@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/src/prompt"
 )
 
-// SquashMergeBranchStep squash merges the branch with the given name into the current branch
+// SquashMergeBranchStep squash merges the branch with the given name into the current branch.
 type SquashMergeBranchStep struct {
 	NoOpStep
 	BranchName    string

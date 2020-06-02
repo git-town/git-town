@@ -53,7 +53,6 @@ func TestGiteaDriver_CanMergePullRequest_EmptyGiteaToken(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "")
 	defer teardown()
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
@@ -63,7 +62,6 @@ func TestGiteaDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T)
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaOpenPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Error(t, err)
 }
 

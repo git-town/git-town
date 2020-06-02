@@ -6,7 +6,7 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
-// UnfinishedRunStateDetails has details about an unfinished run state
+// UnfinishedRunStateDetails has details about an unfinished run state.
 type UnfinishedRunStateDetails struct {
 	CanSkip   bool
 	EndBranch string
@@ -26,7 +26,7 @@ type RunState struct {
 	UndoStepList      StepList
 }
 
-// NewRunState returns a new run state
+// NewRunState returns a new run state.
 func NewRunState(command string, stepList StepList) *RunState {
 	return &RunState{
 		Command:     command,
@@ -35,7 +35,7 @@ func NewRunState(command string, stepList StepList) *RunState {
 }
 
 // AddPushBranchStepAfterCurrentBranchSteps inserts a PushBranchStep
-// after all the steps for the current branch
+// after all the steps for the current branch.
 func (runState *RunState) AddPushBranchStepAfterCurrentBranchSteps() {
 	popped := StepList{}
 	for {
@@ -94,17 +94,17 @@ func (runState *RunState) CreateUndoRunState() (result RunState) {
 	return
 }
 
-// IsUnfinished returns whether or not the run state is unfinished
+// IsUnfinished returns whether or not the run state is unfinished.
 func (runState *RunState) IsUnfinished() bool {
 	return runState.UnfinishedDetails != nil
 }
 
-// MarkAsFinished updates the run state to be marked as finished
+// MarkAsFinished updates the run state to be marked as finished.
 func (runState *RunState) MarkAsFinished() {
 	runState.UnfinishedDetails = nil
 }
 
-// MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields
+// MarkAsUnfinished updates the run state to be marked as unfinished and populates informational fields.
 func (runState *RunState) MarkAsUnfinished() {
 	runState.UnfinishedDetails = &UnfinishedRunStateDetails{
 		CanSkip:   false,

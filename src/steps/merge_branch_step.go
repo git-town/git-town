@@ -4,7 +4,7 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
-// MergeBranchStep merges the branch with the given name into the current branch
+// MergeBranchStep merges the branch with the given name into the current branch.
 type MergeBranchStep struct {
 	NoOpStep
 	BranchName string

@@ -1,13 +1,12 @@
 package steps
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/src/git"
 )
 
-// EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch
+// EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
 	NoOpStep
 	BranchName string
@@ -26,7 +25,7 @@ func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo) error {
 		return err
 	}
 	if !hasShippableChanges {
-		return errors.New("no shippable changes")
+		return fmt.Errorf("aborting: %w", ErrNoShippableChanges)
 	}
 	return nil
 }

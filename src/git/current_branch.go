@@ -9,10 +9,10 @@ import (
 	"github.com/git-town/git-town/src/dryrun"
 )
 
-// The current branch in cached in order to minimize the number of git commands run
+// The current branch in cached in order to minimize the number of git commands run.
 var currentBranchCache string
 
-// GetCurrentBranchName returns the name of the currently checked out branch
+// GetCurrentBranchName returns the name of the currently checked out branch.
 func GetCurrentBranchName() string {
 	if dryrun.IsActive() {
 		return dryrun.GetCurrentBranchName()
@@ -28,13 +28,13 @@ func GetCurrentBranchName() string {
 }
 
 // ClearCurrentBranchCache clears the cache of the current branch.
-// This should be called when a rebase fails
+// This should be called when a rebase fails.
 func ClearCurrentBranchCache() {
 	currentBranchCache = ""
 }
 
 // UpdateCurrentBranchCache clears the cache of the current branch.
-// This should be called when a new branch is checked out
+// This should be called when a new branch is checked out.
 func UpdateCurrentBranchCache(branchName string) {
 	currentBranchCache = branchName
 }

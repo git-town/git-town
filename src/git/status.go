@@ -12,12 +12,12 @@ func EnsureDoesNotHaveConflicts() {
 }
 
 // EnsureDoesNotHaveOpenChanges assets that the workspace
-// has no open changes
+// has no open changes.
 func EnsureDoesNotHaveOpenChanges(message string) {
 	util.Ensure(!HasOpenChanges(), "You have uncommitted changes. "+message)
 }
 
-// Root directory is cached in order to minimize the number of git commands run
+// Root directory is cached in order to minimize the number of git commands run.
 var rootDirectory string
 
 // GetRootDirectory returns the path of the rood directory of the current repository,
