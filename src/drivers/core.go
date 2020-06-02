@@ -1,19 +1,12 @@
 package drivers
 
-import (
-	"errors"
-
-	"github.com/git-town/git-town/src/git"
-)
+import "github.com/git-town/git-town/src/git"
 
 // Core provides the public API for the drivers subsystem.
 
 var registry = Registry{}
 
 var activeDriver CodeHostingDriver
-
-var ErrNotSupported = errors.New("not supported")
-var ErrNoPullRequestFound = errors.New("no pull request found")
 
 // GetActiveDriver returns the code hosting driver to use based on the git config.
 func GetActiveDriver() CodeHostingDriver {
