@@ -7,31 +7,31 @@ linters:
     - bodyclose
     - deadcode
     - depguard
-    # - dogsled (TODO: write rational for disabling here, brought over from Makefile)
+    # - dogsled (The rationale for disabling dogsled is that all the cases it flags have been false positives in test code that intentionally ignores many return values because they test only one thing.)
     # - dupl (TODO: write rational for disabling here, brought over from Makefile)
     - errcheck
     - exhaustive
     - funlen
-    # - gochecknoglobals (TODO: write rational for disabling here, brought over from Makefile)
-    # - gochecknoinits (TODO: write rational for disabling here, brought over from Makefile)
+    # - gochecknoglobals (We are currently using some globals. It's a lot more forgivable in a CLI tool than in a library.)
+    # - gochecknoinits (I think the CLI framework we use requires them.)
     - gocognit
-    # - goconst (TODO: write rational for disabling here, brought over from Makefile)
+    # - goconst (Our tests contain a ton of hard-coded test strings, for example branch names.)
     - gocritic
     - gocyclo
     - godot
     - godox
-    # - goerr113 (TODO: expose errors proerply, once/if approaching library use, as oposed to current cli-only use)
+    # - goerr113 (Expose errors properly, once/if approaching library use, as opposed to current cli-only use)
     - gofmt
     - goimports
     - golint
-    # - gomnd (TODO: write rational for disabling here, brought over from Makefile)
+    # - gomnd (Our tests contain hard-coded test data that wouldn't make sense to extract into constants)
     - goprintffuncname
     - gosec
     - gosimple
     - govet
     - ineffassign
     - interfacer
-    # - lll (TODO: write rational for disabling here, brought over from Makefile)
+    # - lll (Following gofmt principles, we aren't enforcing a line length at this point.)
     - maligned
     - misspell
     - nakedret
@@ -50,7 +50,7 @@ linters:
     - unused
     - varcheck
     - whitespace
-    # - wsl  (TODO: write rational for disabling here, brought over from Makefile)
+    # - wsl (This linter creates too many false positives. Our policy is to not have any empty lines in code blocks anyways.)
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
