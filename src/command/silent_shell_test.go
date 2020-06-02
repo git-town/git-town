@@ -18,7 +18,7 @@ func TestSilentShell_MustRun(t *testing.T) {
 func TestSilentShell_Run_arguments(t *testing.T) {
 	shell := command.SilentShell{}
 	res, err := shell.Run("echo", "hello", "world")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "hello world", res.OutputSanitized())
 }
 
@@ -30,9 +30,9 @@ func TestSilentShell_RunMany(t *testing.T) {
 		{"touch", "tmp/second"},
 	})
 	defer os.RemoveAll("tmp")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	infos, err := ioutil.ReadDir("tmp")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "first", infos[0].Name())
 	assert.Equal(t, "second", infos[1].Name())
 }
@@ -41,7 +41,7 @@ func TestSilentShell_RunString(t *testing.T) {
 	shell := command.SilentShell{}
 	_, err := shell.RunString("touch first")
 	defer os.Remove("first")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	_, err = os.Stat("first")
 	assert.False(t, os.IsNotExist(err))
 }
@@ -49,6 +49,6 @@ func TestSilentShell_RunString(t *testing.T) {
 func TestSilentShell_RunStringWith(t *testing.T) {
 	shell := command.SilentShell{}
 	res, err := shell.RunStringWith("ls -1", command.Options{Dir: ".."})
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Contains(t, res.OutputSanitized(), "cmd")
 }

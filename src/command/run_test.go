@@ -14,7 +14,7 @@ import (
 
 func TestCommand_Run(t *testing.T) {
 	res, err := command.Run("echo", "foo")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "foo\n", res.Output())
 }
 
@@ -34,27 +34,27 @@ func TestCommand_Run_ExitCode(t *testing.T) {
 
 func TestCommand_RunInDir(t *testing.T) {
 	dir, err := ioutil.TempDir("", "")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	dirPath := filepath.Join(dir, "mydir")
 	err = os.Mkdir(dirPath, 0744)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	err = ioutil.WriteFile(filepath.Join(dirPath, "one"), []byte{}, 0744)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	res, err := command.RunInDir(dirPath, "ls", "-1")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "one", res.OutputSanitized())
 }
 
 func TestCommand_Result_OutputContainsText(t *testing.T) {
 	res, err := command.Run("echo", "hello world how are you?")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsText("world"), "should contain 'world'")
 	assert.False(t, res.OutputContainsText("zonk"), "should not contain 'zonk'")
 }
 
 func TestCommand_Result_OutputContainsLine(t *testing.T) {
 	res, err := command.Run("echo", "hello world")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, res.OutputContainsLine("hello world"), `should contain "hello world"`)
 	assert.False(t, res.OutputContainsLine("hello"), `partial match should return false`)
 	assert.False(t, res.OutputContainsLine("zonk"), `should not contain "zonk"`)
