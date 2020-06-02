@@ -342,7 +342,7 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if err != nil {
 			return fmt.Errorf("cannot create fish folder: %w", err)
 		}
-		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0744)
+		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0500)
 	})
 
 	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {

@@ -1,3 +1,4 @@
+// nolint: testpackage
 package test
 
 import (
@@ -22,7 +23,7 @@ func TestRepo_Clone(t *testing.T) {
 	origin := CreateRepo(t)
 	clonedPath := filepath.Join(origin.shell.workingDir, "cloned")
 	cloned, err := origin.Clone(clonedPath)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, clonedPath, cloned.shell.workingDir)
 	assertIsNormalGitRepo(t, clonedPath)
 }
