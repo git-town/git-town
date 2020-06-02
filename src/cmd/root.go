@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -10,7 +11,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RootCmd is the main Cobra object
+var ErrNoFeatureBranch = errors.New("no feature branch")
+var ErrBranchMissing = errors.New("branch missing")
+var ErrInvalidValue = errors.New("invalid value")
+
+// RootCmd is the main Cobra object.
 var RootCmd = &cobra.Command{
 	Use:   "git-town",
 	Short: "Generic, high-level Git workflow support",
@@ -23,11 +28,10 @@ and it allows you to perform many common Git operations faster and easier.`,
 	},
 }
 
-// Execute runs the Cobra stack
+// Execute runs the Cobra stack.
 func Execute() {
 	git.EnsureVersionRequirementSatisfied()
 	color.NoColor = false // Prevent color from auto disable
-
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)

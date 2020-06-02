@@ -118,7 +118,7 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 
 func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber == 0 {
-		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
+		return "", fmt.Errorf("cannot merge via Github: %w", ErrNoPullRequestFound)
 	}
 	if options.LogRequests {
 		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))

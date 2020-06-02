@@ -48,13 +48,13 @@ func (c *Result) OutputSanitized() string {
 }
 
 // OutputContainsLine returns whether the output of this command
-// contains the given line
+// contains the given line.
 func (c *Result) OutputContainsLine(line string) bool {
 	return util.DoesStringArrayContain(c.OutputLines(), line)
 }
 
 // OutputContainsText returns whether the output of this command
-// contains the given text
+// contains the given text.
 func (c *Result) OutputContainsText(text string) bool {
 	return strings.Contains(c.output, text)
 }

@@ -10,7 +10,7 @@ import (
 
 var noneString = "[none]"
 
-// GetPrintableMainBranch returns a user printable main branch
+// GetPrintableMainBranch returns a user printable main branch.
 func GetPrintableMainBranch() string {
 	output := Config().GetMainBranch()
 	if output == "" {
@@ -19,7 +19,7 @@ func GetPrintableMainBranch() string {
 	return output
 }
 
-// GetPrintablePerennialBranches returns a user printable list of perennial branches
+// GetPrintablePerennialBranches returns a user printable list of perennial branches.
 func GetPrintablePerennialBranches() string {
 	output := strings.Join(Config().GetPerennialBranches(), "\n")
 	if output == "" {
@@ -28,7 +28,7 @@ func GetPrintablePerennialBranches() string {
 	return output
 }
 
-// GetPrintablePerennialBranchTrees returns a user printable list of perennial branches trees
+// GetPrintablePerennialBranchTrees returns a user printable list of perennial branches trees.
 func GetPrintablePerennialBranchTrees() string {
 	trees := []string{}
 	for _, perennialBranch := range Config().GetPerennialBranches() {
@@ -40,12 +40,12 @@ func GetPrintablePerennialBranchTrees() string {
 	return strings.Join(trees, "\n")
 }
 
-// GetPrintableNewBranchPushFlag returns a user printable new branch push flag
+// GetPrintableNewBranchPushFlag returns a user printable new branch push flag.
 func GetPrintableNewBranchPushFlag() string {
 	return strconv.FormatBool(Config().ShouldNewBranchPush())
 }
 
-// GetPrintableBranchTree returns a user printable branch tree
+// GetPrintableBranchTree returns a user printable branch tree.
 func GetPrintableBranchTree(branchName string) (result string) {
 	result += branchName
 	childBranches := Config().GetChildBranches(branchName)
@@ -56,7 +56,7 @@ func GetPrintableBranchTree(branchName string) (result string) {
 	return
 }
 
-// GetPrintableOfflineFlag returns a user printable offline flag
+// GetPrintableOfflineFlag returns a user printable offline flag.
 func GetPrintableOfflineFlag() string {
 	return strconv.FormatBool(Config().IsOffline())
 }

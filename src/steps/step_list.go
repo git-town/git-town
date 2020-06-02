@@ -24,7 +24,7 @@ func (stepList *StepList) AppendList(otherList StepList) {
 	stepList.List = append(stepList.List, otherList.List...)
 }
 
-// IsEmpty returns whether or not this StepList has any elements
+// IsEmpty returns whether or not this StepList has any elements.
 func (stepList *StepList) isEmpty() bool {
 	return len(stepList.List) == 0
 }
@@ -70,26 +70,23 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 		InitialBranch:                     git.GetCurrentBranchName(),
 		InitialPreviouslyCheckedOutBranch: git.GetPreviouslyCheckedOutBranch(),
 	})
-
 	if options.StashOpenChanges && git.HasOpenChanges() {
 		stepList.Prepend(&StashOpenChangesStep{})
 		stepList.Append(&RestoreOpenChangesStep{})
 	}
-
 	initialDirectory, err := os.Getwd()
 	if err != nil {
 		fmt.Printf("cannot get current working directory: %v", err)
 		os.Exit(1)
 	}
 	gitRootDirectory := git.GetRootDirectory()
-
 	if options.RunInGitRoot && initialDirectory != gitRootDirectory {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
 }
 
-// MarshalJSON marshals the step list to JSON
+// MarshalJSON marshals the step list to JSON.
 func (stepList *StepList) MarshalJSON() (b []byte, e error) {
 	jsonSteps := make([]*JSONStep, len(stepList.List))
 	for i, step := range stepList.List {
@@ -98,7 +95,7 @@ func (stepList *StepList) MarshalJSON() (b []byte, e error) {
 	return json.Marshal(jsonSteps)
 }
 
-// UnmarshalJSON unmarshals the step list from JSON
+// UnmarshalJSON unmarshals the step list from JSON.
 func (stepList *StepList) UnmarshalJSON(b []byte) error {
 	var jsonSteps []JSONStep
 	err := json.Unmarshal(b, &jsonSteps)

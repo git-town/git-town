@@ -65,7 +65,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 		result.targetBranch = args[0]
 	}
 	if !repo.IsFeatureBranch(result.targetBranch) {
-		return result, fmt.Errorf("you can only kill feature branches")
+		return result, fmt.Errorf("cannot be killed: %w", ErrNoFeatureBranch)
 	}
 	result.isTargetBranchLocal, err = repo.Silent.HasLocalBranch(result.targetBranch)
 	if err != nil {
@@ -92,7 +92,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 			return result, err
 		}
 		if !hasTargetBranch {
-			return result, fmt.Errorf("there is no branch named %q", result.targetBranch)
+			return result, fmt.Errorf("branch %q: %w", result.targetBranch, ErrBranchMissing)
 		}
 	}
 	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.targetBranch)

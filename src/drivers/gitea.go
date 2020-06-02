@@ -2,7 +2,6 @@ package drivers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -83,7 +82,6 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 	if err != nil {
 		return "", err
 	}
-
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	commitTitle := commitMessageParts[0]
 	commitMessage := ""
@@ -134,7 +132,7 @@ func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
 
 func identifyPullRequest(filteredPullRequests []*gitea.PullRequest) (*gitea.PullRequest, error) {
 	if len(filteredPullRequests) == 0 {
-		return nil, errors.New("no pull request found")
+		return nil, fmt.Errorf("cannot merge via Github: %w", ErrNoPullRequestFound)
 	}
 	if len(filteredPullRequests) > 1 {
 		pullRequestNumbersAsStrings := make([]string, len(filteredPullRequests))
@@ -184,6 +182,7 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, co
 //   ancerstor -> master
 //   children1 -> ancestor  --> master (retargeted to master after merge)
 //   children2 -> ancestor  --> master (retargeted to master after merge)
+//nolint:unparam
 func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
 		// if options.LogRequests {

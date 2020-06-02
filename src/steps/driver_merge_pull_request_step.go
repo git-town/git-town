@@ -7,7 +7,7 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
-// DriverMergePullRequestStep squash merges the branch with the given name into the current branch
+// DriverMergePullRequestStep squash merges the branch with the given name into the current branch.
 type DriverMergePullRequestStep struct {
 	NoOpStep
 	BranchName                string
