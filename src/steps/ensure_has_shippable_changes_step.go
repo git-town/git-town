@@ -1,13 +1,10 @@
 package steps
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/git-town/git-town/src/git"
 )
-
-var ErrNoShippableChanges = errors.New("no shippable changes")
 
 // EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
