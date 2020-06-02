@@ -2,7 +2,6 @@ package drivers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -134,7 +133,7 @@ func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
 
 func identifyPullRequest(filteredPullRequests []*gitea.PullRequest) (*gitea.PullRequest, error) {
 	if len(filteredPullRequests) == 0 {
-		return nil, errors.New("no pull request found")
+		return nil, fmt.Errorf("cannot merge via Github: %w", ErrNoPullRequestFound)
 	}
 	if len(filteredPullRequests) > 1 {
 		pullRequestNumbersAsStrings := make([]string, len(filteredPullRequests))
