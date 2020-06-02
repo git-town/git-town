@@ -105,7 +105,7 @@ func (ms *MockingShell) MockNoCommandsInstalled() error {
 		return fmt.Errorf("cannot create mock bin dir: %w", err)
 	}
 	// write custom "which" command
-	content := fmt.Sprintf("#!/usr/bin/env bash\n\nexit 1\n")
+	content := "#!/usr/bin/env bash\n\nexit 1\n"
 	err = ioutil.WriteFile(filepath.Join(ms.binDir, "which"), []byte(content), 0744)
 	if err != nil {
 		return fmt.Errorf("cannot write custom which command: %w", err)
