@@ -49,9 +49,9 @@ func CopyDirectory(src, dst string) error {
 func createFile(t *testing.T, dir, filename string) {
 	filePath := filepath.Join(dir, filename)
 	err := os.MkdirAll(filepath.Dir(filePath), 0744)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	err = ioutil.WriteFile(filePath, []byte(filename+" content"), 0500)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 // CreateTempDir creates a new empty directory in the system's temp directory and provides the path to it.
