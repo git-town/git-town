@@ -33,7 +33,7 @@ func installFishAutocompletion() error {
 	if util.DoesFileExist(filename) {
 		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
-	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0600)
+	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}
