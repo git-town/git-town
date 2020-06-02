@@ -44,6 +44,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortErrorMessage() string {
 // Run executes this step.
 func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 	commitMessage := step.CommitMessage
+	// nolint:nestif
 	if commitMessage == "" {
 		// Allow the user to enter the commit message as if shipping without a driver
 		// then revert the commit since merging via the driver will perform the actual squash merge
