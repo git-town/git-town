@@ -9,7 +9,7 @@ import (
 
 var ErrNoShippableChanges = errors.New("no shippable changes")
 
-// EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch
+// EnsureHasShippableChangesStep asserts that the branch has unique changes not on the main branch.
 type EnsureHasShippableChangesStep struct {
 	NoOpStep
 	BranchName string

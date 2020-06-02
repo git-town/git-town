@@ -10,7 +10,7 @@ import (
 	"github.com/git-town/git-town/src/steps"
 )
 
-// These variables represent command-line flags
+// These variables represent command-line flags.
 var (
 	allFlag,
 	debugFlag,
@@ -18,7 +18,7 @@ var (
 	globalFlag bool
 )
 
-// These variables are set at build time
+// These variables are set at build time.
 var (
 	version,
 	buildDate string

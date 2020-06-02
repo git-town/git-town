@@ -69,7 +69,7 @@ func (r *Runner) Author() (author string, err error) {
 }
 
 // BranchHasUnmergedCommits indicates whether the branch with the given name
-// contains commits that are not merged into the main branch
+// contains commits that are not merged into the main branch.
 func (r *Runner) BranchHasUnmergedCommits(branch string) (bool, error) {
 	out, err := r.Run("git", "log", r.GetMainBranch()+".."+branch)
 	if err != nil {
@@ -98,7 +98,7 @@ func (r *Runner) CheckoutBranch(name string) error {
 }
 
 // CommentOutSquashCommitMessage comments out the message for the current squash merge
-// Adds the given prefix with the newline if provided
+// Adds the given prefix with the newline if provided.
 func (r *Runner) CommentOutSquashCommitMessage(prefix string) error {
 	squashMessageFile := ".git/SQUASH_MSG"
 	contentBytes, err := ioutil.ReadFile(squashMessageFile)
@@ -331,7 +331,7 @@ func (r *Runner) CreateRemoteBranch(localSha, branchName string) error {
 	return nil
 }
 
-// CreateStandaloneTag creates a tag not on a branch
+// CreateStandaloneTag creates a tag not on a branch.
 func (r *Runner) CreateStandaloneTag(name string) error {
 	return r.RunMany([][]string{
 		{"git", "checkout", "-b", "temp"},
@@ -344,7 +344,7 @@ func (r *Runner) CreateStandaloneTag(name string) error {
 	})
 }
 
-// CreateTag creates a tag with the given name
+// CreateTag creates a tag with the given name.
 func (r *Runner) CreateTag(name string) error {
 	_, err := r.Run("git", "tag", "-a", name, "-m", name)
 	return err
@@ -423,7 +423,7 @@ func (r *Runner) DiscardOpenChanges() error {
 }
 
 // ExpectedPreviouslyCheckedOutBranch returns what is the expected previously checked out branch
-// given the inputs
+// given the inputs.
 func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutBranch, initialBranch string) (string, error) {
 	hasInitialPreviouslyCheckedOutBranch, err := r.HasLocalBranch(initialPreviouslyCheckedOutBranch)
 	if err != nil {
@@ -506,7 +506,7 @@ func (r *Runner) FilesInBranch(branch string) (result []string, err error) {
 	return result, err
 }
 
-// HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their remote
+// HasBranchesOutOfSync indicates whether one or more local branches are out of sync with their remote.
 func (r *Runner) HasBranchesOutOfSync() (bool, error) {
 	res, err := r.Run("git", "for-each-ref", "--format=%(refname:short) %(upstream:track)", "refs/heads")
 	if err != nil {
@@ -629,7 +629,7 @@ func (r *Runner) LastActiveDir() (string, error) {
 	return filepath.FromSlash(res.OutputSanitized()), err
 }
 
-// LastCommitMessage returns the commit message for the last commit
+// LastCommitMessage returns the commit message for the last commit.
 func (r *Runner) LastCommitMessage() (string, error) {
 	out, err := r.Run("git", "log", "-1", "--format=%B")
 	if err != nil {
@@ -842,7 +842,7 @@ func (r *Runner) ShouldPushBranch(branch string) (bool, error) {
 	return out.OutputSanitized() != "", nil
 }
 
-// SquashMerge squash-merges the given branch into the current branch
+// SquashMerge squash-merges the given branch into the current branch.
 func (r *Runner) SquashMerge(branch string) error {
 	out, err := r.Run("git", "merge", "--squash", branch)
 	if err != nil {
@@ -875,7 +875,7 @@ func (r *Runner) StashSize() (result int, err error) {
 	return len(res.OutputLines()), nil
 }
 
-// Tags provides a list of the tags in this repository
+// Tags provides a list of the tags in this repository.
 func (r *Runner) Tags() (result []string, err error) {
 	res, err := r.Run("git", "tag")
 	if err != nil {
