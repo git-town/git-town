@@ -205,6 +205,12 @@ Kudos to our contributors!
       </a>
     </td>
     <td align="center" width="60">
+      <a href="https://github.com/blaggacao">
+        <img src="https://avatars2.githubusercontent.com/u/7548295?s=60" width="60px">
+        <sup><b>@aricahunter</b></sup>
+      </a>
+    </td>
+    <td align="center" width="60">
       <a href="https://github.com/aricahunter">
         <img src="https://avatars2.githubusercontent.com/u/5395515?s=60" width="60px">
         <sup><b>@aricahunter</b></sup>
