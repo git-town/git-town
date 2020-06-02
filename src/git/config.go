@@ -75,7 +75,6 @@ type ConfigurationInterface interface {
 	ValidateIsOnline() error
 }
 
-
 // Configuration manages the Git Town configuration
 // stored in Git metadata in the given local repo and the global Git configuration.
 // This class manages which config values are stored in local vs global settings.

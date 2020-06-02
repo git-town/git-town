@@ -16,7 +16,7 @@ import (
 
 // Runner executes Git commands.
 type Runner struct {
-	command.Shell  // for running console commands
+	command.Shell          // for running console commands
 	ConfigurationInterface // provides an interface to cached Git configuration settings
 }
 
