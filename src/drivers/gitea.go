@@ -84,7 +84,6 @@ func (d *giteaCodeHostingDriver) MergePullRequest(options MergePullRequestOption
 	if err != nil {
 		return "", err
 	}
-
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	commitTitle := commitMessageParts[0]
 	commitMessage := ""

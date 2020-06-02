@@ -34,7 +34,7 @@ func TestGiteaDriver_CanMergePullRequest(t *testing.T) {
 	httpmock.RegisterResponder("GET", giteaOpenPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "base": {"label": "main"}, "head": {"label": "gitea/feature"} }]`))
 	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.CanMergePullRequest("feature", "main")
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
 	assert.Equal(t, int64(1), pullRequestNumber)
@@ -45,8 +45,7 @@ func TestGiteaDriver_CanMergePullRequest_EmptyGiteaToken(t *testing.T) {
 	defer teardown()
 	driver.SetAPIToken("")
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
-
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
 
@@ -55,7 +54,6 @@ func TestGiteaDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T)
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaOpenPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Error(t, err)
 }
 
@@ -64,7 +62,7 @@ func TestGiteaDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaOpenPullRequestURL, httpmock.NewStringResponder(200, "[]"))
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
 
@@ -73,7 +71,7 @@ func TestGiteaDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testin
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaOpenPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "no-match"} }, {"number": 2, "base": {"label": "main"}, "head": {"label": "no-match2"} }]`))
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
 
@@ -140,7 +138,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	})
 	httpmock.RegisterResponder("GET", giteaGetPullRequestURL, httpmock.NewStringResponder(200, `{"number": 1, "merge_commit_sha": "abc123"}`))
 	sha, err := driver.MergePullRequest(options)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.Equal(t, "abc123", sha)
 	mergeParameters := getRequestData(mergeRequest)
 	assert.Equal(t, "title", mergeParameters["MergeTitleField"])
