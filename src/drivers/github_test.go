@@ -57,7 +57,6 @@ func TestGitHubDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
 	_, _, _, err := driver.CanMergePullRequest("feature", "main")
-
 	assert.Error(t, err)
 }
 
