@@ -151,7 +151,12 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
 	if config.canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.branchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.branchToShip, PullRequestNumber: config.pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: config.defaultCommitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{
+			BranchName:           config.branchToShip,
+			PullRequestNumber:    config.pullRequestNumber,
+			CommitMessage:        commitMessage,
+			DefaultCommitMessage: config.defaultCommitMessage,
+		})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.branchToShip, CommitMessage: commitMessage})
