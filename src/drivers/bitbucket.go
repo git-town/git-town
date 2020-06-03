@@ -42,10 +42,6 @@ func TryUseBitbucket(config bitbucketConfig) CodeHostingDriver {
 	}
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
-	panic("DONT CALL THIS")
-}
-
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
@@ -67,20 +63,4 @@ func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOp
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
-	panic("DONT CALL THIS")
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
-	panic("DONT CALL THIS")
-}
-
-func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	panic("DONT CALL THIS")
-}
-
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {
-	panic("DONT CALL THIS")
 }

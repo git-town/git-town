@@ -58,10 +58,6 @@ func TryUseGithub(config GithubConfig) CodeHostingDriver {
 	}
 }
 
-func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
-	panic("DONT CALL THIS")
-}
-
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
@@ -104,18 +100,6 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 
 func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
-}
-
-func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
-	panic("DONT CALL THIS")
-}
-
-func (d *githubCodeHostingDriver) GetAPIToken() string {
-	return git.Config().GetGitHubToken()
-}
-
-func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
 }
 
 // Helper

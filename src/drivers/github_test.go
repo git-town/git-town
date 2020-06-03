@@ -86,7 +86,6 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
-	driver.SetAPIToken("")
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.NoError(t, err)

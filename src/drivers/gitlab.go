@@ -40,10 +40,6 @@ func TryUseGitlab(config gitlabConfig) CodeHostingDriver {
 	}
 }
 
-func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
-	panic("DONT CALL THIS")
-}
-
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
@@ -65,20 +61,4 @@ func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 
 func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 	return "GitLab"
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
-	panic("DONT CALL THIS")
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
-	panic("DONT CALL THIS")
-}
-
-func (d *gitlabCodeHostingDriver) GetAPIToken() string {
-	panic("DONT CALL THIS")
-}
-
-func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {
-	panic("DONT CALL THIS")
 }
