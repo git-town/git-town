@@ -17,9 +17,13 @@ func Get(config git.Configuration) (CodeHostingDriver, error) {
 	if driver := tryCreateGitLab(config); driver != nil {
 		return driver
 	}
+	if driver := tryCreateGitea(config); driver != nil {
+		return driver
+	}
 	return nil, errors.New(`unsupported hosting service
 
 This command requires hosting on one of these services:
+* Gitea
 * GitHub
 * GitLab
 * Bitbucket
