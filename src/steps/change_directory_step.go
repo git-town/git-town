@@ -3,6 +3,7 @@ package steps
 import (
 	"os"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -20,7 +21,7 @@ func (step *ChangeDirectoryStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo) error {
+func (step *ChangeDirectoryStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	var err error
 	step.previousDirectory, err = os.Getwd()
 	if err != nil {

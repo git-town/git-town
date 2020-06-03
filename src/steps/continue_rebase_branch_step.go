@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -21,7 +22,7 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 }
 
 // Run executes this step.
-func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo) error {
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
 	if err != nil {
 		return err

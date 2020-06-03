@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -28,7 +29,7 @@ func (step *MergeBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *MergeBranchStep) Run(repo *git.ProdRepo) (err error) {
+func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.previousSha, err = repo.Silent.CurrentSha()
 	if err != nil {
 		return err

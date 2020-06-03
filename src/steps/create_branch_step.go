@@ -1,6 +1,9 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
 // CreateBranchStep creates a new branch
 // but leaves the current branch unchanged.
@@ -16,6 +19,6 @@ func (step *CreateBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CreateBranchStep) Run(repo *git.ProdRepo) error {
+func (step *CreateBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.CreateBranch(step.BranchName, step.StartingPoint)
 }

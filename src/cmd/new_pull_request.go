@@ -43,13 +43,18 @@ where hostname matches what is in your ssh config file.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		driver := drivers.Load(repo.Configuration)
+		if driver == nil {
+			fmt.Println(drivers.UnsupportedHostingError())
+			os.Exit(1)
+		}
 		stepList, err := getNewPullRequestStepList(config, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -66,7 +71,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := git.Config().ValidateIsOnline(); err != nil {
 			return err
 		}
-		return drivers.ValidateHasDriver()
+		return nil
 	},
 }
 

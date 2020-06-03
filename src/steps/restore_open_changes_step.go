@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -15,6 +16,6 @@ func (step *RestoreOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo) error {
+func (step *RestoreOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.PopStash()
 }

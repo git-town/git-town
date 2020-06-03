@@ -10,14 +10,36 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
+type bitbucketConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetCodeHostingOriginHostname() string
+}
+
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
+// LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// otherwise nil.
+func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "bitbucket" && hostname != "bitbucket.org" {
+		return nil
+	}
+	return &bitbucketCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		repository: helpers.GetURLRepositoryName(originURL),
+	}
 }
 
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -41,24 +63,4 @@ func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOp
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = helpers.GetURLHostname(originURL)
-	d.repository = helpers.GetURLRepositoryName(originURL)
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
-
-func init() {
-	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }

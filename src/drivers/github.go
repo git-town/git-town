@@ -6,13 +6,21 @@ import (
 	"net/url"
 	"strings"
 
-	"golang.org/x/oauth2"
-
 	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
+// GithubConfig defines the data that the githubCodeHostingDriver needs from the Git configuration.
+type GithubConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetGitHubToken() string
+	GetCodeHostingOriginHostname() string
+}
+
+// githubCodeHostingDriver makes the GitHub API accessible.
 type githubCodeHostingDriver struct {
 	originURL  string
 	hostname   string
@@ -22,8 +30,32 @@ type githubCodeHostingDriver struct {
 	repository string
 }
 
-func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "github" || d.hostname == "github.com"
+// LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
+// otherwise nil.
+func LoadGithub(config GithubConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "github" && hostname != "github.com" {
+		return nil
+	}
+	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
+	if len(repositoryParts) != 2 {
+		return nil
+	}
+	owner := repositoryParts[0]
+	repository := repositoryParts[1]
+	return &githubCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		apiToken:   config.GetGitHubToken(),
+		owner:      owner,
+		repository: repository,
+	}
 }
 
 func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -64,33 +96,6 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 
 func (d *githubCodeHostingDriver) HostingServiceName() string {
 	return "GitHub"
-}
-
-func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = helpers.GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
-}
-
-func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *githubCodeHostingDriver) GetAPIToken() string {
-	return git.Config().GetGitHubToken()
-}
-
-func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
-	d.apiToken = apiToken
-}
-
-func init() {
-	registry.RegisterDriver(&githubCodeHostingDriver{})
 }
 
 // Helper

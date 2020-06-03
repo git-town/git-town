@@ -1,6 +1,9 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
 // NoOpStep does nothing.
 // It is used for steps that have no undo or abort steps.
@@ -28,7 +31,7 @@ func (step *NoOpStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *NoOpStep) Run(repo *git.ProdRepo) error {
+func (step *NoOpStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return nil
 }
 

@@ -39,7 +39,7 @@ Does not delete perennial branches nor the main branch.`,
 		}
 		stepList := getKillStepList(config, repo)
 		runState := steps.NewRunState("kill", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)

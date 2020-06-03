@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
 
@@ -12,7 +13,7 @@ import (
 
 // Run runs the Git Town command described by the given state.
 // nolint: gocyclo, gocognit, nestif
-func Run(runState *RunState, repo *git.ProdRepo) error {
+func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	for {
 		step := runState.RunStepList.Pop()
 		if step == nil {
@@ -39,12 +40,12 @@ func Run(runState *RunState, repo *git.ProdRepo) error {
 			runState.AddPushBranchStepAfterCurrentBranchSteps()
 			continue
 		}
-		err := step.Run(repo)
+		err := step.Run(repo, driver)
 		if err != nil {
 			runState.AbortStepList.Append(step.CreateAbortStep())
 			if step.ShouldAutomaticallyAbortOnError() {
 				abortRunState := runState.CreateAbortRunState()
-				err := Run(&abortRunState, repo)
+				err := Run(&abortRunState, repo, driver)
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}

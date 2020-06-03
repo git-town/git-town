@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/git-town/git-town/src/util"
@@ -20,11 +21,12 @@ var abortCmd = &cobra.Command{
 			fmt.Printf("cannot load previous run state: %v\n", err)
 			os.Exit(1)
 		}
+		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState, git.NewProdRepo())
+		err = steps.Run(&abortRunState, repo, drivers.Load(repo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

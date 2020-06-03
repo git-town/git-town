@@ -1,6 +1,9 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
 // RemoveFromPerennialBranches removes the branch with the given name as a perennial branch.
 type RemoveFromPerennialBranches struct {
@@ -14,7 +17,7 @@ func (step *RemoveFromPerennialBranches) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *RemoveFromPerennialBranches) Run(repo *git.ProdRepo) error {
+func (step *RemoveFromPerennialBranches) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	repo.RemoveFromPerennialBranches(step.BranchName)
 	return nil
 }

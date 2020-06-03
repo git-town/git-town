@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -13,7 +14,7 @@ type ResetToShaStep struct {
 }
 
 // Run executes this step.
-func (step *ResetToShaStep) Run(repo *git.ProdRepo) (err error) {
+func (step *ResetToShaStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	currentSha, err := repo.Silent.CurrentSha()
 	if err != nil {
 		return err

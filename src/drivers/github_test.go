@@ -18,16 +18,56 @@ var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
+type mockGithubConfig struct {
+	codeHostingDriverName string
+	remoteOriginURL       string
+	gitHubToken           string
+	configuredHostName    string
+}
+
+func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
+	return mgc.codeHostingDriverName
+}
+func (mgc mockGithubConfig) GetRemoteOriginURL() string {
+	return mgc.remoteOriginURL
+}
+func (mgc mockGithubConfig) GetGitHubToken() string {
+	return mgc.gitHubToken
+}
+func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
+	return mgc.configuredHostName
+}
+
 func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := drivers.GetDriver(drivers.DriverOptions{OriginURL: "git@github.com:git-town/git-town.git"})
+	driver := drivers.LoadGithub(mockGithubConfig{
+		remoteOriginURL: "git@github.com:git-town/git-town.git",
+		gitHubToken:     token,
+	})
 	assert.NotNil(t, driver)
-	if token != "" {
-		driver.SetAPIToken(token)
-	}
 	return driver, func() {
 		httpmock.DeactivateAndReset()
 	}
+}
+
+func TestLoadGithub(t *testing.T) {
+	driver := drivers.LoadGithub(mockGithubConfig{
+		codeHostingDriverName: "github",
+		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "GitHub", driver.HostingServiceName())
+	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.GetRepositoryURL())
+}
+
+func TestLoadGithub_customHostName(t *testing.T) {
+	driver := drivers.LoadGithub(mockGithubConfig{
+		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
+		configuredHostName: "github.com",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "GitHub", driver.HostingServiceName())
+	assert.Equal(t, "https://github.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
 func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
@@ -45,7 +85,6 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
-	driver.SetAPIToken("")
 	canMerge, _, _, err := driver.CanMergePullRequest("feature", "main")
 
 	assert.NoError(t, err)

@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -10,6 +11,6 @@ type DiscardOpenChangesStep struct {
 }
 
 // Run executes this step.
-func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo) error {
+func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.DiscardOpenChanges()
 }

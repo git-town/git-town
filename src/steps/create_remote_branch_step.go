@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -12,6 +13,6 @@ type CreateRemoteBranchStep struct {
 }
 
 // Run executes this step.
-func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo) error {
+func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.CreateRemoteBranch(step.Sha, step.BranchName)
 }

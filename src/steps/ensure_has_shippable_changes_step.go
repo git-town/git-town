@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -20,7 +21,7 @@ func (step *EnsureHasShippableChangesStep) GetAutomaticAbortErrorMessage() strin
 }
 
 // Run executes this step.
-func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo) error {
+func (step *EnsureHasShippableChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	hasShippableChanges, err := repo.Silent.HasShippableChanges(step.BranchName)
 	if err != nil {
 		return err
