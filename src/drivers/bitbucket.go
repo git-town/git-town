@@ -22,7 +22,7 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-// TryUseBitbucket provides a GitHub driver instance if the given repo configuration is for a Github repo,
+// TryUseBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
 func TryUseBitbucket(config bitbucketConfig) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()

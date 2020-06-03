@@ -8,14 +8,40 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
+type gitlabConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetCodeHostingOriginHostname() string
+}
+
 type gitlabCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
 }
 
+// TryUseGitlab provides a GitLab driver instance if the given repo configuration is for a Github repo,
+// otherwise nil.
+func TryUseGitlab(config gitlabConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "gitlab" && hostname != "gitlab.com" {
+		return nil
+	}
+	return &gitlabCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		repository: helpers.GetURLRepositoryName(originURL),
+	}
+}
+
 func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "gitlab" || d.hostname == "gitlab.com"
+	panic("DONT CALL THIS")
 }
 
 func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -42,21 +68,17 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = helpers.GetURLHostname(originURL)
-	d.repository = helpers.GetURLRepositoryName(originURL)
+	panic("DONT CALL THIS")
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
+	panic("DONT CALL THIS")
 }
 
 func (d *gitlabCodeHostingDriver) GetAPIToken() string {
-	return ""
+	panic("DONT CALL THIS")
 }
 
-func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {}
-
-func init() {
-	registry.RegisterDriver(&gitlabCodeHostingDriver{})
+func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {
+	panic("DONT CALL THIS")
 }
