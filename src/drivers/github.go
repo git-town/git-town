@@ -90,10 +90,6 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
 // Helper
 
 func (d *githubCodeHostingDriver) connect() {
