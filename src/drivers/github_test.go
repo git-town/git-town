@@ -18,6 +18,27 @@ var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
+type mockGithubConfig struct {
+	codeHostingDriverName string
+	remoteOriginURL       string
+	gitHubToken           string
+	configuredHostName    string
+}
+
+func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
+	return mgc.codeHostingDriverName
+}
+func (mgc mockGithubConfig) GetRemoteOriginURL() string {
+	return mgc.remoteOriginURL
+}
+func (mgc mockGithubConfig) GetGitHubToken() string {
+	return mgc.gitHubToken
+}
+
+func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
+	return mgc.configuredHostName
+}
+
 func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
 	driver := drivers.TryUseGithub(mockGithubConfig{

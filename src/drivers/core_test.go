@@ -7,27 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockGithubConfig struct {
-	codeHostingDriverName string
-	remoteOriginURL       string
-	gitHubToken           string
-	configuredHostName    string
-}
-
-func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGithubConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGithubConfig) GetGitHubToken() string {
-	return mgc.gitHubToken
-}
-
-func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
-}
-
 func TestGetDriver_DriverType_Bitbucket(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "bitbucket",
