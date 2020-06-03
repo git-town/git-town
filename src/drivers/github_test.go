@@ -40,7 +40,7 @@ func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
 
 func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := drivers.TryUseGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockGithubConfig{
 		remoteOriginURL: "git@github.com:git-town/git-town.git",
 		gitHubToken:     token,
 	})
@@ -51,7 +51,7 @@ func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func())
 }
 
 func TestTryUseGithub(t *testing.T) {
-	driver := drivers.TryUseGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockGithubConfig{
 		codeHostingDriverName: "github",
 		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
 	})
@@ -61,7 +61,7 @@ func TestTryUseGithub(t *testing.T) {
 }
 
 func TestTryUseGithub_customHostName(t *testing.T) {
-	driver := drivers.TryUseGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockGithubConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "github.com",
 	})

@@ -39,15 +39,15 @@ type MergePullRequestOptions struct {
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
 func Load(config *git.Configuration) CodeHostingDriver {
-	driver := TryUseGithub(config)
+	driver := LoadGithub(config)
 	if driver != nil {
 		return driver
 	}
-	driver = TryUseBitbucket(config)
+	driver = LoadBitbucket(config)
 	if driver != nil {
 		return driver
 	}
-	driver = TryUseGitlab(config)
+	driver = LoadGitlab(config)
 	if driver != nil {
 		return driver
 	}

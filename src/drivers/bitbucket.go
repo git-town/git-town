@@ -22,9 +22,9 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-// TryUseBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func TryUseBitbucket(config bitbucketConfig) CodeHostingDriver {
+func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

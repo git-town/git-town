@@ -20,9 +20,9 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-// TryUseGitlab provides a GitLab driver instance if the given repo configuration is for a Github repo,
+// LoadGitlab provides a GitLab driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func TryUseGitlab(config gitlabConfig) CodeHostingDriver {
+func LoadGitlab(config gitlabConfig) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

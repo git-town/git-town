@@ -24,7 +24,7 @@ func (mbc mockBitbucketConfig) GetCodeHostingOriginHostname() string {
 }
 
 func TestTryUseBitbucket(t *testing.T) {
-	driver := drivers.TryUseBitbucket(mockBitbucketConfig{
+	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		codeHostingDriverName: "bitbucket",
 		remoteOriginURL:       "git@self-hosted-bitbucket.com:git-town/git-town.git",
 	})
@@ -34,7 +34,7 @@ func TestTryUseBitbucket(t *testing.T) {
 }
 
 func TestTryUseBitbucket_customHostName(t *testing.T) {
-	driver := drivers.TryUseBitbucket(mockBitbucketConfig{
+	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "bitbucket.org",
 	})
