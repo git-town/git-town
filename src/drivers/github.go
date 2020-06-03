@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/oauth2"
 
+	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 )
@@ -25,7 +26,7 @@ func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "github" || d.hostname == "github.com"
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -37,7 +38,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	if len(pullRequests) != 1 {
 		return false, "", 0, nil
 	}
-	return true, d.getDefaultCommitMessage(pullRequests[0]), pullRequests[0].GetNumber(), nil
+	return true, d.getDefaultCommitMessage(pullRequests[0]), int64(pullRequests[0].GetNumber()), nil
 }
 
 func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
@@ -67,9 +68,9 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
+	d.hostname = helpers.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]
@@ -122,7 +123,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
 	if options.LogRequests {
-		printLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))
+		helpers.PrintLog(fmt.Sprintf("GitHub API: Merging PR #%d", options.PullRequestNumber))
 	}
 	commitMessageParts := strings.SplitN(options.CommitMessage, "\n", 2)
 	githubCommitTitle := commitMessageParts[0]
@@ -130,7 +131,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 	if len(commitMessageParts) == 2 {
 		githubCommitMessage = commitMessageParts[1]
 	}
-	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, options.PullRequestNumber, githubCommitMessage, &github.PullRequestOptions{
+	result, _, err := d.client.PullRequests.Merge(context.Background(), d.owner, d.repository, int(options.PullRequestNumber), githubCommitMessage, &github.PullRequestOptions{
 		MergeMethod: "squash",
 		CommitTitle: githubCommitTitle,
 	})
@@ -150,7 +151,7 @@ func (d *githubCodeHostingDriver) updatePullRequestsAgainst(options MergePullReq
 	}
 	for _, pullRequest := range pullRequests {
 		if options.LogRequests {
-			printLog(fmt.Sprintf("GitHub API: Updating base branch for PR #%d", *pullRequest.Number))
+			helpers.PrintLog(fmt.Sprintf("GitHub API: Updating base branch for PR #%d", *pullRequest.Number))
 		}
 		_, _, err = d.client.PullRequests.Edit(context.Background(), d.owner, d.repository, *pullRequest.Number, &github.PullRequest{
 			Base: &github.PullRequestBranch{

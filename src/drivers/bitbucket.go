@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -19,7 +20,7 @@ func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
 
@@ -44,8 +45,8 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
+	d.hostname = helpers.GetURLHostname(originURL)
+	d.repository = helpers.GetURLRepositoryName(originURL)
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {

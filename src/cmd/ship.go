@@ -16,7 +16,7 @@ import (
 )
 
 type shipConfig struct {
-	pullRequestNumber            int
+	pullRequestNumber            int64
 	branchToShip                 string
 	branchToMergeInto            string
 	initialBranch                string
@@ -151,7 +151,12 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
 	if config.canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.branchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.branchToShip, PullRequestNumber: config.pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: config.defaultCommitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{
+			BranchName:           config.branchToShip,
+			PullRequestNumber:    config.pullRequestNumber,
+			CommitMessage:        commitMessage,
+			DefaultCommitMessage: config.defaultCommitMessage,
+		})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.branchToShip, CommitMessage: commitMessage})
@@ -180,7 +185,7 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if !git.HasRemote("origin") {
 		return false, "", 0, nil
 	}

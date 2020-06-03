@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
 type gitlabCodeHostingDriver struct {
@@ -18,7 +18,7 @@ func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
 	return driverType == "gitlab" || d.hostname == "gitlab.com"
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int, err error) {
+func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
 
@@ -43,8 +43,8 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
+	d.hostname = helpers.GetURLHostname(originURL)
+	d.repository = helpers.GetURLRepositoryName(originURL)
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {

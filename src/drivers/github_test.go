@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/stretchr/testify/assert"
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
@@ -18,9 +18,9 @@ var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
 var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
 var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
 
-func setupDriver(t *testing.T, token string) (CodeHostingDriver, func()) {
+func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := GetDriver(DriverOptions{OriginURL: "git@github.com:git-town/git-town.git"})
+	driver := drivers.GetDriver(drivers.DriverOptions{OriginURL: "git@github.com:git-town/git-town.git"})
 	assert.NotNil(t, driver)
 	if token != "" {
 		driver.SetAPIToken(token)
@@ -39,7 +39,7 @@ func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, canMerge)
 	assert.Equal(t, "my title (#1)", defaultCommintMessage)
-	assert.Equal(t, 1, pullRequestNumber)
+	assert.Equal(t, int64(1), pullRequestNumber)
 }
 
 func TestGitHubDriver_CanMergePullRequest_EmptyGithubToken(t *testing.T) {
@@ -81,7 +81,7 @@ func TestGitHubDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testi
 func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -94,7 +94,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -108,7 +108,7 @@ func TestGitHubDriver_MergePullRequest_GetPullRequestToMergeFails(t *testing.T) 
 func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -123,7 +123,7 @@ func TestGitHubDriver_MergePullRequest_PullRequestNotFound(t *testing.T) {
 func TestGitHubDriver_MergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",
@@ -148,7 +148,7 @@ func TestGitHubDriver_MergePullRequest(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:        "feature",
 		CommitMessage: "title\nextra detail1\nextra detail2",
 		ParentBranch:  "main",
@@ -163,7 +163,7 @@ func TestGitHubDriver_MergePullRequest_MergeFails(t *testing.T) {
 func TestGitHubDriver_MergePullRequest_UpdateChildPRs(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
-	options := MergePullRequestOptions{
+	options := drivers.MergePullRequestOptions{
 		Branch:            "feature",
 		PullRequestNumber: 1,
 		CommitMessage:     "title\nextra detail1\nextra detail2",

@@ -234,28 +234,8 @@ func (c *Configuration) GetRemoteOriginURL() string {
 	if remote != "" {
 		return remote
 	}
-	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
-}
-
-// GetURLHostname returns the hostname contained within the given Git URL.
-func (c *Configuration) GetURLHostname(url string) string {
-	hostnameRegex := regexp.MustCompile("(^[^:]*://([^@]*@)?|git@)([^/:]+).*")
-	matches := hostnameRegex.FindStringSubmatch(url)
-	if matches == nil {
-		return ""
-	}
-	return matches[3]
-}
-
-// GetURLRepositoryName returns the repository name contains within the given Git URL.
-func (c *Configuration) GetURLRepositoryName(url string) string {
-	hostname := c.GetURLHostname(url)
-	repositoryNameRegex := regexp.MustCompile(".*" + hostname + "[/:](.+)")
-	matches := repositoryNameRegex.FindStringSubmatch(url)
-	if matches == nil {
-		return ""
-	}
-	return strings.TrimSuffix(matches[1], ".git")
+	res, _ := c.shell.Run("git", "remote", "get-url", "origin")
+	return res.OutputSanitized()
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
