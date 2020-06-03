@@ -8,6 +8,7 @@ import (
 
 	"golang.org/x/oauth2"
 
+	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
 )
@@ -67,9 +68,9 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
+	d.hostname = helpers.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]
