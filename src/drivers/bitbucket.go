@@ -5,9 +5,16 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-
-	"github.com/git-town/git-town/src/git"
 )
+
+// bitbucketConfigurationInterface defines the gitea's interface to configuration.
+type bitbucketConfigurationInterface interface {
+	GetURLHostname(string) string
+	GetURLRepositoryName(string) string
+}
+
+// GitConfig implements bitbucketConfigurationInterface.
+var _ bitbucketConfigurationInterface = (*GitConfig)(nil)
 
 type bitbucketCodeHostingDriver struct {
 	originURL  string
@@ -44,8 +51,8 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
+	d.hostname = GitConfig().GetURLHostname(originURL)
+	d.repository = GitConfig().GetURLRepositoryName(originURL)
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
