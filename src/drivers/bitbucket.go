@@ -9,16 +9,6 @@ import (
     "github.com/git-town/git-town/src/git"
 )
 
-// BitbucketConfigurationInterface defines the bitbucket's interface to configuration.
-type BitbucketConfigurationInterface interface {
-	GetURLHostname(string) string
-	GetURLRepositoryName(string) string
-}
-
-// BitbucketConfiguration implements BitbucketConfigurationInterface.
-// Exported for overrides in test.
-var BitbucketConfiguration BitbucketConfigurationInterface = git.Config()
-
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
@@ -54,8 +44,8 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = BitbucketConfiguration.GetURLHostname(originURL)
-	d.repository = BitbucketConfiguration.GetURLRepositoryName(originURL)
+	d.hostname = Configuration.GetURLHostname(originURL)
+	d.repository = Configuration.GetURLRepositoryName(originURL)
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {

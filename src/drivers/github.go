@@ -15,8 +15,6 @@ import (
 // GithubConfigurationInterface defines the github's interface to configuration.
 type GithubConfigurationInterface interface {
 	GetMainBranch() string
-	GetURLHostname(string) string
-	GetURLRepositoryName(string) string
 	GetGitHubToken() string
 }
 
@@ -79,9 +77,9 @@ func (d *githubCodeHostingDriver) HostingServiceName() string {
 
 func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = GithubConfiguration.GetURLHostname(originURL)
+	d.hostname = Configuration.GetURLHostname(originURL)
 	d.client = nil
-	repositoryParts := strings.SplitN(GithubConfiguration.GetURLRepositoryName(originURL), "/", 2)
+	repositoryParts := strings.SplitN(Configuration.GetURLRepositoryName(originURL), "/", 2)
 	if len(repositoryParts) == 2 {
 		d.owner = repositoryParts[0]
 		d.repository = repositoryParts[1]

@@ -8,24 +8,26 @@ var registry = Registry{}
 
 var activeDriver CodeHostingDriver
 
-// DriverConfigurationInterface defines the driver's interface to configuration.
-type DriverConfigurationInterface interface {
+// ConfigurationInterface defines the drivers's interface to configuration.
+type ConfigurationInterface interface {
 	GetCodeHostingDriverName() string
 	GetRemoteOriginURL() string
 	GetCodeHostingOriginHostname() string
+	GetURLHostname(string) string
+	GetURLRepositoryName(string) string
 }
 
-// DriverConfiguration implements DriverConfigurationInterface.
+// Configuration implements ConfigurationInterface.
 // Exported for overrides in test.
-var DriverConfiguration DriverConfigurationInterface = git.Config()
+var Configuration ConfigurationInterface = git.Config()
 
 // GetActiveDriver returns the code hosting driver to use based on the git config.
 func GetActiveDriver() CodeHostingDriver {
 	if activeDriver == nil {
 		activeDriver = GetDriver(DriverOptions{
-			DriverType:     DriverConfiguration.GetCodeHostingDriverName(),
-			OriginURL:      DriverConfiguration.GetRemoteOriginURL(),
-			OriginHostname: DriverConfiguration.GetCodeHostingOriginHostname(),
+			DriverType:     Configuration.GetCodeHostingDriverName(),
+			OriginURL:      Configuration.GetRemoteOriginURL(),
+			OriginHostname: Configuration.GetCodeHostingOriginHostname(),
 		})
 		if activeDriver != nil {
 			activeDriver.SetAPIToken(activeDriver.GetAPIToken())

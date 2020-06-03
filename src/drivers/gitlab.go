@@ -4,20 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-
-    "github.com/git-town/git-town/src/git"
 )
-
-// GitlabConfigurationInterface defines the gitlab's interface to configuration.
-type GitlabConfigurationInterface interface {
-	GetURLHostname(string) string
-	GetURLRepositoryName(string) string
-}
-
-// GitlabConfiguration implements GitlabConfigurationInterface.
-// Exported for overrides in test.
-var GitlabConfiguration GitlabConfigurationInterface = git.Config()
-
 
 type gitlabCodeHostingDriver struct {
 	originURL  string
@@ -54,8 +41,8 @@ func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 
 func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
 	d.originURL = originURL
-	d.hostname = GitlabConfiguration.GetURLHostname(originURL)
-	d.repository = GitlabConfiguration.GetURLRepositoryName(originURL)
+	d.hostname = Configuration.GetURLHostname(originURL)
+	d.repository = Configuration.GetURLRepositoryName(originURL)
 }
 
 func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
