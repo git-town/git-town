@@ -48,7 +48,7 @@ where hostname matches what is in your ssh config file.`,
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList, err := getNewPullRequestStepList(config, repo, driver)
+		stepList, err := getNewPullRequestStepList(config, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -88,7 +88,7 @@ func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo, driver drivers.CodeHostingDriver) (result steps.StepList, err error) {
+func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
 		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
 		if err != nil {

@@ -70,7 +70,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getShipStepList(config, repo, driver)
+		stepList, err := getShipStepList(config, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -137,7 +137,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig, repo *git.ProdRepo, driver drivers.CodeHostingDriver) (result steps.StepList, err error) {
+func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	syncSteps, err := steps.GetSyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
