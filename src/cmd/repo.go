@@ -26,7 +26,7 @@ When using SSH identities, run
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		driver, err := drivers.GetActiveDriver(repo.Configuration)
+		driver, err := drivers.Get(repo.Configuration)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)

@@ -64,7 +64,7 @@ run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		driver, _ := drivers.GetActiveDriver(repo.Configuration)
+		driver, _ := drivers.Get(repo.Configuration)
 		config, err := gitShipConfig(args, driver)
 		if err != nil {
 			fmt.Println(err)

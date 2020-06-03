@@ -22,7 +22,7 @@ var abortCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		repo := git.NewProdRepo()
-		driver, _ := drivers.GetActiveDriver(repo.Configuration)
+		driver, _ := drivers.Get(repo.Configuration)
 		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to abort")
 		}
