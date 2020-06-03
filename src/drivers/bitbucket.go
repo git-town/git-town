@@ -10,14 +10,40 @@ import (
 	"github.com/git-town/git-town/src/git"
 )
 
+type bitbucketConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetCodeHostingOriginHostname() string
+}
+
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
 }
 
+// TryUseBitbucket provides a GitHub driver instance if the given repo configuration is for a Github repo,
+// otherwise nil.
+func TryUseBitbucket(config bitbucketConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "bitbucket" && hostname != "bitbucket.org" {
+		return nil
+	}
+	return &bitbucketCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		repository: helpers.GetURLRepositoryName(originURL),
+	}
+}
+
 func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
+	panic("DONT CALL THIS")
 }
 
 func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
@@ -44,21 +70,17 @@ func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = helpers.GetURLHostname(originURL)
-	d.repository = helpers.GetURLRepositoryName(originURL)
+	panic("DONT CALL THIS")
 }
 
 func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
+	panic("DONT CALL THIS")
 }
 
 func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	return ""
+	panic("DONT CALL THIS")
 }
 
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
-
-func init() {
-	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
+func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {
+	panic("DONT CALL THIS")
 }

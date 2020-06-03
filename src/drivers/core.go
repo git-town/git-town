@@ -14,6 +14,10 @@ func GetActiveDriver() CodeHostingDriver {
 	if driver != nil {
 		return driver
 	}
+	driver = TryUseBitbucket(git.Config())
+	if driver != nil {
+		return driver
+	}
 	if activeDriver == nil {
 		activeDriver = GetDriver(DriverOptions{
 			DriverType:     git.Config().GetCodeHostingDriverName(),

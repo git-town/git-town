@@ -12,7 +12,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GithubConfig defines the configuration fields that the githubCodeHostingDriver needs.
+// GithubConfig defines the data that the githubCodeHostingDriver needs from the Git configuration.
 type GithubConfig interface {
 	GetCodeHostingDriverName() string
 	GetRemoteOriginURL() string

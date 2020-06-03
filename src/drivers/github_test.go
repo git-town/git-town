@@ -51,6 +51,26 @@ func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func())
 	}
 }
 
+func TestTryUseGithub(t *testing.T) {
+	driver := drivers.TryUseGithub(mockGithubConfig{
+		codeHostingDriverName: "github",
+		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "GitHub", driver.HostingServiceName())
+	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.GetRepositoryURL())
+}
+
+func TestTryUseGithub_customHostName(t *testing.T) {
+	driver := drivers.TryUseGithub(mockGithubConfig{
+		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
+		configuredHostName: "github.com",
+	})
+	assert.NotNil(t, driver)
+	assert.Equal(t, "GitHub", driver.HostingServiceName())
+	assert.Equal(t, "https://github.com/git-town/git-town", driver.GetRepositoryURL())
+}
+
 func TestGitHubDriver_CanMergePullRequest(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
