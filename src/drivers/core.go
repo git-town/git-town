@@ -1,17 +1,27 @@
 package drivers
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"errors"
+
+	"github.com/git-town/git-town/src/git"
+)
 
 // Get returns the code hosting driver to use based on the git config.
-func Get(config git.Configuration) CodeHostingDriver {
+func Get(config git.Configuration) (CodeHostingDriver, error) {
 	if driver := tryCreateBitBucket(config); driver != nil {
-		return driver
+		return driver, nil
 	}
 	if driver := tryCreateGitHub(config); driver != nil {
-		return driver
+		return driver, nil
 	}
 	if driver := tryCreateGitLab(config); driver != nil {
 		return driver
 	}
-	return nil
+	return nil, errors.New(`unsupported hosting service
+
+This command requires hosting on one of these services:
+* GitHub
+* GitLab
+* Bitbucket
+`)
 }

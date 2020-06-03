@@ -43,7 +43,11 @@ where hostname matches what is in your ssh config file.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		driver := drivers.Get(*repo.Configuration)
+		driver, err := drivers.Get(*repo.Configuration)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		stepList, err := getNewPullRequestStepList(config, repo, driver)
 		if err != nil {
 			fmt.Println(err)
@@ -67,7 +71,6 @@ where hostname matches what is in your ssh config file.`,
 		if err := git.Config().ValidateIsOnline(); err != nil {
 			return err
 		}
-		return drivers.ValidateHasDriver()
 	},
 }
 
