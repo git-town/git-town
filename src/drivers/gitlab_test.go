@@ -23,7 +23,7 @@ func (mgc mockGitlabConfig) GetCodeHostingOriginHostname() string {
 	return mgc.configuredHostName
 }
 
-func TestGetDriver_DriverType_GitLab(t *testing.T) {
+func TestLoadGitLab(t *testing.T) {
 	driver := drivers.LoadGitlab(mockGitlabConfig{
 		codeHostingDriverName: "gitlab",
 		remoteOriginURL:       "git@self-hosted-gitlab.com:git-town/git-town.git",
@@ -33,7 +33,7 @@ func TestGetDriver_DriverType_GitLab(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
-func TestGetDriver_OriginHostname_GitLab(t *testing.T) {
+func TestLoadGitLab_customHostName(t *testing.T) {
 	driver := drivers.LoadGitlab(mockGitlabConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "gitlab.com",

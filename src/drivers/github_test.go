@@ -50,7 +50,7 @@ func setupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func())
 	}
 }
 
-func TestTryUseGithub(t *testing.T) {
+func TestLoadGithub(t *testing.T) {
 	driver := drivers.LoadGithub(mockGithubConfig{
 		codeHostingDriverName: "github",
 		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
@@ -60,7 +60,7 @@ func TestTryUseGithub(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
-func TestTryUseGithub_customHostName(t *testing.T) {
+func TestLoadGithub_customHostName(t *testing.T) {
 	driver := drivers.LoadGithub(mockGithubConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "github.com",

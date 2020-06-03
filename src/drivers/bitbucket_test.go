@@ -23,7 +23,7 @@ func (mbc mockBitbucketConfig) GetCodeHostingOriginHostname() string {
 	return mbc.configuredHostName
 }
 
-func TestTryUseBitbucket(t *testing.T) {
+func TestLoadBitbucket(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		codeHostingDriverName: "bitbucket",
 		remoteOriginURL:       "git@self-hosted-bitbucket.com:git-town/git-town.git",
@@ -33,7 +33,7 @@ func TestTryUseBitbucket(t *testing.T) {
 	assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.GetRepositoryURL())
 }
 
-func TestTryUseBitbucket_customHostName(t *testing.T) {
+func TestLoadBitbucket_customHostName(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "bitbucket.org",
