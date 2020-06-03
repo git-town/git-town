@@ -7,10 +7,11 @@ Opens the repository homepage
 <a textrun="command-description">
 
 Supported for repositories hosted on [GitHub](http://github.com/),
-[GitLab](http://gitlab.com/), and [Bitbucket](https://bitbucket.org/). Derives
-the Git provider from the `origin` remote. You can override this detection with
+[GitLab](http://gitlab.com/), [Gitea](http://gitea.com/), and
+[Bitbucket](https://bitbucket.org/). Derives the Git provider from the `origin`
+remote. You can override this detection with
 `git config git-town.code-hosting-driver <DRIVER>` where DRIVER is "github",
-"gitlab", or "bitbucket".
+"gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run
 `git config git-town.code-hosting-origin-hostname <HOSTNAME>` where HOSTNAME
