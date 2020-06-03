@@ -38,9 +38,9 @@ type MergePullRequestOptions struct {
 	ParentBranch      string
 }
 
-// Get returns the code hosting driver to use based on the git config.
+// Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Get(config *git.Configuration) CodeHostingDriver {
+func Load(config *git.Configuration) CodeHostingDriver {
 	driver := TryUseGithub(config)
 	if driver != nil {
 		return driver

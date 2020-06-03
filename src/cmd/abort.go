@@ -26,7 +26,7 @@ var abortCmd = &cobra.Command{
 			util.ExitWithErrorMessage("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
-		err = steps.Run(&abortRunState, repo, drivers.Get(repo.Configuration))
+		err = steps.Run(&abortRunState, repo, drivers.Load(repo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

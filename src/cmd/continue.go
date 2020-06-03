@@ -26,7 +26,7 @@ var continueCmd = &cobra.Command{
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		git.EnsureDoesNotHaveConflicts()
-		err = steps.Run(runState, repo, drivers.Get(repo.Configuration))
+		err = steps.Run(runState, repo, drivers.Load(repo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
