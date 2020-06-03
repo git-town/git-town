@@ -34,7 +34,6 @@ func (mgc mockGithubConfig) GetRemoteOriginURL() string {
 func (mgc mockGithubConfig) GetGitHubToken() string {
 	return mgc.gitHubToken
 }
-
 func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
 	return mgc.configuredHostName
 }

@@ -1,8 +1,6 @@
 package drivers
 
-import (
-	"github.com/git-town/git-town/src/git"
-)
+import "github.com/git-town/git-town/src/git"
 
 // Core provides the public API for the drivers subsystem.
 

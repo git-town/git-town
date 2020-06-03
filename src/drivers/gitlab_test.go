@@ -19,7 +19,6 @@ func (mgc mockGitlabConfig) GetCodeHostingDriverName() string {
 func (mgc mockGitlabConfig) GetRemoteOriginURL() string {
 	return mgc.remoteOriginURL
 }
-
 func (mgc mockGitlabConfig) GetCodeHostingOriginHostname() string {
 	return mgc.configuredHostName
 }

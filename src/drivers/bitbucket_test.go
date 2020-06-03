@@ -19,7 +19,6 @@ func (mbc mockBitbucketConfig) GetCodeHostingDriverName() string {
 func (mbc mockBitbucketConfig) GetRemoteOriginURL() string {
 	return mbc.remoteOriginURL
 }
-
 func (mbc mockBitbucketConfig) GetCodeHostingOriginHostname() string {
 	return mbc.configuredHostName
 }
