@@ -105,10 +105,8 @@ func (d *giteaCodeHostingDriver) SetOriginURL(originURL string) {
 	d.hostname = git.Config().GetURLHostname(originURL)
 	d.client = nil
 	repositoryParts := strings.SplitN(git.Config().GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
+	d.owner = repositoryParts[0]
+	d.repository = repositoryParts[1]
 }
 
 func init() {
