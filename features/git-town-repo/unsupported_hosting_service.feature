@@ -13,4 +13,5 @@ Feature: git-repo when origin is unsupported
       * Bitbucket
       * GitHub
       * GitLab
+      * Gitea
       """

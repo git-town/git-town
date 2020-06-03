@@ -20,4 +20,5 @@ Feature: git-new-pull-request: when origin is unsupported
       * Bitbucket
       * GitHub
       * GitLab
+      * Gitea
       """
