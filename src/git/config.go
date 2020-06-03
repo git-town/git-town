@@ -234,7 +234,8 @@ func (c *Configuration) GetRemoteOriginURL() string {
 	if remote != "" {
 		return remote
 	}
-	return c.shell.MustRun("git", "remote", "get-url", "origin").OutputSanitized()
+	res, _ := c.shell.Run("git", "remote", "get-url", "origin")
+	return res.OutputSanitized()
 }
 
 // HasBranchInformation indicates whether this configuration contains any branch hierarchy entries.
