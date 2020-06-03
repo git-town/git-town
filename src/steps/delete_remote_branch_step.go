@@ -1,6 +1,9 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.
 type DeleteRemoteBranchStep struct {
@@ -20,7 +23,7 @@ func (step *DeleteRemoteBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteRemoteBranchStep) Run(repo *git.ProdRepo) (err error) {
+func (step *DeleteRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	if !step.IsTracking {
 		trackingBranchName := repo.Silent.TrackingBranchName(step.BranchName)
 		step.branchSha, err = repo.Silent.BranchSha(trackingBranchName)

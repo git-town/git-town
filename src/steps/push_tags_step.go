@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -10,6 +11,6 @@ type PushTagsStep struct {
 }
 
 // Run executes this step.
-func (step *PushTagsStep) Run(repo *git.ProdRepo) error {
+func (step *PushTagsStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.PushTags()
 }

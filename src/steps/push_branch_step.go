@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 )
@@ -23,7 +24,7 @@ func (step *PushBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *PushBranchStep) Run(repo *git.ProdRepo) error {
+func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
 	if err != nil {
 		return err

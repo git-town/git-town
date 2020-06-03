@@ -1,3 +1,4 @@
+@debug
 Feature: git town-ship: shipping the current feature branch without a remote origin
 
   As a developer having finished a feature and on repo without a remote origin

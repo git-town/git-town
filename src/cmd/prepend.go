@@ -49,7 +49,7 @@ See "sync" for remote upstream options.
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("prepend", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

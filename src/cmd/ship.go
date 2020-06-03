@@ -64,18 +64,19 @@ run "git config git-town.ship-delete-remote-branch false"
 and Git Town will leave it up to your origin server to delete the remote branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := gitShipConfig(args)
+		driver, _ := drivers.GetActiveDriver(repo.Configuration)
+		config, err := gitShipConfig(args, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getShipStepList(config, repo)
+		stepList, err := getShipStepList(config, repo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("ship", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -90,7 +91,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
-func gitShipConfig(args []string) (result shipConfig, err error) {
+func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result shipConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.branchToShip = result.initialBranch
@@ -117,7 +118,7 @@ func gitShipConfig(args []string) (result shipConfig, err error) {
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = git.Config().GetParentBranch(result.branchToShip)
-	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.branchToShip, result.branchToMergeInto)
+	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
 	result.childBranches = git.Config().GetChildBranches(result.branchToShip)
 	result.shouldShipDeleteRemoteBranch = git.Config().ShouldShipDeleteRemoteBranch()
 	return result, err
@@ -136,7 +137,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 	}
 }
 
-func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func getShipStepList(config shipConfig, repo *git.ProdRepo, driver drivers.CodeHostingDriver) (result steps.StepList, err error) {
 	syncSteps, err := steps.GetSyncBranchSteps(config.branchToMergeInto, true, repo)
 	if err != nil {
 		return result, err
@@ -151,7 +152,12 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	result.Append(&steps.CheckoutBranchStep{BranchName: config.branchToMergeInto})
 	if config.canShipWithDriver {
 		result.Append(&steps.PushBranchStep{BranchName: config.branchToShip})
-		result.Append(&steps.DriverMergePullRequestStep{BranchName: config.branchToShip, PullRequestNumber: config.pullRequestNumber, CommitMessage: commitMessage, DefaultCommitMessage: config.defaultCommitMessage})
+		result.Append(&steps.DriverMergePullRequestStep{
+			BranchName:           config.branchToShip,
+			PullRequestNumber:    config.pullRequestNumber,
+			CommitMessage:        commitMessage,
+			DefaultCommitMessage: config.defaultCommitMessage,
+		})
 		result.Append(&steps.PullBranchStep{})
 	} else {
 		result.Append(&steps.SquashMergeBranchStep{BranchName: config.branchToShip, CommitMessage: commitMessage})
@@ -180,14 +186,13 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if !git.HasRemote("origin") {
 		return false, "", 0, nil
 	}
 	if git.Config().IsOffline() {
 		return false, "", 0, nil
 	}
-	driver := drivers.GetActiveDriver()
 	if driver == nil {
 		return false, "", 0, nil
 	}

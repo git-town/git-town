@@ -1,6 +1,9 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
 // SetParentBranchStep registers the branch with the given name as a parent
 // of the branch with the other given name.
@@ -21,7 +24,7 @@ func (step *SetParentBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *SetParentBranchStep) Run(repo *git.ProdRepo) error {
+func (step *SetParentBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousParent = repo.GetParentBranch(step.BranchName)
 	repo.SetParentBranch(step.BranchName, step.ParentBranchName)
 	return nil

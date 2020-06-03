@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -12,6 +13,6 @@ type FetchUpstreamStep struct {
 }
 
 // Run executes this step.
-func (step *FetchUpstreamStep) Run(repo *git.ProdRepo) error {
+func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.FetchUpstream(step.BranchName)
 }

@@ -55,7 +55,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, syncProdRepo)
+		err = steps.Run(runState, syncProdRepo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -73,7 +73,7 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := validateIsConfigured(); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(syncProdRepo)
+		return ensureIsNotInUnfinishedState(syncProdRepo, nil)
 	},
 }
 

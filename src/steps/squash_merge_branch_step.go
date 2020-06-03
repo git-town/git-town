@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 )
@@ -31,7 +32,7 @@ func (step *SquashMergeBranchStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo) error {
+func (step *SquashMergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	err := repo.Logging.SquashMerge(step.BranchName)
 	if err != nil {
 		return err

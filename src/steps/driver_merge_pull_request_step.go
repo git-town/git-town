@@ -42,7 +42,7 @@ func (step *DriverMergePullRequestStep) GetAutomaticAbortErrorMessage() string {
 }
 
 // Run executes this step.
-func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
+func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	commitMessage := step.CommitMessage
 	// nolint:nestif
 	if commitMessage == "" {
@@ -71,7 +71,6 @@ func (step *DriverMergePullRequestStep) Run(repo *git.ProdRepo) error {
 		}
 		step.enteredEmptyCommitMessage = false
 	}
-	driver := drivers.GetActiveDriver()
 	currentBranch, err := repo.Silent.CurrentBranch()
 	if err != nil {
 		return err

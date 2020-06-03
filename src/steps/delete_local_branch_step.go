@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -20,7 +21,7 @@ func (step *DeleteLocalBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo) (err error) {
+func (step *DeleteLocalBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	step.branchSha, err = repo.Silent.BranchSha(step.BranchName)
 	if err != nil {
 		return err

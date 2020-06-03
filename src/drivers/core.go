@@ -9,16 +9,16 @@ import (
 // Core provides the public API for the drivers subsystem.
 
 // GetActiveDriver returns the code hosting driver to use based on the git config.
-func GetActiveDriver() (CodeHostingDriver, error) {
-	driver := TryUseGithub(git.Config())
+func GetActiveDriver(config *git.Configuration) (CodeHostingDriver, error) {
+	driver := TryUseGithub(config)
 	if driver != nil {
 		return driver, nil
 	}
-	driver = TryUseBitbucket(git.Config())
+	driver = TryUseBitbucket(config)
 	if driver != nil {
 		return driver, nil
 	}
-	driver = TryUseGitlab(git.Config())
+	driver = TryUseGitlab(config)
 	if driver != nil {
 		return driver, nil
 	}

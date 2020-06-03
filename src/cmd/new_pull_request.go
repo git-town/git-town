@@ -43,13 +43,18 @@ where hostname matches what is in your ssh config file.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getNewPullRequestStepList(config, repo)
+		driver, err := drivers.GetActiveDriver(repo.Configuration)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
+		stepList, err := getNewPullRequestStepList(config, repo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("new-pull-request", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, driver)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -66,7 +71,7 @@ where hostname matches what is in your ssh config file.`,
 		if err := git.Config().ValidateIsOnline(); err != nil {
 			return err
 		}
-		return drivers.ValidateHasDriver()
+		return nil
 	},
 }
 
@@ -83,7 +88,7 @@ func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
 	return
 }
 
-func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo, driver drivers.CodeHostingDriver) (result steps.StepList, err error) {
 	for _, branchName := range config.BranchesToSync {
 		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
 		if err != nil {

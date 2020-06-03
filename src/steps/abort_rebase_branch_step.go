@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -11,6 +12,6 @@ type AbortRebaseBranchStep struct {
 }
 
 // Run executes this step.
-func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo) error {
+func (step *AbortRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	return repo.Logging.AbortRebase()
 }

@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
@@ -22,7 +25,12 @@ When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
 where HOSTNAME matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		driver := drivers.GetActiveDriver()
+		repo := git.NewProdRepo()
+		driver, err := drivers.GetActiveDriver(repo.Configuration)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 		script.OpenBrowser(driver.GetRepositoryURL())
 	},
 	Args: cobra.NoArgs,
@@ -36,7 +44,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 		if err := git.Config().ValidateIsOnline(); err != nil {
 			return err
 		}
-		return drivers.ValidateHasDriver()
+		return nil
 	},
 }
 

@@ -1,6 +1,7 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
@@ -19,7 +20,7 @@ func (step *CheckoutBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CheckoutBranchStep) Run(repo *git.ProdRepo) error {
+func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousBranchName = git.GetCurrentBranchName()
 	if step.previousBranchName != step.BranchName {
 		err := script.RunCommand("git", "checkout", step.BranchName)

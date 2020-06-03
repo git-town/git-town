@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/script"
@@ -46,7 +47,7 @@ func validateIsConfigured() error {
 	return nil
 }
 
-func ensureIsNotInUnfinishedState(repo *git.ProdRepo) error {
+func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	runState, err := steps.LoadPreviousRunState()
 	if err != nil {
 		fmt.Printf("cannot load previous run state: %v\n", err)
@@ -64,13 +65,13 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo) error {
 			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
-			err = steps.Run(runState, repo)
+			err = steps.Run(runState, repo, driver)
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()
-			err = steps.Run(&abortRunState, repo)
+			err = steps.Run(&abortRunState, repo, driver)
 		case prompt.ResponseTypeSkip:
 			skipRunState := runState.CreateSkipRunState()
-			err = steps.Run(&skipRunState, repo)
+			err = steps.Run(&skipRunState, repo, driver)
 		}
 		if err != nil {
 			fmt.Println(err)

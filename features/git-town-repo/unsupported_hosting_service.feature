@@ -7,7 +7,7 @@ Feature: git-repo when origin is unsupported
   Scenario: result
     Then it prints the error:
       """
-      Unsupported hosting service
+      Error: unsupported hosting service
 
       This command requires hosting on one of these services:
       * Bitbucket

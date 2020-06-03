@@ -52,7 +52,7 @@ When run on a perennial branch
 		}
 		stepList := getRenameBranchStepList(config)
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, git.NewProdRepo())
+		err = steps.Run(runState, git.NewProdRepo(), nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

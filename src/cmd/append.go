@@ -47,7 +47,7 @@ See "sync" for information regarding remote upstream.`,
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, repo)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
