@@ -10,6 +10,10 @@ var activeDriver CodeHostingDriver
 
 // GetActiveDriver returns the code hosting driver to use based on the git config.
 func GetActiveDriver() CodeHostingDriver {
+	driver := TryUseGithub(git.Config())
+	if driver != nil {
+		return driver
+	}
 	if activeDriver == nil {
 		activeDriver = GetDriver(DriverOptions{
 			DriverType:     git.Config().GetCodeHostingDriverName(),

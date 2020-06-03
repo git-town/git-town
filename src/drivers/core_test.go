@@ -7,6 +7,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type mockGithubConfig struct {
+	codeHostingDriverName string
+	remoteOriginURL       string
+	gitHubToken           string
+	configuredHostName    string
+}
+
+func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
+	return mgc.codeHostingDriverName
+}
+func (mgc mockGithubConfig) GetRemoteOriginURL() string {
+	return mgc.remoteOriginURL
+}
+func (mgc mockGithubConfig) GetGitHubToken() string {
+	return mgc.gitHubToken
+}
+
+func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
+	return mgc.configuredHostName
+}
+
 func TestGetDriver_DriverType_Bitbucket(t *testing.T) {
 	driver := drivers.GetDriver(drivers.DriverOptions{
 		DriverType: "bitbucket",
@@ -18,9 +39,9 @@ func TestGetDriver_DriverType_Bitbucket(t *testing.T) {
 }
 
 func TestGetDriver_DriverType_GitHub(t *testing.T) {
-	driver := drivers.GetDriver(drivers.DriverOptions{
-		DriverType: "github",
-		OriginURL:  "git@self-hosted-github.com:git-town/git-town.git",
+	driver := drivers.TryUseGithub(mockGithubConfig{
+		codeHostingDriverName: "github",
+		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
@@ -48,9 +69,9 @@ func TestGetDriver_OriginHostname_Bitbucket(t *testing.T) {
 }
 
 func TestGetDriver_OriginHostname_GitHub(t *testing.T) {
-	driver := drivers.GetDriver(drivers.DriverOptions{
-		OriginURL:      "git@my-ssh-identity.com:git-town/git-town.git",
-		OriginHostname: "github.com",
+	driver := drivers.TryUseGithub(mockGithubConfig{
+		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
+		configuredHostName: "github.com",
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())

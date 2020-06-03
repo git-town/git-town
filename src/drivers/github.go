@@ -6,14 +6,22 @@ import (
 	"net/url"
 	"strings"
 
-	"golang.org/x/oauth2"
-
 	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
-type githubCodeHostingDriver struct {
+// GithubConfig defines the configuration fields that the githubCodeHostingDriver needs.
+type GithubConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetGitHubToken() string
+	GetCodeHostingOriginHostname() string
+}
+
+// GithubCodeHostingDriver makes the GitHub API accessible.
+type GithubCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	apiToken   string
@@ -22,11 +30,39 @@ type githubCodeHostingDriver struct {
 	repository string
 }
 
-func (d *githubCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "github" || d.hostname == "github.com"
+// TryUseGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
+// otherwise nil.
+func TryUseGithub(config GithubConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "github" && hostname != "github.com" {
+		return nil
+	}
+	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
+	if len(repositoryParts) != 2 {
+		return nil
+	}
+	owner := repositoryParts[0]
+	repository := repositoryParts[1]
+	return &GithubCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		apiToken:   config.GetGitHubToken(),
+		owner:      owner,
+		repository: repository,
+	}
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *GithubCodeHostingDriver) CanBeUsed(driverType string) bool {
+	panic("DONT CALL THIS")
+}
+
+func (d *GithubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -41,7 +77,7 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	return true, d.getDefaultCommitMessage(pullRequests[0]), int64(pullRequests[0].GetNumber()), nil
 }
 
-func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
+func (d *GithubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
@@ -49,11 +85,11 @@ func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBran
 	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
 }
 
-func (d *githubCodeHostingDriver) GetRepositoryURL() string {
+func (d *GithubCodeHostingDriver) GetRepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
-func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GithubCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	d.connect()
 	err = d.updatePullRequestsAgainst(options)
 	if err != nil {
@@ -62,40 +98,29 @@ func (d *githubCodeHostingDriver) MergePullRequest(options MergePullRequestOptio
 	return d.mergePullRequest(options)
 }
 
-func (d *githubCodeHostingDriver) HostingServiceName() string {
+func (d *GithubCodeHostingDriver) HostingServiceName() string {
 	return "GitHub"
 }
 
-func (d *githubCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = helpers.GetURLHostname(originURL)
-	d.client = nil
-	repositoryParts := strings.SplitN(helpers.GetURLRepositoryName(originURL), "/", 2)
-	if len(repositoryParts) == 2 {
-		d.owner = repositoryParts[0]
-		d.repository = repositoryParts[1]
-	}
-}
-
-func (d *githubCodeHostingDriver) SetOriginHostname(originHostname string) {
+func (d *GithubCodeHostingDriver) SetOriginHostname(originHostname string) {
 	d.hostname = originHostname
 }
 
-func (d *githubCodeHostingDriver) GetAPIToken() string {
+func (d *GithubCodeHostingDriver) SetOriginURL(originURL string) {
+	panic("DONT CALL THIS")
+}
+
+func (d *GithubCodeHostingDriver) GetAPIToken() string {
 	return git.Config().GetGitHubToken()
 }
 
-func (d *githubCodeHostingDriver) SetAPIToken(apiToken string) {
+func (d *GithubCodeHostingDriver) SetAPIToken(apiToken string) {
 	d.apiToken = apiToken
-}
-
-func init() {
-	registry.RegisterDriver(&githubCodeHostingDriver{})
 }
 
 // Helper
 
-func (d *githubCodeHostingDriver) connect() {
+func (d *GithubCodeHostingDriver) connect() {
 	if d.client == nil {
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: d.apiToken},
@@ -105,11 +130,11 @@ func (d *githubCodeHostingDriver) connect() {
 	}
 }
 
-func (d *githubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {
+func (d *GithubCodeHostingDriver) getDefaultCommitMessage(pullRequest *github.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", *pullRequest.Title, *pullRequest.Number)
 }
 
-func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
+func (d *GithubCodeHostingDriver) getPullRequests(branch, parentBranch string) ([]*github.PullRequest, error) {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  parentBranch,
 		Head:  d.owner + ":" + branch,
@@ -118,7 +143,7 @@ func (d *githubCodeHostingDriver) getPullRequests(branch, parentBranch string) (
 	return pullRequests, err
 }
 
-func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
+func (d *GithubCodeHostingDriver) mergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	if options.PullRequestNumber == 0 {
 		return "", fmt.Errorf("cannot merge via Github since there is no pull request")
 	}
@@ -141,7 +166,7 @@ func (d *githubCodeHostingDriver) mergePullRequest(options MergePullRequestOptio
 	return *result.SHA, nil
 }
 
-func (d *githubCodeHostingDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
+func (d *GithubCodeHostingDriver) updatePullRequestsAgainst(options MergePullRequestOptions) error {
 	pullRequests, _, err := d.client.PullRequests.List(context.Background(), d.owner, d.repository, &github.PullRequestListOptions{
 		Base:  options.Branch,
 		State: "open",
