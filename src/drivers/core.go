@@ -1,8 +1,6 @@
 package drivers
 
 import (
-	"errors"
-
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -42,23 +40,28 @@ type MergePullRequestOptions struct {
 
 // Get returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Get(config *git.Configuration) (CodeHostingDriver, error) {
+func Get(config *git.Configuration) CodeHostingDriver {
 	driver := TryUseGithub(config)
 	if driver != nil {
-		return driver, nil
+		return driver
 	}
 	driver = TryUseBitbucket(config)
 	if driver != nil {
-		return driver, nil
+		return driver
 	}
 	driver = TryUseGitlab(config)
 	if driver != nil {
-		return driver, nil
+		return driver
 	}
-	return nil, errors.New(`unsupported hosting service
+	return nil
+}
+
+// UnsupportedHostingError provides an error message.
+func UnsupportedHostingError() string {
+	return `Unsupported hosting service
 
 This command requires hosting on one of these services:
 * Bitbucket
 * GitHub
-* GitLab`)
+* GitLab`
 }

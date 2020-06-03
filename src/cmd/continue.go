@@ -22,12 +22,11 @@ var continueCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		repo := git.NewProdRepo()
-		driver, _ := drivers.Get(repo.Configuration)
 		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
 		git.EnsureDoesNotHaveConflicts()
-		err = steps.Run(runState, repo, driver)
+		err = steps.Run(runState, repo, drivers.Get(repo.Configuration))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
