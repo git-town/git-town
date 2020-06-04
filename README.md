@@ -61,8 +61,8 @@ Git Town provides these additional Git commands:
 
 - [git town alias](/documentation/commands/alias.md) - adds or removes shorter
   aliases for Git Town commands
-- [git town completion](/documentation/commands/completion.md) - generates
-  competion scripts for bash, zsh, fish & powershell.
+- [git town completions](/documentation/commands/completions.md) - generates
+  completion scripts for Bash, zsh, fish & PowerShell.
 - [git town version](/documentation/commands/version.md) - displays the
   installed version of Git Town
 

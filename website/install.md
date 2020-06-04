@@ -64,7 +64,7 @@ ensure your Git version is 2.7.0 or higher._
 
 #### Install autocompletion
 
-- check instructions from: `git town completion --help`
+- follow instructions given by `git-town help completions`
 
 #### Notifications about new releases
 

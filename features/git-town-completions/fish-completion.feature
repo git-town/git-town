@@ -1,35 +1,35 @@
 Feature: Installing Fish Shell autocomplete definitions
 
   As a Fish shell user
-  I want to be able to install the autocomplete definitions for Git Town with an easy command
-  So that I can use this tool productively despite not having time for long installation procedures.
+  I want to use Git Town with autocompletion
+  So that I can use this tool productively.
 
 
   Scenario: without existing fish autocompletion folder
     Given my computer has no fish autocompletion file
-    When I run "git-town completion fish"
+    When I run "git-town completions fish"
     Then it prints:
       """
-      Git autocompletion for Fish shell installed
+      Fish autocompletions installed
       """
     And my computer now has a Git autocompletion file
 
 
   Scenario: with empty fish autocompletion folder
     Given my computer has an empty fish autocompletion folder
-    When I run "git-town completion fish"
+    When I run "git-town completions fish"
     Then it prints:
       """
-      Git autocompletion for Fish shell installed
+      Fish autocompletions installed
       """
     And my computer now has a Git autocompletion file
 
 
   Scenario: with an existing Git autocompletion file
-    Given my computer has an existing Git autocompletion file
-    When I run "git-town completion fish"
+    Given my computer has an existing Git autocompletion file for fish
+    When I run "git-town completions fish"
     Then it prints the error:
       """
-      Git autocompletion for Fish shell already exists
+      Fish autocompletions already exists
       """
     And my computer still has the original Git autocompletion file
