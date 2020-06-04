@@ -25,6 +25,19 @@ type mockGithubConfig struct {
 	configuredHostName    string
 }
 
+func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
+	return mgc.codeHostingDriverName
+}
+func (mgc mockGithubConfig) GetRemoteOriginURL() string {
+	return mgc.remoteOriginURL
+}
+func (mgc mockGithubConfig) GetGitHubToken() string {
+	return mgc.gitHubToken
+}
+func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
+	return mgc.configuredHostName
+}
+
 type mockGitHubEndpoints struct {
 	root        string
 	orga        string
@@ -41,29 +54,13 @@ type mockGitHubEndpoints struct {
 func newMockGitHubEndpoints() (mge mockGitHubEndpoints) {
 	mge = mockGitHubEndpoints{}
 	mge.root = "https://api.github.com"
-	mge.orga = "git-town"
-	mge.repo = "git-town"
-	mge.prBase = mge.root + "/repos/" + mge.orga + "/" + mge.repo + "/pulls"
-	mge.prCurrOpen = mge.prBase + "?base=main&head=git-town%3Afeature&state=open"
-	mge.prChildOpen = mge.prBase + "?base=feature&state=open"
-	mge.pr1 = mge.prBase + "/1"
-	mge.pr2 = mge.prBase + "/2"
-	mge.pr3 = mge.prBase + "/3"
-	mge.pr1Merge = mge.pr1 + "/merge"
+	mge.prCurrOpen = mge.root + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
+	mge.prChildOpen = mge.root + "/repos/git-town/git-town/pulls?base=feature&state=open"
+	mge.pr1 = mge.root + "/repos/git-town/git-town/pulls/1"
+	mge.pr2 = mge.root + "/repos/git-town/git-town/pulls/2"
+	mge.pr3 = mge.root + "/repos/git-town/git-town/pulls/3"
+	mge.pr1Merge = mge.root + "/repos/git-town/git-town/pulls/1/merge"
 	return mge
-}
-
-func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGithubConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGithubConfig) GetGitHubToken() string {
-	return mgc.gitHubToken
-}
-func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
 }
 
 func githubSetupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {

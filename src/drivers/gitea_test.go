@@ -16,6 +16,19 @@ type mockGiteaConfig struct {
 	configuredHostName    string
 }
 
+func (mgc mockGiteaConfig) GetCodeHostingDriverName() string {
+	return mgc.codeHostingDriverName
+}
+func (mgc mockGiteaConfig) GetRemoteOriginURL() string {
+	return mgc.remoteOriginURL
+}
+func (mgc mockGiteaConfig) GetGiteaToken() string {
+	return mgc.giteaToken
+}
+func (mgc mockGiteaConfig) GetCodeHostingOriginHostname() string {
+	return mgc.configuredHostName
+}
+
 type mockGiteaEndpoints struct {
 	root     string
 	orga     string
@@ -30,27 +43,11 @@ type mockGiteaEndpoints struct {
 func newMockGiteaEndpoints() (mge mockGiteaEndpoints) {
 	mge = mockGiteaEndpoints{}
 	mge.root = "https://gitea.com/api/v1"
-	mge.orga = "git-town"
-	mge.repo = "git-town"
 	mge.version = mge.root + "/version"
-	mge.prBase = mge.root + "/repos/" + mge.orga + "/" + mge.repo + "/pulls"
-	mge.prOpen = mge.prBase + "?limit=50&page=0&state=open"
-	mge.pr1 = mge.prBase + "/1"
-	mge.pr1Merge = mge.pr1 + "/merge"
+	mge.prOpen = mge.root + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"
+	mge.pr1 = mge.root + "/repos/git-town/git-town/pulls/1"
+	mge.pr1Merge = mge.root + "/repos/git-town/git-town/pulls/1/merge"
 	return mge
-}
-
-func (mgc mockGiteaConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGiteaConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGiteaConfig) GetGiteaToken() string {
-	return mgc.giteaToken
-}
-func (mgc mockGiteaConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
 }
 
 func giteaSetupDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {

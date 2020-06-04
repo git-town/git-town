@@ -71,7 +71,6 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	if err != nil {
 		return false, "", 0, err
 	}
-	fmt.Printf("1111 %#v\n", openPullRequests[0])
 	baseName := parentBranch
 	headName := d.owner + "/" + branch
 	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
@@ -179,6 +178,7 @@ func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, co
 //nolint:unparam
 func (d *giteaCodeHostingDriver) apiRetargetPullRequests(pullRequests []*gitea.PullRequest, newBaseName string) error {
 	for _, pullRequest := range pullRequests {
+		// RE-ENABLE AFTER https://github.com/go-gitea/gitea/issues/11552 and remove the nolint above
 		// if options.LogRequests {
 		// 	helpers.PrintLog(fmt.Sprintf("Gitea API: Updating base branch for PR #%d to #%s", *pullRequest.Index, newBaseName))
 		// }
