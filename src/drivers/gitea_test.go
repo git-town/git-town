@@ -79,7 +79,7 @@ func TestLoadGitea_customHostName(t *testing.T) {
 	assert.Equal(t, "https://gitea.com/git-town/git-town", driver.RepositoryURL())
 }
 
-func TestGiteaDriver_CanMergePullRequest(t *testing.T) {
+func TestGiteaDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "TOKEN")
 	defer teardown()
 	mge := newMockGiteaEndpoints()
@@ -91,7 +91,7 @@ func TestGiteaDriver_CanMergePullRequest(t *testing.T) {
 	assert.Equal(t, int64(1), pullRequestNumber)
 }
 
-func TestGiteaDriver_CanMergePullRequest_EmptyGiteaToken(t *testing.T) {
+func TestGiteaDriver_LoadPullRequestInfo_EmptyGiteaToken(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "")
 	defer teardown()
 	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
@@ -99,7 +99,7 @@ func TestGiteaDriver_CanMergePullRequest_EmptyGiteaToken(t *testing.T) {
 	assert.False(t, canMerge)
 }
 
-func TestGiteaDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T) {
+func TestGiteaDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "TOKEN")
 	defer teardown()
 	mge := newMockGiteaEndpoints()
@@ -108,7 +108,7 @@ func TestGiteaDriver_CanMergePullRequest_GetPullRequestNumberFails(t *testing.T)
 	assert.Error(t, err)
 }
 
-func TestGiteaDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
+func TestGiteaDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "TOKEN")
 	defer teardown()
 	mge := newMockGiteaEndpoints()
@@ -118,7 +118,7 @@ func TestGiteaDriver_CanMergePullRequest_NoPullRequestForBranch(t *testing.T) {
 	assert.False(t, canMerge)
 }
 
-func TestGiteaDriver_CanMergePullRequest_MultiplePullRequestsForBranch(t *testing.T) {
+func TestGiteaDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "TOKEN")
 	defer teardown()
 	mge := newMockGiteaEndpoints()
