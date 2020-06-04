@@ -58,7 +58,7 @@ func LoadGithub(config GithubConfig) CodeHostingDriver {
 	}
 }
 
-func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *githubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -73,15 +73,15 @@ func (d *githubCodeHostingDriver) CanMergePullRequest(branch, parentBranch strin
 	return true, d.getDefaultCommitMessage(pullRequests[0]), int64(pullRequests[0].GetNumber()), nil
 }
 
-func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
+func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare))
 }
 
-func (d *githubCodeHostingDriver) GetRepositoryURL() string {
+func (d *githubCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
