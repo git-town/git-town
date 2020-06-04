@@ -34,7 +34,6 @@ func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
 const githubRoot = "https://api.github.com"
 const githubCurrOpen = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
 const githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
-const githubPR1 = githubRoot + "/repos/git-town/git-town/pulls/1"
 const githubPR2 = githubRoot + "/repos/git-town/git-town/pulls/2"
 const githubPR3 = githubRoot + "/repos/git-town/git-town/pulls/3"
 const githubPR1Merge = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
