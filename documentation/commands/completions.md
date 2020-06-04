@@ -35,7 +35,12 @@ MacOS: `$ git-town completions bash > /usr/local/etc/bash_completion.d/git-town`
 `$ git-town completions fish | source`
 
 **Persist and autoload on each session:**
-`$ git-town completions fish > ~/.config/fish/completions/git-town.fish` </a>
+`$ git-town completions fish > ~/.config/fish/completions/git-town.fish`
+
+_You might be a power user who has their dotfiles under version control. Or you
+might have another motivation to keep those scripts in your home folder.
+Since it sometimes depends on your particular setup, you probably should consult
+the offical docs for your shell._</a>
 
 #### Usage
 
