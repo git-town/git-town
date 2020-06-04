@@ -11,13 +11,6 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-var pullRequestBaseURL = "https://api.github.com/repos/git-town/git-town/pulls"
-var currentPullRequestURL = pullRequestBaseURL + "?base=main&head=git-town%3Afeature&state=open"
-var childPullRequestsURL = pullRequestBaseURL + "?base=feature&state=open"
-var mergePullRequestURL = pullRequestBaseURL + "/1/merge"
-var updatePullRequestBaseURL1 = pullRequestBaseURL + "/2"
-var updatePullRequestBaseURL2 = pullRequestBaseURL + "/3"
-
 type mockGithubConfig struct {
 	codeHostingDriverName string
 	remoteOriginURL       string
@@ -40,9 +33,6 @@ func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
 
 type mockGitHubEndpoints struct {
 	root        string
-	orga        string
-	repo        string
-	prBase      string
 	prCurrOpen  string
 	prChildOpen string
 	pr1         string

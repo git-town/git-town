@@ -31,10 +31,7 @@ func (mgc mockGiteaConfig) GetCodeHostingOriginHostname() string {
 
 type mockGiteaEndpoints struct {
 	root     string
-	orga     string
-	repo     string
 	version  string
-	prBase   string
 	prOpen   string
 	pr1      string
 	pr1Merge string
