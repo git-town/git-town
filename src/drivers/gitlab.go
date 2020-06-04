@@ -44,7 +44,7 @@ func (d *gitlabCodeHostingDriver) CanMergeViaDriver(branch, parentBranch string)
 	return false, "", 0, nil
 }
 
-func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)

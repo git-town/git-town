@@ -73,7 +73,7 @@ func (d *githubCodeHostingDriver) CanMergeViaDriver(branch, parentBranch string)
 	return true, d.getDefaultCommitMessage(pullRequests[0]), int64(pullRequests[0].GetNumber()), nil
 }
 
-func (d *githubCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
+func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := branch
 	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch

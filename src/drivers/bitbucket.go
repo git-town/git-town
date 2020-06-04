@@ -46,7 +46,7 @@ func (d *bitbucketCodeHostingDriver) CanMergeViaDriver(branch, parentBranch stri
 	return false, "", 0, nil
 }
 
-func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))

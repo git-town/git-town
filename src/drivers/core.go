@@ -12,9 +12,9 @@ type CodeHostingDriver interface {
 	// If true, also returns the default commit message and the pull request number.
 	CanMergeViaDriver(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
 
-	// GetNewPullRequestURL returns the URL of the page
+	// NewPullRequestURL returns the URL of the page
 	// to create a new pull request online
-	GetNewPullRequestURL(branch, parentBranch string) string
+	NewPullRequestURL(branch, parentBranch string) string
 
 	// MergePullRequest merges the pull request through the hosting service api
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
