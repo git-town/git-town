@@ -12,7 +12,7 @@ function getCliCommands(activity) {
   const result = []
   const command = getCommand(activity.file)
   const cliOutput = child_process
-    .execSync(`git-town help ${command}`)
+    .execSync(`$GOPATH/bin/git-town help ${command}`)
     .toString()
   const matches = cliOutput.match(/\nAvailable Commands:\n([\s\S]*?)\n\n/)
   const text = matches[1]

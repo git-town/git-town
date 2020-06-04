@@ -11,7 +11,7 @@ module.exports = async function (activity) {
 function getCliDescription(activity) {
   const command = getCommand(activity.file)
   const cliOutput = child_process
-    .execSync(`git-town help ${command}`)
+    .execSync(`$GOPATH/bin/git-town help ${command}`)
     .toString()
   const matches = cliOutput.match(/^(.*)/)
   return matches[1].trim()

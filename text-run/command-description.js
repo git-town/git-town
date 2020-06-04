@@ -54,7 +54,9 @@ function getMd(activity) {
 
 function getCliDesc(activity) {
   const command = getCommand(activity.file)
-  const output = child_process.execSync(`git-town help ${command}`).toString()
+  const output = child_process
+    .execSync(`$GOPATH/bin/git-town help ${command}`)
+    .toString()
   const matches = output.match(/^.*\n\n([\s\S]*)\n\nUsage:\n/m)
   return normalize(
     matches[1]

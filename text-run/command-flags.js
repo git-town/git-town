@@ -14,7 +14,7 @@ function getMdFlags(activity) {
 
 function getCliFlags(activity) {
   return child_process
-    .execSync(`git-town help ${getCommand(activity.file)}`)
+    .execSync(`$GOPATH/bin/git-town help ${getCommand(activity.file)}`)
     .toString()
     .match(/\nFlags:\n([\s\S]*)\nGlobal Flags:\n/)[1]
     .split("\n")

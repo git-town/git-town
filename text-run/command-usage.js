@@ -15,7 +15,7 @@ module.exports = async function (activity) {
 function getCliUsage(activity) {
   const command = getCommand(activity.file)
   const cliOutput = child_process
-    .execSync(`git-town help ${command}`)
+    .execSync(`$GOPATH/bin/git-town help ${command}`)
     .toString()
   const matches = cliOutput.match(/\nUsage:\n([\s\S]*?)\n\n/)
   return matches[1]
