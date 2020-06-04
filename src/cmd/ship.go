@@ -196,7 +196,7 @@ func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostin
 	if driver == nil {
 		return false, "", 0, nil
 	}
-	return driver.CanMergePullRequest(branch, parentBranch)
+	return driver.CanMergeViaDriver(branch, parentBranch)
 }
 
 func init() {

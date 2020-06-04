@@ -42,7 +42,7 @@ func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
 	}
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *bitbucketCodeHostingDriver) CanMergeViaDriver(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
 

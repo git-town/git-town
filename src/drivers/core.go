@@ -8,9 +8,9 @@ import "github.com/git-town/git-town/src/git"
 // for the different code hosting services.
 type CodeHostingDriver interface {
 
-	// CanMergePullRequest returns whether or not MergePullRequest should be called when shipping.
+	// CanMergeViaDriver indicates whether or not MergePullRequest should be called when shipping.
 	// If true, also returns the default commit message and the pull request number.
-	CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
+	CanMergeViaDriver(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
 
 	// GetNewPullRequestURL returns the URL of the page
 	// to create a new pull request online
