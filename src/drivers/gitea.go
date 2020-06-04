@@ -29,7 +29,7 @@ type giteaCodeHostingDriver struct {
 	repository string
 }
 
-// GiteaConfig provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
+// LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
 func LoadGitea(config GiteaConfig) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
