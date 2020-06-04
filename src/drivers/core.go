@@ -8,8 +8,8 @@ import "github.com/git-town/git-town/src/git"
 // for the different code hosting services.
 type CodeHostingDriver interface {
 
-	// LoadPullRequestInfo indicates whether MergePullRequest should be called when shipping.
-	// If true, also returns the default commit message and the pull request number.
+	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
+	// from the code hosting provider.
 	LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
 
 	// NewPullRequestURL returns the URL of the page
