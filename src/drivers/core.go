@@ -8,20 +8,20 @@ import "github.com/git-town/git-town/src/git"
 // for the different code hosting services.
 type CodeHostingDriver interface {
 
-	// CanMergePullRequest returns whether or not MergePullRequest should be
-	// called when shipping. If true, also returns the default commit message
-	CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
+	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
+	// from the code hosting provider.
+	LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
 
-	// GetNewPullRequestURL returns the URL of the page
+	// NewPullRequestURL returns the URL of the page
 	// to create a new pull request online
-	GetNewPullRequestURL(branch, parentBranch string) string
+	NewPullRequestURL(branch, parentBranch string) string
 
 	// MergePullRequest merges the pull request through the hosting service api
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
-	// GetRepositoryURL returns the URL where the given repository
+	// RepositoryURL returns the URL where the given repository
 	// can be found online
-	GetRepositoryURL() string
+	RepositoryURL() string
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string
