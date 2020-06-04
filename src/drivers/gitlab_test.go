@@ -30,7 +30,7 @@ func TestLoadGitLab(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitLab", driver.HostingServiceName())
-	assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://self-hosted-gitlab.com/git-town/git-town", driver.RepositoryURL())
 }
 
 func TestLoadGitLab_customHostName(t *testing.T) {
@@ -40,5 +40,5 @@ func TestLoadGitLab_customHostName(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitLab", driver.HostingServiceName())
-	assert.Equal(t, "https://gitlab.com/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://gitlab.com/git-town/git-town", driver.RepositoryURL())
 }
