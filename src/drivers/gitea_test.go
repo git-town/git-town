@@ -29,14 +29,6 @@ func (mgc mockGiteaConfig) GetCodeHostingOriginHostname() string {
 	return mgc.configuredHostName
 }
 
-type mockGiteaEndpoints struct {
-	root     string
-	version  string
-	prOpen   string
-	pr1      string
-	pr1Merge string
-}
-
 const giteaRoot = "https://gitea.com/api/v1"
 const giteaVersion = giteaRoot + "/version"
 const giteaCurrOpen = giteaRoot + "/repos/git-town/git-town/pulls?limit=50&page=0&state=open"

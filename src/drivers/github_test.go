@@ -31,16 +31,6 @@ func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
 	return mgc.configuredHostName
 }
 
-type mockGitHubEndpoints struct {
-	root        string
-	prCurrOpen  string
-	prChildOpen string
-	pr1         string
-	pr2         string
-	pr3         string
-	pr1Merge    string
-}
-
 const githubRoot = "https://api.github.com"
 const githubCurrOpen = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
 const githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
