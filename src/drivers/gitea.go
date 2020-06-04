@@ -2,10 +2,8 @@ package drivers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/src/drivers/helpers"
@@ -73,10 +71,15 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	if err != nil {
 		return false, "", 0, err
 	}
+	fmt.Printf("1111 %#v\n", openPullRequests[0])
 	baseName := parentBranch
 	headName := d.owner + "/" + branch
-	pullRequest, err := identifyPullRequest(filterPullRequests(openPullRequests, baseName, headName))
-	if err != nil {
+	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
+	if len(pullRequests) != 1 {
+		return false, "", 0, nil
+	}
+	pullRequest := pullRequests[0]
+	if !pullRequest.Mergable {
 		return false, "", 0, nil
 	}
 	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
@@ -137,21 +140,6 @@ func getDefaultCommitMessage(pullRequest *gitea.PullRequest) string {
 	return fmt.Sprintf("%s (#%d)", pullRequest.Title, pullRequest.Index)
 }
 
-func identifyPullRequest(filteredPullRequests []*gitea.PullRequest) (*gitea.PullRequest, error) {
-	if len(filteredPullRequests) == 0 {
-		return nil, errors.New("no pull request found")
-	}
-	if len(filteredPullRequests) > 1 {
-		pullRequestNumbersAsStrings := make([]string, len(filteredPullRequests))
-		for i, filteredPullRequest := range filteredPullRequests {
-			pullRequestNumbersAsStrings[i] = strconv.FormatInt(filteredPullRequest.Index, 10)
-		}
-		return nil, fmt.Errorf("multiple pull requests found: %s", strings.Join(pullRequestNumbersAsStrings, ", "))
-	}
-
-	return filteredPullRequests[0], nil
-}
-
 func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName string) []*gitea.PullRequest {
 	pullRequestsFiltered := []*gitea.PullRequest{}
 	for _, pullRequest := range pullRequests {
@@ -167,7 +155,6 @@ func filterPullRequests(pullRequests []*gitea.PullRequest, baseName, headName st
 }
 
 func (d *giteaCodeHostingDriver) apiMergePullRequest(pullRequestNumber int64, commitTitle, commitMessage string) (mergeSha string, err error) {
-	helpers.PrintLog(fmt.Sprintf("Gitea API: Merging PR #%d", pullRequestNumber))
 	_, err = d.client.MergePullRequest(d.owner, d.repository, pullRequestNumber, gitea.MergePullRequestOption{
 		Style:   gitea.MergeStyleSquash,
 		Title:   commitTitle,
