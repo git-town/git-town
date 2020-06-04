@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -28,14 +27,19 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		repo := git.NewProdRepo()
 		config, err := getHackConfig(args)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getAppendStepList(config)
+		stepList, err := getAppendStepList(config, repo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		runState := steps.NewRunState("hack", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -43,10 +47,10 @@ See "sync" for information regarding remote upstream.`,
 	},
 	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			git.ValidateIsRepository,
-			validateIsConfigured,
-		)
+		if err := git.ValidateIsRepository(); err != nil {
+			return err
+		}
+		return validateIsConfigured()
 	},
 }
 
@@ -60,15 +64,18 @@ func getParentBranch(targetBranch string) string {
 }
 
 func getHackConfig(args []string) (result appendConfig, err error) {
-	result.TargetBranch = args[0]
-	result.ParentBranch = getParentBranch(result.TargetBranch)
+	result.targetBranch = args[0]
+	result.parentBranch = getParentBranch(result.targetBranch)
+	result.hasOrigin = git.HasRemote("origin")
+	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
+	result.isOffline = git.Config().IsOffline()
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.TargetBranch)
+	git.EnsureDoesNotHaveBranch(result.targetBranch)
 	return
 }
 

@@ -1,11 +1,11 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
-// MergeBranchStep merges the branch with the given name into the current branch
+// MergeBranchStep merges the branch with the given name into the current branch.
 type MergeBranchStep struct {
 	NoOpStep
 	BranchName string
@@ -29,7 +29,10 @@ func (step *MergeBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *MergeBranchStep) Run() error {
-	step.previousSha = git.GetCurrentSha()
-	return script.RunCommand("git", "merge", "--no-edit", step.BranchName)
+func (step *MergeBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
+	step.previousSha, err = repo.Silent.CurrentSha()
+	if err != nil {
+		return err
+	}
+	return repo.Logging.MergeBranchNoEdit(step.BranchName)
 }

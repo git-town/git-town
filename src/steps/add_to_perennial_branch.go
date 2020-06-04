@@ -1,8 +1,11 @@
 package steps
 
-import "github.com/git-town/git-town/src/git"
+import (
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
+)
 
-// AddToPerennialBranches adds the branch with the given name as a perennial branch
+// AddToPerennialBranches adds the branch with the given name as a perennial branch.
 type AddToPerennialBranches struct {
 	NoOpStep
 	BranchName string
@@ -14,7 +17,7 @@ func (step *AddToPerennialBranches) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *AddToPerennialBranches) Run() error {
-	git.Config().AddToPerennialBranches(step.BranchName)
+func (step *AddToPerennialBranches) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	repo.AddToPerennialBranches(step.BranchName)
 	return nil
 }

@@ -14,7 +14,7 @@ Feature: git town: show the current Git Town version
 
 
   Scenario: Running outside of a Git repository
-    Given my workspace is currently not a Git repository
+    Given my workspace is currently not a Git repo
     When I run "git-town version"
     Then it prints:
       """

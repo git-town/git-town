@@ -32,7 +32,7 @@ func GetPrintableMainBranch() string {
 	return output
 }
 
-// GetPrintablePerennialBranches returns a user printable list of perennial branches
+// GetPrintablePerennialBranches returns a user printable list of perennial branches.
 func GetPrintablePerennialBranches() string {
 	output := strings.Join(Config().GetPerennialBranches(), "\n")
 	if output == "" {

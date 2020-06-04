@@ -6,7 +6,7 @@ Feature: Initial configuration
 
 
   Scenario: succeeds on valid main branch and perennial branch names
-    Given my repository has the feature branches "production" and "dev"
+    Given my repo has the feature branches "production" and "dev"
     And I haven't configured Git Town yet
     When I run "git-town config setup" and answer the prompts:
       | PROMPT                                     | ANSWER                      |

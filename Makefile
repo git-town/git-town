@@ -13,10 +13,10 @@ cross-compile:  # builds the binary for all platforms
 			-output "dist/{{.Dir}}-${TRAVIS_TAG}-{{.OS}}-{{.Arch}}"
 
 cuke: build   # runs the new Godog-based feature tests
-	@go test . -v -count=1
+	@env GOGC=off go test . -v -count=1
 
 cuke-prof: build  # creates a flamegraph
-	go test . -v -cpuprofile=godog.out
+	env GOGC=off go test . -v -cpuprofile=godog.out
 	@rm git-town.test
 	@echo Please open https://www.speedscope.app and load the file godog.out
 
@@ -48,7 +48,7 @@ help:  # prints all make targets
 lint: lint-go lint-md   # lints all the source code
 
 lint-go:  # lints the Go files
-	golangci-lint run --enable-all -D dupl -D lll -D gochecknoglobals -D gochecknoinits -D goconst -D wsl -D gomnd src/... test/...
+	golangci-lint run src/... test/...
 
 lint-md:   # lints the Markdown files
 	tools/prettier/node_modules/.bin/prettier -l .
@@ -60,7 +60,7 @@ setup: setup-go  # the setup steps necessary on developer machines
 
 setup-go:
 	GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.9.0
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.23.8
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.27.0
 
 stats:  # shows code statistics
 	@find . -type f | grep -v '\./node_modules/' | grep -v '\./vendor/' | grep -v '\./.git/' | xargs scc
@@ -68,15 +68,15 @@ stats:  # shows code statistics
 test: lint unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: build unit cuke lint-go  # runs all tests for Golang
+test-go: build u cuke lint-go  # runs all tests for Golang
 
 test-md: lint-md   # runs all Markdown tests
 
 u:  # runs only the unit tests for changed code
-	go test -timeout 5s ./src/... ./test/...
+	env GOGC=off go test -timeout 5s ./src/... ./test/...
 
 unit:  # runs all the unit tests with race detector
-	go test -count=1 -timeout 20s -race ./src/... ./test/...
+	env GOGC=off go test -count=1 -timeout 60s -race ./src/... ./test/...
 
 update:  # updates all dependencies
 	go get -u ./...

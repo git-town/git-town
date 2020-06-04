@@ -4,8 +4,8 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
 
 
   Background:
-    Given my repository has the feature branches "feature" and "other-feature"
-    And the following commits exist in my repository
+    Given my repo has the feature branches "feature" and "other-feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE        | FILE NAME    | FILE CONTENT    |
       | main    | local, remote | main commit    | main_file    | main content    |
       | feature | local         | feature commit | feature_file | feature content |
@@ -40,4 +40,4 @@ Feature: git town-ship: aborting the ship of the supplied feature branch by ente
       """
     And I am still on the "other-feature" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

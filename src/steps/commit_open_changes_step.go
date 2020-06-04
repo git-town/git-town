@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/script"
 )
@@ -21,7 +22,7 @@ func (step *CommitOpenChangesStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CommitOpenChangesStep) Run() error {
+func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousSha = git.GetCurrentSha()
 	err := script.RunCommand("git", "add", "-A")
 	if err != nil {

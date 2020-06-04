@@ -1,8 +1,8 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // ContinueRebaseBranchStep finishes an ongoing rebase operation
@@ -22,9 +22,13 @@ func (step *ContinueRebaseBranchStep) CreateContinueStep() Step {
 }
 
 // Run executes this step.
-func (step *ContinueRebaseBranchStep) Run() error {
-	if git.IsRebaseInProgress() {
-		return script.RunCommand("git", "rebase", "--continue")
+func (step *ContinueRebaseBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	hasRebaseInProgress, err := repo.Silent.HasRebaseInProgress()
+	if err != nil {
+		return err
+	}
+	if hasRebaseInProgress {
+		return repo.Logging.ContinueRebase()
 	}
 	return nil
 }

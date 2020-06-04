@@ -6,8 +6,8 @@ Feature: git town-kill: errors when trying to kill the main branch
 
 
   Background:
-    Given my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION      | MESSAGE     |
       | feature | local, remote | good commit |
     And I am on the "main" branch
@@ -19,7 +19,7 @@ Feature: git town-kill: errors when trying to kill the main branch
     Then it runs no commands
     And it prints the error:
       """
-      You can only kill feature branches
+      you can only kill feature branches
       """
     And I am still on the "main" branch
     And my workspace still contains my uncommitted file
@@ -27,4 +27,4 @@ Feature: git town-kill: errors when trying to kill the main branch
       | REPOSITORY | BRANCHES      |
       | local      | main, feature |
       | remote     | main, feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

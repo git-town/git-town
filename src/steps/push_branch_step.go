@@ -1,9 +1,9 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // PushBranchStep pushes the branch with the given name to the origin remote.
@@ -24,15 +24,19 @@ func (step *PushBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *PushBranchStep) Run() error {
-	if !git.ShouldBranchBePushed(step.BranchName) && !dryrun.IsActive() {
+func (step *PushBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	shouldPush, err := repo.Silent.ShouldPushBranch(step.BranchName)
+	if err != nil {
+		return err
+	}
+	if !shouldPush && !dryrun.IsActive() {
 		return nil
 	}
 	if step.Force {
-		return script.RunCommand("git", "push", "-f", "origin", step.BranchName)
+		return repo.Logging.PushBranchForce(step.BranchName)
 	}
 	if git.GetCurrentBranchName() == step.BranchName {
-		return script.RunCommand("git", "push")
+		return repo.Logging.PushBranch()
 	}
-	return script.RunCommand("git", "push", "origin", step.BranchName)
+	return repo.Logging.PushBranchSetUpstream(step.BranchName)
 }

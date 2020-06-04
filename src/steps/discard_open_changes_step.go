@@ -1,7 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
 )
 
 // DiscardOpenChangesStep resets the branch to the last commit, discarding uncommitted changes.
@@ -10,6 +11,6 @@ type DiscardOpenChangesStep struct {
 }
 
 // Run executes this step.
-func (step *DiscardOpenChangesStep) Run() error {
-	return script.RunCommand("git", "reset", "--hard")
+func (step *DiscardOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	return repo.Logging.DiscardOpenChanges()
 }

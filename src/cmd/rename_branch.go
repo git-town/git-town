@@ -12,8 +12,13 @@ import (
 )
 
 type renameBranchConfig struct {
-	OldBranchName string
-	NewBranchName string
+	oldBranchName              string
+	newBranchName              string
+	initialBranch              string
+	oldBranchChildren          []string
+	isInitialBranchPerennial   bool
+	oldBranchHasTrackingBranch bool
+	isOffline                  bool
 }
 
 var forceFlag bool
@@ -47,7 +52,7 @@ When run on a perennial branch
 		}
 		stepList := getRenameBranchStepList(config)
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState)
+		err = steps.Run(runState, git.NewProdRepo(), nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -55,60 +60,65 @@ When run on a perennial branch
 	},
 	Args: cobra.RangeArgs(1, 2),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		return util.FirstError(
-			git.ValidateIsRepository,
-			validateIsConfigured,
-		)
+		if err := git.ValidateIsRepository(); err != nil {
+			return err
+		}
+		return validateIsConfigured()
 	},
 }
 
 func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
+	result.initialBranch = git.GetCurrentBranchName()
+	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
+	result.isOffline = git.Config().IsOffline()
 	if len(args) == 1 {
-		result.OldBranchName = git.GetCurrentBranchName()
-		result.NewBranchName = args[0]
+		result.oldBranchName = git.GetCurrentBranchName()
+		result.newBranchName = args[0]
 	} else {
-		result.OldBranchName = args[0]
-		result.NewBranchName = args[1]
+		result.oldBranchName = args[0]
+		result.newBranchName = args[1]
 	}
-	git.EnsureIsNotMainBranch(result.OldBranchName, "The main branch cannot be renamed.")
+	git.EnsureIsNotMainBranch(result.oldBranchName, "The main branch cannot be renamed.")
 	if !forceFlag {
-		git.EnsureIsNotPerennialBranch(result.OldBranchName, fmt.Sprintf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.OldBranchName))
+		git.EnsureIsNotPerennialBranch(result.oldBranchName, fmt.Sprintf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.oldBranchName))
 	}
-	if result.OldBranchName == result.NewBranchName {
+	if result.oldBranchName == result.newBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
-	if !git.Config().IsOffline() {
+	if !result.isOffline {
 		err := script.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureHasBranch(result.OldBranchName)
-	git.EnsureBranchInSync(result.OldBranchName, "Please sync the branches before renaming.")
-	git.EnsureDoesNotHaveBranch(result.NewBranchName)
-	return
+	git.EnsureHasBranch(result.oldBranchName)
+	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
+	git.EnsureDoesNotHaveBranch(result.newBranchName)
+	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
+	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)
+	return result, nil
 }
 
 func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {
-	result.Append(&steps.CreateBranchStep{BranchName: config.NewBranchName, StartingPoint: config.OldBranchName})
-	if git.GetCurrentBranchName() == config.OldBranchName {
-		result.Append(&steps.CheckoutBranchStep{BranchName: config.NewBranchName})
+	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
+	if config.initialBranch == config.oldBranchName {
+		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
 	}
-	if git.Config().IsPerennialBranch(config.OldBranchName) {
-		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.OldBranchName})
-		result.Append(&steps.AddToPerennialBranches{BranchName: config.NewBranchName})
+	if config.isInitialBranchPerennial {
+		result.Append(&steps.RemoveFromPerennialBranches{BranchName: config.oldBranchName})
+		result.Append(&steps.AddToPerennialBranches{BranchName: config.newBranchName})
 	} else {
-		result.Append(&steps.DeleteParentBranchStep{BranchName: config.OldBranchName})
-		result.Append(&steps.SetParentBranchStep{BranchName: config.NewBranchName, ParentBranchName: git.Config().GetParentBranch(config.OldBranchName)})
+		result.Append(&steps.DeleteParentBranchStep{BranchName: config.oldBranchName})
+		result.Append(&steps.SetParentBranchStep{BranchName: config.newBranchName, ParentBranchName: git.Config().GetParentBranch(config.oldBranchName)})
 	}
-	for _, child := range git.Config().GetChildBranches(config.OldBranchName) {
-		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.NewBranchName})
+	for _, child := range config.oldBranchChildren {
+		result.Append(&steps.SetParentBranchStep{BranchName: child, ParentBranchName: config.newBranchName})
 	}
-	if git.HasTrackingBranch(config.OldBranchName) && !git.Config().IsOffline() {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.NewBranchName})
-		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.OldBranchName, IsTracking: true})
+	if config.oldBranchHasTrackingBranch && !config.isOffline {
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.newBranchName})
+		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
-	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.OldBranchName})
+	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
 	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
 	return
 }

@@ -22,8 +22,8 @@ var (
 	ResponseTypeSkip = "skip"
 )
 
-// AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state
-func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) string {
+// AskHowToHandleUnfinishedRunState prompts the user for how to handle the unfinished run state.
+func AskHowToHandleUnfinishedRunState(command, endBranch string, endTime time.Time, canSkip bool) (responseType string) {
 	formattedOptions := map[string]string{
 		ResponseTypeAbort:    fmt.Sprintf("Abort the `%s` command", command),
 		ResponseTypeContinue: fmt.Sprintf("Restart the `%s` command after having resolved conflicts", command),

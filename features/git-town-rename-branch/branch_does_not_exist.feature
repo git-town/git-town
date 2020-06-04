@@ -6,7 +6,7 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
 
 
   Background:
-    Given the following commits exist in my repository
+    Given the following commits exist in my repo
       | BRANCH | LOCATION      | MESSAGE     |
       | main   | local, remote | main commit |
     And I am on the "main" branch
@@ -20,8 +20,8 @@ Feature: git town-rename-branch: errors if the feature branch does not exist
       | main   | git fetch --prune --tags |
     And it prints the error:
       """
-      There is no branch named "non-existing-feature"
+      there is no branch named "non-existing-feature"
       """
     And I end up on the "main" branch
     And my workspace still contains my uncommitted file
-    And my repository is left with my original commits
+    And my repo is left with my original commits

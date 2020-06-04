@@ -1,7 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
 )
 
 // CreateTrackingBranchStep pushes the current branch up to origin
@@ -17,6 +18,6 @@ func (step *CreateTrackingBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *CreateTrackingBranchStep) Run() error {
-	return script.RunCommand("git", "push", "-u", "origin", step.BranchName)
+func (step *CreateTrackingBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	return repo.Logging.CreateTrackingBranch(step.BranchName)
 }

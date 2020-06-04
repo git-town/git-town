@@ -6,8 +6,8 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
 
 
   Background:
-    Given my repository has a feature branch named "empty-feature"
-    And the following commits exist in my repository
+    Given my repo has a feature branch named "empty-feature"
+    And the following commits exist in my repo
       | BRANCH        | LOCATION | MESSAGE        | FILE NAME   | FILE CONTENT   |
       | main          | remote   | main commit    | common_file | common content |
       | empty-feature | local    | feature commit | common_file | common content |
@@ -42,7 +42,7 @@ Feature: git town-ship: errors when trying to ship the current feature branch th
       Nothing to undo
       """
     And I am still on the "empty-feature" branch
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE        | FILE NAME   |
       | main          | local, remote | main commit    | common_file |
       | empty-feature | local         | feature commit | common_file |

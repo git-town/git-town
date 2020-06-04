@@ -1,3 +1,4 @@
+// nolint: testpackage
 package test
 
 import (
@@ -8,28 +9,25 @@ import (
 )
 
 func TestCopyDirectory(t *testing.T) {
-	tmpDir := createTempDir(t)
+	tmpDir := CreateTempDir(t)
 	srcDir := filepath.Join(tmpDir, "src")
 	dstDir := filepath.Join(tmpDir, "dst")
 	createFile(t, srcDir, "one.txt")
 	createFile(t, srcDir, "f1/a.txt")
 	createFile(t, srcDir, "f2/b.txt")
 	err := CopyDirectory(srcDir, dstDir)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExists(t, dstDir, "f1/a.txt")
 	assertFileExists(t, dstDir, "f2/b.txt")
 }
 
 func TestCopyDirectory_GitRepo(t *testing.T) {
-	tmpDir := createTempDir(t)
-	srcDir := filepath.Join(tmpDir, "src")
-	dstDir := filepath.Join(tmpDir, "dst")
-	_, err := InitGitRepository(srcDir, tmpDir, "")
-	assert.Nil(t, err)
-	createFile(t, srcDir, "one.txt")
-	err = CopyDirectory(srcDir, dstDir)
-	assert.Nil(t, err)
+	origin := CreateRepo(t)
+	createFile(t, origin.WorkingDir(), "one.txt")
+	dstDir := filepath.Join(CreateTempDir(t), "dest")
+	err := CopyDirectory(origin.WorkingDir(), dstDir)
+	assert.NoError(t, err)
 	assertFileExists(t, dstDir, "one.txt")
 	assertFileExistsWithContent(t, dstDir, ".git/HEAD", "ref: refs/heads/master\n")
 }

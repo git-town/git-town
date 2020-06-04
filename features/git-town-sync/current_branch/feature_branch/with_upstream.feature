@@ -2,8 +2,8 @@ Feature: git-sync: on a feature branch with a upstream remote
 
   Background:
     Given my repo has an upstream repo
-    And my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    And my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE         |
       | main    | upstream | upstream commit |
       | feature | local    | local commit    |
@@ -30,7 +30,7 @@ Feature: git-sync: on a feature branch with a upstream remote
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION                | MESSAGE                          |
       | main    | local, remote, upstream | upstream commit                  |
       | feature | local, remote           | local commit                     |

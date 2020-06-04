@@ -7,8 +7,8 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
 
   Background:
     Given the pull-branch-strategy configuration is "merge"
-    And my repository has a feature branch named "feature"
-    And the following commits exist in my repository
+    And my repo has a feature branch named "feature"
+    And the following commits exist in my repo
       | BRANCH  | LOCATION | MESSAGE               | FILE NAME           |
       | main    | local    | local main commit     | local_main_file     |
       |         | remote   | remote main commit    | remote_main_file    |
@@ -35,7 +35,7 @@ Feature: git-sync: on a feature branch with merge pull branch strategy
       |         | git stash pop                      |
     And I am still on the "feature" branch
     And my workspace still contains my uncommitted file
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH  | LOCATION      | MESSAGE                                                    | FILE NAME           |
       | main    | local, remote | local main commit                                          | local_main_file     |
       |         |               | remote main commit                                         | remote_main_file    |

@@ -22,7 +22,7 @@ func EnsureKnowsParentBranches(branchNames []string) {
 	}
 }
 
-// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch
+// AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
 func AskForBranchAncestry(branchName, defaultBranchName string) {
 	current := branchName
 	for {
@@ -43,7 +43,7 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 	}
 }
 
-// AskForBranchParent prompts the user for the parent of the given branch
+// AskForBranchParent prompts the user for the parent of the given branch.
 func AskForBranchParent(branchName, defaultBranchName string) string {
 	choices := git.GetLocalBranchesWithMainBranchFirst()
 	filteredChoices := filterOutSelfAndDescendants(branchName, choices)
@@ -68,15 +68,14 @@ The latter allows to build on top of currently unshipped features.
 var parentBranchPromptTemplate = "Please specify the parent branch of %q:"
 var perennialBranchOption = "<none> (perennial branch)"
 
-func filterOutSelfAndDescendants(branchName string, choices []string) []string {
-	result := []string{}
+func filterOutSelfAndDescendants(branchName string, choices []string) (filteredChoices []string) {
 	for _, choice := range choices {
 		if choice == branchName || git.Config().IsAncestorBranch(choice, branchName) {
 			continue
 		}
-		result = append(result, choice)
+		filteredChoices = append(filteredChoices, choice)
 	}
-	return result
+	return filteredChoices
 }
 
 func printParentBranchHeader() {

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 )
 
-// These variables represent command-line flags
+// These variables represent command-line flags.
 var (
 	allFlag,
 	debugFlag,
@@ -18,7 +19,7 @@ var (
 	globalFlag bool
 )
 
-// These variables are set at build time
+// These variables are set at build time.
 var (
 	version,
 	buildDate string
@@ -46,7 +47,7 @@ func validateIsConfigured() error {
 	return nil
 }
 
-func ensureIsNotInUnfinishedState() error {
+func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	runState, err := steps.LoadPreviousRunState()
 	if err != nil {
 		fmt.Printf("cannot load previous run state: %v\n", err)
@@ -64,13 +65,13 @@ func ensureIsNotInUnfinishedState() error {
 			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
 			git.EnsureDoesNotHaveConflicts()
-			err = steps.Run(runState)
+			err = steps.Run(runState, repo, driver)
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()
-			err = steps.Run(&abortRunState)
+			err = steps.Run(&abortRunState, repo, driver)
 		case prompt.ResponseTypeSkip:
 			skipRunState := runState.CreateSkipRunState()
-			err = steps.Run(&skipRunState)
+			err = steps.Run(&skipRunState, repo, driver)
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -81,16 +82,20 @@ func ensureIsNotInUnfinishedState() error {
 	return nil
 }
 
-func getAppendStepList(config appendConfig) (result steps.StepList) {
-	for _, branchName := range append(git.Config().GetAncestorBranches(config.ParentBranch), config.ParentBranch) {
-		result.AppendList(steps.GetSyncBranchSteps(branchName, true))
+func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
+	for _, branchName := range append(config.ancestorBranches, config.parentBranch) {
+		steps, err := steps.GetSyncBranchSteps(branchName, true, repo)
+		if err != nil {
+			return result, err
+		}
+		result.AppendList(steps)
 	}
-	result.Append(&steps.CreateBranchStep{BranchName: config.TargetBranch, StartingPoint: config.ParentBranch})
-	result.Append(&steps.SetParentBranchStep{BranchName: config.TargetBranch, ParentBranchName: config.ParentBranch})
-	result.Append(&steps.CheckoutBranchStep{BranchName: config.TargetBranch})
-	if git.HasRemote("origin") && git.Config().ShouldNewBranchPush() && !git.Config().IsOffline() {
-		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.TargetBranch})
+	result.Append(&steps.CreateBranchStep{BranchName: config.targetBranch, StartingPoint: config.parentBranch})
+	result.Append(&steps.SetParentBranchStep{BranchName: config.targetBranch, ParentBranchName: config.parentBranch})
+	result.Append(&steps.CheckoutBranchStep{BranchName: config.targetBranch})
+	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
+		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result
+	return result, nil
 }

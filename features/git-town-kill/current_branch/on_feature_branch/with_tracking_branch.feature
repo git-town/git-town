@@ -6,8 +6,8 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
 
 
   Background:
-    Given my repository has the feature branches "current-feature" and "other-feature"
-    And the following commits exist in my repository
+    Given my repo has the feature branches "current-feature" and "other-feature"
+    And the following commits exist in my repo
       | BRANCH          | LOCATION      | MESSAGE                |
       | current-feature | local, remote | current feature commit |
       | other-feature   | local, remote | other feature commit   |
@@ -26,12 +26,12 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       |                 | git checkout main                      |
       | main            | git branch -D current-feature          |
     And I end up on the "main" branch
-    And I don't have any uncommitted files
+    And my repo doesn't have any uncommitted files
     And the existing branches are
       | REPOSITORY | BRANCHES            |
       | local      | main, other-feature |
       | remote     | main, other-feature |
-    And my repository now has the following commits
+    And my repo now has the following commits
       | BRANCH        | LOCATION      | MESSAGE              |
       | other-feature | local, remote | other feature commit |
 
@@ -50,4 +50,4 @@ Feature: git town-kill: killing the current feature branch with a tracking branc
       | REPOSITORY | BRANCHES                             |
       | local      | main, current-feature, other-feature |
       | remote     | main, current-feature, other-feature |
-    And my repository is left with my original commits
+    And my repo is left with my original commits

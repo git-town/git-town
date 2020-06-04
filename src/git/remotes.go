@@ -5,7 +5,7 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// Remotes are cached in order to minimize the number of git commands run
+// Remotes are cached in order to minimize the number of git commands run.
 var remotes []string
 var remotesInitialized bool
 

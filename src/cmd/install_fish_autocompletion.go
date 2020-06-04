@@ -33,7 +33,7 @@ func installFishAutocompletion() error {
 	if util.DoesFileExist(filename) {
 		util.ExitWithErrorMessage("Git autocompletion for Fish shell already exists")
 	}
-	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0644)
+	err = ioutil.WriteFile(filename, []byte(buildAutocompletionDefinition()), 0500)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}
@@ -93,7 +93,6 @@ func buildAutocompletionDefinition() string {
 		{name: "sync", description: syncCmd.Short},
 		{name: "undo", description: undoCmd.Short},
 	}
-
 	commandsSpaceSeparated := ""
 	for _, command := range commands {
 		commandsSpaceSeparated += command.name + " "
@@ -102,7 +101,6 @@ func buildAutocompletionDefinition() string {
 	for _, command := range commands {
 		commandAutocompletion += fmt.Sprintf("complete --command git --arguments %q --description %q --condition '__fish_complete_git_town_no_command' --no-files\n", command.name, command.description)
 	}
-
 	return fmt.Sprintf(fishAutocompletionTemplate, commandsSpaceSeparated, commandAutocompletion)
 }
 

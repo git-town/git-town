@@ -1,7 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
 )
 
 // CreateRemoteBranchStep pushes the current branch up to origin.
@@ -12,6 +13,6 @@ type CreateRemoteBranchStep struct {
 }
 
 // Run executes this step.
-func (step *CreateRemoteBranchStep) Run() error {
-	return script.RunCommand("git", "push", "origin", step.Sha+":refs/heads/"+step.BranchName)
+func (step *CreateRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	return repo.Logging.CreateRemoteBranch(step.Sha, step.BranchName)
 }

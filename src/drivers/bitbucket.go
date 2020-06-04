@@ -6,8 +6,15 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/git-town/git-town/src/drivers/helpers"
 	"github.com/git-town/git-town/src/git"
 )
+
+type bitbucketConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetCodeHostingOriginHostname() string
+}
 
 type bitbucketCodeHostingDriver struct {
 	originURL  string
@@ -15,12 +22,28 @@ type bitbucketCodeHostingDriver struct {
 	repository string
 }
 
-func (d *bitbucketCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "bitbucket" || d.hostname == "bitbucket.org"
+// LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
+// otherwise nil.
+func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "bitbucket" && hostname != "bitbucket.org" {
+		return nil
+	}
+	return &bitbucketCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		repository: helpers.GetURLRepositoryName(originURL),
+	}
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
-	return false, "", nil
+func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+	return false, "", 0, nil
 }
 
 func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
@@ -34,30 +57,10 @@ func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
-func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *bitbucketCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	return "", errors.New("shipping pull requests via the Bitbucket API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
 func (d *bitbucketCodeHostingDriver) HostingServiceName() string {
 	return "Bitbucket"
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
-}
-
-func (d *bitbucketCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *bitbucketCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *bitbucketCodeHostingDriver) SetAPIToken(apiToken string) {}
-
-func init() {
-	registry.RegisterDriver(&bitbucketCodeHostingDriver{})
 }

@@ -1,7 +1,8 @@
 package steps
 
 import (
-	"github.com/git-town/git-town/src/script"
+	"github.com/git-town/git-town/src/drivers"
+	"github.com/git-town/git-town/src/git"
 )
 
 // FetchUpstreamStep brings the Git history of the local repository
@@ -12,6 +13,6 @@ type FetchUpstreamStep struct {
 }
 
 // Run executes this step.
-func (step *FetchUpstreamStep) Run() error {
-	return script.RunCommand("git", "fetch", "upstream", step.BranchName)
+func (step *FetchUpstreamStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
+	return repo.Logging.FetchUpstream(step.BranchName)
 }

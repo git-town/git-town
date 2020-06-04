@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/git-town/git-town/src/git"
+	"github.com/git-town/git-town/src/drivers/helpers"
 )
+
+type gitlabConfig interface {
+	GetCodeHostingDriverName() string
+	GetRemoteOriginURL() string
+	GetCodeHostingOriginHostname() string
+}
 
 type gitlabCodeHostingDriver struct {
 	originURL  string
@@ -14,12 +20,28 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-func (d *gitlabCodeHostingDriver) CanBeUsed(driverType string) bool {
-	return driverType == "gitlab" || d.hostname == "gitlab.com"
+// LoadGitlab provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
+// otherwise nil.
+func LoadGitlab(config gitlabConfig) CodeHostingDriver {
+	driverType := config.GetCodeHostingDriverName()
+	originURL := config.GetRemoteOriginURL()
+	hostname := helpers.GetURLHostname(originURL)
+	configuredHostName := config.GetCodeHostingOriginHostname()
+	if configuredHostName != "" {
+		hostname = configuredHostName
+	}
+	if driverType != "gitlab" && hostname != "gitlab.com" {
+		return nil
+	}
+	return &gitlabCodeHostingDriver{
+		originURL:  originURL,
+		hostname:   hostname,
+		repository: helpers.GetURLRepositoryName(originURL),
+	}
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (bool, string, error) {
-	return false, "", nil
+func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+	return false, "", 0, nil
 }
 
 func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
@@ -33,30 +55,10 @@ func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 
-func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (string, error) {
+func (d *gitlabCodeHostingDriver) MergePullRequest(options MergePullRequestOptions) (mergeSha string, err error) {
 	return "", errors.New("shipping pull requests via the GitLab API is currently not supported. If you need this functionality, please vote for it by opening a ticket at https://github.com/git-town/git-town/issues")
 }
 
 func (d *gitlabCodeHostingDriver) HostingServiceName() string {
 	return "GitLab"
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginURL(originURL string) {
-	d.originURL = originURL
-	d.hostname = git.Config().GetURLHostname(originURL)
-	d.repository = git.Config().GetURLRepositoryName(originURL)
-}
-
-func (d *gitlabCodeHostingDriver) SetOriginHostname(originHostname string) {
-	d.hostname = originHostname
-}
-
-func (d *gitlabCodeHostingDriver) GetAPIToken() string {
-	return ""
-}
-
-func (d *gitlabCodeHostingDriver) SetAPIToken(apiToken string) {}
-
-func init() {
-	registry.RegisterDriver(&gitlabCodeHostingDriver{})
 }

@@ -5,7 +5,7 @@ import (
 	"sync/atomic"
 )
 
-// scenarioCounter counts the currently executed scenario
+// scenarioCounter counts the currently executed scenario.
 var scenarioCounter uint32
 
 // UniqueString provides a globally unique number.

@@ -1,8 +1,8 @@
 package steps
 
 import (
+	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // DeleteRemoteBranchStep deletes the current branch from the origin remote.
@@ -23,9 +23,13 @@ func (step *DeleteRemoteBranchStep) CreateUndoStep() Step {
 }
 
 // Run executes this step.
-func (step *DeleteRemoteBranchStep) Run() error {
+func (step *DeleteRemoteBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) (err error) {
 	if !step.IsTracking {
-		step.branchSha = git.GetBranchSha(git.GetTrackingBranchName(step.BranchName))
+		trackingBranchName := repo.Silent.TrackingBranchName(step.BranchName)
+		step.branchSha, err = repo.Silent.BranchSha(trackingBranchName)
+		if err != nil {
+			return err
+		}
 	}
-	return script.RunCommand("git", "push", "origin", ":"+step.BranchName)
+	return repo.Logging.DeleteRemoteBranch(step.BranchName)
 }

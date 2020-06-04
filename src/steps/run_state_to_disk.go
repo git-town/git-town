@@ -12,7 +12,7 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state
+// LoadPreviousRunState loads the run state from disk if it exists or creates a new run state.
 func LoadPreviousRunState() (result *RunState, err error) {
 	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
@@ -30,7 +30,7 @@ func LoadPreviousRunState() (result *RunState, err error) {
 	return nil, nil
 }
 
-// DeletePreviousRunState deletes the previous run state from disk
+// DeletePreviousRunState deletes the previous run state from disk.
 func DeletePreviousRunState() error {
 	filename := getRunResultFilename()
 	if util.DoesFileExist(filename) {
@@ -42,14 +42,14 @@ func DeletePreviousRunState() error {
 	return nil
 }
 
-// SaveRunState saves the run state to disk
+// SaveRunState saves the run state to disk.
 func SaveRunState(runState *RunState) error {
 	content, err := json.MarshalIndent(runState, "", "  ")
 	if err != nil {
 		return fmt.Errorf("cannot encode run-state: %w", err)
 	}
 	filename := getRunResultFilename()
-	err = ioutil.WriteFile(filename, content, 0644)
+	err = ioutil.WriteFile(filename, content, 0600)
 	if err != nil {
 		return fmt.Errorf("cannot write file %q: %w", filename, err)
 	}
