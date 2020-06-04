@@ -20,7 +20,7 @@ type gitlabCodeHostingDriver struct {
 	repository string
 }
 
-// LoadGitlab provides a GitLab driver instance if the given repo configuration is for a Github repo,
+// LoadGitlab provides a GitLab driver instance if the given repo configuration is for a GitLab repo,
 // otherwise nil.
 func LoadGitlab(config gitlabConfig) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()

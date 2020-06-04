@@ -1,18 +1,9 @@
-# Drivers
+# Code Hosting Drivers
 
-_The following refers to the commands `git-new-pull-request` and `git-repo`._
+Code hosting drivers allow commands like `git-new-pull-request`, `git-repo`, and
+`git ship` to communicate with the API of your hosting service.
 
-_Drivers_ implement third-party specific functionality in a standardized way.
-For example, the [GitHub driver](/src/drivers/github.go) implements
-GitHub-related operations like creating a pull request there.
-
-There is also an analogous [Bitbucket driver](/src/drivers/bitbucket.go) that
-does the same things on Bitbucket. Both drivers are part of the
-[code hosting](/src/drivers/code_hosting_driver.go) _driver family_.
-
-The functions that a driver needs to implement are described in the
-documentation for the respective driver family.
-
-In order to use a driver, a script simply needs to activate the respective
-driver family. The driver family's activation script then automatically
-determines the appropriate driver for the current environment and runs it.
+Drivers implement the [CodeHostingDriver](/src/drivers/core.go) interface.
+Driver implementations are available for [GitHub](/src/drivers/github.go),
+[Bitbucket](/src/drivers/bitbucket.go), and [GitLab](/src/drivers/bitbucket.go).
+To use a driver, call `drivers.Load()`.
