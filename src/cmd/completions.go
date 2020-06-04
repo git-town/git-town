@@ -13,41 +13,43 @@ var completionsCmd = &cobra.Command{
 	Short: "Generates completion scripts for Bash, zsh, fish, and PowerShell",
 	Long: `Generates completion scripts for Bash, zsh, fish, and PowerShell
 
-A GitTown values productivity, so this is for you.
+A Git Town user values productivity, so this is for you.
 
-With completions enabled, ` + "`git-town <TAB>`" + `will show you all possible
+With completions enabled, git-town TAB will show you all possible
 subcommands. As a bonus, some shells even show the short help text next to it.
 
-## To enable completions:
+To enable completions:
 
-### Bash:
+Bash:
 
-` + "`$ source <(git-town completions bash)`" + `
+$ source <(git-town completions bash)
 
-**Persist and autoload on each session:**
+Persist and autoload on each session:
 
-Linux:` + "`$ git-town completions bash > /etc/bash_completion.d/git-town`" + `
+Linux: $ git-town completions bash > /etc/bash_completion.d/git-town
 
-MacOS:` + "`$ git-town completions bash > /usr/local/etc/bash_completion.d/git-town`" + `
+MacOS: $ git-town completions bash > /usr/local/etc/bash_completion.d/git-town
 
-### Zsh:
+Zsh:
 
-` + "`$ source <(git-town completions zsh)`" + `
+$ source <(git-town completions zsh)
 
-**Persist and autoload on each session:**
-` + "`$ git-town completions zsh > /usr/share/zsh/vendor-completions/_git-town`" + `
+Persist and autoload on each session:
 
-### Fish:
+$ git-town completions zsh > /usr/share/zsh/vendor-completions/_git-town
 
-` + "`$ git-town completions fish | source`" + `
+Fish:
 
-**Persist and autoload on each session:**
-` + "`$ git-town completions fish > /etc/fish/completions/git-town.fish`" + `
+$ git-town completions fish | source
 
-_You might be a power user who has their dotfiles under version control. Or you
+Persist and autoload on each session:
+
+$ git-town completions fish > /etc/fish/completions/git-town.fish
+
+You might be a power user who has their dotfiles under version control. Or you
 might have another motivation to keep those scripts in your home folder.
 Since it sometimes depends on your particular setup, you probably should consult
-the official docs for your shell._
+the official docs for your shell.
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
