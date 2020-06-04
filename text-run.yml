@@ -3,7 +3,7 @@
 # The folder "node_modules" is already excluded.
 # To exclude the "vendor" folder: '{,!(vendor)/**/}*.md'
 files: "**/*.md"
-
+eeueu
 # black-list of files not to test
 # This is applied after the white-list above.
 exclude: "vendor/"
