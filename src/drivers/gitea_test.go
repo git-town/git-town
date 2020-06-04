@@ -86,7 +86,7 @@ func TestGiteaDriver_CanMergePullRequest(t *testing.T) {
 	driver, teardown := giteaSetupDriver(t, "TOKEN")
 	defer teardown()
 	mge := newMockGiteaEndpoints()
-	httpmock.RegisterResponder("GET", mge.prOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "base": {"label": "main"}, "head": {"label": "gitea/feature"} }]`))
+	httpmock.RegisterResponder("GET", mge.prOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
 	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.CanMergePullRequest("feature", "main")
 	assert.NoError(t, err)
 	assert.True(t, canMerge)
@@ -190,7 +190,7 @@ func TestGiteaDriver_MergePullRequest(t *testing.T) {
 	}
 	var mergeRequest *http.Request
 	mge := newMockGiteaEndpoints()
-	httpmock.RegisterResponder("GET", mge.prOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "gitea/feature"} }]`))
+	httpmock.RegisterResponder("GET", mge.prOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
 	httpmock.RegisterResponder("GET", mge.version, httpmock.NewStringResponder(200, `{"version": "1.11.5"}`))
 	httpmock.RegisterResponder("POST", mge.pr1Merge, func(req *http.Request) (*http.Response, error) {
 		mergeRequest = req
