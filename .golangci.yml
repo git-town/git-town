@@ -19,6 +19,6 @@ issues:
   exclude:
     - Using the variable on range scope `(input|expected)` in function literal
   exclude-rules:
-      - linters:
-          - goerr113
-        text: "do not define dynamic errors"
+    - linters:
+        - goerr113
+      text: "do not define dynamic errors"
