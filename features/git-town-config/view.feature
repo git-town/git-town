@@ -90,8 +90,8 @@ Feature: listing the configuration
 
   Scenario: disconnected branches
     Given the main branch is configured as "main"
-    And my repository has a branch "parent-feature"
-    And my repository has a feature branch named "child-feature" as a child of "parent-feature"
+    And my repo has a branch "parent-feature"
+    And my repo has a feature branch named "child-feature" as a child of "parent-feature"
     When I run "git-town config"
     Then it prints:
       """
