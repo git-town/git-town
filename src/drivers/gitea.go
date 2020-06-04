@@ -78,7 +78,7 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 		return false, "", 0, nil
 	}
 	pullRequest := pullRequests[0]
-	if !pullRequest.Mergable {
+	if !pullRequest.Mergeable {
 		return false, "", 0, nil
 	}
 	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
