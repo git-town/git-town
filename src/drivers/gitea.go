@@ -57,7 +57,7 @@ func LoadGitea(config GiteaConfig) CodeHostingDriver {
 	}
 }
 
-func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
@@ -84,12 +84,12 @@ func (d *giteaCodeHostingDriver) CanMergePullRequest(branch, parentBranch string
 	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
 }
 
-func (d *giteaCodeHostingDriver) GetNewPullRequestURL(branch string, parentBranch string) string {
+func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
 	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", d.GetRepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare))
 }
 
-func (d *giteaCodeHostingDriver) GetRepositoryURL() string {
+func (d *giteaCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 
