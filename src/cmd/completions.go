@@ -46,7 +46,7 @@ MacOS:` + "`$ git-town completions bash > /usr/local/etc/bash_completion.d/git-t
 _You might be a power user who has their dotfiles under version control. Or you
 might have another motivation to keep those scripts in your home folder.
 Since it sometimes depends on your particular setup, you probably should consult
-the offical docs for your shell._
+the official docs for your shell._
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
