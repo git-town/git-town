@@ -48,10 +48,10 @@ func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string)
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", d.GetRepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/merge_requests/new?%s", d.RepositoryURL(), query.Encode())
 }
 
-func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
+func (d *gitlabCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 

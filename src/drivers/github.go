@@ -78,10 +78,10 @@ func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch 
 	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.GetRepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare))
 }
 
-func (d *githubCodeHostingDriver) GetRepositoryURL() string {
+func (d *githubCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s/%s", d.hostname, d.owner, d.repository)
 }
 

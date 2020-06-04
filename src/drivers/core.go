@@ -19,9 +19,9 @@ type CodeHostingDriver interface {
 	// MergePullRequest merges the pull request through the hosting service api
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
-	// GetRepositoryURL returns the URL where the given repository
+	// RepositoryURL returns the URL where the given repository
 	// can be found online
-	GetRepositoryURL() string
+	RepositoryURL() string
 
 	// HostingServiceName returns the name of the code hosting service
 	HostingServiceName() string

@@ -57,7 +57,7 @@ func TestLoadGithub(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
-	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://self-hosted-github.com/git-town/git-town", driver.RepositoryURL())
 }
 
 func TestLoadGithub_customHostName(t *testing.T) {
@@ -67,7 +67,7 @@ func TestLoadGithub_customHostName(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "GitHub", driver.HostingServiceName())
-	assert.Equal(t, "https://github.com/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
 }
 
 func TestGitHubDriver_CanMergeViaDriver(t *testing.T) {

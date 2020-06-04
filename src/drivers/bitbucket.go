@@ -50,10 +50,10 @@ func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch stri
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.GetRepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode())
 }
 
-func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
+func (d *bitbucketCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 

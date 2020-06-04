@@ -30,7 +30,7 @@ func TestLoadBitbucket(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
-	assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
 }
 
 func TestLoadBitbucket_customHostName(t *testing.T) {
@@ -40,5 +40,5 @@ func TestLoadBitbucket_customHostName(t *testing.T) {
 	})
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
-	assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.GetRepositoryURL())
+	assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())
 }

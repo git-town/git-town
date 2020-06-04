@@ -31,7 +31,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 			fmt.Println(drivers.UnsupportedHostingError())
 			os.Exit(1)
 		}
-		script.OpenBrowser(driver.GetRepositoryURL())
+		script.OpenBrowser(driver.RepositoryURL())
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
