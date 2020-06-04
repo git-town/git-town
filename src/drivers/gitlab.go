@@ -40,7 +40,7 @@ func LoadGitlab(config gitlabConfig) CodeHostingDriver {
 	}
 }
 
-func (d *gitlabCodeHostingDriver) CanMergeViaDriver(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *gitlabCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	return false, "", 0, nil
 }
 

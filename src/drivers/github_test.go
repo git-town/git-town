@@ -70,11 +70,11 @@ func TestLoadGithub_customHostName(t *testing.T) {
 	assert.Equal(t, "https://github.com/git-town/git-town", driver.RepositoryURL())
 }
 
-func TestGitHubDriver_CanMergeViaDriver(t *testing.T) {
+func TestGitHubDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.CanMergeViaDriver("feature", "main")
+	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.LoadPullRequestInfo("feature", "main")
 
 	assert.NoError(t, err)
 	assert.True(t, canMerge)
@@ -82,37 +82,37 @@ func TestGitHubDriver_CanMergeViaDriver(t *testing.T) {
 	assert.Equal(t, int64(1), pullRequestNumber)
 }
 
-func TestGitHubDriver_CanMergeViaDriver_EmptyGithubToken(t *testing.T) {
+func TestGitHubDriver_LoadPullRequestInfo_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupDriver(t, "")
 	defer teardown()
-	canMerge, _, _, err := driver.CanMergeViaDriver("feature", "main")
+	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
 
 	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
 
-func TestGitHubDriver_CanMergeViaDriver_GetPullRequestNumberFails(t *testing.T) {
+func TestGitHubDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(404, ""))
-	_, _, _, err := driver.CanMergeViaDriver("feature", "main")
+	_, _, _, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.Error(t, err)
 }
 
-func TestGitHubDriver_CanMergeViaDriver_NoPullRequestForBranch(t *testing.T) {
+func TestGitHubDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, "[]"))
-	canMerge, _, _, err := driver.CanMergeViaDriver("feature", "main")
+	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }
 
-func TestGitHubDriver_CanMergeViaDriver_MultiplePullRequestsForBranch(t *testing.T) {
+func TestGitHubDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", currentPullRequestURL, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-	canMerge, _, _, err := driver.CanMergeViaDriver("feature", "main")
+	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
 	assert.False(t, canMerge)
 }

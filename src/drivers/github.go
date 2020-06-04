@@ -58,7 +58,7 @@ func LoadGithub(config GithubConfig) CodeHostingDriver {
 	}
 }
 
-func (d *githubCodeHostingDriver) CanMergeViaDriver(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *githubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
 	if d.apiToken == "" {
 		return false, "", 0, nil
 	}
