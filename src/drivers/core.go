@@ -43,6 +43,10 @@ func Load(config *git.Configuration) CodeHostingDriver {
 	if driver != nil {
 		return driver
 	}
+	driver = LoadGitea(config)
+	if driver != nil {
+		return driver
+	}
 	driver = LoadBitbucket(config)
 	if driver != nil {
 		return driver
@@ -61,5 +65,6 @@ func UnsupportedHostingError() string {
 This command requires hosting on one of these services:
 * Bitbucket
 * GitHub
-* GitLab`
+* GitLab
+* Gitea`
 }
