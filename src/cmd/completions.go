@@ -9,11 +9,9 @@ import (
 var completionsNoDesc bool
 
 var completionsCmd = &cobra.Command{
-	Use:   "completions <bash|zsh|fish|powershell>",
+	Use:   "completions [bash|zsh|fish|powershell]",
 	Short: "Generates completion scripts for Bash, zsh, fish, and PowerShell",
 	Long: `Generates completion scripts for Bash, zsh, fish, and PowerShell
-
-A Git Town user values productivity, so this is for you.
 
 With completions enabled, git-town TAB will show you all possible
 subcommands. As a bonus, some shells even show the short help text next to it.

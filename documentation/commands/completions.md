@@ -5,8 +5,6 @@ Generates completion scripts for Bash, zsh, fish, and PowerShell
 </blockquote>
 
 <a textrun="command-description">
-A Git Town user values productivity, so this is for you.
-
 With completions enabled, git-town TAB will show you all possible subcommands.
 As a bonus, some shells even show the short help text next to it.
 
@@ -46,5 +44,5 @@ official docs for your shell.</a>
 #### Usage
 
 <pre textrun="command-usage">
-git town completions <bash|zsh|fish|powershell>
+git town completions [bash|zsh|fish|powershell]
 </pre>
