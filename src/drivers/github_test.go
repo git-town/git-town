@@ -74,26 +74,26 @@ func TestGitHubDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title" }]`))
-	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.True(t, canMerge)
-	assert.Equal(t, "my title (#1)", defaultCommintMessage)
-	assert.Equal(t, int64(1), pullRequestNumber)
+	assert.True(t, prInfo.CanMergeWithAPI)
+	assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
+	assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 }
 
 func TestGitHubDriver_LoadPullRequestInfo_EmptyGithubToken(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "")
 	defer teardown()
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGitHubDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(404, ""))
-	_, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	_, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.Error(t, err)
 }
 
@@ -101,18 +101,18 @@ func TestGitHubDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, "[]"))
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGitHubDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupGithubDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", githubCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1}, {"number": 2}]`))
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGitHubDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {

@@ -40,8 +40,8 @@ func LoadGitlab(config gitlabConfig) CodeHostingDriver {
 	}
 }
 
-func (d *gitlabCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
-	return false, "", 0, nil
+func (d *gitlabCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+	return result, nil
 }
 
 func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
