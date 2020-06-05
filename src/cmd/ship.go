@@ -118,7 +118,10 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result ship
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = git.Config().GetParentBranch(result.branchToShip)
-	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	result.canShipWithDriver = prInfo.CanMergeWithAPI
+	result.defaultCommitMessage = prInfo.DefaultCommitMessage
+	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = git.Config().GetChildBranches(result.branchToShip)
 	result.shouldShipDeleteRemoteBranch = git.Config().ShouldShipDeleteRemoteBranch()
 	return result, err
@@ -186,15 +189,15 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
 	if !git.HasRemote("origin") {
-		return false, "", 0, nil
+		return result, nil
 	}
 	if git.Config().IsOffline() {
-		return false, "", 0, nil
+		return result, nil
 	}
 	if driver == nil {
-		return false, "", 0, nil
+		return result, nil
 	}
 	return driver.LoadPullRequestInfo(branch, parentBranch)
 }

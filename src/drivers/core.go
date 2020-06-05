@@ -10,21 +10,28 @@ type CodeHostingDriver interface {
 
 	// LoadPullRequestInfo loads information about the pull request of the given branch into the given parent branch
 	// from the code hosting provider.
-	LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error)
+	LoadPullRequestInfo(branch, parentBranch string) (PullRequestInfo, error)
 
 	// NewPullRequestURL returns the URL of the page
-	// to create a new pull request online
+	// to create a new pull request online.
 	NewPullRequestURL(branch, parentBranch string) string
 
-	// MergePullRequest merges the pull request through the hosting service api
+	// MergePullRequest merges the pull request through the hosting service API.
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
 
 	// RepositoryURL returns the URL where the given repository
-	// can be found online
+	// can be found online.
 	RepositoryURL() string
 
-	// HostingServiceName returns the name of the code hosting service
+	// HostingServiceName returns the name of the code hosting service.
 	HostingServiceName() string
+}
+
+// PullRequestInfo contains information about a pull request.
+type PullRequestInfo struct {
+	CanMergeWithAPI      bool
+	DefaultCommitMessage string
+	PullRequestNumber    int64
 }
 
 // MergePullRequestOptions defines the options to the MergePullRequest function.
