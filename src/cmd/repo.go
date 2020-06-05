@@ -15,11 +15,11 @@ var repoCommand = &cobra.Command{
 	Short: "Opens the repository homepage",
 	Long: `Opens the repository homepage
 
-Supported for repositories hosted on GitHub, GitLab, and Bitbucket.
+Supported for repositories hosted on GitHub, GitLab, Gitea, and Bitbucket.
 Derives the Git provider from the "origin" remote.
 You can override this detection with
 "git config git-town.code-hosting-driver <DRIVER>"
-where DRIVER is "github", "gitlab", or "bitbucket".
+where DRIVER is "github", "gitlab", "gitea", or "bitbucket".
 
 When using SSH identities, run
 "git config git-town.code-hosting-origin-hostname <HOSTNAME>"
