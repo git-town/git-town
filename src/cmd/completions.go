@@ -58,12 +58,11 @@ the official docs for your shell.
 			_ = RootCmd.GenBashCompletion(os.Stdout)
 		case "zsh":
 			_ = RootCmd.GenZshCompletion(os.Stdout)
-			// once merged https://github.com/spf13/cobra/pull/1070
-			// if !completionsNoDesc {
-			// 	RootCmd.GenZshCompletion(os.Stdout)
-			// } else {
-			// 	RootCmd.GenZshCompletionNoDesc(os.Stdout)
-			// }
+			if !completionsNoDesc {
+				RootCmd.GenZshCompletion(os.Stdout)
+			} else {
+				RootCmd.GenZshCompletionNoDesc(os.Stdout)
+			}
 		case "fish":
 			_ = RootCmd.GenFishCompletion(os.Stdout, !completionsNoDesc)
 		case "powershell":
