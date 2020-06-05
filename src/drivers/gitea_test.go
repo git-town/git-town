@@ -71,26 +71,26 @@ func TestGiteaDriver_LoadPullRequestInfo(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "title": "my title", "mergeable": true, "base": {"label": "main"}, "head": {"label": "git-town/feature"} }]`))
-	canMerge, defaultCommintMessage, pullRequestNumber, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.True(t, canMerge)
-	assert.Equal(t, "my title (#1)", defaultCommintMessage)
-	assert.Equal(t, int64(1), pullRequestNumber)
+	assert.True(t, prInfo.CanMergeWithAPI)
+	assert.Equal(t, "my title (#1)", prInfo.DefaultCommitMessage)
+	assert.Equal(t, int64(1), prInfo.PullRequestNumber)
 }
 
 func TestGiteaDriver_LoadPullRequestInfo_EmptyGiteaToken(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "")
 	defer teardown()
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGiteaDriver_LoadPullRequestInfo_GetPullRequestNumberFails(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(404, ""))
-	_, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	_, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.Error(t, err)
 }
 
@@ -98,18 +98,18 @@ func TestGiteaDriver_LoadPullRequestInfo_NoPullRequestForBranch(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, "[]"))
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGiteaDriver_LoadPullRequestInfo_MultiplePullRequestsForBranch(t *testing.T) {
 	driver, teardown := setupGiteaDriver(t, "TOKEN")
 	defer teardown()
 	httpmock.RegisterResponder("GET", giteaCurrOpen, httpmock.NewStringResponder(200, `[{"number": 1, "base": {"label": "main"}, "head": {"label": "no-match"} }, {"number": 2, "base": {"label": "main"}, "head": {"label": "no-match2"} }]`))
-	canMerge, _, _, err := driver.LoadPullRequestInfo("feature", "main")
+	prInfo, err := driver.LoadPullRequestInfo("feature", "main")
 	assert.NoError(t, err)
-	assert.False(t, canMerge)
+	assert.False(t, prInfo.CanMergeWithAPI)
 }
 
 func TestGiteaDriver_MergePullRequest_GetPullRequestIdsFails(t *testing.T) {

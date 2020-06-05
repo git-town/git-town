@@ -57,9 +57,9 @@ func LoadGitea(config GiteaConfig) CodeHostingDriver {
 	}
 }
 
-func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
 	if d.apiToken == "" {
-		return false, "", 0, nil
+		return result, nil
 	}
 	d.connect()
 	openPullRequests, err := d.client.ListRepoPullRequests(d.owner, d.repository, gitea.ListPullRequestsOptions{
@@ -69,19 +69,22 @@ func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 		State: gitea.StateOpen,
 	})
 	if err != nil {
-		return false, "", 0, err
+		return result, err
 	}
 	baseName := parentBranch
 	headName := d.owner + "/" + branch
 	pullRequests := filterPullRequests(openPullRequests, baseName, headName)
 	if len(pullRequests) != 1 {
-		return false, "", 0, nil
+		return result, nil
 	}
 	pullRequest := pullRequests[0]
 	if !pullRequest.Mergeable {
-		return false, "", 0, nil
+		return result, nil
 	}
-	return true, getDefaultCommitMessage(pullRequest), pullRequest.Index, nil
+	result.CanMergeWithAPI = true
+	result.DefaultCommitMessage = getDefaultCommitMessage(pullRequest)
+	result.PullRequestNumber = pullRequest.Index
+	return result, nil
 }
 
 func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
