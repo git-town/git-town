@@ -1,7 +1,7 @@
 <h1 textrun="command-heading">Completions command</h1>
 
 <blockquote textrun="command-summary">
-Generates auto completion scripts for Bash, zsh, fish, and PowerShell
+Generates auto-completion scripts for Bash, zsh, fish, and PowerShell
 </blockquote>
 
 <a textrun="command-description">

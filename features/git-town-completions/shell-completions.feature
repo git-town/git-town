@@ -4,38 +4,30 @@ Feature: Rendering Shell autocomplete definitions
   I want to use Git Town with autocompletion
   So that I can use this tool productively.
 
-  Scenario: loading autocompletion in fish
-    Given a fish shell
-    And I run "git-town completions fish | source"
-    And then I type "git-town <TAB>"
+  Scenario: verifying command output plausibility for fish autocompletion
+    Given I run "git-town completions fish"
     Then it prints:
       """
-      ????
+      function __git-town_prepare_completions
       """
 
-  Scenario: loading autocompletion in Bash
-    Given a Bash shell
-    And I run "source <(git-town completions bash)"
-    And then I type "git-town <TAB>"
+  Scenario: verifying command output plausibility for Bash autocompletion
+    Given I run "git-town completions bash"
     Then it prints:
       """
-      ????
+      _git-town_completions()
       """
 
-  Scenario: loading autocompletion in zsh
-    Given a zsh shell
-    And I run "source <(git-town completions zsh)"
-    And then I type "git-town <TAB>"
+  Scenario: verifying command output plausibility for zsh autocompletion
+    Given I run "git-town completions zsh"
     Then it prints:
       """
-      ????
+      Generates auto-completion scripts for Bash, zsh, fish, and PowerShell
       """
 
-  Scenario: loading autocompletion in PowerShell
-    Given a PowerShell
-    And I run "source <(git-town completions powershell)"
-    And then I type "git-town <TAB>"
+  Scenario: verifying command output plausibility for PowerShell autocompletion
+    Given I run "git-town completions powershell"
     Then it prints:
       """
-      ????
+      Generates auto-completion scripts for Bash, zsh, fish, and PowerShell
       """

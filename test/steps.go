@@ -333,25 +333,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
-	suite.Step(`^a fish shell$`, func() error {
-		return godog.ErrPending
-	})
-
-	suite.Step(`^a Bash shell$`, func() error {
-		return godog.ErrPending
-	})
-
-	suite.Step(`^a zsh shell$`, func() error {
-		return godog.ErrPending
-	})
-
-	suite.Step(`^a PowerShell$`, func() error {
-		return godog.ErrPending
-	})
-
-	suite.Step(`^then I type "([^"]*)"$`, func(arg1 string) error {
-		return godog.ErrPending
-	})
 	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {
 		err := state.gitEnv.DevShell.MockGit(version)
 		return err
