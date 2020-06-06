@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -38,7 +37,7 @@ When using SSH identities, this command needs to be configured with
 where hostname matches what is in your ssh config file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := getNewPullRequestConfig()
+		config, err := getNewPullRequestConfig(repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -75,9 +74,9 @@ where hostname matches what is in your ssh config file.`,
 	},
 }
 
-func getNewPullRequestConfig() (result newPullRequestConfig, err error) {
+func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
 	if git.HasRemote("origin") {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

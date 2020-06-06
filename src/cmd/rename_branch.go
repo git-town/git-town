@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -45,14 +44,15 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getRenameBranchConfig(args)
+		repo := git.NewProdRepo()
+		config, err := getRenameBranchConfig(args, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		stepList := getRenameBranchStepList(config)
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, git.NewProdRepo(), nil)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -67,7 +67,7 @@ When run on a perennial branch
 	},
 }
 
-func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
+func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBranchConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
 	result.isOffline = git.Config().IsOffline()
@@ -86,7 +86,7 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
 	}
 	if !result.isOffline {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

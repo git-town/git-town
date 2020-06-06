@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 
 	"github.com/spf13/cobra"
@@ -38,7 +37,7 @@ See "sync" for remote upstream options.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := getPrependConfig(args)
+		config, err := getPrependConfig(args, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -64,14 +63,14 @@ See "sync" for remote upstream options.
 	},
 }
 
-func getPrependConfig(args []string) (result prependConfig, err error) {
+func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	result.targetBranch = args[0]
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
 	if result.hasOrigin && !result.isOffline {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

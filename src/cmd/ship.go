@@ -8,7 +8,6 @@ import (
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/git-town/git-town/src/util"
 
@@ -65,7 +64,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
 		driver := drivers.Load(repo.Configuration)
-		config, err := gitShipConfig(args, driver)
+		config, err := gitShipConfig(args, driver, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -91,7 +90,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
-func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result shipConfig, err error) {
+func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.branchToShip = result.initialBranch
@@ -102,7 +101,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result ship
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

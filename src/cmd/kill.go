@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/spf13/cobra"
 )
@@ -81,7 +80,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	}
 	result.isOffline = repo.IsOffline()
 	if hasOrigin && !result.isOffline {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
