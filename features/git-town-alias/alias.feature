@@ -43,3 +43,11 @@ Feature: git town: alias
     Given my workspace is currently not a Git repo
     When I run "git-town alias true"
     Then it does not print "Not a git repository"
+
+  Scenario: wrong value
+    When I run "git-town alias zonk"
+    Then it prints:
+      """
+      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      """
+    And it runs no commands

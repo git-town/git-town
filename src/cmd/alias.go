@@ -24,7 +24,7 @@ This can conflict with other tools that also define Git aliases.`,
 		repo := git.NewProdRepo()
 		toggle, err := strconv.ParseBool(args[0])
 		if err != nil {
-			fmt.Println("Please provide either true or false")
+			fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
 			os.Exit(1)
 		}
 		var commandsToAlias = []string{
@@ -47,12 +47,7 @@ This can conflict with other tools that also define Git aliases.`,
 			}
 		}
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 {
-			return validateBooleanArgument(args[0])
-		}
-		return cobra.ExactArgs(1)(cmd, args)
-	},
+	Args: cobra.ExactArgs(1),
 }
 
 func addAlias(command string, repo *git.ProdRepo) {
