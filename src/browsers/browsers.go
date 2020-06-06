@@ -7,9 +7,9 @@ import (
 	"github.com/git-town/git-town/src/command"
 )
 
-// GetOpenBrowserCommand returns the command to run on the console
+// OpenBrowserCommand returns the command to run on the console
 // to open the default browser.
-func GetOpenBrowserCommand() string {
+func OpenBrowserCommand() string {
 	if runtime.GOOS == "windows" {
 		// NOTE: the "explorer" command cannot handle special characters
 		//       like "?" and "=".
@@ -38,10 +38,10 @@ func GetOpenBrowserCommand() string {
 	return ""
 }
 
-// OpenBrowser opens the default browser with the given URL.
+// Open opens the default browser with the given URL.
 // If no browser is found, prints the URL.
-func OpenBrowser(url string, shell command.Shell) {
-	command := GetOpenBrowserCommand()
+func Open(url string, shell command.Shell) {
+	command := OpenBrowserCommand()
 	if command == "" {
 		fmt.Println("Please open in a browser: " + url)
 		return

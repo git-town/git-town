@@ -15,6 +15,6 @@ type CreatePullRequestStep struct {
 // Run executes this step.
 func (step *CreatePullRequestStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	parentBranch := repo.GetParentBranch(step.BranchName)
-	browsers.OpenBrowser(driver.NewPullRequestURL(step.BranchName, parentBranch), repo.LoggingShell)
+	browsers.Open(driver.NewPullRequestURL(step.BranchName, parentBranch), repo.LoggingShell)
 	return nil
 }
