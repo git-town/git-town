@@ -279,7 +279,7 @@ func (c *Configuration) IsOffline() bool {
 	}
 	result, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either true or false.", config)
+		fmt.Printf("Invalid value for git-town.offline: %q. Please provide either true or false. Considering false for now.", config)
 		fmt.Println()
 		return false
 	}
@@ -443,7 +443,12 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 	if config == "" {
 		return false
 	}
-	return util.StringToBool(config)
+	value, err := strconv.ParseBool(config)
+	if err != nil {
+		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.", config)
+		return false
+	}
+	return value
 }
 
 // ShouldNewBranchPushGlobal indictes whether the global configuration requires to push
