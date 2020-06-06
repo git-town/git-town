@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 
 	"github.com/spf13/cobra"
@@ -36,7 +35,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := getAppendConfig(args)
+		config, err := getAppendConfig(args, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -62,11 +61,11 @@ See "sync" for information regarding remote upstream.`,
 	},
 }
 
-func getAppendConfig(args []string) (result appendConfig, err error) {
+func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.parentBranch = git.GetCurrentBranchName()
 	result.targetBranch = args[0]
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := script.Fetch()
+		err := repo.Logging.FetchPrune()
 		if err != nil {
 			return result, err
 		}

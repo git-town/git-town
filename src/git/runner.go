@@ -463,6 +463,15 @@ func (r *Runner) Fetch() error {
 	return nil
 }
 
+// FetchPrune retrieves the updates from the remote repo.
+func (r *Runner) FetchPrune() error {
+	_, err := r.Run("git", "fetch", "--prune", "--tags")
+	if err != nil {
+		return fmt.Errorf("cannot fetch: %w", err)
+	}
+	return nil
+}
+
 // FetchUpstream fetches updates from the upstream remote.
 func (r *Runner) FetchUpstream(branch string) error {
 	out, err := r.Run("git", "fetch", "upstream", branch)
