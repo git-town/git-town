@@ -3,7 +3,7 @@ package cmd
 import (
 	"strconv"
 
-	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -36,9 +36,9 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag() {
 	if globalFlag {
-		cfmt.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
+		command.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
-		cfmt.Println(git.GetPrintableNewBranchPushFlag())
+		command.Println(git.GetPrintableNewBranchPushFlag())
 	}
 }
 

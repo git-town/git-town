@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
@@ -29,7 +29,7 @@ Git Town avoids network operations in offline mode.`,
 }
 
 func printOfflineFlag() {
-	cfmt.Println(git.GetPrintableOfflineFlag())
+	command.Println(git.GetPrintableOfflineFlag())
 }
 
 func setOfflineFlag(value bool) {

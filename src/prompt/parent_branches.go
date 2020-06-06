@@ -3,7 +3,7 @@ package prompt
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 )
 
@@ -81,6 +81,6 @@ func filterOutSelfAndDescendants(branchName string, choices []string) (filteredC
 func printParentBranchHeader() {
 	if !parentBranchHeaderShown {
 		parentBranchHeaderShown = true
-		cfmt.Printf(parentBranchHeaderTemplate, git.Config().GetMainBranch())
+		command.Printf(parentBranchHeaderTemplate, git.Config().GetMainBranch())
 	}
 }

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +35,7 @@ for the main branch and perennial branches.`,
 }
 
 func printPullBranchStrategy() {
-	cfmt.Println(git.Config().GetPullBranchStrategy())
+	command.Println(git.Config().GetPullBranchStrategy())
 }
 
 func setPullBranchStrategy(value string) {

@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/cfmt"
 )
 
 // DoesStringArrayContain returns whether the given string slice
@@ -19,12 +16,6 @@ func DoesStringArrayContain(list []string, value string) bool {
 		}
 	}
 	return false
-}
-
-// ExitWithErrorMessage prints the given error message and terminates the application.
-func ExitWithErrorMessage(messages ...string) {
-	PrintError(messages...)
-	os.Exit(1)
 }
 
 var inputReader = bufio.NewReader(os.Stdin)
@@ -54,37 +45,6 @@ func Pluralize(count, word string) string {
 		result += "s"
 	}
 	return result
-}
-
-// PrintlnColor prints using the given color function.
-// If that doesn't work, it falls back to printing without color.
-func PrintlnColor(color *color.Color, messages ...interface{}) {
-	_, err := color.Println(messages...)
-	if err != nil {
-		fmt.Println(messages...)
-	}
-}
-
-// PrintError prints the given error message to the console.
-func PrintError(messages ...string) {
-	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
-	errMessageFmt := color.New(color.FgRed)
-	fmt.Println()
-	PrintlnColor(errHeaderFmt, "  Error")
-	for _, message := range messages {
-		PrintlnColor(errMessageFmt, "  "+message)
-	}
-	fmt.Println()
-}
-
-// PrintLabelAndValue prints the label bolded and underlined
-// the value indented on the next line
-// followed by an empty line.
-func PrintLabelAndValue(label, value string) {
-	labelFmt := color.New(color.Bold).Add(color.Underline)
-	PrintlnColor(labelFmt, label+":")
-	cfmt.Println(Indent(value, 1))
-	fmt.Println()
 }
 
 // RemoveStringFromSlice returns a new string slice which is the given string slice
