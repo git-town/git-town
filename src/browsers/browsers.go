@@ -1,6 +1,7 @@
 package browsers
 
 import (
+	"fmt"
 	"runtime"
 
 	"github.com/git-town/git-town/src/command"
@@ -35,4 +36,18 @@ func GetOpenBrowserCommand() string {
 		}
 	}
 	return ""
+}
+
+// OpenBrowser opens the default browser with the given URL.
+// If no browser is found, prints the URL.
+func OpenBrowser(url string, shell command.Shell) {
+	command := GetOpenBrowserCommand()
+	if command == "" {
+		fmt.Println("Please open in a browser: " + url)
+		return
+	}
+	_, err := shell.Run(command, url)
+	if err != nil {
+		fmt.Println("Please open in a browser: " + url)
+	}
 }
