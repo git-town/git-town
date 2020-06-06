@@ -22,16 +22,6 @@ func Indent(message string, level int) string {
 	return prefix + strings.Replace(message, "\n", "\n"+prefix, -1)
 }
 
-// Pluralize outputs the count and the word. The word is made plural
-// if the count isn't one.
-func Pluralize(count, word string) string {
-	result := count + " " + word
-	if count != "1" {
-		result += "s"
-	}
-	return result
-}
-
 // RemoveStringFromSlice returns a new string slice which is the given string slice
 // with the given string removed.
 func RemoveStringFromSlice(list []string, value string) (result []string) {
