@@ -75,7 +75,9 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.targetBranch)
+	if git.HasBranch(result.targetBranch) {
+		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+	}
 	git.Config().EnsureIsFeatureBranch(result.initialBranch, "Only feature branches can have parent branches.")
 	prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
 	result.parentBranch = git.Config().GetParentBranch(result.initialBranch)
