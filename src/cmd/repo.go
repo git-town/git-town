@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/browsers"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ where HOSTNAME matches what is in your ssh config file.`,
 			fmt.Println(drivers.UnsupportedHostingError())
 			os.Exit(1)
 		}
-		script.OpenBrowser(driver.RepositoryURL())
+		browsers.Open(driver.RepositoryURL(), repo.LoggingShell)
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
