@@ -51,7 +51,7 @@ func GetPrintableBranchTree(branchName string) (result string) {
 	childBranches := Config().GetChildBranches(branchName)
 	sort.Strings(childBranches)
 	for _, childBranch := range childBranches {
-		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch), 1)
+		result += "\n" + util.Indent(GetPrintableBranchTree(childBranch))
 	}
 	return
 }

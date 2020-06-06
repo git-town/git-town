@@ -17,9 +17,8 @@ func DoesStringArrayContain(list []string, value string) bool {
 
 // Indent outputs the given string with the given level of indentation
 // on each line. Each level of indentation is two spaces.
-func Indent(message string, level int) string {
-	prefix := strings.Repeat("  ", level)
-	return prefix + strings.Replace(message, "\n", "\n"+prefix, -1)
+func Indent(message string) string {
+	return "  " + strings.Replace(message, "\n", "\n  ", -1)
 }
 
 // RemoveStringFromSlice returns a new string slice which is the given string slice
