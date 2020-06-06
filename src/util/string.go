@@ -1,7 +1,7 @@
 package util
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 )
 
@@ -9,7 +9,7 @@ import (
 func StringToBool(arg string) bool {
 	value, err := strconv.ParseBool(arg)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Cannot ")
 	}
 	return value
 }
