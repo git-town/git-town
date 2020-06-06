@@ -25,7 +25,7 @@ and it allows you to perform many common Git operations faster and easier.`,
 
 // Execute runs the Cobra stack.
 func Execute() {
-	majorVersion, minorVersion, err := git.GetVersion()
+	majorVersion, minorVersion, err := git.Version()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

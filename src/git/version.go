@@ -8,8 +8,8 @@ import (
 	"github.com/git-town/git-town/src/command"
 )
 
-// GetVersion indicates whether the needed Git version is installed.
-func GetVersion() (int, int, error) {
+// Version indicates whether the needed Git version is installed.
+func Version() (int, int, error) {
 	versionRegexp := regexp.MustCompile(`git version (\d+).(\d+).(\d+)`)
 	res := command.MustRun("git", "version")
 	matches := versionRegexp.FindStringSubmatch(res.OutputSanitized())
