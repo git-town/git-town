@@ -25,7 +25,10 @@ var continueCmd = &cobra.Command{
 		if runState == nil || !runState.IsUnfinished() {
 			util.ExitWithErrorMessage("Nothing to continue")
 		}
-		git.EnsureDoesNotHaveConflicts()
+		if git.HasConflicts() {
+			fmt.Println("You must resolve the conflicts before continuing")
+			os.Exit(1)
+		}
 		err = steps.Run(runState, repo, drivers.Load(repo.Configuration))
 		if err != nil {
 			fmt.Println(err)

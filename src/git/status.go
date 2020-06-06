@@ -5,12 +5,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureDoesNotHaveConflicts asserts that the workspace
-// has no unresolved merge conflicts.
-func EnsureDoesNotHaveConflicts() {
-	util.Ensure(!HasConflicts(), "You must resolve the conflicts before continuing")
-}
-
 // EnsureDoesNotHaveOpenChanges assets that the workspace
 // has no open changes.
 func EnsureDoesNotHaveOpenChanges(message string) {
