@@ -1,9 +1,6 @@
 package util
 
 import (
-	"bufio"
-	"fmt"
-	"os"
 	"strings"
 )
 
@@ -16,17 +13,6 @@ func DoesStringArrayContain(list []string, value string) bool {
 		}
 	}
 	return false
-}
-
-// GetUserInput reads input from the user and returns it.
-func GetUserInput() string {
-	inputReader := bufio.NewReader(os.Stdin)
-	text, err := inputReader.ReadString('\n')
-	if err != nil {
-		fmt.Printf("Error getting user input: %v", err)
-		os.Exit(1)
-	}
-	return strings.TrimSpace(text)
 }
 
 // Indent outputs the given string with the given level of indentation
