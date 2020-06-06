@@ -70,7 +70,9 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.targetBranch)
+	if git.HasBranch(result.targetBranch) {
+		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+	}
 	prompt.EnsureKnowsParentBranches([]string{result.parentBranch})
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.parentBranch)
 	result.hasOrigin = git.HasRemote("origin")
