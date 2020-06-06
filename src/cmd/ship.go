@@ -107,7 +107,9 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		git.EnsureHasBranch(result.branchToShip)
+		if !git.HasBranch(result.branchToShip) {
+			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
+		}
 	}
 	git.Config().EnsureIsFeatureBranch(result.branchToShip, "Only feature branches can be shipped.")
 	prompt.EnsureKnowsParentBranches([]string{result.branchToShip})

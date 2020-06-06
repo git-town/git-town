@@ -8,11 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureHasBranch enforces that a branch with the given name exists.
-func EnsureHasBranch(branchName string) {
-	util.Ensure(HasBranch(branchName), fmt.Sprintf("there is no branch named %q", branchName))
-}
-
 // EnsureHasLocalBranch enforces that a local branch with the given name exists.
 func EnsureHasLocalBranch(branchName string) {
 	util.Ensure(HasLocalBranch(branchName), fmt.Sprintf("There is no local branch named %q", branchName))
