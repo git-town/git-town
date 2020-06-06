@@ -76,7 +76,7 @@ where hostname matches what is in your ssh config file.`,
 
 func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, err error) {
 	if git.HasRemote("origin") {
-		err := repo.Logging.FetchPrune()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

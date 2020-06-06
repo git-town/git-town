@@ -101,7 +101,7 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := repo.Logging.FetchPrune()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

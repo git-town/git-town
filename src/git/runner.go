@@ -456,15 +456,6 @@ func (r *Runner) ExpectedPreviouslyCheckedOutBranch(initialPreviouslyCheckedOutB
 
 // Fetch retrieves the updates from the remote repo.
 func (r *Runner) Fetch() error {
-	_, err := r.Run("git", "fetch")
-	if err != nil {
-		return fmt.Errorf("cannot fetch: %w", err)
-	}
-	return nil
-}
-
-// FetchPrune retrieves the updates from the remote repo.
-func (r *Runner) FetchPrune() error {
 	_, err := r.Run("git", "fetch", "--prune", "--tags")
 	if err != nil {
 		return fmt.Errorf("cannot fetch: %w", err)

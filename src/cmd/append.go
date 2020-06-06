@@ -65,7 +65,7 @@ func getAppendConfig(args []string, repo *git.ProdRepo) (result appendConfig, er
 	result.parentBranch = git.GetCurrentBranchName()
 	result.targetBranch = args[0]
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := repo.Logging.FetchPrune()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

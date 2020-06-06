@@ -80,7 +80,7 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 	}
 	result.isOffline = repo.IsOffline()
 	if hasOrigin && !result.isOffline {
-		err := repo.Logging.FetchPrune()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

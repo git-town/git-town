@@ -80,7 +80,7 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	result.hasOrigin = git.HasRemote("origin")
 	result.isOffline = git.Config().IsOffline()
 	if result.hasOrigin && !result.isOffline {
-		err := repo.Logging.FetchPrune()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
