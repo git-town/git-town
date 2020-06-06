@@ -48,3 +48,11 @@ Feature: displaying the new branch push flag configuration
       """
       false
       """
+
+  Scenario: invalid value
+    Given the new-branch-push-flag configuration is "zonk"
+    When I run "git-town new-branch-push-flag"
+    Then it prints:
+      """
+      Invalid value for git-town.new-branch-push-flag: "zonk". Please provide either true or false. Considering false for now.
+      """
