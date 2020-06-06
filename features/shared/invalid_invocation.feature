@@ -23,8 +23,6 @@ Feature: invalid invocation
       | hack arg1 arg2                 |
       | kill arg1 arg2                 |
       | main-branch arg1 arg2          |
-      | new-branch-push-flag arg1 arg2 |
-      | new-branch-push-flag invalid   |
       | new-pull-request arg1          |
       | offline arg1 arg2              |
       | offline invalid                |

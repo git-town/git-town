@@ -13,3 +13,17 @@ Feature: set the new-branch-push-flag
   Scenario: update to "false"
     When I run "git-town new-branch-push-flag false"
     Then the new-branch-push-flag configuration is now false
+
+  Scenario: invalid value
+    When I run "git-town new-branch-push-flag zonk"
+    Then it prints:
+      """
+      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      """
+
+  Scenario: multiple arguments
+    When I run "git-town new-branch-push-flag true false"
+    Then it prints:
+      """
+      accepts at most 1 arg(s), received 2
+      """
