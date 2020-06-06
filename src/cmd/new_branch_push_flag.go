@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +21,12 @@ hack / append / prepend on creation. Defaults to false.`,
 		if len(args) == 0 {
 			printNewBranchPushFlag()
 		} else {
-			setNewBranchPushFlag(util.StringToBool(args[0]))
+			value, err := strconv.ParseBool(args[0])
+			if err != nil {
+				fmt.Println("Please provide either true or false")
+				os.Exit(1)
+			}
+			setNewBranchPushFlag(value)
 		}
 	},
 	Args: func(cmd *cobra.Command, args []string) error {
