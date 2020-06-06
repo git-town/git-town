@@ -10,7 +10,7 @@ import (
 
 // EnsureDoesNotHaveBranch enforces that a branch with the given name does not exist.
 func EnsureDoesNotHaveBranch(branchName string) {
-	util.Ensure(!HasBranch(branchName), fmt.Sprintf("A branch named %q already exists", branchName))
+	util.Ensure(!HasBranch(branchName), fmt.Sprintf("a branch named %q already exists", branchName))
 }
 
 // EnsureHasBranch enforces that a branch with the given name exists.
