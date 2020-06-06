@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
@@ -12,7 +15,10 @@ var setParentBranchCommand = &cobra.Command{
 	Long:  `Prompts to set the parent branch for the current branch`,
 	Run: func(cmd *cobra.Command, args []string) {
 		branchName := git.GetCurrentBranchName()
-		git.Config().EnsureIsFeatureBranch(branchName, "Only feature branches can have parent branches.")
+		if !git.Config().IsFeatureBranch(branchName) {
+			fmt.Println("Error: only feature branches can have parent branches")
+			os.Exit(1)
+		}
 		defaultParentBranch := git.Config().GetParentBranch(branchName)
 		if defaultParentBranch == "" {
 			defaultParentBranch = git.Config().GetMainBranch()

@@ -46,7 +46,7 @@ Feature: git-town sync: resolving conflicts between the current feature branch a
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And I am still on the "feature" branch
     And my uncommitted file is stashed

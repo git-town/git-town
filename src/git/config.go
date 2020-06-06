@@ -111,11 +111,6 @@ func (c *Configuration) DeletePerennialBranchConfiguration() {
 	c.removeLocalConfigValue("git-town.perennial-branch-names")
 }
 
-// EnsureIsFeatureBranch asserts that the given branch is a feature branch.
-func (c *Configuration) EnsureIsFeatureBranch(branchName, errorSuffix string) {
-	util.Ensure(c.IsFeatureBranch(branchName), fmt.Sprintf("The branch %q is not a feature branch. %s", branchName, errorSuffix))
-}
-
 // GetAncestorBranches returns the names of all parent branches for the given branch,
 // This information is read from the cache in the Git config,
 // so might be out of date when the branch hierarchy has been modified.

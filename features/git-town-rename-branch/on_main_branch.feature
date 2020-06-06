@@ -14,7 +14,7 @@ Feature: git town-rename-branch: errors when renaming the main branch
     Then it runs no commands
     And it prints the error:
       """
-      The main branch cannot be renamed.
+      the main branch cannot be renamed
       """
     And I am still on the "main" branch
 
@@ -24,6 +24,6 @@ Feature: git town-rename-branch: errors when renaming the main branch
     Then it runs no commands
     And it prints the error:
       """
-      The main branch cannot be renamed.
+      the main branch cannot be renamed
       """
     And I am still on the "main" branch

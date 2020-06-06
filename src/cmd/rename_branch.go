@@ -47,7 +47,7 @@ When run on a perennial branch
 		repo := git.NewProdRepo()
 		config, err := getRenameBranchConfig(args, repo)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
 		stepList := getRenameBranchStepList(config)
@@ -78,9 +78,13 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 		result.oldBranchName = args[0]
 		result.newBranchName = args[1]
 	}
-	git.EnsureIsNotMainBranch(result.oldBranchName, "The main branch cannot be renamed.")
+	if git.Config().IsMainBranch(result.oldBranchName) {
+		return result, fmt.Errorf("the main branch cannot be renamed")
+	}
 	if !forceFlag {
-		git.EnsureIsNotPerennialBranch(result.oldBranchName, fmt.Sprintf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.oldBranchName))
+		if git.Config().IsPerennialBranch(result.oldBranchName) {
+			return result, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranchName)
+		}
 	}
 	if result.oldBranchName == result.newBranchName {
 		util.ExitWithErrorMessage("Cannot rename branch to current name.")
@@ -91,9 +95,15 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 			return result, err
 		}
 	}
-	git.EnsureHasBranch(result.oldBranchName)
-	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
-	git.EnsureDoesNotHaveBranch(result.newBranchName)
+	if !git.HasBranch(result.oldBranchName) {
+		return result, fmt.Errorf("there is no branch named %q", result.oldBranchName)
+	}
+	if !git.IsBranchInSync(result.oldBranchName) {
+		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
+	}
+	if git.HasBranch(result.newBranchName) {
+		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
+	}
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)
 	return result, nil

@@ -10,6 +10,6 @@ Feature: git town-diff-parent: errors if supplied branch does not exist
     Then it runs no commands
     And it prints the error:
       """
-      There is no local branch named "non-existing-feature"
+      there is no local branch named "non-existing-feature"
       """
     And I end up on the "main" branch
