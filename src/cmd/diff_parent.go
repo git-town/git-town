@@ -57,7 +57,9 @@ func getDiffParentConfig(args []string) (config diffParentConfig, err error) {
 			return config, fmt.Errorf("there is no local branch named %q", config.branch)
 		}
 	}
-	git.Config().EnsureIsFeatureBranch(config.branch, "You can only diff-parent feature branches.")
+	if !git.Config().IsFeatureBranch(config.branch) {
+		return config, fmt.Errorf("you can only diff-parent feature branches")
+	}
 	prompt.EnsureKnowsParentBranches([]string{config.branch})
 	config.parentBranch = git.Config().GetParentBranch(config.branch)
 	return config, nil
