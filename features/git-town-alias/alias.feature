@@ -44,10 +44,26 @@ Feature: git town: alias
     When I run "git-town alias true"
     Then it does not print "Not a git repository"
 
-  Scenario: wrong value
+  Scenario: no argument
+    When I run "git-town alias"
+    Then it prints:
+      """
+      accepts 1 arg(s), received 0
+      """
+    And it runs no commands
+
+  Scenario: non-boolean argument
     When I run "git-town alias zonk"
     Then it prints:
       """
       Error: invalid argument: "zonk". Please provide either "true" or "false".
+      """
+    And it runs no commands
+
+  Scenario: too many arguments
+    When I run "git-town alias true false"
+    Then it prints:
+      """
+      accepts 1 arg(s), received 2
       """
     And it runs no commands

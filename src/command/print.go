@@ -10,7 +10,6 @@ import (
 
 // Exit prints the given error message and terminates the application.
 func Exit(messages ...interface{}) {
-	messages = append([]interface{}{"Error:"}, messages...)
 	PrintError(messages...)
 	os.Exit(1)
 }
