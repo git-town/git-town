@@ -8,11 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureIsNotMainBranch enforces that a branch with the given name is not the main branch.
-func EnsureIsNotMainBranch(branchName, errorMessage string) {
-	util.Ensure(!Config().IsMainBranch(branchName), errorMessage)
-}
-
 // EnsureIsNotPerennialBranch enforces that a branch with the given name is not a perennial branch.
 func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
 	util.Ensure(!Config().IsPerennialBranch(branchName), errorMessage)
