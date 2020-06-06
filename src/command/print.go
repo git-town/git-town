@@ -2,17 +2,10 @@ package command
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/fatih/color"
 	"github.com/git-town/git-town/src/util"
 )
-
-// Exit prints the given error message and terminates the application.
-func Exit(messages ...interface{}) {
-	PrintError(messages...)
-	os.Exit(1)
-}
 
 // Printf prints the given text using fmt.Printf
 // in a way where colors work on Windows.
