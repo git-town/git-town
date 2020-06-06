@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/util"
 )
 
 // ExitWithErrorMessage prints the given error message and terminates the application.
@@ -58,6 +59,6 @@ func PrintError(messages ...string) {
 func PrintLabelAndValue(label, value string) {
 	labelFmt := color.New(color.Bold).Add(color.Underline)
 	PrintlnColor(labelFmt, label+":")
-	command.Println(Indent(value, 1))
+	Println(util.Indent(value, 1))
 	fmt.Println()
 }
