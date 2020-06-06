@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +24,12 @@ Works on either the current branch or the branch name provided.
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := getDiffParentConfig(args)
-		script.RunCommandSafe("git", "diff", config.parentBranch+".."+config.branch)
+		repo := git.NewProdRepo()
+		err := repo.Logging.DiffParent(config.branch, config.parentBranch)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 	Args: cobra.MaximumNArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {

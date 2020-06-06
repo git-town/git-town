@@ -412,6 +412,15 @@ func (r *Runner) DeleteRemoteBranch(name string) error {
 	return nil
 }
 
+// DiffParent displays the diff between the given branch and its given parent branch.
+func (r *Runner) DiffParent(branch, parentBranch string) error {
+	out, err := r.Run("git", "diff", parentBranch+".."+branch)
+	if err != nil {
+		return fmt.Errorf("cannot diff branch %q with its parent branch %q: %w\n%s", branch, parentBranch, err, out.Output())
+	}
+	return nil
+}
+
 // DiscardOpenChanges deletes all uncommitted changes.
 func (r *Runner) DiscardOpenChanges() error {
 	out, err := r.Run("git", "reset", "--hard")
