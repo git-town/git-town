@@ -98,7 +98,9 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		result.branchToShip = args[0]
 	}
 	if result.branchToShip == result.initialBranch {
-		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
+		if git.HasOpenChanges() {
+			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+		}
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()

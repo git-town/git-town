@@ -54,7 +54,7 @@ Feature: git-town sync: syncing inside a folder that doesn't exist on the main b
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And I am still on the "current-feature" branch
     And my uncommitted file is stashed

@@ -80,7 +80,7 @@ Feature: git-town sync --all: handling merge conflicts between feature branch an
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And I am still on the "feature-2" branch
     And my uncommitted file is stashed
