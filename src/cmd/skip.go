@@ -21,10 +21,10 @@ var skipCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if runState == nil || !runState.IsUnfinished() {
-			command.ExitWithErrorMessage("Nothing to skip")
+			command.Exit("Nothing to skip")
 		}
 		if !runState.UnfinishedDetails.CanSkip {
-			command.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
+			command.Exit("Cannot skip branch that resulted in conflicts")
 		}
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, git.NewProdRepo(), nil)

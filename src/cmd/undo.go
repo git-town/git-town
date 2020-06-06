@@ -21,7 +21,7 @@ var undoCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if runState == nil || runState.IsUnfinished() {
-			command.ExitWithErrorMessage("Nothing to undo")
+			command.Exit("Nothing to undo")
 		}
 		undoRunState := runState.CreateUndoRunState()
 		err = steps.Run(&undoRunState, git.NewProdRepo(), nil)

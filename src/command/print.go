@@ -8,9 +8,9 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// ExitWithErrorMessage prints the given error message and terminates the application.
-func ExitWithErrorMessage(messages ...string) {
-	messages = append([]string{"Error:"}, messages...)
+// Exit prints the given error message and terminates the application.
+func Exit(messages ...interface{}) {
+	messages = append([]interface{}{"Error:"}, messages...)
 	PrintError(messages...)
 	os.Exit(1)
 }
@@ -43,13 +43,13 @@ func PrintlnColor(color *color.Color, messages ...interface{}) {
 }
 
 // PrintError prints the given error message to the console.
-func PrintError(messages ...string) {
+func PrintError(messages ...interface{}) {
 	errHeaderFmt := color.New(color.Bold).Add(color.FgRed)
 	errMessageFmt := color.New(color.FgRed)
 	fmt.Println()
 	PrintlnColor(errHeaderFmt, "  Error")
 	for _, message := range messages {
-		PrintlnColor(errMessageFmt, "  "+message)
+		PrintlnColor(errMessageFmt, "  ", message)
 	}
 	fmt.Println()
 }

@@ -18,12 +18,11 @@ var abortCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		runState, err := steps.LoadPreviousRunState()
 		if err != nil {
-			fmt.Printf("cannot load previous run state: %v\n", err)
-			os.Exit(1)
+			command.Exit("cannot load previous run state: %v\n", err)
 		}
 		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
-			command.ExitWithErrorMessage("Nothing to abort")
+			command.Exit("Nothing to abort")
 		}
 		abortRunState := runState.CreateAbortRunState()
 		err = steps.Run(&abortRunState, repo, drivers.Load(repo.Configuration))

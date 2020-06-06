@@ -23,7 +23,7 @@ var continueCmd = &cobra.Command{
 		}
 		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
-			command.ExitWithErrorMessage("Nothing to continue")
+			command.Exit("Nothing to continue")
 		}
 		if git.HasConflicts() {
 			fmt.Println("Error: you must resolve the conflicts before continuing")

@@ -138,7 +138,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		command.ExitWithErrorMessage(
+		command.Exit(
 			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
