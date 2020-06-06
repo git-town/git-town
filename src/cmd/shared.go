@@ -34,13 +34,6 @@ func conditionallyActivateDryRun() error {
 	return nil
 }
 
-func validateBooleanArgument(arg string) error {
-	if arg != "true" && arg != "false" {
-		return fmt.Errorf("invalid value: %q", arg)
-	}
-	return nil
-}
-
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
 	git.Config().RemoveOutdatedConfiguration()

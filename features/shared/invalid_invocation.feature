@@ -24,8 +24,6 @@ Feature: invalid invocation
       | kill arg1 arg2                 |
       | main-branch arg1 arg2          |
       | new-pull-request arg1          |
-      | offline arg1 arg2              |
-      | offline invalid                |
       | perennial-branches arg1        |
       | perennial-branches update arg1 |
       | prune-branches arg1            |
