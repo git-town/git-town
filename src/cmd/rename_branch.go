@@ -92,7 +92,9 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 		}
 	}
 	git.EnsureHasBranch(result.oldBranchName)
-	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
+	if !git.IsBranchInSync(result.oldBranchName) {
+		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
+	}
 	git.EnsureDoesNotHaveBranch(result.newBranchName)
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)

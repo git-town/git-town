@@ -8,11 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch.
-func EnsureBranchInSync(branchName, errorMessageSuffix string) {
-	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("%q is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))
-}
-
 // EnsureDoesNotHaveBranch enforces that a branch with the given name does not exist.
 func EnsureDoesNotHaveBranch(branchName string) {
 	util.Ensure(!HasBranch(branchName), fmt.Sprintf("A branch named %q already exists", branchName))
