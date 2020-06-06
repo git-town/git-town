@@ -8,11 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch.
-func EnsureIsPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
-}
-
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically.
 func GetLocalBranches() (result []string) {
