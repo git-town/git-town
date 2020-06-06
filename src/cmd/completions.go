@@ -37,7 +37,7 @@ Persist and autoload on each session:
 $ git-town completions zsh > /usr/share/zsh/vendor-completions/_git-town
 
 Fish:
-
+CAUTION> pending upstream issue breaks this: https://github.com/spf13/cobra/pull/1122
 $ git-town completions fish | source
 
 Persist and autoload on each session:
