@@ -18,10 +18,9 @@ func DoesStringArrayContain(list []string, value string) bool {
 	return false
 }
 
-var inputReader = bufio.NewReader(os.Stdin)
-
 // GetUserInput reads input from the user and returns it.
 func GetUserInput() string {
+	inputReader := bufio.NewReader(os.Stdin)
 	text, err := inputReader.ReadString('\n')
 	if err != nil {
 		fmt.Printf("Error getting user input: %v", err)
