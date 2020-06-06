@@ -780,6 +780,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Configuration.SetGlobalConfigValue("git-town.offline", value)
+		return nil
+	})
+
 	suite.Step(`^the perennial branches are configured as "([^"]+)"$`, func(name string) error {
 		state.gitEnv.DevRepo.AddToPerennialBranches(name)
 		return nil

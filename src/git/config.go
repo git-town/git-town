@@ -92,7 +92,7 @@ func (c *Configuration) AddToPerennialBranches(branchNames ...string) *command.R
 
 // AddGitAlias sets the given Git alias.
 func (c *Configuration) AddGitAlias(command string) *command.Result {
-	return c.setGlobalConfigValue("alias."+command, "town "+command)
+	return c.SetGlobalConfigValue("alias."+command, "town "+command)
 }
 
 // DeleteMainBranchConfiguration removes the configuration entry for the main branch name.
@@ -374,12 +374,13 @@ func (c *Configuration) SetColorUI(value string) *command.Result {
 	return c.shell.MustRun("git", "config", "color.ui", value)
 }
 
-func (c *Configuration) setGlobalConfigValue(key, value string) *command.Result {
+// SetGlobalConfigValue sets the given configuration setting in the global Git configuration.
+func (c *Configuration) SetGlobalConfigValue(key, value string) *command.Result {
 	c.globalConfigCache[key] = value
 	return c.shell.MustRun("git", "config", "--global", key, value)
 }
 
-// setConfigurationValue sets the local configuration with the given key to the given value.
+// SetLocalConfigValue sets the local configuration with the given key to the given value.
 func (c *Configuration) SetLocalConfigValue(key, value string) *command.Result {
 	c.localConfigCache[key] = value
 	return c.shell.MustRun("git", "config", key, value)
@@ -395,14 +396,14 @@ func (c *Configuration) SetMainBranch(branchName string) *command.Result {
 // freshly created branches up to the origin remote.
 func (c *Configuration) SetNewBranchPush(value bool, global bool) *command.Result {
 	if global {
-		return c.setGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
+		return c.SetGlobalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 	}
 	return c.SetLocalConfigValue("git-town.new-branch-push-flag", strconv.FormatBool(value))
 }
 
 // SetOffline updates whether Git Town is in offline mode.
 func (c *Configuration) SetOffline(value bool) *command.Result {
-	return c.setGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
+	return c.SetGlobalConfigValue("git-town.offline", strconv.FormatBool(value))
 }
 
 // SetTestOrigin sets the origin to be used for testing.
