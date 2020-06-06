@@ -2,20 +2,7 @@ package git
 
 import (
 	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/util"
 )
-
-// EnsureDoesNotHaveConflicts asserts that the workspace
-// has no unresolved merge conflicts.
-func EnsureDoesNotHaveConflicts() {
-	util.Ensure(!HasConflicts(), "You must resolve the conflicts before continuing")
-}
-
-// EnsureDoesNotHaveOpenChanges assets that the workspace
-// has no open changes.
-func EnsureDoesNotHaveOpenChanges(message string) {
-	util.Ensure(!HasOpenChanges(), "You have uncommitted changes. "+message)
-}
 
 // Root directory is cached in order to minimize the number of git commands run.
 var rootDirectory string

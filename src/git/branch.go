@@ -8,41 +8,6 @@ import (
 	"github.com/git-town/git-town/src/util"
 )
 
-// EnsureBranchInSync enforces that a branch with the given name is in sync with its tracking branch.
-func EnsureBranchInSync(branchName, errorMessageSuffix string) {
-	util.Ensure(IsBranchInSync(branchName), fmt.Sprintf("%q is not in sync with its tracking branch. %s", branchName, errorMessageSuffix))
-}
-
-// EnsureDoesNotHaveBranch enforces that a branch with the given name does not exist.
-func EnsureDoesNotHaveBranch(branchName string) {
-	util.Ensure(!HasBranch(branchName), fmt.Sprintf("A branch named %q already exists", branchName))
-}
-
-// EnsureHasBranch enforces that a branch with the given name exists.
-func EnsureHasBranch(branchName string) {
-	util.Ensure(HasBranch(branchName), fmt.Sprintf("there is no branch named %q", branchName))
-}
-
-// EnsureHasLocalBranch enforces that a local branch with the given name exists.
-func EnsureHasLocalBranch(branchName string) {
-	util.Ensure(HasLocalBranch(branchName), fmt.Sprintf("There is no local branch named %q", branchName))
-}
-
-// EnsureIsNotMainBranch enforces that a branch with the given name is not the main branch.
-func EnsureIsNotMainBranch(branchName, errorMessage string) {
-	util.Ensure(!Config().IsMainBranch(branchName), errorMessage)
-}
-
-// EnsureIsNotPerennialBranch enforces that a branch with the given name is not a perennial branch.
-func EnsureIsNotPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(!Config().IsPerennialBranch(branchName), errorMessage)
-}
-
-// EnsureIsPerennialBranch enforces that a branch with the given name is a perennial branch.
-func EnsureIsPerennialBranch(branchName, errorMessage string) {
-	util.Ensure(Config().IsPerennialBranch(branchName), errorMessage)
-}
-
 // GetLocalBranches returns the names of all branches in the local repository,
 // ordered alphabetically.
 func GetLocalBranches() (result []string) {

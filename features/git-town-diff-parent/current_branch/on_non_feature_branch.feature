@@ -12,6 +12,6 @@ Feature: git town-diff-parent: errors when trying to diff a perennial branch
     Then it runs no commands
     And it prints the error:
       """
-      You can only diff-parent feature branches
+      you can only diff-parent feature branches
       """
     And I am still on the "qa" branch

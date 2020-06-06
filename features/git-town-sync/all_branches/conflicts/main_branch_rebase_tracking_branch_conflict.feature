@@ -48,7 +48,7 @@ Feature: git-town sync --all: handling rebase conflicts between main branch and 
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And my uncommitted file is stashed
     And my repo still has a rebase in progress

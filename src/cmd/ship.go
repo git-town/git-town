@@ -98,7 +98,9 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		result.branchToShip = args[0]
 	}
 	if result.branchToShip == result.initialBranch {
-		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
+		if git.HasOpenChanges() {
+			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+		}
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
 		err := repo.Logging.Fetch()
@@ -107,9 +109,13 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		git.EnsureHasBranch(result.branchToShip)
+		if !git.HasBranch(result.branchToShip) {
+			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
+		}
 	}
-	git.Config().EnsureIsFeatureBranch(result.branchToShip, "Only feature branches can be shipped.")
+	if !git.Config().IsFeatureBranch(result.branchToShip) {
+		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
+	}
 	prompt.EnsureKnowsParentBranches([]string{result.branchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
 	result.hasTrackingBranch = git.HasTrackingBranch(result.branchToShip)

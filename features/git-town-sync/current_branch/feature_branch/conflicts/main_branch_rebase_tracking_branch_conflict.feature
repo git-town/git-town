@@ -51,7 +51,7 @@ Feature: git-town sync: resolving conflicts between the main branch and its trac
     Then it runs no commands
     And it prints the error:
       """
-      You must resolve the conflicts before continuing
+      you must resolve the conflicts before continuing
       """
     And my repo still has a rebase in progress
     And my uncommitted file is stashed

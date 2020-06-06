@@ -25,7 +25,15 @@ and it allows you to perform many common Git operations faster and easier.`,
 
 // Execute runs the Cobra stack.
 func Execute() {
-	git.EnsureVersionRequirementSatisfied()
+	majorVersion, minorVersion, err := git.Version()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if majorVersion*100+minorVersion < 207 {
+		fmt.Println("Git Town requires Git 2.7.0 or higher")
+		os.Exit(1)
+	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)

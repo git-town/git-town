@@ -23,9 +23,13 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := getDiffParentConfig(args)
+		config, err := getDiffParentConfig(args)
+		if err != nil {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 		repo := git.NewProdRepo()
-		err := repo.Logging.DiffParent(config.branch, config.parentBranch)
+		err = repo.Logging.DiffParent(config.branch, config.parentBranch)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -41,7 +45,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func getDiffParentConfig(args []string) (config diffParentConfig) {
+func getDiffParentConfig(args []string) (config diffParentConfig, err error) {
 	initialBranch := git.GetCurrentBranchName()
 	if len(args) == 0 {
 		config.branch = initialBranch
@@ -49,12 +53,16 @@ func getDiffParentConfig(args []string) (config diffParentConfig) {
 		config.branch = args[0]
 	}
 	if initialBranch != config.branch {
-		git.EnsureHasLocalBranch(config.branch)
+		if !git.HasLocalBranch(config.branch) {
+			return config, fmt.Errorf("there is no local branch named %q", config.branch)
+		}
 	}
-	git.Config().EnsureIsFeatureBranch(config.branch, "You can only diff-parent feature branches.")
+	if !git.Config().IsFeatureBranch(config.branch) {
+		return config, fmt.Errorf("you can only diff-parent feature branches")
+	}
 	prompt.EnsureKnowsParentBranches([]string{config.branch})
 	config.parentBranch = git.Config().GetParentBranch(config.branch)
-	return
+	return config, nil
 }
 
 func init() {
