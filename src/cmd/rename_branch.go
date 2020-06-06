@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/spf13/cobra"
@@ -87,7 +87,7 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 		}
 	}
 	if result.oldBranchName == result.newBranchName {
-		command.Exit("Cannot rename branch to current name.")
+		cli.Exit("Cannot rename branch to current name.")
 	}
 	if !result.isOffline {
 		err := repo.Logging.Fetch()

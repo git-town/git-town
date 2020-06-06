@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
@@ -138,7 +138,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		command.Exit(
+		cli.Exit(
 			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)

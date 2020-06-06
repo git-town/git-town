@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
@@ -14,14 +14,14 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		command.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-		command.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
+		cli.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
+		cli.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranchTrees())
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
-			command.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
+			cli.PrintLabelAndValue("Branch Ancestry", git.GetPrintableBranchTree(mainBranch))
 		}
-		command.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
-		command.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
+		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
+		cli.PrintLabelAndValue("New Branch Push Flag", git.GetPrintableNewBranchPushFlag())
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

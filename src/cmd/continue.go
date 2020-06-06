@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
@@ -23,7 +23,7 @@ var continueCmd = &cobra.Command{
 		}
 		repo := git.NewProdRepo()
 		if runState == nil || !runState.IsUnfinished() {
-			command.Exit("Nothing to continue")
+			cli.Exit("Nothing to continue")
 		}
 		if git.HasConflicts() {
 			fmt.Println("Error: you must resolve the conflicts before continuing")

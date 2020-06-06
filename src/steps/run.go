@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 
@@ -49,7 +49,7 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 				if err != nil {
 					return fmt.Errorf("cannot run the abort steps: %w", err)
 				}
-				command.Exit(step.GetAutomaticAbortErrorMessage())
+				cli.Exit(step.GetAutomaticAbortErrorMessage())
 			} else {
 				runState.RunStepList.Prepend(step.CreateContinueStep())
 				runState.MarkAsUnfinished()
@@ -72,10 +72,10 @@ func Run(runState *RunState, repo *git.ProdRepo, driver drivers.CodeHostingDrive
 func exitWithMessages(canSkip bool) {
 	messageFmt := color.New(color.FgRed)
 	fmt.Println()
-	command.PrintlnColor(messageFmt, "To abort, run \"git-town abort\".")
-	command.PrintlnColor(messageFmt, "To continue after having resolved conflicts, run \"git-town continue\".")
+	cli.PrintlnColor(messageFmt, "To abort, run \"git-town abort\".")
+	cli.PrintlnColor(messageFmt, "To continue after having resolved conflicts, run \"git-town continue\".")
 	if canSkip {
-		command.PrintlnColor(messageFmt, "To continue by skipping the current branch, run \"git-town skip\".")
+		cli.PrintlnColor(messageFmt, "To continue by skipping the current branch, run \"git-town skip\".")
 	}
 	fmt.Println()
 	os.Exit(1)

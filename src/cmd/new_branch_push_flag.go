@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -37,9 +37,9 @@ hack / append / prepend on creation. Defaults to false.`,
 
 func printNewBranchPushFlag() {
 	if globalFlag {
-		command.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
+		cli.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
-		command.Println(git.GetPrintableNewBranchPushFlag())
+		cli.Println(git.GetPrintableNewBranchPushFlag())
 	}
 }
 

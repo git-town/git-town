@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/command"
 	"github.com/git-town/git-town/src/git"
 	survey "gopkg.in/AlecAivazis/survey.v1"
@@ -16,7 +17,7 @@ func GetSquashCommitAuthor(branchName string) string {
 	if len(authors) == 1 {
 		return authors[0]
 	}
-	command.Printf(squashCommitAuthorHeaderTemplate, branchName)
+	cli.Printf(squashCommitAuthorHeaderTemplate, branchName)
 	fmt.Println()
 	return askForAuthor(authors)
 }

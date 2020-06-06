@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,7 @@ Git Town avoids network operations in offline mode.`,
 }
 
 func printOfflineFlag() {
-	command.Println(git.GetPrintableOfflineFlag())
+	cli.Println(git.GetPrintableOfflineFlag())
 }
 
 func setOfflineFlag(value bool) {

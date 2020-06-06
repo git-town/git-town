@@ -7,6 +7,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/git-town/git-town/src/cli"
 )
 
 // Options defines optional arguments for ShellRunner.RunWith().
@@ -60,7 +62,7 @@ func RunInDir(dir string, cmd string, args ...string) (*Result, error) {
 
 // RunWith runs the command with the given RunOptions.
 func RunWith(opts Options, cmd string, args ...string) (*Result, error) {
-	logRun(cmd, args...)
+	cli.LogRun(cmd, args...)
 	subProcess := exec.Command(cmd, args...) // #nosec
 	if opts.Dir != "" {
 		subProcess.Dir = opts.Dir
