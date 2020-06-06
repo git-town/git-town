@@ -445,7 +445,7 @@ func (c *Configuration) ShouldNewBranchPush() bool {
 	}
 	value, err := strconv.ParseBool(config)
 	if err != nil {
-		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.", config)
+		fmt.Printf("Invalid value for git-town.new-branch-push-flag: %q. Please provide either true or false. Considering false for now.\n", config)
 		return false
 	}
 	return value
@@ -464,7 +464,12 @@ func (c *Configuration) ShouldShipDeleteRemoteBranch() bool {
 	if setting == "" {
 		return true
 	}
-	return util.StringToBool(setting)
+	result, err := strconv.ParseBool(setting)
+	if err != nil {
+		fmt.Printf("Invalid value for git-town.ship-delete-remote-branch: %q. Please provide either true or false. Considering true for now.\n", setting)
+		return true
+	}
+	return result
 }
 
 // ShouldSyncUpstream indicates whether this repo should sync with its upstream.
