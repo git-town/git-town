@@ -88,11 +88,3 @@ func RunCommand(cmd string, args ...string) error {
 	subProcess.Stdout = os.Stdout
 	return subProcess.Run()
 }
-
-// RunCommandSafe executes the given command-line operation, exiting if the command errors.
-func RunCommandSafe(cmd string, args ...string) {
-	err := RunCommand(cmd, args...)
-	if err != nil {
-		panic(err)
-	}
-}
