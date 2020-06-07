@@ -53,11 +53,10 @@ See "sync" for information regarding remote upstream.`,
 	},
 	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		appendRepo := git.NewProdRepo()
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured(appendRepo)
+		return validateIsConfigured(repo())
 	},
 }
 

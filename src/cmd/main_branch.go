@@ -16,11 +16,10 @@ var mainBranchCommand = &cobra.Command{
 
 The main branch is the Git branch from which new feature branches are cut.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
 		if len(args) == 0 {
 			printMainBranch()
 		} else {
-			err := setMainBranch(args[0], repo)
+			err := setMainBranch(args[0], repo())
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
