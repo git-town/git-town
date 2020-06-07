@@ -122,6 +122,6 @@ func getSyncStepList(config syncConfig, repo *git.ProdRepo) (result steps.StepLi
 
 func init() {
 	syncCmd.Flags().BoolVar(&allFlag, "all", false, "Sync all local branches")
-	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, "Print the commands but don't run them")
+	syncCmd.Flags().BoolVar(&dryRunFlag, "dry-run", false, dryRunFlagDescription)
 	RootCmd.AddCommand(syncCmd)
 }
