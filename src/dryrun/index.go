@@ -1,9 +1,7 @@
 package dryrun
 
 import (
-	"fmt"
-
-	"github.com/fatih/color"
+	"github.com/git-town/git-town/src/cli"
 )
 
 var currentBranchName = ""
@@ -11,10 +9,7 @@ var isActive = false
 
 // Activate causes all commands to not be run.
 func Activate(currentBranch string) {
-	_, err := color.New(color.FgBlue).Print(dryRunMessage)
-	if err != nil {
-		fmt.Println(dryRunMessage)
-	}
+	cli.PrintDryRunMessage()
 	isActive = true
 	SetCurrentBranchName(currentBranch)
 }
@@ -33,10 +28,3 @@ func GetCurrentBranchName() string {
 func SetCurrentBranchName(branchName string) {
 	currentBranchName = branchName
 }
-
-var dryRunMessage = `
-In dry run mode. No commands will be run. When run in normal mode, the command
-output will appear beneath the command. Some commands will only be run if
-necessary. For example: 'git push' will run if and only if there are local
-commits not on the remote.
-`
