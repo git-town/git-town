@@ -124,7 +124,10 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		return result, err
 	}
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
-	result.hasTrackingBranch = git.HasTrackingBranch(result.branchToShip)
+	result.hasTrackingBranch, err = repo.Silent.HasTrackingBranch(result.branchToShip)
+	if err != nil {
+		return result, err
+	}
 	result.hasOrigin = git.HasRemote("origin")
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch

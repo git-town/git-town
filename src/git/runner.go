@@ -632,13 +632,17 @@ func (r *Runner) HasTrackingBranch(name string) (result bool, err error) {
 }
 
 // IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func (r *Runner) IsBranchInSync(branchName string) bool {
-	if HasTrackingBranch(branchName) {
+func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
+	hasTrackingBranch, err := r.HasTrackingBranch(branchName)
+	if err != nil {
+		return false, err
+	}
+	if hasTrackingBranch {
 		localSha := GetBranchSha(branchName)
 		remoteSha := GetBranchSha(GetTrackingBranchName(branchName))
-		return localSha == remoteSha
+		return localSha == remoteSha, nil
 	}
-	return true
+	return true, nil
 }
 
 // LastActiveDir provides the directory that was last used in this repo.
