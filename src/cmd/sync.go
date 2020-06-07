@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/steps"
@@ -70,8 +71,8 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err != nil {
 			return err
 		}
-		if err := conditionallyActivateDryRun(currentBranch); err != nil {
-			return err
+		if dryRunFlag {
+			dryrun.Activate(currentBranch)
 		}
 		if err := validateIsConfigured(); err != nil {
 			return err

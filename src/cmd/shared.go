@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/git-town/git-town/src/drivers"
-	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/git-town/git-town/src/steps"
@@ -26,13 +25,6 @@ var (
 )
 
 var dryRunFlagDescription = "Print the commands but don't run them"
-
-func conditionallyActivateDryRun(currentBranch string) error {
-	if dryRunFlag {
-		dryrun.ActivateDryRun(currentBranch)
-	}
-	return nil
-}
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()

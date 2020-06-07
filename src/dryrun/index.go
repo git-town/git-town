@@ -1,25 +1,22 @@
 package dryrun
 
 import (
+	"fmt"
+
 	"github.com/fatih/color"
 )
 
 var currentBranchName = ""
 var isActive = false
 
-// Activate enables dry-run mode.
-func Activate(initialBranchName string) {
-	isActive = true
-	SetCurrentBranchName(initialBranchName)
-}
-
-// ActivateDryRun causes all commands to not be run.
-func ActivateDryRun(currentBranch string) {
+// Activate causes all commands to not be run.
+func Activate(currentBranch string) {
 	_, err := color.New(color.FgBlue).Print(dryRunMessage)
 	if err != nil {
-		panic(err)
+		fmt.Println(dryRunMessage)
 	}
-	Activate(currentBranch)
+	isActive = true
+	SetCurrentBranchName(currentBranch)
 }
 
 // IsActive returns whether of not dry-run mode is active.
