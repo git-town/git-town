@@ -1,8 +1,6 @@
 package dryrun
 
-import (
-	"github.com/git-town/git-town/src/cli"
-)
+import "github.com/git-town/git-town/src/cli"
 
 var currentBranchName = ""
 var isActive = false
