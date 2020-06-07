@@ -83,7 +83,11 @@ func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err 
 			return result, err
 		}
 	}
-	if git.HasBranch(result.targetBranch) {
+	hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.targetBranch)
+	if err != nil {
+		return result, err
+	}
+	if hasBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
 	}
 	return
