@@ -21,6 +21,5 @@ func (cr *CachedRunner) RemoteBranches() ([]string, error) {
 	}
 	result, err := cr.Runner.RemoteBranches()
 	cr.remoteBranchCache.Set(result)
-	remoteBranchesInitialized = true
 	return result, err
 }
