@@ -81,7 +81,10 @@ func getPrependConfig(args []string, repo *git.ProdRepo) (result prependConfig, 
 	if !git.Config().IsFeatureBranch(result.initialBranch) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can have parent branches", result.initialBranch)
 	}
-	prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+	err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.parentBranch = git.Config().GetParentBranch(result.initialBranch)
 	result.ancestorBranches = git.Config().GetAncestorBranches(result.initialBranch)
 	return

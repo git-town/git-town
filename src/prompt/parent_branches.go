@@ -10,26 +10,33 @@ import (
 // EnsureKnowsParentBranches asserts that the entire ancestry for all given branches
 // is known to Git Town.
 // Missing ancestry information is queried from the user.
-func EnsureKnowsParentBranches(branchNames []string) {
+func EnsureKnowsParentBranches(branchNames []string, repo *git.ProdRepo) error {
 	for _, branchName := range branchNames {
 		if git.Config().IsMainBranch(branchName) || git.Config().IsPerennialBranch(branchName) || git.Config().HasParentBranch(branchName) {
 			continue
 		}
-		AskForBranchAncestry(branchName, git.Config().GetMainBranch())
+		err := AskForBranchAncestry(branchName, git.Config().GetMainBranch(), repo)
+		if err != nil {
+			return err
+		}
 		if parentBranchHeaderShown {
 			fmt.Println()
 		}
 	}
+	return nil
 }
 
 // AskForBranchAncestry prompts the user for all unknown ancestors of the given branch.
-func AskForBranchAncestry(branchName, defaultBranchName string) {
+func AskForBranchAncestry(branchName, defaultBranchName string, repo *git.ProdRepo) (err error) {
 	current := branchName
 	for {
 		parent := git.Config().GetParentBranch(current)
 		if parent == "" {
 			printParentBranchHeader()
-			parent = AskForBranchParent(current, defaultBranchName)
+			parent, err = AskForBranchParent(current, defaultBranchName, repo)
+			if err != nil {
+				return err
+			}
 			if parent == perennialBranchOption {
 				git.Config().AddToPerennialBranches(current)
 				break
@@ -41,17 +48,21 @@ func AskForBranchAncestry(branchName, defaultBranchName string) {
 		}
 		current = parent
 	}
+	return nil
 }
 
 // AskForBranchParent prompts the user for the parent of the given branch.
-func AskForBranchParent(branchName, defaultBranchName string) string {
-	choices := git.GetLocalBranchesWithMainBranchFirst()
+func AskForBranchParent(branchName, defaultBranchName string, repo *git.ProdRepo) (string, error) {
+	choices, err := repo.Silent.LocalBranchesWithMainBranchFirst()
+	if err != nil {
+		return "", err
+	}
 	filteredChoices := filterOutSelfAndDescendants(branchName, choices)
 	return askForBranch(askForBranchOptions{
 		branchNames:       append([]string{perennialBranchOption}, filteredChoices...),
 		prompt:            fmt.Sprintf(parentBranchPromptTemplate, branchName),
 		defaultBranchName: defaultBranchName,
-	})
+	}), nil
 }
 
 // Helpers

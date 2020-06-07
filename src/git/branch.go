@@ -30,21 +30,6 @@ func GetLocalBranchesWithoutMain() (result []string) {
 	return
 }
 
-// GetLocalBranchesWithMainBranchFirst returns the names of all branches
-// that exist in the local repository,
-// ordered to have the name of the main branch first,
-// then the names of the branches, ordered alphabetically.
-func GetLocalBranchesWithMainBranchFirst() (result []string) {
-	mainBranch := Config().GetMainBranch()
-	result = append(result, mainBranch)
-	for _, branch := range GetLocalBranches() {
-		if branch != mainBranch {
-			result = append(result, branch)
-		}
-	}
-	return
-}
-
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch.
 func GetPreviouslyCheckedOutBranch() string {
 	outcome, err := command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")

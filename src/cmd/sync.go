@@ -92,12 +92,21 @@ func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	}
 	result.initialBranch = git.GetCurrentBranchName()
 	if allFlag {
-		branches := git.GetLocalBranchesWithMainBranchFirst()
-		prompt.EnsureKnowsParentBranches(branches)
+		branches, err := repo.Silent.LocalBranchesWithMainBranchFirst()
+		if err != nil {
+			return result, err
+		}
+		err = prompt.EnsureKnowsParentBranches(branches, repo)
+		if err != nil {
+			return result, err
+		}
 		result.branchesToSync = branches
 		result.shouldPushTags = true
 	} else {
-		prompt.EnsureKnowsParentBranches([]string{result.initialBranch})
+		err = prompt.EnsureKnowsParentBranches([]string{result.initialBranch}, repo)
+		if err != nil {
+			return result, err
+		}
 		result.branchesToSync = append(git.Config().GetAncestorBranches(result.initialBranch), result.initialBranch)
 		result.shouldPushTags = !git.Config().IsFeatureBranch(result.initialBranch)
 	}

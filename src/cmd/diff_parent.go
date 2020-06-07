@@ -23,12 +23,12 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getDiffParentConfig(args)
+		repo := git.NewProdRepo()
+		config, err := getDiffParentConfig(args, repo)
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		repo := git.NewProdRepo()
 		err = repo.Logging.DiffParent(config.branch, config.parentBranch)
 		if err != nil {
 			fmt.Println(err)
@@ -45,7 +45,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 }
 
 // Does not return error because "Ensure" functions will call exit directly.
-func getDiffParentConfig(args []string) (config diffParentConfig, err error) {
+func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentConfig, err error) {
 	initialBranch := git.GetCurrentBranchName()
 	if len(args) == 0 {
 		config.branch = initialBranch
@@ -60,7 +60,10 @@ func getDiffParentConfig(args []string) (config diffParentConfig, err error) {
 	if !git.Config().IsFeatureBranch(config.branch) {
 		return config, fmt.Errorf("you can only diff-parent feature branches")
 	}
-	prompt.EnsureKnowsParentBranches([]string{config.branch})
+	err = prompt.EnsureKnowsParentBranches([]string{config.branch}, repo)
+	if err != nil {
+		return config, err
+	}
 	config.parentBranch = git.Config().GetParentBranch(config.branch)
 	return config, nil
 }

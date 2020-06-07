@@ -701,6 +701,25 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 	return result, nil
 }
 
+// LocalBranchesWithMainBranchFirst returns the names of all branches
+// that exist in the local repository,
+// ordered to have the name of the main branch first,
+// then the names of the branches, ordered alphabetically.
+func (r *Runner) LocalBranchesWithMainBranchFirst() (result []string, err error) {
+	mainBranch := r.Configuration.GetMainBranch()
+	result = append(result, mainBranch)
+	localBranches, err := r.LocalBranches()
+	if err != nil {
+		return result, err
+	}
+	for _, branch := range localBranches {
+		if branch != mainBranch {
+			result = append(result, branch)
+		}
+	}
+	return result, nil
+}
+
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
 func (r *Runner) MergeBranchNoEdit(branch string) error {

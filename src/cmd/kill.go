@@ -53,6 +53,7 @@ Does not delete perennial branches nor the main branch.`,
 	},
 }
 
+// nolint: funlen
 func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err error) {
 	result.initialBranch, err = repo.Silent.CurrentBranch()
 	if err != nil {
@@ -71,7 +72,10 @@ func getKillConfig(args []string, repo *git.ProdRepo) (result killConfig, err er
 		return result, err
 	}
 	if result.isTargetBranchLocal {
-		prompt.EnsureKnowsParentBranches([]string{result.targetBranch})
+		err = prompt.EnsureKnowsParentBranches([]string{result.targetBranch}, repo)
+		if err != nil {
+			return result, err
+		}
 		repo.Configuration.Reload()
 	}
 	hasOrigin, err := repo.Silent.HasRemote("origin")

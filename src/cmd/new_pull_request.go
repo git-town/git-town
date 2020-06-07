@@ -82,7 +82,10 @@ func getNewPullRequestConfig(repo *git.ProdRepo) (result newPullRequestConfig, e
 		}
 	}
 	result.InitialBranch = git.GetCurrentBranchName()
-	prompt.EnsureKnowsParentBranches([]string{result.InitialBranch})
+	err = prompt.EnsureKnowsParentBranches([]string{result.InitialBranch}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.BranchesToSync = append(git.Config().GetAncestorBranches(result.InitialBranch), result.InitialBranch)
 	return
 }

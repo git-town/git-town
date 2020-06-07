@@ -116,7 +116,10 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 	if !git.Config().IsFeatureBranch(result.branchToShip) {
 		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
 	}
-	prompt.EnsureKnowsParentBranches([]string{result.branchToShip})
+	err = prompt.EnsureKnowsParentBranches([]string{result.branchToShip}, repo)
+	if err != nil {
+		return result, err
+	}
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
 	result.hasTrackingBranch = git.HasTrackingBranch(result.branchToShip)
 	result.hasOrigin = git.HasRemote("origin")

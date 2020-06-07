@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
@@ -24,7 +25,11 @@ var setParentBranchCommand = &cobra.Command{
 			defaultParentBranch = git.Config().GetMainBranch()
 		}
 		git.Config().DeleteParentBranch(branchName)
-		prompt.AskForBranchAncestry(branchName, defaultParentBranch)
+		repo := git.NewProdRepo()
+		err := prompt.AskForBranchAncestry(branchName, defaultParentBranch, repo)
+		if err != nil {
+			cli.Exit(err)
+		}
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
