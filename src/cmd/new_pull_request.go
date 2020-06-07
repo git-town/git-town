@@ -97,7 +97,10 @@ func getNewPullRequestStepList(config newPullRequestConfig, repo *git.ProdRepo) 
 		}
 		result.AppendList(steps)
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	if err != nil {
+		return result, err
+	}
 	result.Append(&steps.CreatePullRequestStep{BranchName: config.InitialBranch})
 	return result, nil
 }

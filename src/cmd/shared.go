@@ -86,8 +86,8 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 	if config.hasOrigin && config.shouldNewBranchPush && !config.isOffline {
 		result.Append(&steps.CreateTrackingBranchStep{BranchName: config.targetBranch})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
-	return result, nil
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true}, repo)
+	return result, err
 }
 
 // repo provides the git.ProdRepo instance to use in commands.

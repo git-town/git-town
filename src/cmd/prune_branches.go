@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
 	"github.com/spf13/cobra"
@@ -28,7 +29,10 @@ This usually means the branch was shipped or killed on another machine.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList := getPruneBranchesStepList(config)
+		stepList, err := getPruneBranchesStepList(config, repo())
+		if err != nil {
+			cli.Exit(err)
+		}
 		runState := steps.NewRunState("prune-branches", stepList)
 		err = steps.Run(runState, repo(), nil)
 		if err != nil {
@@ -61,7 +65,7 @@ func getPruneBranchesConfig(repo *git.ProdRepo) (result pruneBranchesConfig, err
 	return result, err
 }
 
-func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList) {
+func getPruneBranchesStepList(config pruneBranchesConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	initialBranchName := config.initialBranchName
 	for _, branchName := range config.localBranchesWithDeletedTrackingBranches {
 		if initialBranchName == branchName {
@@ -79,8 +83,8 @@ func getPruneBranchesStepList(config pruneBranchesConfig) (result steps.StepList
 		}
 		result.Append(&steps.DeleteLocalBranchStep{BranchName: branchName})
 	}
-	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
-	return
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	return result, err
 }
 
 func init() {

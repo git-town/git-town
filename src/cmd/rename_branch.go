@@ -50,7 +50,10 @@ When run on a perennial branch
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		stepList := getRenameBranchStepList(config)
+		stepList, err := getRenameBranchStepList(config, repo)
+		if err != nil {
+			cli.Exit(err)
+		}
 		runState := steps.NewRunState("rename-branch", stepList)
 		err = steps.Run(runState, repo, nil)
 		if err != nil {
@@ -117,7 +120,7 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 	return result, nil
 }
 
-func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) {
+func getRenameBranchStepList(config renameBranchConfig, repo *git.ProdRepo) (result steps.StepList, err error) {
 	result.Append(&steps.CreateBranchStep{BranchName: config.newBranchName, StartingPoint: config.oldBranchName})
 	if config.initialBranch == config.oldBranchName {
 		result.Append(&steps.CheckoutBranchStep{BranchName: config.newBranchName})
@@ -137,8 +140,8 @@ func getRenameBranchStepList(config renameBranchConfig) (result steps.StepList) 
 		result.Append(&steps.DeleteRemoteBranchStep{BranchName: config.oldBranchName, IsTracking: true})
 	}
 	result.Append(&steps.DeleteLocalBranchStep{BranchName: config.oldBranchName})
-	result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false})
-	return
+	err = result.Wrap(steps.WrapOptions{RunInGitRoot: false, StashOpenChanges: false}, repo)
+	return result, err
 }
 
 func init() {

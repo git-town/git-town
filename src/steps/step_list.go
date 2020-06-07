@@ -65,10 +65,14 @@ type WrapOptions struct {
 
 // Wrap wraps the list with steps that
 // change to the Git root directory or stash away open changes.
-func (stepList *StepList) Wrap(options WrapOptions) {
+func (stepList *StepList) Wrap(options WrapOptions, repo *git.ProdRepo) error {
+	previousBranch, err := repo.Silent.PreviouslyCheckedOutBranch()
+	if err != nil {
+		return err
+	}
 	stepList.Append(&PreserveCheckoutHistoryStep{
 		InitialBranch:                     git.GetCurrentBranchName(),
-		InitialPreviouslyCheckedOutBranch: git.GetPreviouslyCheckedOutBranch(),
+		InitialPreviouslyCheckedOutBranch: previousBranch,
 	})
 	if options.StashOpenChanges && git.HasOpenChanges() {
 		stepList.Prepend(&StashOpenChangesStep{})
@@ -84,6 +88,7 @@ func (stepList *StepList) Wrap(options WrapOptions) {
 		stepList.Prepend(&ChangeDirectoryStep{Directory: gitRootDirectory})
 		stepList.Append(&ChangeDirectoryStep{Directory: initialDirectory})
 	}
+	return nil
 }
 
 // MarshalJSON marshals the step list to JSON.
