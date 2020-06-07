@@ -9,12 +9,12 @@ import (
 )
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
-func EnsureIsConfigured() {
+func EnsureIsConfigured(repo *git.ProdRepo) {
 	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		ConfigureMainBranch()
-		ConfigurePerennialBranches()
+		ConfigurePerennialBranches(repo)
 	}
 }
 
@@ -29,8 +29,8 @@ func ConfigureMainBranch() {
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
-func ConfigurePerennialBranches() {
-	branchNames := git.GetLocalBranchesWithoutMain()
+func ConfigurePerennialBranches(repo *git.ProdRepo) {
+	branchNames := repo.Silent.LocalBranchesWithoutMain()
 	if len(branchNames) == 0 {
 		return
 	}

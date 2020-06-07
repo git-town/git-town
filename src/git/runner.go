@@ -720,6 +720,18 @@ func (r *Runner) LocalBranchesWithMainBranchFirst() (result []string, err error)
 	return result, nil
 }
 
+// LocalBranchesWithoutMain returns the names of all branches in the local repository,
+// ordered alphabetically without the main branch.
+func (r *Runner) LocalBranchesWithoutMain() (result []string) {
+	mainBranch := r.Configuration.GetMainBranch()
+	for _, branch := range GetLocalBranches() {
+		if branch != mainBranch {
+			result = append(result, branch)
+		}
+	}
+	return
+}
+
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
 func (r *Runner) MergeBranchNoEdit(branch string) error {
