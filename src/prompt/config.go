@@ -13,20 +13,28 @@ func EnsureIsConfigured(repo *git.ProdRepo) error {
 	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
-		ConfigureMainBranch()
+		err := ConfigureMainBranch(repo)
+		if err != nil {
+			return err
+		}
 		return ConfigurePerennialBranches(repo)
 	}
 	return nil
 }
 
 // ConfigureMainBranch has the user to confgure the main branch.
-func ConfigureMainBranch() {
+func ConfigureMainBranch(repo *git.ProdRepo) error {
+	localBranches, err := repo.Silent.LocalBranches()
+	if err != nil {
+		return err
+	}
 	newMainBranch := askForBranch(askForBranchOptions{
-		branchNames:       git.GetLocalBranches(),
+		branchNames:       localBranches,
 		prompt:            getMainBranchPrompt(),
 		defaultBranchName: git.Config().GetMainBranch(),
 	})
 	git.Config().SetMainBranch(newMainBranch)
+	return nil
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.

@@ -45,8 +45,11 @@ var setupConfigCommand = &cobra.Command{
 	Use:   "setup",
 	Short: "Prompts to setup your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		prompt.ConfigureMainBranch()
-		err := prompt.ConfigurePerennialBranches(repo())
+		err := prompt.ConfigureMainBranch(repo())
+		if err != nil {
+			cli.Exit(err)
+		}
+		err = prompt.ConfigurePerennialBranches(repo())
 		if err != nil {
 			cli.Exit(err)
 		}
