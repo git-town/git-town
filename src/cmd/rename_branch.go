@@ -95,13 +95,21 @@ func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBran
 			return result, err
 		}
 	}
-	if !git.HasBranch(result.oldBranchName) {
+	hasOldBranch, err := repo.Silent.HasLocalBranch(result.oldBranchName)
+	if err != nil {
+		return result, err
+	}
+	if !hasOldBranch {
 		return result, fmt.Errorf("there is no branch named %q", result.oldBranchName)
 	}
 	if !git.IsBranchInSync(result.oldBranchName) {
 		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
 	}
-	if git.HasBranch(result.newBranchName) {
+	hasNewBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.newBranchName)
+	if err != nil {
+		return result, err
+	}
+	if hasNewBranch {
 		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
 	}
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
