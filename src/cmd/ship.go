@@ -109,7 +109,11 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.Pr
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		if !git.HasBranch(result.branchToShip) {
+		hasBranch, err := repo.Silent.HasLocalOrRemoteBranch(result.branchToShip)
+		if err != nil {
+			return result, err
+		}
+		if !hasBranch {
 			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
 		}
 	}
