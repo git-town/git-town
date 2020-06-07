@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +21,7 @@ var undoCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if runState == nil || runState.IsUnfinished() {
-			util.ExitWithErrorMessage("Nothing to undo")
+			cli.Exit("Nothing to undo")
 		}
 		undoRunState := runState.CreateUndoRunState()
 		err = steps.Run(&undoRunState, git.NewProdRepo(), nil)

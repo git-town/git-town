@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +22,11 @@ Does not overwrite existing aliases.
 This can conflict with other tools that also define Git aliases.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		toggle := util.StringToBool(args[0])
+		toggle, err := strconv.ParseBool(args[0])
+		if err != nil {
+			fmt.Printf(`Error: invalid argument: %q. Please provide either "true" or "false".\n`, args[0])
+			os.Exit(1)
+		}
 		var commandsToAlias = []string{
 			"append",
 			"hack",
@@ -40,12 +47,7 @@ This can conflict with other tools that also define Git aliases.`,
 			}
 		}
 	},
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 1 {
-			return validateBooleanArgument(args[0])
-		}
-		return cobra.ExactArgs(1)(cmd, args)
-	},
+	Args: cobra.ExactArgs(1),
 }
 
 func addAlias(command string, repo *git.ProdRepo) {

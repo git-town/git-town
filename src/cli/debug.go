@@ -1,4 +1,4 @@
-package command
+package cli
 
 import (
 	"strings"
@@ -14,7 +14,7 @@ func SetDebug(value bool) {
 	debug = value
 }
 
-func logRun(cmd string, args ...string) {
+func LogRun(cmd string, args ...string) {
 	if debug {
 		count++
 		_, err := color.New(color.FgBlue).Printf("DEBUG (%d): %s %s\n", count, cmd, strings.Join(args, " "))

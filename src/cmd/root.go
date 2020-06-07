@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +19,7 @@ var RootCmd = &cobra.Command{
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		command.SetDebug(debugFlag)
+		cli.SetDebug(debugFlag)
 	},
 }
 

@@ -762,6 +762,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Configuration.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		return nil
+	})
+
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
@@ -772,6 +777,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if have != want {
 			return fmt.Errorf("expected global new-branch-push-flag to be %t, but was %t", want, have)
 		}
+		return nil
+	})
+
+	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Configuration.SetGlobalConfigValue("git-town.offline", value)
 		return nil
 	})
 

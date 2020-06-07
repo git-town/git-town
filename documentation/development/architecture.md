@@ -1,42 +1,19 @@
 # Architecture of the Git Town code base
 
-## Source code
+All Git Town code is stored as a mono-repo. The [Go](https://golang.org) source
+code is located in the [src](../../src) folder. It contains these packages:
 
-Git Town is written in [Go](https://golang.org). The source code is located in
-the [src](../../src) folder.
-
-### CLI wrapper
-
-Git Town uses the [Cobra](https://github.com/spf13/cobra) CLI framework.
-[src/cmd](../../src/cmd) contains the commands that Git Town understands.
-
-### Steps
-
-See the [step list documentation](steps_list.md)
-
-### Utility code
-
-The other folders in [src](../../src) are utility methods used by the commands
-and steps:
-
-- [src/browsers](../../src/browsers) provides code to open a browser window with
-  a given URL
-- [src/cfmt](../../src/cfmt) contains helpers to print colored text in the
-  terminal
-- [src/command](../../src/command) contains a helper to run external tools like
-  Git in a subshell and capture their output
-- [src/drivers](../../src/drivers) contains the
-  [driver infrastructure](drivers.md) for the APIs of various code hosting
-  services that Git Town supports
-- [src/dryrun](../../src/dryrun) contains code that allows to run commands that
-  only print but don't execute their steps
-- [src/git](../../src/git) contains code to run various Git commands and parse
-  their output intelligently
-- [src/prompt](../../src/prompt) contains the code to interactively ask the user
-  for information via the command line
-- [src/script](../../src/script) contains high-level, Git-Town specific helpers
-- [src/util](../../src/util) contains a variety of other low-level helper
-  methods
+- [src/browsers](../../src/browsers) interacts with the local browser
+- [src/cli](../../src/cli) reads and writes data from and to Git Town's CLI
+- [src/cmd](../../src/cmd) defines Git Town's
+  [Cobra](https://github.com/spf13/cobra)-based subcommands
+- [src/command](../../src/command) runs commands in subshells
+- [src/drivers](../../src/drivers) interacts with external Git hosting providers
+- [src/dryrun](../../src/dryrun) manages dry-runs
+- [src/git](../../src/git) accesses the Git binary on the user's computer
+- [src/prompt](../../src/prompt) implements interactive wizards
+- [src/steps](../../src/steps) contains the building blocks of Git Town commands
+- [src/util](../../src/util) string helper functions
 
 ## State files
 

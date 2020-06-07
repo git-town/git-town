@@ -5,11 +5,30 @@ Feature: set the new-branch-push-flag
   So that I can configure Git Town safely, and the tool does exactly what I want.
 
 
-  Scenario: update to "true"
-    When I run "git-town new-branch-push-flag true"
-    Then the new-branch-push-flag configuration is now true
+  Scenario Outline: update
+    When I run "git-town new-branch-push-flag <GIVE>"
+    Then the new-branch-push-flag configuration is now <WANT>
+
+    Examples:
+      | GIVE  | WANT  |
+      | true  | true  |
+      | t     | true  |
+      | 1     | true  |
+      | false | false |
+      | f     | false |
+      | 0     | false |
 
 
-  Scenario: update to "false"
-    When I run "git-town new-branch-push-flag false"
-    Then the new-branch-push-flag configuration is now false
+  Scenario: invalid value
+    When I run "git-town new-branch-push-flag zonk"
+    Then it prints:
+      """
+      Error: invalid argument: "zonk". Please provide either "true" or "false".
+      """
+
+  Scenario: multiple arguments
+    When I run "git-town new-branch-push-flag true false"
+    Then it prints:
+      """
+      accepts at most 1 arg(s), received 2
+      """
