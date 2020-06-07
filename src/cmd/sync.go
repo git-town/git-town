@@ -67,11 +67,11 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		currentBranch, err := syncProdRepo.Silent.CurrentBranch()
-		if err != nil {
-			return err
-		}
 		if dryRunFlag {
+			currentBranch, err := syncProdRepo.Silent.CurrentBranch()
+			if err != nil {
+				return err
+			}
 			dryrun.Activate(currentBranch)
 		}
 		if err := validateIsConfigured(); err != nil {
