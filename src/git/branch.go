@@ -45,20 +45,6 @@ func GetTrackingBranchName(branchName string) string {
 	return "origin/" + branchName
 }
 
-// HasBranch returns whether the repository contains a branch with the given name.
-// The branch does not have to be present on the local repository.
-func HasBranch(branchName string) bool {
-	for _, line := range command.MustRun("git", "branch", "-a").OutputLines() {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		line = strings.Replace(line, "remotes/origin/", "", 1)
-		if line == branchName {
-			return true
-		}
-	}
-	return false
-}
-
 // HasLocalBranch returns whether the local repository contains
 // a branch with the given name.
 func HasLocalBranch(branchName string) bool {
