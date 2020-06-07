@@ -24,8 +24,6 @@ var (
 	buildDate string
 )
 
-var dryRunFlagDescription = "Print the commands but don't run them"
-
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
 	git.Config().RemoveOutdatedConfiguration()
