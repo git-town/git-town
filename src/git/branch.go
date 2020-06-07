@@ -6,15 +6,6 @@ import (
 	"github.com/git-town/git-town/src/command"
 )
 
-// GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch.
-func GetPreviouslyCheckedOutBranch() string {
-	outcome, err := command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
-	if err != nil {
-		return ""
-	}
-	return outcome.OutputSanitized()
-}
-
 // GetTrackingBranchName returns the name of the remote branch
 // that corresponds to the local branch with the given name.
 func GetTrackingBranchName(branchName string) string {
