@@ -9,13 +9,14 @@ import (
 )
 
 // EnsureIsConfigured has the user to confgure the main branch and perennial branches if needed.
-func EnsureIsConfigured(repo *git.ProdRepo) {
+func EnsureIsConfigured(repo *git.ProdRepo) error {
 	if git.Config().GetMainBranch() == "" {
 		fmt.Println("Git Town needs to be configured")
 		fmt.Println()
 		ConfigureMainBranch()
-		ConfigurePerennialBranches(repo)
+		return ConfigurePerennialBranches(repo)
 	}
+	return nil
 }
 
 // ConfigureMainBranch has the user to confgure the main branch.
@@ -29,10 +30,13 @@ func ConfigureMainBranch() {
 }
 
 // ConfigurePerennialBranches has the user to confgure the perennial branches.
-func ConfigurePerennialBranches(repo *git.ProdRepo) {
-	branchNames := repo.Silent.LocalBranchesWithoutMain()
+func ConfigurePerennialBranches(repo *git.ProdRepo) error {
+	branchNames, err := repo.Silent.LocalBranchesWithoutMain()
+	if err != nil {
+		return err
+	}
 	if len(branchNames) == 0 {
-		return
+		return nil
 	}
 	newPerennialBranches := askForBranches(askForBranchesOptions{
 		branchNames:        branchNames,
@@ -40,6 +44,7 @@ func ConfigurePerennialBranches(repo *git.ProdRepo) {
 		defaultBranchNames: git.Config().GetPerennialBranches(),
 	})
 	git.Config().SetPerennialBranches(newPerennialBranches)
+	return nil
 }
 
 // Helpers

@@ -28,7 +28,10 @@ var (
 const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured(repo *git.ProdRepo) error {
-	prompt.EnsureIsConfigured(repo)
+	err := prompt.EnsureIsConfigured(repo)
+	if err != nil {
+		return err
+	}
 	return repo.RemoveOutdatedConfiguration()
 }
 

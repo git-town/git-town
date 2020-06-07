@@ -646,19 +646,6 @@ func (r *Runner) LastCommitMessage() (string, error) {
 	return out.OutputSanitized(), nil
 }
 
-// LocalBranchesMainFirst provides the names of all local branches in this repo.
-func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
-	outcome, err := r.Run("git", "branch")
-	if err != nil {
-		return result, fmt.Errorf("cannot determine the local branches")
-	}
-	lines := outcome.OutputLines()
-	for l := range lines {
-		result = append(result, strings.TrimSpace(strings.Trim(lines[l], "* ")))
-	}
-	return MainFirst(sort.StringSlice(result)), nil
-}
-
 // LocalAndRemoteBranches provides the names of all local branches in this repo.
 func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	outcome, err := r.Run("git", "branch", "-a")
@@ -680,6 +667,30 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	}
 	sort.Strings(result)
 	return MainFirst(result), nil
+}
+
+// LocalBranches returns the names of all branches in the local repository,
+// ordered alphabetically.
+func (r *Runner) LocalBranches() (result []string, err error) {
+	res, err := r.Run("git", "branch")
+	if err != nil {
+		return result, err
+	}
+	for _, line := range res.OutputLines() {
+		line = strings.Trim(line, "* ")
+		line = strings.TrimSpace(line)
+		result = append(result, line)
+	}
+	return
+}
+
+// LocalBranchesMainFirst provides the names of all local branches in this repo.
+func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
+	branches, err := r.LocalBranches()
+	if err != nil {
+		return result, err
+	}
+	return MainFirst(sort.StringSlice(branches)), nil
 }
 
 // LocalBranchesWithDeletedTrackingBranches returns the names of all branches
@@ -722,9 +733,13 @@ func (r *Runner) LocalBranchesWithMainBranchFirst() (result []string, err error)
 
 // LocalBranchesWithoutMain returns the names of all branches in the local repository,
 // ordered alphabetically without the main branch.
-func (r *Runner) LocalBranchesWithoutMain() (result []string) {
+func (r *Runner) LocalBranchesWithoutMain() (result []string, err error) {
 	mainBranch := r.Configuration.GetMainBranch()
-	for _, branch := range GetLocalBranches() {
+	branches, err := r.LocalBranches()
+	if err != nil {
+		return result, err
+	}
+	for _, branch := range branches {
 		if branch != mainBranch {
 			result = append(result, branch)
 		}
