@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 )
 
@@ -25,14 +24,7 @@ var (
 	buildDate string
 )
 
-var dryRunFlagDescription = "Print the commands but don't run them"
-
-func conditionallyActivateDryRun() error {
-	if dryRunFlag {
-		script.ActivateDryRun()
-	}
-	return nil
-}
+const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()

@@ -1,12 +1,15 @@
 package dryrun
 
+import "github.com/git-town/git-town/src/cli"
+
 var currentBranchName = ""
 var isActive = false
 
-// Activate enables dry-run mode.
-func Activate(initialBranchName string) {
+// Activate causes all commands to not be run.
+func Activate(currentBranch string) {
+	cli.PrintDryRunMessage()
 	isActive = true
-	SetCurrentBranchName(initialBranchName)
+	SetCurrentBranchName(currentBranch)
 }
 
 // IsActive returns whether of not dry-run mode is active.
