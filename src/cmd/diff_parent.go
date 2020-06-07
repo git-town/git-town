@@ -23,13 +23,12 @@ Works on either the current branch or the branch name provided.
 
 Exits with error code 1 if the given branch is a perennial branch or the main branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getDiffParentConfig(args, repo)
+		config, err := getDiffParentConfig(args, repo())
 		if err != nil {
 			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
-		err = repo.Logging.DiffParent(config.branch, config.parentBranch)
+		err = repo().Logging.DiffParent(config.branch, config.parentBranch)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -40,7 +39,7 @@ Exits with error code 1 if the given branch is a perennial branch or the main br
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(repo())
 	},
 }
 

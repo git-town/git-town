@@ -26,3 +26,12 @@ func NewProdRepo() *ProdRepo {
 		Configuration: config,
 	}
 }
+
+// RemoveOutdatedConfiguration removes outdated Git Town configuration.
+func (r *ProdRepo) RemoveOutdatedConfiguration() {
+	for child, parent := range r.GetParentBranchMap() {
+		if !HasBranch(child) || !HasBranch(parent) {
+			r.Configuration.DeleteParentBranch(child)
+		}
+	}
+}

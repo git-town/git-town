@@ -20,9 +20,6 @@ type syncConfig struct {
 	isOffline      bool
 }
 
-// the git.ProdRepo instance to use for sync commands.
-var syncProdRepo *git.ProdRepo
-
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Updates the current branch with all relevant changes",
@@ -44,18 +41,18 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getSyncConfig(syncProdRepo)
+		config, err := getSyncConfig(repo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getSyncStepList(config, syncProdRepo)
+		stepList, err := getSyncStepList(config, repo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("sync", stepList)
-		err = steps.Run(runState, syncProdRepo, nil)
+		err = steps.Run(runState, repo(), nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -63,21 +60,20 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		syncProdRepo = git.NewProdRepo()
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
 		if dryRunFlag {
-			currentBranch, err := syncProdRepo.Silent.CurrentBranch()
+			currentBranch, err := repo().Silent.CurrentBranch()
 			if err != nil {
 				return err
 			}
 			dryrun.Activate(currentBranch)
 		}
-		if err := validateIsConfigured(); err != nil {
+		if err := validateIsConfigured(repo()); err != nil {
 			return err
 		}
-		return ensureIsNotInUnfinishedState(syncProdRepo, nil)
+		return ensureIsNotInUnfinishedState(repo(), nil)
 	},
 }
 

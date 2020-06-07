@@ -346,15 +346,6 @@ func (c *Configuration) RemoveLocalGitConfiguration() {
 	}
 }
 
-// RemoveOutdatedConfiguration removes outdated Git Town configuration.
-func (c *Configuration) RemoveOutdatedConfiguration() {
-	for child, parent := range c.GetParentBranchMap() {
-		if !HasBranch(child) || !HasBranch(parent) {
-			c.DeleteParentBranch(child)
-		}
-	}
-}
-
 // SetCodeHostingDriver sets the "github.code-hosting-driver" setting.
 func (c *Configuration) SetCodeHostingDriver(value string) *command.Result {
 	const key = "git-town.code-hosting-driver"

@@ -34,19 +34,18 @@ and brings over all uncommitted changes to the new feature branch.
 
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		repo := git.NewProdRepo()
-		config, err := getAppendConfig(args, repo)
+		config, err := getAppendConfig(args, repo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		stepList, err := getAppendStepList(config, repo)
+		stepList, err := getAppendStepList(config, repo())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 		runState := steps.NewRunState("append", stepList)
-		err = steps.Run(runState, repo, nil)
+		err = steps.Run(runState, repo(), nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -54,10 +53,11 @@ See "sync" for information regarding remote upstream.`,
 	},
 	Args: cobra.ExactArgs(1),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		appendRepo := git.NewProdRepo()
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(appendRepo)
 	},
 }
 

@@ -63,7 +63,7 @@ When run on a perennial branch
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(repo())
 	},
 }
 

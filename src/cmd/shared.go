@@ -16,6 +16,7 @@ var (
 	debugFlag,
 	dryRunFlag,
 	globalFlag bool
+	repoCache *git.ProdRepo
 )
 
 // These variables are set at build time.
@@ -26,9 +27,9 @@ var (
 
 const dryRunFlagDescription = "Print the commands but don't run them"
 
-func validateIsConfigured() error {
+func validateIsConfigured(repo *git.ProdRepo) error {
 	prompt.EnsureIsConfigured()
-	git.Config().RemoveOutdatedConfiguration()
+	repo.RemoveOutdatedConfiguration()
 	return nil
 }
 
@@ -85,4 +86,12 @@ func getAppendStepList(config appendConfig, repo *git.ProdRepo) (result steps.St
 	}
 	result.Wrap(steps.WrapOptions{RunInGitRoot: true, StashOpenChanges: true})
 	return result, nil
+}
+
+// repo provides the git.ProdRepo instance to use in commands.
+func repo() *git.ProdRepo {
+	if repoCache == nil {
+		repoCache = git.NewProdRepo()
+	}
+	return repoCache
 }

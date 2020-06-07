@@ -24,7 +24,7 @@ var undoCmd = &cobra.Command{
 			cli.Exit("Nothing to undo")
 		}
 		undoRunState := runState.CreateUndoRunState()
-		err = steps.Run(&undoRunState, git.NewProdRepo(), nil)
+		err = steps.Run(&undoRunState, repo(), nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -35,7 +35,7 @@ var undoCmd = &cobra.Command{
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		return validateIsConfigured()
+		return validateIsConfigured(repo())
 	},
 }
 
