@@ -24,16 +24,6 @@ func HasTrackingBranch(branchName string) bool {
 	return false
 }
 
-// IsBranchInSync returns whether the branch with the given name is in sync with its tracking branch.
-func IsBranchInSync(branchName string) bool {
-	if HasTrackingBranch(branchName) {
-		localSha := GetBranchSha(branchName)
-		remoteSha := GetBranchSha(GetTrackingBranchName(branchName))
-		return localSha == remoteSha
-	}
-	return true
-}
-
 // Helpers
 
 // Remote branches are cached in order to minimize the number of git commands run.
