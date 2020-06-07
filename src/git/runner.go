@@ -639,7 +639,7 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 	}
 	if hasTrackingBranch {
 		localSha := GetBranchSha(branchName)
-		remoteSha := GetBranchSha(GetTrackingBranchName(branchName))
+		remoteSha := GetBranchSha(r.TrackingBranchName(branchName))
 		return localSha == remoteSha, nil
 	}
 	return true, nil
@@ -718,7 +718,7 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 		line = strings.Trim(line, "* ")
 		parts := strings.SplitN(line, " ", 2)
 		branchName := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName))
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", r.TrackingBranchName(branchName))
 		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
 			result = append(result, branchName)
 		}
