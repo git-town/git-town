@@ -6,17 +6,6 @@ import (
 	"github.com/git-town/git-town/src/command"
 )
 
-// GetLocalBranches returns the names of all branches in the local repository,
-// ordered alphabetically.
-func GetLocalBranches() (result []string) {
-	for _, line := range command.MustRun("git", "branch").OutputLines() {
-		line = strings.Trim(line, "* ")
-		line = strings.TrimSpace(line)
-		result = append(result, line)
-	}
-	return
-}
-
 // GetPreviouslyCheckedOutBranch returns the name of the previously checked out branch.
 func GetPreviouslyCheckedOutBranch() string {
 	outcome, err := command.Run("git", "rev-parse", "--verify", "--abbrev-ref", "@{-1}")
