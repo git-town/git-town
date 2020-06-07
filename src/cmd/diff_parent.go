@@ -52,7 +52,11 @@ func getDiffParentConfig(args []string, repo *git.ProdRepo) (config diffParentCo
 		config.branch = args[0]
 	}
 	if initialBranch != config.branch {
-		if !git.HasLocalBranch(config.branch) {
+		hasBranch, err := repo.Silent.HasLocalBranch(config.branch)
+		if err != nil {
+			return config, err
+		}
+		if !hasBranch {
 			return config, fmt.Errorf("there is no local branch named %q", config.branch)
 		}
 	}

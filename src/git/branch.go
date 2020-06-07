@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
-	"github.com/git-town/git-town/src/util"
 )
 
 // GetLocalBranches returns the names of all branches in the local repository,
@@ -43,12 +42,6 @@ func GetPreviouslyCheckedOutBranch() string {
 // that corresponds to the local branch with the given name.
 func GetTrackingBranchName(branchName string) string {
 	return "origin/" + branchName
-}
-
-// HasLocalBranch returns whether the local repository contains
-// a branch with the given name.
-func HasLocalBranch(branchName string) bool {
-	return util.DoesStringArrayContain(GetLocalBranches(), branchName)
 }
 
 // HasTrackingBranch returns whether the local branch with the given name
