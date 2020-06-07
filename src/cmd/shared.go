@@ -29,8 +29,7 @@ const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured(repo *git.ProdRepo) error {
 	prompt.EnsureIsConfigured()
-	repo.RemoveOutdatedConfiguration()
-	return nil
+	return repo.RemoveOutdatedConfiguration()
 }
 
 func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
