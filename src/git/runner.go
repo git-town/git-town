@@ -123,7 +123,7 @@ func (r *Runner) CommitNoEdit() error {
 
 // Commits provides a list of the commits in this Git repository with the given fields.
 func (r *Runner) Commits(fields []string) (result []Commit, err error) {
-	branches, err := r.LocalBranches()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the Git branches: %w", err)
 	}
@@ -550,7 +550,7 @@ func (r *Runner) HasGitTownConfigNow() (result bool, err error) {
 
 // HasLocalBranch indicates whether this repo has a local branch with the given name.
 func (r *Runner) HasLocalBranch(name string) (bool, error) {
-	branches, err := r.LocalBranches()
+	branches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return false, fmt.Errorf("cannot determine whether the local branch %q exists: %w", name, err)
 	}
@@ -646,8 +646,8 @@ func (r *Runner) LastCommitMessage() (string, error) {
 	return out.OutputSanitized(), nil
 }
 
-// LocalBranches provides the names of all local branches in this repo.
-func (r *Runner) LocalBranches() (result []string, err error) {
+// LocalBranchesMainFirst provides the names of all local branches in this repo.
+func (r *Runner) LocalBranchesMainFirst() (result []string, err error) {
 	outcome, err := r.Run("git", "branch")
 	if err != nil {
 		return result, fmt.Errorf("cannot determine the local branches")
@@ -708,7 +708,7 @@ func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, er
 func (r *Runner) LocalBranchesWithMainBranchFirst() (result []string, err error) {
 	mainBranch := r.Configuration.GetMainBranch()
 	result = append(result, mainBranch)
-	localBranches, err := r.LocalBranches()
+	localBranches, err := r.LocalBranchesMainFirst()
 	if err != nil {
 		return result, err
 	}
