@@ -682,6 +682,25 @@ func (r *Runner) LocalAndRemoteBranches() ([]string, error) {
 	return MainFirst(result), nil
 }
 
+// LocalBranchesWithDeletedTrackingBranches returns the names of all branches
+// whose remote tracking branches have been deleted.
+func (r *Runner) LocalBranchesWithDeletedTrackingBranches() (result []string, err error) {
+	res, err := r.Run("git", "branch", "-vv")
+	if err != nil {
+		return result, err
+	}
+	for _, line := range res.OutputLines() {
+		line = strings.Trim(line, "* ")
+		parts := strings.SplitN(line, " ", 2)
+		branchName := parts[0]
+		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName))
+		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
+			result = append(result, branchName)
+		}
+	}
+	return result, nil
+}
+
 // MergeBranchNoEdit merges the given branch into the current branch,
 // using the default commit message.
 func (r *Runner) MergeBranchNoEdit(branch string) error {

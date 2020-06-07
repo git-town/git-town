@@ -1,7 +1,6 @@
 package git
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/git-town/git-town/src/command"
@@ -26,21 +25,6 @@ func GetLocalBranchesWithoutMain() (result []string) {
 	for _, branch := range GetLocalBranches() {
 		if branch != mainBranch {
 			result = append(result, branch)
-		}
-	}
-	return
-}
-
-// GetLocalBranchesWithDeletedTrackingBranches returns the names of all branches
-// whose remote tracking branches have been deleted.
-func GetLocalBranchesWithDeletedTrackingBranches() (result []string) {
-	for _, line := range command.MustRun("git", "branch", "-vv").OutputLines() {
-		line = strings.Trim(line, "* ")
-		parts := strings.SplitN(line, " ", 2)
-		branchName := parts[0]
-		deleteTrackingBranchStatus := fmt.Sprintf("[%s: gone]", GetTrackingBranchName(branchName))
-		if strings.Contains(parts[1], deleteTrackingBranchStatus) {
-			result = append(result, branchName)
 		}
 	}
 	return
