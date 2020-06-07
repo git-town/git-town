@@ -6,7 +6,7 @@ import (
 	"github.com/fatih/color"
 )
 
-// PrintDryRunMessage prints the dry-run message
+// PrintDryRunMessage prints the dry-run message.
 func PrintDryRunMessage() {
 	_, err := color.New(color.FgBlue).Print(dryRunMessage)
 	if err != nil {
