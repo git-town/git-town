@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIsAcceptableVersion(t *testing.T) {
+func TestIsAcceptableGitVersion(t *testing.T) {
 	tests := []struct {
 		major int
 		minor int
