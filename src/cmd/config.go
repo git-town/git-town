@@ -24,7 +24,7 @@ var configCommand = &cobra.Command{
 			cli.PrintLabelAndValue("Branch Ancestry", printableBranchAncestry(prodRepo))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
-		cli.PrintLabelAndValue("New Branch Push Flag", prodRepo.Configuration.PrintableNewBranchPushFlag())
+		cli.PrintLabelAndValue("New Branch Push Flag", printableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

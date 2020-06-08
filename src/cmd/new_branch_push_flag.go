@@ -39,8 +39,13 @@ func printNewBranchPushFlag() {
 	if globalFlag {
 		cli.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(prodRepo.Configuration.PrintableNewBranchPushFlag())
+		cli.Println(printableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
 	}
+}
+
+// printableNewBranchPushFlag returns a user printable new branch push flag.
+func printableNewBranchPushFlag(flag bool) string {
+	return strconv.FormatBool(flag)
 }
 
 func setNewBranchPushFlag(value bool) {
