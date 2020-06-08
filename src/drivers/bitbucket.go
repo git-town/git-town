@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/git-town/git-town/src/drivers/helpers"
-	"github.com/git-town/git-town/src/git"
 )
 
 type bitbucketConfig interface {
@@ -16,16 +15,20 @@ type bitbucketConfig interface {
 	GetCodeHostingOriginHostname() string
 }
 
+type bitbucketShell interface {
+	ShaForBranch(string) (string, error)
+}
+
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
-	repo       *git.ProdRepo
+	shell      bitbucketShell
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config bitbucketConfig, repo *git.ProdRepo) CodeHostingDriver {
+func LoadBitbucket(config bitbucketConfig, shell bitbucketShell) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -40,7 +43,7 @@ func LoadBitbucket(config bitbucketConfig, repo *git.ProdRepo) CodeHostingDriver
 		originURL:  originURL,
 		hostname:   hostname,
 		repository: helpers.GetURLRepositoryName(originURL),
-		repo:       repo,
+		shell:      shell,
 	}
 }
 
@@ -50,7 +53,7 @@ func (d *bitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch st
 
 func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	branchSha, err := d.repo.Silent.ShaForBranch(branch)
+	branchSha, err := d.shell.ShaForBranch(branch)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine pull request URL from %q to %q: %w", branch, parentBranch, err)
 	}

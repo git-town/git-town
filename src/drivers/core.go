@@ -54,7 +54,7 @@ func Load(repo *git.ProdRepo) CodeHostingDriver {
 	if driver != nil {
 		return driver
 	}
-	driver = LoadBitbucket(repo.Configuration, repo)
+	driver = LoadBitbucket(repo.Configuration, &repo.Silent)
 	if driver != nil {
 		return driver
 	}
