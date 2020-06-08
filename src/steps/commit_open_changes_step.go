@@ -5,7 +5,6 @@ import (
 
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // CommitOpenChangesStep commits all open changes as a new commit.
@@ -24,9 +23,13 @@ func (step *CommitOpenChangesStep) CreateUndoStep() Step {
 // Run executes this step.
 func (step *CommitOpenChangesStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousSha = git.GetCurrentSha()
-	err := script.RunCommand("git", "add", "-A")
+	err := repo.Logging.StageFiles("-A")
 	if err != nil {
 		return err
 	}
-	return script.RunCommand("git", "commit", "-m", fmt.Sprintf("WIP on %s", git.GetCurrentBranchName()))
+	currentBranch, err := repo.Silent.CurrentBranch()
+	if err != nil {
+		return err
+	}
+	return repo.Logging.CommitStagedChanges(fmt.Sprintf("WIP on %s", currentBranch))
 }

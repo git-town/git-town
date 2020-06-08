@@ -6,7 +6,6 @@ import (
 
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 
 	"github.com/spf13/cobra"
@@ -28,7 +27,7 @@ and brings over all uncommitted changes to the new feature branch.
 See "sync" for information regarding remote upstream.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
-		config, err := getHackConfig(args)
+		config, err := getHackConfig(args, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -63,19 +62,21 @@ func getParentBranch(targetBranch string) string {
 	return git.Config().GetMainBranch()
 }
 
-func getHackConfig(args []string) (result appendConfig, err error) {
+func getHackConfig(args []string, repo *git.ProdRepo) (result appendConfig, err error) {
 	result.targetBranch = args[0]
 	result.parentBranch = getParentBranch(result.targetBranch)
 	result.hasOrigin = git.HasRemote("origin")
 	result.shouldNewBranchPush = git.Config().ShouldNewBranchPush()
 	result.isOffline = git.Config().IsOffline()
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureDoesNotHaveBranch(result.targetBranch)
+	if git.HasBranch(result.targetBranch) {
+		return result, fmt.Errorf("a branch named %q already exists", result.targetBranch)
+	}
 	return
 }
 

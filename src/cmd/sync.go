@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/dryrun"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 
 	"github.com/spf13/cobra"
@@ -44,7 +44,7 @@ If the repository contains an "upstream" remote,
 syncs the main branch with its upstream counterpart.
 You can disable this by running "git config git-town.sync-upstream false".`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getSyncConfig()
+		config, err := getSyncConfig(syncProdRepo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -67,8 +67,12 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 		if err := git.ValidateIsRepository(); err != nil {
 			return err
 		}
-		if err := conditionallyActivateDryRun(); err != nil {
-			return err
+		if dryRunFlag {
+			currentBranch, err := syncProdRepo.Silent.CurrentBranch()
+			if err != nil {
+				return err
+			}
+			dryrun.Activate(currentBranch)
 		}
 		if err := validateIsConfigured(); err != nil {
 			return err
@@ -77,11 +81,11 @@ You can disable this by running "git config git-town.sync-upstream false".`,
 	},
 }
 
-func getSyncConfig() (result syncConfig, err error) {
+func getSyncConfig(repo *git.ProdRepo) (result syncConfig, err error) {
 	result.hasOrigin = git.HasRemote("origin")
 	result.isOffline = git.Config().IsOffline()
 	if result.hasOrigin && !result.isOffline {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}

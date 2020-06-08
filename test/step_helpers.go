@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/cucumber/messages-go/v10"
@@ -24,14 +23,6 @@ func compareExistingCommits(state *ScenarioState, table *messages.PickleStepArgu
 		return fmt.Errorf("mismatching commits found, see diff above")
 	}
 	return nil
-}
-
-func fishFolderPath(state *ScenarioState) string {
-	return filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions")
-}
-
-func fishFilePath(state *ScenarioState) string {
-	return filepath.Join(fishFolderPath(state), "git.fish")
 }
 
 // hasTag indicates whether the given feature has a tag with the given name.

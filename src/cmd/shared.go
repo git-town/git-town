@@ -7,7 +7,6 @@ import (
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
 )
 
@@ -25,21 +24,7 @@ var (
 	buildDate string
 )
 
-var dryRunFlagDescription = "Print the commands but don't run them"
-
-func conditionallyActivateDryRun() error {
-	if dryRunFlag {
-		script.ActivateDryRun()
-	}
-	return nil
-}
-
-func validateBooleanArgument(arg string) error {
-	if arg != "true" && arg != "false" {
-		return fmt.Errorf("invalid value: %q", arg)
-	}
-	return nil
-}
+const dryRunFlagDescription = "Print the commands but don't run them"
 
 func validateIsConfigured() error {
 	prompt.EnsureIsConfigured()
@@ -64,7 +49,9 @@ func ensureIsNotInUnfinishedState(repo *git.ProdRepo, driver drivers.CodeHosting
 		case prompt.ResponseTypeDiscard:
 			return steps.DeletePreviousRunState()
 		case prompt.ResponseTypeContinue:
-			git.EnsureDoesNotHaveConflicts()
+			if git.HasConflicts() {
+				return fmt.Errorf("you must resolve the conflicts before continuing")
+			}
 			err = steps.Run(runState, repo, driver)
 		case prompt.ResponseTypeAbort:
 			abortRunState := runState.CreateAbortRunState()

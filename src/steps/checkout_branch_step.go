@@ -3,7 +3,6 @@ package steps
 import (
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 )
 
 // CheckoutBranchStep checks out a new branch.
@@ -23,7 +22,7 @@ func (step *CheckoutBranchStep) CreateUndoStep() Step {
 func (step *CheckoutBranchStep) Run(repo *git.ProdRepo, driver drivers.CodeHostingDriver) error {
 	step.previousBranchName = git.GetCurrentBranchName()
 	if step.previousBranchName != step.BranchName {
-		err := script.RunCommand("git", "checkout", step.BranchName)
+		err := repo.Logging.CheckoutBranch(step.BranchName)
 		if err == nil {
 			git.UpdateCurrentBranchCache(step.BranchName)
 		}

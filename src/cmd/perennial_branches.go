@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
 	"github.com/spf13/cobra"
@@ -15,7 +15,7 @@ var perennialBranchesCommand = &cobra.Command{
 Perennial branches are long-lived branches.
 They cannot be shipped.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cfmt.Println(git.GetPrintablePerennialBranches())
+		cli.Println(git.GetPrintablePerennialBranches())
 	},
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {

@@ -5,12 +5,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/drivers"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/prompt"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -65,7 +64,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	Run: func(cmd *cobra.Command, args []string) {
 		repo := git.NewProdRepo()
 		driver := drivers.Load(repo.Configuration)
-		config, err := gitShipConfig(args, driver)
+		config, err := gitShipConfig(args, driver, repo)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -91,7 +90,7 @@ and Git Town will leave it up to your origin server to delete the remote branch.
 	},
 }
 
-func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result shipConfig, err error) {
+func gitShipConfig(args []string, driver drivers.CodeHostingDriver, repo *git.ProdRepo) (result shipConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	if len(args) == 0 {
 		result.branchToShip = result.initialBranch
@@ -99,18 +98,24 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result ship
 		result.branchToShip = args[0]
 	}
 	if result.branchToShip == result.initialBranch {
-		git.EnsureDoesNotHaveOpenChanges("Did you mean to commit them before shipping?")
+		if git.HasOpenChanges() {
+			return result, fmt.Errorf("you have uncommitted changes. Did you mean to commit them before shipping?")
+		}
 	}
 	if git.HasRemote("origin") && !git.Config().IsOffline() {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
 	if result.branchToShip != result.initialBranch {
-		git.EnsureHasBranch(result.branchToShip)
+		if !git.HasBranch(result.branchToShip) {
+			return result, fmt.Errorf("there is no branch named %q", result.branchToShip)
+		}
 	}
-	git.Config().EnsureIsFeatureBranch(result.branchToShip, "Only feature branches can be shipped.")
+	if !git.Config().IsFeatureBranch(result.branchToShip) {
+		return result, fmt.Errorf("the branch %q is not a feature branch. Only feature branches can be shipped", result.branchToShip)
+	}
 	prompt.EnsureKnowsParentBranches([]string{result.branchToShip})
 	ensureParentBranchIsMainOrPerennialBranch(result.branchToShip)
 	result.hasTrackingBranch = git.HasTrackingBranch(result.branchToShip)
@@ -118,7 +123,10 @@ func gitShipConfig(args []string, driver drivers.CodeHostingDriver) (result ship
 	result.isOffline = git.Config().IsOffline()
 	result.isShippingInitialBranch = result.branchToShip == result.initialBranch
 	result.branchToMergeInto = git.Config().GetParentBranch(result.branchToShip)
-	result.canShipWithDriver, result.defaultCommitMessage, result.pullRequestNumber, err = getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	prInfo, err := getCanShipWithDriver(result.branchToShip, result.branchToMergeInto, driver)
+	result.canShipWithDriver = prInfo.CanMergeWithAPI
+	result.defaultCommitMessage = prInfo.DefaultCommitMessage
+	result.pullRequestNumber = prInfo.PullRequestNumber
 	result.childBranches = git.Config().GetChildBranches(result.branchToShip)
 	result.shouldShipDeleteRemoteBranch = git.Config().ShouldShipDeleteRemoteBranch()
 	return result, err
@@ -130,7 +138,7 @@ func ensureParentBranchIsMainOrPerennialBranch(branchName string) {
 		ancestors := git.Config().GetAncestorBranches(branchName)
 		ancestorsWithoutMainOrPerennial := ancestors[1:]
 		oldestAncestor := ancestorsWithoutMainOrPerennial[0]
-		util.ExitWithErrorMessage(
+		cli.Exit(
 			"Shipping this branch would ship "+strings.Join(ancestorsWithoutMainOrPerennial, ", ")+" as well.",
 			"Please ship \""+oldestAncestor+"\" first.",
 		)
@@ -186,17 +194,17 @@ func getShipStepList(config shipConfig, repo *git.ProdRepo) (result steps.StepLi
 	return result, nil
 }
 
-func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (canShip bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
+func getCanShipWithDriver(branch, parentBranch string, driver drivers.CodeHostingDriver) (result drivers.PullRequestInfo, err error) {
 	if !git.HasRemote("origin") {
-		return false, "", 0, nil
+		return result, nil
 	}
 	if git.Config().IsOffline() {
-		return false, "", 0, nil
+		return result, nil
 	}
 	if driver == nil {
-		return false, "", 0, nil
+		return result, nil
 	}
-	return driver.CanMergePullRequest(branch, parentBranch)
+	return driver.LoadPullRequestInfo(branch, parentBranch)
 }
 
 func init() {

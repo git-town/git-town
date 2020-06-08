@@ -42,18 +42,18 @@ func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
 	}
 }
 
-func (d *bitbucketCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
-	return false, "", 0, nil
+func (d *bitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+	return result, nil
 }
 
-func (d *bitbucketCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
 	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.GetRepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode())
 }
 
-func (d *bitbucketCodeHostingDriver) GetRepositoryURL() string {
+func (d *bitbucketCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 

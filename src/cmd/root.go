@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	"github.com/git-town/git-town/src/command"
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -19,13 +19,21 @@ var RootCmd = &cobra.Command{
 It adds Git commands that support GitHub Flow, Git Flow, the Nvie model, GitLab Flow, and other workflows more directly,
 and it allows you to perform many common Git operations faster and easier.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		command.SetDebug(debugFlag)
+		cli.SetDebug(debugFlag)
 	},
 }
 
 // Execute runs the Cobra stack.
 func Execute() {
-	git.EnsureVersionRequirementSatisfied()
+	majorVersion, minorVersion, err := git.Version()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if majorVersion*100+minorVersion < 207 {
+		fmt.Println("Git Town requires Git 2.7.0 or higher")
+		os.Exit(1)
+	}
 	color.NoColor = false // Prevent color from auto disable
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)

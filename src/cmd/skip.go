@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 
 	"github.com/spf13/cobra"
 )
@@ -21,10 +21,10 @@ var skipCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if runState == nil || !runState.IsUnfinished() {
-			util.ExitWithErrorMessage("Nothing to skip")
+			cli.Exit("Nothing to skip")
 		}
 		if !runState.UnfinishedDetails.CanSkip {
-			util.ExitWithErrorMessage("Cannot skip branch that resulted in conflicts")
+			cli.Exit("Cannot skip branch that resulted in conflicts")
 		}
 		skipRunState := runState.CreateSkipRunState()
 		err = steps.Run(&skipRunState, git.NewProdRepo(), nil)

@@ -31,7 +31,7 @@ jobs:
       - run: make unit
       - run: make lint-go
       - run:
-          find features -type f -name '*.feature' | grep -v git-town-s | xargs
+          find features -type f -name '*.feature' | grep -v features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
   # runs the Cucumber tests for ship and sync in parallel to the other ones
   go-s:
@@ -44,7 +44,7 @@ jobs:
       - run: mv ./godog /go/bin/
       - run: mv ./golangci-lint /go/bin/
       - run:
-          find features -type f -name '*.feature' | grep git-town-s | xargs
+          find features -type f -name '*.feature' | grep features/s | xargs
           godog --concurrency=$(nproc --all) --format=progress --strict
   markdown:
     docker:

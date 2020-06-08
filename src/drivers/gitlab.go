@@ -40,18 +40,18 @@ func LoadGitlab(config gitlabConfig) CodeHostingDriver {
 	}
 }
 
-func (d *gitlabCodeHostingDriver) CanMergePullRequest(branch, parentBranch string) (canMerge bool, defaultCommitMessage string, pullRequestNumber int64, err error) {
-	return false, "", 0, nil
+func (d *gitlabCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string) (result PullRequestInfo, err error) {
+	return result, nil
 }
 
-func (d *gitlabCodeHostingDriver) GetNewPullRequestURL(branch, parentBranch string) string {
+func (d *gitlabCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
 	query := url.Values{}
 	query.Add("merge_request[source_branch]", branch)
 	query.Add("merge_request[target_branch]", parentBranch)
-	return fmt.Sprintf("%s/merge_requests/new?%s", d.GetRepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/merge_requests/new?%s", d.RepositoryURL(), query.Encode())
 }
 
-func (d *gitlabCodeHostingDriver) GetRepositoryURL() string {
+func (d *gitlabCodeHostingDriver) RepositoryURL() string {
 	return fmt.Sprintf("https://%s/%s", d.hostname, d.repository)
 }
 

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
-	"github.com/git-town/git-town/src/script"
 	"github.com/git-town/git-town/src/steps"
-	"github.com/git-town/git-town/src/util"
 	"github.com/spf13/cobra"
 )
 
@@ -45,14 +44,15 @@ When run on a perennial branch
 - confirm with the "-f" option
 - registers the new perennial branch name in the local Git Town configuration`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getRenameBranchConfig(args)
+		repo := git.NewProdRepo()
+		config, err := getRenameBranchConfig(args, repo)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
 		stepList := getRenameBranchStepList(config)
 		runState := steps.NewRunState("rename-branch", stepList)
-		err = steps.Run(runState, git.NewProdRepo(), nil)
+		err = steps.Run(runState, repo, nil)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -67,7 +67,7 @@ When run on a perennial branch
 	},
 }
 
-func getRenameBranchConfig(args []string) (result renameBranchConfig, err error) {
+func getRenameBranchConfig(args []string, repo *git.ProdRepo) (result renameBranchConfig, err error) {
 	result.initialBranch = git.GetCurrentBranchName()
 	result.isInitialBranchPerennial = git.Config().IsPerennialBranch(result.initialBranch)
 	result.isOffline = git.Config().IsOffline()
@@ -78,22 +78,32 @@ func getRenameBranchConfig(args []string) (result renameBranchConfig, err error)
 		result.oldBranchName = args[0]
 		result.newBranchName = args[1]
 	}
-	git.EnsureIsNotMainBranch(result.oldBranchName, "The main branch cannot be renamed.")
+	if git.Config().IsMainBranch(result.oldBranchName) {
+		return result, fmt.Errorf("the main branch cannot be renamed")
+	}
 	if !forceFlag {
-		git.EnsureIsNotPerennialBranch(result.oldBranchName, fmt.Sprintf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'.", result.oldBranchName))
+		if git.Config().IsPerennialBranch(result.oldBranchName) {
+			return result, fmt.Errorf("%q is a perennial branch. Renaming a perennial branch typically requires other updates. If you are sure you want to do this, use '--force'", result.oldBranchName)
+		}
 	}
 	if result.oldBranchName == result.newBranchName {
-		util.ExitWithErrorMessage("Cannot rename branch to current name.")
+		cli.Exit("Cannot rename branch to current name.")
 	}
 	if !result.isOffline {
-		err := script.Fetch()
+		err := repo.Logging.Fetch()
 		if err != nil {
 			return result, err
 		}
 	}
-	git.EnsureHasBranch(result.oldBranchName)
-	git.EnsureBranchInSync(result.oldBranchName, "Please sync the branches before renaming.")
-	git.EnsureDoesNotHaveBranch(result.newBranchName)
+	if !git.HasBranch(result.oldBranchName) {
+		return result, fmt.Errorf("there is no branch named %q", result.oldBranchName)
+	}
+	if !git.IsBranchInSync(result.oldBranchName) {
+		return result, fmt.Errorf("%q is not in sync with its tracking branch, please sync the branches before renaming", result.oldBranchName)
+	}
+	if git.HasBranch(result.newBranchName) {
+		return result, fmt.Errorf("a branch named %q already exists", result.newBranchName)
+	}
 	result.oldBranchChildren = git.Config().GetChildBranches(result.oldBranchName)
 	result.oldBranchHasTrackingBranch = git.HasTrackingBranch(result.oldBranchName)
 	return result, nil

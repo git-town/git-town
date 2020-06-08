@@ -333,26 +333,9 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return state.gitEnv.DevShell.MockBrokenCommand(name)
 	})
 
-	suite.Step(`^my computer has an empty fish autocompletion folder$`, func() error {
-		return os.MkdirAll(fishFolderPath(state), 0744)
-	})
-
-	suite.Step(`^my computer has an existing Git autocompletion file$`, func() error {
-		err := os.MkdirAll(fishFolderPath(state), 0744)
-		if err != nil {
-			return fmt.Errorf("cannot create fish folder: %w", err)
-		}
-		return ioutil.WriteFile(fishFilePath(state), []byte("existing content"), 0500)
-	})
-
 	suite.Step(`^my computer has Git "([^"]*)" installed$`, func(version string) error {
 		err := state.gitEnv.DevShell.MockGit(version)
 		return err
-	})
-
-	suite.Step(`^my computer has no fish autocompletion file$`, func() error {
-		// nothing to do here, the test directory has no data
-		return nil
 	})
 
 	suite.Step(`^my computer has no tool to open browsers installed$`, func() error {
@@ -361,27 +344,6 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 
 	suite.Step(`^my computer has the "([^"]*)" tool installed$`, func(tool string) error {
 		return state.gitEnv.DevShell.MockCommand(tool)
-	})
-
-	suite.Step(`^my computer now has a Git autocompletion file$`, func() error {
-		fishPath := filepath.Join(state.gitEnv.Dir, ".config", "fish", "completions", "git.fish")
-		_, err := os.Stat(fishPath)
-		if os.IsNotExist(err) {
-			return err
-		}
-		return nil
-	})
-
-	suite.Step(`^my computer still has the original Git autocompletion file$`, func() error {
-		content, err := ioutil.ReadFile(fishFilePath(state))
-		if err != nil {
-			return err
-		}
-		contentStr := string(content)
-		if contentStr != "existing content" {
-			return fmt.Errorf("config file content was changed to %q", content)
-		}
-		return nil
 	})
 
 	suite.Step(`^my (?:coworker|origin) has a feature branch named "([^"]*)"$`, func(branch string) error {
@@ -800,6 +762,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		return nil
 	})
 
+	suite.Step(`^the new-branch-push-flag configuration is "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Configuration.SetLocalConfigValue("git-town.new-branch-push-flag", value)
+		return nil
+	})
+
 	suite.Step(`^the new-branch-push-flag configuration is now (true|false)$`, func(text string) error {
 		want, err := strconv.ParseBool(text)
 		if err != nil {
@@ -810,6 +777,11 @@ func Steps(suite *godog.Suite, state *ScenarioState) {
 		if have != want {
 			return fmt.Errorf("expected global new-branch-push-flag to be %t, but was %t", want, have)
 		}
+		return nil
+	})
+
+	suite.Step(`^the offline configuration is accidentally set to "([^"]*)"$`, func(value string) error {
+		_ = state.gitEnv.DevRepo.Configuration.SetGlobalConfigValue("git-town.offline", value)
 		return nil
 	})
 

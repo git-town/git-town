@@ -1,7 +1,10 @@
 package cmd
 
 import (
-	"github.com/git-town/git-town/src/cfmt"
+	"fmt"
+	"os"
+
+	"github.com/git-town/git-town/src/cli"
 	"github.com/git-town/git-town/src/git"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +19,11 @@ The main branch is the Git branch from which new feature branches are cut.`,
 		if len(args) == 0 {
 			printMainBranch()
 		} else {
-			setMainBranch(args[0])
+			err := setMainBranch(args[0])
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 		}
 	},
 	Args: cobra.MaximumNArgs(1),
@@ -26,12 +33,15 @@ The main branch is the Git branch from which new feature branches are cut.`,
 }
 
 func printMainBranch() {
-	cfmt.Println(git.GetPrintableMainBranch())
+	cli.Println(git.GetPrintableMainBranch())
 }
 
-func setMainBranch(branchName string) {
-	git.EnsureHasBranch(branchName)
+func setMainBranch(branchName string) error {
+	if !git.HasBranch(branchName) {
+		return fmt.Errorf("there is no branch named %q", branchName)
+	}
 	git.Config().SetMainBranch(branchName)
+	return nil
 }
 
 func init() {
