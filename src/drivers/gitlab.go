@@ -8,12 +8,14 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
+// gitlabConfig defines the configuration data needed by the GitLab driver.
 type gitlabConfig interface {
 	GetCodeHostingDriverName() string
 	GetRemoteOriginURL() string
 	GetCodeHostingOriginHostname() string
 }
 
+// gitlabCodeHostingDriver provides access to the API of GitLab installations.
 type gitlabCodeHostingDriver struct {
 	originURL  string
 	hostname   string

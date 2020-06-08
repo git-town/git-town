@@ -9,16 +9,19 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
+// bitbucketConfig defines the configuration data needed by the Bitbucket driver.
 type bitbucketConfig interface {
 	GetCodeHostingDriverName() string
 	GetRemoteOriginURL() string
 	GetCodeHostingOriginHostname() string
 }
 
+// bitbucketShell defines the shell methods used by the Bitbucket driver
 type bitbucketShell interface {
 	ShaForBranch(string) (string, error)
 }
 
+// bitbucketCodeHostingDriver provides access to the API of Bitbucket installations.
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string

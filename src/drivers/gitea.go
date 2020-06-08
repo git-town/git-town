@@ -12,7 +12,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 )
 
-// GiteaConfig defines the data that the giteaCodeHostingDriver needs from the Git configuration.
+// GiteaConfig defines the configuration data needed by the gitea driver.
 type GiteaConfig interface {
 	GetCodeHostingDriverName() string
 	GetRemoteOriginURL() string
@@ -20,6 +20,7 @@ type GiteaConfig interface {
 	GetCodeHostingOriginHostname() string
 }
 
+// giteaCodeHostingDriver provides access to the API of Gitea installations.
 type giteaCodeHostingDriver struct {
 	originURL  string
 	hostname   string
