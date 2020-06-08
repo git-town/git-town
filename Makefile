@@ -68,7 +68,7 @@ stats:  # shows code statistics
 test: lint unit cuke  # runs all the tests
 .PHONY: test
 
-test-go: build u cuke lint-go  # runs all tests for Golang
+test-go: build u lint-go cuke  # runs all tests for Golang
 
 test-md: lint-md   # runs all Markdown tests
 
