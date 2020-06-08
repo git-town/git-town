@@ -18,7 +18,7 @@ var configCommand = &cobra.Command{
 		cli.PrintLabelAndValue("Perennial branches", cli.PrintablePerennialBranches(prodRepo.GetPerennialBranches()))
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
-			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo))
+			cli.PrintLabelAndValue("Branch Ancestry", cli.PrintableBranchAncestry(prodRepo.Configuration))
 		}
 		cli.PrintLabelAndValue("Pull branch strategy", git.Config().GetPullBranchStrategy())
 		cli.PrintLabelAndValue("New Branch Push Flag", cli.PrintableNewBranchPushFlag(prodRepo.ShouldNewBranchPush()))
