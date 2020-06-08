@@ -1,7 +1,5 @@
 package drivers
 
-import "github.com/git-town/git-town/src/git"
-
 // Core provides the public API for the drivers subsystem.
 
 // CodeHostingDriver defines the structure of drivers
@@ -27,6 +25,20 @@ type CodeHostingDriver interface {
 	HostingServiceName() string
 }
 
+// config defines the configuration data needed by the driver package.
+type config interface {
+	GetCodeHostingOriginHostname() string
+	GetCodeHostingDriverName() string
+	GetGiteaToken() string
+	GetGitHubToken() string
+	GetRemoteOriginURL() string
+}
+
+// shell defines the shell methods used by the driver package.
+type shell interface {
+	ShaForBranch(string) (string, error)
+}
+
 // PullRequestInfo contains information about a pull request.
 type PullRequestInfo struct {
 	CanMergeWithAPI      bool
@@ -45,20 +57,20 @@ type MergePullRequestOptions struct {
 
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(repo *git.ProdRepo) CodeHostingDriver {
-	driver := LoadGithub(repo.Configuration)
+func Load(config config, shell shell) CodeHostingDriver {
+	driver := LoadGithub(config)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadGitea(repo.Configuration)
+	driver = LoadGitea(config)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadBitbucket(repo.Configuration, &repo.Silent)
+	driver = LoadBitbucket(config, shell)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadGitlab(repo.Configuration)
+	driver = LoadGitlab(config)
 	if driver != nil {
 		return driver
 	}

@@ -12,14 +12,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// GithubConfig defines the configuration data needed by the GitHub driver.
-type GithubConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetGitHubToken() string
-	GetCodeHostingOriginHostname() string
-}
-
 // githubCodeHostingDriver provides access to the API of GitHub installations.
 type githubCodeHostingDriver struct {
 	originURL  string
@@ -32,7 +24,7 @@ type githubCodeHostingDriver struct {
 
 // LoadGithub provides a GitHub driver instance if the given repo configuration is for a Github repo,
 // otherwise nil.
-func LoadGithub(config GithubConfig) CodeHostingDriver {
+func LoadGithub(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

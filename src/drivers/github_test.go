@@ -11,26 +11,6 @@ import (
 	httpmock "gopkg.in/jarcoal/httpmock.v1"
 )
 
-type mockGithubConfig struct {
-	codeHostingDriverName string
-	remoteOriginURL       string
-	gitHubToken           string
-	configuredHostName    string
-}
-
-func (mgc mockGithubConfig) GetCodeHostingDriverName() string {
-	return mgc.codeHostingDriverName
-}
-func (mgc mockGithubConfig) GetRemoteOriginURL() string {
-	return mgc.remoteOriginURL
-}
-func (mgc mockGithubConfig) GetGitHubToken() string {
-	return mgc.gitHubToken
-}
-func (mgc mockGithubConfig) GetCodeHostingOriginHostname() string {
-	return mgc.configuredHostName
-}
-
 const githubRoot = "https://api.github.com"
 const githubCurrOpen = githubRoot + "/repos/git-town/git-town/pulls?base=main&head=git-town%3Afeature&state=open"
 const githubChildOpen = githubRoot + "/repos/git-town/git-town/pulls?base=feature&state=open"
@@ -40,7 +20,7 @@ const githubPR1Merge = githubRoot + "/repos/git-town/git-town/pulls/1/merge"
 
 func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, func()) {
 	httpmock.Activate()
-	driver := drivers.LoadGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL: "git@github.com:git-town/git-town.git",
 		gitHubToken:     token,
 	})
@@ -51,7 +31,7 @@ func setupGithubDriver(t *testing.T, token string) (drivers.CodeHostingDriver, f
 }
 
 func TestLoadGithub(t *testing.T) {
-	driver := drivers.LoadGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockConfig{
 		codeHostingDriverName: "github",
 		remoteOriginURL:       "git@self-hosted-github.com:git-town/git-town.git",
 	})
@@ -61,7 +41,7 @@ func TestLoadGithub(t *testing.T) {
 }
 
 func TestLoadGithub_customHostName(t *testing.T) {
-	driver := drivers.LoadGithub(mockGithubConfig{
+	driver := drivers.LoadGithub(mockConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "github.com",
 	})

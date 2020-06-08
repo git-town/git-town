@@ -9,29 +9,17 @@ import (
 	"github.com/git-town/git-town/src/drivers/helpers"
 )
 
-// bitbucketConfig defines the configuration data needed by the Bitbucket driver.
-type bitbucketConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetCodeHostingOriginHostname() string
-}
-
-// bitbucketShell defines the shell methods used by the Bitbucket driver
-type bitbucketShell interface {
-	ShaForBranch(string) (string, error)
-}
-
 // bitbucketCodeHostingDriver provides access to the API of Bitbucket installations.
 type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
-	shell      bitbucketShell
+	shell      shell
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config bitbucketConfig, shell bitbucketShell) CodeHostingDriver {
+func LoadBitbucket(config config, shell shell) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

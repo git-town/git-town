@@ -12,14 +12,6 @@ import (
 	"code.gitea.io/sdk/gitea"
 )
 
-// GiteaConfig defines the configuration data needed by the gitea driver.
-type GiteaConfig interface {
-	GetCodeHostingDriverName() string
-	GetRemoteOriginURL() string
-	GetGiteaToken() string
-	GetCodeHostingOriginHostname() string
-}
-
 // giteaCodeHostingDriver provides access to the API of Gitea installations.
 type giteaCodeHostingDriver struct {
 	originURL  string
@@ -32,7 +24,7 @@ type giteaCodeHostingDriver struct {
 
 // LoadGitea provides a Gitea driver instance if the given repo configuration is for a Gitea repo,
 // otherwise nil.
-func LoadGitea(config GiteaConfig) CodeHostingDriver {
+func LoadGitea(config config) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)

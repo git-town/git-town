@@ -28,7 +28,7 @@ var continueCmd = &cobra.Command{
 			fmt.Println("Error: you must resolve the conflicts before continuing")
 			os.Exit(1)
 		}
-		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo))
+		err = steps.Run(runState, prodRepo, drivers.Load(prodRepo.Configuration, &prodRepo.Silent))
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
