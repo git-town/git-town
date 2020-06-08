@@ -314,6 +314,15 @@ func (c *Configuration) PrintableBranchAncestry() string {
 	return strings.Join(trees, "\n\n")
 }
 
+// PrintableMainBranch returns a user printable main branch.
+func (c *Configuration) PrintableMainBranch() string {
+	output := Config().GetMainBranch()
+	if output == "" {
+		return noneString
+	}
+	return output
+}
+
 // PrintableNewBranchPushFlag returns a user printable new branch push flag.
 func (c *Configuration) PrintableNewBranchPushFlag() string {
 	return strconv.FormatBool(c.ShouldNewBranchPush())

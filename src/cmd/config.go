@@ -14,7 +14,7 @@ var configCommand = &cobra.Command{
 	Short: "Displays your Git Town configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
-		cli.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
+		cli.PrintLabelAndValue("Main branch", prodRepo.Configuration.PrintableMainBranch())
 		cli.PrintLabelAndValue("Perennial branches", prodRepo.Configuration.PrintablePerennialBranches())
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {

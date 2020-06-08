@@ -21,15 +21,6 @@ func getBranchAncestryRoots() []string {
 	return roots
 }
 
-// GetPrintableMainBranch returns a user printable main branch.
-func GetPrintableMainBranch() string {
-	output := Config().GetMainBranch()
-	if output == "" {
-		return noneString
-	}
-	return output
-}
-
 // getPrintableBranchTree returns a user printable branch tree.
 func getPrintableBranchTree(branchName string) (result string) {
 	result += branchName
