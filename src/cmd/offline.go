@@ -32,7 +32,11 @@ Git Town avoids network operations in offline mode.`,
 }
 
 func printOfflineFlag() {
-	cli.Println(prodRepo.Configuration.PrintableOfflineFlag())
+	cli.Println(printableOfflineFlag(prodRepo.IsOffline()))
+}
+
+func printableOfflineFlag(flag bool) string {
+	return strconv.FormatBool(flag)
 }
 
 func setOfflineFlag(value bool) {

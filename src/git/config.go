@@ -304,11 +304,6 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 	return result
 }
 
-// PrintableOfflineFlag returns a user printable offline flag.
-func (c *Configuration) PrintableOfflineFlag() string {
-	return strconv.FormatBool(c.IsOffline())
-}
-
 // Reload refreshes the cached configuration information.
 func (c *Configuration) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)
