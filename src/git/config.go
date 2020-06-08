@@ -314,6 +314,11 @@ func (c *Configuration) PrintableBranchAncestry() string {
 	return strings.Join(trees, "\n\n")
 }
 
+// PrintableNewBranchPushFlag returns a user printable new branch push flag.
+func (c *Configuration) PrintableNewBranchPushFlag() string {
+	return strconv.FormatBool(c.ShouldNewBranchPush())
+}
+
 // PrintableOfflineFlag returns a user printable offline flag.
 func (c *Configuration) PrintableOfflineFlag() string {
 	return strconv.FormatBool(c.IsOffline())

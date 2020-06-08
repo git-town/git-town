@@ -2,7 +2,6 @@ package git
 
 import (
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/git-town/git-town/src/util"
@@ -39,11 +38,6 @@ func GetPrintablePerennialBranches() string {
 		return noneString
 	}
 	return output
-}
-
-// GetPrintableNewBranchPushFlag returns a user printable new branch push flag.
-func GetPrintableNewBranchPushFlag() string {
-	return strconv.FormatBool(Config().ShouldNewBranchPush())
 }
 
 // getPrintableBranchTree returns a user printable branch tree.

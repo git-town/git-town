@@ -39,7 +39,7 @@ func printNewBranchPushFlag() {
 	if globalFlag {
 		cli.Println(strconv.FormatBool(git.Config().ShouldNewBranchPushGlobal()))
 	} else {
-		cli.Println(git.GetPrintableNewBranchPushFlag())
+		cli.Println(prodRepo.Configuration.PrintableNewBranchPushFlag())
 	}
 }
 
