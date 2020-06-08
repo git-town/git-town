@@ -14,7 +14,7 @@ type CodeHostingDriver interface {
 
 	// NewPullRequestURL returns the URL of the page
 	// to create a new pull request online.
-	NewPullRequestURL(branch, parentBranch string) string
+	NewPullRequestURL(branch, parentBranch string) (string, error)
 
 	// MergePullRequest merges the pull request through the hosting service API.
 	MergePullRequest(MergePullRequestOptions) (mergeSha string, err error)
@@ -45,20 +45,20 @@ type MergePullRequestOptions struct {
 
 // Load returns the code hosting driver to use based on the git config.
 // nolint:interfacer  // for Gitea support later
-func Load(config *git.Configuration) CodeHostingDriver {
-	driver := LoadGithub(config)
+func Load(repo *git.ProdRepo) CodeHostingDriver {
+	driver := LoadGithub(repo.Configuration)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadGitea(config)
+	driver = LoadGitea(repo.Configuration)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadBitbucket(config)
+	driver = LoadBitbucket(repo.Configuration, repo)
 	if driver != nil {
 		return driver
 	}
-	driver = LoadGitlab(config)
+	driver = LoadGitlab(repo.Configuration)
 	if driver != nil {
 		return driver
 	}

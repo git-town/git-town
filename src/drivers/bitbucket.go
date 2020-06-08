@@ -20,11 +20,12 @@ type bitbucketCodeHostingDriver struct {
 	originURL  string
 	hostname   string
 	repository string
+	repo       *git.ProdRepo
 }
 
 // LoadBitbucket provides a Bitbucket driver instance if the given repo configuration is for a Bitbucket repo,
 // otherwise nil.
-func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
+func LoadBitbucket(config bitbucketConfig, repo *git.ProdRepo) CodeHostingDriver {
 	driverType := config.GetCodeHostingDriverName()
 	originURL := config.GetRemoteOriginURL()
 	hostname := helpers.GetURLHostname(originURL)
@@ -39,6 +40,7 @@ func LoadBitbucket(config bitbucketConfig) CodeHostingDriver {
 		originURL:  originURL,
 		hostname:   hostname,
 		repository: helpers.GetURLRepositoryName(originURL),
+		repo:       repo,
 	}
 }
 
@@ -46,11 +48,15 @@ func (d *bitbucketCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch st
 	return result, nil
 }
 
-func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) string {
+func (d *bitbucketCodeHostingDriver) NewPullRequestURL(branch, parentBranch string) (string, error) {
 	query := url.Values{}
-	query.Add("source", strings.Join([]string{d.repository, git.GetBranchSha(branch)[0:12], branch}, ":"))
+	branchSha, err := d.repo.Silent.ShaForBranch(branch)
+	if err != nil {
+		return "", err
+	}
+	query.Add("source", strings.Join([]string{d.repository, branchSha[0:12], branch}, ":"))
 	query.Add("dest", strings.Join([]string{d.repository, "", parentBranch}, ":"))
-	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode())
+	return fmt.Sprintf("%s/pull-request/new?%s", d.RepositoryURL(), query.Encode()), nil
 }
 
 func (d *bitbucketCodeHostingDriver) RepositoryURL() string {

@@ -27,7 +27,7 @@ func TestLoadBitbucket(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		codeHostingDriverName: "bitbucket",
 		remoteOriginURL:       "git@self-hosted-bitbucket.com:git-town/git-town.git",
-	})
+	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
 	assert.Equal(t, "https://self-hosted-bitbucket.com/git-town/git-town", driver.RepositoryURL())
@@ -37,7 +37,7 @@ func TestLoadBitbucket_customHostName(t *testing.T) {
 	driver := drivers.LoadBitbucket(mockBitbucketConfig{
 		remoteOriginURL:    "git@my-ssh-identity.com:git-town/git-town.git",
 		configuredHostName: "bitbucket.org",
-	})
+	}, nil)
 	assert.NotNil(t, driver)
 	assert.Equal(t, "Bitbucket", driver.HostingServiceName())
 	assert.Equal(t, "https://bitbucket.org/git-town/git-town", driver.RepositoryURL())

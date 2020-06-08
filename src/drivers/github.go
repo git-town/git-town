@@ -76,12 +76,12 @@ func (d *githubCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch strin
 	return result, nil
 }
 
-func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
+func (d *githubCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := branch
 	if parentBranch != git.Config().GetMainBranch() {
 		toCompare = parentBranch + "..." + branch
 	}
-	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s?expand=1", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (d *githubCodeHostingDriver) RepositoryURL() string {

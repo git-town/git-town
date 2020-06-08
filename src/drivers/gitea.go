@@ -87,9 +87,9 @@ func (d *giteaCodeHostingDriver) LoadPullRequestInfo(branch, parentBranch string
 	return result, nil
 }
 
-func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) string {
+func (d *giteaCodeHostingDriver) NewPullRequestURL(branch string, parentBranch string) (string, error) {
 	toCompare := parentBranch + "..." + branch
-	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare))
+	return fmt.Sprintf("%s/compare/%s", d.RepositoryURL(), url.PathEscape(toCompare)), nil
 }
 
 func (d *giteaCodeHostingDriver) RepositoryURL() string {

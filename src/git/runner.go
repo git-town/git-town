@@ -629,9 +629,12 @@ func (r *Runner) IsBranchInSync(branchName string) (bool, error) {
 		return false, err
 	}
 	if hasTrackingBranch {
-		localSha := GetBranchSha(branchName)
-		remoteSha := GetBranchSha(r.TrackingBranchName(branchName))
-		return localSha == remoteSha, nil
+		localSha, err := r.ShaForBranch(branchName)
+		if err != nil {
+			return false, err
+		}
+		remoteSha, err := r.ShaForBranch(r.TrackingBranchName(branchName))
+		return localSha == remoteSha, err
 	}
 	return true, nil
 }
