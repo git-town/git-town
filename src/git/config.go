@@ -304,15 +304,6 @@ func (c *Configuration) localConfigKeysMatching(toMatch string) (result []string
 	return result
 }
 
-// PrintableMainBranch returns a user printable main branch.
-func (c *Configuration) PrintableMainBranch() string {
-	output := Config().GetMainBranch()
-	if output == "" {
-		return noneString
-	}
-	return output
-}
-
 // PrintableNewBranchPushFlag returns a user printable new branch push flag.
 func (c *Configuration) PrintableNewBranchPushFlag() string {
 	return strconv.FormatBool(c.ShouldNewBranchPush())
@@ -321,15 +312,6 @@ func (c *Configuration) PrintableNewBranchPushFlag() string {
 // PrintableOfflineFlag returns a user printable offline flag.
 func (c *Configuration) PrintableOfflineFlag() string {
 	return strconv.FormatBool(c.IsOffline())
-}
-
-// PrintablePerennialBranches returns a user printable list of perennial branches.
-func (c *Configuration) PrintablePerennialBranches() string {
-	output := strings.Join(c.GetPerennialBranches(), "\n")
-	if output == "" {
-		return noneString
-	}
-	return output
 }
 
 // Reload refreshes the cached configuration information.
