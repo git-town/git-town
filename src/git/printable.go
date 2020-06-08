@@ -2,7 +2,6 @@ package git
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/git-town/git-town/src/util"
 )
@@ -25,15 +24,6 @@ func getBranchAncestryRoots() []string {
 // GetPrintableMainBranch returns a user printable main branch.
 func GetPrintableMainBranch() string {
 	output := Config().GetMainBranch()
-	if output == "" {
-		return noneString
-	}
-	return output
-}
-
-// GetPrintablePerennialBranches returns a user printable list of perennial branches.
-func GetPrintablePerennialBranches() string {
-	output := strings.Join(Config().GetPerennialBranches(), "\n")
 	if output == "" {
 		return noneString
 	}

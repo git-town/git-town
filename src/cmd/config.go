@@ -15,7 +15,7 @@ var configCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println()
 		cli.PrintLabelAndValue("Main branch", git.GetPrintableMainBranch())
-		cli.PrintLabelAndValue("Perennial branches", git.GetPrintablePerennialBranches())
+		cli.PrintLabelAndValue("Perennial branches", prodRepo.Configuration.PrintablePerennialBranches())
 		mainBranch := git.Config().GetMainBranch()
 		if mainBranch != "" {
 			cli.PrintLabelAndValue("Branch Ancestry", prodRepo.Configuration.PrintableBranchAncestry())

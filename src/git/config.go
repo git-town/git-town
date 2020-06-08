@@ -324,6 +324,15 @@ func (c *Configuration) PrintableOfflineFlag() string {
 	return strconv.FormatBool(c.IsOffline())
 }
 
+// PrintablePerennialBranches returns a user printable list of perennial branches.
+func (c *Configuration) PrintablePerennialBranches() string {
+	output := strings.Join(c.GetPerennialBranches(), "\n")
+	if output == "" {
+		return noneString
+	}
+	return output
+}
+
 // Reload refreshes the cached configuration information.
 func (c *Configuration) Reload() {
 	c.localConfigCache = loadGitConfig(c.shell, false)
